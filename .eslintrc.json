@@ -1,0 +1,22 @@
+{
+  "rules": {
+    "react/jsx-filename-extension": 0,
+    "react/react-in-jsx-scope": 0,
+    "react/no-unescaped-entities": 0,
+    "no-unused-vars": "warn",
+    "template-curly-spacing": "off",
+    "object-curly-newline": "off",
+    "react/jsx-props-no-spreading": "off",
+    "react-hooks/exhaustive-deps": "warn",
+    "max-len": ["warn", 200],
+    "react/prop-types": "warn",
+    "indent": [
+      "warn",
+      2,
+      {
+        "ignoredNodes": ["TemplateLiteral"]
+      }
+    ]
+  },
+  "extends": ["react-app", "airbnb", "airbnb/hooks"]
+}
