@@ -1,20 +1,12 @@
-import { useState, useEffect } from 'react';
-import axios from 'axios';
 import { Button, Col, Container, Row, Title } from '@dataesr/react-dsfr';
 import { useNavigate } from 'react-router-dom';
+import useFetch from '../../hooks/useFetch';
 
 export default function OfficialTextsPage() {
   const navigate = useNavigate();
-  const [dataAPI, setDataAPI] = useState([]);
-
-  useEffect(() => {
-    const getData = async () => {
-      const response = await axios.get('/official-texts');
-      setDataAPI(response.data);
-    };
-    getData();
-  }, []);
-
+  const { data, error, isLoading } = useFetch('GET', '/official-texts');
+  if (isLoading || !data) return <h1>Loading</h1>;
+  if (error) return <h1>Error</h1>;
   return (
     <Container as="main">
       <Row>
@@ -27,7 +19,7 @@ export default function OfficialTextsPage() {
           </Button>
         </Col>
       </Row>
-      {dataAPI.totalCount}
+      {data.totalCount}
     </Container>
   );
 }

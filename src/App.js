@@ -1,11 +1,8 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import axios from 'axios';
 
 import CategoriesPage from './pages/Categories';
 import CategoriesAddPage from './pages/Categories/add';
 import ContributePage from './pages/Contribute';
-import Footer from './components/Footer';
-import Header from './components/Header';
 import HelpPage from './pages/Help';
 import HomePage from './pages/Home';
 import OfficialTextsPage from './pages/OfficialTexts';
@@ -16,61 +13,56 @@ import ProjectsPage from './pages/Projects';
 import ProjectsAddPage from './pages/Projects/add';
 import RessourcesPage from './pages/Ressources';
 import StructuresPage from './pages/Structures';
+import StructuresByIdPage from './pages/Structures/id';
 import StructuresAddPage from './pages/Structures/add';
 import TermsPage from './pages/Terms';
 import TermsAddPage from './pages/Terms/add';
+import Layout from './components/Layout';
+import SignIn from './pages/Authentication/signin';
+import SignUp from './pages/Authentication/signup';
+import Bienvenue from './pages/Authentication/bienvenue';
 
 import './styles/index.scss';
 
 function App() {
-  axios.interceptors.request.use(
-    (config) => {
-      // eslint-disable-next-line no-param-reassign
-      config.baseURL = process.env.REACT_APP_API_URL;
-      // eslint-disable-next-line no-param-reassign
-      config.headers.Authorization = 'Bearer 123';
-      return config;
-    },
-    (error) =>
-      // Do something with request error
-      // eslint-disable-next-line implicit-arrow-linebreak
-      Promise.reject(error),
-  );
-
   return (
     <Router>
-      <Header />
       <Routes>
-        <Route path="/" element={<HomePage />} />
+        <Route element={<Layout />}>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/se-connecter" element={<SignIn />} />
+          <Route path="/creer-un-compte" element={<SignUp />} />
+          <Route path="/bienvenue" element={<Bienvenue />} />
 
-        <Route path="/categories" element={<CategoriesPage />} />
-        <Route path="/categories/ajouter" element={<CategoriesAddPage />} />
+          <Route path="/categories" element={<CategoriesPage />} />
+          <Route path="/categories/ajouter" element={<CategoriesAddPage />} />
 
-        <Route path="/contribuer" element={<ContributePage />} />
+          <Route path="/contribuer" element={<ContributePage />} />
 
-        <Route path="/personnes" element={<PersonsPage />} />
-        <Route path="/personnes/ajouter" element={<PersonsAddPage />} />
+          <Route path="/personnes" element={<PersonsPage />} />
+          <Route path="/personnes/ajouter" element={<PersonsAddPage />} />
 
-        <Route path="/projets" element={<ProjectsPage />} />
-        <Route path="/projets/ajouter" element={<ProjectsAddPage />} />
+          <Route path="/projets" element={<ProjectsPage />} />
+          <Route path="/projets/ajouter" element={<ProjectsAddPage />} />
 
-        <Route path="/structures" element={<StructuresPage />} />
-        <Route path="/structures/ajouter" element={<StructuresAddPage />} />
+          <Route path="/structures" element={<StructuresPage />} />
+          <Route path="/structures/ajouter" element={<StructuresAddPage />} />
+          <Route path="/structures/:id" element={<StructuresByIdPage />} />
 
-        <Route path="/termes" element={<TermsPage />} />
-        <Route path="/termes/ajouter" element={<TermsAddPage />} />
+          <Route path="/termes" element={<TermsPage />} />
+          <Route path="/termes/ajouter" element={<TermsAddPage />} />
 
-        <Route path="/textes-officiels" element={<OfficialTextsPage />} />
-        <Route
-          path="/textes-officiels/ajouter"
-          element={<OfficialTextsAddPage />}
-        />
+          <Route path="/textes-officiels" element={<OfficialTextsPage />} />
+          <Route
+            path="/textes-officiels/ajouter"
+            element={<OfficialTextsAddPage />}
+          />
 
-        <Route path="/ressources" element={<RessourcesPage />} />
+          <Route path="/ressources" element={<RessourcesPage />} />
 
-        <Route path="/aide" element={<HelpPage />} />
+          <Route path="/aide" element={<HelpPage />} />
+        </Route>
       </Routes>
-      <Footer />
     </Router>
   );
 }
