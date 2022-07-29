@@ -18,7 +18,7 @@ export default function SignIn() {
   const [password, setPassword] = useState('');
   const requestOtp = async (e) => {
     e.preventDefault();
-    const response = await requestSignInEmail({ email });
+    const response = await requestSignInEmail({ email, password });
     const serverMessage = /Un nouveau code à été envoyé/i;
     if (serverMessage.test(response.error)) { setView(1); } else { console.log(response); }
   };

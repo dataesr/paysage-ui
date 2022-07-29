@@ -12,9 +12,9 @@ export function AuthContextProvider({ children }) {
   const { data: user } = useFetch('GET', '/me');
   const viewer = user || {};
 
-  const requestSignInEmail = async ({ email }) => {
+  const requestSignInEmail = async ({ email, password }) => {
     const url = `${process.env.REACT_APP_API_URL}/signin`;
-    const body = JSON.stringify({ email });
+    const body = JSON.stringify({ email, password });
     const headers = { 'X-Paysage-OTP-Method': 'email', 'Content-Type': 'application/json' };
     const response = await fetch(url, { method: 'POST', body, headers })
       .catch(() => { console.log('Erreur inatendue'); });
