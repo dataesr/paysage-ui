@@ -10,7 +10,7 @@ const AuthContext = createContext();
 
 export function AuthContextProvider({ children }) {
   const { data: user } = useFetch('GET', '/me');
-  const viewer = user || {};
+  const viewer = useMemo(() => user || {}, [user]);
 
   const requestSignInEmail = async ({ email, password }) => {
     const url = `${process.env.REACT_APP_API_URL}/signin`;

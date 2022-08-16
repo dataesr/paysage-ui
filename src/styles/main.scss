@@ -45,3 +45,22 @@ $persons-color: var(--pink-tuile-main-556);
     background-color: #ffa6a6;
   }
 }
+
+#page-border {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 10px;
+  background-color: var(--page-border);
+  z-index: 1000;
+}
+
+#toast-container {
+  position: fixed;
+  box-sizing: border-box;
+  bottom: 50px;
+  left: calc(50vw - 160px);
+  z-index: 10000;
+}
+

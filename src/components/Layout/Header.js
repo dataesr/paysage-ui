@@ -18,6 +18,7 @@ export default function Header({ switchTheme }) {
   const { isOpen, setIsOpen } = switchTheme;
   const { pathname } = useLocation();
   const { viewer, signout } = useAuth();
+  console.log(viewer?.id);
   const handleSignOut = () => {
     signout();
     window.location.reload(false);
@@ -35,18 +36,12 @@ export default function Header({ switchTheme }) {
         <Tool closeButtonLabel="fermer">
           <ToolItemGroup>
             {viewer?.id ? (
-              <>
-                <ToolItem
-                  icon="ri-user-3-line"
-                  asLink={<RouterLink to="/me" />}
-                >
-                  {viewer.email}
-                </ToolItem>
-                <ToolItem
-                  icon="ri-logout-circle-r-line"
-                  onClick={handleSignOut}
-                />
-              </>
+              <ToolItem
+                icon="ri-user-3-line"
+                asLink={<RouterLink to="/me" />}
+              >
+                {viewer.email}
+              </ToolItem>
             ) : (
               <ToolItem
                 icon="ri-user-3-line"
@@ -54,6 +49,12 @@ export default function Header({ switchTheme }) {
               >
                 Se connecter
               </ToolItem>
+            )}
+            {viewer?.id && (
+              <ToolItem
+                icon="ri-logout-circle-r-line"
+                onClick={handleSignOut}
+              />
             )}
             <ToolItem icon="ri-sun-fill" onClick={() => setIsOpen(true)}>
               <span aria-controls="fr-theme-modal" data-fr-opened={isOpen}>

@@ -9,15 +9,17 @@ import {
 import useViewport from '../../hooks/useViewport';
 import Header from './Header';
 import Footer from './Footer';
+import PageBorder from './PageBorder';
 
 export default function Layout() {
   const [isOpen, setIsOpen] = useState(false);
   const { mobile } = useViewport();
   return (
     <>
+      <PageBorder />
       <Header switchTheme={{ isOpen, setIsOpen }} />
       <SwitchTheme isOpen={isOpen} setIsOpen={setIsOpen} />
-      <Container className="full-height" fluid={!mobile} spacing="mb-10w">
+      <Container fluid={!mobile} spacing="mb-10w">
         <Row>
           <Col>
             <Outlet />
