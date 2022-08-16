@@ -11,7 +11,7 @@ export default function HomePage() {
       <Row className="fr-pb-5w">
         <ButtonGroup isInlineFrom="lg">
 
-          <Button onClick={() => toast({ toastType: 'info', content: 'test un peu plus long peut etre sur deux lignes' })}>Toast</Button>
+          <Button onClick={() => toast({ toastType: 'info', content: 'test un peu plus long peut etre sur deux lignes', autoDismiss: false })}>Toast</Button>
           <Button onClick={() => toast({
             toastType: 'success',
             content: 'test un peu plus long peut etre sur deux lignes',
