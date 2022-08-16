@@ -10,7 +10,7 @@ import Identifiers from '../../components/Blocs/Identifiers';
 import Weblinks from '../../components/Blocs/Weblinks';
 import SocialMedias from '../../components/Blocs/SocialMedias';
 // import OfficialTexts from '../../components/Blocs/OfficialTexts';
-// import Documents from '../../components/Blocs/Documents';
+import Documents from '../../components/Blocs/Documents';
 
 export default function PersonByIdPage() {
   const { id } = useParams();
@@ -92,11 +92,11 @@ export default function PersonByIdPage() {
               <Weblinks apiObject="persons" id={getData.data.id} />
               <SocialMedias apiObject="persons" id={getData.data.id} />
               {/* <OfficialTexts apiObject="persons" id={getData.data.id} /> */}
-              {/* <Documents apiObject="persons" id={getData.data.id} /> */}
+              <Documents apiObject="persons" id={getData.data.id} />
 
-              <div>
+              {/* <div>
                 <pre>{JSON.stringify(getData.data, null, 2)}</pre>
-              </div>
+              </div> */}
             </Container>
           </Col>
         </Row>

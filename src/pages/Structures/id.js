@@ -3,13 +3,13 @@ import { Col, Container, Row, Tag, Title } from '@dataesr/react-dsfr';
 
 import useFetch from '../../hooks/useFetch';
 
-import Localisations from '../../components/Blocs/Localisations';
+// import Localisations from '../../components/Blocs/Localisations';
 import Emails from '../../components/Blocs/Emails';
-import Names from '../../components/Blocs/Names';
+// import Names from '../../components/Blocs/Names';
 import Identifiers from '../../components/Blocs/Identifiers';
 import Weblinks from '../../components/Blocs/Weblinks';
 import SocialMedias from '../../components/Blocs/SocialMedias';
-import OfficialTexts from '../../components/Blocs/OfficialTexts';
+// import OfficialTexts from '../../components/Blocs/OfficialTexts';
 import Documents from '../../components/Blocs/Documents';
 
 export default function StructuresByIdPage() {
@@ -84,18 +84,18 @@ export default function StructuresByIdPage() {
                 {getData.data.structureStatus}
               </Tag>
 
-              <Localisations apiObject="structures" id={getData.data.id} />
+              {/* <Localisations apiObject="structures" id={getData.data.id} /> */}
               <Emails apiObject="structures" id={getData.data.id} />
-              <Names apiObject="structures" id={getData.data.id} />
+              {/* <Names apiObject="structures" id={getData.data.id} /> */}
               <Identifiers apiObject="structures" id={getData.data.id} />
               <Weblinks apiObject="structures" id={getData.data.id} />
               <SocialMedias apiObject="structures" id={getData.data.id} />
-              <OfficialTexts apiObject="structures" id={getData.data.id} />
+              {/* <OfficialTexts apiObject="structures" id={getData.data.id} /> */}
               <Documents apiObject="structures" id={getData.data.id} />
 
-              <div>
+              {/* <div>
                 <pre>{JSON.stringify(getData.data, null, 2)}</pre>
-              </div>
+              </div> */}
             </Container>
           </Col>
         </Row>

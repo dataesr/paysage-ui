@@ -66,9 +66,11 @@ export default {
     method: 'PATCH', url, body, headers,
   }),
   delete: (url, headers) => customFetch({ method: 'DELETE', url, headers }),
-  postFormData: (url, headers) => customFetch({
+  postFormData: (url, body, headers) => customFetch({
     method: 'POST',
     url,
+    body,
+    mode: 'cors',
     headers: { ...headers, 'Content-Type': 'multipart/form-data' },
   }),
 };
