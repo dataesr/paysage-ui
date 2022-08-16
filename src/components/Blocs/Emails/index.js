@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { Button, Card, CardDescription, CardTitle, Col, Container, Modal, ModalContent, ModalTitle, Row, Title } from '@dataesr/react-dsfr';
+import { Button, Callout, Card, CardDescription, CardTitle, Col, Container, Highlight, Modal, ModalContent, ModalTitle, Row, Title } from '@dataesr/react-dsfr';
 import EmailForm from './form';
 import fetch from '../../../utils/fetch';
 
@@ -66,7 +66,7 @@ export default function EmailsComponent({ apiObject, id }) {
     setShowModal(true);
   };
 
-  if (!data?.data || data.data.length === 0) return <>Chargement...</>; // TODO Loader
+  if (!data?.data) return <>Chargement...</>; // TODO Loader
 
   return (
     <Container fluid as="section">
@@ -88,6 +88,11 @@ export default function EmailsComponent({ apiObject, id }) {
         </Col>
       </Row>
       <Row>
+        {data.data.length === 0 ? (
+          <Highlight className="fr-highlight--yellow-tournesol">
+            Cette section est vide pour le moment
+          </Highlight>
+        ) : null}
         {data.data.map((gm) => (
           <Col n="4" key={gm.id}>
             <Card hasArrow={false} onClick={() => onClickModifyHandler(gm)}>

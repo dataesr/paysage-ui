@@ -7,6 +7,7 @@ import {
   CardTitle,
   Col,
   Container,
+  Highlight,
   Modal,
   ModalContent,
   ModalTitle,
@@ -110,6 +111,11 @@ export default function WeblinksComponent({ apiObject, id }) {
         </Col>
       </Row>
       <Row>
+        {data.data.length === 0 ? (
+          <Highlight className="fr-highlight--yellow-tournesol">
+            Cette section est vide pour le moment
+          </Highlight>
+        ) : null}
         {data.data.map((wl) => (
           <Col n="3" key={wl.id}>
             <Card hasArrow={false} onClick={() => onClickModifyHandler(wl)}>

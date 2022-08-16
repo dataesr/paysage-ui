@@ -119,8 +119,8 @@ export default function IdentifierForm({ data, onDeleteHandler, onSaveHandler, e
           <Col>
             <DateOneField
               value={identifierEndDate}
-              name="startDate"
-              label="Date de début"
+              name="endDate"
+              label="Date de fin"
               onValueChangeHandler={setIdentifierEndDate}
             />
           </Col>

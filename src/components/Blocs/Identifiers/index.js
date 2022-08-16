@@ -7,6 +7,7 @@ import {
   CardTitle,
   Col,
   Container,
+  Highlight,
   Modal,
   ModalContent,
   ModalTitle,
@@ -108,6 +109,11 @@ export default function IdentifiersComponent({ apiObject, id }) {
         </Col>
       </Row>
       <Row>
+        {data.data.length === 0 ? (
+          <Highlight className="fr-highlight--yellow-tournesol">
+            Cette section est vide pour le moment
+          </Highlight>
+        ) : null}
         {data.data.map((ident) => (
           <Col n="3" key={ident.id}>
             <Card hasArrow={false} onClick={() => onClickModifyHandler(ident)}>
