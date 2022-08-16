@@ -30,8 +30,7 @@ export default function Footer({ switchTheme }) {
       </FooterTop>
       <FooterBody description="Paysage : Plateforme d'échanges et d'informations de la DGESIP et de la DGRI">
         <Logo>
-          Ministère de l‘enseignement supérieur de la rechercher
-          et de l‘innovation
+          Ministère de l‘enseignement supérieur et de la recherche
         </Logo>
         <FooterBodyItem>
           <Link href="https://legifrance.gouv.fr">
@@ -66,7 +65,7 @@ export default function Footer({ switchTheme }) {
           </span>
         </FooterLink>
         <FooterCopy to="/">
-          © République Française 2020
+          © République Française 2022
         </FooterCopy>
       </FooterBottom>
     </FooterWrapper>

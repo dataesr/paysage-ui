@@ -6,6 +6,8 @@ import {
   Text,
   TextInput,
 } from '@dataesr/react-dsfr';
+import PropTypes from 'prop-types';
+
 import { useState } from 'react';
 import { getApproximativeDate, validDate } from '../../utils/dates';
 
@@ -21,7 +23,8 @@ export default function DateOneField({
 
   const onChangeHandler = (key, event) => {
     if (validDate(event.target.value)) {
-      onValueChangeHandler(key, event.target.value);
+      // onValueChangeHandler(key, event.target.value);
+      onValueChangeHandler(event.target.value);
     }
   };
 
@@ -56,3 +59,10 @@ export default function DateOneField({
     </Col>
   );
 }
+
+DateOneField.propTypes = {
+  value: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired,
+  label: PropTypes.string.isRequired,
+  onValueChangeHandler: PropTypes.func.isRequired,
+};

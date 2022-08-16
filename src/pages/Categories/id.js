@@ -3,23 +3,23 @@ import { Col, Container, Row, Tag, Title } from '@dataesr/react-dsfr';
 
 import useFetch from '../../hooks/useFetch';
 
-import Localisations from '../../components/Blocs/Localisations';
-import Emails from '../../components/Blocs/Emails';
-import Names from '../../components/Blocs/Names';
+// import Localisations from '../../components/Blocs/Localisations';
+// import Emails from '../../components/Blocs/Emails';
+// import Names from '../../components/Blocs/Names';
 import Identifiers from '../../components/Blocs/Identifiers';
 import Weblinks from '../../components/Blocs/Weblinks';
-import SocialMedias from '../../components/Blocs/SocialMedias';
-import OfficialTexts from '../../components/Blocs/OfficialTexts';
-import Documents from '../../components/Blocs/Documents';
+// import SocialMedias from '../../components/Blocs/SocialMedias';
+// import OfficialTexts from '../../components/Blocs/OfficialTexts';
+// import Documents from '../../components/Blocs/Documents';
 
-export default function StructuresByIdPage() {
+export default function CategoryByIdPage() {
   const { id } = useParams();
 
-  const getData = useFetch('GET', `/structures/${id}`);
+  const getData = useFetch('GET', `/categories/${id}`);
 
   if (getData.isLoading) return <h1>Loading</h1>;
   return (
-    <div className="structures-main-container">
+    <div className="categories-main-container">
       <Container fluid spacing="mt-5w">
         <Row>
           <Col n="3">
@@ -78,20 +78,21 @@ export default function StructuresByIdPage() {
           </Col>
           <Col>
             <Container as="main">
-              <Title as="h2">{getData.data.currentName.usualName}</Title>
-              <Tag className="mx-1 bg-structures">Structure</Tag>
-              <Tag className="mx-1 bg-success">
+              <Title as="h2">
+                {getData.data.usualNameFr}
+              </Title>
+              <Tag className="mx-1 bg-personnes ">Catégorie</Tag>
+              {/* <Tag className="mx-1 bg-success">
                 {getData.data.structureStatus}
-              </Tag>
+              </Tag> */}
 
-              <Localisations apiObject="structures" id={getData.data.id} />
-              <Emails apiObject="structures" id={getData.data.id} />
-              <Names apiObject="structures" id={getData.data.id} />
-              <Identifiers apiObject="structures" id={getData.data.id} />
-              <Weblinks apiObject="structures" id={getData.data.id} />
-              <SocialMedias apiObject="structures" id={getData.data.id} />
-              <OfficialTexts apiObject="structures" id={getData.data.id} />
-              <Documents apiObject="structures" id={getData.data.id} />
+              {/* <Emails apiObject="categories" id={getData.data.id} /> */}
+              {/* <Names apiObject="categories" id={getData.data.id} /> */}
+              <Identifiers apiObject="categories" id={getData.data.id} />
+              <Weblinks apiObject="categories" id={getData.data.id} />
+              {/* <SocialMedias apiObject="categories" id={getData.data.id} /> */}
+              {/* <OfficialTexts apiObject="categories" id={getData.data.id} /> */}
+              {/* <Documents apiObject="categories" id={getData.data.id} /> */}
 
               <div>
                 <pre>{JSON.stringify(getData.data, null, 2)}</pre>

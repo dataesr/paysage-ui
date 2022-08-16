@@ -1,5 +1,5 @@
 import { Col, Container, Row, Title } from '@dataesr/react-dsfr';
-import OfficiaTextAddForm from '../../components/Forms/OfficialText/add';
+import OfficiaTextAddForm from '../../components/Forms/OfficialText';
 
 export default function OfficialTextsAddPage() {
   return (

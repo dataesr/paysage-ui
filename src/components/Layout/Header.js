@@ -26,7 +26,7 @@ export default function Header({ switchTheme }) {
     <HeaderWrapper>
       <HeaderBody>
         <Logo splitCharacter={10}>
-          {'Ministère le l\'enseignement supérieur et de la recherche'}
+          Ministère le l'enseignement supérieur et de la recherche
         </Logo>
         <Service
           title="Paysage"
@@ -56,10 +56,7 @@ export default function Header({ switchTheme }) {
               </ToolItem>
             )}
             <ToolItem icon="ri-sun-fill" onClick={() => setIsOpen(true)}>
-              <span
-                aria-controls="fr-theme-modal"
-                data-fr-opened={isOpen}
-              >
+              <span aria-controls="fr-theme-modal" data-fr-opened={isOpen}>
                 Paramètres d’affichage
               </span>
             </ToolItem>
@@ -76,29 +73,27 @@ export default function Header({ switchTheme }) {
           <>
             <NavItem
               title="Je contribue"
-              current={pathname.startsWith('/contrib')}
+              current={pathname.startsWith('/contribuer')}
             >
               <NavSubItem
                 current={
-                  pathname.startsWith('/contrib')
+                  pathname.startsWith('/contribuer')
                   && !pathname.endsWith('/import')
                 }
                 title="Ajouter un nouvel objet"
-                asLink={<RouterLink to="/contrib" />}
+                asLink={<RouterLink to="/contribuer" />}
               />
               <NavSubItem
                 current={pathname.endsWith('/import')}
                 title="Ajouter en masse"
-                asLink={
-                  <RouterLink to="/contrib/structure/import" />
-                }
+                asLink={<RouterLink to="/contribuer/structure/import" />}
               />
             </NavItem>
             <NavItem title="Annuaire">
               <NavSubItem
-                current={pathname.startsWith('/search/1')}
+                current={pathname.startsWith('/personnes')}
                 title="Rechercher une personne"
-                asLink={<RouterLink to="/search/1" />}
+                asLink={<RouterLink to="/personnes" />}
               />
               <NavSubItem
                 title="Listes qualifiées"
@@ -107,9 +102,9 @@ export default function Header({ switchTheme }) {
             </NavItem>
             <NavItem title="Répertoire">
               <NavSubItem
-                current={pathname.startsWith('/search')}
+                current={pathname.startsWith('/structures')}
                 title="Rechercher une structure"
-                asLink={<RouterLink to="/search/0" />}
+                asLink={<RouterLink to="/structures" />}
               />
               <NavSubItem
                 title="Listes qualifiées"
@@ -120,13 +115,13 @@ export default function Header({ switchTheme }) {
         )}
         <NavItem
           title="Ressources"
-          asLink={<RouterLink to="/resources" />}
-          current={pathname.startsWith('/resources')}
+          asLink={<RouterLink to="/ressources" />}
+          current={pathname.startsWith('/ressources')}
         />
         <NavItem
           title="Aide"
-          asLink={<RouterLink to="/help" />}
-          current={pathname.startsWith('/help')}
+          asLink={<RouterLink to="/aide" />}
+          current={pathname.startsWith('/aide')}
         />
       </HeaderNav>
     </HeaderWrapper>

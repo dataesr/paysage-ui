@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import {
   Alert,
   Button,
@@ -14,6 +15,7 @@ import { useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import validator from './validator';
 import DateOneField from '../../DateOneField';
+import fetch from '../../../utils/fetch';
 
 export default function OfficiaTextAddForm() {
   const [savingErrors, setSavingErrors] = useState(null);
@@ -39,14 +41,6 @@ export default function OfficiaTextAddForm() {
 
   const [relatesToSearch, setRelatesToSearch] = useState(null);
   const [relatesToSearchResult, setRelatesToSearchResult] = useState([]);
-
-  const onDateChangeHandler = (key, value) => {
-    if (key === 'startDate') setStartDate(value);
-    if (key === 'endDate') setEndDate(value);
-    if (key === 'publicationDate') setPublicationDate(value);
-    if (key === 'signatureDate') setSignatureDate(value);
-    if (key === 'previsionalEndDate') setPrevisionalEndDate(value);
-  };
 
   const setErrors = (err) => {
     setReturnedErrors(errors);
@@ -87,7 +81,7 @@ export default function OfficiaTextAddForm() {
     setRelatesToSearchResult(result);
   };
 
-  const onSaveHandler = () => {
+  const onSaveHandler = async () => {
     const body = {
       nature: otNature,
       type: otType,
@@ -109,8 +103,12 @@ export default function OfficiaTextAddForm() {
 
     const { ok, returnedErrors } = validator(body);
     if (ok) {
-      // onSave(body);
-      console.log('save');
+      const response = await fetch.post('/official-texts', body).catch((e) => {
+        console.log(e);
+      });
+      if (response.status === 201) {
+        // TODO : toast + redirection
+      }
     } else {
       setErrors(returnedErrors);
     }
@@ -255,7 +253,7 @@ export default function OfficiaTextAddForm() {
                 value={otStartDate}
                 name="startDate"
                 label="Date de début"
-                onValueChangeHandler={onDateChangeHandler}
+                onValueChangeHandler={setStartDate}
               />
             </Col>
             <Col n="6" className="fr-pl-5w">
@@ -263,7 +261,7 @@ export default function OfficiaTextAddForm() {
                 value={otEndDate}
                 name="endDate"
                 label="Date de fin"
-                onValueChangeHandler={onDateChangeHandler}
+                onValueChangeHandler={setEndDate}
               />
             </Col>
             <Col n="6" className="fr-pr-5w">
@@ -271,7 +269,7 @@ export default function OfficiaTextAddForm() {
                 value={otPublicationDate}
                 name="publicationDate"
                 label="Date de publication"
-                onValueChangeHandler={onDateChangeHandler}
+                onValueChangeHandler={setPublicationDate}
               />
             </Col>
             <Col n="6" className="fr-pl-5w">
@@ -279,7 +277,7 @@ export default function OfficiaTextAddForm() {
                 value={otSignatureDate}
                 name="signatureDate"
                 label="Date de signature"
-                onValueChangeHandler={onDateChangeHandler}
+                onValueChangeHandler={setSignatureDate}
               />
             </Col>
             <Col n="6" className="fr-pr-5w">
@@ -287,7 +285,7 @@ export default function OfficiaTextAddForm() {
                 value={otPrevisionalEndDate}
                 name="previsionalEndDate"
                 label="Date de fin prévisionnelle"
-                onValueChangeHandler={onDateChangeHandler}
+                onValueChangeHandler={setPrevisionalEndDate}
               />
             </Col>
           </Row>

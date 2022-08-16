@@ -1,0 +1,47 @@
+.text-right {
+  text-align: right;
+}
+
+HR {
+  margin: 24px 0 16px 0;
+  padding-bottom: 8px;
+}
+
+.mx-1 {
+  margin: 0 4px;
+}
+
+$categories-color: var(--green-bourgeon-main-640);
+$structures-color: var(--yellow-tournesol-main-731);
+$persons-color: var(--pink-tuile-main-556);
+
+
+.bg-categories {
+  background-color: $categories-color;
+}
+.categories-main-container {
+  border-left: 10px solid $categories-color !important;
+}
+
+.bg-structures {
+  background-color: $structures-color;
+}
+.structures-main-container {
+  border-left: 10px solid $structures-color !important;
+}
+
+.bg-persons {
+  background-color: $persons-color;
+}
+.persons-main-container {
+  border-left: 10px solid $persons-color !important;
+}
+
+
+
+.bt-delete {
+  background-color: #ff5655;
+  &:hover {
+    background-color: #ffa6a6;
+  }
+}

@@ -14,9 +14,9 @@ export default function ContributePage() {
   const [selected, setSelected] = useState(null);
 
   const options = [
-    { value: '', label: "Selectionner un type d'objet" },
+    { value: null, label: "Selectionner un type d'objet" },
     { value: 'structures', label: 'Structures' },
-    { value: 'personne', label: 'Personne' },
+    { value: 'personnes', label: 'Personne' },
     { value: 'categories', label: 'Catégorie' },
     { value: 'textes-officiels', label: 'Texte officiel' },
     { value: 'termes', label: 'Terme' },

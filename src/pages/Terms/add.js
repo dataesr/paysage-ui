@@ -1,10 +1,16 @@
-import TermAddForm from '../../components/Forms/Term/add';
+import { Col, Container, Row, Title } from '@dataesr/react-dsfr';
+import TermAddForm from '../../components/Forms/Term';
 
 export default function TermsAddPage() {
   return (
-    <main>
-      <h1>Page d'ajout d'un terme</h1>
+    <Container as="main">
+      <Row>
+        <Col>
+          <Title as="h2">Page d'ajout d'un terme</Title>
+        </Col>
+      </Row>
+
       <TermAddForm />
-    </main>
+    </Container>
   );
 }
