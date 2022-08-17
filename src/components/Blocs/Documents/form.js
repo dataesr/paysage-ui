@@ -75,15 +75,6 @@ export default function SocialMediaForm({ data, onDeleteHandler, onSaveHandler }
   };
 
   const onSave = () => {
-    // const formData = new FormData();
-    // formData.append('documentTypeId', documentTypeId);
-    // if (documentTitle) formData.append('title', documentTitle);
-    // if (documentDescription) formData.append('description', documentDescription);
-    // formData.append('file', documentFile[0]);
-    // formData.append('relatesTo[]', id);
-    // if (documentStartDate) formData.append('startDate', documentStartDate);
-    // if (documentEndDate) formData.append('endDate', documentEndDate);
-
     const body = {
       type: documentTypeId,
       title: documentTitle,
@@ -188,7 +179,7 @@ export default function SocialMediaForm({ data, onDeleteHandler, onSaveHandler }
                 <Icon name="ri-chat-delete-line" size="lg" />
                 Supprimer
               </Button>
-              <Button onClick={onSave}>
+              <Button onClick={() => onSave()}>
                 <Icon name="ri-save-line" size="lg" />
                 Sauvegarder
               </Button>

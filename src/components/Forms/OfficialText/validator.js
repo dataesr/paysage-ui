@@ -35,5 +35,17 @@ export default function validation(body) {
     });
   }
 
+  if (!body.publicationDate) {
+    ret.ok = false;
+    ret.returnedErrors.push({
+      field: 'publicationDate',
+      error: 'La date de publication du texte officiel est obligatoire',
+    });
+  }
+
+  // TODO
+  // Si boesr alors NOR et BOESRID required
+  // Si JO alors Jorftext required et URL automatiquement remplie
+
   return ret;
 }

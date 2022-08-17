@@ -31,14 +31,17 @@ async function customFetch({
   const options = {
     method: method.toUpperCase(),
     headers: setDefaultHeaders(headers),
+    body,
   };
-  if (body && ['POST', 'PUT', 'PATCH'].includes(method.toUpperCase())) { options.body = JSON.stringify(body); }
+
   const response = await fetch(requestUrl, options);
+
   if (response.ok) {
     const json = await response.json();
     response.data = json;
     return response;
   }
+
   if (response.status === 401) {
     const newAccessToken = await catchInvalidToken();
     if (newAccessToken) {
@@ -55,22 +58,23 @@ async function customFetch({
 }
 
 export default {
+  postFormData: (url, formData, headers) => {
+    customFetch({
+      method: 'POST',
+      url,
+      body: formData,
+      headers: { ...headers, 'Content-Type': 'multipart/form-data' },
+    });
+  },
   get: (url, headers) => customFetch({ method: 'GET', url, headers }),
   post: (url, body, headers) => customFetch({
-    method: 'POST', url, body, headers,
+    method: 'POST', url, body: JSON.stringify(body), headers,
   }),
   put: (url, body, headers) => customFetch({
-    method: 'PUT', url, body, headers,
+    method: 'PUT', url, body: JSON.stringify(body), headers,
   }),
   patch: (url, body, headers) => customFetch({
-    method: 'PATCH', url, body, headers,
+    method: 'PATCH', url, body: JSON.stringify(body), headers,
   }),
   delete: (url, headers) => customFetch({ method: 'DELETE', url, headers }),
-  postFormData: (url, body, headers) => customFetch({
-    method: 'POST',
-    url,
-    body,
-    mode: 'cors',
-    headers: { ...headers, 'Content-Type': 'multipart/form-data' },
-  }),
 };
