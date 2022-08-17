@@ -250,6 +250,23 @@ export default function OfficiaTextAddForm() {
           <Row>
             <Col n="6" className="fr-pr-5w">
               <DateOneField
+                value={otPublicationDate}
+                name="publicationDate"
+                label="Date de publication"
+                onValueChangeHandler={setPublicationDate}
+                // TODO : required
+              />
+            </Col>
+            <Col n="6" className="fr-pl-5w">
+              <DateOneField
+                value={otSignatureDate}
+                name="signatureDate"
+                label="Date de signature"
+                onValueChangeHandler={setSignatureDate}
+              />
+            </Col>
+            <Col n="6" className="fr-pr-5w">
+              <DateOneField
                 value={otStartDate}
                 name="startDate"
                 label="Date de début"
@@ -262,22 +279,6 @@ export default function OfficiaTextAddForm() {
                 name="endDate"
                 label="Date de fin"
                 onValueChangeHandler={setEndDate}
-              />
-            </Col>
-            <Col n="6" className="fr-pr-5w">
-              <DateOneField
-                value={otPublicationDate}
-                name="publicationDate"
-                label="Date de publication"
-                onValueChangeHandler={setPublicationDate}
-              />
-            </Col>
-            <Col n="6" className="fr-pl-5w">
-              <DateOneField
-                value={otSignatureDate}
-                name="signatureDate"
-                label="Date de signature"
-                onValueChangeHandler={setSignatureDate}
               />
             </Col>
             <Col n="6" className="fr-pr-5w">
@@ -300,9 +301,10 @@ export default function OfficiaTextAddForm() {
       <Row>
         <Col>
           <TextInput
-            label="Rechercher une structure ou une personne pour l'ajouter"
+            label="Rechercher un objet pour l'ajouter"
             value={relatesToSearch}
             onChange={onRelatesToSearch}
+            // TODO : search
           />
         </Col>
       </Row>
