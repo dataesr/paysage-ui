@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
-import AdminDocumentTypesPage from './pages/Admin/documentTypes';
+import AdminPage from './pages/Admin';
 import Bienvenue from './pages/Authentication/bienvenue';
 import CategoriesAddPage from './pages/Categories/add';
 import CategoriesPage from './pages/Categories';
@@ -72,7 +72,7 @@ function App() {
 
           <Route path="/ressources" element={<RessourcesPage />} />
 
-          <Route path="/document-types" element={<AdminDocumentTypesPage />} />
+          <Route path="/admin/:route" element={<AdminPage />} />
 
           <Route path="/aide" element={<HelpPage />} />
         </Route>

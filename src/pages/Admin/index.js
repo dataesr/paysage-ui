@@ -1,10 +1,11 @@
 import { Button, Col, Container, Icon, Row, TextInput, Title } from '@dataesr/react-dsfr';
 import { useEffect, useState } from 'react';
-// import useFetch from '../../hooks/useFetch';
+import { useParams } from 'react-router-dom';
+
 import fetch from '../../utils/fetch';
 
 export default function DocumentTypesPage() {
-  // const { data, error, isLoading } = useFetch('GET', '/document-types');
+  const { route } = useParams();
 
   const [data, setData] = useState([]);
   const [usualName, setUsualName] = useState(null);
@@ -12,11 +13,11 @@ export default function DocumentTypesPage() {
 
   useEffect(() => {
     const getData = async () => {
-      const response = await fetch.get('/document-types');
+      const response = await fetch.get(`/${route}`);
       setData(response?.data?.data || []);
     };
     getData();
-  }, [reload]);
+  }, [reload, route]);
 
   const onSaveHandler = async () => {
     const body = {
@@ -29,29 +30,33 @@ export default function DocumentTypesPage() {
     }
   };
 
-  if (!data || data.length === 0) return (<>...</>);
   return (
     <Container>
-      <Row>
+      <Title as="h2">{route}</Title>
+      <Row
+        gutters
+        spacing="px-2w"
+        alignItems="bottom"
+        className="fr-pt-1w fr-pb-2w"
+      >
+        <Col n="10">
+          <TextInput
+            label="Ajout"
+            value={usualName}
+            onChange={(e) => setUsualName(e.target.value)}
+          />
+        </Col>
         <Col>
-          <Title as="h3">Ajout d'un type de document</Title>
-          <form>
-            <TextInput
-              label="Valeur"
-              value={usualName}
-              onChange={(e) => setUsualName(e.target.value)}
-            />
-            <Button onClick={onSaveHandler}>
-              <Icon name="ri-save-line" size="lg" />
-              Sauvegarder
-            </Button>
-          </form>
+          <Button onClick={onSaveHandler}>
+            <Icon name="ri-save-line" size="lg" />
+            Sauvegarder
+          </Button>
         </Col>
       </Row>
       <Row>
         <Col>
-          <Title as="h3">Liste des type de document existants</Title>
-          {data.map((docType) => (
+          <Title as="h3">Liste</Title>
+          {data?.map((docType) => (
             <div key={docType.id}>{docType.usualName}</div>
           ))}
         </Col>
