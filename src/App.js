@@ -17,7 +17,8 @@ import PersonsAddPage from './pages/Persons/add';
 import PersonsPage from './pages/Persons';
 import ProjectsAddPage from './pages/Projects/add';
 import ProjectsPage from './pages/Projects';
-import RessourcesPage from './pages/Ressources';
+import RessourcesInternesPage from './pages/Ressources/internes';
+import RessourcesExternesPage from './pages/Ressources/externes';
 import SignIn from './pages/Authentication/signin';
 import SignUp from './pages/Authentication/signup';
 import StructureByIdPage from './pages/Structures/id';
@@ -70,7 +71,8 @@ function App() {
             element={<OfficialTextsByIdPage />}
           />
 
-          <Route path="/ressources" element={<RessourcesPage />} />
+          <Route path="/ressources-internes" element={<RessourcesInternesPage />} />
+          <Route path="/ressources-externes" element={<RessourcesExternesPage />} />
 
           <Route path="/admin/:route" element={<AdminPage />} />
 

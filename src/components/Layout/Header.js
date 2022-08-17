@@ -36,10 +36,7 @@ export default function Header({ switchTheme }) {
         <Tool closeButtonLabel="fermer">
           <ToolItemGroup>
             {viewer?.id ? (
-              <ToolItem
-                icon="ri-user-3-line"
-                asLink={<RouterLink to="/me" />}
-              >
+              <ToolItem icon="ri-user-3-line" asLink={<RouterLink to="/me" />}>
                 {viewer.email}
               </ToolItem>
             ) : (
@@ -78,8 +75,7 @@ export default function Header({ switchTheme }) {
             >
               <NavSubItem
                 current={
-                  pathname.startsWith('/contribuer')
-                  && !pathname.endsWith('/import')
+                  pathname.startsWith('/contribuer') && !pathname.endsWith('/import')
                 }
                 title="Ajouter un nouvel objet"
                 asLink={<RouterLink to="/contribuer" />}
@@ -114,11 +110,18 @@ export default function Header({ switchTheme }) {
             </NavItem>
           </>
         )}
-        <NavItem
-          title="Ressources"
-          asLink={<RouterLink to="/ressources" />}
-          current={pathname.startsWith('/ressources')}
-        />
+        <NavItem title="Ressources">
+          <NavSubItem
+            current={pathname.startsWith('/ressources-internes')}
+            title="Les ressources internes"
+            asLink={<RouterLink to="/ressources-internes" />}
+          />
+          <NavSubItem
+            current={pathname.startsWith('/ressources-extenes')}
+            title="Les ressources extenes"
+            asLink={<RouterLink to="/ressources-extenes" />}
+          />
+        </NavItem>
         <NavItem
           title="Aide"
           asLink={<RouterLink to="/aide" />}
