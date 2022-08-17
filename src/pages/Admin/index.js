@@ -31,8 +31,7 @@ export default function DocumentTypesPage() {
   };
 
   const onDeleteHandler = async (id) => {
-    const response = await fetch.delete(`/${route}/${id}`);
-    console.log(response);
+    await fetch.delete(`/${route}/${id}`);
     setReload(reload + 1);
   };
 

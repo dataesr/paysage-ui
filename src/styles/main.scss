@@ -11,31 +11,34 @@ HR {
   margin: 0 4px;
 }
 
-$categories-color: var(--green-bourgeon-main-640);
-$structures-color: var(--yellow-tournesol-main-731);
-$persons-color: var(--pink-tuile-main-556);
-
-
-.bg-categories {
-  background-color: $categories-color;
-}
-.categories-main-container {
-  border-left: 10px solid $categories-color !important;
-}
-
 .bg-structures {
-  background-color: $structures-color;
-}
-.structures-main-container {
-  border-left: 10px solid $structures-color !important;
+  background-color: rgba(200,170,57, 0.2);
 }
 
 .bg-persons {
-  background-color: $persons-color;
+  background-color: rgba(206,97,74, 0.2);
 }
-.persons-main-container {
-  border-left: 10px solid $persons-color !important;
+
+.bg-categories {
+  background-color: rgba(104,165,50, 0.2);
 }
+
+.bg-prices {
+  background-color: rgba(104,165,50, 0.2);
+}
+
+.bg-documents {
+  background-color: rgba(104,165,50, 0.2);
+}
+
+.bg-terms {
+  background-color: rgba(165,88,160, 0.2);
+}
+
+.bg-textes-officiels {
+  background-color: rgba(0,159,95, 0.2);
+}
+
 
 
 
