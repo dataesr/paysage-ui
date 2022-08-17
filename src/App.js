@@ -1,30 +1,31 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
-import CategoriesPage from './pages/Categories';
+import AdminDocumentTypesPage from './pages/Admin/documentTypes';
+import Bienvenue from './pages/Authentication/bienvenue';
 import CategoriesAddPage from './pages/Categories/add';
+import CategoriesPage from './pages/Categories';
 import CategoryByIdPage from './pages/Categories/id';
 import ContributePage from './pages/Contribute';
 import HelpPage from './pages/Help';
 import HomePage from './pages/Home';
-import OfficialTextsPage from './pages/OfficialTexts';
+import Layout from './components/Layout';
 import OfficialTextsAddPage from './pages/OfficialTexts/add';
 import OfficialTextsByIdPage from './pages/OfficialTexts/id';
-import PersonsPage from './pages/Persons';
-import PersonsAddPage from './pages/Persons/add';
+import OfficialTextsPage from './pages/OfficialTexts';
 import PersonByIdPage from './pages/Persons/id';
-import ProjectsPage from './pages/Projects';
+import PersonsAddPage from './pages/Persons/add';
+import PersonsPage from './pages/Persons';
 import ProjectsAddPage from './pages/Projects/add';
+import ProjectsPage from './pages/Projects';
 import RessourcesPage from './pages/Ressources';
-import StructuresPage from './pages/Structures';
-import StructuresAddPage from './pages/Structures/add';
-import StructureByIdPage from './pages/Structures/id';
-import TermsPage from './pages/Terms';
-import TermsAddPage from './pages/Terms/add';
-import TermByIdPage from './pages/Terms/id';
-import Layout from './components/Layout';
 import SignIn from './pages/Authentication/signin';
 import SignUp from './pages/Authentication/signup';
-import Bienvenue from './pages/Authentication/bienvenue';
+import StructureByIdPage from './pages/Structures/id';
+import StructuresAddPage from './pages/Structures/add';
+import StructuresPage from './pages/Structures';
+import TermByIdPage from './pages/Terms/id';
+import TermsAddPage from './pages/Terms/add';
+import TermsPage from './pages/Terms';
 
 import './styles/index.scss';
 
@@ -70,6 +71,8 @@ function App() {
           />
 
           <Route path="/ressources" element={<RessourcesPage />} />
+
+          <Route path="/document-types" element={<AdminDocumentTypesPage />} />
 
           <Route path="/aide" element={<HelpPage />} />
         </Route>
