@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Text, Row, Icon, Container } from '@dataesr/react-dsfr';
 import usePausableTimer from '../../hooks/usePausableTimer';
@@ -10,12 +10,23 @@ function Toast({
   title,
   description,
   toastType,
-  autoDismiss,
+  autoDismissAfter,
   remove,
 }) {
-  const removeSelf = useCallback(() => remove(id), [id, remove]);
-  const autoDismissAfter = autoDismiss ? 4000 : 0;
-  const { paused, pause, resume } = usePausableTimer(removeSelf, autoDismissAfter);
+  const removeSelf = useCallback(() => {
+    document.getElementById(id).style.setProperty('animation', 'toast-unmount 300ms');
+    setTimeout(() => {
+      remove(id);
+    }, 300);
+  }, [id, remove]);
+  const { pause, resume } = usePausableTimer(removeSelf, autoDismissAfter);
+
+  useEffect(() => {
+    const progressBar = document.getElementById(`progress-${id}`);
+    if (progressBar) {
+      progressBar.style.setProperty('animation-duration', `${autoDismissAfter}ms`);
+    }
+  }, [id, autoDismissAfter]);
 
   const icon = {
     info: 'ri-information-fill',
@@ -26,6 +37,7 @@ function Toast({
 
   return (
     <div
+      id={id}
       role="alert"
       className="toast"
       onMouseEnter={pause}
@@ -35,13 +47,12 @@ function Toast({
         <Icon color="#ffffff" name={icon[toastType]} />
         {
           (autoDismissAfter !== 0)
-            ? (<div className="toast-progress-bar" paused={paused} />)
+            ? (<div id={`progress-${id}`} className="toast-progress-bar" />)
             : null
         }
       </div>
       <button
         type="button"
-        hasBorder={false}
         onClick={() => remove(id)}
         className="toast-btn-close"
       >
@@ -63,7 +74,7 @@ Toast.propTypes = {
   id: PropTypes.number.isRequired,
   title: PropTypes.string,
   description: PropTypes.string,
-  autoDismiss: PropTypes.bool,
+  autoDismissAfter: PropTypes.number,
   remove: PropTypes.func,
   toastType: PropTypes.oneOf(['info', 'success', 'error', 'warning']),
 };
@@ -71,7 +82,7 @@ Toast.propTypes = {
 Toast.defaultProps = {
   title: null,
   description: null,
-  autoDismiss: true,
+  autoDismissAfter: 3000,
   remove: () => { },
   toastType: 'success',
 };

@@ -18,7 +18,6 @@ export default function Header({ switchTheme }) {
   const { isOpen, setIsOpen } = switchTheme;
   const { pathname } = useLocation();
   const { viewer, signout } = useAuth();
-  console.log(viewer?.id);
   const handleSignOut = () => {
     signout();
     window.location.reload(false);
@@ -54,7 +53,9 @@ export default function Header({ switchTheme }) {
               <ToolItem
                 icon="ri-logout-circle-r-line"
                 onClick={handleSignOut}
-              />
+              >
+                {' '}
+              </ToolItem>
             )}
             <ToolItem icon="ri-sun-fill" onClick={() => setIsOpen(true)}>
               <span aria-controls="fr-theme-modal" data-fr-opened={isOpen}>

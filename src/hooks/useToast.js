@@ -1,3 +1,4 @@
+/* eslint-disable react/require-default-props */
 /* eslint-disable react/jsx-closing-tag-location */
 import React, {
   useState,
@@ -44,7 +45,6 @@ export function ToastContextProvider({ children }) {
         {
           toasts.map((toastOptions) => (
             <Toast
-              id={toastOptions.id}
               key={toastOptions.id}
               remove={remove}
               {...toastOptions}
@@ -57,7 +57,7 @@ export function ToastContextProvider({ children }) {
 }
 
 ToastContextProvider.propTypes = {
-  children: PropTypes.node.isRequired,
+  children: PropTypes.node,
 };
 
 // Hook

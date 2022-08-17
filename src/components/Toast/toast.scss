@@ -7,6 +7,15 @@
     transform: translateY(0);
   }
 }
+@keyframes toast-unmount {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(300%);
+  }
+}
 
 @keyframes toast-unfill {
   from {
@@ -90,7 +99,8 @@
     }
 
     .toast-progress-bar {
-      animation: toast-unfill 4000ms linear;
+      animation-name: toast-unfill;
+      animation-timing-function: linear;
       animation-play-state: running;
       bottom: 0;
       left: 0;

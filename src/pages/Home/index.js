@@ -11,11 +11,12 @@ export default function HomePage() {
       <Row className="fr-pb-5w">
         <ButtonGroup isInlineFrom="lg">
 
-          <Button onClick={() => toast({ toastType: 'info', title: 'test un peu plus long peut etre sur deux lignes', autoDismiss: false })}>Toast</Button>
+          <Button onClick={() => toast({ toastType: 'info', title: 'test un peu plus long peut etre sur deux lignes', autoDismissAfter: 0 })}>Toast</Button>
           <Button onClick={() => toast({
             toastType: 'success',
             title: 'test un peu plus long peut etre sur deux lignes',
-            description: 'test un peu plus long eventuellement sur deux lignes',
+            description: 'Ici avec un dismiss de huit secondes',
+            autoDismissAfter: 8000,
           })}
           >
             Toast

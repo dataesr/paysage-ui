@@ -15,7 +15,6 @@ export default function PageBorder() {
 
   useEffect(() => {
     const splitted = location?.pathname?.split('/')[1];
-    console.log(location?.pathname, splitted);
     const border = pageBorderColors[splitted] || 'transparent';
     document.documentElement.style.setProperty('--page-border', border);
   }, [location]);
