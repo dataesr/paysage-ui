@@ -44,6 +44,7 @@ export function ToastContextProvider({ children }) {
         {
           toasts.map((toastOptions) => (
             <Toast
+              id={toastOptions.id}
               key={toastOptions.id}
               remove={remove}
               {...toastOptions}

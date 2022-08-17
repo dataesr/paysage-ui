@@ -1,13 +1,13 @@
 import React, { useCallback } from 'react';
 import PropTypes from 'prop-types';
-import { Button, Text, Row, Icon, Container } from '@dataesr/react-dsfr';
+import { Text, Row, Icon, Container } from '@dataesr/react-dsfr';
 import usePausableTimer from '../../hooks/usePausableTimer';
 
 // Toast component
 // ==============================
 function Toast({
   id,
-  content,
+  title,
   description,
   toastType,
   autoDismiss,
@@ -26,30 +26,30 @@ function Toast({
 
   return (
     <div
+      role="alert"
       className="toast"
       onMouseEnter={pause}
       onMouseLeave={resume}
     >
-      <div className={`colored-box ${toastType}`}>
-        <Icon color="#fff" name={icon[toastType]} />
+      <div className={`toast-colored-box toast-bg-${toastType}`}>
+        <Icon color="#ffffff" name={icon[toastType]} />
         {
           (autoDismissAfter !== 0)
-            ? (<div className="progress-bar" paused={paused} />)
+            ? (<div className="toast-progress-bar" paused={paused} />)
             : null
         }
       </div>
-      <Container fluid className="content" role="alert">
+      <button
+        type="button"
+        hasBorder={false}
+        onClick={() => remove(id)}
+        className="toast-btn-close"
+      >
+        <Icon color="var(--grey-50-1000)" size="lg" name="ri-close-line" />
+      </button>
+      <Container fluid className="toast-content">
         <Row>
-          <Text bold spacing="mb-1w">
-            {content}
-          </Text>
-          <Button
-            hasBorder={false}
-            onClick={() => remove(id)}
-            className="close"
-          >
-            <Icon color="var(--grey-50-1000)" size="md" name="ri-close-line" />
-          </Button>
+          {title && <Text bold spacing="mb-1w">{title}</Text>}
         </Row>
         <Row>
           {description && (<Text spacing="mb-2w" size="sm">{description}</Text>)}
@@ -61,7 +61,7 @@ function Toast({
 
 Toast.propTypes = {
   id: PropTypes.number.isRequired,
-  content: PropTypes.string,
+  title: PropTypes.string,
   description: PropTypes.string,
   autoDismiss: PropTypes.bool,
   remove: PropTypes.func,
@@ -69,7 +69,7 @@ Toast.propTypes = {
 };
 
 Toast.defaultProps = {
-  content: '',
+  title: null,
   description: null,
   autoDismiss: true,
   remove: () => { },

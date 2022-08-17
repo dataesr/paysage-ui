@@ -23,15 +23,20 @@
   box-sizing: border-box;
   z-index: 10000;
   bottom: 4px;
-
+  padding: 4px;
+  > * {
+    margin-top: 8px;
+  }
   @media only screen and (min-width: 992px) {
     bottom: 30px;
     left: calc(50vw - 160px);
+    padding: 12px;
   }
+
   .toast {
     position: relative;
-    background: var(--background-alt-grey);
-    box-shadow: 0 4px 4px 0 rgba(65, 65, 65, .236);
+    background: var(--background-default-grey-hover);
+    box-shadow: 0 6px 18px 0 rgba(0, 0, 18, 16%);
     display: flex;
     flex-wrap: nowrap;
     align-items: flex-start;
@@ -40,25 +45,27 @@
     top: 0;
     right: 0;
     animation: toast-mount .3s;
-    margin: 4px;
     @media only screen and (min-width: 992px) {
-      margin: 12px;
       width: 400px;
     }
 
     &:hover {
-      .progress-bar {
+      .toast-progress-bar {
         animation-play-state: paused;
       }
     }
 
-    .close {
+    .toast-btn-close {
       position: absolute;
-      right: 0;
-      top: 0;
+      right: 2px;
+      top: 2px;
+      border-radius: 100%;
+      height: 32px;
+      width: 32px;
 
       SPAN {
-        margin: 0;
+        padding-bottom: 6px;
+        margin-right: 0px;
       }
 
       &:hover {
@@ -66,34 +73,34 @@
       }
     }
 
-    .info {
+    .toast-bg-info {
       background-color: var(--info-main-525);
     }
 
-    .warning {
+    .toast-bg-warning {
       background-color: var(--warning-main-525);
     }
 
-    .success {
+    .toast-bg-success {
       background-color: var(--success-main-525);
     }
 
-    .error {
+    .toast-bg-error {
       background-color: var(--error-main-525);
     }
 
-    .progress-bar {
+    .toast-progress-bar {
       animation: toast-unfill 4000ms linear;
       animation-play-state: running;
       bottom: 0;
       left: 0;
       position: absolute;
-      width: 36px;
-      background: rgba(2, 4, 5, 0.1);
+      width: 40px;
+      background: rgba(0, 0, 18, 16%);
     }
 
-    .colored-box {
-      width: 36px;
+    .toast-colored-box {
+      width: 40px;
       position: absolute;
       top: 0;
       bottom: 0;
@@ -105,12 +112,12 @@
         z-index: 100;
         margin-left: 9px;
         color: var(--background-alt-grey);
-        font-size: 1.3em;
+        font-size: 1.8em;
       }
     }
 
-    .content {
-      margin: 0 36px;
+    .toast-content {
+      margin: 0 40px;
       width: 100%;
       display: flex;
       padding: 8px;
