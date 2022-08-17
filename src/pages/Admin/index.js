@@ -23,11 +23,16 @@ export default function DocumentTypesPage() {
     const body = {
       usualName,
     };
-    const response = await fetch.post('/document-types', body);
+    const response = await fetch.post(`/${route}`, body);
 
     if (response.ok) {
       setReload(reload + 1);
     }
+  };
+
+  const onDeleteHandler = async (id) => {
+    const response = await fetch.delete(`/${route}/${id}`);
+    setReload(reload + 1);
   };
 
   return (
@@ -56,8 +61,17 @@ export default function DocumentTypesPage() {
       <Row>
         <Col>
           <Title as="h3">Liste</Title>
-          {data?.map((docType) => (
-            <div key={docType.id}>{docType.usualName}</div>
+          {data?.map((item) => (
+            <div key={item.id}>
+              {item.usualName}
+              <Button
+                onClick={() => onDeleteHandler(item.id)}
+                size="sm"
+                className="bt-delete"
+              >
+                X
+              </Button>
+            </div>
           ))}
         </Col>
       </Row>
