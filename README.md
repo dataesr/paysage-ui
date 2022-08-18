@@ -1,2 +1,2 @@
-# paysage-ui-v2
+# paysage-ui
 Frontend application of new Paysage project.
