@@ -64,7 +64,25 @@ export default function OfficiaTextForm({ data, from }) {
     setPrevisionalEndDate(data.previsionalEndDate || null);
     setTextExtract(data.textExtract || null);
     setComment(data.comment || null);
-    // setRelatesTo(['EWw2c', 'p25Q3']);
+
+    const relatedCategories = data.relatedCategories.map((el) => ({
+      id: el.id,
+      label: 'cat',
+      apiObject: 'categories',
+    }));
+    const relatedPersons = data.relatedPersons.map((el) => ({
+      id: el.id,
+      label: `${el.lastName} ${el.firstName}`,
+      apiObject: 'persons',
+    }));
+    const relatedStructures = data.relatedStructures.map((el) => ({
+      id: el.id,
+      label: el.currentName.usualName,
+      apiObject: 'structures',
+    }));
+    setRelatesTo(
+      relatedCategories.concat(relatedPersons).concat(relatedStructures),
+    );
   }, [data]);
 
   const setErrors = (err) => {
@@ -93,14 +111,16 @@ export default function OfficiaTextForm({ data, from }) {
     if (needle) {
       // TODO : requete API
       result = [
-        { id: 'G1r6y', label: 'Normandie Université' },
+        { id: 'G1r6y', label: 'Normandie Université', apiObject: 'structures' },
         {
           id: 'QYw7j',
           label:
             'Institut national des sciences appliquées Centre Val de Loire',
+          apiObject: 'structures',
         },
-        { id: 'p25Q3', label: 'Université de Caen' },
-        { id: 'EWw2c', label: 'Péglion Jérémy' },
+        { id: 'p25Q3', label: 'Université de Caen', apiObject: 'structures' },
+        { id: 'EWw2c', label: 'Péglion Jérémy', apiObject: 'persons' },
+        { id: 'McQOf', label: 'Ma nouvelle catégorie', apiObject: 'categories' },
       ];
     }
 
@@ -178,60 +198,6 @@ export default function OfficiaTextForm({ data, from }) {
 
   const deleteRelation = (item) => {
     setRelatesTo(otRelatesTo.filter((ele) => ele.id !== item.id));
-  };
-
-  const getRelatedObject = (objectType) => {
-    switch (objectType) {
-    case 'categories':
-      if (data.relatedCategories.length > 0) {
-        return (
-          <>
-            <Title>Catégories liées</Title>
-            {data.relatedCategories.map((item) => (
-              <div key={item.id}>
-                {item.id}
-              </div>
-            ))}
-          </>
-        );
-      }
-      break;
-    case 'structures':
-      if (data.relatedStructures.length > 0) {
-        return (
-          <>
-            <Title>Structures liées</Title>
-            {data.relatedStructures.map((item) => (
-              <div key={item.id}>
-                {item.currentName.officialName}
-              </div>
-            ))}
-          </>
-        );
-      }
-      break;
-    case 'persons':
-      if (data.relatedPersons.length > 0) {
-        return (
-          <>
-            <Title>Personnes liées</Title>
-            {data.relatedPersons.map((item) => (
-              <div key={item.id}>{`${item.lastName} ${item.firstName}`}</div>
-            ))}
-          </>
-        );
-      }
-      break;
-
-      // {getRelatedObject('prices')}
-      // {getRelatedObject('projects')}
-
-      // {getRelatedObject('terms')}
-
-    default:
-      return null;
-    }
-    return null;
   };
 
   const natureOptions = [
@@ -406,16 +372,6 @@ export default function OfficiaTextForm({ data, from }) {
       </Row>
       <Row>
         <Col>
-          {getRelatedObject('categories')}
-          {getRelatedObject('persons')}
-          {getRelatedObject('prices')}
-          {getRelatedObject('projects')}
-          {getRelatedObject('structures')}
-          {getRelatedObject('terms')}
-        </Col>
-      </Row>
-      <Row>
-        <Col>
           <TextInput
             label="Rechercher un objet pour l'ajouter"
             value={relatesToSearch}
@@ -446,20 +402,38 @@ export default function OfficiaTextForm({ data, from }) {
         </Row>
       ) : null}
       {otRelatesTo ? (
-        <Row>
-          <Col className="fr-mb-5v">
-            {otRelatesTo.map((item) => (
-              <Tag as="a" key={uuidv4()} onClick={() => deleteRelation(item)}>
-                {item.label}
-              </Tag>
-            ))}
-          </Col>
-        </Row>
+        <>
+          <Row>
+            <Col className="fr-mb-5v">
+              {otRelatesTo.map((item) => (
+                <Tag
+                  as="a"
+                  key={uuidv4()}
+                  onClick={() => deleteRelation(item)}
+                  className={`bg-${item.apiObject} mx-1`}
+                  closable
+                >
+                  {item.label}
+                </Tag>
+              ))}
+            </Col>
+          </Row>
+          <Row>
+            <Col>
+              <span className="bullet bg-structures" />
+              Structures
+              <span className="bullet bg-persons" />
+              Personnes
+              <span className="bullet bg-categories" />
+              Catégories
+            </Col>
+          </Row>
+        </>
       ) : null}
       <hr />
       {savingErrors || null}
       <Row>
-        <Col className="txt-right">
+        <Col className="text-right">
           <Button onClick={onSaveHandler} size="sm">
             <Icon name="ri-save-line" size="lg" />
             {data?.id ? 'Modifier' : 'Ajouter'}

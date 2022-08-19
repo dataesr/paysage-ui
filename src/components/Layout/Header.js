@@ -75,7 +75,8 @@ export default function Header({ switchTheme }) {
             >
               <NavSubItem
                 current={
-                  pathname.startsWith('/contribuer') && !pathname.endsWith('/import')
+                  pathname.startsWith('/contribuer')
+                  && !pathname.endsWith('/import')
                 }
                 title="Ajouter un nouvel objet"
                 asLink={<RouterLink to="/contribuer" />}
@@ -117,9 +118,26 @@ export default function Header({ switchTheme }) {
             asLink={<RouterLink to="/ressources-internes" />}
           />
           <NavSubItem
-            current={pathname.startsWith('/ressources-extenes')}
-            title="Les ressources extenes"
-            asLink={<RouterLink to="/ressources-extenes" />}
+            current={pathname.startsWith('/ressources-externes')}
+            title="Les ressources externes"
+            asLink={<RouterLink to="/ressources-externes" />}
+          />
+        </NavItem>
+        <NavItem title="Admin">
+          <NavSubItem
+            current={pathname.startsWith('/admin/document-types')}
+            title="Types de documents"
+            asLink={<RouterLink to="/admin/document-types" />}
+          />
+          <NavSubItem
+            current={pathname.startsWith('/admin/email-types')}
+            title="Types d'email"
+            asLink={<RouterLink to="/admin/email-types" />}
+          />
+          <NavSubItem
+            current={pathname.startsWith('/admin/supervising-ministers')}
+            title="Ministres de tutelle"
+            asLink={<RouterLink to="/admin/supervising-ministers" />}
           />
         </NavItem>
         <NavItem

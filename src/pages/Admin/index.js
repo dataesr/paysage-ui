@@ -1,4 +1,4 @@
-import { Button, Col, Container, Icon, Row, TextInput, Title } from '@dataesr/react-dsfr';
+import { Button, Col, Container, Icon, Row, Tag, TextInput, Title } from '@dataesr/react-dsfr';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
@@ -27,6 +27,7 @@ export default function DocumentTypesPage() {
 
     if (response.ok) {
       setReload(reload + 1);
+      setUsualName('');
     }
   };
 
@@ -62,16 +63,9 @@ export default function DocumentTypesPage() {
         <Col>
           <Title as="h3">Liste</Title>
           {data?.map((item) => (
-            <div key={item.id}>
+            <Tag key={item.id} closable onClick={() => onDeleteHandler(item.id)}>
               {item.usualName}
-              <Button
-                onClick={() => onDeleteHandler(item.id)}
-                size="sm"
-                className="bt-delete"
-              >
-                X
-              </Button>
-            </div>
+            </Tag>
           ))}
         </Col>
       </Row>
