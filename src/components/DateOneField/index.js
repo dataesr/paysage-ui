@@ -18,12 +18,12 @@ export default function DateOneField({
   name,
   label,
   onValueChangeHandler,
+  isRequired,
 }) {
   const [CKDateField, setCKDateField] = useState(false);
 
   const onChangeHandler = (key, event) => {
     if (validDate(event.target.value)) {
-      // onValueChangeHandler(key, event.target.value);
       onValueChangeHandler(event.target.value);
     }
   };
@@ -51,6 +51,7 @@ export default function DateOneField({
               value={value}
               name={name}
               onChange={(e) => onChangeHandler(name, e)}
+              isRequired={isRequired}
             />
           </Col>
           {CKDateField ? <Col>{getApproximativeDate(value)}</Col> : null}
@@ -65,4 +66,9 @@ DateOneField.propTypes = {
   name: PropTypes.string.isRequired,
   label: PropTypes.string.isRequired,
   onValueChangeHandler: PropTypes.func.isRequired,
+  isRequired: PropTypes.bool,
+};
+
+DateOneField.defaultProps = {
+  isRequired: false,
 };

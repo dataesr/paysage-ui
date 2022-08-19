@@ -35,10 +35,7 @@ export default function Header({ switchTheme }) {
         <Tool closeButtonLabel="fermer">
           <ToolItemGroup>
             {viewer?.id ? (
-              <ToolItem
-                icon="ri-user-3-line"
-                asLink={<RouterLink to="/me" />}
-              >
+              <ToolItem icon="ri-user-3-line" asLink={<RouterLink to="/me" />}>
                 {viewer.email}
               </ToolItem>
             ) : (
@@ -115,11 +112,35 @@ export default function Header({ switchTheme }) {
             </NavItem>
           </>
         )}
-        <NavItem
-          title="Ressources"
-          asLink={<RouterLink to="/ressources" />}
-          current={pathname.startsWith('/ressources')}
-        />
+        <NavItem title="Ressources">
+          <NavSubItem
+            current={pathname.startsWith('/ressources-internes')}
+            title="Les ressources internes"
+            asLink={<RouterLink to="/ressources-internes" />}
+          />
+          <NavSubItem
+            current={pathname.startsWith('/ressources-externes')}
+            title="Les ressources externes"
+            asLink={<RouterLink to="/ressources-externes" />}
+          />
+        </NavItem>
+        <NavItem title="Admin">
+          <NavSubItem
+            current={pathname.startsWith('/admin/document-types')}
+            title="Types de documents"
+            asLink={<RouterLink to="/admin/document-types" />}
+          />
+          <NavSubItem
+            current={pathname.startsWith('/admin/email-types')}
+            title="Types d'email"
+            asLink={<RouterLink to="/admin/email-types" />}
+          />
+          <NavSubItem
+            current={pathname.startsWith('/admin/supervising-ministers')}
+            title="Ministres de tutelle"
+            asLink={<RouterLink to="/admin/supervising-ministers" />}
+          />
+        </NavItem>
         <NavItem
           title="Aide"
           asLink={<RouterLink to="/aide" />}

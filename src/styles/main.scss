@@ -11,33 +11,62 @@ HR {
   margin: 0 4px;
 }
 
-$categories-color: var(--green-bourgeon-main-640);
-$structures-color: var(--yellow-tournesol-main-731);
-$persons-color: var(--pink-tuile-main-556);
-
-
-.bg-categories {
-  background-color: $categories-color;
-}
-.categories-main-container {
-  border-left: 10px solid $categories-color !important;
-}
-
 .bg-structures {
-  background-color: $structures-color;
+  background-color: rgb(200,170,57) !important;
 }
-.structures-main-container {
-  border-left: 10px solid $structures-color !important;
+.bg-structures-light {
+  background-color: rgba(200,170,57, 0.2) !important;
 }
 
 .bg-persons {
-  background-color: $persons-color;
+  background-color: rgb(206,97,74) !important;
 }
-.persons-main-container {
-  border-left: 10px solid $persons-color !important;
+.bg-persons-light {
+  background-color: rgba(206,97,74, 0.2) !important;
 }
 
+.bg-categories {
+  background-color: rgb(104,165,50) !important;
+}
+.bg-categories-light {
+  background-color: rgba(104,165,50, 0.2) !important;
+}
 
+.bg-prices {
+  background-color: rgb(104,165,50) !important;
+}
+.bg-prices-light {
+  background-color: rgba(104,165,50, 0.2) !important;
+}
+
+.bg-documents {
+  background-color: rgb(104,165,50) !important;
+}
+.bg-documents-light {
+  background-color: rgba(104,165,50, 0.2) !important;
+}
+
+.bg-terms {
+  background-color: rgb(165,88,160) !important;
+}
+.bg-terms-light {
+  background-color:  rgba(165,88,160, 0.2) !important;
+}
+
+.bg-textes-officiels {
+  background-color: rgb(0,159,95) !important;
+}
+.bg-textes-officiels-light {
+  background-color: rgba(0,159,95, 0.2) !important;
+}
+
+.bullet {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  margin: 0 8px;
+  border-radius: 8px;
+}
 
 .bt-delete {
   background-color: #ff5655;

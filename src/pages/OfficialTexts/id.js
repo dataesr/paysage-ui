@@ -1,11 +1,14 @@
 import { useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
 import { useParams } from 'react-router-dom';
-import { Container, Title } from '@dataesr/react-dsfr';
+import { Col, Container, Row, Title } from '@dataesr/react-dsfr';
 import fetch from '../../utils/fetch';
+import OfficiaTextForm from '../../components/Forms/OfficialText';
 
-export default function OfficialTextByIdPage() {
+export default function OfficialTextByIdPage({ from }) {
   const { id } = useParams();
   const [data, setData] = useState();
+
   useEffect(() => {
     const getData = async () => {
       const response = await fetch.get(`/official-texts/${id}`).catch((e) => {
@@ -16,13 +19,25 @@ export default function OfficialTextByIdPage() {
     getData();
     return () => {};
   }, [id]);
+
   if (!data) return <h1>Loading</h1>;
   return (
-    <Container as="main" spacing="mt-10w">
-      <Title as="h2">{`Modification du texte officiel ${id}`}</Title>
-      <div>
-        <pre>{JSON.stringify(data, null, 2)}</pre>
-      </div>
+    <Container as="main">
+      <Row>
+        <Col>
+          <Title as="h2">Page de modification d'un texte officiel</Title>
+        </Col>
+      </Row>
+
+      <OfficiaTextForm data={data} from={from} />
     </Container>
   );
 }
+
+OfficialTextByIdPage.propTypes = {
+  from: PropTypes.string,
+};
+
+OfficialTextByIdPage.defaultProps = {
+  from: null,
+};

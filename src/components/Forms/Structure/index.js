@@ -12,11 +12,13 @@ import { useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 import validator from './validator';
 import fetch from '../../../utils/fetch';
+import useToast from '../../../hooks/useToast';
 
 export default function StructureAddForm() {
   const navigate = useNavigate();
   const [savingErrors, setSavingErrors] = useState(null);
   const [errors, setReturnedErrors] = useState([]);
+  const { toast } = useToast();
 
   const [usualName, setUsualName] = useState(null);
   const [wikidata, setWikidata] = useState(null);
@@ -60,8 +62,11 @@ export default function StructureAddForm() {
         console.log(e);
       });
       if (response.status === 201) {
-        // TODO : toast + redirection
-        console.log('response', response);
+        toast({
+          toastType: 'success',
+          title: 'Ajout',
+          description: `Personne ${usualName} ajoutée avec succès`,
+        });
         navigate(`../structures/${response.data.id}`);
       }
     } else {

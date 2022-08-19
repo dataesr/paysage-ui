@@ -13,15 +13,21 @@ import { useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 import validator from './validator';
 import fetch from '../../../utils/fetch';
+import useToast from '../../../hooks/useToast';
 
 export default function StructureAddForm() {
   const navigate = useNavigate();
   const [savingErrors, setSavingErrors] = useState(null);
   const [errors, setReturnedErrors] = useState([]);
+  const { toast } = useToast();
 
   const [firstName, setFirstName] = useState(null);
   const [lastName, setLastName] = useState(null);
   const [gender, setGender] = useState(null);
+  // const [idref, setIdref] = useState(null);
+  // const [orcid, setOrcid] = useState(null);
+  // const [wikidata, setWikidata] = useState(null);
+  // TODO Ajouter les ids au modele persons
 
   const setErrors = (err) => {
     setReturnedErrors(errors);
@@ -53,8 +59,11 @@ export default function StructureAddForm() {
         console.log(e);
       });
       if (response.status === 201) {
-        // TODO : toast + redirection
-        console.log('response', response);
+        toast({
+          toastType: 'success',
+          title: 'Ajout',
+          description: `Personne ${firstName} ${lastName} ajoutée avec succès`,
+        });
         navigate(`../personnes/${response.data.id}`);
       }
     } else {

@@ -1,7 +1,9 @@
 import { Col, Container, Row, Title, TextInput, Button } from '@dataesr/react-dsfr';
+import { useNavigate } from 'react-router-dom';
 import useFetch from '../../hooks/useFetch';
 
 export default function CategoriesPage() {
+  const navigate = useNavigate();
   const { data, error, isLoading } = useFetch('GET', '/categories');
 
   if (isLoading || !data) return <h1>Loading</h1>;
@@ -9,7 +11,20 @@ export default function CategoriesPage() {
 
   return (
     <Container spacing="mt-5w" as="main">
-      <Title as="h2">Les catégories Paysage</Title>
+      <Row>
+        <Col n="9">
+          <Title as="h2">Les catégories Paysage</Title>
+        </Col>
+        <Col className="text-right">
+          <Button
+            onClick={() => navigate('./ajouter')}
+            secondary
+            icon="ri-add-circle-line"
+          >
+            Ajouter une catégorie
+          </Button>
+        </Col>
+      </Row>
       <Row className="fr-pb-5w">
         Nombre de catégories en base :
         {data.totalCount}
@@ -40,7 +55,10 @@ export default function CategoriesPage() {
             <div className="fr-tile fr-enlarge-link fr-tile--horizontal">
               <div className="fr-tile__body">
                 <h4 className="fr-tile__title">
-                  <a className="fr-tile__link" href={`/categories/${category.id}`}>
+                  <a
+                    className="fr-tile__link"
+                    href={`/categories/${category.id}`}
+                  >
                     {category.usualNameFr}
                   </a>
                 </h4>
