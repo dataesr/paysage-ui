@@ -1,4 +1,5 @@
 /* eslint-disable no-console */
+import PropTypes from 'prop-types';
 import {
   Alert,
   Button,
@@ -11,18 +12,22 @@ import {
   TextInput,
   Title,
 } from '@dataesr/react-dsfr';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 import validator from './validator';
 import DateOneField from '../../DateOneField';
 import fetch from '../../../utils/fetch';
+import useToast from '../../../hooks/useToast';
 
-export default function OfficiaTextAddForm() {
+export default function OfficiaTextForm({ data, from }) {
+  const navigate = useNavigate();
   const [savingErrors, setSavingErrors] = useState(null);
   const [errors, setReturnedErrors] = useState([]);
+  const { toast } = useToast();
 
   const [otNature, setNature] = useState('Publication au JO');
-  const [otType, setOtType] = useState('Loi');
+  const [otType, setType] = useState('Loi');
   const [otJorftext, setJorftext] = useState(null);
   const [otNor, setNor] = useState(null);
   const [otTitle, setTitle] = useState(null);
@@ -41,6 +46,26 @@ export default function OfficiaTextAddForm() {
 
   const [relatesToSearch, setRelatesToSearch] = useState(null);
   const [relatesToSearchResult, setRelatesToSearchResult] = useState([]);
+
+  useEffect(() => {
+    // init si data (modif)
+    setNature(data.nature || null);
+    setType(data.type || null);
+    setJorftext(data.jorftext || null);
+    setNor(data.nor || null);
+    setTitle(data.title || null);
+    setPageUrl(data.pageUrl || null);
+    setBoesrId(data.boesrId || null);
+    setJoId(data.joId || null);
+    setStartDate(data.startDate || null);
+    setEndDate(data.endDate || null);
+    setPublicationDate(data.publicationDate || null);
+    setSignatureDate(data.signatureDate || null);
+    setPrevisionalEndDate(data.previsionalEndDate || null);
+    setTextExtract(data.textExtract || null);
+    setComment(data.comment || null);
+    // setRelatesTo(['EWw2c', 'p25Q3']);
+  }, [data]);
 
   const setErrors = (err) => {
     setReturnedErrors(errors);
@@ -75,6 +100,7 @@ export default function OfficiaTextAddForm() {
             'Institut national des sciences appliquées Centre Val de Loire',
         },
         { id: 'p25Q3', label: 'Université de Caen' },
+        { id: 'EWw2c', label: 'Péglion Jérémy' },
       ];
     }
 
@@ -103,12 +129,38 @@ export default function OfficiaTextAddForm() {
 
     const { ok, returnedErrors } = validator(body);
     if (ok) {
-      const response = await fetch.post('/official-texts', body).catch((e) => {
-        console.log(e);
-      });
-      if (response.status === 201) {
-        // TODO : toast + redirection
+      let response = null;
+      if (data?.id) {
+        response = await fetch.patch(`/official-texts/${data.id}`, body).catch((e) => {
+          console.log(e);
+        });
+      } else {
+        response = await fetch.post('/official-texts', body).catch((e) => {
+          console.log(e);
+        });
       }
+      switch (response.status) {
+      case 200:
+        toast({
+          toastType: 'success',
+          title: 'Le texte officiel à été mise à jour',
+        });
+        break;
+      case 201:
+        toast({
+          toastType: 'success',
+          title: 'Le texte officiel été ajouté',
+        });
+        break;
+      default:
+        toast({
+          toastType: 'error',
+          title: "Erreur lors de l'enregistrement",
+        });
+        break;
+      }
+
+      navigate(from || '/textes-officiels');
     } else {
       setErrors(returnedErrors);
     }
@@ -126,6 +178,60 @@ export default function OfficiaTextAddForm() {
 
   const deleteRelation = (item) => {
     setRelatesTo(otRelatesTo.filter((ele) => ele.id !== item.id));
+  };
+
+  const getRelatedObject = (objectType) => {
+    switch (objectType) {
+    case 'categories':
+      if (data.relatedCategories.length > 0) {
+        return (
+          <>
+            <Title>Catégories liées</Title>
+            {data.relatedCategories.map((item) => (
+              <div key={item.id}>
+                {item.id}
+              </div>
+            ))}
+          </>
+        );
+      }
+      break;
+    case 'structures':
+      if (data.relatedStructures.length > 0) {
+        return (
+          <>
+            <Title>Structures liées</Title>
+            {data.relatedStructures.map((item) => (
+              <div key={item.id}>
+                {item.currentName.officialName}
+              </div>
+            ))}
+          </>
+        );
+      }
+      break;
+    case 'persons':
+      if (data.relatedPersons.length > 0) {
+        return (
+          <>
+            <Title>Personnes liées</Title>
+            {data.relatedPersons.map((item) => (
+              <div key={item.id}>{`${item.lastName} ${item.firstName}`}</div>
+            ))}
+          </>
+        );
+      }
+      break;
+
+      // {getRelatedObject('prices')}
+      // {getRelatedObject('projects')}
+
+      // {getRelatedObject('terms')}
+
+    default:
+      return null;
+    }
+    return null;
   };
 
   const natureOptions = [
@@ -159,7 +265,7 @@ export default function OfficiaTextAddForm() {
             label="Type"
             options={typeOptions}
             selected={otType}
-            onChange={(e) => setOtType(e.target.value)}
+            onChange={(e) => setType(e.target.value)}
             required
           />
         </Col>
@@ -254,7 +360,7 @@ export default function OfficiaTextAddForm() {
                 name="publicationDate"
                 label="Date de publication"
                 onValueChangeHandler={setPublicationDate}
-                // TODO : required
+                isRequired
               />
             </Col>
             <Col n="6" className="fr-pl-5w">
@@ -295,7 +401,17 @@ export default function OfficiaTextAddForm() {
       <hr />
       <Row>
         <Col>
-          <Title as="h3">Eléments liés</Title>
+          <Title as="h3">Eléments liés à ce texte officiel</Title>
+        </Col>
+      </Row>
+      <Row>
+        <Col>
+          {getRelatedObject('categories')}
+          {getRelatedObject('persons')}
+          {getRelatedObject('prices')}
+          {getRelatedObject('projects')}
+          {getRelatedObject('structures')}
+          {getRelatedObject('terms')}
         </Col>
       </Row>
       <Row>
@@ -346,10 +462,20 @@ export default function OfficiaTextAddForm() {
         <Col className="txt-right">
           <Button onClick={onSaveHandler} size="sm">
             <Icon name="ri-save-line" size="lg" />
-            Ajouter
+            {data?.id ? 'Modifier' : 'Ajouter'}
           </Button>
         </Col>
       </Row>
     </Container>
   );
 }
+
+OfficiaTextForm.propTypes = {
+  // eslint-disable-next-line react/forbid-prop-types
+  data: PropTypes.object,
+  from: PropTypes.string.isRequired,
+};
+
+OfficiaTextForm.defaultProps = {
+  data: null,
+};
