@@ -6,7 +6,6 @@ import {
   CardDescription,
   CardTitle,
   Col,
-  Container,
   Highlight,
   Modal,
   ModalContent,
@@ -87,10 +86,16 @@ export default function IdentifiersComponent({ apiObject, id }) {
     setShowModal(true);
   };
 
-  if (!data?.data) return <>Chargement...</>; // TODO Loader
+  if (!data?.data) {
+    return (
+      <div className="fr-container-fluid" as="section" data-paysage-menu="Identifiants" id="Les-identifiants">
+        Chargement...
+      </div>
+    );
+  } // TODO Loader
 
   return (
-    <Container fluid as="section" id="Les-identifiants">
+    <div className="fr-container-fluid" as="section" data-paysage-menu="Identifiants" id="Les-identifiants">
       <Row>
         <Col>
           <Title as="h3" look="h6">
@@ -127,7 +132,7 @@ export default function IdentifiersComponent({ apiObject, id }) {
         <ModalTitle>{modalTitle}</ModalTitle>
         <ModalContent>{modalContent}</ModalContent>
       </Modal>
-    </Container>
+    </div>
   );
 }
 

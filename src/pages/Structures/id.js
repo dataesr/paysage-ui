@@ -1,5 +1,5 @@
 import { useParams } from 'react-router-dom';
-import { Col, Container, Row, Tag, Title } from '@dataesr/react-dsfr';
+import { Container, Tag, Title } from '@dataesr/react-dsfr';
 
 import useFetch from '../../hooks/useFetch';
 
@@ -11,95 +11,39 @@ import Weblinks from '../../components/Blocs/Weblinks';
 import SocialMedias from '../../components/Blocs/SocialMedias';
 // import OfficialTexts from '../../components/Blocs/OfficialTexts';
 import Documents from '../../components/Blocs/Documents';
+import Sidemenu from '../../components/Sidemenu';
+import Spinner from '../../components/Spinner';
 
 export default function StructuresByIdPage() {
   const { id } = useParams();
 
-  const getData = useFetch('GET', `/structures/${id}`);
+  const { data, isLoading, error } = useFetch('GET', `/structures/${id}`);
 
-  if (getData.isLoading) return <h1>Loading</h1>;
+  if (isLoading) return <Spinner size={48} />;
+  if (error) return <>Erreur...</>;
   return (
-    <div className="structures-main-container">
-      <Container fluid spacing="mt-5w">
-        <Row>
-          <Col n="3">
-            <nav className="fr-sidemenu" aria-label="Menu latéral">
-              <div className="fr-sidemenu__inner">
-                <button
-                  type="button"
-                  className="fr-sidemenu__btn"
-                  hidden
-                  aria-controls="fr-sidemenu-wrapper"
-                  aria-expanded="false"
-                >
-                  Dans cette rubrique
-                </button>
-                <div className="fr-collapse" id="fr-sidemenu-wrapper">
-                  <div className="fr-sidemenu__title">Titre de rubrique</div>
-                  <ul className="fr-sidemenu__list">
-                    <li className="fr-sidemenu__item fr-sidemenu__item--active">
-                      <a
-                        className="fr-sidemenu__link"
-                        href="#"
-                        target="_self"
-                        aria-current="page"
-                      >
-                        Accès direct
-                      </a>
-                    </li>
-                    <li className="fr-sidemenu__item">
-                      <a
-                        className="fr-sidemenu__link"
-                        href="#Les-identifiants"
-                        target="_self"
-                      >
-                        Identifiants
-                      </a>
-                    </li>
-                    <li className="fr-sidemenu__item">
-                      <a className="fr-sidemenu__link" href="#2" target="_self">
-                        Accès direct
-                      </a>
-                    </li>
-                    <li className="fr-sidemenu__item">
-                      <a className="fr-sidemenu__link" href="#3" target="_self">
-                        Accès direct
-                      </a>
-                    </li>
-                    <li className="fr-sidemenu__item">
-                      <a className="fr-sidemenu__link" href="#4" target="_self">
-                        Accès direct
-                      </a>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </nav>
-          </Col>
-          <Col>
-            <Container as="main">
-              <Title as="h2">{getData.data.currentName.usualName}</Title>
-              <Tag className="mx-1 bg-structures">Structure</Tag>
-              <Tag className="mx-1 bg-success">
-                {getData.data.structureStatus}
-              </Tag>
+    <>
+      <Sidemenu />
+      <Container as="main">
+        <Title as="h2">{data.currentName.usualName}</Title>
+        <Tag className="mx-1 bg-structures">Structure</Tag>
+        <Tag className="mx-1 bg-success">
+          {data.structureStatus}
+        </Tag>
 
-              {/* <Localisations apiObject="structures" id={getData.data.id} /> */}
-              <Emails apiObject="structures" id={getData.data.id} />
-              {/* <Names apiObject="structures" id={getData.data.id} /> */}
-              <Identifiers apiObject="structures" id={getData.data.id} />
-              <Weblinks apiObject="structures" id={getData.data.id} />
-              <SocialMedias apiObject="structures" id={getData.data.id} />
-              {/* <OfficialTexts apiObject="structures" id={getData.data.id} /> */}
-              <Documents apiObject="structures" id={getData.data.id} />
+        {/* <Localisations apiObject="structures" id={id} /> */}
+        <Emails apiObject="structures" id={id} />
+        {/* <Names apiObject="structures" id={id} /> */}
+        <Identifiers apiObject="structures" id={id} />
+        <Weblinks apiObject="structures" id={id} />
+        <SocialMedias apiObject="structures" id={id} />
+        <Documents apiObject="structures" id={id} />
+        {/* <OfficialTexts apiObject="structures" id={id} /> */}
 
-              {/* <div>
+        {/* <div>
                 <pre>{JSON.stringify(getData.data, null, 2)}</pre>
               </div> */}
-            </Container>
-          </Col>
-        </Row>
       </Container>
-    </div>
+    </>
   );
 }

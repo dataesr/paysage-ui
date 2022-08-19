@@ -13,9 +13,8 @@
 /build
 
 # misc
-.env.local
-.env.development
-.env.staging
+.env.*.local
+
 
 
 npm-debug.log*

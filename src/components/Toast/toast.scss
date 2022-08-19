@@ -45,7 +45,7 @@
   .toast {
     position: relative;
     background: var(--background-default-grey-hover);
-    box-shadow: 0 6px 18px 0 rgba(0, 0, 18, 16%);
+    box-shadow: 0 6px 18px 0 rgba(0, 0, 18, 0.16);
     display: flex;
     flex-wrap: nowrap;
     align-items: flex-start;
@@ -106,7 +106,7 @@
       left: 0;
       position: absolute;
       width: 40px;
-      background: rgba(0, 0, 18, 16%);
+      background: rgba(0, 0, 18, 0.16);
     }
 
     .toast-colored-box {
