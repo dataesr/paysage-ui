@@ -49,40 +49,42 @@ export default function OfficiaTextForm({ data, from }) {
 
   useEffect(() => {
     // init si data (modif)
-    setNature(data.nature || null);
-    setType(data.type || null);
-    setJorftext(data.jorftext || null);
-    setNor(data.nor || null);
-    setTitle(data.title || null);
-    setPageUrl(data.pageUrl || null);
-    setBoesrId(data.boesrId || null);
-    setJoId(data.joId || null);
-    setStartDate(data.startDate || null);
-    setEndDate(data.endDate || null);
-    setPublicationDate(data.publicationDate || null);
-    setSignatureDate(data.signatureDate || null);
-    setPrevisionalEndDate(data.previsionalEndDate || null);
-    setTextExtract(data.textExtract || null);
-    setComment(data.comment || null);
+    if (data) {
+      setNature(data.nature || null);
+      setType(data.type || null);
+      setJorftext(data.jorftext || null);
+      setNor(data.nor || null);
+      setTitle(data.title || null);
+      setPageUrl(data.pageUrl || null);
+      setBoesrId(data.boesrId || null);
+      setJoId(data.joId || null);
+      setStartDate(data.startDate || null);
+      setEndDate(data.endDate || null);
+      setPublicationDate(data.publicationDate || null);
+      setSignatureDate(data.signatureDate || null);
+      setPrevisionalEndDate(data.previsionalEndDate || null);
+      setTextExtract(data.textExtract || null);
+      setComment(data.comment || null);
 
-    const relatedCategories = data.relatedCategories.map((el) => ({
-      id: el.id,
-      label: 'cat',
-      apiObject: 'categories',
-    }));
-    const relatedPersons = data.relatedPersons.map((el) => ({
-      id: el.id,
-      label: `${el.lastName} ${el.firstName}`,
-      apiObject: 'persons',
-    }));
-    const relatedStructures = data.relatedStructures.map((el) => ({
-      id: el.id,
-      label: el.currentName.usualName,
-      apiObject: 'structures',
-    }));
-    setRelatesTo(
-      relatedCategories.concat(relatedPersons).concat(relatedStructures),
-    );
+      const relatedCategories = data.relatedCategories.map((el) => ({
+        id: el.id,
+        label: 'cat',
+        apiObject: 'categories',
+      }));
+      const relatedPersons = data.relatedPersons.map((el) => ({
+        id: el.id,
+        label: `${el.lastName} ${el.firstName}`,
+        apiObject: 'persons',
+      }));
+      const relatedStructures = data.relatedStructures.map((el) => ({
+        id: el.id,
+        label: el.currentName.usualName,
+        apiObject: 'structures',
+      }));
+      setRelatesTo(
+        relatedCategories.concat(relatedPersons).concat(relatedStructures),
+      );
+    }
   }, [data]);
 
   const setErrors = (err) => {
