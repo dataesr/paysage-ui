@@ -1,5 +1,5 @@
-import { useParams } from 'react-router-dom';
-import { Container, Tag, Title } from '@dataesr/react-dsfr';
+import { useParams, Link as RouterLink } from 'react-router-dom';
+import { Breadcrumb, BreadcrumbItem, Col, Container, Row, Tag, Title } from '@dataesr/react-dsfr';
 
 import useFetch from '../../hooks/useFetch';
 
@@ -22,28 +22,38 @@ export default function StructuresByIdPage() {
   if (isLoading) return <Spinner size={48} />;
   if (error) return <>Erreur...</>;
   return (
-    <>
-      <Sidemenu />
-      <Container as="main">
-        <Title as="h2">{data.currentName.usualName}</Title>
-        <Tag className="mx-1 bg-structures">Structure</Tag>
-        <Tag className="mx-1 bg-success">
-          {data.structureStatus}
-        </Tag>
+    <Container spacing="py-6w">
+      <Row>
+        <Col n="12 md-3">
+          <Sidemenu />
+        </Col>
 
-        {/* <Localisations apiObject="structures" id={id} /> */}
-        <Emails apiObject="structures" id={id} />
-        {/* <Names apiObject="structures" id={id} /> */}
-        <Identifiers apiObject="structures" id={id} />
-        <Weblinks apiObject="structures" id={id} />
-        <SocialMedias apiObject="structures" id={id} />
-        <Documents apiObject="structures" id={id} />
-        {/* <OfficialTexts apiObject="structures" id={id} /> */}
+        <Col n="12 md-9">
+          <Breadcrumb>
+            <BreadcrumbItem asLink={<RouterLink to="/" />}>Acceuil</BreadcrumbItem>
+            <BreadcrumbItem asLink={<RouterLink to="/rechercher/structures" />}>Structures</BreadcrumbItem>
+            <BreadcrumbItem>{data.currentName.usualName}</BreadcrumbItem>
+          </Breadcrumb>
+          <Title as="h2">{data.currentName.usualName}</Title>
+          <Tag className="mx-1 bg-structures">Structure</Tag>
+          <Tag className="mx-1 bg-success">
+            {data.structureStatus}
+          </Tag>
 
-        {/* <div>
+          {/* <Localisations apiObject="structures" id={id} /> */}
+          <Emails apiObject="structures" id={id} />
+          {/* <Names apiObject="structures" id={id} /> */}
+          <Identifiers apiObject="structures" id={id} />
+          <Weblinks apiObject="structures" id={id} />
+          <SocialMedias apiObject="structures" id={id} />
+          <Documents apiObject="structures" id={id} />
+          {/* <OfficialTexts apiObject="structures" id={id} /> */}
+
+          {/* <div>
                 <pre>{JSON.stringify(getData.data, null, 2)}</pre>
               </div> */}
-      </Container>
-    </>
+        </Col>
+      </Row>
+    </Container>
   );
 }

@@ -1,5 +1,4 @@
 import { Link as RouterLink, useLocation } from 'react-router-dom';
-import PropTypes from 'prop-types';
 import {
   Header as HeaderWrapper,
   HeaderBody,
@@ -14,14 +13,10 @@ import {
 } from '@dataesr/react-dsfr';
 import useAuth from '../../hooks/useAuth';
 
-export default function Header({ switchTheme }) {
-  const { isOpen, setIsOpen } = switchTheme;
+export default function Header() {
   const { pathname } = useLocation();
-  const { viewer, signout } = useAuth();
-  const handleSignOut = () => {
-    signout();
-    window.location.reload(false);
-  };
+  const { viewer } = useAuth();
+
   return (
     <HeaderWrapper>
       <HeaderBody>
@@ -29,13 +24,21 @@ export default function Header({ switchTheme }) {
           Ministère le l'enseignement supérieur et de la recherche
         </Logo>
         <Service
-          title="Paysage"
+          title={(
+            <>
+              Paysage
+              <span className="fr-badge fr-badge--sm fr-badge--green-emeraude">STAGING</span>
+            </>
+          )}
           description="Plateforme d'échanges et d'informations de la DGESIP et de la DGRI"
         />
         <Tool closeButtonLabel="fermer">
           <ToolItemGroup>
             {viewer?.id ? (
-              <ToolItem icon="ri-user-3-line" asLink={<RouterLink to="/me" />}>
+              <ToolItem
+                icon="ri-user-3-line"
+                asLink={<RouterLink to="/profile" />}
+              >
                 {viewer.email}
               </ToolItem>
             ) : (
@@ -46,19 +49,6 @@ export default function Header({ switchTheme }) {
                 Se connecter
               </ToolItem>
             )}
-            {viewer?.id && (
-              <ToolItem
-                icon="ri-logout-circle-r-line"
-                onClick={handleSignOut}
-              >
-                {' '}
-              </ToolItem>
-            )}
-            <ToolItem icon="ri-sun-fill" onClick={() => setIsOpen(true)}>
-              <span aria-controls="fr-theme-modal" data-fr-opened={isOpen}>
-                Paramètres d’affichage
-              </span>
-            </ToolItem>
           </ToolItemGroup>
         </Tool>
       </HeaderBody>
@@ -88,59 +78,74 @@ export default function Header({ switchTheme }) {
                 asLink={<RouterLink to="/contribuer/structure/import" />}
               />
             </NavItem>
-            <NavItem title="Annuaire">
+            <NavItem
+              title="Je recherche"
+              current={pathname.startsWith('/rechercher')}
+            >
               <NavSubItem
-                current={pathname.startsWith('/personnes')}
-                title="Rechercher une personne"
-                asLink={<RouterLink to="/personnes" />}
+                current={pathname.startsWith('/rechercher/personnes')}
+                title="Rechercher des personnes"
+                asLink={<RouterLink to="/rechercher/personnes" />}
               />
               <NavSubItem
-                title="Listes qualifiées"
-                asLink={<RouterLink to="/list" />}
-              />
-            </NavItem>
-            <NavItem title="Répertoire">
-              <NavSubItem
-                current={pathname.startsWith('/structures')}
-                title="Rechercher une structure"
-                asLink={<RouterLink to="/structures" />}
+                current={pathname.startsWith('/rechercher/structures')}
+                title="Rechercher des structures"
+                asLink={<RouterLink to="/rechercher/structures" />}
               />
               <NavSubItem
-                title="Listes qualifiées"
-                asLink={<RouterLink to="/list" />}
+                current={pathname.startsWith('/rechercher/termes')}
+                title="Rechercher des termes"
+                asLink={<RouterLink to="/rechercher/termes" />}
+              />
+              <NavSubItem
+                current={pathname.startsWith('/rechercher/categories')}
+                title="Rechercher des catégories"
+                asLink={<RouterLink to="/rechercher/categories" />}
+              />
+              <NavSubItem
+                current={pathname.startsWith('/rechercher/textes-officiels')}
+                title="Rechercher des textes officiels"
+                asLink={<RouterLink to="/rechercher/textes-officiels" />}
               />
             </NavItem>
           </>
         )}
-        <NavItem title="Ressources">
+        <NavItem title="Ressources" current={pathname.startsWith('/ressources')}>
           <NavSubItem
-            current={pathname.startsWith('/ressources-internes')}
-            title="Les ressources internes"
-            asLink={<RouterLink to="/ressources-internes" />}
+            current={pathname.startsWith('/ressources/listes-qualifiées')}
+            title="Listes qualifiées"
+            asLink={<RouterLink to="/listes" />}
           />
           <NavSubItem
-            current={pathname.startsWith('/ressources-externes')}
+            current={pathname.startsWith('/ressources/liens-externes')}
             title="Les ressources externes"
             asLink={<RouterLink to="/ressources-externes" />}
           />
         </NavItem>
-        <NavItem title="Admin">
-          <NavSubItem
-            current={pathname.startsWith('/admin/document-types')}
-            title="Types de documents"
-            asLink={<RouterLink to="/admin/document-types" />}
-          />
-          <NavSubItem
-            current={pathname.startsWith('/admin/email-types')}
-            title="Types d'email"
-            asLink={<RouterLink to="/admin/email-types" />}
-          />
-          <NavSubItem
-            current={pathname.startsWith('/admin/supervising-ministers')}
-            title="Ministres de tutelle"
-            asLink={<RouterLink to="/admin/supervising-ministers" />}
-          />
-        </NavItem>
+        {(viewer?.id && (['admin', 'user'].includes(viewer?.role))) && (
+          <NavItem title="Admin" current={pathname.startsWith('/admin')}>
+            <NavSubItem
+              current={pathname.startsWith('/admin/document-types')}
+              title="Types de documents"
+              asLink={<RouterLink to="/admin/document-types" />}
+            />
+            <NavSubItem
+              current={pathname.startsWith('/admin/email-types')}
+              title="Types d'email"
+              asLink={<RouterLink to="/admin/email-types" />}
+            />
+            <NavSubItem
+              current={pathname.startsWith('/admin/supervising-ministers')}
+              title="Ministres de tutelle"
+              asLink={<RouterLink to="/admin/supervising-ministers" />}
+            />
+            <NavSubItem
+              current={pathname.startsWith('/admin/utilisateurs')}
+              title="Utilisateurs"
+              asLink={<RouterLink to="/admin/utilisateurs" />}
+            />
+          </NavItem>
+        )}
         <NavItem
           title="Aide"
           asLink={<RouterLink to="/aide" />}
@@ -150,10 +155,3 @@ export default function Header({ switchTheme }) {
     </HeaderWrapper>
   );
 }
-
-Header.propTypes = {
-  switchTheme: PropTypes.shape({
-    isOpen: PropTypes.bool,
-    setIsOpen: PropTypes.func,
-  }).isRequired,
-};

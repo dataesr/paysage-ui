@@ -66,6 +66,14 @@ export default {
       headers: { ...headers, 'Content-Type': 'multipart/form-data' },
     });
   },
+  putFormData: (url, formData, headers) => {
+    customFetch({
+      method: 'PUT',
+      url,
+      body: formData,
+      headers: { ...headers, 'Content-Type': 'multipart/form-data' },
+    });
+  },
   get: (url, headers) => customFetch({ method: 'GET', url, headers }),
   post: (url, body, headers) => customFetch({
     method: 'POST', url, body: JSON.stringify(body), headers,

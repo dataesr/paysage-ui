@@ -11,7 +11,7 @@ export default function Layout() {
     <>
       <Header switchTheme={{ isOpen, setIsOpen }} />
       <SwitchTheme isOpen={isOpen} setIsOpen={setIsOpen} />
-      <Container as="main" fluid className="fr-px-2w">
+      <Container as="main" role="main" fluid>
         <Outlet />
       </Container>
       <Footer switchTheme={{ isOpen, setIsOpen }} />

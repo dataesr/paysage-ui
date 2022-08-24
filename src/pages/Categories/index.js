@@ -10,7 +10,7 @@ export default function CategoriesPage() {
   if (error) return <h1>Error</h1>;
 
   return (
-    <Container spacing="mt-5w" as="main">
+    <Container spacing="mt-5w">
       <Row>
         <Col n="9">
           <Title as="h2">Les catégories Paysage</Title>

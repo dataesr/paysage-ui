@@ -46,6 +46,8 @@ export function AuthContextProvider({ children }) {
     });
     const response = await fetch(url, { method: 'POST', body, headers: { 'Content-Type': 'application/json' } })
       .catch(() => { console.log('Erreur inatendue'); });
+    const data = await response.json().catch(() => { console.log('Erreur inatendue'); });
+    response.data = data;
     return response;
   };
 

@@ -41,6 +41,37 @@
     left: calc(50vw - 160px);
     padding: 12px;
   }
+  .toast-info {
+    border: 1px solid var(--info-main-525);
+
+    >.toast-colored-box {
+      background-color: var(--info-main-525);
+    }
+  }
+
+  .toast-warning {
+    border: 1px solid var(--warning-main-525);
+
+    >.toast-colored-box {
+      background-color: var(--warning-main-525);
+    }
+  }
+
+  .toast-success {
+    border: 1px solid var(--success-main-525);
+
+    >.toast-colored-box {
+      background-color: var(--success-main-525);
+    }
+  }
+
+  .toast-error {
+    border: 1px solid var(--error-main-525);
+
+    >.toast-colored-box {
+      background-color: var(--error-main-525);
+    }
+  }
 
   .toast {
     position: relative;
@@ -80,22 +111,6 @@
       &:hover {
         background-color: var(--active-tint);
       }
-    }
-
-    .toast-bg-info {
-      background-color: var(--info-main-525);
-    }
-
-    .toast-bg-warning {
-      background-color: var(--warning-main-525);
-    }
-
-    .toast-bg-success {
-      background-color: var(--success-main-525);
-    }
-
-    .toast-bg-error {
-      background-color: var(--error-main-525);
     }
 
     .toast-progress-bar {

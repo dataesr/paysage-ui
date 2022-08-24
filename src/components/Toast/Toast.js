@@ -39,11 +39,11 @@ function Toast({
     <div
       id={id}
       role="alert"
-      className="toast"
+      className={`toast toast-${toastType}`}
       onMouseEnter={pause}
       onMouseLeave={resume}
     >
-      <div className={`toast-colored-box toast-bg-${toastType}`}>
+      <div className="toast-colored-box">
         <Icon color="#ffffff" name={icon[toastType]} />
         {
           (autoDismissAfter !== 0)

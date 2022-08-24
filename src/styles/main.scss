@@ -85,4 +85,23 @@ HR {
   z-index: 1000;
 }
 
+.fr-background-alt {
+  background-color: var(--background-alt-grey);
+}
+.fr-password-info {
+  color: var(--info-main-525);
+  margin: 0;
+}
+.fr-password-success {
+  color: var(--success-main-525);
+  margin: 0;
+}
+.fr-password-error {
+  color: var(--error-main-525);
+  margin: 0;
+}
+.fr-btns--space-between {
+  justify-content: space-between;
+}
+
 
