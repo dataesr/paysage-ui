@@ -9,7 +9,7 @@ import Emails from '../../components/Blocs/Emails';
 import Identifiers from '../../components/Blocs/Identifiers';
 import Weblinks from '../../components/Blocs/Weblinks';
 import SocialMedias from '../../components/Blocs/SocialMedias';
-// import OfficialTexts from '../../components/Blocs/OfficialTexts';
+import OfficialTexts from '../../components/Blocs/OfficialTexts';
 import Documents from '../../components/Blocs/Documents';
 import Sidemenu from '../../components/Sidemenu';
 import Spinner from '../../components/Spinner';
@@ -47,7 +47,7 @@ export default function StructuresByIdPage() {
           <Weblinks apiObject="structures" id={id} />
           <SocialMedias apiObject="structures" id={id} />
           <Documents apiObject="structures" id={id} />
-          {/* <OfficialTexts apiObject="structures" id={id} /> */}
+          <OfficialTexts apiObject="structures" id={id} />
 
           {/* <div>
                 <pre>{JSON.stringify(getData.data, null, 2)}</pre>

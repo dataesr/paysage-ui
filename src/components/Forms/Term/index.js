@@ -11,7 +11,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 import validator from './validator';
-import fetch from '../../../utils/fetch';
+import api from '../../../utils/fetch';
 
 export default function TermAddForm() {
   const navigate = useNavigate();
@@ -44,7 +44,7 @@ export default function TermAddForm() {
 
     const { ok, returnedErrors } = validator(body);
     if (ok) {
-      const response = await fetch.post('/terms', body).catch((e) => {
+      const response = await api.post('/terms', body).catch((e) => {
         console.log(e);
       });
       if (response.status === 201) {

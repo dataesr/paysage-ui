@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Container, Title } from '@dataesr/react-dsfr';
-import fetch from '../../utils/fetch';
+import api from '../../utils/fetch';
 
 export default function TermByIdPage() {
   const { id } = useParams();
@@ -9,7 +9,7 @@ export default function TermByIdPage() {
 
   useEffect(() => {
     const getData = async () => {
-      const response = await fetch.get(`/terms/${id}`).catch((e) => {
+      const response = await api.get(`/terms/${id}`).catch((e) => {
         console.log(e);
       });
       if (response.ok) setData(response.data);

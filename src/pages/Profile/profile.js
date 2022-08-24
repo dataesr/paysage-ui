@@ -4,7 +4,7 @@ import { Button, ButtonGroup, Breadcrumb, BreadcrumbItem, Col, Container, Row, T
 import Sidemenu from '../../components/Sidemenu';
 import useToast from '../../hooks/useToast';
 import useAuth from '../../hooks/useAuth';
-import fetch from '../../utils/fetch';
+import api from '../../utils/fetch';
 
 export default function HomePage() {
   const navigate = useNavigate();
@@ -24,14 +24,14 @@ export default function HomePage() {
     const formData = new FormData();
     formData.append('file', avatar[0]);
     console.log(formData);
-    const response = await fetch.putFormData('/me/avatar', formData);
+    const response = await api.putFormData('/me/avatar', formData);
     console.log(response.data);
     if (response.ok) return toast({ toastType: 'success', description: 'Les modifications ont été prises en compte' });
     return toast({ toastType: 'error', description: "Une erreur s'est produite" });
   };
   const deleteAvatar = async (e) => {
     e.preventDefault();
-    const response = await fetch.delete('/me/avatar');
+    const response = await api.delete('/me/avatar');
     if (response.ok) return toast({ toastType: 'success', description: 'Les modifications ont été prises en compte' });
     return toast({ toastType: 'error', description: "Une erreur s'est produite" });
   };
@@ -57,7 +57,7 @@ export default function HomePage() {
 
   const saveInformations = async (e) => {
     e.preventDefault();
-    const response = await fetch.patch('/me', { firstName, lastName, position, service });
+    const response = await api.patch('/me', { firstName, lastName, position, service });
     console.log(response.data);
     if (response.ok) return toast({ toastType: 'success', description: 'Les modifications ont été prises en compte' });
     return toast({ toastType: 'error', description: "Une erreur s'est produite" });

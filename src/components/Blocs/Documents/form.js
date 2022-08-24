@@ -13,7 +13,7 @@ import {
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
-import fetch from '../../../utils/fetch';
+import api from '../../../utils/fetch';
 import DateOneField from '../../DateOneField';
 import validator from './validator';
 
@@ -32,7 +32,7 @@ export default function SocialMediaForm({ data, onDeleteHandler, onSaveHandler }
 
   useEffect(() => {
     const getOptions = async () => {
-      const response = await fetch.get('/document-types?limit=50').catch((e) => {
+      const response = await api.get('/document-types?limit=50').catch((e) => {
         console.log(e);
       });
       if (response.ok) {

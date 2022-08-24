@@ -1,17 +1,16 @@
 import { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
 import { useParams } from 'react-router-dom';
 import { Col, Container, Row, Title } from '@dataesr/react-dsfr';
-import fetch from '../../utils/fetch';
+import api from '../../utils/fetch';
 import OfficiaTextForm from '../../components/Forms/OfficialText';
 
-export default function OfficialTextByIdPage({ from }) {
-  const { id } = useParams();
+export default function OfficialTextByIdPage() {
+  const { id, route, idFrom } = useParams();
   const [data, setData] = useState();
 
   useEffect(() => {
     const getData = async () => {
-      const response = await fetch.get(`/official-texts/${id}`).catch((e) => {
+      const response = await api.get(`/official-texts/${id}`).catch((e) => {
         console.log(e);
       });
       if (response.ok) setData(response.data);
@@ -19,6 +18,11 @@ export default function OfficialTextByIdPage({ from }) {
     getData();
     return () => {};
   }, [id]);
+
+  let from = null;
+  if (route && idFrom) {
+    from = `/${route}/${idFrom}`;
+  }
 
   if (!data) return <h1>Loading</h1>;
   return (
@@ -33,11 +37,3 @@ export default function OfficialTextByIdPage({ from }) {
     </Container>
   );
 }
-
-OfficialTextByIdPage.propTypes = {
-  from: PropTypes.string,
-};
-
-OfficialTextByIdPage.defaultProps = {
-  from: null,
-};

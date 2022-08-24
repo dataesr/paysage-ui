@@ -12,7 +12,7 @@ import {
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
-import fetch from '../../../utils/fetch';
+import api from '../../../utils/fetch';
 import validator from './validator';
 
 export default function WeblinkForm({ data, onDeleteHandler, onSaveHandler, enumKey }) {
@@ -27,7 +27,7 @@ export default function WeblinkForm({ data, onDeleteHandler, onSaveHandler, enum
 
   useEffect(() => {
     const getOptions = async () => {
-      const response = await fetch.get('/docs/enums').catch((e) => {
+      const response = await api.get('/docs/enums').catch((e) => {
         console.log(e);
       });
       if (response.ok) {

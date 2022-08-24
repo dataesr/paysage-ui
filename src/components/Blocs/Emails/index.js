@@ -4,7 +4,7 @@ import { Button, Card, CardDescription, CardTitle, Col, Modal, ModalContent, Mod
 import PaysageSection from '../../Sections/section';
 import EmptySection from '../../Sections/empty';
 import EmailForm from './form';
-import fetch from '../../../utils/fetch';
+import api from '../../../utils/fetch';
 
 export default function EmailsComponent({ apiObject, id }) {
   const [data, setData] = useState([]);
@@ -15,7 +15,7 @@ export default function EmailsComponent({ apiObject, id }) {
 
   useEffect(() => {
     const getData = async () => {
-      const response = await fetch
+      const response = await api
         .get(`/${apiObject}/${id}/emails`)
         .catch((e) => {
           console.log(e);
@@ -35,7 +35,7 @@ export default function EmailsComponent({ apiObject, id }) {
       url += `/${emailId}`;
     }
 
-    const response = await fetch[method](url, body).catch((e) => { console.log(e); });
+    const response = await api[method](url, body).catch((e) => { console.log(e); });
 
     if (response.ok) {
       setReloader((reloader + 1));
@@ -45,7 +45,7 @@ export default function EmailsComponent({ apiObject, id }) {
 
   const onDeleteHandler = async (emailId) => {
     const url = `/${apiObject}/${id}/emails/${emailId}`;
-    await fetch.delete(url).catch((e) => { console.log(e); });
+    await api.delete(url).catch((e) => { console.log(e); });
     setReloader(reloader + 1);
     setShowModal(false);
   };

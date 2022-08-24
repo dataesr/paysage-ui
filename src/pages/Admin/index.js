@@ -2,7 +2,7 @@ import { Button, Col, Container, Icon, Row, Tag, TextInput, Title } from '@datae
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
-import fetch from '../../utils/fetch';
+import api from '../../utils/fetch';
 
 export default function DocumentTypesPage() {
   const { route } = useParams();
@@ -13,7 +13,7 @@ export default function DocumentTypesPage() {
 
   useEffect(() => {
     const getData = async () => {
-      const response = await fetch.get(`/${route}`);
+      const response = await api.get(`/${route}`);
       setData(response?.data?.data || []);
     };
     getData();
@@ -23,7 +23,7 @@ export default function DocumentTypesPage() {
     const body = {
       usualName,
     };
-    const response = await fetch.post(`/${route}`, body);
+    const response = await api.post(`/${route}`, body);
 
     if (response.ok) {
       setReload(reload + 1);
@@ -32,7 +32,7 @@ export default function DocumentTypesPage() {
   };
 
   const onDeleteHandler = async (id) => {
-    await fetch.delete(`/${route}/${id}`);
+    await api.delete(`/${route}/${id}`);
     setReload(reload + 1);
   };
 

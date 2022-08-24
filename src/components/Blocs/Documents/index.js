@@ -16,7 +16,7 @@ import {
 import PaysageSection from '../../Sections/section';
 import EmptySection from '../../Sections/empty';
 import DocumentForm from './form';
-import fetch from '../../../utils/fetch';
+import api from '../../../utils/fetch';
 
 export default function DocumentsComponent({ apiObject, id }) {
   const [data, setData] = useState([]);
@@ -27,7 +27,7 @@ export default function DocumentsComponent({ apiObject, id }) {
 
   useEffect(() => {
     const getData = async () => {
-      const response = await fetch
+      const response = await api
         .get(
           `/documents?filters[relatesTo]=${id}`,
         )
@@ -54,7 +54,7 @@ export default function DocumentsComponent({ apiObject, id }) {
     if (body.startDate) formData.append('startDate', body.startDate);
     if (body.eEndDate) formData.append('endDate', body.eEndDate);
 
-    const response = await fetch
+    const response = await api
       .postFormData('/documents', formData)
       .catch((e) => {
         console.log(e);
@@ -70,7 +70,7 @@ export default function DocumentsComponent({ apiObject, id }) {
 
   // const onDeleteHandler = async (itemId) => {
   //   const url = `/documents/${apiObject}/${id}/social-medias/${itemId}`;
-  //   await fetch.delete(url).catch((e) => {
+  //   await api.delete(url).catch((e) => {
   //     console.log(e);
   //   });
   //   setReloader(reloader + 1);

@@ -15,8 +15,8 @@ import {
 import PaysageSection from '../../Sections/section';
 import EmptySection from '../../Sections/empty';
 import IdentifierForm from './form';
-import fetch from '../../../utils/fetch';
-import getEnumKey from '../../../utils';
+import api from '../../../utils/fetch';
+import { getEnumKey } from '../../../utils';
 
 export default function IdentifiersComponent({ apiObject, id }) {
   const [data, setData] = useState([]);
@@ -29,7 +29,7 @@ export default function IdentifiersComponent({ apiObject, id }) {
 
   useEffect(() => {
     const getData = async () => {
-      const response = await fetch
+      const response = await api
         .get(`/${apiObject}/${id}/identifiers`)
         .catch((e) => {
           console.log(e);
@@ -49,7 +49,7 @@ export default function IdentifiersComponent({ apiObject, id }) {
       url += `/${identifierId}`;
     }
 
-    const response = await fetch[method](url, body).catch((e) => {
+    const response = await api[method](url, body).catch((e) => {
       console.log(e);
     });
 
@@ -61,7 +61,7 @@ export default function IdentifiersComponent({ apiObject, id }) {
 
   const onDeleteHandler = async (emailId) => {
     const url = `/${apiObject}/${id}/identifiers/${emailId}`;
-    await fetch.delete(url).catch((e) => {
+    await api.delete(url).catch((e) => {
       console.log(e);
     });
     setReloader(reloader + 1);
