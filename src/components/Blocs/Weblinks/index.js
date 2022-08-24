@@ -89,10 +89,16 @@ export default function WeblinksComponent({ apiObject, id }) {
     setShowModal(true);
   };
 
-  if (!data?.data) return <>Chargement...</>; // TODO Loader
+  if (!data?.data) {
+    return (
+      <div className="fr-container-fluid" as="section" data-paysage-menu="Liens web" id="Les-liens-web">
+        Chargement...
+      </div>
+    ); // TODO Loader
+  }
 
   return (
-    <Container fluid as="section" id="Les-liens-web">
+    <div className="fr-container-fluid" as="section" data-paysage-menu="Liens web" id="Les-liens-web">
       <Row>
         <Col>
           <Title as="h3" look="h6">
@@ -129,7 +135,7 @@ export default function WeblinksComponent({ apiObject, id }) {
         <ModalTitle>{modalTitle}</ModalTitle>
         <ModalContent>{modalContent}</ModalContent>
       </Modal>
-    </Container>
+    </div>
   );
 }
 
