@@ -6,7 +6,6 @@ import {
   CardDescription,
   CardTitle,
   Col,
-  Container,
   Highlight,
   Modal,
   ModalContent,
@@ -14,6 +13,7 @@ import {
   Row,
   Title,
 } from '@dataesr/react-dsfr';
+import PaysageSection from '../../Section';
 import WeblinkForm from './form';
 import fetch from '../../../utils/fetch';
 import getEnumKey from '../../../utils';
@@ -91,14 +91,12 @@ export default function WeblinksComponent({ apiObject, id }) {
 
   if (!data?.data) {
     return (
-      <div className="fr-container-fluid" as="section" data-paysage-menu="Liens web" id="Les-liens-web">
-        Chargement...
-      </div>
-    ); // TODO Loader
+      <PaysageSection dataPaysageMenu="Liens web" id="weblinks" isEmpty />
+    );
   }
 
   return (
-    <div className="fr-container-fluid" as="section" data-paysage-menu="Liens web" id="Les-liens-web">
+    <PaysageSection dataPaysageMenu="Liens web" id="weblinks">
       <Row>
         <Col>
           <Title as="h3" look="h6">
@@ -135,7 +133,7 @@ export default function WeblinksComponent({ apiObject, id }) {
         <ModalTitle>{modalTitle}</ModalTitle>
         <ModalContent>{modalContent}</ModalContent>
       </Modal>
-    </div>
+    </PaysageSection>
   );
 }
 

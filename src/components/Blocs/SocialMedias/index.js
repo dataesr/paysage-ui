@@ -6,7 +6,6 @@ import {
   CardDescription,
   CardTitle,
   Col,
-  Container,
   Highlight,
   Modal,
   ModalContent,
@@ -14,6 +13,7 @@ import {
   Row,
   Title,
 } from '@dataesr/react-dsfr';
+import PaysageSection from '../../Section';
 import SocialMediaForm from './form';
 import fetch from '../../../utils/fetch';
 import getEnumKey from '../../../utils';
@@ -89,10 +89,14 @@ export default function SocialMediasComponent({ apiObject, id }) {
     setShowModal(true);
   };
 
-  if (!data?.data) return <>Chargement...</>; // TODO Loader
+  if (!data?.data) {
+    return (
+      <PaysageSection dataPaysageMenu="Médias sociaux" id="socialMedias" isEmpty />
+    );
+  }
 
   return (
-    <Container fluid as="section" id="Les-reseaux-sociaux">
+    <PaysageSection dataPaysageMenu="Médias sociaux" id="socialMedias">
       <Row>
         <Col>
           <Title as="h3" look="h6">
@@ -129,7 +133,7 @@ export default function SocialMediasComponent({ apiObject, id }) {
         <ModalTitle>{modalTitle}</ModalTitle>
         <ModalContent>{modalContent}</ModalContent>
       </Modal>
-    </Container>
+    </PaysageSection>
   );
 }
 

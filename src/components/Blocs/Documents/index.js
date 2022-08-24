@@ -4,9 +4,7 @@ import {
   Button,
   Card,
   CardDescription,
-  // CardTitle,
   Col,
-  Container,
   Highlight,
   Icon,
   Modal,
@@ -16,6 +14,7 @@ import {
   Text,
   Title,
 } from '@dataesr/react-dsfr';
+import PaysageSection from '../../Section';
 import DocumentForm from './form';
 import fetch from '../../../utils/fetch';
 
@@ -41,7 +40,10 @@ export default function DocumentsComponent({ apiObject, id }) {
     return () => {};
   }, [apiObject, id, reloader]);
 
-  const onSaveHandler = async (body, itemId = null) => {
+  const onSaveHandler = async (
+    body,
+    // itemId = null,
+  ) => {
     console.log('save doc', body);
     const formData = new FormData();
     formData.append('documentTypeId', body.type);
@@ -66,21 +68,21 @@ export default function DocumentsComponent({ apiObject, id }) {
     }
   };
 
-  const onDeleteHandler = async (itemId) => {
-    const url = `/documents/${apiObject}/${id}/social-medias/${itemId}`;
-    await fetch.delete(url).catch((e) => {
-      console.log(e);
-    });
-    setReloader(reloader + 1);
-    setShowModal(false);
-  };
+  // const onDeleteHandler = async (itemId) => {
+  //   const url = `/documents/${apiObject}/${id}/social-medias/${itemId}`;
+  //   await fetch.delete(url).catch((e) => {
+  //     console.log(e);
+  //   });
+  //   setReloader(reloader + 1);
+  //   setShowModal(false);
+  // };
 
   const onClickModifyHandler = (oneData) => {
     setModalTitle("Modification d'un document");
     setModalContent(
       <DocumentForm
         data={oneData}
-        onDeleteHandler={onDeleteHandler}
+        // onDeleteHandler={onDeleteHandler}
         onSaveHandler={onSaveHandler}
       />,
     );
@@ -125,10 +127,14 @@ export default function DocumentsComponent({ apiObject, id }) {
     return <Icon name={iconName} size="5x" color={color} />;
   };
 
-  if (!data?.data) return <>Chargement...</>; // TODO Loader
+  if (!data?.data) {
+    return (
+      <PaysageSection dataPaysageMenu="Documents" id="documents" isEmpty />
+    );
+  }
 
   return (
-    <Container fluid as="section" id="Les-reseaux-sociaux">
+    <PaysageSection dataPaysageMenu="Documents" id="documents">
       <Row>
         <Col>
           <Title as="h3" look="h6">
@@ -187,7 +193,7 @@ export default function DocumentsComponent({ apiObject, id }) {
         <ModalTitle>{modalTitle}</ModalTitle>
         <ModalContent>{modalContent}</ModalContent>
       </Modal>
-    </Container>
+    </PaysageSection>
   );
 }
 

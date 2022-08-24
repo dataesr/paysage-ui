@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Button, Card, CardDescription, CardTitle, Col, Highlight, Modal, ModalContent, ModalTitle, Row, Title } from '@dataesr/react-dsfr';
+import PaysageSection from '../../Section';
 import EmailForm from './form';
 import fetch from '../../../utils/fetch';
 
@@ -68,14 +69,12 @@ export default function EmailsComponent({ apiObject, id }) {
 
   if (!data?.data) {
     return (
-      <div className="fr-container-fluid" as="section" data-paysage-menu="Emails génériques" id="boites-mails-generiques">
-        Chargement...
-      </div>
+      <PaysageSection dataPaysageMenu="Emails génériques" id="emails" isEmpty />
     );
-  } // TODO Loader
+  }
 
   return (
-    <div className="fr-container-fluid" as="section" data-paysage-menu="Emails génériques" id="boites-mails-generiques">
+    <PaysageSection dataPaysageMenu="Emails génériques" id="emails">
       <Row>
         <Col>
           <Title as="h3" look="h6">
@@ -112,7 +111,7 @@ export default function EmailsComponent({ apiObject, id }) {
         <ModalTitle>{modalTitle}</ModalTitle>
         <ModalContent>{modalContent}</ModalContent>
       </Modal>
-    </div>
+    </PaysageSection>
   );
 }
 

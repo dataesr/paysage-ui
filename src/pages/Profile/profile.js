@@ -9,7 +9,10 @@ import fetch from '../../utils/fetch';
 export default function HomePage() {
   const navigate = useNavigate();
   const { toast } = useToast();
-  const { viewer, update } = useAuth();
+  const {
+    viewer,
+    // update,
+  } = useAuth();
 
   useEffect(() => {
     if (!viewer?.id) navigate('/');

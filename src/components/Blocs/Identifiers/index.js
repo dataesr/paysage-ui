@@ -13,6 +13,7 @@ import {
   Row,
   Title,
 } from '@dataesr/react-dsfr';
+import PaysageSection from '../../Section';
 import IdentifierForm from './form';
 import fetch from '../../../utils/fetch';
 import getEnumKey from '../../../utils';
@@ -87,15 +88,11 @@ export default function IdentifiersComponent({ apiObject, id }) {
   };
 
   if (!data?.data) {
-    return (
-      <div className="fr-container-fluid" as="section" data-paysage-menu="Identifiants" id="Les-identifiants">
-        Chargement...
-      </div>
-    );
-  } // TODO Loader
+    return <PaysageSection dataPaysageMenu="Identifiants" id="identifiers" isEmpty />;
+  }
 
   return (
-    <div className="fr-container-fluid" as="section" data-paysage-menu="Identifiants" id="Les-identifiants">
+    <PaysageSection dataPaysageMenu="Identifiants" id="identifiers">
       <Row>
         <Col>
           <Title as="h3" look="h6">
@@ -121,7 +118,10 @@ export default function IdentifiersComponent({ apiObject, id }) {
         ) : null}
         {data.data.map((ident) => (
           <Col n="3" key={ident.id}>
-            <Card hasArrow={false} onClick={() => onClickModifyHandler(ident)}>
+            <Card
+              hasArrow={false}
+              onClick={() => onClickModifyHandler(ident)}
+            >
               <CardTitle>{ident.type}</CardTitle>
               <CardDescription>{ident.value}</CardDescription>
             </Card>
@@ -132,7 +132,7 @@ export default function IdentifiersComponent({ apiObject, id }) {
         <ModalTitle>{modalTitle}</ModalTitle>
         <ModalContent>{modalContent}</ModalContent>
       </Modal>
-    </div>
+    </PaysageSection>
   );
 }
 
