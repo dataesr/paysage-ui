@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { Button, Card, CardDescription, CardTitle, Col, Highlight, Modal, ModalContent, ModalTitle, Row, Title } from '@dataesr/react-dsfr';
-import PaysageSection from '../../Section';
+import { Button, Card, CardDescription, CardTitle, Col, Modal, ModalContent, ModalTitle, Row, Title } from '@dataesr/react-dsfr';
+import PaysageSection from '../../Sections/section';
+import EmptySection from '../../Sections/empty';
 import EmailForm from './form';
 import fetch from '../../../utils/fetch';
 
@@ -93,11 +94,7 @@ export default function EmailsComponent({ apiObject, id }) {
         </Col>
       </Row>
       <Row>
-        {data.data.length === 0 ? (
-          <Highlight className="fr-highlight--yellow-tournesol">
-            Cette section est vide pour le moment
-          </Highlight>
-        ) : null}
+        {data.data.length === 0 ? <EmptySection apiObject={apiObject} /> : null}
         {data.data.map((gm) => (
           <Col n="4" key={gm.id}>
             <Card hasArrow={false} onClick={() => onClickModifyHandler(gm)}>

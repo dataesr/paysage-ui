@@ -6,14 +6,14 @@ import {
   CardDescription,
   CardTitle,
   Col,
-  Highlight,
   Modal,
   ModalContent,
   ModalTitle,
   Row,
   Title,
 } from '@dataesr/react-dsfr';
-import PaysageSection from '../../Section';
+import PaysageSection from '../../Sections/section';
+import EmptySection from '../../Sections/empty';
 import IdentifierForm from './form';
 import fetch from '../../../utils/fetch';
 import getEnumKey from '../../../utils';
@@ -111,17 +111,10 @@ export default function IdentifiersComponent({ apiObject, id }) {
         </Col>
       </Row>
       <Row>
-        {data.data.length === 0 ? (
-          <Highlight className="fr-highlight--yellow-tournesol">
-            Cette section est vide pour le moment
-          </Highlight>
-        ) : null}
+        {data.data.length === 0 ? <EmptySection apiObject={apiObject} /> : null}
         {data.data.map((ident) => (
           <Col n="3" key={ident.id}>
-            <Card
-              hasArrow={false}
-              onClick={() => onClickModifyHandler(ident)}
-            >
+            <Card hasArrow={false} onClick={() => onClickModifyHandler(ident)}>
               <CardTitle>{ident.type}</CardTitle>
               <CardDescription>{ident.value}</CardDescription>
             </Card>

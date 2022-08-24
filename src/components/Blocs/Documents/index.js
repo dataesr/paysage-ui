@@ -5,7 +5,6 @@ import {
   Card,
   CardDescription,
   Col,
-  Highlight,
   Icon,
   Modal,
   ModalContent,
@@ -14,7 +13,8 @@ import {
   Text,
   Title,
 } from '@dataesr/react-dsfr';
-import PaysageSection from '../../Section';
+import PaysageSection from '../../Sections/section';
+import EmptySection from '../../Sections/empty';
 import DocumentForm from './form';
 import fetch from '../../../utils/fetch';
 
@@ -153,11 +153,7 @@ export default function DocumentsComponent({ apiObject, id }) {
         </Col>
       </Row>
       <Row>
-        {data.data.length === 0 ? (
-          <Highlight className="fr-highlight--yellow-tournesol">
-            Cette section est vide pour le moment
-          </Highlight>
-        ) : null}
+        {data.data.length === 0 ? <EmptySection apiObject={apiObject} /> : null}
         {data.data.map((doc) => (
           <Col n="6" key={doc.id}>
             <Card hasArrow={false} onClick={() => onClickModifyHandler(doc)}>
