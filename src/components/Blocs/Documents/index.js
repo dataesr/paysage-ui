@@ -4,10 +4,7 @@ import {
   Button,
   Card,
   CardDescription,
-  // CardTitle,
   Col,
-  Container,
-  Highlight,
   Icon,
   Modal,
   ModalContent,
@@ -16,6 +13,8 @@ import {
   Text,
   Title,
 } from '@dataesr/react-dsfr';
+import PaysageSection from '../../Sections/section';
+import EmptySection from '../../Sections/empty';
 import DocumentForm from './form';
 import api from '../../../utils/api';
 
@@ -41,8 +40,10 @@ export default function DocumentsComponent({ apiObject, id }) {
     return () => {};
   }, [apiObject, id, reloader]);
 
-  const onSaveHandler = async (body, itemId = null) => {
-    console.log('save doc', body);
+  const onSaveHandler = async (
+    body,
+    // itemId = null,
+  ) => {
     const formData = new FormData();
     formData.append('documentTypeId', body.type);
     if (body.title) formData.append('title', body.title);
@@ -52,8 +53,7 @@ export default function DocumentsComponent({ apiObject, id }) {
     if (body.startDate) formData.append('startDate', body.startDate);
     if (body.eEndDate) formData.append('endDate', body.eEndDate);
 
-    const response = await api
-      .postFormData('/documents', formData)
+    const response = await api.post('/documents', formData, { 'Content-Type': 'multipart/form-data' })
       .catch((e) => {
         console.log(e);
       });
@@ -66,21 +66,21 @@ export default function DocumentsComponent({ apiObject, id }) {
     }
   };
 
-  const onDeleteHandler = async (itemId) => {
-    const url = `/documents/${apiObject}/${id}/social-medias/${itemId}`;
-    await api.delete(url).catch((e) => {
-      console.log(e);
-    });
-    setReloader(reloader + 1);
-    setShowModal(false);
-  };
+  // const onDeleteHandler = async (itemId) => {
+  //   const url = `/documents/${apiObject}/${id}/social-medias/${itemId}`;
+  //   await api.delete(url).catch((e) => {
+  //     console.log(e);
+  //   });
+  //   setReloader(reloader + 1);
+  //   setShowModal(false);
+  // };
 
   const onClickModifyHandler = (oneData) => {
     setModalTitle("Modification d'un document");
     setModalContent(
       <DocumentForm
         data={oneData}
-        onDeleteHandler={onDeleteHandler}
+        // onDeleteHandler={onDeleteHandler}
         onSaveHandler={onSaveHandler}
       />,
     );
@@ -125,10 +125,14 @@ export default function DocumentsComponent({ apiObject, id }) {
     return <Icon name={iconName} size="5x" color={color} />;
   };
 
-  if (!data?.data) return <>Chargement...</>; // TODO Loader
+  if (!data?.data) {
+    return (
+      <PaysageSection dataPaysageMenu="Documents" id="documents" isEmpty />
+    );
+  }
 
   return (
-    <Container fluid as="section" id="Les-reseaux-sociaux">
+    <PaysageSection dataPaysageMenu="Documents" id="documents">
       <Row>
         <Col>
           <Title as="h3" look="h6">
@@ -147,11 +151,7 @@ export default function DocumentsComponent({ apiObject, id }) {
         </Col>
       </Row>
       <Row>
-        {data.data.length === 0 ? (
-          <Highlight className="fr-highlight--yellow-tournesol">
-            Cette section est vide pour le moment
-          </Highlight>
-        ) : null}
+        {data.data.length === 0 ? <EmptySection apiObject={apiObject} /> : null}
         {data.data.map((doc) => (
           <Col n="6" key={doc.id}>
             <Card hasArrow={false} onClick={() => onClickModifyHandler(doc)}>
@@ -187,7 +187,7 @@ export default function DocumentsComponent({ apiObject, id }) {
         <ModalTitle>{modalTitle}</ModalTitle>
         <ModalContent>{modalContent}</ModalContent>
       </Modal>
-    </Container>
+    </PaysageSection>
   );
 }
 

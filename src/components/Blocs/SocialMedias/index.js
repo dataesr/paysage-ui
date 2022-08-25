@@ -6,17 +6,17 @@ import {
   CardDescription,
   CardTitle,
   Col,
-  Container,
-  Highlight,
   Modal,
   ModalContent,
   ModalTitle,
   Row,
   Title,
 } from '@dataesr/react-dsfr';
+import PaysageSection from '../../Sections/section';
+import EmptySection from '../../Sections/empty';
 import SocialMediaForm from './form';
 import api from '../../../utils/api';
-import getEnumKey from '../../../utils';
+import { getEnumKey } from '../../../utils';
 
 export default function SocialMediasComponent({ apiObject, id }) {
   const [data, setData] = useState([]);
@@ -89,10 +89,14 @@ export default function SocialMediasComponent({ apiObject, id }) {
     setShowModal(true);
   };
 
-  if (!data?.data) return <>Chargement...</>; // TODO Loader
+  if (!data?.data) {
+    return (
+      <PaysageSection dataPaysageMenu="Médias sociaux" id="socialMedias" isEmpty />
+    );
+  }
 
   return (
-    <Container fluid as="section" id="Les-reseaux-sociaux">
+    <PaysageSection dataPaysageMenu="Médias sociaux" id="socialMedias">
       <Row>
         <Col>
           <Title as="h3" look="h6">
@@ -111,11 +115,7 @@ export default function SocialMediasComponent({ apiObject, id }) {
         </Col>
       </Row>
       <Row>
-        {data.data.length === 0 ? (
-          <Highlight className="fr-highlight--yellow-tournesol">
-            Cette section est vide pour le moment
-          </Highlight>
-        ) : null}
+        {data.data.length === 0 ? (<EmptySection apiObject={apiObject} />) : null}
         {data.data.map((sm) => (
           <Col n="3" key={sm.id}>
             <Card hasArrow={false} onClick={() => onClickModifyHandler(sm)}>
@@ -129,7 +129,7 @@ export default function SocialMediasComponent({ apiObject, id }) {
         <ModalTitle>{modalTitle}</ModalTitle>
         <ModalContent>{modalContent}</ModalContent>
       </Modal>
-    </Container>
+    </PaysageSection>
   );
 }
 

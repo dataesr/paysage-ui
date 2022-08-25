@@ -6,16 +6,17 @@ import {
   CardDescription,
   CardTitle,
   Col,
-  Highlight,
   Modal,
   ModalContent,
   ModalTitle,
   Row,
   Title,
 } from '@dataesr/react-dsfr';
+import PaysageSection from '../../Sections/section';
+import EmptySection from '../../Sections/empty';
 import IdentifierForm from './form';
 import api from '../../../utils/api';
-import getEnumKey from '../../../utils';
+import { getEnumKey } from '../../../utils';
 
 export default function IdentifiersComponent({ apiObject, id }) {
   const [data, setData] = useState([]);
@@ -87,15 +88,11 @@ export default function IdentifiersComponent({ apiObject, id }) {
   };
 
   if (!data?.data) {
-    return (
-      <div className="fr-container-fluid" as="section" data-paysage-menu="Identifiants" id="Les-identifiants">
-        Chargement...
-      </div>
-    );
-  } // TODO Loader
+    return <PaysageSection dataPaysageMenu="Identifiants" id="identifiers" isEmpty />;
+  }
 
   return (
-    <div className="fr-container-fluid" as="section" data-paysage-menu="Identifiants" id="Les-identifiants">
+    <PaysageSection dataPaysageMenu="Identifiants" id="identifiers">
       <Row>
         <Col>
           <Title as="h3" look="h6">
@@ -114,11 +111,7 @@ export default function IdentifiersComponent({ apiObject, id }) {
         </Col>
       </Row>
       <Row>
-        {data.data.length === 0 ? (
-          <Highlight className="fr-highlight--yellow-tournesol">
-            Cette section est vide pour le moment
-          </Highlight>
-        ) : null}
+        {data.data.length === 0 ? <EmptySection apiObject={apiObject} /> : null}
         {data.data.map((ident) => (
           <Col n="3" key={ident.id}>
             <Card hasArrow={false} onClick={() => onClickModifyHandler(ident)}>
@@ -132,7 +125,7 @@ export default function IdentifiersComponent({ apiObject, id }) {
         <ModalTitle>{modalTitle}</ModalTitle>
         <ModalContent>{modalContent}</ModalContent>
       </Modal>
-    </div>
+    </PaysageSection>
   );
 }
 

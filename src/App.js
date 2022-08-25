@@ -73,18 +73,35 @@ function App() {
           <Route path="/termes/ajouter" element={<TermsAddPage />} />
           <Route path="/termes/:id" element={<TermByIdPage />} />
 
-          <Route path="/rechercher/textes-officiels" element={<OfficialTextsPage />} />
+          <Route
+            path="/rechercher/textes-officiels"
+            element={<OfficialTextsPage />}
+          />
           <Route
             path="/textes-officiels/ajouter"
+            element={<OfficialTextsAddPage />}
+          />
+          <Route
+            path="/textes-officiels/ajouter/:route/:idFrom"
             element={<OfficialTextsAddPage />}
           />
           <Route
             path="/textes-officiels/:id"
             element={<OfficialTextsByIdPage />}
           />
+          <Route
+            path="/textes-officiels/:id/:route/:idFrom"
+            element={<OfficialTextsByIdPage />}
+          />
 
-          <Route path="/ressources-internes" element={<RessourcesInternesPage />} />
-          <Route path="/ressources-externes" element={<RessourcesExternesPage />} />
+          <Route
+            path="/ressources-internes"
+            element={<RessourcesInternesPage />}
+          />
+          <Route
+            path="/ressources-externes"
+            element={<RessourcesExternesPage />}
+          />
 
           <Route path="/admin/:route" element={<AdminPage />} />
 

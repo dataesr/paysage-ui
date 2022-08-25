@@ -1,4 +1,4 @@
-export default function getEnumKey(apiObject, apiSubObject) {
+function getEnumKey(apiObject, apiSubObject) {
   let enumKey = '';
   if (apiSubObject === 'weblinks') {
     if (apiObject === 'structures') enumKey = 'StructureWeblinkTypesEnum';
@@ -20,3 +20,21 @@ export default function getEnumKey(apiObject, apiSubObject) {
 
   return enumKey;
 }
+
+function getRoute(apiObject) {
+  switch (apiObject) {
+  case 'persons':
+    return 'personnes';
+  case 'terms':
+    return 'termes';
+  case 'projects':
+    return 'projets';
+  case 'official-texts':
+    return 'textes-officiels';
+
+  default:
+    return apiObject;
+  }
+}
+
+export { getEnumKey, getRoute };

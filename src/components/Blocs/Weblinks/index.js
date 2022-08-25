@@ -6,17 +6,17 @@ import {
   CardDescription,
   CardTitle,
   Col,
-  Container,
-  Highlight,
   Modal,
   ModalContent,
   ModalTitle,
   Row,
   Title,
 } from '@dataesr/react-dsfr';
+import PaysageSection from '../../Sections/section';
+import EmptySection from '../../Sections/empty';
 import WeblinkForm from './form';
 import api from '../../../utils/api';
-import getEnumKey from '../../../utils';
+import { getEnumKey } from '../../../utils';
 
 export default function WeblinksComponent({ apiObject, id }) {
   const [data, setData] = useState([]);
@@ -91,14 +91,12 @@ export default function WeblinksComponent({ apiObject, id }) {
 
   if (!data?.data) {
     return (
-      <div className="fr-container-fluid" as="section" data-paysage-menu="Liens web" id="Les-liens-web">
-        Chargement...
-      </div>
-    ); // TODO Loader
+      <PaysageSection dataPaysageMenu="Liens web" id="weblinks" isEmpty />
+    );
   }
 
   return (
-    <div className="fr-container-fluid" as="section" data-paysage-menu="Liens web" id="Les-liens-web">
+    <PaysageSection dataPaysageMenu="Liens web" id="weblinks">
       <Row>
         <Col>
           <Title as="h3" look="h6">
@@ -117,11 +115,7 @@ export default function WeblinksComponent({ apiObject, id }) {
         </Col>
       </Row>
       <Row>
-        {data.data.length === 0 ? (
-          <Highlight className="fr-highlight--yellow-tournesol">
-            Cette section est vide pour le moment
-          </Highlight>
-        ) : null}
+        {data.data.length === 0 ? <EmptySection apiObject={apiObject} /> : null}
         {data.data.map((wl) => (
           <Col n="3" key={wl.id}>
             <Card hasArrow={false} onClick={() => onClickModifyHandler(wl)}>
@@ -135,7 +129,7 @@ export default function WeblinksComponent({ apiObject, id }) {
         <ModalTitle>{modalTitle}</ModalTitle>
         <ModalContent>{modalContent}</ModalContent>
       </Modal>
-    </div>
+    </PaysageSection>
   );
 }
 
