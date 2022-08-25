@@ -5,6 +5,9 @@ export default function useFetch(method, url, body, headers) {
   const [data, setData] = useState(null);
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(true);
+  const [reloads, setReloads] = useState(0);
+
+  const reload = () => setReloads(reloads + 1);
 
   const setDefaultHeaders = (requestHeaders = {}) => {
     const accessToken = localStorage.getItem('__paysage_access__');
@@ -106,7 +109,7 @@ export default function useFetch(method, url, body, headers) {
       setError(true);
       console.log(e);
     });
-  }, [method, url, body, headers]);
+  }, [method, url, body, headers, reloads]);
 
-  return { data, error, isLoading };
+  return { data, error, isLoading, reload };
 }

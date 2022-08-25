@@ -7,12 +7,10 @@ import {
   NavItem,
   NavSubItem,
   Service,
-  Text,
   Tool,
   ToolItem,
   ToolItemGroup,
 } from '@dataesr/react-dsfr';
-import Avatar from '../Avatar';
 import useAuth from '../../hooks/useAuth';
 
 export default function Header() {
@@ -127,28 +125,11 @@ export default function Header() {
           />
         </NavItem>
         {(viewer?.id && (['admin', 'user'].includes(viewer?.role))) && (
-          <NavItem title="Admin" current={pathname.startsWith('/admin')}>
-            <NavSubItem
-              current={pathname.startsWith('/admin/document-types')}
-              title="Types de documents"
-              asLink={<RouterLink to="/admin/document-types" />}
-            />
-            <NavSubItem
-              current={pathname.startsWith('/admin/email-types')}
-              title="Types d'email"
-              asLink={<RouterLink to="/admin/email-types" />}
-            />
-            <NavSubItem
-              current={pathname.startsWith('/admin/supervising-ministers')}
-              title="Ministres de tutelle"
-              asLink={<RouterLink to="/admin/supervising-ministers" />}
-            />
-            <NavSubItem
-              current={pathname.startsWith('/admin/utilisateurs')}
-              title="Utilisateurs"
-              asLink={<RouterLink to="/admin/utilisateurs" />}
-            />
-          </NavItem>
+          <NavItem
+            title="Administration"
+            current={pathname.startsWith('/admin')}
+            asLink={<RouterLink to="/admin" />}
+          />
         )}
         <NavItem
           title="Aide"

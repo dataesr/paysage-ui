@@ -10,7 +10,7 @@ import { MAIL_REGEXP, PASSWORD_REGEXP, OTP_REGEXP, getPasswordValidationInfo } f
 export default function Passwordless() {
   const navigate = useNavigate();
   const { requestPasswordChangeEmail, changePassword, viewer } = useAuth();
-  // if (viewer?.id) { navigate('/'); }
+  if (viewer?.id) { navigate('/'); }
   const [step, setStep] = useState(1);
 
   const [otp, setOtp] = useState('');
