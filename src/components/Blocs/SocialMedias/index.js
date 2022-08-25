@@ -15,7 +15,7 @@ import {
   Title,
 } from '@dataesr/react-dsfr';
 import SocialMediaForm from './form';
-import fetch from '../../../utils/fetch';
+import api from '../../../utils/api';
 import getEnumKey from '../../../utils';
 
 export default function SocialMediasComponent({ apiObject, id }) {
@@ -29,7 +29,7 @@ export default function SocialMediasComponent({ apiObject, id }) {
 
   useEffect(() => {
     const getData = async () => {
-      const response = await fetch
+      const response = await api
         .get(`/${apiObject}/${id}/social-medias`)
         .catch((e) => {
           console.log(e);
@@ -49,7 +49,7 @@ export default function SocialMediasComponent({ apiObject, id }) {
       url += `/${itemId}`;
     }
 
-    const response = await fetch[method](url, body).catch((e) => {
+    const response = await api[method](url, body).catch((e) => {
       console.log(e);
     });
 
@@ -61,7 +61,7 @@ export default function SocialMediasComponent({ apiObject, id }) {
 
   const onDeleteHandler = async (itemId) => {
     const url = `/${apiObject}/${id}/social-medias/${itemId}`;
-    await fetch.delete(url).catch((e) => {
+    await api.delete(url).catch((e) => {
       console.log(e);
     });
     setReloader(reloader + 1);

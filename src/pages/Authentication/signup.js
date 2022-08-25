@@ -1,40 +1,12 @@
 import { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import {
   ButtonGroup, Button, Breadcrumb, BreadcrumbItem, Container, Row, Col, TextInput, Text, Title, Icon, Stepper, Highlight,
 } from '@dataesr/react-dsfr';
 import useAuth from '../../hooks/useAuth';
 import useToast from '../../hooks/useToast';
-
-const MAIL_REGEXP = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-const PASSWORD_REGEXP = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&:_])[A-Za-z\d@$!%*#?&:_]{8,}$/;
-
-function PasswordHint({ display, hint }) {
-  const icon = {
-    info: 'ri-information-fill',
-    success: 'ri-checkbox-circle-fill',
-    error: 'ri-close-circle-fill',
-  };
-  return (
-    <Text
-      className={`fr-password-${display}`}
-      size="xs"
-    >
-      <Icon
-        color={`var(--${display}-main-525)`}
-        size="lg"
-        name={icon[display]}
-      >
-        {hint}
-      </Icon>
-    </Text>
-  );
-}
-PasswordHint.propTypes = {
-  hint: PropTypes.string.isRequired,
-  display: PropTypes.oneOf(['error', 'info', 'success']).isRequired,
-};
+import PasswordHint from '../../components/PasswordHint';
+import { MAIL_REGEXP, PASSWORD_REGEXP, getPasswordValidationInfo } from '../../utils/auth';
 
 export default function SignUp() {
   const { toast } = useToast();
@@ -46,38 +18,18 @@ export default function SignUp() {
   const [firstName, setFirstName] = useState('');
   const [firstNameError, setFirstNameError] = useState('');
   const [firstNameErrorDisplay, setFirstNameErrorDisplay] = useState(false);
-  useEffect(() => {
-    if (firstName.length >= 2) return setFirstNameError('');
-    return setFirstNameError('Le prénom doit avoir au moins deux caractères');
-  }, [firstName]);
 
   const [lastName, setLastName] = useState('');
   const [lastNameError, setLastNameError] = useState('');
   const [lastNameErrorDisplay, setLastNameErrorDisplay] = useState(false);
-  useEffect(() => {
-    if (lastName.length >= 2) return setLastNameError('');
-    return setLastNameError('Le nom doit avoir au moins deux caractères');
-  }, [lastName]);
 
   const [email, setEmail] = useState('');
   const [emailError, setEmailError] = useState('');
   const [emailErrorDisplay, setEmailErrorDisplay] = useState(false);
-  useEffect(() => {
-    if (MAIL_REGEXP.test(email)) return setEmailError('');
-    return setEmailError('Veuillez entrer une adresse email valide.');
-  }, [email]);
 
   const [password, setPassword] = useState('');
-  const passwordValidatationInfo = (pwd) => ({
-    uppercase: /(?=[A-Z])/.test(pwd),
-    lowercase: /(?=[a-z])/.test(pwd),
-    special: /(?=[@$!%*#?&:_])/.test(pwd),
-    integer: /(?=\d)/.test(pwd),
-    length: /[A-Za-z\d@$!%*#?&:_]{8,}/.test(pwd),
-  });
-  const [passwordValidation, setPasswordValidation] = useState(passwordValidatationInfo(password));
+  const [passwordValidation, setPasswordValidation] = useState(getPasswordValidationInfo(password));
   const [passwordErrorDisplay, setPasswordErrorDisplay] = useState('info');
-  useEffect(() => { setPasswordValidation(passwordValidatationInfo(password)); }, [password]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -93,7 +45,6 @@ export default function SignUp() {
     setStep(step - 1);
     toast({ toastType: 'error', title: 'Une erreur est survenue', description: response.data.error });
   };
-
   const nextStep = async (e) => {
     e.preventDefault();
     if (emailError || !PASSWORD_REGEXP.test(password)) {
@@ -103,6 +54,23 @@ export default function SignUp() {
     }
     setStep(step + 1);
   };
+
+  useEffect(() => {
+    if (firstName.length >= 2) return setFirstNameError('');
+    return setFirstNameError('Le prénom doit avoir au moins deux caractères');
+  }, [firstName]);
+
+  useEffect(() => {
+    if (lastName.length >= 2) return setLastNameError('');
+    return setLastNameError('Le nom doit avoir au moins deux caractères');
+  }, [lastName]);
+
+  useEffect(() => {
+    if (MAIL_REGEXP.test(email)) return setEmailError('');
+    return setEmailError('Veuillez entrer une adresse email valide.');
+  }, [email]);
+
+  useEffect(() => setPasswordValidation(getPasswordValidationInfo(password)), [password]);
 
   return (
     <Container spacing="mb-6w">
@@ -150,7 +118,7 @@ export default function SignUp() {
                           hint="Format attendu : nom@domaine.fr"
                           value={email}
                           onChange={(e) => setEmail(e.target.value)}
-                          messageType={(emailErrorDisplay && emailError) ? 'error' : null}
+                          messageType={(emailErrorDisplay && emailError) ? 'error' : ''}
                           message={(emailErrorDisplay && emailError) ? emailError : null}
                           onBlur={() => setEmailErrorDisplay(true)}
                         />
@@ -160,7 +128,7 @@ export default function SignUp() {
                           value={password}
                           onChange={(e) => setPassword(e.target.value)}
                           type="password"
-                          messageType="info"
+                          messageType="success"
                           message={(
                             <Text size="xs">
                               Votre mot de passe doit contenir:
@@ -208,7 +176,7 @@ export default function SignUp() {
                         currentStep={step}
                         steps={3}
                         currentTitle="Informations complémentaires"
-                        nextStepTitle="Compte crée !"
+                        nextStepTitle="Compte créé !"
                       />
                     </Col>
                   </Row>
@@ -222,7 +190,7 @@ export default function SignUp() {
                           value={firstName}
                           type="text"
                           onChange={(e) => setFirstName(e.target.value)}
-                          messageType={(firstNameErrorDisplay && firstNameError) ? 'error' : null}
+                          messageType={(firstNameErrorDisplay && firstNameError) ? 'error' : ''}
                           message={(firstNameErrorDisplay && firstNameError) ? firstNameError : null}
                           onBlur={() => setFirstNameErrorDisplay(true)}
                         />
@@ -232,7 +200,7 @@ export default function SignUp() {
                           type="text"
                           value={lastName}
                           onChange={(e) => setLastName(e.target.value)}
-                          messageType={(lastNameErrorDisplay && lastNameError) ? 'error' : null}
+                          messageType={(lastNameErrorDisplay && lastNameError) ? 'error' : ''}
                           message={(lastNameErrorDisplay && lastNameError) ? lastNameError : null}
                           onBlur={() => setLastNameErrorDisplay(true)}
                         />
@@ -273,7 +241,7 @@ export default function SignUp() {
                       <Stepper
                         currentStep={step}
                         steps={3}
-                        currentTitle="Compte crée"
+                        currentTitle="Compte créé"
                         nextStepTitle=""
                       />
                     </Col>
@@ -291,7 +259,7 @@ export default function SignUp() {
                       {' '}
                       <br />
                       <br />
-                      Un administrateur doit valider votre inscription. Lorsque cela aura été fait, vous revevrez un autre email de confirmation et vous pourrez vous connecter.
+                      Un administrateur doit valider votre inscription. Lorsque cela aura été fait, vous recevrez un autre email de confirmation et vous pourrez vous connecter.
                       {' '}
                       <br />
                       <br />
@@ -307,7 +275,6 @@ export default function SignUp() {
                   </Row>
                 </>
               )}
-
             </Container>
           </Col>
         </Row>

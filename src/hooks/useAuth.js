@@ -1,21 +1,48 @@
-import PropTypes from 'prop-types';
-import {
+import { useState,
   createContext,
   useContext,
   useMemo,
+  useEffect,
 } from 'react';
-import useFetch from './useFetch';
+import PropTypes from 'prop-types';
+import api from '../utils/api';
 
 const AuthContext = createContext();
 
 export function AuthContextProvider({ children }) {
-  const { data: user } = useFetch('GET', '/me');
-  const viewer = useMemo(() => user || {}, [user]);
+  const [viewer, setViewer] = useState({});
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      const { data } = await api.get('/me');
+      setViewer(data || {});
+    };
+    fetchUser();
+  }, []);
 
   const requestSignInEmail = async ({ email, password }) => {
     const url = `${process.env.REACT_APP_API_URL}/signin`;
     const body = JSON.stringify({ email, password });
     const headers = { 'X-Paysage-OTP-Method': 'email', 'Content-Type': 'application/json' };
+    const response = await fetch(url, { method: 'POST', body, headers })
+      .catch(() => { console.log('Erreur inatendue'); });
+    return response.json();
+  };
+
+  const requestPasswordChangeEmail = async ({ email }) => {
+    const url = `${process.env.REACT_APP_API_URL}/recovery/password`;
+    const body = JSON.stringify({ email });
+    const headers = { 'X-Paysage-OTP-Method': 'email', 'Content-Type': 'application/json' };
+    const response = await fetch(url, { method: 'POST', body, headers })
+      .catch(() => { console.log('Erreur inatendue'); });
+    return response.json();
+  };
+
+  const changePassword = async ({ email, password, otp }) => {
+    console.log('changePassword');
+    const url = `${process.env.REACT_APP_API_URL}/recovery/password`;
+    const body = JSON.stringify({ email, password });
+    const headers = { 'X-Paysage-OTP': otp, 'Content-Type': 'application/json' };
     const response = await fetch(url, { method: 'POST', body, headers })
       .catch(() => { console.log('Erreur inatendue'); });
     return response.json();
@@ -57,7 +84,14 @@ export function AuthContextProvider({ children }) {
   };
 
   const value = useMemo(() => ({
-    viewer, signup, signin, signout, requestSignInEmail,
+    viewer,
+    setViewer,
+    signup,
+    signin,
+    signout,
+    changePassword,
+    requestSignInEmail,
+    requestPasswordChangeEmail,
   }), [viewer]);
   return (
     <AuthContext.Provider value={value}>

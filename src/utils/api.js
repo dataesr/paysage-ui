@@ -1,5 +1,13 @@
 const setDefaultHeaders = (requestHeaders = {}) => {
   const accessToken = localStorage.getItem('__paysage_access__');
+  const { 'Content-Type': contentType, ...rest } = requestHeaders;
+  if (contentType === 'multipart/form-data') {
+    return {
+      Accept: 'application/json',
+      Authorization: `Bearer ${accessToken}`,
+      ...rest,
+    };
+  }
   return {
     'Content-Type': 'application/json',
     Accept: 'application/json',
@@ -33,6 +41,9 @@ async function customFetch({
     headers: setDefaultHeaders(headers),
     body,
   };
+  if (body && options.headers['Content-Type'] === 'application/json') {
+    options.body = JSON.stringify(body);
+  }
 
   const response = await fetch(requestUrl, options);
 
@@ -58,31 +69,9 @@ async function customFetch({
 }
 
 export default {
-  postFormData: (url, formData, headers) => {
-    customFetch({
-      method: 'POST',
-      url,
-      body: formData,
-      headers: { ...headers, 'Content-Type': 'multipart/form-data' },
-    });
-  },
-  putFormData: (url, formData, headers) => {
-    customFetch({
-      method: 'PUT',
-      url,
-      body: formData,
-      headers: { ...headers, 'Content-Type': 'multipart/form-data' },
-    });
-  },
   get: (url, headers) => customFetch({ method: 'GET', url, headers }),
-  post: (url, body, headers) => customFetch({
-    method: 'POST', url, body: JSON.stringify(body), headers,
-  }),
-  put: (url, body, headers) => customFetch({
-    method: 'PUT', url, body: JSON.stringify(body), headers,
-  }),
-  patch: (url, body, headers) => customFetch({
-    method: 'PATCH', url, body: JSON.stringify(body), headers,
-  }),
+  post: (url, body, headers) => customFetch({ method: 'POST', url, body, headers }),
+  put: (url, body, headers) => customFetch({ method: 'PUT', url, body, headers }),
+  patch: (url, body, headers) => customFetch({ method: 'PATCH', url, body, headers }),
   delete: (url, headers) => customFetch({ method: 'DELETE', url, headers }),
 };

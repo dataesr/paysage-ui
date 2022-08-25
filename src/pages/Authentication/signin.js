@@ -1,13 +1,10 @@
 import { useState } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import {
-  Container, Row, Col, TextInput, Text, Button, Link, Title, Breadcrumb, BreadcrumbItem, ButtonGroup, Stepper,
+  Container, Row, Col, TextInput, Text, Button, Link, Title, Breadcrumb, BreadcrumbItem, ButtonGroup, Stepper, Alert,
 } from '@dataesr/react-dsfr';
 import useAuth from '../../hooks/useAuth';
-
-const MAIL_REGEXP = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-const PASSWORD_REGEXP = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&:_])[A-Za-z\d@$!%*#?&:_]{8,}$/;
-const OTP_REGEXP = /^[0-9]{6}$/;
+import { MAIL_REGEXP, PASSWORD_REGEXP, OTP_REGEXP } from '../../utils/auth';
 
 export default function SignIn() {
   const navigate = useNavigate();
@@ -17,9 +14,9 @@ export default function SignIn() {
   const [otp, setOtp] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [matchError, setMatchError] = useState(false);
 
   const validateEmail = () => MAIL_REGEXP.test(email);
-
   const validateOtp = () => OTP_REGEXP.test(otp);
   const validatePassword = () => PASSWORD_REGEXP.test(password);
 
@@ -28,8 +25,8 @@ export default function SignIn() {
     if (validateEmail(email) && (validatePassword(password) === true)) {
       const response = await requestSignInEmail({ email, password });
       const serverMessage = /Un nouveau code à été envoyé/i;
-      if (serverMessage.test(response.error)) { setStep(2); } else { console.log(response); }
-    }
+      if (serverMessage.test(response.error)) { setStep(2); } else { setMatchError(true); }
+    } else { setMatchError(true); }
   };
   const handleSignIn = async (e) => {
     e.preventDefault();
@@ -70,6 +67,7 @@ export default function SignIn() {
               { (step === 1) && (
                 <Row justifyContent="center">
                   <Col>
+                    {matchError && <Alert description="Mauvaise combinaison Identifiant/Mot de passe " type="error" />}
                     <form onSubmit={requestOtp}>
                       <TextInput
                         required

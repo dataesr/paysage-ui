@@ -10,7 +10,7 @@ import {
 } from '@dataesr/react-dsfr';
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
-import fetch from '../../../utils/fetch';
+import api from '../../../utils/api';
 
 export default function EmailForm({ data, onDeleteHandler, onSaveHandler }) {
   const [email, setEmail] = useState(null);
@@ -19,7 +19,7 @@ export default function EmailForm({ data, onDeleteHandler, onSaveHandler }) {
 
   useEffect(() => {
     const getOptions = async () => {
-      const response = await fetch.get('/email-types?limit=50').catch((e) => {
+      const response = await api.get('/email-types?limit=50').catch((e) => {
         console.log(e);
       });
       if (response.ok) {

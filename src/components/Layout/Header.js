@@ -7,10 +7,12 @@ import {
   NavItem,
   NavSubItem,
   Service,
+  Text,
   Tool,
   ToolItem,
   ToolItemGroup,
 } from '@dataesr/react-dsfr';
+import Avatar from '../Avatar';
 import useAuth from '../../hooks/useAuth';
 
 export default function Header() {
@@ -36,10 +38,12 @@ export default function Header() {
           <ToolItemGroup>
             {viewer?.id ? (
               <ToolItem
-                icon="ri-user-3-line"
+                // icon="ri-user-3-line"
                 asLink={<RouterLink to="/profile" />}
               >
-                {viewer.email}
+                {viewer.firstName}
+                {' '}
+                {viewer.lastName}
               </ToolItem>
             ) : (
               <ToolItem

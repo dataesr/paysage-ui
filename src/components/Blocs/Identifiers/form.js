@@ -12,7 +12,7 @@ import {
 } from '@dataesr/react-dsfr';
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
-import fetch from '../../../utils/fetch';
+import api from '../../../utils/api';
 import DateOneField from '../../DateOneField';
 
 export default function IdentifierForm({ data, onDeleteHandler, onSaveHandler, enumKey }) {
@@ -26,7 +26,7 @@ export default function IdentifierForm({ data, onDeleteHandler, onSaveHandler, e
 
   useEffect(() => {
     const getOptions = async () => {
-      const response = await fetch.get('/docs/enums').catch((e) => {
+      const response = await api.get('/docs/enums').catch((e) => {
         console.log(e);
       });
       if (response.ok) {

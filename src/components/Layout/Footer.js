@@ -70,6 +70,9 @@ export default function Footer({ switchTheme }) {
         <FooterLink href="#">
           Mentions légales
         </FooterLink>
+        <FooterLink href={`https://github.com/dataesr/paysage-ui/releases/tag/v${process.env.REACT_APP_VERSION}`}>
+          {`Version de l'application v${process.env.REACT_APP_VERSION}`}
+        </FooterLink>
         <FooterLink onClick={() => setIsOpen(true)}>
           <button
             type="button"

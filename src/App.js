@@ -14,7 +14,12 @@ import OfficialTextsPage from './pages/OfficialTexts';
 import PersonByIdPage from './pages/Persons/id';
 import PersonsAddPage from './pages/Persons/add';
 import PersonsPage from './pages/Persons';
-import Profile from './pages/Profile/profile';
+import UserAccount from './pages/Account';
+import UserProfile from './pages/Account/profile';
+import UserPreferences from './pages/Account/preferences';
+import UserSecurity from './pages/Account/security';
+import UserGroups from './pages/Account/groups';
+import Passwordless from './pages/Authentication/passwordless';
 import ProjectsAddPage from './pages/Projects/add';
 import ProjectsPage from './pages/Projects';
 import RessourcesInternesPage from './pages/Ressources/internes';
@@ -38,8 +43,14 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/se-connecter" element={<SignIn />} />
           <Route path="/creer-un-compte" element={<SignUp />} />
+          <Route path="/mot-de-passe-oublie" element={<Passwordless />} />
 
-          <Route path="/profile" element={<Profile />} />
+          <Route path="/profile" element={<UserAccount />}>
+            <Route path="" element={<UserProfile />} />
+            <Route path="preferences" element={<UserPreferences />} />
+            <Route path="groupes" element={<UserGroups />} />
+            <Route path="securite" element={<UserSecurity />} />
+          </Route>
 
           <Route path="/rechercher/categories" element={<CategoriesPage />} />
           <Route path="/categories/ajouter" element={<CategoriesAddPage />} />

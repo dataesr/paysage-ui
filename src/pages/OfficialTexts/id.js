@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useParams } from 'react-router-dom';
 import { Col, Container, Row, Title } from '@dataesr/react-dsfr';
-import fetch from '../../utils/fetch';
+import api from '../../utils/api';
 import OfficiaTextForm from '../../components/Forms/OfficialText';
 
 export default function OfficialTextByIdPage({ from }) {
@@ -11,7 +11,7 @@ export default function OfficialTextByIdPage({ from }) {
 
   useEffect(() => {
     const getData = async () => {
-      const response = await fetch.get(`/official-texts/${id}`).catch((e) => {
+      const response = await api.get(`/official-texts/${id}`).catch((e) => {
         console.log(e);
       });
       if (response.ok) setData(response.data);

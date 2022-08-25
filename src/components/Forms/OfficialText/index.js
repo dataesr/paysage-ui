@@ -17,7 +17,7 @@ import { useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 import validator from './validator';
 import DateOneField from '../../DateOneField';
-import fetch from '../../../utils/fetch';
+import api from '../../../utils/api';
 import useToast from '../../../hooks/useToast';
 
 export default function OfficiaTextForm({ data, from }) {
@@ -153,11 +153,11 @@ export default function OfficiaTextForm({ data, from }) {
     if (ok) {
       let response = null;
       if (data?.id) {
-        response = await fetch.patch(`/official-texts/${data.id}`, body).catch((e) => {
+        response = await api.patch(`/official-texts/${data.id}`, body).catch((e) => {
           console.log(e);
         });
       } else {
-        response = await fetch.post('/official-texts', body).catch((e) => {
+        response = await api.post('/official-texts', body).catch((e) => {
           console.log(e);
         });
       }
