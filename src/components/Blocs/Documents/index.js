@@ -44,7 +44,6 @@ export default function DocumentsComponent({ apiObject, id }) {
     body,
     // itemId = null,
   ) => {
-    console.log('save doc', body);
     const formData = new FormData();
     formData.append('documentTypeId', body.type);
     if (body.title) formData.append('title', body.title);
@@ -54,8 +53,7 @@ export default function DocumentsComponent({ apiObject, id }) {
     if (body.startDate) formData.append('startDate', body.startDate);
     if (body.eEndDate) formData.append('endDate', body.eEndDate);
 
-    const response = await api
-      .postFormData('/documents', formData)
+    const response = await api.post('/documents', formData, { 'Content-Type': 'multipart/form-data' })
       .catch((e) => {
         console.log(e);
       });
