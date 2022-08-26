@@ -36,7 +36,7 @@ export default function Header() {
           <ToolItemGroup>
             {viewer?.id ? (
               <ToolItem
-                // icon="ri-user-3-line"
+                icon="ri-user-3-line"
                 asLink={<RouterLink to="/profile" />}
               >
                 {viewer.firstName}

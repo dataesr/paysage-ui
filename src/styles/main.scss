@@ -112,4 +112,15 @@ HR {
   justify-content: space-between;
 }
 
+.fr-row--space-between {
+  justify-content: space-between;
+}
+.fr-row--baseline {
+  align-items: baseline;
+}
+.fr-col--grow {
+  flex: none;
+  flex-grow: 1;
+}
+
 

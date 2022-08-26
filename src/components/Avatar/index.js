@@ -9,13 +9,13 @@ import styles from './avatar.module.scss';
 export default function Avatar({ src, name, size, ...rest }) {
   const [error, setError] = useState(false);
   return (
-    <div className={`${styles['avatar-box']} fr-m-2w`} style={{ width: size, height: size }} {...rest}>
+    <span className={`${styles['avatar-box']}`} style={{ width: size, height: size }} {...rest}>
       {
         (error)
-          ? (<Text size="lead">{(name) ? name.slice(0, 2).toUpperCase() : ''}</Text>)
-          : (<img alt="avatar" className={styles['avatar-img']} src={src} onError={() => setError(true)} />)
+          ? (<Text as="span" spacing="m-0" size="lg">{(name) ? name.slice(0, 2).toUpperCase() : ''}</Text>)
+          : (<img alt="avatar" className={styles['avatar-img']} src={src || 'https://avataaars.io/?avatarStyle=Circle&topType=Eyepatch&accessoriesType=Prescription02&hairColor=Platinum&facialHairType=MoustacheFancy&facialHairColor=Platinum&clotheType=Hoodie&clotheColor=Heather&graphicType=Bear&eyeType=Cry&eyebrowType=RaisedExcited&mouthType=Concerned&skinColor=Yellow'} onError={() => setError(true)} />)
       }
-    </div>
+    </span>
   );
 }
 
@@ -41,5 +41,5 @@ Avatar.propTypes = {
 Avatar.defaultProps = {
   src: '',
   name: null,
-  size: 32,
+  size: 48,
 };

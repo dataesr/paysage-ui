@@ -61,3 +61,16 @@ export function getApproximativeDate(d) {
 
   return `${dd} ${months[mm - 1]} ${yyyy}`;
 }
+
+export function toString(date, time = false) {
+  const options = {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: 'numeric',
+    second: 'numeric',
+  };
+  if (time) return new Date(date).toLocaleString('fr-FR', options);
+  return new Date(date).toLocaleDateString('fr-FR', options);
+}
