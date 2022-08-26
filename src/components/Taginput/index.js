@@ -1,70 +1,67 @@
-/* eslint-disable react/forbid-prop-types */
-/* eslint-disable react/no-unused-prop-types */
+import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { Button, Col, Row, Tag, TextInput } from '@dataesr/react-dsfr';
-import { useState } from 'react';
-import { v4 as uuidv4 } from 'uuid';
+import { Col, Row, Tag, TagGroup, TextInput } from '@dataesr/react-dsfr';
 
-export default function Taginput({ label, values, hint, setValuesHandler }) {
-  const [value, setValue] = useState(null);
+export default function TagInput({ label, hint, tags, onTagsChange }) {
+  const [input, setInput] = useState('');
+  const [values, setValues] = useState(tags);
 
-  const addValues = () => {
-    if (value) {
-      const newValues = [...values];
-      newValues.push(value);
-      setValuesHandler(newValues);
-      setValue('');
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      if (input) { setValues([...values, input]); }
+      setInput('');
     }
   };
 
-  const deleteValue = (valueToDelete) => {
-    let newValues = [...values];
-    newValues = newValues.filter((el) => el !== valueToDelete);
-    console.log(valueToDelete, newValues);
-    setValuesHandler(newValues);
-  };
+  useEffect(() => onTagsChange(values), [values, onTagsChange]);
 
   return (
-    <>
-      <Row alignItems="bottom">
-        <Col n="10">
-          <TextInput
-            value={value}
-            label={label}
-            hint={hint}
-            onChange={(e) => setValue(e.target.value)}
-          />
-        </Col>
-        <Col className="text-right">
-          <Button onClick={() => addValues()}>Ajouter</Button>
-        </Col>
-      </Row>
-      <Row>
-        <Col className="fr-pt-2w">
-          {values.map((item) => (
-            <Tag
-              key={uuidv4()}
-              className="fr-mr-1w"
-              closable
-              onClick={() => deleteValue(item)}
-            >
-              {item}
-            </Tag>
-          ))}
-        </Col>
-      </Row>
-    </>
+    <div>
+      <div>
+        <Row alignItems="bottom">
+          <Col n="10">
+            <TextInput
+              type="text"
+              value={input}
+              label={label}
+              hint={hint}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={handleKeyDown}
+            />
+          </Col>
+        </Row>
+        <Row>
+          <Col className="fr-pt-2w">
+            <TagGroup>
+              {values.map((tag, i) => (
+                <Tag
+                  // eslint-disable-next-line react/no-array-index-key
+                  key={`tag-${i}`}
+                  className="fr-mr-1w"
+                  onClick={() => {
+                    setValues([...values.filter((el) => el !== tag)]);
+                  }}
+                >
+                  {tag}
+                </Tag>
+              ))}
+            </TagGroup>
+          </Col>
+        </Row>
+      </div>
+    </div>
   );
 }
 
-Taginput.propTypes = {
+TagInput.propTypes = {
   hint: PropTypes.string,
   label: PropTypes.string.isRequired,
-  values: PropTypes.arrayOf(PropTypes.string),
-  setValuesHandler: PropTypes.func.isRequired,
+  tags: PropTypes.arrayOf(PropTypes.string),
+  onTagsChange: PropTypes.func.isRequired,
 };
 
-Taginput.defaultProps = {
+TagInput.defaultProps = {
   hint: 'Validez votre ajout avec la touche "Entrée" afin de valider votre ajout',
-  values: [],
+  tags: [],
 };

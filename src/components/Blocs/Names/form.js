@@ -160,8 +160,8 @@ export default function EmailForm({ data, onDeleteHandler, onSaveHandler }) {
             <Taginput
               label="Autres noms"
               hint='Validez votre ajout avec la touche "Entrée" afin de valider votre ajout'
-              values={otherNames || []}
-              setValuesHandler={setOtherNames}
+              tags={otherNames || []}
+              onTagsChange={(tags) => setOtherNames(tags)}
             />
           </Col>
         </Row>

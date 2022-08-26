@@ -118,6 +118,9 @@ HR {
 .fr-row--baseline {
   align-items: baseline;
 }
+.fr-row--last-baseline {
+  align-items: last baseline;
+}
 .fr-col--grow {
   flex: none;
   flex-grow: 1;

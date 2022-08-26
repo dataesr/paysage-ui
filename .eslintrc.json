@@ -12,6 +12,7 @@
     "max-len": ["warn", 200],
     "react/prop-types": "warn",
     "import/prefer-default-export": 0,
+    "no-underscore-dangle": 0,
     "no-console": 0,
     "indent": [
       "warn",
