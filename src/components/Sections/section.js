@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 export default function Section({ children, dataPaysageMenu, id, isEmpty }) {
   return (
     <div
-      className="fr-container-fluid"
+      className="fr-container-fluid fr-mb-5w"
       as="section"
       data-paysage-menu={dataPaysageMenu}
       id={id}

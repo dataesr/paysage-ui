@@ -97,7 +97,7 @@ export default function EmailsComponent({ apiObject, id }) {
         {data.data.length === 0 ? <EmptySection apiObject={apiObject} /> : null}
         {data.data.map((gm) => (
           <Col n="4" key={gm.id}>
-            <Card hasArrow={false} onClick={() => onClickModifyHandler(gm)}>
+            <Card hasArrow={false} onClick={() => onClickModifyHandler(gm)} href="#">
               <CardTitle>{gm.emailType.usualName}</CardTitle>
               <CardDescription>{gm.email}</CardDescription>
             </Card>

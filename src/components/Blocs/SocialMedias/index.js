@@ -115,10 +115,14 @@ export default function SocialMediasComponent({ apiObject, id }) {
         </Col>
       </Row>
       <Row>
-        {data.data.length === 0 ? (<EmptySection apiObject={apiObject} />) : null}
+        {data.data.length === 0 ? <EmptySection apiObject={apiObject} /> : null}
         {data.data.map((sm) => (
           <Col n="3" key={sm.id}>
-            <Card hasArrow={false} onClick={() => onClickModifyHandler(sm)}>
+            <Card
+              hasArrow={false}
+              onClick={() => onClickModifyHandler(sm)}
+              href="#"
+            >
               <CardTitle>{sm.type}</CardTitle>
               <CardDescription>{sm.account}</CardDescription>
             </Card>

@@ -114,7 +114,11 @@ export default function IdentifiersComponent({ apiObject, id }) {
         {data.data.length === 0 ? <EmptySection apiObject={apiObject} /> : null}
         {data.data.map((ident) => (
           <Col n="3" key={ident.id}>
-            <Card hasArrow={false} onClick={() => onClickModifyHandler(ident)}>
+            <Card
+              hasArrow={false}
+              onClick={() => onClickModifyHandler(ident)}
+              href="#"
+            >
               <CardTitle>{ident.type}</CardTitle>
               <CardDescription>{ident.value}</CardDescription>
             </Card>

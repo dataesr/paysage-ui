@@ -118,7 +118,11 @@ export default function WeblinksComponent({ apiObject, id }) {
         {data.data.length === 0 ? <EmptySection apiObject={apiObject} /> : null}
         {data.data.map((wl) => (
           <Col n="3" key={wl.id}>
-            <Card hasArrow={false} onClick={() => onClickModifyHandler(wl)}>
+            <Card
+              hasArrow={false}
+              onClick={() => onClickModifyHandler(wl)}
+              href="#"
+            >
               <CardTitle>{wl.type}</CardTitle>
               <CardDescription>{wl.value}</CardDescription>
             </Card>
