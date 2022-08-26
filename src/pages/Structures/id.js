@@ -3,7 +3,7 @@ import { Breadcrumb, BreadcrumbItem, Col, Container, Row, Tag, Title } from '@da
 
 import useFetch from '../../hooks/useFetch';
 
-// import Localisations from '../../components/Blocs/Localisations';
+import Localisations from '../../components/Blocs/Localisations';
 import Emails from '../../components/Blocs/Emails';
 import Names from '../../components/Blocs/Names';
 import Identifiers from '../../components/Blocs/Identifiers';
@@ -40,7 +40,7 @@ export default function StructuresByIdPage() {
             {data.structureStatus}
           </Tag>
 
-          {/* <Localisations apiObject="structures" id={id} /> */}
+          <Localisations apiObject="structures" id={id} data={data.currentLocalisation || null} />
           <Emails apiObject="structures" id={id} />
           <Names apiObject="structures" id={id} />
           <Identifiers apiObject="structures" id={id} />

@@ -126,7 +126,11 @@ export default function NamesComponent({ apiObject, id }) {
         {data.data.length === 0 ? <EmptySection apiObject={apiObject} /> : null}
         {data.data.map((item) => (
           <Col n="4" key={item.id}>
-            <Card hasArrow={false} onClick={() => onClickModifyHandler(item)}>
+            <Card
+              hasArrow={false}
+              onClick={() => onClickModifyHandler(item)}
+              href="#"
+            >
               <CardTitle>{item.usualName}</CardTitle>
               <CardDescription>
                 {formatDescriptionDates(item.startDate, item.endDate)}
