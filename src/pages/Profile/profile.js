@@ -71,12 +71,12 @@ export default function HomePage() {
         </Col>
         <Col n="12 md-9">
           <Breadcrumb>
-            <BreadcrumbItem asLink={<RouterLink to="/" />}>Acceuil</BreadcrumbItem>
+            <BreadcrumbItem asLink={<RouterLink to="/" />}>Accueil</BreadcrumbItem>
             <BreadcrumbItem>{`${viewer?.firstName} ${viewer?.lastName}`}</BreadcrumbItem>
           </Breadcrumb>
           <div className="fr-container-fluid" as="section" data-paysage-menu="Profile" id="profile">
             <Row className="fr-pb-5w">
-              <Title as="h2">Mon profile</Title>
+              <Title as="h2">Mon profil</Title>
             </Row>
             <Row className="fr-pb-5w">
               <Col n="12 md-6" spacing="px-2w">
@@ -134,7 +134,7 @@ export default function HomePage() {
                     <Col>
                       <ButtonGroup isInlineFrom="md" align="right">
                         <Button submit>
-                          Modifier le profile
+                          Modifier le profil
                         </Button>
                       </ButtonGroup>
                     </Col>

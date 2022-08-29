@@ -215,7 +215,7 @@ export default function UsersManagment() {
     <Container>
       <Row>
         <Breadcrumb>
-          <BreadcrumbItem asLink={<RouterLink to="/" />}>Acceuil</BreadcrumbItem>
+          <BreadcrumbItem asLink={<RouterLink to="/" />}>Accueil</BreadcrumbItem>
           <BreadcrumbItem asLink={<RouterLink to="/admin" />}>Administration</BreadcrumbItem>
           <BreadcrumbItem>Utilisateurs</BreadcrumbItem>
         </Breadcrumb>

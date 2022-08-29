@@ -30,7 +30,7 @@ export default function StructuresByIdPage() {
 
         <Col n="12 md-9">
           <Breadcrumb>
-            <BreadcrumbItem asLink={<RouterLink to="/" />}>Acceuil</BreadcrumbItem>
+            <BreadcrumbItem asLink={<RouterLink to="/" />}>Accueil</BreadcrumbItem>
             <BreadcrumbItem asLink={<RouterLink to="/rechercher/structures" />}>Structures</BreadcrumbItem>
             <BreadcrumbItem>{data.currentName.usualName}</BreadcrumbItem>
           </Breadcrumb>

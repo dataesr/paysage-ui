@@ -29,7 +29,7 @@ export default function ContributePage() {
         <Col>
           <Breadcrumb>
             <BreadcrumbItem asLink={<RouterLink to="/" />}>
-              Acceuil
+              Accueil
             </BreadcrumbItem>
             <BreadcrumbItem>Ajouter un nouvel objet</BreadcrumbItem>
           </Breadcrumb>

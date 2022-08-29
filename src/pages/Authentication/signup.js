@@ -77,7 +77,7 @@ export default function SignUp() {
       <Row justifyContent="center">
         <Col n="xs-12 sm-10 md-8 lg-7">
           <Breadcrumb>
-            <BreadcrumbItem asLink={<RouterLink to="/" />}>Acceuil</BreadcrumbItem>
+            <BreadcrumbItem asLink={<RouterLink to="/" />}>Accueil</BreadcrumbItem>
             <BreadcrumbItem>Créer un compte</BreadcrumbItem>
           </Breadcrumb>
         </Col>
@@ -269,7 +269,7 @@ export default function SignUp() {
                   <Row justifyContent="end">
                     <Col n="12">
                       <Button as="a" secondary onClick={() => navigate('/')}>
-                        Retour à l'acceuil
+                        Retour à l'accueil
                       </Button>
                     </Col>
                   </Row>

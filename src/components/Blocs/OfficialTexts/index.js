@@ -45,7 +45,7 @@ export default function OfficialTextsComponent({ id, apiObject }) {
             secondary
             icon="ri-add-circle-line"
           >
-            Ajouter un text officiel
+            Ajouter un texte officiel
           </Button>
         </Col>
       </Row>

@@ -78,7 +78,7 @@ export default function Profile() {
   return (
     <>
       <Breadcrumb>
-        <BreadcrumbItem asLink={<RouterLink to="/" />}>Acceuil</BreadcrumbItem>
+        <BreadcrumbItem asLink={<RouterLink to="/" />}>Accueil</BreadcrumbItem>
         <BreadcrumbItem>{`${viewer?.firstName} ${viewer?.lastName}`}</BreadcrumbItem>
       </Breadcrumb>
       <Container fluid>
@@ -155,7 +155,7 @@ export default function Profile() {
                 <Col>
                   <ButtonGroup isInlineFrom="md" align="right">
                     <Button submit>
-                      Modifier le profile
+                      Modifier le profil
                     </Button>
                   </ButtonGroup>
                 </Col>

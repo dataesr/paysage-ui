@@ -7,7 +7,7 @@ export default function AdminDashboard() {
       <Row>
         <Col>
           <Breadcrumb>
-            <BreadcrumbItem asLink={<RouterLink to="/" />}>Acceuil</BreadcrumbItem>
+            <BreadcrumbItem asLink={<RouterLink to="/" />}>Accueil</BreadcrumbItem>
             <BreadcrumbItem asLink={<RouterLink to="/admin" />}>Administration</BreadcrumbItem>
             <BreadcrumbItem>Tableau de bord</BreadcrumbItem>
           </Breadcrumb>

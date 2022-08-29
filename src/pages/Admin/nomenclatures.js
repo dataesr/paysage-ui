@@ -33,7 +33,7 @@ export default function Nomenclatures({ route, title }) {
       <Row>
         <Col>
           <Breadcrumb>
-            <BreadcrumbItem asLink={<RouterLink to="/" />}>Acceuil</BreadcrumbItem>
+            <BreadcrumbItem asLink={<RouterLink to="/" />}>Accueil</BreadcrumbItem>
             <BreadcrumbItem asLink={<RouterLink to="/admin" />}>Administration</BreadcrumbItem>
             <BreadcrumbItem>{title}</BreadcrumbItem>
           </Breadcrumb>

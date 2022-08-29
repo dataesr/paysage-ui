@@ -83,7 +83,7 @@ export default function Passwordless() {
       <Row justifyContent="center">
         <Col n="xs-12 sm-10 md-8 lg-6">
           <Breadcrumb>
-            <BreadcrumbItem asLink={<RouterLink to="/" />}>Acceuil</BreadcrumbItem>
+            <BreadcrumbItem asLink={<RouterLink to="/" />}>Accueil</BreadcrumbItem>
             <BreadcrumbItem>Récupération de mot de passe</BreadcrumbItem>
           </Breadcrumb>
         </Col>

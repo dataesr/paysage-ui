@@ -40,7 +40,7 @@ export default function SignIn() {
       <Row justifyContent="center">
         <Col n="xs-12 sm-10 md-8 lg-6">
           <Breadcrumb>
-            <BreadcrumbItem asLink={<RouterLink to="/" />}>Acceuil</BreadcrumbItem>
+            <BreadcrumbItem asLink={<RouterLink to="/" />}>Accueil</BreadcrumbItem>
             <BreadcrumbItem>Se connecter</BreadcrumbItem>
           </Breadcrumb>
         </Col>

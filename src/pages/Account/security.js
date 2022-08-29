@@ -8,7 +8,7 @@ export default function Security() {
   return (
     <>
       <Breadcrumb>
-        <BreadcrumbItem asLink={<RouterLink to="/" />}>Acceuil</BreadcrumbItem>
+        <BreadcrumbItem asLink={<RouterLink to="/" />}>Accueil</BreadcrumbItem>
         <BreadcrumbItem asLink={<RouterLink to="/profile" />}>{`${viewer?.firstName} ${viewer?.lastName}`}</BreadcrumbItem>
         <BreadcrumbItem>Sécurité</BreadcrumbItem>
       </Breadcrumb>
