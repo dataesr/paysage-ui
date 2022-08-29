@@ -1,4 +1,7 @@
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import {
+  Breadcrumb,
+  BreadcrumbItem,
   Button,
   Col,
   Container,
@@ -7,7 +10,6 @@ import {
   Title,
 } from '@dataesr/react-dsfr';
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 
 export default function ContributePage() {
   const navigate = useNavigate();
@@ -22,10 +24,20 @@ export default function ContributePage() {
     { value: 'termes', label: 'Terme' },
   ];
   return (
-    <Container as="main">
+    <Container className="fr-mb-6w">
       <Row>
         <Col>
-          <Title as="h2">Ajouter un nouvel objet Paysage</Title>
+          <Breadcrumb>
+            <BreadcrumbItem asLink={<RouterLink to="/" />}>
+              Acceuil
+            </BreadcrumbItem>
+            <BreadcrumbItem>Ajouter un nouvel objet</BreadcrumbItem>
+          </Breadcrumb>
+        </Col>
+      </Row>
+      <Row>
+        <Col>
+          <Title as="h2" look="h3">Ajouter un nouvel objet Paysage</Title>
         </Col>
       </Row>
       <Row gutters spacing="px-2w" alignItems="bottom">

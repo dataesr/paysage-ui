@@ -14,7 +14,7 @@ import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import DateOneField from '../../DateOneField';
-import Taginput from '../../Taginput';
+import TagInput from '../../Taginput';
 import validator from './validator';
 
 export default function EmailForm({ data, onDeleteHandler, onSaveHandler }) {
@@ -155,13 +155,14 @@ export default function EmailForm({ data, onDeleteHandler, onSaveHandler }) {
             />
           </Col>
         </Row>
+
         <Row>
           <Col className="fr-pb-5w">
-            <Taginput
+            <TagInput
               label="Autres noms"
               hint='Validez votre ajout avec la touche "Entrée" afin de valider votre ajout'
               tags={otherNames || []}
-              onTagsChange={(tags) => setOtherNames(tags)}
+              onTagsChange={setOtherNames}
             />
           </Col>
         </Row>

@@ -20,52 +20,31 @@ HR {
 }
 
 .bg-structures {
-  background-color: rgb(200,170,57) !important;
-}
-.bg-structures-light {
-  background-color: rgba(200,170,57, 0.2) !important;
+  background-color: var(--structures-color) !important;
 }
 
 .bg-persons {
-  background-color: rgb(206,97,74) !important;
-}
-.bg-persons-light {
-  background-color: rgba(206,97,74, 0.2) !important;
+  background-color: var(--persons-color) !important;
 }
 
 .bg-categories {
-  background-color: rgb(104,165,50) !important;
-}
-.bg-categories-light {
-  background-color: rgba(104,165,50, 0.2) !important;
+  background-color: var(--categories-color) !important;
 }
 
 .bg-prices {
-  background-color: rgb(104,165,50) !important;
-}
-.bg-prices-light {
-  background-color: rgba(104,165,50, 0.2) !important;
+  background-color: var(--prices-color) !important;
 }
 
 .bg-documents {
-  background-color: rgb(104,165,50) !important;
-}
-.bg-documents-light {
-  background-color: rgba(104,165,50, 0.2) !important;
+  background-color: var(--documents-color) !important;
 }
 
 .bg-terms {
-  background-color: rgb(165,88,160) !important;
-}
-.bg-terms-light {
-  background-color:  rgba(165,88,160, 0.2) !important;
+  background-color: var(--terms-color) !important;
 }
 
 .bg-textes-officiels {
-  background-color: rgb(0,159,95) !important;
-}
-.bg-textes-officiels-light {
-  background-color: rgba(0,159,95, 0.2) !important;
+  background-color: var(--textes-officiels-color) !important;
 }
 
 .bullet {
@@ -77,7 +56,7 @@ HR {
 }
 
 .bt-delete {
-  background-color: #ff5655;
+  background-color: var(--error-main-525);
   &:hover {
     background-color: #ffa6a6;
   }

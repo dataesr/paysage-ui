@@ -9,7 +9,9 @@ export default function TagInput({ label, hint, tags, onTagsChange }) {
   const handleKeyDown = (e) => {
     if (e.key === 'Enter') {
       e.preventDefault();
-      if (input) { setValues([...values, input]); }
+      if (input) {
+        setValues([...values, input]);
+      }
       setInput('');
     }
   };
@@ -20,7 +22,7 @@ export default function TagInput({ label, hint, tags, onTagsChange }) {
     <div>
       <div>
         <Row alignItems="bottom">
-          <Col n="10">
+          <Col>
             <TextInput
               type="text"
               value={input}
