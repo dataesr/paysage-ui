@@ -255,7 +255,7 @@ export default function SignUp() {
                     />
                     <Text bold size="lg">Votre compte à été crée avec succès</Text>
                     <Highlight colorFamily="green-emeraude">
-                      Votre compte viens d’être crée. Vous allez recevoir un premier email qui comfirera la prise en compte de votre inscription.
+                      Votre compte viens d’être crée. Vous allez recevoir un premier email qui confirmera la prise en compte de votre inscription.
                       {' '}
                       <br />
                       <br />
