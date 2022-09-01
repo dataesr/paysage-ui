@@ -52,9 +52,9 @@ function App() {
             <Route path="dashboard" element={<AdminDashboardPage />} />
             <Route path="utilisateurs" element={<AdminUsersPage />} />
             <Route path="nomenclatures" element={<Navigate to="nomenclatures/types-de-document" replace />} />
-            <Route path="nomenclatures/types-de-document" element={<NomenclaturesPage route="document-types" title="Types de documents" />} />
-            <Route path="nomenclatures/ministeres-de-tutelle" element={<NomenclaturesPage route="supervising-ministers" title="Ministères de tutelle" />} />
-            <Route path="nomenclatures/types-de-mail" element={<NomenclaturesPage route="email-types" title="Types d'email" />} />
+            <Route path="nomenclatures/types-de-document" element={<NomenclaturesPage route="/document-types" title="Types de documents" />} />
+            <Route path="nomenclatures/ministeres-de-tutelle" element={<NomenclaturesPage route="/supervising-ministers" title="Ministères de tutelle" />} />
+            <Route path="nomenclatures/types-de-mail" element={<NomenclaturesPage route="/email-types" title="Types d'email" />} />
           </Route>
 
           <Route path="/structures" element={<StructuresPage />} />
