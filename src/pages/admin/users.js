@@ -114,7 +114,7 @@ function User({
           </ButtonGroup>
         </div>
       </Row>
-      <Modal isOpen={isEditModalOpen} size="md" hide={() => setIsEditModalOpen(false)}>
+      <Modal isOpen={isEditModalOpen} size="lg" hide={() => setIsEditModalOpen(false)}>
         <ModalContent>
           <Container fluid>
             <Title as="h2" look="h6">{`Modifier le role de ${firstName} ${lastName}`}</Title>
@@ -221,7 +221,10 @@ export default function AdminUsersPage() {
         </Breadcrumb>
       </Row>
       <Row spacing="mb-3w">
-        <Title as="h2" look="h3">Utilisateurs Paysage</Title>
+        <Row alignItems="top">
+          <Title className="fr-pr-1v" as="h2" look="h3">Utilisateurs</Title>
+          <Badge type="info" text={data?.totalCount} />
+        </Row>
       </Row>
       <Row>
         {(error) && <div>Erreur</div>}

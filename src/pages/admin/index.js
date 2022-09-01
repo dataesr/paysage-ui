@@ -17,7 +17,7 @@ function AdminPage() {
             <SideMenuLink asLink={<RouterLink to="/admin/utilisateurs" />}>
               Utilisateurs
             </SideMenuLink>
-            <SideMenuItem title="Nomenclatures">
+            <SideMenuItem expandedDefault title="Nomenclatures">
               <SideMenuLink asLink={<RouterLink to="/admin/nomenclatures/types-de-document" />}>
                 Types de document
               </SideMenuLink>

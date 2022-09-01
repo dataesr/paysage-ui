@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { Col, Row, Tag, TagGroup, TextInput } from '@dataesr/react-dsfr';
+import { Col, Icon, Row, Tag, TagGroup, TextInput } from '@dataesr/react-dsfr';
 
 export default function TagInput({ label, hint, tags, onTagsChange }) {
   const [input, setInput] = useState('');
@@ -46,6 +46,7 @@ export default function TagInput({ label, hint, tags, onTagsChange }) {
                   }}
                 >
                   {tag}
+                  <Icon iconPosition="right" name="ri-close-line" />
                 </Tag>
               ))}
             </TagGroup>
