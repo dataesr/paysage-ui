@@ -2,9 +2,6 @@ import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import {
   Button,
-  Card,
-  CardDescription,
-  CardTitle,
   Col,
   Modal,
   ModalContent,
@@ -17,6 +14,8 @@ import EmptySection from '../../sections/empty';
 import IdentifierForm from './form';
 import api from '../../../utils/api';
 import { getEnumKey } from '../../../utils';
+import TripleDotCard from '../../card/triple-dot-card';
+import ClipboardCopy from '../../../utils/clipboard-copy';
 
 export default function IdentifiersComponent({ apiObject, id }) {
   const [data, setData] = useState([]);
@@ -114,14 +113,11 @@ export default function IdentifiersComponent({ apiObject, id }) {
         {data.data.length === 0 ? <EmptySection apiObject={apiObject} /> : null}
         {data.data.map((ident) => (
           <Col n="3" key={ident.id}>
-            <Card
-              hasArrow={false}
+            <TripleDotCard
+              title={ident.type}
+              description={<ClipboardCopy copyText={ident.value} />}
               onClick={() => onClickModifyHandler(ident)}
-              href="#"
-            >
-              <CardTitle>{ident.type}</CardTitle>
-              <CardDescription>{ident.value}</CardDescription>
-            </Card>
+            />
           </Col>
         ))}
       </Row>
