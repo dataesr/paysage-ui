@@ -15,7 +15,7 @@ import Weblinks from '../../components/blocs/weblinks';
 export default function CategoryByIdPage() {
   const { id } = useParams();
 
-  const getData = useFetch('GET', `/categories/${id}`);
+  const getData = useFetch(`/categories/${id}`);
 
   if (getData.isLoading) return <h1>Loading</h1>;
   return (

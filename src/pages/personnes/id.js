@@ -15,7 +15,7 @@ import Documents from '../../components/blocs/documents';
 export default function PersonByIdPage() {
   const { id } = useParams();
 
-  const getData = useFetch('GET', `/persons/${id}`);
+  const getData = useFetch(`/persons/${id}`);
 
   if (getData.isLoading) return <h1>Loading</h1>;
   return (

@@ -16,7 +16,7 @@ import useHashScroll from '../../../hooks/useHashScroll';
 export default function StructurePresentationPage() {
   const { id } = useParams();
 
-  const { data, isLoading, error } = useFetch('GET', `/structures/${id}`);
+  const { data, isLoading, error } = useFetch(`/structures/${id}`);
   useHashScroll();
 
   if (isLoading) return <Spinner size={48} />;

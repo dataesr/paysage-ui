@@ -11,7 +11,7 @@ import useFetch from '../../hooks/useFetch';
 
 export default function OfficialTextsPage() {
   const navigate = useNavigate();
-  const { data, error, isLoading } = useFetch('GET', '/official-texts');
+  const { data, error, isLoading } = useFetch('/official-texts');
 
   if (isLoading || !data) return <h1>Loading</h1>;
   if (error) return <h1>Error</h1>;

@@ -4,7 +4,7 @@ import useFetch from '../../hooks/useFetch';
 
 export default function CategoriesPage() {
   const navigate = useNavigate();
-  const { data, error, isLoading } = useFetch('GET', '/categories');
+  const { data, error, isLoading } = useFetch('/categories');
 
   if (isLoading || !data) return <h1>Loading</h1>;
   if (error) return <h1>Error</h1>;

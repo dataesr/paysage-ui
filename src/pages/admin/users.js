@@ -180,7 +180,7 @@ User.propTypes = {
 
 export default function AdminUsersPage() {
   const { toast } = useToast();
-  const { data, isLoading, error, reload } = useFetch('GET', '/admin/users?sort=-createdAt');
+  const { data, isLoading, error, reload } = useFetch('/admin/users?sort=-createdAt');
 
   const toastError = () => toast({
     toastType: 'error',

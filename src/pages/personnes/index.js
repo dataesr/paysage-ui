@@ -9,7 +9,7 @@ import {
 import useFetch from '../../hooks/useFetch';
 
 export default function StructuresPage() {
-  const { data, error, isLoading } = useFetch('GET', '/persons');
+  const { data, error, isLoading } = useFetch('/persons');
   if (isLoading || !data) return <h1>Loading</h1>;
   if (error) return <h1>Error</h1>;
 

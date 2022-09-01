@@ -11,7 +11,7 @@ function StructureByIdPage() {
   const { id } = useParams();
   const { pathname } = useLocation();
 
-  const { data, isLoading, error } = useFetch('GET', `/structures/${id}`);
+  const { data, isLoading, error } = useFetch(`/structures/${id}`);
 
   const menu = {
     'chiffres-cles': 'Chiffres clés',

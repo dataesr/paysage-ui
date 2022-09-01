@@ -32,9 +32,7 @@ const catchInvalidToken = async () => {
   return access;
 };
 
-async function customFetch({
-  method, url, body, headers,
-}) {
+async function customFetch({ method, url, body, headers }) {
   const requestUrl = `${process.env.REACT_APP_API_URL}${url}`;
   const options = {
     method: method.toUpperCase(),
@@ -46,7 +44,7 @@ async function customFetch({
   }
 
   const response = await fetch(requestUrl, options);
-
+  if (response.status === 204) return response;
   if (response.ok) {
     const json = await response.json();
     response.data = json;
