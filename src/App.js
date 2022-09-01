@@ -1,40 +1,31 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Navigate, Routes, Route } from 'react-router-dom';
 
-import Admin from './pages/Admin';
-import AdminDashboard from './pages/Admin/dashboard';
-import CategoriesAddPage from './pages/Categories/add';
-import CategoriesPage from './pages/Categories';
-import CategoryByIdPage from './pages/Categories/id';
-import ContributePage from './pages/Contribute';
-import HelpPage from './pages/Help';
-import HomePage from './pages/Home';
+import CategoriesAddPage from './pages/categories/ajouter';
+import CategoriesPage from './pages/categories';
+import CategoryByIdPage from './pages/categories/id';
+import { ContributePage, PersonAddPage, ProjectAddPage, StructureAddPage, OfficialTextAddPage } from './pages/contribuer';
+import HelpPage from './pages/aide';
+import HomePage from './pages/accueil';
 import Layout from './components/Layout';
-import Nomenclatures from './pages/Admin/nomenclatures';
-import OfficialTextsAddPage from './pages/OfficialTexts/add';
-import OfficialTextsByIdPage from './pages/OfficialTexts/id';
-import OfficialTextsPage from './pages/OfficialTexts';
-import PersonByIdPage from './pages/Persons/id';
-import PersonsAddPage from './pages/Persons/add';
-import PersonsPage from './pages/Persons';
-import Passwordless from './pages/Authentication/passwordless';
-import ProjectsAddPage from './pages/Projects/add';
-import ProjectsPage from './pages/Projects';
-import RessourcesInternesPage from './pages/Ressources/internes';
-import RessourcesExternesPage from './pages/Ressources/externes';
-import SignIn from './pages/Authentication/signin';
-import SignUp from './pages/Authentication/signup';
-import StructureByIdPage from './pages/Structures/id';
-import StructuresAddPage from './pages/Structures/add';
-import StructuresPage from './pages/Structures';
-import TermByIdPage from './pages/Terms/id';
-import TermsAddPage from './pages/Terms/add';
-import TermsPage from './pages/Terms';
-import UserAccount from './pages/Account';
-import UserGroups from './pages/Account/groups';
-import UserProfile from './pages/Account/profile';
-import UserPreferences from './pages/Account/preferences';
-import Users from './pages/Admin/utilisateurs';
-import UserSecurity from './pages/Account/security';
+import OfficialTextsByIdPage from './pages/textes-officiels/id';
+import OfficialTextsPage from './pages/textes-officiels';
+import PersonByIdPage from './pages/personnes/id';
+import PersonsPage from './pages/personnes';
+import Passwordless from './pages/mot-de-passe-oublie';
+import ProjectsPage from './pages/projets';
+import RessourcesExternesPage from './pages/resources-externes';
+import SignIn from './pages/se-connecter';
+import SignUp from './pages/creer-un-compte';
+
+import StructuresPage from './pages/structures';
+import { StructureActualitesPage, StructureByIdPage, StructurePresentationPage, StructureChiffresClesPage, StructurePrixPage } from './pages/structures/[id]';
+
+import TermsPage from './pages/termes';
+import TermByIdPage from './pages/termes/id';
+import TermsAddPage from './pages/termes/ajouter';
+
+import { AccountPage, ProfilePage, PreferencesPage, SecurityPage, GroupsPage } from './pages/mon-compte';
+import { AdminPage, AdminDashboardPage, AdminUsersPage, NomenclaturesPage } from './pages/admin';
 
 import './styles/index.scss';
 
@@ -48,72 +39,55 @@ function App() {
           <Route path="/creer-un-compte" element={<SignUp />} />
           <Route path="/mot-de-passe-oublie" element={<Passwordless />} />
 
-          <Route path="/profile" element={<UserAccount />}>
-            <Route path="" element={<UserProfile />} />
-            <Route path="preferences" element={<UserPreferences />} />
-            <Route path="groupes" element={<UserGroups />} />
-            <Route path="securite" element={<UserSecurity />} />
+          <Route path="/mon-compte" element={<AccountPage />}>
+            <Route path="" element={<Navigate to="/mon-compte/profile" replace />} />
+            <Route path="profile" element={<ProfilePage />} />
+            <Route path="preferences" element={<PreferencesPage />} />
+            <Route path="groupes" element={<GroupsPage />} />
+            <Route path="securite" element={<SecurityPage />} />
           </Route>
 
-          <Route path="/admin" element={<Admin />}>
-            <Route path="" element={<AdminDashboard />} />
-            <Route path="utilisateurs" element={<Users />} />
-            <Route path="nomenclatures/types-de-document" element={<Nomenclatures route="document-types" title="Types de documents" />} />
-            <Route path="nomenclatures/ministeres-de-tutelle" element={<Nomenclatures route="supervising-ministers" title="Ministères de tutelle" />} />
-            <Route path="nomenclatures/types-de-mail" element={<Nomenclatures route="email-types" title="Types d'email" />} />
+          <Route path="/admin" element={<AdminPage />}>
+            <Route path="" element={<Navigate to="dashboard" replace />} />
+            <Route path="dashboard" element={<AdminDashboardPage />} />
+            <Route path="utilisateurs" element={<AdminUsersPage />} />
+            <Route path="nomenclatures" element={<Navigate to="nomenclatures/types-de-document" replace />} />
+            <Route path="nomenclatures/types-de-document" element={<NomenclaturesPage route="document-types" title="Types de documents" />} />
+            <Route path="nomenclatures/ministeres-de-tutelle" element={<NomenclaturesPage route="supervising-ministers" title="Ministères de tutelle" />} />
+            <Route path="nomenclatures/types-de-mail" element={<NomenclaturesPage route="email-types" title="Types d'email" />} />
           </Route>
 
-          <Route path="/rechercher/categories" element={<CategoriesPage />} />
+          <Route path="/structures" element={<StructuresPage />} />
+          <Route path="/structures/ajouter" element={<StructureAddPage />} />
+          <Route path="/structures/:id" element={<StructureByIdPage />}>
+            <Route path="" element={<Navigate to="presentation" replace />} />
+            <Route path="presentation" element={<StructurePresentationPage />} />
+            <Route path="actualites" element={<StructureActualitesPage />} />
+            <Route path="chiffres-cles" element={<StructureChiffresClesPage />} />
+            <Route path="prix" element={<StructurePrixPage />} />
+          </Route>
+
+          <Route path="/categories" element={<CategoriesPage />} />
           <Route path="/categories/ajouter" element={<CategoriesAddPage />} />
           <Route path="/categories/:id" element={<CategoryByIdPage />} />
 
-          <Route path="/contribuer" element={<ContributePage />} />
-
-          <Route path="/rechercher/personnes" element={<PersonsPage />} />
-          <Route path="/personnes/ajouter" element={<PersonsAddPage />} />
+          <Route path="/personnes" element={<PersonsPage />} />
+          <Route path="/personnes/ajouter" element={<PersonAddPage />} />
           <Route path="/personnes/:id" element={<PersonByIdPage />} />
 
-          <Route path="/rechercher/projets" element={<ProjectsPage />} />
-          <Route path="/projets/ajouter" element={<ProjectsAddPage />} />
+          <Route path="/projets/ajouter" element={<ProjectAddPage />} />
+          <Route path="/projets" element={<ProjectsPage />} />
 
-          <Route path="/rechercher/structures" element={<StructuresPage />} />
-          <Route path="/structures/ajouter" element={<StructuresAddPage />} />
-          <Route path="/structures/:id" element={<StructureByIdPage />} />
-
-          <Route path="/rechercher/termes" element={<TermsPage />} />
+          <Route path="/termes" element={<TermsPage />} />
           <Route path="/termes/ajouter" element={<TermsAddPage />} />
           <Route path="/termes/:id" element={<TermByIdPage />} />
 
-          <Route
-            path="/rechercher/textes-officiels"
-            element={<OfficialTextsPage />}
-          />
-          <Route
-            path="/textes-officiels/ajouter"
-            element={<OfficialTextsAddPage />}
-          />
-          <Route
-            path="/textes-officiels/ajouter/:route/:idFrom"
-            element={<OfficialTextsAddPage />}
-          />
-          <Route
-            path="/textes-officiels/:id"
-            element={<OfficialTextsByIdPage />}
-          />
-          <Route
-            path="/textes-officiels/:id/:route/:idFrom"
-            element={<OfficialTextsByIdPage />}
-          />
+          <Route path="/textes-officiels" element={<OfficialTextsPage />} />
+          <Route path="/textes-officiels/ajouter" element={<OfficialTextAddPage />} />
+          <Route path="/textes-officiels/:id" element={<OfficialTextsByIdPage />} />
 
-          <Route
-            path="/ressources-internes"
-            element={<RessourcesInternesPage />}
-          />
-          <Route
-            path="/ressources-externes"
-            element={<RessourcesExternesPage />}
-          />
-
+          <Route path="/contribuer" element={<ContributePage />} />
+          <Route path="/ressources-externes" element={<RessourcesExternesPage />} />
           <Route path="/aide" element={<HelpPage />} />
         </Route>
       </Routes>

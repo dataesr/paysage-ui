@@ -15,7 +15,7 @@ import useAuth from '../../hooks/useAuth';
 
 export default function Header() {
   const { pathname } = useLocation();
-  const { viewer } = useAuth();
+  const { viewer, signout } = useAuth();
 
   return (
     <HeaderWrapper>
@@ -37,7 +37,7 @@ export default function Header() {
             {viewer?.id ? (
               <ToolItem
                 icon="ri-user-3-line"
-                asLink={<RouterLink to="/profile" />}
+                asLink={<RouterLink to="/mon-compte" />}
               >
                 {viewer.firstName}
                 {' '}
@@ -49,6 +49,14 @@ export default function Header() {
                 asLink={<RouterLink to="/se-connecter" />}
               >
                 Se connecter
+              </ToolItem>
+            )}
+            {viewer.id && (
+              <ToolItem
+                icon="ri-logout-circle-r-line"
+                onClick={() => signout()}
+              >
+                Déconnexion
               </ToolItem>
             )}
           </ToolItemGroup>
@@ -74,52 +82,42 @@ export default function Header() {
                 title="Ajouter un nouvel objet"
                 asLink={<RouterLink to="/contribuer" />}
               />
-              <NavSubItem
-                current={pathname.endsWith('/import')}
-                title="Ajouter en masse"
-                asLink={<RouterLink to="/contribuer/structure/import" />}
-              />
             </NavItem>
             <NavItem
               title="Je recherche"
               current={pathname.startsWith('/rechercher')}
             >
               <NavSubItem
-                current={pathname.startsWith('/rechercher/personnes')}
+                current={pathname.startsWith('/personnes')}
                 title="Rechercher des personnes"
-                asLink={<RouterLink to="/rechercher/personnes" />}
+                asLink={<RouterLink to="/personnes" />}
               />
               <NavSubItem
-                current={pathname.startsWith('/rechercher/structures')}
+                current={pathname.startsWith('/structures')}
                 title="Rechercher des structures"
-                asLink={<RouterLink to="/rechercher/structures" />}
+                asLink={<RouterLink to="/structures" />}
               />
               <NavSubItem
-                current={pathname.startsWith('/rechercher/termes')}
+                current={pathname.startsWith('/termes')}
                 title="Rechercher des termes"
-                asLink={<RouterLink to="/rechercher/termes" />}
+                asLink={<RouterLink to="/termes" />}
               />
               <NavSubItem
-                current={pathname.startsWith('/rechercher/categories')}
+                current={pathname.startsWith('/categories')}
                 title="Rechercher des catégories"
-                asLink={<RouterLink to="/rechercher/categories" />}
+                asLink={<RouterLink to="/categories" />}
               />
               <NavSubItem
-                current={pathname.startsWith('/rechercher/textes-officiels')}
+                current={pathname.startsWith('/textes-officiels')}
                 title="Rechercher des textes officiels"
-                asLink={<RouterLink to="/rechercher/textes-officiels" />}
+                asLink={<RouterLink to="/textes-officiels" />}
               />
             </NavItem>
           </>
         )}
         <NavItem title="Ressources" current={pathname.startsWith('/ressources')}>
           <NavSubItem
-            current={pathname.startsWith('/ressources/listes-qualifiées')}
-            title="Listes qualifiées"
-            asLink={<RouterLink to="/listes" />}
-          />
-          <NavSubItem
-            current={pathname.startsWith('/ressources/liens-externes')}
+            current={pathname.startsWith('/ressources-externes')}
             title="Les ressources externes"
             asLink={<RouterLink to="/ressources-externes" />}
           />

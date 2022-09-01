@@ -217,7 +217,7 @@ export default function OfficiaTextForm({ data, from }) {
   ];
 
   return (
-    <Container>
+    <Container fluid className="fr-pb-6w">
       <Row>
         <Col className="fr-pr-5w fr-pb-5w">
           <Select

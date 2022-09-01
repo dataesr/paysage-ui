@@ -11,9 +11,16 @@ export default function Avatar({ src, name, size, ...rest }) {
   return (
     <span className={`${styles['avatar-box']}`} style={{ width: size, height: size }} {...rest}>
       {
-        (error)
-          ? (<Text as="span" spacing="m-0" size="lg">{(name) ? name.slice(0, 2).toUpperCase() : ''}</Text>)
-          : (<img alt="avatar" className={styles['avatar-img']} src={src || 'https://avataaars.io/?avatarStyle=Circle&topType=Eyepatch&accessoriesType=Prescription02&hairColor=Platinum&facialHairType=MoustacheFancy&facialHairColor=Platinum&clotheType=Hoodie&clotheColor=Heather&graphicType=Bear&eyeType=Cry&eyebrowType=RaisedExcited&mouthType=Concerned&skinColor=Yellow'} onError={() => setError(true)} />)
+        (!src || error)
+          ? (<span><Text bold as="span" spacing="m-0" size="lg">{(name) ? name.slice(0, 2).toUpperCase() : ''}</Text></span>)
+          : (
+            <img
+              alt="avatar"
+              className={styles['avatar-img']}
+              src={src}
+              onError={() => setError(true)}
+            />
+          )
       }
     </span>
   );

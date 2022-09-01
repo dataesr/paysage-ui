@@ -3,7 +3,6 @@ import {
   Button,
   Col,
   Container,
-  Icon,
   Row,
   TextInput,
 } from '@dataesr/react-dsfr';
@@ -75,8 +74,8 @@ export default function StructureAddForm() {
   };
 
   return (
-    <form>
-      <Container className="fr-pl-5w fr-pr-5w fr-pb-5w">
+    <form onSubmit={onSaveHandler}>
+      <Container fluid className="fr-pb-6w">
         <Row className="fr-pb-5w">
           <Col>
             <TextInput
@@ -145,8 +144,7 @@ export default function StructureAddForm() {
         {savingErrors || null}
         <Row>
           <Col className="text-right">
-            <Button onClick={onSaveHandler} size="sm">
-              <Icon name="ri-save-line" size="lg" />
+            <Button icon="ri-save-line" submit>
               Ajouter
             </Button>
           </Col>
