@@ -1,6 +1,6 @@
 import { Link as RouterLink } from 'react-router-dom';
 import { Breadcrumb, BreadcrumbItem, Col, Container, Row, Title } from '@dataesr/react-dsfr';
-import TermAddForm from '../../components/Forms/Term';
+import TermAddForm from '../../components/forms/term';
 
 export default function TermsAddPage() {
   return (

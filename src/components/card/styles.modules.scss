@@ -1,0 +1,13 @@
+.fr-card__body {
+  background-color: var(--background-default-grey-hover) !important;
+
+  .card-button{
+    position: absolute;
+    bottom: 8px;
+    right: 8px;
+
+    &:hover {
+      cursor: pointer;
+    }
+  }
+}

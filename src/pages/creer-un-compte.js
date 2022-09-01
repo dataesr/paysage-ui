@@ -5,7 +5,7 @@ import {
 } from '@dataesr/react-dsfr';
 import useAuth from '../hooks/useAuth';
 import useToast from '../hooks/useToast';
-import PasswordHint from '../components/PasswordHint';
+import PasswordHint from '../components/password-hint';
 import { MAIL_REGEXP, PASSWORD_REGEXP, getPasswordValidationInfo } from '../utils/auth';
 
 export default function SignUp() {

@@ -6,11 +6,11 @@ import useFetch from '../../hooks/useFetch';
 // import Localisations from '../../components/Blocs/Localisations';
 // import Emails from '../../components/Blocs/Emails';
 // import Names from '../../components/Blocs/Names';
-import Identifiers from '../../components/Blocs/Identifiers';
-import Weblinks from '../../components/Blocs/Weblinks';
-import SocialMedias from '../../components/Blocs/SocialMedias';
-import OfficialTexts from '../../components/Blocs/OfficialTexts';
-import Documents from '../../components/Blocs/Documents';
+import Identifiers from '../../components/blocs/identifiers';
+import Weblinks from '../../components/blocs/weblinks';
+import SocialMedias from '../../components/blocs/social-medias';
+import OfficialTexts from '../../components/blocs/official-texts';
+import Documents from '../../components/blocs/documents';
 
 export default function PersonByIdPage() {
   const { id } = useParams();

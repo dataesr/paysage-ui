@@ -1,6 +1,6 @@
 import { Link as RouterLink } from 'react-router-dom';
 import { Breadcrumb, BreadcrumbItem, Col, Container, Row, Title } from '@dataesr/react-dsfr';
-import PersonAddForm from '../../components/Forms/Person';
+import PersonAddForm from '../../components/forms/person';
 
 export default function PersonAddPage() {
   return (
