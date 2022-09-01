@@ -1,14 +1,14 @@
 import PropTypes from 'prop-types';
 import './styles.modules.scss';
 
-export default function Card({ title, description, element }) {
+export default function Card({ title, descriptionElement, actionElement }) {
   return (
     <div className="fr-card fr-enlarge-link">
       <div className="fr-card__body">
         <div className="fr-card__content">
           {title ? <h4 className="fr-card__title">{title}</h4> : null}
-          {description ? <p className="fr-card__desc">{description}</p> : null}
-          <div className="card-button">{element || null}</div>
+          <p className="fr-card__desc">{descriptionElement}</p>
+          <div className="card-button">{actionElement || null}</div>
         </div>
       </div>
     </div>
@@ -17,12 +17,12 @@ export default function Card({ title, description, element }) {
 
 Card.propTypes = {
   title: PropTypes.string,
-  description: PropTypes.string,
-  element: PropTypes.node,
+  descriptionElement: PropTypes.element,
+  actionElement: PropTypes.element,
 };
 
 Card.defaultProps = {
   title: '',
-  description: '',
-  element: null,
+  descriptionElement: null,
+  actionElement: null,
 };

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import Card from './index';
 
 export default function TripleDotCard({ title, description, onClick }) {
-  const element = (
+  const actionElement = (
     <button onClick={onClick} type="button">
       <Icon className="ri-more-2-fill" size="lg" />
     </button>
@@ -11,8 +11,8 @@ export default function TripleDotCard({ title, description, onClick }) {
   return (
     <Card
       title={title}
-      description={description}
-      element={element}
+      descriptionElement={description}
+      actionElement={actionElement}
     />
   );
 }
