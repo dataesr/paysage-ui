@@ -1,6 +1,6 @@
 import { Link as RouterLink } from 'react-router-dom';
 import { Breadcrumb, BreadcrumbItem, Col, Container, Row, Title } from '@dataesr/react-dsfr';
-import CategoryAddForm from '../../components/Forms/Category';
+import CategoryAddForm from '../../components/forms/category';
 
 export default function CategoriesAddPage() {
   return (

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Col, Container, Row, Title } from '@dataesr/react-dsfr';
 import api from '../../utils/api';
-import OfficiaTextForm from '../../components/Forms/OfficialText';
+import OfficiaTextForm from '../../components/forms/official-text';
 
 export default function OfficialTextByIdPage() {
   const { id, route, idFrom } = useParams();

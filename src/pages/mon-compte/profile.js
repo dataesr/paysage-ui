@@ -4,8 +4,8 @@ import { Button, ButtonGroup, Breadcrumb, BreadcrumbItem, Col, Container, Row, T
 import useToast from '../../hooks/useToast';
 import useAuth from '../../hooks/useAuth';
 import api from '../../utils/api';
-import Spinner from '../../components/Spinner';
-import Avatar from '../../components/Avatar';
+import Spinner from '../../components/spinner';
+import Avatar from '../../components/avatar';
 
 export default function ProfilePage() {
   const { toast } = useToast();

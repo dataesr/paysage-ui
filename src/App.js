@@ -6,7 +6,7 @@ import CategoryByIdPage from './pages/categories/id';
 import { ContributePage, PersonAddPage, ProjectAddPage, StructureAddPage, OfficialTextAddPage } from './pages/contribuer';
 import HelpPage from './pages/aide';
 import HomePage from './pages/accueil';
-import Layout from './components/Layout';
+import Layout from './components/layout';
 import OfficialTextsByIdPage from './pages/textes-officiels/id';
 import OfficialTextsPage from './pages/textes-officiels';
 import PersonByIdPage from './pages/personnes/id';

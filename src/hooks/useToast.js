@@ -7,7 +7,7 @@ import React, {
 } from 'react';
 import { createPortal } from 'react-dom';
 import PropTypes from 'prop-types';
-import Toast from '../components/Toast/Toast';
+import Toast from '../components/toast/toast';
 
 function ToastContainer({ children }) {
   return <div id="toast-container">{children}</div>;

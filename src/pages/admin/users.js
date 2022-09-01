@@ -17,7 +17,7 @@ import {
   Title,
 } from '@dataesr/react-dsfr';
 import { Link as RouterLink } from 'react-router-dom';
-import Avatar from '../../components/Avatar';
+import Avatar from '../../components/avatar';
 import useFetch from '../../hooks/useFetch';
 import useToast from '../../hooks/useToast';
 import api from '../../utils/api';
