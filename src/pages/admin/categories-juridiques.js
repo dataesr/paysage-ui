@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import { Link as RouterLink } from 'react-router-dom';
-import { Button, Breadcrumb, BreadcrumbItem, Col, Container, Row, Text, Title, Modal, ModalTitle, ModalContent, TextInput, Badge, Tag } from '@dataesr/react-dsfr';
+import { Button, Breadcrumb, BreadcrumbItem, Col, Container, Row, Text, Title, Modal, ModalTitle, ModalContent, TextInput, Badge, Tag, Select } from '@dataesr/react-dsfr';
 import { useState } from 'react';
 import useFetch from '../../hooks/useFetch';
 import api from '../../utils/api';
@@ -8,37 +8,62 @@ import TagInput from '../../components/tag-input';
 import { toString } from '../../utils/dates';
 import useForm from '../../hooks/useForm';
 
-function NomenclatureForm({ id, initialForm, onSave, onDelete }) {
-  const validateForm = (body) => {
-    const validationErrors = {};
-    if (!body.usualName) { validationErrors.usualName = 'Le nom usuel est obligatoire'; }
-    return validationErrors;
-  };
-
-  const { form, updateForm, errors } = useForm(initialForm, validateForm);
-  const [showErrors, setShowErrors] = useState(false);
+function LegalCategoriesForm({ id, initialForm, onSave, onDelete }) {
+  const { form, updateForm } = useForm(initialForm);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (Object.keys(errors).length !== 0) return setShowErrors(true);
-    return onSave(id, form);
+    onSave(id, form);
   };
 
   const handleDelete = () => onDelete(id);
 
+  const options = [
+    { value: null, label: "Selectionner un type d'objet" },
+    { value: 'public', label: 'Public' },
+    { value: 'privé', label: 'Privé' },
+    { value: 'sans objet', label: 'Sans objet' },
+  ];
+
   return (
-    <form>
+    <form onSubmit={handleSubmit}>
       <Container fluid>
         <Row>
           <Col n="12" spacing="pb-3w">
-            <TextInput
-              label="Nom"
-              required
-              value={form.usualName || ''}
-              onChange={(e) => updateForm({ usualName: e.target.value })}
-              message={(showErrors && errors.usualName) ? errors.usualName : null}
-              messageType={(showErrors && errors.usualName) ? 'error' : ''}
-            />
+            <TextInput label="Nom" value={form.usualName} onChange={(e) => updateForm({ usualName: e.target.value })} />
+          </Col>
+          <Col n="12" spacing="pb-3w">
+            <TextInput label="Nom long en français" value={form.longNameFr} onChange={(e) => updateForm({ longNameFr: e.target.value })} />
+          </Col>
+          <Col n="12" spacing="pb-3w">
+            <TextInput label="Nom court en français" value={form.shortNameFr} onChange={(e) => updateForm({ shortNameFr: e.target.value })} />
+          </Col>
+          <Col n="12" spacing="pb-3w">
+            <TextInput label="Acronyme en français" value={form.acronymFr} onChange={(e) => updateForm({ acronymFr: e.target.value })} />
+          </Col>
+          <Col n="12" spacing="pb-3w">
+            <TextInput label="Nom pluriel en français" value={form.pluralNameFr} onChange={(e) => updateForm({ pluralNameFr: e.target.value })} />
+          </Col>
+          <Col n="12" spacing="pb-3w">
+            <TextInput textarea label="Description en français" value={form.descriptionFr} onChange={(e) => updateForm({ descriptionFr: e.target.value })} />
+          </Col>
+          <Col n="12" spacing="pb-3w">
+            <TextInput label="Nom court en anglais" value={form.shortNameEn} onChange={(e) => updateForm({ shortNameEn: e.target.value })} />
+          </Col>
+          <Col n="12" spacing="pb-3w">
+            <TextInput label="Nom long en anglais" value={form.longNameEn} onChange={(e) => updateForm({ longNameEn: e.target.value })} />
+          </Col>
+          <Col n="12" spacing="pb-3w">
+            <Select label="Secteur" selected={form.sector} options={options} onChange={(e) => updateForm({ sector: e.target.value })} />
+          </Col>
+          <Col n="12" spacing="pb-3w">
+            <TextInput label="Site web en anglais" value={form.websiteEn} onChange={(e) => updateForm({ websiteEn: e.target.value })} />
+          </Col>
+          <Col n="12" spacing="pb-3w">
+            <TextInput label="Site web en français" value={form.websiteFr} onChange={(e) => updateForm({ websiteFr: e.target.value })} />
+          </Col>
+          <Col n="12" spacing="pb-3w">
+            <TextInput textarea label="Commentaire" value={form.comment} onChange={(e) => updateForm({ comment: e.target.value })} />
           </Col>
           <Col n="12" spacing="pb-3w">
             <TagInput
@@ -49,7 +74,7 @@ function NomenclatureForm({ id, initialForm, onSave, onDelete }) {
             />
           </Col>
         </Row>
-        <Button onClick={handleSubmit} iconPosition="right" icon="ri-save-line">Enregistrer</Button>
+        <Button submit iconPosition="right" icon="ri-save-line">Enregistrer</Button>
         <hr />
         {id && (
           <Button secondary onClick={handleDelete} colors={['var(--background-action-high-error)', 'white']} icon="ri-chat-delete-line">
@@ -60,18 +85,37 @@ function NomenclatureForm({ id, initialForm, onSave, onDelete }) {
     </form>
   );
 }
-NomenclatureForm.propTypes = {
+LegalCategoriesForm.propTypes = {
   id: PropTypes.string,
   initialForm: PropTypes.oneOfType([PropTypes.shape, null]),
   onSave: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired,
 };
-NomenclatureForm.defaultProps = {
+LegalCategoriesForm.defaultProps = {
   id: null,
-  initialForm: { usualName: null, otherNames: [] },
+  initialForm: {
+    inseeCode: null,
+    longNameFr: null,
+    shortNameFr: null,
+    acronymFr: null,
+    pluralNameFr: null,
+    descriptionFr: null,
+    longNameEn: null,
+    shortNameEn: null,
+    otherNames: [],
+    sector: null,
+    officialTextId: null,
+    legalPersonality: null,
+    inPublicResearch: null,
+    wikidataId: null,
+    websiteFr: null,
+    websiteEn: null,
+    comment: null,
+  },
 };
 
-export default function NomenclaturesPage({ route, title }) {
+export default function LegalCategoriesPage() {
+  const route = '/legal-categories';
   const { data, isLoading, error, reload } = useFetch(route);
   const [isOpen, setIsOpen] = useState();
   const [modalTitle, setModalTitle] = useState('');
@@ -95,14 +139,13 @@ export default function NomenclaturesPage({ route, title }) {
     }
   };
 
-  const handleModalToggle = (e, item = {}) => {
-    e.preventDefault();
+  const handleModalToggle = (item = {}) => {
     const { id, ...rest } = item;
     setModalTitle(item?.id ? 'Modifier' : 'Ajouter');
     setModalContent(
-      <NomenclatureForm
+      <LegalCategoriesForm
         id={id}
-        initialForm={rest}
+        data={rest}
         onDelete={handleDelete}
         onSave={handleSave}
       />,
@@ -119,13 +162,13 @@ export default function NomenclaturesPage({ route, title }) {
           <Breadcrumb>
             <BreadcrumbItem asLink={<RouterLink to="/" />}>Accueil</BreadcrumbItem>
             <BreadcrumbItem asLink={<RouterLink to="/admin" />}>Administration</BreadcrumbItem>
-            <BreadcrumbItem>{title}</BreadcrumbItem>
+            <BreadcrumbItem>Catégories juridiques</BreadcrumbItem>
           </Breadcrumb>
         </Col>
       </Row>
       <Row className="fr-row--space-between fr-row--baseline">
         <Row alignItems="top">
-          <Title className="fr-pr-1v" as="h2" look="h3">{title}</Title>
+          <Title className="fr-pr-1v" as="h2" look="h3">Catégories juridiques</Title>
           <Badge type="info" text={data?.totalCount} />
         </Row>
         <Button secondary size="sm" icon="ri-add-line" onClick={handleModalToggle}>Ajouter</Button>
@@ -135,7 +178,7 @@ export default function NomenclaturesPage({ route, title }) {
         <>
           <Row className="fr-row--space-between">
             <div className="fr-col--grow fr-pl-2w">
-              <Text spacing="my-1v" bold size="lg">{item.usualName}</Text>
+              <Text spacing="my-1v" bold size="lg">{item.longNameFr}</Text>
               <Text as="span" bold>Autres noms: </Text>
               {item.otherNames.length ? item.otherNames.map((name) => <Tag as="span">{name}</Tag>) : <Text as="span">Aucun alias pour le moment</Text>}
               <Text spacing="mt-2w mb-0" size="xs">
@@ -156,7 +199,7 @@ export default function NomenclaturesPage({ route, title }) {
               )}
             </div>
             <div>
-              <Button secondary size="sm" title="editer" icon="ri-pencil-line" onClick={(e) => handleModalToggle(e, item)}>Editer</Button>
+              <Button secondary size="sm" title="editer" icon="ri-pencil-line" onClick={() => handleModalToggle(item)}>Editer</Button>
             </div>
           </Row>
           <hr />
@@ -173,8 +216,3 @@ export default function NomenclaturesPage({ route, title }) {
     </Container>
   );
 }
-
-NomenclaturesPage.propTypes = {
-  route: PropTypes.string.isRequired,
-  title: PropTypes.string.isRequired,
-};

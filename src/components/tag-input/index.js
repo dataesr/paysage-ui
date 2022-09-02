@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Col, Icon, Row, Tag, TagGroup, TextInput } from '@dataesr/react-dsfr';
 
@@ -7,16 +7,20 @@ export default function TagInput({ label, hint, tags, onTagsChange }) {
   const [values, setValues] = useState(tags);
 
   const handleKeyDown = (e) => {
-    if (e.key === 'Enter') {
+    if (e.key === 'Enter' && input) {
       e.preventDefault();
-      if (input) {
-        setValues([...values, input]);
-      }
+      const newValues = [...values, input];
+      setValues(newValues);
       setInput('');
+      onTagsChange(newValues);
     }
   };
 
-  useEffect(() => onTagsChange(values), [values, onTagsChange]);
+  const handleDeleteClick = (tag) => {
+    const newValues = [...values.filter((el) => el !== tag)];
+    setValues(newValues);
+    onTagsChange(newValues);
+  };
 
   return (
     <div>
@@ -41,9 +45,7 @@ export default function TagInput({ label, hint, tags, onTagsChange }) {
                   // eslint-disable-next-line react/no-array-index-key
                   key={`tag-${i}`}
                   className="fr-mr-1w"
-                  onClick={() => {
-                    setValues([...values.filter((el) => el !== tag)]);
-                  }}
+                  onClick={() => handleDeleteClick(tag)}
                 >
                   {tag}
                   <Icon iconPosition="right" name="ri-close-line" />

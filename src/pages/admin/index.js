@@ -4,6 +4,7 @@ import { Link as RouterLink, Outlet } from 'react-router-dom';
 import AdminDashboardPage from './dashboard';
 import NomenclaturesPage from './nomenclatures';
 import AdminUsersPage from './users';
+import LegalCategoriesPage from './categories-juridiques';
 
 function AdminPage() {
   return (
@@ -16,6 +17,9 @@ function AdminPage() {
             </SideMenuLink>
             <SideMenuLink asLink={<RouterLink to="/admin/utilisateurs" />}>
               Utilisateurs
+            </SideMenuLink>
+            <SideMenuLink asLink={<RouterLink to="/admin/categories-juridiques" />}>
+              Catégories juridiques
             </SideMenuLink>
             <SideMenuItem expandedDefault title="Nomenclatures">
               <SideMenuLink asLink={<RouterLink to="/admin/nomenclatures/types-de-document" />}>
@@ -38,4 +42,4 @@ function AdminPage() {
   );
 }
 
-export { AdminDashboardPage, AdminPage, AdminUsersPage, NomenclaturesPage };
+export { AdminDashboardPage, AdminPage, AdminUsersPage, NomenclaturesPage, LegalCategoriesPage };

@@ -1,4 +1,7 @@
 import {
+  Breadcrumb,
+  BreadcrumbItem,
+  Badge,
   Col,
   Container,
   Row,
@@ -6,37 +9,31 @@ import {
   TextInput,
   Button,
 } from '@dataesr/react-dsfr';
-import { useNavigate } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router-dom';
 import useFetch from '../../hooks/useFetch';
 
 export default function TermssPage() {
-  const navigate = useNavigate();
   const { data, error, isLoading } = useFetch('/terms');
 
   if (isLoading || !data) return <h1>Loading</h1>;
   if (error) return <h1>Error</h1>;
 
   return (
-    <Container spacing="mt-5w" as="main">
+    <Container spacing="mb-6w">
       <Row>
-        <Col n="9">
-          <Title as="h2">Les termes Paysage</Title>
-        </Col>
-        <Col className="text-right">
-          <Button
-            onClick={() => navigate('./ajouter')}
-            secondary
-            icon="ri-add-circle-line"
-          >
-            Ajouter un terme
-          </Button>
+        <Col>
+          <Breadcrumb>
+            <BreadcrumbItem asLink={<RouterLink to="/" />}>Accueil</BreadcrumbItem>
+            <BreadcrumbItem>Les termes</BreadcrumbItem>
+          </Breadcrumb>
         </Col>
       </Row>
-      <Row className="fr-pb-5w">
-        Nombre de termes en base :
-        {data.totalCount}
+      <Row>
+        <Row alignItems="top">
+          <Title className="fr-pr-1v" as="h1" look="h2">Les termes</Title>
+          <Badge type="info" text={data?.totalCount} />
+        </Row>
       </Row>
-
       <Row
         gutters
         spacing="px-2w"
