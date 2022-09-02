@@ -2,10 +2,10 @@ import { Icon } from '@dataesr/react-dsfr';
 import PropTypes from 'prop-types';
 import Card from './index';
 
-export default function TripleDotCard({ title, description, onClick }) {
+export default function ModifyCard({ title, description, onClick }) {
   const actionElement = (
     <button onClick={onClick} type="button">
-      <Icon className="ri-more-2-fill" size="lg" />
+      <Icon className="ri-edit-line" size="lg" />
     </button>
   );
   return (
@@ -17,13 +17,13 @@ export default function TripleDotCard({ title, description, onClick }) {
   );
 }
 
-TripleDotCard.propTypes = {
+ModifyCard.propTypes = {
   title: PropTypes.string,
   description: PropTypes.string,
   onClick: PropTypes.func.isRequired,
 };
 
-TripleDotCard.defaultProps = {
+ModifyCard.defaultProps = {
   title: '',
   description: '',
 };

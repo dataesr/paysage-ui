@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Button, ButtonGroup, Col, Container, Row, Title } from '@dataesr/react-dsfr';
 import TagInput from '../components/tag-input';
 import useToast from '../hooks/useToast';
-import TripleDotCard from '../components/card/triple-dot-card';
+import ModifyCard from '../components/card/modify-card';
 
 export default function HomePage() {
   const { toast } = useToast();
@@ -45,7 +45,7 @@ export default function HomePage() {
       </Row>
       <Row className="fr-pb-5w">
         <Col n="3">
-          <TripleDotCard title="titre" description="desc" />
+          <ModifyCard title="titre" description="desc" />
         </Col>
       </Row>
 

@@ -10,12 +10,12 @@ import {
   Title,
 } from '@dataesr/react-dsfr';
 import PaysageSection from '../../sections/section';
-import EmptySection from '../../sections/empty';
 import IdentifierForm from './form';
 import api from '../../../utils/api';
 import { getEnumKey } from '../../../utils';
-import TripleDotCard from '../../card/triple-dot-card';
+import ModifyCard from '../../card/modify-card';
 import ClipboardCopy from '../../../utils/clipboard-copy';
+import ExpendableListCards from '../../card/expendable-list-cards';
 
 export default function IdentifiersComponent({ apiObject, id }) {
   const [data, setData] = useState([]);
@@ -86,6 +86,45 @@ export default function IdentifiersComponent({ apiObject, id }) {
     setShowModal(true);
   };
 
+  const renderCards = () => {
+    const list = data.data.map((ident) => (
+      <ModifyCard
+        title={ident.type}
+        description={<ClipboardCopy copyText={ident.value} />}
+        onClick={() => onClickModifyHandler(ident)}
+      />
+    ));
+    return <ExpendableListCards apiObject={apiObject} list={list} />;
+    // if (data.data.length === 0) return <EmptySection apiObject={apiObject} />;
+    // if (data.data.length === max) {
+    //   return data.data.map((ident) => (
+    //     <Col n="12 md-4" key={ident.id} className="fr-p-1w">
+    //       <ModifyCard
+    //         title={ident.type}
+    //         description={<ClipboardCopy copyText={ident.value} />}
+    //         onClick={() => onClickModifyHandler(ident)}
+    //       />
+    //     </Col>
+    //   ));
+    // }
+    // return (
+    //   <>
+    //     {data.data.slice(0, max - 1).map((ident) => (
+    //       <Col n="12 md-4" key={ident.id} className="fr-p-1w">
+    //         <ModifyCard
+    //           title={ident.type}
+    //           description={<ClipboardCopy copyText={ident.value} />}
+    //           onClick={() => onClickModifyHandler(ident)}
+    //         />
+    //       </Col>
+    //     ))}
+    //     <Col n="12 md-4" className="fr-p-1w">
+    //       voir les autres
+    //     </Col>
+    //   </>
+    // );
+  };
+
   if (!data?.data) {
     return <PaysageSection dataPaysageMenu="Identifiants" id="identifiers" isEmpty />;
   }
@@ -110,16 +149,7 @@ export default function IdentifiersComponent({ apiObject, id }) {
         </Col>
       </Row>
       <Row>
-        {data.data.length === 0 ? <EmptySection apiObject={apiObject} /> : null}
-        {data.data.map((ident) => (
-          <Col n="3" key={ident.id}>
-            <TripleDotCard
-              title={ident.type}
-              description={<ClipboardCopy copyText={ident.value} />}
-              onClick={() => onClickModifyHandler(ident)}
-            />
-          </Col>
-        ))}
+        {renderCards()}
       </Row>
       <Modal isOpen={showModal} size="lg" hide={() => setShowModal(false)}>
         <ModalTitle>{modalTitle}</ModalTitle>
