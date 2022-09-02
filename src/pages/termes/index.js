@@ -12,7 +12,7 @@ import {
 import { Link as RouterLink } from 'react-router-dom';
 import useFetch from '../../hooks/useFetch';
 
-export default function TermssPage() {
+export default function TermsPage() {
   const { data, error, isLoading } = useFetch('/terms');
 
   if (isLoading || !data) return <h1>Loading</h1>;

@@ -9,20 +9,35 @@ import { toString } from '../../utils/dates';
 import useForm from '../../hooks/useForm';
 
 function LegalCategoriesForm({ id, initialForm, onSave, onDelete }) {
-  const { form, updateForm } = useForm(initialForm);
+  const validateForm = (body) => {
+    const validationErrors = {};
+    if (!body.longNameFr) { validationErrors.longNameFr = 'Le nom long en français est obligatoire'; }
+    return validationErrors;
+  };
+  const { form, updateForm, errors } = useForm(initialForm, validateForm);
+  const [showErrors, setShowErrors] = useState(false);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSave(id, form);
+    if (Object.keys(errors).length !== 0) return setShowErrors(true);
+    return onSave(id, form);
   };
 
   const handleDelete = () => onDelete(id);
 
-  const options = [
+  const sectorOptions = [
     { value: null, label: "Selectionner un type d'objet" },
     { value: 'public', label: 'Public' },
     { value: 'privé', label: 'Privé' },
     { value: 'sans objet', label: 'Sans objet' },
+  ];
+  const legalPersonalityOptions = [
+    { value: null, label: "Selectionner un type d'objet" },
+    { value: 'personne morale de droit public', label: 'Personne morale de droit public' },
+    { value: 'personne morale de droit privé', label: 'Personne morale de droit privé' },
+    { value: 'organisation internationale', label: 'Organisation internationale' },
+    { value: 'autre forme juridique étrangère', label: 'Autre forme juridique étrangère' },
+    { value: 'sans personalité juridique', label: 'Sans personalité juridique' },
   ];
 
   return (
@@ -30,10 +45,14 @@ function LegalCategoriesForm({ id, initialForm, onSave, onDelete }) {
       <Container fluid>
         <Row>
           <Col n="12" spacing="pb-3w">
-            <TextInput label="Nom" value={form.usualName} onChange={(e) => updateForm({ usualName: e.target.value })} />
-          </Col>
-          <Col n="12" spacing="pb-3w">
-            <TextInput label="Nom long en français" value={form.longNameFr} onChange={(e) => updateForm({ longNameFr: e.target.value })} />
+            <TextInput
+              required
+              label="Nom long en français"
+              value={form.longNameFr}
+              onChange={(e) => updateForm({ longNameFr: e.target.value })}
+              message={(showErrors && errors.longNameFr) ? errors.usualName : null}
+              messageType={(showErrors && errors.longNameFr) ? 'error' : ''}
+            />
           </Col>
           <Col n="12" spacing="pb-3w">
             <TextInput label="Nom court en français" value={form.shortNameFr} onChange={(e) => updateForm({ shortNameFr: e.target.value })} />
@@ -48,13 +67,22 @@ function LegalCategoriesForm({ id, initialForm, onSave, onDelete }) {
             <TextInput textarea label="Description en français" value={form.descriptionFr} onChange={(e) => updateForm({ descriptionFr: e.target.value })} />
           </Col>
           <Col n="12" spacing="pb-3w">
+            <TextInput label="Code insee" value={form.inseeCode} onChange={(e) => updateForm({ inseeCode: e.target.value })} />
+          </Col>
+          <Col n="12" spacing="pb-3w">
+            <TextInput label="Identifiant Wikidata" value={form.wikidataId} onChange={(e) => updateForm({ wikidataId: e.target.value })} />
+          </Col>
+          <Col n="12" spacing="pb-3w">
             <TextInput label="Nom court en anglais" value={form.shortNameEn} onChange={(e) => updateForm({ shortNameEn: e.target.value })} />
           </Col>
           <Col n="12" spacing="pb-3w">
             <TextInput label="Nom long en anglais" value={form.longNameEn} onChange={(e) => updateForm({ longNameEn: e.target.value })} />
           </Col>
           <Col n="12" spacing="pb-3w">
-            <Select label="Secteur" selected={form.sector} options={options} onChange={(e) => updateForm({ sector: e.target.value })} />
+            <Select label="Secteur" selected={form.sector} options={sectorOptions} onChange={(e) => updateForm({ sector: e.target.value })} />
+          </Col>
+          <Col n="12" spacing="pb-3w">
+            <Select label="Secteur" selected={form.legalPersonality} options={legalPersonalityOptions} onChange={(e) => updateForm({ legalPersonality: e.target.value })} />
           </Col>
           <Col n="12" spacing="pb-3w">
             <TextInput label="Site web en anglais" value={form.websiteEn} onChange={(e) => updateForm({ websiteEn: e.target.value })} />
@@ -69,7 +97,7 @@ function LegalCategoriesForm({ id, initialForm, onSave, onDelete }) {
             <TagInput
               label="Autres noms"
               hint='Validez votre ajout avec la touche "Entrée" afin de valider votre ajout'
-              tags={form.otherNames}
+              tags={form.otherNames || []}
               onTagsChange={(tags) => updateForm({ otherNames: tags })}
             />
           </Col>
@@ -94,23 +122,23 @@ LegalCategoriesForm.propTypes = {
 LegalCategoriesForm.defaultProps = {
   id: null,
   initialForm: {
-    inseeCode: null,
-    longNameFr: null,
-    shortNameFr: null,
-    acronymFr: null,
-    pluralNameFr: null,
-    descriptionFr: null,
-    longNameEn: null,
-    shortNameEn: null,
+    inseeCode: '',
+    longNameFr: '',
+    shortNameFr: '',
+    acronymFr: '',
+    pluralNameFr: '',
+    descriptionFr: '',
+    longNameEn: '',
+    shortNameEn: '',
     otherNames: [],
     sector: null,
-    officialTextId: null,
+    officialTextId: '',
     legalPersonality: null,
     inPublicResearch: null,
-    wikidataId: null,
-    websiteFr: null,
-    websiteEn: null,
-    comment: null,
+    wikidataId: '',
+    websiteFr: '',
+    websiteEn: '',
+    comment: '',
   },
 };
 
@@ -139,13 +167,14 @@ export default function LegalCategoriesPage() {
     }
   };
 
-  const handleModalToggle = (item = {}) => {
+  const handleModalToggle = (e, item = {}) => {
+    e.preventDefault();
     const { id, ...rest } = item;
     setModalTitle(item?.id ? 'Modifier' : 'Ajouter');
     setModalContent(
       <LegalCategoriesForm
         id={id}
-        data={rest}
+        initialForm={rest}
         onDelete={handleDelete}
         onSave={handleSave}
       />,
@@ -199,7 +228,7 @@ export default function LegalCategoriesPage() {
               )}
             </div>
             <div>
-              <Button secondary size="sm" title="editer" icon="ri-pencil-line" onClick={() => handleModalToggle(item)}>Editer</Button>
+              <Button secondary size="sm" title="editer" icon="ri-pencil-line" onClick={(e) => handleModalToggle(e, item)}>Editer</Button>
             </div>
           </Row>
           <hr />
