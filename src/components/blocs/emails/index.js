@@ -2,10 +2,11 @@ import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Button, Col, Modal, ModalContent, ModalTitle, Row, Title } from '@dataesr/react-dsfr';
 import PaysageSection from '../../sections/section';
-import EmptySection from '../../sections/empty';
 import EmailForm from './form';
 import api from '../../../utils/api';
 import ModifyCard from '../../card/modify-card';
+import ExpendableListCards from '../../card/expendable-list-cards';
+import ClipboardCopy from '../../../utils/clipboard-copy';
 
 export default function EmailsComponent({ apiObject, id }) {
   const [data, setData] = useState([]);
@@ -69,6 +70,17 @@ export default function EmailsComponent({ apiObject, id }) {
     setShowModal(true);
   };
 
+  const renderCards = () => {
+    const list = data.data.map((el) => (
+      <ModifyCard
+        title={el.emailType.usualName}
+        description={<ClipboardCopy copyText={el.email} />}
+        onClick={() => onClickModifyHandler(el)}
+      />
+    ));
+    return <ExpendableListCards apiObject={apiObject} list={list} nCol="12 md-6" />;
+  };
+
   if (!data?.data) {
     return (
       <PaysageSection dataPaysageMenu="Emails génériques" id="emails" isEmpty />
@@ -95,16 +107,7 @@ export default function EmailsComponent({ apiObject, id }) {
         </Col>
       </Row>
       <Row>
-        {data.data.length === 0 ? <EmptySection apiObject={apiObject} /> : null}
-        {data.data.map((gm) => (
-          <Col n="4" key={gm.id}>
-            <ModifyCard
-              title={gm.emailType.usualName}
-              description={gm.email}
-              onClick={() => onClickModifyHandler(gm)}
-            />
-          </Col>
-        ))}
+        {renderCards()}
       </Row>
       <Modal isOpen={showModal} size="lg" hide={() => setShowModal(false)}>
         <ModalTitle>{modalTitle}</ModalTitle>
