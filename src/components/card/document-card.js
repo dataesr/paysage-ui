@@ -1,8 +1,14 @@
-import { Col, Icon, Row } from '@dataesr/react-dsfr';
+import { Col, Icon, Link, Row } from '@dataesr/react-dsfr';
 import PropTypes from 'prop-types';
 import './styles.modules.scss';
 
-export default function Card({ title, iconElement, descriptionElement, onClick }) {
+export default function Card({
+  title,
+  iconElement,
+  descriptionElement,
+  onClick,
+  downloadUrl,
+}) {
   return (
     <div className="fr-card fr-enlarge-link fr-card--horizontal">
       <div className="fr-card__body">
@@ -12,7 +18,12 @@ export default function Card({ title, iconElement, descriptionElement, onClick }
               {iconElement}
             </Col>
             <Col>
-              {title ? <h4 className="fr-card__title">{title}</h4> : null}
+              {title ? (
+                <h4 className="fr-card__title">
+                  {title}
+                  <Link href={downloadUrl} target="_blank" />
+                </h4>
+              ) : null}
               <div className="fr-card__desc">{descriptionElement}</div>
               <div className="card-button">
                 <button onClick={onClick} type="button">
@@ -31,6 +42,7 @@ Card.propTypes = {
   title: PropTypes.string,
   descriptionElement: PropTypes.element,
   onClick: PropTypes.func.isRequired,
+  downloadUrl: PropTypes.string.isRequired,
   iconElement: PropTypes.element,
 };
 

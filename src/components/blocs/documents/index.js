@@ -140,6 +140,7 @@ export default function DocumentsComponent({ apiObject, id }) {
         onClick={() => onClickModifyHandler(doc)}
         descriptionElement={doc.title}
         iconElement={renderIcon(doc.mimetype)}
+        downloadUrl={doc.url}
       />
     ));
     return <ExpendableListCards apiObject={apiObject} list={list} nCol="12 md-6" />;
