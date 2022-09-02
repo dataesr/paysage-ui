@@ -5,7 +5,7 @@ import PaysageSection from '../../sections/section';
 import EmptySection from '../../sections/empty';
 import EmailForm from './form';
 import api from '../../../utils/api';
-import TripleDotCard from '../../card/triple-dot-card';
+import ModifyCard from '../../card/modify-card';
 
 export default function EmailsComponent({ apiObject, id }) {
   const [data, setData] = useState([]);
@@ -98,7 +98,7 @@ export default function EmailsComponent({ apiObject, id }) {
         {data.data.length === 0 ? <EmptySection apiObject={apiObject} /> : null}
         {data.data.map((gm) => (
           <Col n="4" key={gm.id}>
-            <TripleDotCard
+            <ModifyCard
               title={gm.emailType.usualName}
               description={gm.email}
               onClick={() => onClickModifyHandler(gm)}

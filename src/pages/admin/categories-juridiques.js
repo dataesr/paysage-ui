@@ -199,7 +199,7 @@ export default function LegalCategoriesPage() {
               )}
             </div>
             <div>
-              <Button secondary size="sm" title="editer" icon="ri-pencil-line" onClick={() => handleModalToggle(item)}>Editer</Button>
+              <Button secondary size="sm" title="editer" icon="ri-edit-line" onClick={() => handleModalToggle(item)}>Editer</Button>
             </div>
           </Row>
           <hr />

@@ -26,6 +26,8 @@ export default function EmptySection({ apiObject }) {
   case 'textes-officiels':
     className = 'fr-highlight--green-emeraude';
     break;
+  default:
+    className = 'fr-highlight--beige-gris-galet';
   }
 
   return (
@@ -36,5 +38,9 @@ export default function EmptySection({ apiObject }) {
 }
 
 EmptySection.propTypes = {
-  apiObject: PropTypes.string.isRequired,
+  apiObject: PropTypes.string,
+};
+
+EmptySection.defaultProps = {
+  apiObject: '',
 };

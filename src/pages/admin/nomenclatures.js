@@ -156,7 +156,7 @@ export default function NomenclaturesPage({ route, title }) {
               )}
             </div>
             <div>
-              <Button secondary size="sm" title="editer" icon="ri-pencil-line" onClick={(e) => handleModalToggle(e, item)}>Editer</Button>
+              <Button secondary size="sm" title="editer" icon="ri-edit-line" onClick={(e) => handleModalToggle(e, item)}>Editer</Button>
             </div>
           </Row>
           <hr />

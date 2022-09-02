@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Icon } from '@dataesr/react-dsfr';
+import { Badge, Icon, Tag } from '@dataesr/react-dsfr';
 
 export default function ClipboardCopy({ copyText }) {
   const [isCopied, setIsCopied] = useState(false);
@@ -30,7 +30,11 @@ export default function ClipboardCopy({ copyText }) {
     <>
       <span className="fr-mr-1w">{copyText}</span>
       <button onClick={handleCopyClick} type="button">
-        {isCopied ? 'Copié' : <Icon className="ri-file-copy-line" />}
+        {isCopied ? (
+          <Badge colorFamily="green-menthe" text="Copié" isSmall />
+        ) : (
+          <Icon className="ri-file-copy-line" />
+        )}
       </button>
     </>
   );

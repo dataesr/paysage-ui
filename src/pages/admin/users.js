@@ -101,7 +101,7 @@ function User({
                 Activer
               </Button>
             )}
-            {(!deleted) && <Button secondary title="editer" icon="ri-pencil-line" onClick={() => setIsEditModalOpen(!isEditModalOpen)}>Editer</Button>}
+            {(!deleted) && <Button secondary title="editer" icon="ri-edit-line" onClick={() => setIsEditModalOpen(!isEditModalOpen)}>Editer</Button>}
             {deleted && (
               <Button
                 colors={['var(--background-action-high-success)', 'white']}
