@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Badge, Icon, Tag } from '@dataesr/react-dsfr';
+import { Badge, Icon } from '@dataesr/react-dsfr';
 
 export default function ClipboardCopy({ copyText }) {
   const [isCopied, setIsCopied] = useState(false);
