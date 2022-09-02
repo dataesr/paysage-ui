@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Text } from '@dataesr/react-dsfr';
-import styles from './avatar.module.scss';
+import styles from './styles.module.scss';
 
 /**
  * Avatar component.

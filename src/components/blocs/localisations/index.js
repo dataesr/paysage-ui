@@ -5,7 +5,6 @@ import PaysageSection from '../../sections/section';
 import EmptySection from '../../sections/empty';
 
 export default function LocalisationsComponent({ id, apiObject, data }) {
-  console.log('data', data);
   return (
     <PaysageSection dataPaysageMenu="Localisation" id="localisations">
       <Row>
@@ -55,7 +54,6 @@ export default function LocalisationsComponent({ id, apiObject, data }) {
                 <Row>
                   <Col>
                     {data.address}
-                    {/* <br /> */}
                     {`${data.locality} - ${data.postalCode}`}
                   </Col>
                   <Col>
