@@ -1,0 +1,92 @@
+@keyframes notice-mount {
+  from {
+    transform: translateY(-100%);
+  }
+
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes notice-unmount {
+  from {
+    transform: translateY(0);
+  }
+
+  to {
+    transform: translateY(-100%);
+  }
+}
+
+.notice {
+  animation: notice-mount .3s;
+}
+
+.notice-info {
+  --idle: #0000;
+  --hover: var(--background-contrast-info-hover);
+  --active: var(--background-contrast-info-active);
+  background-color: var(--background-contrast-info);
+  color: var(--text-default-info);
+
+  .fr-notice__body::before {
+    content: "\ee59";
+    font-size: 1.4rem;
+    line-height: 1.5rem;
+    background-color: inherit;
+    box-shadow: none;
+    font-family: remixicon;
+  }
+}
+.notice-error {
+  --idle: #0000;
+  --hover: var(--background-contrast-error-hover);
+  --active: var(--background-contrast-error-active);
+  background-color: var(--background-contrast-error);
+  color: var(--text-default-error);
+
+  .fr-notice__body::before {
+    content: "\eb97";
+    font-size: 1.4rem;
+    line-height: 1.5rem;
+    background-color: inherit;
+    box-shadow: none;
+    font-family: remixicon;
+  }
+}
+.notice-warning {
+  --idle: #0000;
+  --hover: var(--background-contrast-warning-hover);
+  --active: var(--background-contrast-warning-active);
+  background-color: var(--background-contrast-warning);
+  color: var(--text-default-warning);
+
+  .fr-notice__body::before {
+    content: "\eca1";
+    font-size: 1.4rem;
+    line-height: 1.5rem;
+    background-color: inherit;
+    box-shadow: none;
+    font-family: remixicon;
+  }
+}
+.notice-success {
+  --idle: #0000;
+  --hover: var(--background-contrast-success-hover);
+  --active: var(--background-contrast-success-active);
+  background-color: var(--background-contrast-success);
+  color: var(--text-default-success);
+
+  .fr-notice__body::before {
+    content: "\eb81";
+    font-size: 1.4rem;
+    line-height: 1.5rem;
+    background-color: inherit;
+    box-shadow: none;
+    font-family: remixicon;
+  }
+}
+
+.notice-btn--close {
+  color: inherit !important;
+}

@@ -4,8 +4,7 @@ import Map from '../../map';
 import PaysageSection from '../../sections/section';
 import EmptySection from '../../sections/empty';
 
-export default function LocalisationsComponent({ id, apiObject, data }) {
-  console.log('data', data);
+export default function LocalisationsComponent({ apiObject, data }) {
   return (
     <PaysageSection dataPaysageMenu="Localisation" id="localisations">
       <Row>
@@ -76,7 +75,7 @@ export default function LocalisationsComponent({ id, apiObject, data }) {
 
 LocalisationsComponent.propTypes = {
   apiObject: PropTypes.string.isRequired,
-  id: PropTypes.string.isRequired,
+  // id: PropTypes.string.isRequired,
   // eslint-disable-next-line react/forbid-prop-types
   data: PropTypes.object.isRequired,
 };

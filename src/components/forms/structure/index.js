@@ -44,7 +44,8 @@ export default function StructureAddForm() {
     );
   };
 
-  const onSaveHandler = async () => {
+  const onSaveHandler = async (e) => {
+    e.preventDefault();
     const body = {
       usualName,
       wikidata,
@@ -57,8 +58,8 @@ export default function StructureAddForm() {
 
     const { ok, returnedErrors } = validator(body);
     if (ok) {
-      const response = await api.post('/structures', body).catch((e) => {
-        console.log(e);
+      const response = await api.post('/structures', body).catch((err) => {
+        console.log(err);
       });
       if (response.status === 201) {
         toast({

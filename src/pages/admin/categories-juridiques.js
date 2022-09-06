@@ -167,8 +167,7 @@ export default function LegalCategoriesPage() {
     }
   };
 
-  const handleModalToggle = (e, item = {}) => {
-    e.preventDefault();
+  const handleModalToggle = (item = {}) => {
     const { id, ...rest } = item;
     setModalTitle(item?.id ? 'Modifier' : 'Ajouter');
     setModalContent(

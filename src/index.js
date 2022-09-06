@@ -3,16 +3,19 @@ import ReactDOM from 'react-dom/client';
 import App from './App';
 import { AuthContextProvider } from './hooks/useAuth';
 import { ToastContextProvider } from './hooks/useToast';
+import { NoticeContextProvider } from './hooks/useNotice';
 // import reportWebVitals from './reportWebVitals';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <ToastContextProvider>
-      <AuthContextProvider>
-        <App />
-      </AuthContextProvider>
-    </ToastContextProvider>
+    <NoticeContextProvider>
+      <ToastContextProvider>
+        <AuthContextProvider>
+          <App />
+        </AuthContextProvider>
+      </ToastContextProvider>
+    </NoticeContextProvider>
   </React.StrictMode>,
 );
 

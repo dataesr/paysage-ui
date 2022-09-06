@@ -95,8 +95,7 @@ export default function NomenclaturesPage({ route, title }) {
     }
   };
 
-  const handleModalToggle = (e, item = {}) => {
-    e.preventDefault();
+  const handleModalToggle = (item = {}) => {
     const { id, ...rest } = item;
     setModalTitle(item?.id ? 'Modifier' : 'Ajouter');
     setModalContent(
@@ -156,7 +155,7 @@ export default function NomenclaturesPage({ route, title }) {
               )}
             </div>
             <div>
-              <Button secondary size="sm" title="editer" icon="ri-edit-line" onClick={(e) => handleModalToggle(e, item)}>Editer</Button>
+              <Button secondary size="sm" title="editer" icon="ri-edit-line" onClick={() => handleModalToggle(item)}>Editer</Button>
             </div>
           </Row>
           <hr />

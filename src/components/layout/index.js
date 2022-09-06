@@ -6,15 +6,16 @@ import Footer from './footer';
 import PageBorder from './page-border';
 
 export default function Layout() {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isSwitchThemeOpen, setIsSwitchThemeOpen] = useState(false);
   return (
     <>
-      <Header switchTheme={{ isOpen, setIsOpen }} />
-      <SwitchTheme isOpen={isOpen} setIsOpen={setIsOpen} />
+      <Header />
+      <SwitchTheme isOpen={isSwitchThemeOpen} setIsOpen={setIsSwitchThemeOpen} />
+      <div role="alert" id="notice-container" />
       <Container as="main" role="main" fluid>
         <Outlet />
       </Container>
-      <Footer switchTheme={{ isOpen, setIsOpen }} />
+      <Footer switchTheme={{ isOpen: isSwitchThemeOpen, setIsOpen: setIsSwitchThemeOpen }} />
       <PageBorder />
     </>
   );
