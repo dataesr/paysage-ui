@@ -3,7 +3,7 @@ import './styles.modules.scss';
 
 export default function Card({ title, descriptionElement, actionElement }) {
   return (
-    <div className="fr-card fr-enlarge-link">
+    <div className="fr-card fr-enlarge-link fr-card--horizontal">
       <div className="fr-card__body">
         <div className="fr-card__content fr-py-1w">
           {title ? <h4 className="fr-card__title">{title}</h4> : null}

@@ -95,34 +95,6 @@ export default function IdentifiersComponent({ apiObject, id }) {
       />
     ));
     return <ExpendableListCards apiObject={apiObject} list={list} />;
-    // if (data.data.length === 0) return <EmptySection apiObject={apiObject} />;
-    // if (data.data.length === max) {
-    //   return data.data.map((ident) => (
-    //     <Col n="12 md-4" key={ident.id} className="fr-p-1w">
-    //       <ModifyCard
-    //         title={ident.type}
-    //         description={<ClipboardCopy copyText={ident.value} />}
-    //         onClick={() => onClickModifyHandler(ident)}
-    //       />
-    //     </Col>
-    //   ));
-    // }
-    // return (
-    //   <>
-    //     {data.data.slice(0, max - 1).map((ident) => (
-    //       <Col n="12 md-4" key={ident.id} className="fr-p-1w">
-    //         <ModifyCard
-    //           title={ident.type}
-    //           description={<ClipboardCopy copyText={ident.value} />}
-    //           onClick={() => onClickModifyHandler(ident)}
-    //         />
-    //       </Col>
-    //     ))}
-    //     <Col n="12 md-4" className="fr-p-1w">
-    //       voir les autres
-    //     </Col>
-    //   </>
-    // );
   };
 
   if (!data?.data) {

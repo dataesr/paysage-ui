@@ -5,6 +5,17 @@
     position: absolute;
     top: 8px;
     right: 8px;
+    z-index: 1;
+
+    &:hover {
+      cursor: pointer;
+    }
+  }
+
+    .card-button{
+      position: absolute;
+      top: 8px;
+      right: 8px;
 
     &:hover {
       cursor: pointer;

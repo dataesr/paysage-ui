@@ -2,23 +2,23 @@ import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import {
   Button,
-  Card,
-  CardDescription,
   Col,
   Icon,
   Modal,
   ModalContent,
   ModalTitle,
   Row,
-  Text,
   Title,
 } from '@dataesr/react-dsfr';
-import PaysageSection from '../../sections/section';
-import EmptySection from '../../sections/empty';
+import useToast from '../../../hooks/useToast';
+import DocumentCard from '../../card/document-card';
 import DocumentForm from './form';
+import ExpendableListCards from '../../card/expendable-list-cards';
+import PaysageSection from '../../sections/section';
 import api from '../../../utils/api';
 
 export default function DocumentsComponent({ apiObject, id }) {
+  const { toast } = useToast();
   const [data, setData] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [modalTitle, setModalTitle] = useState('');
@@ -31,13 +31,17 @@ export default function DocumentsComponent({ apiObject, id }) {
         .get(
           `/documents?filters[relatesTo]=${id}`,
         )
-        .catch((e) => {
-          console.log(e);
+        .catch(() => {
+          toast({
+            toastType: 'error',
+            description: "Une erreur s'est produite",
+          });
         });
       if (response.ok) setData(response.data);
     };
     getData();
     return () => {};
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [apiObject, id, reloader]);
 
   const onSaveHandler = async (
@@ -51,16 +55,21 @@ export default function DocumentsComponent({ apiObject, id }) {
     formData.append('file', body.file);
     formData.append('relatesTo[]', id);
     if (body.startDate) formData.append('startDate', body.startDate);
-    if (body.eEndDate) formData.append('endDate', body.eEndDate);
+    if (body.endDate) formData.append('endDate', body.endDate);
 
     const response = await api.post('/documents', formData, { 'Content-Type': 'multipart/form-data' })
-      .catch((e) => {
-        console.log(e);
+      .catch(() => {
+        toast({
+          toastType: 'error',
+          description: "Une erreur s'est produite",
+        });
       });
 
-    console.log('response', response);
-
     if (response.ok) {
+      toast({
+        toastType: 'success',
+        description: 'Le document à été ajouté',
+      });
       setReloader(reloader + 1);
       setShowModal(false);
     }
@@ -103,26 +112,38 @@ export default function DocumentsComponent({ apiObject, id }) {
     case 'image/png':
     case 'image/jpeg':
       iconName = 'ri-image-fill';
-      color = '--green-archipel-main-557';
+      color = 'var(--green-archipel-main-557)';
       break;
     case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
       iconName = 'ri-file-word-fill';
-      color = '--blue-ecume-main-400';
+      color = 'var(--blue-ecume-main-400)';
       break;
     case 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
       iconName = 'ri-file-excel-fill';
-      color = '--green-emeraude-main-632';
+      color = 'var(--green-emeraude-main-632)';
       break;
     case 'application/pdf':
       iconName = 'ri-file-pdf-fill';
-      color = '--error-main-525';
+      color = 'var(--error-main-525)';
       break;
 
     default:
       break;
     }
+    return <Icon name={iconName} size="4x" color={color} />;
+  };
 
-    return <Icon name={iconName} size="5x" color={color} />;
+  const renderCards = () => {
+    const list = data.data.map((doc) => (
+      <DocumentCard
+        title={doc.documentType?.usualName}
+        onClick={() => onClickModifyHandler(doc)}
+        descriptionElement={doc.title}
+        iconElement={renderIcon(doc.mimetype)}
+        downloadUrl={doc.url}
+      />
+    ));
+    return <ExpendableListCards apiObject={apiObject} list={list} nCol="12 md-6" />;
   };
 
   if (!data?.data) {
@@ -151,37 +172,7 @@ export default function DocumentsComponent({ apiObject, id }) {
         </Col>
       </Row>
       <Row>
-        {data.data.length === 0 ? <EmptySection apiObject={apiObject} /> : null}
-        {data.data.map((doc) => (
-          <Col n="6" key={doc.id}>
-            <Card hasArrow={false} onClick={() => onClickModifyHandler(doc)}>
-              <CardDescription>
-                <Row>
-                  <Col n="4">
-                    <div>{renderIcon(document.mimetype)}</div>
-                    <div>
-                      <a
-                        href={document.url}
-                        target="_blank"
-                        title={`téléchargement du fichier : ${document.title}`}
-                        rel="noreferrer"
-                      >
-                        Télécharger
-                      </a>
-                    </div>
-                  </Col>
-                  <Col>
-                    <h3>{document.documentType.usualName}</h3>
-                    {document.startDate ? `${document.startDate}` : null}
-                    {document.endDate ? ` - ${document.endDate}` : null}
-                    <Text size="md">{document.title}</Text>
-                    <Text size="sm">{document.description}</Text>
-                  </Col>
-                </Row>
-              </CardDescription>
-            </Card>
-          </Col>
-        ))}
+        {renderCards()}
       </Row>
       <Modal isOpen={showModal} size="lg" hide={() => setShowModal(false)}>
         <ModalTitle>{modalTitle}</ModalTitle>
