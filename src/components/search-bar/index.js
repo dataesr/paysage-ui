@@ -63,7 +63,9 @@ const SearchBar = forwardRef((props, ref) => {
               <li className={styles.item}>
                 <button className={styles.btn} type="button" onClick={() => { onAutocompleteSelection(option); }}>
                   <Badge isSmall text={option.type} />
-                  <Text className={styles.content}>{option.name}</Text>
+                  <Text className={styles.content}>
+                    {`${option.resource.name} (${option.resource.acronym})`}
+                  </Text>
                   <Icon name="ri-arrow-go-forward-line" />
                 </button>
               </li>
