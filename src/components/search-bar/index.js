@@ -1,13 +1,17 @@
-import React, { forwardRef, useRef } from 'react';
+/* eslint-disable react/no-array-index-key */
+import React, { forwardRef, useRef, useState } from 'react';
 
 import PropTypes from 'prop-types';
 import { v4 as uuidv4 } from 'uuid';
-import classNames from 'classnames';
+import classnames from 'classnames';
 import { Badge, Icon, Text } from '@dataesr/react-dsfr';
 import styles from './styles.module.scss';
+
 /**
  *
- * @visibleName SearchBar
+ * TODO:
+ * hide Autocomplete options on input focus out
+ * handle onKeyDown with arrows to select options
  */
 const SearchBar = forwardRef((props, ref) => {
   const {
@@ -16,62 +20,103 @@ const SearchBar = forwardRef((props, ref) => {
     buttonLabel,
     placeholder,
     onSearch,
-    autocompleteOptions,
-    onAutocompleteSelection,
+    options,
+    onSelect,
     value,
     className,
     ...remainingProps
   } = props;
   const inputId = useRef(uuidv4());
-  const onInputKeyDown = (e) => (e.keyCode === 13) && onSearch(value);
-  const _className = classNames('fr-search-bar', {
+  const _className = classnames('fr-search-bar', {
     'fr-search-bar--lg': (size === 'lg'),
   }, className);
-  const _classNameButton = classNames('fr-btn', { 'fr-btn--lg': (size === 'lg') });
-  const handleSubmit = (e, currentText) => { e.preventDefault(); onSearch(currentText); };
+  const _classNameButton = classnames('fr-btn', { 'fr-btn--lg': (size === 'lg') });
+  const [activeSuggestionIndex, setActiveSuggestionIndex] = useState(null);
+  const [showOptions, setShowOptions] = useState((options.length >= 0));
+
+  const handleSubmit = (e) => { e.preventDefault(); onSearch(value); };
+  const handleOnKeyDown = (e) => {
+    // User pressed the enter key
+    if (e.keyCode === 13) {
+      if (onSearch) {
+        onSearch(value);
+      } else if (activeSuggestionIndex && onSelect) {
+        onSelect(options[activeSuggestionIndex]);
+      }
+    } else if (e.keyCode === 38) {
+      // User pressed the up arrow
+      e.preventDefault();
+      setActiveSuggestionIndex((activeSuggestionIndex !== null && activeSuggestionIndex !== 0) ? activeSuggestionIndex - 1 : null);
+    } else if (e.keyCode === 40) {
+      // User pressed the down arrow
+      if (activeSuggestionIndex !== null && activeSuggestionIndex < (options.length - 1)) {
+        setActiveSuggestionIndex(activeSuggestionIndex + 1);
+      } else if (activeSuggestionIndex === null) {
+        setActiveSuggestionIndex(0);
+      } else if (activeSuggestionIndex !== null && activeSuggestionIndex === (options.length - 1)) {
+        setActiveSuggestionIndex(null);
+      }
+    }
+  };
 
   return (
-    <div className={styles.searchbar}>
-      <form
-        onSubmit={handleSubmit}
-        role="search"
-        className={_className}
-        {...remainingProps}
-      >
-        {label && <label className="fr-label" htmlFor={inputId.current}>{label}</label>}
-        <input
-          ref={ref}
-          className="fr-input"
-          placeholder={placeholder}
-          type="search"
-          id={inputId.current}
-          value={value}
-          onKeyDown={onInputKeyDown}
-        />
-        <button
-          type="submit"
-          className={_classNameButton}
-          title={buttonLabel}
-        >
-          {buttonLabel}
-        </button>
-      </form>
-      {autocompleteOptions.length ? (
-        <div className={styles.autocomplete}>
-          <ul className={styles.list}>
-            {autocompleteOptions.map((option) => (
-              <li className={styles.item}>
-                <button className={styles.btn} type="button" onClick={() => { onAutocompleteSelection(option); }}>
-                  <Badge isSmall text={option.type} />
-                  <Text className={styles.content}>{option.name}</Text>
-                  <Icon name="ri-arrow-go-forward-line" />
-                </button>
-              </li>
-            ))}
-          </ul>
+    <form
+      onBlur={() => setShowOptions(false)}
+      onFocus={() => setShowOptions(true)}
+      onSubmit={handleSubmit}
+      role="search"
+      className={classnames(styles.form, _className)}
+    >
+      <div className={styles.searchbar}>
+        <div className={_className}>
+          {label && <label className="fr-label" htmlFor={inputId.current}>{label}</label>}
+          <input
+            ref={ref}
+            className="fr-input"
+            placeholder={placeholder}
+            type="search"
+            id={inputId.current}
+            value={value}
+            onKeyDown={handleOnKeyDown}
+            {...remainingProps}
+          />
+          {onSearch && (
+            <button
+              type="submit"
+              className={_classNameButton}
+              title={buttonLabel}
+            >
+              {buttonLabel}
+            </button>
+          )}
         </div>
-      ) : null}
-    </div>
+        <div className={styles.autocomplete}>
+          {(options.length && showOptions) ? (
+            <ul className={styles.list} onMouseLeave={() => setActiveSuggestionIndex(null)}>
+              {options.map((option, i) => (
+                <li
+                  key={i}
+                  id={`${inputId.current}-option-${i}`}
+                  className={classnames(`${styles.item}`, { [styles.hovered]: (i === activeSuggestionIndex) })}
+                  onMouseEnter={() => setActiveSuggestionIndex(i)}
+                >
+                  <button
+                    tabIndex={-1}
+                    className={styles.btn}
+                    type="button"
+                    onMouseDown={() => { onSelect(option); }}
+                  >
+                    {option.type && <Badge isSmall text={option.type} />}
+                    <Text className={styles.content}>{option.name}</Text>
+                    <Icon name="ri-arrow-right-line" />
+                  </button>
+                </li>
+              ))}
+            </ul>
+          ) : null}
+        </div>
+      </div>
+    </form>
   );
 });
 SearchBar.defaultProps = {
@@ -80,16 +125,14 @@ SearchBar.defaultProps = {
   value: '',
   className: '',
   label: '',
-  autocompleteOptions: [],
+  options: [],
+  onSearch: null,
 };
 SearchBar.propTypes = {
   label: PropTypes.string,
   buttonLabel: PropTypes.string.isRequired,
   placeholder: PropTypes.string,
-  /**
-   * A function that handles search action. Input value is passed as prop.
-   */
-  onSearch: PropTypes.func.isRequired,
+  onSearch: PropTypes.func,
   size: PropTypes.oneOf(['md', 'lg']),
   value: PropTypes.string,
   className: PropTypes.oneOfType([
@@ -97,9 +140,8 @@ SearchBar.propTypes = {
     PropTypes.object,
     PropTypes.array,
   ]),
-  autocompleteOptions: PropTypes.arrayOf(PropTypes.string),
-  onAutocompleteSelection: PropTypes.func.isRequired,
-  onInputChange: PropTypes.func.isRequired,
+  options: PropTypes.arrayOf(PropTypes.string),
+  onSelect: PropTypes.func.isRequired,
 };
 
 export default SearchBar;

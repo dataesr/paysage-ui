@@ -43,9 +43,9 @@ export default function HomePage() {
           label="Rechercher dans paysage"
           placeholder="Rechercher..."
           onChange={(e) => setQuery(e.target.value)}
-          autocompleteOptions={options}
-          onSearch={handleSearchRedirection}
-          onAutocompleteSelection={handleSearchRedirection}
+          options={options}
+          // onSearch={handleSearchRedirection}
+          onSelect={handleSearchRedirection}
         />
       </Row>
       <Row className="fr-pb-5w">

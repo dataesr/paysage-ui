@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Link as RouterLink, useLocation } from 'react-router-dom';
+import { Link as RouterLink, useLocation, useNavigate } from 'react-router-dom';
 import {
   Header as HeaderWrapper,
   HeaderBody,
@@ -13,25 +13,36 @@ import {
   ToolItemGroup,
 } from '@dataesr/react-dsfr';
 import useAuth from '../../hooks/useAuth';
-import Search from './search';
+import SearchBar from '../search-bar';
+import api from '../../utils/api';
 
 export default function Header() {
   const { pathname } = useLocation();
   const { viewer, signout } = useAuth();
-  const [isSearchOpen, setIsSearchOpen] = useState(false);
+
+  const [query, setQuery] = useState('');
+  const [options, setOptions] = useState([]);
+  const navigate = useNavigate();
+
   useEffect(() => {
-    const callback = (event) => {
-      if ((event.metaKey || event.ctrlKey) && event.code === 'KeyK') {
-        console.log('EVENT');
-        event.preventDefault();
-        setIsSearchOpen(!isSearchOpen);
-      }
+    const getAutocompleteResult = async () => {
+      const response = await api.get(`/autocomplete?query=${query}&limit=10`); // &types=categories
+      setOptions(response.data?.data);
     };
-    document.addEventListener('keydown', callback);
-    return () => {
-      document.removeEventListener('keydown', callback);
-    };
-  }, [isSearchOpen, setIsSearchOpen]);
+    if (query) { getAutocompleteResult(); } else { setOptions([]); }
+  }, [query]);
+
+  const handleSearchRedirection = ({ id, type }) => {
+    navigate(`/${type}/${id}`);
+    setQuery('');
+    setOptions([]);
+  };
+  const handleSearch = () => {
+    navigate(`rechercher?query=${query}`);
+    setQuery('');
+    setOptions([]);
+  };
+
   return (
     <HeaderWrapper>
       <HeaderBody>
@@ -74,13 +85,20 @@ export default function Header() {
                 Déconnexion
               </ToolItem>
             )}
-            {viewer.id && (
-              <ToolItem
-                icon="ri-search-line"
-                onClick={() => setIsSearchOpen(true)}
-              />
-            )}
           </ToolItemGroup>
+          {viewer.id && (
+            <SearchBar
+              size="md"
+              buttonLabel="Rechercher"
+              value={query}
+              label="Rechercher dans paysage"
+              placeholder="Rechercher..."
+              onChange={(e) => setQuery(e.target.value)}
+              options={options}
+              onSearch={handleSearch}
+              onSelect={handleSearchRedirection}
+            />
+          )}
         </Tool>
       </HeaderBody>
       <HeaderNav path={pathname}>
@@ -156,7 +174,6 @@ export default function Header() {
           current={pathname.startsWith('/aide')}
         />
       </HeaderNav>
-      <Search isOpen={isSearchOpen} setIsOpen={setIsSearchOpen} />
     </HeaderWrapper>
   );
 }
