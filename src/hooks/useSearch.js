@@ -2,24 +2,21 @@
 import { useEffect, useState } from 'react';
 import api from '../utils/api';
 
-const scopeTypesMapper = {
-  structures: 'structures',
-  personnes: 'persons',
-  categories: 'categories',
-  prix: 'prices',
-  'textes-officiels': 'official-texts',
-  projets: 'projects',
-};
-
-export default function useSearch(scope, query) {
+export default function useSearch(scopes, query = '', limit = 10) {
   const [data, setData] = useState(null);
+  const [counts, setCounts] = useState({});
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   useEffect(() => {
     const fetchData = async () => {
-      const response = await api.get(`/autocomplete?types=${scopeTypesMapper[scope]}&query=${query}`);
+      const response = await api.get(`/autocomplete?types=${scopes}&query=${query}&limit=${limit}`);
       if (response.ok) {
-        setData(response.data);
+        setData(response.data?.data);
+        const responseCounts = {};
+        response.data?.aggregation.forEach((elem) => {
+          responseCounts[elem.key] = elem.count;
+        });
+        setCounts(responseCounts);
         setIsLoading(false);
         setError(false);
         return;
@@ -37,7 +34,7 @@ export default function useSearch(scope, query) {
       setError(true);
       console.log(e);
     });
-  }, [scope, query]);
+  }, [scopes, query, limit]);
 
-  return { data, error, isLoading };
+  return { data, counts, error, isLoading };
 }
