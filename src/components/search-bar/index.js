@@ -4,15 +4,19 @@ import React, { forwardRef, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import { v4 as uuidv4 } from 'uuid';
 import classnames from 'classnames';
-import { Badge, Icon, Text } from '@dataesr/react-dsfr';
+import { Icon, Text } from '@dataesr/react-dsfr';
 import styles from './styles.module.scss';
 
-/**
- *
- * TODO:
- * hide Autocomplete options on input focus out
- * handle onKeyDown with arrows to select options
- */
+const objectTypes = {
+  structures: 'ri-building-line',
+  personnes: 'ri-user-3-line',
+  prix: 'ri-award-line',
+  'textes-officiels': 'ri-git-repository-line',
+  projets: 'ri-booklet-fill',
+  categories: 'ri-price-tag-3-line',
+  terms: 'ri-hashtag',
+};
+
 const SearchBar = forwardRef((props, ref) => {
   const {
     size,
@@ -21,6 +25,7 @@ const SearchBar = forwardRef((props, ref) => {
     placeholder,
     onSearch,
     options,
+    optionsIcon,
     onSelect,
     value,
     className,
@@ -32,7 +37,7 @@ const SearchBar = forwardRef((props, ref) => {
   }, className);
   const _classNameButton = classnames('fr-btn', { 'fr-btn--lg': (size === 'lg') });
   const [activeSuggestionIndex, setActiveSuggestionIndex] = useState(null);
-  const [showOptions, setShowOptions] = useState((options.length >= 0));
+  const [showOptions, setShowOptions] = useState(false);
 
   const handleSubmit = (e) => { e.preventDefault(); onSearch(value); };
   const handleOnKeyDown = (e) => {
@@ -106,9 +111,12 @@ const SearchBar = forwardRef((props, ref) => {
                     type="button"
                     onMouseDown={() => { onSelect(option); }}
                   >
-                    {option.type && <Badge isSmall text={option.type} />}
-                    <Text className={styles.content}>{option.name}</Text>
-                    <Icon name="ri-arrow-right-line" />
+                    {option.type && <Icon size="xl" color={`var(--${option.type}-color)`} name={objectTypes[option.type]} />}
+                    <Text className={styles.content}>
+                      {option.name}
+                      {option.acronym ? ` ${option.acronym}` : null}
+                    </Text>
+                    {optionsIcon && <Icon name={optionsIcon} />}
                   </button>
                 </li>
               ))}
@@ -127,6 +135,7 @@ SearchBar.defaultProps = {
   label: '',
   options: [],
   onSearch: null,
+  optionsIcon: null,
 };
 SearchBar.propTypes = {
   label: PropTypes.string,
@@ -140,8 +149,9 @@ SearchBar.propTypes = {
     PropTypes.object,
     PropTypes.array,
   ]),
-  options: PropTypes.arrayOf(PropTypes.string),
+  options: PropTypes.arrayOf(PropTypes.shape),
   onSelect: PropTypes.func.isRequired,
+  optionsIcon: PropTypes.string,
 };
 
 export default SearchBar;

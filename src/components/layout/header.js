@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Link as RouterLink, useLocation, useNavigate } from 'react-router-dom';
+import { Link as RouterLink, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import {
   Header as HeaderWrapper,
   HeaderBody,
@@ -19,8 +19,10 @@ import api from '../../utils/api';
 export default function Header() {
   const { pathname } = useLocation();
   const { viewer, signout } = useAuth();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const initialQuery = searchParams.get('query');
 
-  const [query, setQuery] = useState('');
+  const [query, setQuery] = useState(initialQuery || '');
   const [options, setOptions] = useState([]);
   const navigate = useNavigate();
 
@@ -32,14 +34,21 @@ export default function Header() {
     if (query) { getAutocompleteResult(); } else { setOptions([]); }
   }, [query]);
 
+  useEffect(() => {
+    if (!pathname.startsWith('/rechercher')) { setQuery(''); }
+  }, [pathname]);
+
   const handleSearchRedirection = ({ id, type }) => {
     navigate(`/${type}/${id}`);
     setQuery('');
     setOptions([]);
   };
   const handleSearch = () => {
-    navigate(`rechercher?query=${query}`);
-    setQuery('');
+    if (pathname.startsWith('/rechercher')) {
+      setSearchParams({ query });
+    } else {
+      navigate(`/rechercher/structures?query=${query}`);
+    }
     setOptions([]);
   };
 
@@ -58,7 +67,7 @@ export default function Header() {
           )}
           description="Plateforme d'échanges et d'informations de la DGESIP et de la DGRI"
         />
-        <Tool closeButtonLabel="fermer">
+        <Tool closeButtonLabel="fermer" className="extend">
           <ToolItemGroup>
             {viewer?.id ? (
               <ToolItem
@@ -80,7 +89,7 @@ export default function Header() {
             {viewer.id && (
               <ToolItem
                 icon="ri-logout-circle-r-line"
-                onClick={() => signout()}
+                onClick={() => { signout(); navigate('/'); }}
               >
                 Déconnexion
               </ToolItem>

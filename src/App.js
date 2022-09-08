@@ -28,6 +28,7 @@ import { AccountPage, ProfilePage, PreferencesPage, SecurityPage, GroupsPage } f
 import { AdminPage, AdminDashboardPage, AdminUsersPage, NomenclaturesPage, LegalCategoriesPage } from './pages/admin';
 
 import './styles/index.scss';
+import SearchPage from './pages/rechercher';
 
 function App() {
   return (
@@ -57,6 +58,8 @@ function App() {
             <Route path="nomenclatures/ministeres-de-tutelle" element={<NomenclaturesPage route="/supervising-ministers" title="Ministères de tutelle" />} />
             <Route path="nomenclatures/types-de-mail" element={<NomenclaturesPage route="/email-types" title="Types d'email" />} />
           </Route>
+
+          <Route path="/rechercher/*" element={<SearchPage />} />
 
           <Route path="/structures" element={<StructuresPage />} />
           <Route path="/structures/ajouter" element={<StructureAddPage />} />

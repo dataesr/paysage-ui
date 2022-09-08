@@ -25,7 +25,7 @@ export function AuthContextProvider({ children }) {
     const body = JSON.stringify({ email, password });
     const headers = { 'X-Paysage-OTP-Method': 'email', 'Content-Type': 'application/json' };
     const response = await fetch(url, { method: 'POST', body, headers })
-      .catch(() => { console.log('Erreur inatendue'); });
+      .catch(() => { console.log('Erreur inattendue'); });
     return response.json();
   };
 
@@ -34,7 +34,7 @@ export function AuthContextProvider({ children }) {
     const body = JSON.stringify({ email });
     const headers = { 'X-Paysage-OTP-Method': 'email', 'Content-Type': 'application/json' };
     const response = await fetch(url, { method: 'POST', body, headers })
-      .catch(() => { console.log('Erreur inatendue'); });
+      .catch(() => { console.log('Erreur inattendue'); });
     return response.json();
   };
 
@@ -44,7 +44,7 @@ export function AuthContextProvider({ children }) {
     const body = JSON.stringify({ email, password });
     const headers = { 'X-Paysage-OTP': otp, 'Content-Type': 'application/json' };
     const response = await fetch(url, { method: 'POST', body, headers })
-      .catch(() => { console.log('Erreur inatendue'); });
+      .catch(() => { console.log('Erreur inattendue'); });
     return response.json();
   };
 
@@ -53,10 +53,10 @@ export function AuthContextProvider({ children }) {
     const body = JSON.stringify({ email, password });
     const headers = { 'X-Paysage-OTP': otp, 'Content-Type': 'application/json' };
     const response = await fetch(url, { method: 'POST', body, headers })
-      .catch(() => { console.log('Erreur inatendue'); });
+      .catch(() => { console.log('Erreur inattendue'); });
     if (response.ok) {
       const data = await response.json()
-        .catch(() => { console.log('Erreur inatendue'); });
+        .catch(() => { console.log('Erreur inattendue'); });
       const { accessToken, refreshToken } = data;
       localStorage.setItem('__paysage_access__', accessToken);
       localStorage.setItem('__paysage_refresh__', refreshToken);
@@ -72,8 +72,8 @@ export function AuthContextProvider({ children }) {
       email, password, firstName, lastName,
     });
     const response = await fetch(url, { method: 'POST', body, headers: { 'Content-Type': 'application/json' } })
-      .catch(() => { console.log('Erreur inatendue'); });
-    const data = await response.json().catch(() => { console.log('Erreur inatendue'); });
+      .catch(() => { console.log('Erreur inattendue'); });
+    const data = await response.json().catch(() => { console.log('Erreur inattendue'); });
     response.data = data;
     return response;
   };

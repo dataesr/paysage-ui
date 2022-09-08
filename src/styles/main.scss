@@ -110,9 +110,57 @@ HR {
   flex: none;
   flex-grow: 1;
 }
+.fullwidth {
+  width: 100%;
+}
 
 .animate-notice {
   animation: toast-mount .3s;
 }
 
+.sidemenu__item--active {
+   A:before {
+    --idle: transparent;
+    --hover: var(--border-active-blue-france-hover);
+    --active: var(--border-active-blue-france-active);
+    background-color: var(--border-active-blue-france);
+    bottom: .75rem;
+    content: "";
+    left: 0;
+    position: absolute;
+    top: .75rem;
+    width: 2px;
+  }
+  .fr-text--md {color: var(--text-active-blue-france); }
+}
+
+@keyframes extend {
+  from {
+    max-width: 25rem;
+  }
+
+  to {
+    max-width: 100%;
+  }
+}
+@keyframes shrink {
+  from {
+    max-width: 100%;
+  }
+
+  to {
+    max-width: 25rem;
+  }
+}
+
+.fr-header__tools {
+  .fr-header__search {
+    &:focus-within {
+      max-width: 100%;
+      animation: extend 0.1s ease-in-out;
+    }
+    animation: shrink 0.2s ease-in-out;
+
+  }
+}
 

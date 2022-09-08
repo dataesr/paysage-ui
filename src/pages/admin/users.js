@@ -37,7 +37,7 @@ function User({
   avatar,
   service,
   position,
-  deleted,
+  isDeleted,
   createdAt,
   updatedAt,
   updatedBy,
@@ -59,9 +59,9 @@ function User({
         <div className="fr-col--grow fr-pl-2w">
           <Text spacing="my-1v" bold size="lg">
             {`${firstName} ${lastName} `}
-            {deleted && <Badge className="fr-mx-1w" isSmall type="error" text="Supprimé" />}
+            {isDeleted && <Badge className="fr-mx-1w" isSmall type="error" text="Supprimé" />}
             {(!confirmed) && <Badge isSmall type="success" text="Nouveau" />}
-            {(confirmed && !deleted) && <Badge className="fr-mx-1w" isSmall type="info" text={role} />}
+            {(confirmed && !isDeleted) && <Badge className="fr-mx-1w" isSmall type="info" text={role} />}
           </Text>
           <Text spacing="m-0" size="sm">
             <Icon size="1x" name="ri-mail-fill" />
@@ -92,7 +92,7 @@ function User({
         </div>
         <div>
           <ButtonGroup size="sm" isInlineFrom="xs">
-            {(!confirmed && !deleted) && (
+            {(!confirmed && !isDeleted) && (
               <Button
                 icon="ri-check-double-line"
                 colors={['var(--background-action-high-success)', 'white']}
@@ -101,12 +101,12 @@ function User({
                 Activer
               </Button>
             )}
-            {(!deleted) && <Button secondary title="editer" icon="ri-edit-line" onClick={() => setIsEditModalOpen(!isEditModalOpen)}>Editer</Button>}
-            {deleted && (
+            {(!isDeleted) && <Button secondary title="editer" icon="ri-edit-line" onClick={() => setIsEditModalOpen(!isEditModalOpen)}>Editer</Button>}
+            {isDeleted && (
               <Button
                 colors={['var(--background-action-high-success)', 'white']}
                 icon="ri-check-double-line"
-                onClick={() => handleSwitchDeleteUser(id, !deleted)}
+                onClick={() => handleSwitchDeleteUser(id, !isDeleted)}
               >
                 Réactiver
               </Button>
@@ -131,7 +131,7 @@ function User({
             <Button
               secondary
               colors={['var(--background-action-high-error)', 'white']}
-              onClick={() => handleSwitchDeleteUser(id, !deleted)}
+              onClick={() => handleSwitchDeleteUser(id, !isDeleted)}
             >
               Supprimer l'utilisateur
             </Button>
@@ -167,7 +167,7 @@ User.propTypes = {
   avatar: PropTypes.string,
   service: PropTypes.string,
   position: PropTypes.string,
-  deleted: PropTypes.bool.isRequired,
+  isDeleted: PropTypes.bool.isRequired,
   createdAt: PropTypes.string.isRequired,
   updatedAt: PropTypes.string.isRequired,
   updatedBy: PropTypes.shape({
@@ -196,9 +196,8 @@ export default function AdminUsersPage() {
     return reload();
   };
 
-  const handleSwitchDeleteUser = async (userId, deleted) => {
-    console.log('deleted', deleted);
-    const response = await api.patch(`/admin/users/${userId}`, { deleted }).catch(() => { toastError(); });
+  const handleSwitchDeleteUser = async (userId, isDeleted) => {
+    const response = await api.patch(`/admin/users/${userId}`, { isDeleted }).catch(() => { toastError(); });
     if (!response.ok) return toastError();
     toast({ toastType: 'success', title: 'Utilisateur désactivé avec succès' });
     return reload();

@@ -29,6 +29,11 @@ export default function HomePage() {
     setQuery('');
     setOptions([]);
   };
+  const handleSearch = () => {
+    navigate(`rechercher?query=${query}`);
+    setQuery('');
+    setOptions([]);
+  };
 
   return (
     <Container spacing="mt-5w" as="main">
@@ -44,7 +49,8 @@ export default function HomePage() {
           placeholder="Rechercher..."
           onChange={(e) => setQuery(e.target.value)}
           options={options}
-          // onSearch={handleSearchRedirection}
+          optionsIcon="ri-arrow-right-line"
+          onSearch={handleSearch}
           onSelect={handleSearchRedirection}
         />
       </Row>

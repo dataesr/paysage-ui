@@ -34,15 +34,15 @@
       background-color: var(--hover);
     }
     .item {
-      border-bottom: 1px solid grey;
-      &:last-child {
-        border-bottom: none;
-      }
+      // border-bottom: 1px solid grey;
+      // &:last-child {
+      //   border-bottom: none;
+      // }
       .btn {
         &:hover{
           background-color: inherit;
         }
-        padding: .75rem .5rem;
+        padding: .5rem .5rem;
         display: flex;
         flex-direction: row;
         flex-wrap: nowrap;
