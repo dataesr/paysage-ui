@@ -32,6 +32,7 @@ const scopeTypesMapper = {
   prix: 'prices',
   'textes-officiels': 'official-texts',
   projets: 'projects',
+  termes: 'terms',
 };
 
 const countScopes = 'structures%2Cpersons%2Ccategories%2Cprices%2Cprojects%2Cterms';
@@ -66,7 +67,7 @@ export default function SearchPage() {
             <SideMenuLink className={(scope === 'personnes') ? 'sidemenu__item--active' : ''} asLink={<RouterLink to={`personnes?query=${query}`} />}>
               <Row alignItems="top" className="fr-row--space-between fullwidth">
                 <Text spacing="pr-2v" bold>Personnes</Text>
-                <Badge type={(scope === 'personnes') ? 'info' : 'new'} text={counts.personnes || '0'} />
+                <Badge type={(scope === 'personnes') ? 'info' : 'new'} text={counts.persons || '0'} />
               </Row>
             </SideMenuLink>
             <SideMenuLink className={(scope === 'categories') ? 'sidemenu__item--active' : ''} asLink={<RouterLink to={`categories?query=${query}`} />}>
@@ -75,22 +76,28 @@ export default function SearchPage() {
                 <Badge type={(scope === 'categories') ? 'info' : 'new'} text={counts.categories || '0'} />
               </Row>
             </SideMenuLink>
+            <SideMenuLink className={(scope === 'termes') ? 'sidemenu__item--active' : ''} asLink={<RouterLink to={`termes?query=${query}`} />}>
+              <Row alignItems="top" className="fr-row--space-between fullwidth">
+                <Text spacing="pr-2v" bold>Termes</Text>
+                <Badge type={(scope === 'termes') ? 'info' : 'new'} text={counts.terms || '0'} />
+              </Row>
+            </SideMenuLink>
             <SideMenuLink className={(scope === 'prix') ? 'sidemenu__item--active' : ''} asLink={<RouterLink to={`prix?query=${query}`} />}>
               <Row alignItems="top" className="fr-row--space-between fullwidth">
                 <Text spacing="pr-2v" bold>Prix scientifiques</Text>
-                <Badge type={(scope === 'prix') ? 'info' : 'new'} text={counts.prix || '0'} />
+                <Badge type={(scope === 'prix') ? 'info' : 'new'} text={counts.prices || '0'} />
               </Row>
             </SideMenuLink>
             <SideMenuLink className={(scope === 'textes-officiels') ? 'sidemenu__item--active' : ''} asLink={<RouterLink to={`textes-officiels?query=${query}`} />}>
               <Row alignItems="top" className="fr-row--space-between fullwidth">
                 <Text spacing="pr-2v" bold>Textes officiels</Text>
-                <Badge type={(scope === 'textes-officiels') ? 'info' : 'new'} text={counts['textes-officiels'] || '0'} />
+                <Badge type={(scope === 'textes-officiels') ? 'info' : 'new'} text={counts['official-texts'] || '0'} />
               </Row>
             </SideMenuLink>
             <SideMenuLink className={(scope === 'projets') ? 'sidemenu__item--active' : ''} asLink={<RouterLink to={`projets?query=${query}`} />}>
               <Row alignItems="top" className="fr-row--space-between fullwidth">
                 <Text spacing="pr-2v" bold>Projets</Text>
-                <Badge type={(scope === 'projets') ? 'info' : 'new'} text={counts.projets || '0'} />
+                <Badge type={(scope === 'projets') ? 'info' : 'new'} text={counts.projects || '0'} />
               </Row>
             </SideMenuLink>
           </SideMenu>

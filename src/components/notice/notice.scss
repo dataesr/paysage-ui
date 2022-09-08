@@ -24,10 +24,10 @@
 
 .notice-info {
   --idle: #0000;
-  --hover: var(--background-contrast-info-hover);
-  --active: var(--background-contrast-info-active);
-  background-color: var(--background-contrast-info);
-  color: var(--text-default-info);
+  --hover: var(--background-contrast-info-hover) !important;
+  --active: var(--background-contrast-info-active) !important;
+  background-color: var(--background-contrast-info) !important;
+  color: var(--text-default-info) !important;
 
   .fr-notice__body::before {
     content: "\ee59";
@@ -40,10 +40,10 @@
 }
 .notice-error {
   --idle: #0000;
-  --hover: var(--background-contrast-error-hover);
-  --active: var(--background-contrast-error-active);
-  background-color: var(--background-contrast-error);
-  color: var(--text-default-error);
+  --hover: var(--background-contrast-error-hover) !important;
+  --active: var(--background-contrast-error-active) !important;
+  background-color: var(--background-contrast-error) !important;
+  color: var(--text-default-error) !important;
 
   .fr-notice__body::before {
     content: "\eb97";
@@ -56,10 +56,10 @@
 }
 .notice-warning {
   --idle: #0000;
-  --hover: var(--background-contrast-warning-hover);
-  --active: var(--background-contrast-warning-active);
-  background-color: var(--background-contrast-warning);
-  color: var(--text-default-warning);
+  --hover: var(--background-contrast-warning-hover) !important;
+  --active: var(--background-contrast-warning-active) !important;
+  background-color: var(--background-contrast-warning) !important;
+  color: var(--text-default-warning) !important;
 
   .fr-notice__body::before {
     content: "\eca1";
@@ -72,10 +72,10 @@
 }
 .notice-success {
   --idle: #0000;
-  --hover: var(--background-contrast-success-hover);
-  --active: var(--background-contrast-success-active);
-  background-color: var(--background-contrast-success);
-  color: var(--text-default-success);
+  --hover: var(--background-contrast-success-hover) !important;
+  --active: var(--background-contrast-success-active) !important;
+  background-color: var(--background-contrast-success) !important;
+  color: var(--text-default-success) !important;
 
   .fr-notice__body::before {
     content: "\eb81";

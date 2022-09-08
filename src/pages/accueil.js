@@ -79,10 +79,10 @@ export default function HomePage() {
       </Row>
       <Row className="fr-pb-5w">
         <ButtonGroup isInlineFrom="lg">
-          <Button onClick={() => notice({ content: 'info', autoDismissAfter: 500000 })}>Notice</Button>
-          <Button onClick={() => notice({ content: 'success', autoDismissAfter: 500000, type: 'success' })}>Notice</Button>
-          <Button onClick={() => notice({ content: 'error', autoDismissAfter: 500000, type: 'error' })}>Notice</Button>
-          <Button onClick={() => notice({ content: 'warning', autoDismissAfter: 500000, type: 'warning' })}>Notice</Button>
+          <Button onClick={() => notice({ content: 'info', autoDismissAfter: 5000 })}>Notice</Button>
+          <Button onClick={() => notice({ content: 'success', autoDismissAfter: 0, type: 'success' })}>Notice</Button>
+          <Button onClick={() => notice({ content: 'error', autoDismissAfter: 8000, type: 'error' })}>Notice</Button>
+          <Button onClick={() => notice({ content: 'warning', autoDismissAfter: 3000, type: 'warning' })}>Notice</Button>
         </ButtonGroup>
       </Row>
       <Row className="fr-pb-5w">

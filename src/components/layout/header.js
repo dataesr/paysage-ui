@@ -13,6 +13,7 @@ import {
   ToolItemGroup,
 } from '@dataesr/react-dsfr';
 import useAuth from '../../hooks/useAuth';
+import useDebounce from '../../hooks/useDebounce';
 import SearchBar from '../search-bar';
 import api from '../../utils/api';
 
@@ -23,16 +24,17 @@ export default function Header() {
   const initialQuery = searchParams.get('query');
 
   const [query, setQuery] = useState(initialQuery || '');
+  const debouncedQuery = useDebounce(query, 500);
   const [options, setOptions] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
     const getAutocompleteResult = async () => {
-      const response = await api.get(`/autocomplete?query=${query}&limit=10`); // &types=categories
+      const response = await api.get(`/autocomplete?query=${debouncedQuery}&limit=10`); // &types=categories
       setOptions(response.data?.data);
     };
-    if (query) { getAutocompleteResult(); } else { setOptions([]); }
-  }, [query]);
+    if (debouncedQuery) { getAutocompleteResult(); } else { setOptions([]); }
+  }, [debouncedQuery]);
 
   useEffect(() => {
     if (!pathname.startsWith('/rechercher')) { setQuery(''); }
