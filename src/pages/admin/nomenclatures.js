@@ -20,6 +20,7 @@ function NomenclatureForm({ id, initialForm, onSave, onDelete }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    console.log('here', id, form);
     if (Object.keys(errors).length !== 0) return setShowErrors(true);
     return onSave(id, form);
   };
@@ -96,6 +97,7 @@ export default function NomenclaturesPage({ route, title }) {
   };
 
   const handleModalToggle = (item = {}) => {
+    console.log(item);
     const { id, ...rest } = item;
     setModalTitle(item?.id ? 'Modifier' : 'Ajouter');
     setModalContent(
@@ -127,7 +129,7 @@ export default function NomenclaturesPage({ route, title }) {
           <Title className="fr-pr-1v" as="h2" look="h3">{title}</Title>
           <Badge type="info" text={data?.totalCount} />
         </Row>
-        <Button secondary size="sm" icon="ri-add-line" onClick={handleModalToggle}>Ajouter</Button>
+        <Button secondary size="sm" icon="ri-add-line" onClick={() => handleModalToggle()}>Ajouter</Button>
       </Row>
       <hr />
       {data.data?.map((item) => (

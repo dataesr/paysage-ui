@@ -199,7 +199,7 @@ export default function LegalCategoriesPage() {
           <Title className="fr-pr-1v" as="h2" look="h3">Catégories juridiques</Title>
           <Badge type="info" text={data?.totalCount} />
         </Row>
-        <Button secondary size="sm" icon="ri-add-line" onClick={handleModalToggle}>Ajouter</Button>
+        <Button secondary size="sm" icon="ri-add-line" onClick={() => handleModalToggle()}>Ajouter</Button>
       </Row>
       <hr />
       {data.data?.map((item) => (

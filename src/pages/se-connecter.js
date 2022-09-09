@@ -32,7 +32,7 @@ export default function SignIn() {
     e.preventDefault();
 
     const response = await signin({ email, password, otp });
-    if (response.ok) { window.location.reload(false); } else { console.log(response); }
+    if (response.ok) { navigate('/'); } else { console.log(response); }
   };
 
   return (
