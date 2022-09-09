@@ -18,7 +18,25 @@ import SignIn from './pages/se-connecter';
 import SignUp from './pages/creer-un-compte';
 
 import StructuresPage from './pages/structures';
-import { StructureActualitesPage, StructureByIdPage, StructurePresentationPage, StructureChiffresClesPage, StructurePrixPage } from './pages/structures/[id]';
+import {
+  StructureByIdPage,
+  StructurePresentationPage,
+  StructureGouvernancePage,
+  StructureRHPage,
+  StructureBudgetPage,
+  StructureAnalyseEtRessourcesStrategiquesPage,
+  StructureActualitesPage,
+  StructureImmobilierPage,
+  StructureEtudiantsPage,
+  StructureOffreDeFormationPage,
+  StructureProjetsPage,
+  StructureChiffresClesPage,
+  StructureTextesOfficielsPage,
+  StructurePrixEtRecompensesPage,
+  StructureAgendaPage,
+  StructureElementsLiesPage,
+  StructureParticipationsPage,
+} from './pages/structures/[id]';
 
 import TermsPage from './pages/termes';
 import TermByIdPage from './pages/termes/id';
@@ -66,9 +84,21 @@ function App() {
           <Route path="/structures/:id" element={<StructureByIdPage />}>
             <Route path="" element={<Navigate to="presentation" replace />} />
             <Route path="presentation" element={<StructurePresentationPage />} />
+            <Route path="gouvernance-et-referents" element={<StructureGouvernancePage />} />
+            <Route path="ressource-humaines" element={<StructureRHPage />} />
+            <Route path="budget" element={<StructureBudgetPage />} />
+            <Route path="analyse-et-ressources-strategiques" element={<StructureAnalyseEtRessourcesStrategiquesPage />} />
             <Route path="actualites" element={<StructureActualitesPage />} />
+            <Route path="immobilier" element={<StructureImmobilierPage />} />
+            <Route path="etudiants" element={<StructureEtudiantsPage />} />
+            <Route path="offre-de-formation" element={<StructureOffreDeFormationPage />} />
+            <Route path="projets" element={<StructureProjetsPage />} />
             <Route path="chiffres-cles" element={<StructureChiffresClesPage />} />
-            <Route path="prix" element={<StructurePrixPage />} />
+            <Route path="textes-officiels" element={<StructureTextesOfficielsPage />} />
+            <Route path="prix-et-recompenses" element={<StructurePrixEtRecompensesPage />} />
+            <Route path="agenda" element={<StructureAgendaPage />} />
+            <Route path="elements-lies" element={<StructureElementsLiesPage />} />
+            <Route path="participations" element={<StructureParticipationsPage />} />
           </Route>
 
           <Route path="/categories" element={<CategoriesPage />} />

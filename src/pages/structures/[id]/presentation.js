@@ -3,14 +3,19 @@ import { useParams } from 'react-router-dom';
 import useFetch from '../../../hooks/useFetch';
 
 import Categories from '../../../components/blocs/catgories';
-import Documents from '../../../components/blocs/documents';
 import Emails from '../../../components/blocs/emails';
 import Identifiers from '../../../components/blocs/identifiers';
 import Localisations from '../../../components/blocs/localisations';
 import Names from '../../../components/blocs/names';
-import OfficialTexts from '../../../components/blocs/official-texts';
-import SocialMedias from '../../../components/blocs/social-medias';
-import Weblinks from '../../../components/blocs/weblinks';
+import Informations from '../../../components/blocs/informations';
+import HistoriqueEtDates from '../../../components/blocs/historique-et-dates';
+import PalmaresEtClassements from '../../../components/blocs/palmares-et-classements';
+import PresenceSurLeWeb from '../../../components/blocs/presence-sur-le-web';
+import ChiffresClesPresentation from '../../../components/blocs/chiffres-cles-presentation';
+import GouvernancePresentation from '../../../components/blocs/gouvernance-presentation';
+import DernieresActualites from '../../../components/blocs/dernieres-actualites';
+import SuiviDGESIP from '../../../components/blocs/suivi-dgesip';
+
 import Spinner from '../../../components/spinner';
 
 import useHashScroll from '../../../hooks/useHashScroll';
@@ -32,17 +37,38 @@ export default function StructurePresentationPage() {
           data={data.currentLocalisation || null}
         />
       </div>
-
-      <div id="informations">hello world</div>
-      <Emails apiObject="structures" id={id} />
-      <Names apiObject="structures" id={id} />
-      <Categories apiObject="structures" id={id} />
-      <Identifiers apiObject="structures" id={id} />
-      <Weblinks apiObject="structures" id={id} />
-      <div id="testing">hello world</div>
-      <SocialMedias apiObject="structures" id={id} />
-      <Documents apiObject="structures" id={id} />
-      <OfficialTexts apiObject="structures" id={id} />
+      <div id="informations">
+        <Informations apiObject="structures" id={id} />
+      </div>
+      <div id="historique-et-dates">
+        <HistoriqueEtDates apiObject="structures" id={id} />
+        <Names apiObject="structures" id={id} />
+      </div>
+      <div id="categories">
+        <Categories apiObject="structures" id={id} />
+      </div>
+      <div id="palmares-et-classements">
+        <PalmaresEtClassements apiObject="structures" id={id} />
+      </div>
+      <div id="presence-sur-le-web">
+        <PresenceSurLeWeb apiObject="structures" id={id} />
+      </div>
+      <div id="identifiants">
+        <Identifiers apiObject="structures" id={id} />
+      </div>
+      <div id="chiffres-cles">
+        <ChiffresClesPresentation apiObject="structures" id={id} />
+      </div>
+      <div id="gouvernance">
+        <GouvernancePresentation apiObject="structures" id={id} />
+        <Emails apiObject="structures" id={id} />
+      </div>
+      <div id="dernieres-actualites">
+        <DernieresActualites apiObject="structures" id={id} />
+      </div>
+      <div id="suivi-dgesip">
+        <SuiviDGESIP apiObject="structures" id={id} />
+      </div>
     </>
   );
 }

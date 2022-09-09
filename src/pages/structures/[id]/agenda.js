@@ -2,12 +2,12 @@ import { Text } from '@dataesr/react-dsfr';
 
 import useHashScroll from '../../../hooks/useHashScroll';
 
-export default function StructurePrixPage() {
+export default function StructureAgendaPage() {
   useHashScroll();
 
   return (
     <Text>
-      Pas d'actualité pour le moment
+      Agenda/événements
     </Text>
   );
 }

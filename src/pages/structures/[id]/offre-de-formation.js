@@ -2,12 +2,12 @@ import { Text } from '@dataesr/react-dsfr';
 
 import useHashScroll from '../../../hooks/useHashScroll';
 
-export default function StructureChiffresClesPage() {
+export default function StructureOffreDeFormationPage() {
   useHashScroll();
 
   return (
     <Text>
-      Les chiffres clés
+      Offre de formation
     </Text>
   );
 }
