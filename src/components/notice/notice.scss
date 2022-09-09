@@ -18,7 +18,17 @@
   }
 }
 
+#notice-container {
+  top: 0;
+  position: sticky;
+  height: 100%;
+}
+
 .notice {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
   animation: notice-mount .3s;
 }
 

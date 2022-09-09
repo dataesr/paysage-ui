@@ -73,9 +73,21 @@ HR {
   top: 0;
   bottom: 0;
   left: 0;
-  width: 10px;
+  width: 4px;
   background-color: var(--page-border);
-  z-index: 1000;
+  z-index: 0;
+  @media only screen and (min-width: 576px) {
+    width: 4px;
+  }
+  @media only screen and (min-width: 768px) {
+    width: 6px;
+  }
+  @media only screen and (min-width: 992px) {
+    width: 8px;
+  }
+  @media only screen and (min-width: 1248px) {
+    width: 10px;
+  }
 }
 
 .fr-background-alt {
@@ -99,6 +111,9 @@ HR {
 
 .fr-row--space-between {
   justify-content: space-between;
+}
+.fr-row--space-around {
+  justify-content: space-around;
 }
 .fr-row--baseline {
   align-items: baseline;
@@ -162,5 +177,9 @@ HR {
     animation: shrink 0.2s ease-in-out;
 
   }
+}
+
+.card-gap {
+  gap: 1rem;
 }
 

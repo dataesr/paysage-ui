@@ -11,13 +11,16 @@ const AuthContext = createContext();
 
 export function AuthContextProvider({ children }) {
   const [viewer, setViewer] = useState({});
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    setIsLoading(true);
     const fetchUser = async () => {
       const { data } = await api.get('/me');
       setViewer(data || {});
+      setIsLoading(false);
     };
-    fetchUser();
+    if (!localStorage.getItem('__paysage_access__')) setIsLoading(false); else fetchUser();
   }, []);
 
   const requestSignInEmail = async ({ email, password }) => {
@@ -60,6 +63,8 @@ export function AuthContextProvider({ children }) {
       const { accessToken, refreshToken } = data;
       localStorage.setItem('__paysage_access__', accessToken);
       localStorage.setItem('__paysage_refresh__', refreshToken);
+      const { data: user } = await api.get('/me');
+      setViewer(user || {});
     }
     return response;
   };
@@ -81,9 +86,11 @@ export function AuthContextProvider({ children }) {
   const signout = () => {
     localStorage.removeItem('__paysage_access__');
     localStorage.removeItem('__paysage_refresh__');
+    setViewer({});
   };
 
   const value = useMemo(() => ({
+    isLoading,
     viewer,
     setViewer,
     signup,
@@ -92,7 +99,7 @@ export function AuthContextProvider({ children }) {
     changePassword,
     requestSignInEmail,
     requestPasswordChangeEmail,
-  }), [viewer]);
+  }), [viewer, isLoading]);
   return (
     <AuthContext.Provider value={value}>
       {children}

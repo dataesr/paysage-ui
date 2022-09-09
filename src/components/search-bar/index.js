@@ -4,7 +4,7 @@ import React, { forwardRef, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import { v4 as uuidv4 } from 'uuid';
 import classnames from 'classnames';
-import { Icon, Text } from '@dataesr/react-dsfr';
+import { Badge, Icon, Text } from '@dataesr/react-dsfr';
 import styles from './styles.module.scss';
 
 const objectTypes = {
@@ -116,7 +116,7 @@ const SearchBar = forwardRef((props, ref) => {
                       {option.name}
                       {option.acronym ? ` ${option.acronym}` : null}
                     </Text>
-                    {optionsIcon && <Icon name={optionsIcon} />}
+                    {optionsIcon && <Badge type="info" isSmall hasIcon icon={optionsIcon} text="voir la page" />}
                   </button>
                 </li>
               ))}
