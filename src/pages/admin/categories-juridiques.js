@@ -203,7 +203,7 @@ export default function LegalCategoriesPage() {
       </Row>
       <hr />
       {data.data?.map((item) => (
-        <>
+        <div key={item.id}>
           <Row className="fr-row--space-between">
             <div className="fr-col--grow fr-pl-2w">
               <Text spacing="my-1v" bold size="lg">{item.longNameFr}</Text>
@@ -231,7 +231,7 @@ export default function LegalCategoriesPage() {
             </div>
           </Row>
           <hr />
-        </>
+        </div>
       ))}
       <Modal size="lg" isOpen={isOpen} hide={() => setIsOpen(false)}>
         <ModalTitle>

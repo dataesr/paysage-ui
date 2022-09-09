@@ -57,7 +57,7 @@ function User({
           <Avatar name={`${firstName} ${lastName}`} src={avatar} />
         </div>
         <div className="fr-col--grow fr-pl-2w">
-          <Text spacing="my-1v" bold size="lg">
+          <Text as="span" spacing="my-1v" bold size="lg">
             {`${firstName} ${lastName} `}
             {isDeleted && <Badge className="fr-mx-1w" isSmall type="error" text="Supprimé" />}
             {(!confirmed) && <Badge isSmall type="success" text="Nouveau" />}
@@ -222,7 +222,7 @@ export default function AdminUsersPage() {
       <Row spacing="mb-3w">
         <Row alignItems="top">
           <Title className="fr-pr-1v" as="h2" look="h3">Utilisateurs</Title>
-          <Badge type="info" text={data?.totalCount} />
+          {(data?.totalCount) && <Badge type="info" text={data?.totalCount} />}
         </Row>
       </Row>
       <Row>

@@ -1,15 +1,16 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import {
   Container, Row, Col, TextInput, Text, Button, Link, Title, Breadcrumb, BreadcrumbItem, ButtonGroup, Stepper, Alert,
 } from '@dataesr/react-dsfr';
 import useAuth from '../hooks/useAuth';
 import { MAIL_REGEXP, PASSWORD_REGEXP, OTP_REGEXP } from '../utils/auth';
+import useNotice from '../hooks/useNotice';
 
 export default function SignIn() {
   const navigate = useNavigate();
+  const { notice } = useNotice();
   const { requestSignInEmail, signin, viewer } = useAuth();
-  if (viewer?.id) { navigate('/'); }
   const [step, setStep] = useState(1);
   const [otp, setOtp] = useState('');
   const [email, setEmail] = useState('');
@@ -32,8 +33,12 @@ export default function SignIn() {
     e.preventDefault();
 
     const response = await signin({ email, password, otp });
-    if (response.ok) { navigate('/'); } else { console.log(response); }
+    if (response.ok) { navigate('/'); } else { notice({ content: response.data.message }); }
   };
+
+  useEffect(() => {
+    if (viewer?.id) { navigate('/'); }
+  }, [viewer, navigate]);
 
   return (
     <Container spacing="mb-6w">
@@ -81,7 +86,7 @@ export default function SignIn() {
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         type="password"
-                        messageType="info"
+                        messageType=""
                         message={(
                           <Link size="sm" as={<RouterLink to="/mot-de-passe-oublie" />}>
                             Mot de passe oublié ?
