@@ -15,8 +15,10 @@ import {
 import PaysageSection from '../../sections/section';
 import EmptySection from '../../sections/empty';
 import SocialMediaForm from './form';
+import ExpendableListCards from '../../card/expendable-list-cards';
 import api from '../../../utils/api';
 import { getEnumKey } from '../../../utils';
+import SocialMediaCard from '../../card/social-media-card';
 
 export default function SocialMediasComponent({ apiObject, id }) {
   const [data, setData] = useState([]);
@@ -89,6 +91,17 @@ export default function SocialMediasComponent({ apiObject, id }) {
     setShowModal(true);
   };
 
+  const renderCards = () => {
+    const list = data.data.map((item) => (
+      <SocialMediaCard
+        mediaName={item.type}
+        account={item.account}
+        onClick={() => onClickModifyHandler(item)}
+      />
+    ));
+    return <ExpendableListCards apiObject={apiObject} list={list} />;
+  };
+
   if (!data?.data) {
     return (
       <PaysageSection dataPaysageMenu="Médias sociaux" id="socialMedias" isEmpty />
@@ -115,7 +128,8 @@ export default function SocialMediasComponent({ apiObject, id }) {
         </Col>
       </Row>
       <Row>
-        {data.data.length === 0 ? <EmptySection apiObject={apiObject} /> : null}
+        {renderCards()}
+        {/* {data.data.length === 0 ? <EmptySection apiObject={apiObject} /> : null}
         {data.data.map((sm) => (
           <Col n="3" key={sm.id}>
             <Card
@@ -127,7 +141,7 @@ export default function SocialMediasComponent({ apiObject, id }) {
               <CardDescription>{sm.account}</CardDescription>
             </Card>
           </Col>
-        ))}
+        ))} */}
       </Row>
       <Modal isOpen={showModal} size="lg" hide={() => setShowModal(false)}>
         <ModalTitle>{modalTitle}</ModalTitle>

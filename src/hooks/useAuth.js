@@ -16,7 +16,7 @@ export function AuthContextProvider({ children }) {
   useEffect(() => {
     setIsLoading(true);
     const fetchUser = async () => {
-      const { data } = await api.get('/me');
+      const { data } = await api.get('/me').catch(() => setIsLoading(false));
       setViewer(data || {});
       setIsLoading(false);
     };
