@@ -10,7 +10,9 @@ export default function SubSection({ children, title }) {
       <Title as="h3">
         {title}
       </Title>
-      { children }
+      <div className="fr-ml-5w">
+        { children }
+      </div>
     </div>
   );
 }

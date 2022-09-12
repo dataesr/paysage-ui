@@ -2,9 +2,6 @@ import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import {
   Button,
-  Card,
-  CardDescription,
-  CardTitle,
   Col,
   Modal,
   ModalContent,
@@ -13,7 +10,6 @@ import {
   Title,
 } from '@dataesr/react-dsfr';
 import PaysageSection from '../../sections/section';
-import EmptySection from '../../sections/empty';
 import SocialMediaForm from './form';
 import ExpendableListCards from '../../card/expendable-list-cards';
 import api from '../../../utils/api';

@@ -1,3 +1,3 @@
 export default function GouvernancePresentation() {
-  return (<div>GouvernancePresentation</div>);
+  return (<div>Gouvernance light Presentation</div>);
 }

@@ -43,7 +43,7 @@ export default function NamesComponent({ apiObject, id }) {
 
   const onSaveHandler = async (body, nameId = null) => {
     let method = 'post';
-    let url = `/${apiObject}/${id}/names`;
+    let url = `/${apiObject}/${id}/categories`;
 
     if (nameId) {
       method = 'patch';
@@ -63,25 +63,12 @@ export default function NamesComponent({ apiObject, id }) {
     }
   };
 
-  // const onDeleteHandler = async (nameId) => {
-  //   const url = `/${apiObject}/${id}/names/${nameId}`;
-  //   await api.delete(url).catch((e) => {
-  //     console.log(e);
-  //   });
-  //   setReloader(reloader + 1);
-  //   setShowModal(false);
-  // };
-
-  const onClickDeleteHandler = (idCat) => {
-    // setModalTitle("Modification d'un nom");
-    // setModalContent(
-    //   <CategoryForm
-    //     data={Name}
-    //     onDeleteHandler={onDeleteHandler}
-    //     onSaveHandler={onSaveHandler}
-    //   />,
-    // );
-    // setShowModal(true);
+  const onClickDeleteHandler = async (idCat) => {
+    const url = `/${apiObject}/${id}/categories/${idCat}`;
+    await api.delete(url).catch((e) => {
+      console.log(e);
+    });
+    setReloader(reloader + 1);
     console.log('delete cat', idCat);
   };
 
@@ -116,7 +103,7 @@ export default function NamesComponent({ apiObject, id }) {
       />
     ));
     return (
-      <ExpendableListCards apiObject={apiObject} list={list} nCol="12 md-6" />
+      <ExpendableListCards apiObject={apiObject} list={list} nCol="12 md-4" />
     );
   };
 

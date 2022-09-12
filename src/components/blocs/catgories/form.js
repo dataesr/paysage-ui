@@ -5,17 +5,19 @@ import {
   Container,
   Col,
   Row,
-  TextInput,
   Title,
   Alert,
+  Tag,
 } from '@dataesr/react-dsfr';
 import PropTypes from 'prop-types';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import DateOneField from '../../date-one-field';
+import SearchBar from '../../search-bar';
 import validator from './validator';
+import api from '../../../utils/api';
 
-export default function EmailForm({ data, onDeleteHandler, onSaveHandler }) {
+export default function EmailForm({ onSaveHandler }) {
   const [savingErrors, setSavingErrors] = useState(null);
   const [errors, setReturnedErrors] = useState([]);
 
@@ -23,7 +25,17 @@ export default function EmailForm({ data, onDeleteHandler, onSaveHandler }) {
   const [endDate, setEndDate] = useState(null);
   const [startDate, setStartDate] = useState(null);
 
-  const [categorySearchText, setCategorySearchText] = useState('');
+  const [query, setQuery] = useState('');
+  const [categoryName, setCategoryName] = useState(null);
+  const [options, setOptions] = useState([]);
+
+  useEffect(() => {
+    const getAutocompleteResult = async () => {
+      const response = await api.get(`/autocomplete?query=${query}&types=categories`);
+      setOptions(response.data?.data);
+    };
+    if (query) { getAutocompleteResult(); } else { setOptions([]); }
+  }, [query]);
 
   const setErrors = (err) => {
     setReturnedErrors(errors);
@@ -51,17 +63,17 @@ export default function EmailForm({ data, onDeleteHandler, onSaveHandler }) {
 
     const { ok, returnedErrors } = validator(body);
     if (ok) {
-      onSaveHandler(body, data?.id || null);
+      onSaveHandler(body);
     } else {
       setErrors(returnedErrors);
     }
   };
 
-  const categorySearch = (text) => {
-    setCategorySearchText(text);
-    if (text.length >= 2) {
-      console.log('recherche');
-    }
+  const handleSelect = ({ id, name }) => {
+    setCategoryId(id);
+    setCategoryName(name);
+    setQuery('');
+    setOptions([]);
   };
 
   return (
@@ -69,11 +81,20 @@ export default function EmailForm({ data, onDeleteHandler, onSaveHandler }) {
       <Container>
         <Row>
           <Col className="fr-pb-2w">
-            <TextInput
-              label="Recherche"
-              value={categorySearchText || ''}
-              onChange={(e) => categorySearch(e.target.value)}
+            <SearchBar
+              size="lg"
+              buttonLabel="Rechercher"
+              value={query}
+              label="Rechercher dans paysage"
+              placeholder="Rechercher..."
+              onChange={(e) => setQuery(e.target.value)}
+              options={options}
+              optionsIcon="ri-arrow-right-line"
+              onSelect={handleSelect}
             />
+            <p className="fr-mt-2w">
+              {(categoryName) ? <Tag className="bg-categories">{categoryName}</Tag> : null}
+            </p>
           </Col>
         </Row>
         <Row>
@@ -113,14 +134,6 @@ export default function EmailForm({ data, onDeleteHandler, onSaveHandler }) {
         <Row>
           <Col>
             <ButtonGroup size="sm" isEquisized align="right" isInlineFrom="md">
-              <Button
-                onClick={() => onDeleteHandler(data?.id || null)}
-                className="bt-delete"
-                disabled={!data}
-              >
-                <Icon name="ri-chat-delete-line" size="lg" />
-                Supprimer
-              </Button>
               <Button onClick={onSave}>
                 <Icon name="ri-save-line" size="lg" />
                 Sauvegarder
@@ -134,13 +147,5 @@ export default function EmailForm({ data, onDeleteHandler, onSaveHandler }) {
 }
 
 EmailForm.propTypes = {
-  // eslint-disable-next-line react/forbid-prop-types
-  data: PropTypes.object,
-  onDeleteHandler: PropTypes.func,
   onSaveHandler: PropTypes.func.isRequired,
-};
-
-EmailForm.defaultProps = {
-  data: null,
-  onDeleteHandler: null,
 };
