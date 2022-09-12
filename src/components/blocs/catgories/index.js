@@ -100,6 +100,7 @@ export default function NamesComponent({ apiObject, id }) {
         title={el.category.usualNameFr}
         description={formatDescriptionDates(el.startDate, el.endDate)}
         onClick={() => onClickDeleteHandler(el.id)}
+        bgColorClassName="bg-categories-light"
       />
     ));
     return (
