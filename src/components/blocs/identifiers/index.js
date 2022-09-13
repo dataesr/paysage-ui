@@ -105,7 +105,7 @@ export default function IdentifiersComponent({ apiObject, id }) {
     <PaysageSection dataPaysageMenu="Identifiants" id="identifiers">
       <Row>
         <Col>
-          <Title as="h3" look="h6">
+          <Title as="h3">
             Identifiants
           </Title>
         </Col>
@@ -120,9 +120,11 @@ export default function IdentifiersComponent({ apiObject, id }) {
           </Button>
         </Col>
       </Row>
-      <Row>
-        {renderCards()}
-      </Row>
+      <div className="fr-pl-5w">
+        <Row>
+          {renderCards()}
+        </Row>
+      </div>
       <Modal isOpen={showModal} size="lg" hide={() => setShowModal(false)}>
         <ModalTitle>{modalTitle}</ModalTitle>
         <ModalContent>{modalContent}</ModalContent>

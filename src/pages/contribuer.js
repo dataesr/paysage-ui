@@ -24,7 +24,7 @@ export default function ContributePage() {
 
   const options = [
     { value: null, label: "Selectionner un type d'objet" },
-    { value: 'structures', label: 'Structures' },
+    { value: 'structures', label: 'Structure' },
     { value: 'personnes', label: 'Personne' },
     { value: 'categories', label: 'Catégorie' },
     { value: 'textes-officiels', label: 'Texte officiel' },
