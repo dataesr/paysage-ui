@@ -51,7 +51,6 @@ function StructureByIdPage() {
               <SideMenuLink asLink={<RouterLink to="presentation#informations" />}>
                 Informations
               </SideMenuLink>
-
               <SideMenuLink asLink={<RouterLink to="presentation#historique-et-dates" />}>
                 Historique & dates
               </SideMenuLink>

@@ -1,5 +1,3 @@
-import { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
 import {
   Button,
   Col,
@@ -9,13 +7,16 @@ import {
   Row,
   Title,
 } from '@dataesr/react-dsfr';
-import PaysageSection from '../../sections/section';
+import PropTypes from 'prop-types';
+import { useEffect, useState } from 'react';
+
 import IdentifierForm from './form';
-import api from '../../../utils/api';
-import { getEnumKey } from '../../../utils';
-import ModifyCard from '../../card/modify-card';
-import ClipboardCopy from '../../../utils/clipboard-copy';
 import ExpendableListCards from '../../card/expendable-list-cards';
+import ModifyCard from '../../card/modify-card';
+import PaysageSection from '../../sections/section';
+import { getEnumKey } from '../../../utils';
+import api from '../../../utils/api';
+import ClipboardCopy from '../../../utils/clipboard-copy';
 
 export default function IdentifiersComponent({ apiObject, id }) {
   const [data, setData] = useState([]);
@@ -37,7 +38,7 @@ export default function IdentifiersComponent({ apiObject, id }) {
     };
     getData();
     return () => {};
-  }, [apiObject, id, reloader]);
+  }, [apiObject, id]);
 
   const onSaveHandler = async (body, identifierId = null) => {
     let method = 'post';
