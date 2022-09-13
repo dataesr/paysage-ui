@@ -1,6 +1,8 @@
 import PropTypes from 'prop-types';
 import usePausableTimer from '../../hooks/usePausableTimer';
 
+import './notice.scss';
+
 export default function Notice({
   content,
   autoDismissAfter,

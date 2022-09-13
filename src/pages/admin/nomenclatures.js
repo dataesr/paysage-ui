@@ -1,12 +1,13 @@
 import PropTypes from 'prop-types';
 import { Link as RouterLink } from 'react-router-dom';
-import { Button, Breadcrumb, BreadcrumbItem, Col, Container, Row, Text, Title, Modal, ModalTitle, ModalContent, TextInput, Badge, Tag } from '@dataesr/react-dsfr';
+import { Breadcrumb, BreadcrumbItem, Col, Container, Row, Text, Title, Modal, ModalTitle, ModalContent, TextInput, Badge, Tag } from '@dataesr/react-dsfr';
 import { useState } from 'react';
 import useFetch from '../../hooks/useFetch';
 import api from '../../utils/api';
 import TagInput from '../../components/tag-input';
 import { toString } from '../../utils/dates';
 import useForm from '../../hooks/useForm';
+import Button from '../../components/button';
 
 function NomenclatureForm({ id, initialForm, onSave, onDelete }) {
   const validateForm = (body) => {
@@ -50,10 +51,10 @@ function NomenclatureForm({ id, initialForm, onSave, onDelete }) {
             />
           </Col>
         </Row>
-        <Button onClick={handleSubmit} iconPosition="right" icon="ri-save-line">Enregistrer</Button>
+        <Button onClick={handleSubmit} icon="ri-save-line">Enregistrer</Button>
         <hr />
         {id && (
-          <Button secondary onClick={handleDelete} colors={['var(--background-action-high-error)', 'white']} icon="ri-chat-delete-line">
+          <Button secondary onClick={handleDelete} color="error" icon="ri-delete-bin-2-line">
             Supprimer
           </Button>
         )}

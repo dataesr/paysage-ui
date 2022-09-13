@@ -7,6 +7,8 @@ import PageBorder from './page-border';
 import useAuth from '../../hooks/useAuth';
 import Spinner from '../spinner';
 
+import './layout.scss';
+
 export default function Layout() {
   const [isSwitchThemeOpen, setIsSwitchThemeOpen] = useState(false);
   const { isLoading } = useAuth();

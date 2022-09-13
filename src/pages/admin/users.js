@@ -2,7 +2,6 @@ import { useState } from 'react';
 import PropTypes from 'prop-types';
 import {
   Badge,
-  Button,
   ButtonGroup,
   Breadcrumb,
   BreadcrumbItem,
@@ -21,6 +20,7 @@ import Avatar from '../../components/avatar';
 import useFetch from '../../hooks/useFetch';
 import useToast from '../../hooks/useToast';
 import api from '../../utils/api';
+import Button from '../../components/button';
 
 import { toString } from '../../utils/dates';
 
@@ -95,7 +95,7 @@ function User({
             {(!confirmed && !isDeleted) && (
               <Button
                 icon="ri-check-double-line"
-                colors={['var(--background-action-high-success)', 'white']}
+                color="success"
                 onClick={() => handleActivateUser(id)}
               >
                 Activer
@@ -104,7 +104,8 @@ function User({
             {(!isDeleted) && <Button secondary title="editer" icon="ri-edit-line" onClick={() => setIsEditModalOpen(!isEditModalOpen)}>Editer</Button>}
             {isDeleted && (
               <Button
-                colors={['var(--background-action-high-success)', 'white']}
+                color="success"
+                secondary
                 icon="ri-check-double-line"
                 onClick={() => handleSwitchDeleteUser(id, !isDeleted)}
               >
@@ -130,7 +131,8 @@ function User({
             <Text>En désactivant un utilisateur, il sera marqué comme supprimé et ne pourra plus se connecter à paysage.</Text>
             <Button
               secondary
-              colors={['var(--background-action-high-error)', 'white']}
+              color="error"
+              icon="ri-delete-bin-2-line"
               onClick={() => handleSwitchDeleteUser(id, !isDeleted)}
             >
               Supprimer l'utilisateur

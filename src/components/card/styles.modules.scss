@@ -3,22 +3,8 @@
 
   .card-button{
     position: absolute;
-    top: 8px;
-    right: 8px;
+    top: .25rem;
+    right: .25rem;
     z-index: 1;
-
-    &:hover {
-      cursor: pointer;
-    }
-  }
-
-    .card-button{
-      position: absolute;
-      top: 8px;
-      right: 8px;
-
-    &:hover {
-      cursor: pointer;
-    }
   }
 }

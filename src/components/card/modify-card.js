@@ -1,18 +1,23 @@
-import { Icon } from '@dataesr/react-dsfr';
 import PropTypes from 'prop-types';
 import Card from './index';
+import Button from '../button';
 
 export default function ModifyCard({ title, description, onClick }) {
-  const actionElement = (
-    <button onClick={onClick} type="button">
-      <Icon className="ri-edit-line" size="lg" />
-    </button>
-  );
   return (
     <Card
       title={title}
       descriptionElement={description}
-      actionElement={actionElement}
+      actionElement={(
+        <Button
+          size="sm"
+          onClick={onClick}
+          color="text"
+          tertiary
+          borderless
+          rounded
+          icon="ri-edit-line"
+        />
+      )}
     />
   );
 }

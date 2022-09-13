@@ -1,12 +1,13 @@
 import PropTypes from 'prop-types';
 import { Link as RouterLink } from 'react-router-dom';
-import { Button, Breadcrumb, BreadcrumbItem, Col, Container, Row, Text, Title, Modal, ModalTitle, ModalContent, TextInput, Badge, Tag, Select } from '@dataesr/react-dsfr';
+import { Breadcrumb, BreadcrumbItem, Col, Container, Row, Text, Title, Modal, ModalTitle, ModalContent, TextInput, Badge, Tag, Select } from '@dataesr/react-dsfr';
 import { useState } from 'react';
 import useFetch from '../../hooks/useFetch';
 import api from '../../utils/api';
 import TagInput from '../../components/tag-input';
 import { toString } from '../../utils/dates';
 import useForm from '../../hooks/useForm';
+import Button from '../../components/button';
 
 function LegalCategoriesForm({ id, initialForm, onSave, onDelete }) {
   const validateForm = (body) => {
@@ -102,10 +103,10 @@ function LegalCategoriesForm({ id, initialForm, onSave, onDelete }) {
             />
           </Col>
         </Row>
-        <Button submit iconPosition="right" icon="ri-save-line">Enregistrer</Button>
+        <Button submit icon="ri-save-line">Enregistrer</Button>
         <hr />
         {id && (
-          <Button secondary onClick={handleDelete} colors={['var(--background-action-high-error)', 'white']} icon="ri-chat-delete-line">
+          <Button secondary color="error" onClick={handleDelete} icon="ri-delete-bin-2-line">
             Supprimer
           </Button>
         )}
@@ -227,7 +228,7 @@ export default function LegalCategoriesPage() {
               )}
             </div>
             <div>
-              <Button secondary size="sm" title="editer" icon="ri-edit-line" onClick={() => handleModalToggle(item)}>Editer</Button>
+              <Button size="sm" secondary icon="ri-edit-line" onClick={() => handleModalToggle(item)}>Editer</Button>
             </div>
           </Row>
           <hr />

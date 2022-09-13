@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import { Text, Row, Icon, Container } from '@dataesr/react-dsfr';
 import usePausableTimer from '../../hooks/usePausableTimer';
 
-// Toast component
-// ==============================
+import './toast.scss';
+
 function Toast({
   id,
   title,
