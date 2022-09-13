@@ -77,20 +77,20 @@
   }
 }
 .fr-btns-group--sm .btn-icon{
-  width: 2rem;
-  height: 2rem;
+  width: 2rem !important;
+  height: 2rem !important;
 }
 .btn-icon.fr-btn--sm {
-  max-width: 2rem;
-  max-height: 2rem;
+  max-width: 2rem !important;
+  max-height: 2rem !important;
 }
 .btn-icon.fr-btn--md {
-  max-width: 2.5rem;
-  max-height: 2.5rem;
+  max-width: 2.5rem !important;
+  max-height: 2.5rem !important;
 }
 .btn-icon.fr-btn--lg {
-  max-width: 3rem;
-  max-height: 3rem;
+  max-width: 3rem !important;
+  max-height: 3rem !important;
 }
 
 .btn-icon--rounded.btn-icon {
