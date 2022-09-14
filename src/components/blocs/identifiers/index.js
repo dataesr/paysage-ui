@@ -38,7 +38,7 @@ export default function IdentifiersComponent({ apiObject, id }) {
     };
     getData();
     return () => {};
-  }, [apiObject, id]);
+  }, [apiObject, id, reloader]);
 
   const onSaveHandler = async (body, identifierId = null) => {
     let method = 'post';
