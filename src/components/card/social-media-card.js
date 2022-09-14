@@ -36,7 +36,6 @@ export default function SocialMediaCard({
       rxIcon = 'ri-youtube-fill';
       iconColor = 'var(--youtube-icon-color)';
       break;
-
     default:
       break;
     }
@@ -76,5 +75,4 @@ SocialMediaCard.propTypes = {
   mediaName: PropTypes.string.isRequired,
   account: PropTypes.element.isRequired,
   onClick: PropTypes.func.isRequired,
-
 };

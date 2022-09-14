@@ -53,7 +53,6 @@ function StructureByIdPage() {
                 En un coup d’œil
                 <Icon className="ri-eye-2-line fr-ml-1w" />
               </SideMenuLink>
-
               <SideMenuLink asLink={<RouterLink to="presentation#historique-et-dates" />}>
                 Historique & dates
               </SideMenuLink>
