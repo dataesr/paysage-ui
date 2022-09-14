@@ -34,7 +34,7 @@ export default function StructurePresentationPage() {
         <Localisations
           apiObject="structures"
           id={id}
-          data={data.currentLocalisation || null}
+          currentLocalisation={data.currentLocalisation || null}
         />
       </div>
       <div id="informations">
