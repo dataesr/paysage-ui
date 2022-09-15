@@ -36,7 +36,6 @@ export default function LocalisationsComponent({ id, apiObject, currentLocalisat
       reload();
       setIsOpen(false);
     }
-    console.log('delete', localisationId);
   };
 
   const handleModalToggle = (item = {}) => {
@@ -87,7 +86,6 @@ export default function LocalisationsComponent({ id, apiObject, currentLocalisat
   if (isLoading) return <div>Chargement</div>;
 
   const currentLocalisation = data.data.find((item) => item.id === currentLocalisationId);
-  console.log(currentLocalisation);
 
   return (
     <PaysageSection dataPaysageMenu="Localisation" id="localisations">
@@ -134,17 +132,19 @@ export default function LocalisationsComponent({ id, apiObject, currentLocalisat
             ) : null}
             {currentLocalisation?.address ? renderAdress(currentLocalisation) : null}
           </Tab>
-          <Tab label="Historique des adresses" className="fr-p-2w">
-            <ul>
-              {
-                data.data.map((item) => (
-                  <li key={`HistoriqueLocalisation${item.id}`}>
-                    {renderAdress(item)}
-                  </li>
-                ))
-              }
-            </ul>
-          </Tab>
+          {(data.totalCount > 1) ? (
+            <Tab label="Historique des adresses" className="fr-p-2w">
+              <ul>
+                {
+                  data.data.map((item) => (
+                    <li key={`HistoriqueLocalisation${item.id}`}>
+                      {renderAdress(item)}
+                    </li>
+                  ))
+                }
+              </ul>
+            </Tab>
+          ) : null}
         </Tabs>
       )}
       <Modal size="lg" isOpen={isOpen} hide={() => setIsOpen(false)}>
