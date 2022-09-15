@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Callout, Col, Container, Icon, Modal, ModalContent, ModalTitle, Row, Tab, Tabs, Tile, Title } from '@dataesr/react-dsfr';
+import { Col, Container, Icon, Modal, ModalContent, ModalTitle, Row, Tab, Tabs, Tile, Title } from '@dataesr/react-dsfr';
 import useFetch from '../../../hooks/useFetch';
 import api from '../../../utils/api';
 import { formatDescriptionDates } from '../../../utils/dates';
@@ -30,12 +30,12 @@ export default function LocalisationsComponent({ id, apiObject, currentLocalisat
   };
 
   const handleDelete = async (localisationId) => {
-    // if (!id) return;
-    // const response = await api.delete(`${route}/${id}`);
-    // if (response.ok) {
-    //   reload();
-    //   setIsOpen(false);
-    // }
+    if (!localisationId) return;
+    const response = await api.delete(`${route}/${localisationId}`);
+    if (response.ok) {
+      reload();
+      setIsOpen(false);
+    }
     console.log('delete', localisationId);
   };
 
