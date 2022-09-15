@@ -1,5 +1,3 @@
-import { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
 import {
   Button,
   Col,
@@ -10,13 +8,16 @@ import {
   Text,
   Title,
 } from '@dataesr/react-dsfr';
-import PaysageSection from '../../sections/section';
+import PropTypes from 'prop-types';
+import { useEffect, useState } from 'react';
+
 import IdentifierForm from './form';
-import api from '../../../utils/api';
-import { getEnumKey } from '../../../utils';
-import ModifyCard from '../../card/modify-card';
 import ExpendableListCards from '../../card/expendable-list-cards';
+import ModifyCard from '../../card/modify-card';
 import CopyButton from '../../copy/copy-button';
+import PaysageSection from '../../sections/section';
+import { getEnumKey } from '../../../utils';
+import api from '../../../utils/api';
 
 export default function IdentifiersComponent({ apiObject, id }) {
   const [data, setData] = useState([]);

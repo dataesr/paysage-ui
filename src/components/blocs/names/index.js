@@ -16,6 +16,7 @@ import PaysageSection from '../../sections/section';
 import EmptySection from '../../sections/empty';
 import NameForm from './form';
 import api from '../../../utils/api';
+import { formatDescriptionDates } from '../../../utils/dates';
 
 export default function NamesComponent({ apiObject, id }) {
   const [data, setData] = useState([]);
@@ -81,20 +82,6 @@ export default function NamesComponent({ apiObject, id }) {
     setModalTitle("Ajout d'un nom");
     setModalContent(<NameForm onSaveHandler={onSaveHandler} />);
     setShowModal(true);
-  };
-
-  const formatDescriptionDates = (startDate = null, endDate = null) => {
-    if (!startDate && !endDate) { return null; }
-    if (!startDate && endDate) {
-      return `jusqu'au ${endDate}`;
-    }
-    if (startDate && !endDate) {
-      return `depuis le ${startDate}`;
-    }
-    if (startDate && endDate) {
-      return `du ${startDate} au ${endDate}`;
-    }
-    return null;
   };
 
   if (!data?.data) {

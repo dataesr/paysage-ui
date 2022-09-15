@@ -1,23 +1,20 @@
 import { useParams } from 'react-router-dom';
 
-import useFetch from '../../../hooks/useFetch';
-
 import Categories from '../../../components/blocs/catgories';
+import ChiffresClesPresentation from '../../../components/blocs/chiffres-cles-presentation';
+import DernieresActualites from '../../../components/blocs/dernieres-actualites';
 import Emails from '../../../components/blocs/emails';
+import GouvernancePresentation from '../../../components/blocs/gouvernance-presentation';
+import HistoriqueEtDates from '../../../components/blocs/historique-et-dates';
 import Identifiers from '../../../components/blocs/identifiers';
+import Informations from '../../../components/blocs/informations';
 import Localisations from '../../../components/blocs/localisations';
 import Names from '../../../components/blocs/names';
-import Informations from '../../../components/blocs/informations';
-import HistoriqueEtDates from '../../../components/blocs/historique-et-dates';
 import PalmaresEtClassements from '../../../components/blocs/palmares-et-classements';
 import PresenceSurLeWeb from '../../../components/blocs/presence-sur-le-web';
-import ChiffresClesPresentation from '../../../components/blocs/chiffres-cles-presentation';
-import GouvernancePresentation from '../../../components/blocs/gouvernance-presentation';
-import DernieresActualites from '../../../components/blocs/dernieres-actualites';
 import SuiviDGESIP from '../../../components/blocs/suivi-dgesip';
-
 import Spinner from '../../../components/spinner';
-
+import useFetch from '../../../hooks/useFetch';
 import useHashScroll from '../../../hooks/useHashScroll';
 
 export default function StructurePresentationPage() {
@@ -34,7 +31,7 @@ export default function StructurePresentationPage() {
         <Localisations
           apiObject="structures"
           id={id}
-          data={data.currentLocalisation || null}
+          currentLocalisationId={data.currentLocalisation.id || null}
         />
       </div>
       <div id="informations">

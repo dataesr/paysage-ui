@@ -1,5 +1,5 @@
 import { Link as RouterLink, Outlet, useLocation, useParams } from 'react-router-dom';
-import { Badge, BadgeGroup, Breadcrumb, BreadcrumbItem, Col, Container, Row, SideMenu, SideMenuItem, SideMenuLink, Title } from '@dataesr/react-dsfr';
+import { Badge, BadgeGroup, Breadcrumb, BreadcrumbItem, Col, Container, Icon, Row, SideMenu, SideMenuItem, SideMenuLink, Title } from '@dataesr/react-dsfr';
 import useFetch from '../../../hooks/useFetch';
 import CopyBadgeButton from '../../../components/copy/copy-badge-button';
 import StructurePresentationPage from './presentation';
@@ -49,9 +49,9 @@ function StructureByIdPage() {
                 Localisation
               </SideMenuLink>
               <SideMenuLink asLink={<RouterLink to="presentation#informations" />}>
-                Informations
+                En un coup d’œil
+                <Icon className="ri-eye-2-line fr-ml-1w" />
               </SideMenuLink>
-
               <SideMenuLink asLink={<RouterLink to="presentation#historique-et-dates" />}>
                 Historique & dates
               </SideMenuLink>
