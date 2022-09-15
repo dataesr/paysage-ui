@@ -23,8 +23,20 @@ HR {
   margin-top: 8px;
 }
 
+.p-0 {
+  padding: 0;
+}
+
+.m-0 {
+  margin: 0;
+}
+
 .italic {
   font-style: italic;
+}
+
+.structures-tile {
+  box-shadow: inset 0 0 0 1px var(--border-default-grey),inset 0 -0.25rem 0 0 var(--structures-color) !important;
 }
 
 .bg-structures {
@@ -133,4 +145,14 @@ HR {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.show-bt-on-over:hover {
+  .bt-visible-on-over {
+    visibility: visible;
+  }
+}
+
+.bt-visible-on-over {
+  visibility: hidden;
 }

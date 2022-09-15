@@ -114,7 +114,6 @@ export default function EmailForm({ data, onDeleteHandler, onSaveHandler }) {
               label="Mention de distribution"
               value={distributionStatement || ''}
               onChange={(e) => setDistributionStatement(e.target.value)}
-              required
             />
           </Col>
         </Row>
@@ -124,22 +123,6 @@ export default function EmailForm({ data, onDeleteHandler, onSaveHandler }) {
               label="Adresse"
               value={address || ''}
               onChange={(e) => setAddress(e.target.value)}
-            />
-          </Col>
-        </Row>
-        <Row>
-          <Col className="fr-pb-2w fr-pr-1w">
-            <TextInput
-              label="Commune"
-              value={locality || ''}
-              onChange={(e) => setLocality(e.target.value)}
-            />
-          </Col>
-          <Col className="fr-pb-2w fr-pl-1w">
-            <TextInput
-              label="Code commune"
-              value={cityId || ''}
-              onChange={(e) => setCityId(e.target.value)}
             />
           </Col>
         </Row>
@@ -172,6 +155,7 @@ export default function EmailForm({ data, onDeleteHandler, onSaveHandler }) {
               label="Pays"
               value={country || ''}
               onChange={(e) => setCountry(e.target.value)}
+              required
             />
           </Col>
         </Row>

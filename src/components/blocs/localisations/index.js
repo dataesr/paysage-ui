@@ -1,16 +1,18 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
-import { ButtonGroup, Col, Container, Modal, ModalContent, ModalTitle, Row, Title } from '@dataesr/react-dsfr';
+import { Callout, Col, Container, Icon, Modal, ModalContent, ModalTitle, Row, Tab, Tabs, Tile, Title } from '@dataesr/react-dsfr';
 import useFetch from '../../../hooks/useFetch';
 import api from '../../../utils/api';
+import { formatDescriptionDates } from '../../../utils/dates';
 import Map from '../../map';
 import LocalisationForm from './form';
 import PaysageSection from '../../sections/section';
 import EmptySection from '../../sections/empty';
 import Button from '../../button';
-import HistoriqueLocalisation from './historique-localisation';
 
-export default function LocalisationsComponent({ id, apiObject, currentLocalisation }) {
+import styles from './styles.module.scss';
+
+export default function LocalisationsComponent({ id, apiObject, currentLocalisationId }) {
   const route = `/${apiObject}/${id}/localisations`;
   const { data, isLoading, error, reload } = useFetch(route);
   const [isOpen, setIsOpen] = useState();
@@ -18,14 +20,13 @@ export default function LocalisationsComponent({ id, apiObject, currentLocalisat
   const [modalContent, setModalContent] = useState(null);
 
   const handleSave = async (localisationId, body) => {
-    const method = id ? 'patch' : 'post';
-    const url = id ? `${route}/${localisationId}` : route;
+    const method = localisationId ? 'patch' : 'post';
+    const url = localisationId ? `${route}/${localisationId}` : route;
     const response = await api[method](url, body);
     if (response.ok) {
       reload();
       setIsOpen(false);
     }
-    console.log('save', localisationId, body);
   };
 
   const handleDelete = async (localisationId) => {
@@ -38,38 +39,62 @@ export default function LocalisationsComponent({ id, apiObject, currentLocalisat
     console.log('delete', localisationId);
   };
 
-  const handleModalToggle = (item = {}, target = 'localisationForm') => {
-    console.log('handleModalToggle', item);
+  const handleModalToggle = (item = {}) => {
+    setModalTitle(item?.id ? 'Modifier' : 'Ajouter');
+    setModalContent(
+      <LocalisationForm
+        data={item}
+        onDeleteHandler={handleDelete}
+        onSaveHandler={handleSave}
+      />,
+    );
 
-    if (target === 'historique') {
-      setModalTitle('Historiques des adresses');
-      setModalContent(
-        <HistoriqueLocalisation
-          currentLocalisationId={currentLocalisation.id || null}
-          data={data}
-        />,
-      );
-    } else {
-      setModalTitle(item?.id ? 'Modifier' : 'Ajouter');
-      setModalContent(
-        <LocalisationForm
-          data={item}
-          onDeleteHandler={handleDelete}
-          onSaveHandler={handleSave}
-        />,
-      );
-    }
     setIsOpen(true);
   };
 
+  const renderAdress = (localisation) => (
+    <Tile className={`${styles.Tile} show-bt-on-over`}>
+      <Container fluid>
+        <Row>
+          <Col className="fr-p-2w">
+            <p>
+              <b><i>{formatDescriptionDates(localisation.startDate || null, localisation.endDate || null)}</i></b>
+              <div>
+                <Icon className="ri-map-pin-fill fr-pr-1w" />
+                {`${localisation.address} - ${localisation.locality} - ${localisation.postalCode}`}
+              </div>
+            </p>
+          </Col>
+          <Col className="text-right fr-pt-2w fr-pr-2w">
+            <Button
+              className="bt-visible-on-over"
+              size="sm"
+              onClick={() => handleModalToggle(localisation)}
+              color="text"
+              tertiary
+              borderless
+              rounded
+              icon="ri-edit-line"
+            />
+          </Col>
+        </Row>
+      </Container>
+    </Tile>
+
+  );
+
   if (error) return <div>Erreur</div>;
   if (isLoading) return <div>Chargement</div>;
+
+  const currentLocalisation = data.data.find((item) => item.id === currentLocalisationId);
+  console.log(currentLocalisation);
+
   return (
     <PaysageSection dataPaysageMenu="Localisation" id="localisations">
       <Row>
         <Col>
           <Title as="h3" look="h6">
-            Localisation
+            Localisations
           </Title>
         </Col>
         <Col className="text-right">
@@ -85,48 +110,43 @@ export default function LocalisationsComponent({ id, apiObject, currentLocalisat
       </Row>
       {Object.keys(currentLocalisation).length === 0 ? (
         <EmptySection apiObject={apiObject} />
-      ) : null}
-      {currentLocalisation?.geometry?.coordinates ? (
-        <Row>
-          <Col>
-            <Map
-              lat={currentLocalisation?.geometry?.coordinates[1]}
-              lng={currentLocalisation?.geometry?.coordinates[0]}
-              markers={[
-                {
-                  address: currentLocalisation.address,
-                  latLng: [
-                    currentLocalisation?.geometry?.coordinates[1],
-                    currentLocalisation?.geometry?.coordinates[0],
-                  ],
-                },
-              ]}
-            />
-          </Col>
-        </Row>
-      ) : null}
-      {currentLocalisation?.address ? (
-        <Container fluid>
-          <Row>
-            <Col>
-              {currentLocalisation.address}
-              {`${currentLocalisation.locality} - ${currentLocalisation.postalCode}`}
-            </Col>
-            <Col className="text-right">
-              <Row className="fr-pt-2w">
-                <ButtonGroup size="sm" isInlineFrom="md">
-                  <Button className="fr-mr-1w" secondary onClick={() => handleModalToggle(currentLocalisation)}>
-                    Corriger l'adresse actuelle
-                  </Button>
-                  <Button secondary color="text" onClick={() => handleModalToggle(null, 'historique')}>
-                    Voir l'historique
-                  </Button>
-                </ButtonGroup>
+      ) : (
+        <Tabs>
+          <Tab label="Adresse actuelle" className="fr-p-2w">
+            {currentLocalisation?.coordinates ? (
+              <Row>
+                <Col>
+                  <Map
+                    lat={currentLocalisation?.coordinates.lat}
+                    lng={currentLocalisation?.coordinates.lng}
+                    markers={[
+                      {
+                        address: currentLocalisation.address,
+                        latLng: [
+                          currentLocalisation?.coordinates.lat,
+                          currentLocalisation?.coordinates.lng,
+                        ],
+                      },
+                    ]}
+                  />
+                </Col>
               </Row>
-            </Col>
-          </Row>
-        </Container>
-      ) : null}
+            ) : null}
+            {currentLocalisation?.address ? renderAdress(currentLocalisation) : null}
+          </Tab>
+          <Tab label="Historique des adresses" className="fr-p-2w">
+            <ul>
+              {
+                data.data.map((item) => (
+                  <li key={`HistoriqueLocalisation${item.id}`}>
+                    {renderAdress(item)}
+                  </li>
+                ))
+              }
+            </ul>
+          </Tab>
+        </Tabs>
+      )}
       <Modal size="lg" isOpen={isOpen} hide={() => setIsOpen(false)}>
         <ModalTitle>
           {modalTitle}
@@ -143,5 +163,5 @@ LocalisationsComponent.propTypes = {
   apiObject: PropTypes.string.isRequired,
   id: PropTypes.string.isRequired,
   // eslint-disable-next-line react/forbid-prop-types
-  currentLocalisation: PropTypes.object.isRequired,
+  currentLocalisationId: PropTypes.string.isRequired,
 };

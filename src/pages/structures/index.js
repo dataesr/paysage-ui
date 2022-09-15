@@ -59,7 +59,7 @@ export default function StructuresPage() {
       <Row>
         {data.data.map((structure) => (
           <Col n="4" className="fr-p-1w">
-            <div className="fr-tile fr-enlarge-link fr-tile--horizontal">
+            <div className="fr-tile fr-enlarge-link fr-tile--horizontal structures-tile">
               <div className="fr-tile__body">
                 <h4 className="fr-tile__title">
                   <a

@@ -11,6 +11,7 @@ import {
 } from '@dataesr/react-dsfr';
 import useToast from '../../../hooks/useToast';
 import api from '../../../utils/api';
+import { formatDescriptionDates } from '../../../utils/dates';
 import CategoryForm from './form';
 import DeleteCard from '../../card/delete-card';
 import ExpendableListCards from '../../card/expendable-list-cards';
@@ -76,22 +77,6 @@ export default function NamesComponent({ apiObject, id }) {
     setModalTitle("Ajout d'une catégorie");
     setModalContent(<CategoryForm onSaveHandler={onSaveHandler} />);
     setShowModal(true);
-  };
-
-  const formatDescriptionDates = (startDate = null, endDate = null) => {
-    if (!startDate && !endDate) {
-      return null;
-    }
-    if (!startDate && endDate) {
-      return `jusqu'au ${endDate}`;
-    }
-    if (startDate && !endDate) {
-      return `depuis le ${startDate}`;
-    }
-    if (startDate && endDate) {
-      return `du ${startDate} au ${endDate}`;
-    }
-    return null;
   };
 
   const renderCards = () => {

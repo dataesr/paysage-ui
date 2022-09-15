@@ -74,3 +74,17 @@ export function toString(date, time = false) {
   if (time) return new Date(date).toLocaleString('fr-FR', options);
   return new Date(date).toLocaleDateString('fr-FR', options);
 }
+
+export function formatDescriptionDates(startDate = null, endDate = null) {
+  if (!startDate && !endDate) { return null; }
+  if (!startDate && endDate) {
+    return `jusqu'au ${endDate}`;
+  }
+  if (startDate && !endDate) {
+    return `depuis le ${startDate}`;
+  }
+  if (startDate && endDate) {
+    return `du ${startDate} au ${endDate}`;
+  }
+  return null;
+}

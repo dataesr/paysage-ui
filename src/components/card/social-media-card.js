@@ -46,7 +46,7 @@ export default function SocialMediaCard({
   };
 
   return (
-    <div className="fr-card fr-enlarge-link fr-card--horizontal">
+    <div className="fr-card fr-enlarge-link fr-card--horizontal show-bt-on-over">
       <div className="fr-card__body">
         <div className="fr-card__content fr-py-1w">
           <Row>
@@ -59,7 +59,7 @@ export default function SocialMediaCard({
                 <Link href={account} target="_blank" />
               </h4>
               <div className="card-button">
-                <button onClick={onClick} type="button">
+                <button onClick={onClick} type="button" className="bt-visible-on-over">
                   <Icon className="ri-edit-line" size="lg" />
                 </button>
               </div>
