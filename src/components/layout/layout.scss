@@ -24,6 +24,7 @@
   top: 0;
   position: sticky;
   height: 100%;
+  z-index: calc(var(--ground) + 1000);
 }
 
 @keyframes extend {
