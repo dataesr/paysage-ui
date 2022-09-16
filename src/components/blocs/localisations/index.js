@@ -60,7 +60,7 @@ export default function LocalisationsComponent({ id, apiObject, currentLocalisat
               <b><i>{formatDescriptionDates(localisation.startDate || null, localisation.endDate || null)}</i></b>
               <div>
                 <Icon className="ri-map-pin-fill fr-pr-1w" />
-                {`${localisation.address} - ${localisation.locality} - ${localisation.postalCode}`}
+                {`${localisation.address || ''}  ${localisation.locality || ''}  ${localisation.postalCode || ''}  ${localisation.country}`}
               </div>
             </p>
           </Col>
@@ -106,9 +106,29 @@ export default function LocalisationsComponent({ id, apiObject, currentLocalisat
           </Button>
         </Col>
       </Row>
-      {Object.keys(currentLocalisation).length === 0 ? (
-        <EmptySection apiObject={apiObject} />
-      ) : (
+      {data.totalCount === 0 && <EmptySection apiObject={apiObject} />}
+      {data.totalCount === 1 && currentLocalisation?.coordinates && (
+        <Row>
+          <Col>
+            <Map
+              lat={currentLocalisation?.coordinates.lat}
+              lng={currentLocalisation?.coordinates.lng}
+              markers={[
+                {
+                  address: currentLocalisation.address,
+                  latLng: [
+                    currentLocalisation?.coordinates.lat,
+                    currentLocalisation?.coordinates.lng,
+                  ],
+                },
+              ]}
+            />
+          </Col>
+        </Row>
+      )}
+      {data.totalCount === 1 && currentLocalisation?.country && renderAdress(currentLocalisation)}
+
+      {data.totalCount > 1 && (
         <Tabs>
           <Tab label="Adresse actuelle" className="fr-p-2w">
             {currentLocalisation?.coordinates ? (
@@ -147,6 +167,7 @@ export default function LocalisationsComponent({ id, apiObject, currentLocalisat
           ) : null}
         </Tabs>
       )}
+
       <Modal size="lg" isOpen={isOpen} hide={() => setIsOpen(false)}>
         <ModalTitle>
           {modalTitle}

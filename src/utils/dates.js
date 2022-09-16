@@ -75,16 +75,47 @@ export function toString(date, time = false) {
   return new Date(date).toLocaleDateString('fr-FR', options);
 }
 
+function reverseDate(d) {
+  const arrDate = d.split('-');
+  switch (arrDate.length) {
+  case 2:
+    return `${arrDate[1]}/${arrDate[0]}`;
+
+  case 3:
+    return `${arrDate[2]}/${arrDate[1]}/${arrDate[0]}`;
+
+  default:
+    return d;
+  }
+}
+
 export function formatDescriptionDates(startDate = null, endDate = null) {
   if (!startDate && !endDate) { return null; }
   if (!startDate && endDate) {
-    return `jusqu'au ${endDate}`;
+    if (endDate.split('-').length === 1) {
+      return `jusqu'à ${reverseDate(endDate)}`;
+    }
+    return `jusqu'au ${reverseDate(endDate)}`;
   }
   if (startDate && !endDate) {
-    return `depuis le ${startDate}`;
+    if (startDate.split('-').length === 1) {
+      return `depuis ${reverseDate(startDate)}`;
+    }
+    return `depuis le ${reverseDate(startDate)}`;
   }
   if (startDate && endDate) {
-    return `du ${startDate} au ${endDate}`;
+    let ret = '';
+    if (startDate.split('-').length === 1) {
+      ret = `de ${reverseDate(startDate)} `;
+    } else {
+      ret = `du ${reverseDate(startDate)} `;
+    }
+    if (endDate.split('-').length === 1) {
+      ret += `à ${reverseDate(endDate)} `;
+    } else {
+      ret += `au ${reverseDate(endDate)}`;
+    }
+    return ret;
   }
   return null;
 }
