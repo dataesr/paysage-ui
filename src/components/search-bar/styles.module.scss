@@ -5,6 +5,12 @@
   flex-flow: row 1;
   width: 100%;
 }
+.label {
+  color: var(--text-label-grey);
+  display: block;
+  font-size: 1rem;
+  line-height: 1.5rem;
+}
 .autocomplete {
   position: relative;
   --idle: #0000;
@@ -60,4 +66,15 @@
     }
   }
 
+}
+
+.badge {
+  display: flex;
+  position: absolute;
+  margin: 0.375rem;
+  background-color: var(--hover);
+  // text-transform: none;
+}
+.badgeselected {
+  background-color: var(--active);
 }

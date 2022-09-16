@@ -19,7 +19,7 @@ import {
 } from '@dataesr/react-dsfr';
 import TagInput from '../../components/tag-input';
 import Button from '../../components/button';
-import DateOneField from '../../components/date-one-field';
+import DateInput from '../../components/date-input';
 import Map from '../../components/map';
 import useForm from '../../hooks/useForm';
 import useNotice from '../../hooks/useNotice';
@@ -327,9 +327,6 @@ function HistoryStep({ globalForm, handleSave, updateGlobalForm, setStep }) {
   const { form, updateForm, errors } = useForm(globalForm, validateForm);
   const [showErrors, setShowErrors] = useState(false);
 
-  const [creationDateApprox, setCreationDateApprox] = useState('day');
-  const [closureDateApprox, setClosureDateApprox] = useState('day');
-
   const handleNextStep = (e) => {
     e.preventDefault();
     if (Object.keys(errors).length !== 0) return setShowErrors(true);
@@ -363,17 +360,11 @@ function HistoryStep({ globalForm, handleSave, updateGlobalForm, setStep }) {
           </RadioGroup>
         </Col>
         <Col n="12 md-6" spacing="pb-3w">
-          <DateOneField
+          <DateInput
             value={form.creationDate}
-            name="startDate"
             label="Date de création"
-            onValueChangeHandler={(value) => updateForm({ creationDate: value })}
+            onDateChange={(value) => updateForm({ creationDate: value })}
           />
-          <TagGroup className="fr-mt-1w">
-            <Tag size="sm" className="no-span" selected={creationDateApprox === 'day'} onClick={() => setCreationDateApprox('day')}>Date exacte</Tag>
-            <Tag size="sm" className="no-span" selected={creationDateApprox === 'month'} onClick={() => setCreationDateApprox('month')}>Approximer au mois</Tag>
-            <Tag size="sm" className="no-span" selected={creationDateApprox === 'year'} onClick={() => setCreationDateApprox('year')}>Approximer à l'Année</Tag>
-          </TagGroup>
         </Col>
         <Col n="12 md-6" spacing="pb-3w">
           <TextInput
@@ -385,17 +376,11 @@ function HistoryStep({ globalForm, handleSave, updateGlobalForm, setStep }) {
           />
         </Col>
         <Col n="12 md-6" spacing="pb-3w">
-          <DateOneField
+          <DateInput
             value={form.closureDate}
-            name="startDate"
             label="Date de Fermeture"
-            onValueChangeHandler={(value) => updateForm({ closureDate: value })}
+            onDateChange={(value) => updateForm({ closureDate: value })}
           />
-          <TagGroup className="fr-mt-1w">
-            <Tag size="sm" className="no-span" selected={closureDateApprox === 'day'} onClick={() => setClosureDateApprox('day')}>Date exacte</Tag>
-            <Tag size="sm" className="no-span" selected={closureDateApprox === 'month'} onClick={() => setClosureDateApprox('month')}>Approximer au mois</Tag>
-            <Tag size="sm" className="no-span" selected={closureDateApprox === 'year'} onClick={() => setClosureDateApprox('year')}>Approximer à l'Année</Tag>
-          </TagGroup>
         </Col>
         <Col n="12 md-6" spacing="pb-3w">
           <TextInput

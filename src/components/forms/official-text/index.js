@@ -16,7 +16,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 import validator from './validator';
-import DateOneField from '../../date-one-field';
+import DateInput from '../../date-input';
 import api from '../../../utils/api';
 import useToast from '../../../hooks/useToast';
 
@@ -323,44 +323,39 @@ export default function OfficiaTextForm({ data, from }) {
           </Row>
           <Row>
             <Col n="6" className="fr-pr-5w">
-              <DateOneField
+              <DateInput
                 value={otPublicationDate}
-                name="publicationDate"
                 label="Date de publication"
-                onValueChangeHandler={setPublicationDate}
+                onDateChange={(v) => setPublicationDate(v)}
                 isRequired
               />
             </Col>
             <Col n="6" className="fr-pl-5w">
-              <DateOneField
+              <DateInput
                 value={otSignatureDate}
-                name="signatureDate"
                 label="Date de signature"
-                onValueChangeHandler={setSignatureDate}
+                onDateChange={(v) => setSignatureDate(v)}
               />
             </Col>
             <Col n="6" className="fr-pr-5w">
-              <DateOneField
+              <DateInput
                 value={otStartDate}
-                name="startDate"
                 label="Date de début"
-                onValueChangeHandler={setStartDate}
+                onDateChange={(v) => setStartDate(v)}
               />
             </Col>
             <Col n="6" className="fr-pl-5w">
-              <DateOneField
+              <DateInput
                 value={otEndDate}
-                name="endDate"
                 label="Date de fin"
-                onValueChangeHandler={setEndDate}
+                onDateChange={(v) => setEndDate(v)}
               />
             </Col>
             <Col n="6" className="fr-pr-5w">
-              <DateOneField
+              <DateInput
                 value={otPrevisionalEndDate}
-                name="previsionalEndDate"
                 label="Date de fin prévisionnelle"
-                onValueChangeHandler={setPrevisionalEndDate}
+                onDateChange={(v) => setPrevisionalEndDate(v)}
               />
             </Col>
           </Row>

@@ -13,7 +13,7 @@ import {
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
-import DateOneField from '../../date-one-field';
+import DateInput from '../../date-input';
 import TagInput from '../../tag-input';
 import validator from './validator';
 
@@ -211,22 +211,20 @@ export default function EmailForm({ data, onDeleteHandler, onSaveHandler }) {
             </Row>
             <Row>
               <Col className="fr-pb-2w">
-                <DateOneField
+                <DateInput
                   value={startDate}
-                  name="startDate"
                   label="Date de début"
-                  onValueChangeHandler={setStartDate}
+                  onDateChange={(v) => setStartDate(v)}
                   isRequired
                 />
               </Col>
             </Row>
             <Row>
               <Col>
-                <DateOneField
+                <DateInput
                   value={endDate}
-                  name="endDate"
                   label="Date de fin"
-                  onValueChangeHandler={setEndDate}
+                  onDateChange={(v) => setEndDate(v)}
                 />
               </Col>
             </Row>

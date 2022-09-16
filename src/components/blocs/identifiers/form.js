@@ -13,7 +13,7 @@ import {
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import api from '../../../utils/api';
-import DateOneField from '../../date-one-field';
+import DateInput from '../../date-input';
 
 export default function IdentifierForm({ data, onDeleteHandler, onSaveHandler, enumKey }) {
   const [identifierType, setIdentifierType] = useState(null);
@@ -107,21 +107,19 @@ export default function IdentifierForm({ data, onDeleteHandler, onSaveHandler, e
         </Row>
         <Row className="fr-pt-3w">
           <Col>
-            <DateOneField
+            <DateInput
               value={identifierStartDate}
-              name="startDate"
               label="Date de début"
-              onValueChangeHandler={setIdentifierStartDate}
+              onDateChange={(v) => setIdentifierStartDate(v)}
             />
           </Col>
         </Row>
         <Row>
           <Col>
-            <DateOneField
+            <DateInput
               value={identifierEndDate}
-              name="endDate"
               label="Date de fin"
-              onValueChangeHandler={setIdentifierEndDate}
+              onDateChange={(v) => setIdentifierEndDate(v)}
             />
           </Col>
         </Row>

@@ -14,7 +14,7 @@ import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import api from '../../../utils/api';
-import DateOneField from '../../date-one-field';
+import DateInput from '../../date-input';
 import validator from './validator';
 
 export default function SocialMediaForm({ data, onDeleteHandler, onSaveHandler }) {
@@ -148,21 +148,19 @@ export default function SocialMediaForm({ data, onDeleteHandler, onSaveHandler }
         </Row>
         <Row className="fr-pt-3w">
           <Col>
-            <DateOneField
+            <DateInput
               value={documentStartDate}
-              name="startDate"
               label="Date de début"
-              onValueChangeHandler={setDocumentStartDate}
+              onDateChange={(v) => setDocumentStartDate(v)}
             />
           </Col>
         </Row>
         <Row>
           <Col>
-            <DateOneField
+            <DateInput
               value={documentEndDate}
-              name="endDate"
               label="Date de fin"
-              onValueChangeHandler={setDocumentEndDate}
+              onDateChange={(v) => setDocumentEndDate(v)}
             />
           </Col>
         </Row>

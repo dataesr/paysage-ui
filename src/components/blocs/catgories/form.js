@@ -5,14 +5,12 @@ import {
   Container,
   Col,
   Row,
-  Title,
   Alert,
-  Tag,
 } from '@dataesr/react-dsfr';
 import PropTypes from 'prop-types';
 import { useState, useEffect } from 'react';
 import { v4 as uuidv4 } from 'uuid';
-import DateOneField from '../../date-one-field';
+import DateInput from '../../date-input';
 import SearchBar from '../../search-bar';
 import validator from './validator';
 import api from '../../../utils/api';
@@ -26,7 +24,7 @@ export default function EmailForm({ onSaveHandler }) {
   const [startDate, setStartDate] = useState(null);
 
   const [query, setQuery] = useState('');
-  const [categoryName, setCategoryName] = useState(null);
+  const [scope, setScope] = useState(null);
   const [options, setOptions] = useState([]);
 
   useEffect(() => {
@@ -71,7 +69,13 @@ export default function EmailForm({ onSaveHandler }) {
 
   const handleSelect = ({ id, name }) => {
     setCategoryId(id);
-    setCategoryName(name);
+    setScope(name);
+    setQuery('');
+    setOptions([]);
+  };
+  const handleUnselect = () => {
+    setCategoryId(null);
+    setScope(null);
     setQuery('');
     setOptions([]);
   };
@@ -80,53 +84,36 @@ export default function EmailForm({ onSaveHandler }) {
     <form>
       <Container>
         <Row>
-          <Col className="fr-pb-2w">
+          <Col n="12" className="fr-pb-5w">
             <SearchBar
               size="lg"
               buttonLabel="Rechercher"
               value={query}
-              label="Rechercher dans paysage"
-              placeholder="Rechercher..."
-              onChange={(e) => setQuery(e.target.value)}
+              label="Catégorie"
+              hint="Recherchez et séléctionnez une catégorie paysage"
+              required
+              scope={scope}
+              placeholder={scope ? '' : 'Rechercher...'}
+              onChange={(e) => { setCategoryId(null); setQuery(e.target.value); }}
               options={options}
-              optionsIcon="ri-arrow-right-line"
               onSelect={handleSelect}
+              onDeleteScope={handleUnselect}
             />
-            <p className="fr-mt-2w">
-              {(categoryName) ? <Tag className="bg-categories">{categoryName}</Tag> : null}
-            </p>
           </Col>
-        </Row>
-        <Row>
           <Col n="12" className="fr-pb-5w">
-            <Row>
-              <Col>
-                <Title as="h3" look="h6">
-                  Dates
-                </Title>
-              </Col>
-            </Row>
-            <Row>
-              <Col className="fr-pb-2w">
-                <DateOneField
-                  value={startDate}
-                  name="startDate"
-                  label="Date de début"
-                  onValueChangeHandler={setStartDate}
-                  isRequired
-                />
-              </Col>
-            </Row>
-            <Row>
-              <Col>
-                <DateOneField
-                  value={endDate}
-                  name="endDate"
-                  label="Date de fin"
-                  onValueChangeHandler={setEndDate}
-                />
-              </Col>
-            </Row>
+            <DateInput
+              value={startDate}
+              label="Date de début"
+              onDateChange={(v) => setStartDate(v)}
+              required
+            />
+          </Col>
+          <Col n="12" className="fr-pb-5w">
+            <DateInput
+              value={endDate}
+              label="Date de fin"
+              onDateChange={(v) => setEndDate(v)}
+            />
           </Col>
         </Row>
         <hr />

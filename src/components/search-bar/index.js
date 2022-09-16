@@ -1,5 +1,5 @@
 /* eslint-disable react/no-array-index-key */
-import React, { forwardRef, useRef, useState } from 'react';
+import { forwardRef, useLayoutEffect, useRef, useState } from 'react';
 
 import PropTypes from 'prop-types';
 import { v4 as uuidv4 } from 'uuid';
@@ -24,30 +24,51 @@ const SearchBar = forwardRef((props, ref) => {
     buttonLabel,
     placeholder,
     onSearch,
+    scope,
     options,
     optionsIcon,
     onSelect,
+    onDeleteScope,
     value,
+    required,
+    hint,
     className,
     ...remainingProps
   } = props;
   const inputId = useRef(uuidv4());
-  const _className = classnames('fr-search-bar', {
+  const hintId = useRef(uuidv4());
+  const scopeRef = useRef();
+  const _className = classnames('fr-search-bar', 'fr-mt-2v', {
     'fr-search-bar--lg': (size === 'lg'),
   }, className);
   const _classNameButton = classnames('fr-btn', { 'fr-btn--lg': (size === 'lg') });
   const [activeSuggestionIndex, setActiveSuggestionIndex] = useState(null);
   const [showOptions, setShowOptions] = useState(false);
+  const [inputPadding, setInputPadding] = useState(0);
+  const [isScopeSelected, setIsScopeSelected] = useState(false);
 
-  const handleSubmit = (e) => { e.preventDefault(); onSearch(value); };
+  const handleDeleteScope = () => {
+    if (!value && onDeleteScope) {
+      if (isScopeSelected) {
+        onDeleteScope();
+        setIsScopeSelected(false);
+      } else {
+        setIsScopeSelected(true);
+      }
+    }
+  };
+
   const handleOnKeyDown = (e) => {
     // User pressed the enter key
     if (e.keyCode === 13) {
+      e.preventDefault();
       if (onSearch) {
         onSearch(value);
-      } else if (activeSuggestionIndex && onSelect) {
+      } else if ((activeSuggestionIndex !== null) && onSelect) {
         onSelect(options[activeSuggestionIndex]);
       }
+    } else if (e.keyCode === 8) {
+      handleDeleteScope();
     } else if (e.keyCode === 38) {
       // User pressed the up arrow
       e.preventDefault();
@@ -64,17 +85,46 @@ const SearchBar = forwardRef((props, ref) => {
     }
   };
 
+  useLayoutEffect(() => {
+    if (scopeRef && scopeRef.current) {
+      setInputPadding(scopeRef.current.offsetWidth);
+    } else { setInputPadding(0); }
+  }, [scope]);
+
+  const colorFamily = 'new';
+  const scopeClassNames = classnames(
+    'fr-badge',
+    styles.badge,
+    {
+      [`fr-badge--${colorFamily}`]: colorFamily,
+      [styles.badgeselected]: isScopeSelected,
+    },
+  );
+
   return (
-    <form
+    <div
       onBlur={() => setShowOptions(false)}
       onFocus={() => setShowOptions(true)}
-      onSubmit={handleSubmit}
       role="search"
       className={classnames(styles.form, _className)}
     >
       <div className={styles.searchbar}>
+        <label className={styles.label} htmlFor={inputId.current}>
+          {label}
+          {required && <span className="error"> *</span>}
+          {hint && (
+            <p className="fr-hint-text" id={hintId.current}>
+              {hint}
+            </p>
+          )}
+        </label>
         <div className={_className}>
-          {label && <label className="fr-label" htmlFor={inputId.current}>{label}</label>}
+          {scope && (
+            <button onClick={handleDeleteScope} type="button" ref={scopeRef} className={scopeClassNames}>
+              {scope}
+              {isScopeSelected && <span className="ri-1x icon-right ds-fr--v-sub ri-close-line ds-fr-badge-icon" />}
+            </button>
+          )}
           <input
             ref={ref}
             className="fr-input"
@@ -83,11 +133,14 @@ const SearchBar = forwardRef((props, ref) => {
             id={inputId.current}
             value={value}
             onKeyDown={handleOnKeyDown}
+            onFocus={() => setIsScopeSelected(false)}
+            style={{ paddingLeft: `calc(${inputPadding}px + 1rem)` }}
             {...remainingProps}
           />
           {onSearch && (
             <button
               type="submit"
+              onClick={() => onSearch(value)}
               className={_classNameButton}
               title={buttonLabel}
             >
@@ -124,18 +177,22 @@ const SearchBar = forwardRef((props, ref) => {
           ) : null}
         </div>
       </div>
-    </form>
+    </div>
   );
 });
 SearchBar.defaultProps = {
   size: 'md',
   placeholder: '',
   value: '',
+  hint: '',
+  required: false,
+  scope: null,
   className: '',
   label: '',
   options: [],
   onSearch: null,
   optionsIcon: null,
+  onDeleteScope: null,
 };
 SearchBar.propTypes = {
   label: PropTypes.string,
@@ -144,6 +201,9 @@ SearchBar.propTypes = {
   onSearch: PropTypes.func,
   size: PropTypes.oneOf(['md', 'lg']),
   value: PropTypes.string,
+  hint: PropTypes.string,
+  required: PropTypes.bool,
+  scope: PropTypes.string,
   className: PropTypes.oneOfType([
     PropTypes.string,
     PropTypes.object,
@@ -151,6 +211,7 @@ SearchBar.propTypes = {
   ]),
   options: PropTypes.arrayOf(PropTypes.shape),
   onSelect: PropTypes.func.isRequired,
+  onDeleteScope: PropTypes.func,
   optionsIcon: PropTypes.string,
 };
 
