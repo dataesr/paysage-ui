@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { Button, Col, Modal, ModalContent, ModalTitle, Row, Title } from '@dataesr/react-dsfr';
+import { Button, Col, Modal, ModalContent, ModalTitle, Row, Text, Title } from '@dataesr/react-dsfr';
 import PaysageSection from '../../sections/section';
 import EmailForm from './form';
 import api from '../../../utils/api';
 import ModifyCard from '../../card/modify-card';
 import ExpendableListCards from '../../card/expendable-list-cards';
-import ClipboardCopy from '../../../utils/clipboard-copy';
+import CopyButton from '../../copy/copy-button';
 
 export default function EmailsComponent({ apiObject, id }) {
   const [data, setData] = useState([]);
@@ -74,7 +74,12 @@ export default function EmailsComponent({ apiObject, id }) {
     const list = data.data.map((el) => (
       <ModifyCard
         title={el.emailType.usualName}
-        description={<ClipboardCopy copyText={el.email} />}
+        description={(
+          <Row alignItems="middle">
+            <Text spacing="mr-1v mb-0">{el.value}</Text>
+            <CopyButton title="Copier l'identifiant" copyText={el.value} />
+          </Row>
+        )}
         onClick={() => onClickModifyHandler(el)}
       />
     ));

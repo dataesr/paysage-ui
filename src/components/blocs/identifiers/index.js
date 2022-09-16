@@ -5,6 +5,7 @@ import {
   ModalContent,
   ModalTitle,
   Row,
+  Text,
   Title,
 } from '@dataesr/react-dsfr';
 import PropTypes from 'prop-types';
@@ -13,10 +14,10 @@ import { useEffect, useState } from 'react';
 import IdentifierForm from './form';
 import ExpendableListCards from '../../card/expendable-list-cards';
 import ModifyCard from '../../card/modify-card';
+import CopyButton from '../../copy/copy-button';
 import PaysageSection from '../../sections/section';
 import { getEnumKey } from '../../../utils';
 import api from '../../../utils/api';
-import ClipboardCopy from '../../../utils/clipboard-copy';
 
 export default function IdentifiersComponent({ apiObject, id }) {
   const [data, setData] = useState([]);
@@ -91,7 +92,12 @@ export default function IdentifiersComponent({ apiObject, id }) {
     const list = data.data.map((ident) => (
       <ModifyCard
         title={ident.type}
-        description={<ClipboardCopy copyText={ident.value} />}
+        description={(
+          <Row alignItems="middle">
+            <Text spacing="mr-1v mb-0">{ident.value}</Text>
+            <CopyButton title="Copier l'identifiant" copyText={ident.value} />
+          </Row>
+        )}
         onClick={() => onClickModifyHandler(ident)}
       />
     ));

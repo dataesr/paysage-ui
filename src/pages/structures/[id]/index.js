@@ -1,8 +1,7 @@
 import { Link as RouterLink, Outlet, useLocation, useParams } from 'react-router-dom';
 import { Badge, BadgeGroup, Breadcrumb, BreadcrumbItem, Col, Container, Icon, Row, SideMenu, SideMenuItem, SideMenuLink, Title } from '@dataesr/react-dsfr';
 import useFetch from '../../../hooks/useFetch';
-import ClipboardCopy from '../../../utils/clipboard-copy';
-
+import CopyBadgeButton from '../../../components/copy/copy-badge-button';
 import StructurePresentationPage from './presentation';
 import StructureGouvernancePage from './gouvernance';
 import StructureRHPage from './ressources-humaines';
@@ -183,9 +182,10 @@ function StructureByIdPage() {
             <Title as="h2">
               {data.currentName.usualName}
               <BadgeGroup>
-                <Badge
+                <CopyBadgeButton
                   colorFamily="yellow-tournesol"
-                  text={<ClipboardCopy copyText={data.id} textOnClick="" colorFamily="" />}
+                  text={data.id}
+                  lowercase
                 />
                 <Badge
                   colorFamily="green-emeraude"
