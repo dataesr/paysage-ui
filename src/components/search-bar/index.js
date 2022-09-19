@@ -167,7 +167,9 @@ const SearchBar = forwardRef((props, ref) => {
                     {option.type && <Icon size="xl" color={`var(--${option.type}-color)`} name={objectTypes[option.type]} />}
                     <Text className={styles.content}>
                       {option.name}
-                      {option.acronym ? ` ${option.acronym}` : null}
+                      {option.acronym ? ` (${option.acronym})` : null}
+                      {option.locality ? ` à ${ option.locality.charAt(0).toUpperCase() + option.locality.slice(1)}` : null}
+                      {option.creationDate ? ` depuis ${option.creationDate.slice(0, 4)}` : null}
                     </Text>
                     {optionsIcon && <Badge type="info" isSmall hasIcon icon={optionsIcon} text="voir la page" />}
                   </button>
