@@ -1,6 +1,13 @@
-import { Link as RouterLink, Outlet, useLocation, useParams } from 'react-router-dom';
-import { Badge, BadgeGroup, Breadcrumb, BreadcrumbItem, Col, Container, Icon, Row, SideMenu, SideMenuItem, SideMenuLink, Title } from '@dataesr/react-dsfr';
+import { useState } from 'react';
+import { Link as RouterLink, useNavigate, Outlet, useLocation, useParams } from 'react-router-dom';
+import {
+  Badge, BadgeGroup, Breadcrumb, BreadcrumbItem, ButtonGroup, Checkbox,
+  CheckboxGroup, Col, Container, Icon, Modal, ModalContent, ModalFooter,
+  ModalTitle, Row, SideMenu, SideMenuItem, SideMenuLink, Title,
+} from '@dataesr/react-dsfr';
+import Button from '../../../components/button';
 import useFetch from '../../../hooks/useFetch';
+import useForm from '../../../hooks/useForm';
 import CopyBadgeButton from '../../../components/copy/copy-badge-button';
 import StructurePresentationPage from './presentation';
 import StructureGouvernancePage from './gouvernance';
@@ -18,10 +25,14 @@ import StructurePrixEtRecompensesPage from './prix-et-recompenses';
 import StructureAgendaPage from './agenda';
 import StructureElementsLiesPage from './elements-lies';
 import StructureParticipationsPage from './participations';
+import StructureExportPage from './exporter';
 
 function StructureByIdPage() {
   const { id } = useParams();
   const { pathname } = useLocation();
+  const navigate = useNavigate();
+  const [isExportOpen, setIsExportOpen] = useState(false);
+  const { form, updateForm } = useForm({}, () => {});
 
   const { data, isLoading, error } = useFetch(`/structures/${id}`);
 
@@ -159,43 +170,66 @@ function StructureByIdPage() {
           </SideMenu>
         </Col>
         <Col n="12 md-9">
-          <>
-            <Breadcrumb>
-              <BreadcrumbItem asLink={<RouterLink to="/" />}>
-                Accueil
+          <Breadcrumb>
+            <BreadcrumbItem asLink={<RouterLink to="/" />}>
+              Accueil
+            </BreadcrumbItem>
+            <BreadcrumbItem
+              asLink={<RouterLink to="/rechercher/structures" />}
+            >
+              Structures
+            </BreadcrumbItem>
+            {section && (
+              <BreadcrumbItem asLink={<RouterLink to="" />}>
+                {data?.currentName?.usualName}
               </BreadcrumbItem>
-              <BreadcrumbItem
-                asLink={<RouterLink to="/rechercher/structures" />}
-              >
-                Structures
-              </BreadcrumbItem>
-              {section && (
-                <BreadcrumbItem asLink={<RouterLink to="" />}>
-                  {data?.currentName?.usualName}
-                </BreadcrumbItem>
-              )}
-              {section && <BreadcrumbItem>{section}</BreadcrumbItem>}
-              {!section && (
-                <BreadcrumbItem>{data?.currentName?.usualName}</BreadcrumbItem>
-              )}
-            </Breadcrumb>
-            <Title as="h2">
-              {data.currentName.usualName}
-              <BadgeGroup>
-                <CopyBadgeButton
-                  colorFamily="yellow-tournesol"
-                  text={data.id}
-                  lowercase
+            )}
+            {section && <BreadcrumbItem>{section}</BreadcrumbItem>}
+            {!section && (
+              <BreadcrumbItem>{data?.currentName?.usualName}</BreadcrumbItem>
+            )}
+          </Breadcrumb>
+          <Button secondary onClick={() => setIsExportOpen(true)}>Exporter</Button>
+          <Modal size="sm" isOpen={isExportOpen} hide={() => setIsExportOpen(false)}>
+            <ModalTitle>
+              Que souhaitez-vous exporter ?
+            </ModalTitle>
+            <ModalContent>
+              <CheckboxGroup>
+                <Checkbox
+                  onChange={(e) => updateForm({ identifiants: e.target.checked })}
+                  label="Identifiants"
                 />
-                <Badge
-                  colorFamily="green-emeraude"
-                  text={data.active || 'active'}
+                <Checkbox
+                  onChange={(e) => updateForm({ categories: e.target.checked })}
+                  label="Catégories"
                 />
-              </BadgeGroup>
-            </Title>
-            {section && <Title as="h3">{section}</Title>}
-            <Outlet />
-          </>
+              </CheckboxGroup>
+            </ModalContent>
+            <ModalFooter>
+              <ButtonGroup>
+                <Button onClick={() => navigate(`/structures/${id}/exporter?${new URLSearchParams(form)}`)}>
+                  Exporter
+                </Button>
+              </ButtonGroup>
+            </ModalFooter>
+          </Modal>
+          <Title as="h2">
+            {data.currentName.usualName}
+            <BadgeGroup>
+              <CopyBadgeButton
+                colorFamily="yellow-tournesol"
+                text={data.id}
+                lowercase
+              />
+              <Badge
+                colorFamily="green-emeraude"
+                text={data.active || 'active'}
+              />
+            </BadgeGroup>
+          </Title>
+          {section && <Title as="h3">{section}</Title>}
+          <Outlet />
         </Col>
       </Row>
     </Container>
@@ -212,6 +246,7 @@ export {
   StructureActualitesPage,
   StructureImmobilierPage,
   StructureEtudiantsPage,
+  StructureExportPage,
   StructureOffreDeFormationPage,
   StructureProjetsPage,
   StructureChiffresClesPage,
