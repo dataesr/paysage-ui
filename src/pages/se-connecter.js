@@ -87,14 +87,11 @@ export default function SignIn() {
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         type="password"
-                        messageType=""
-                        message={(
-                          <Link size="sm" as={<RouterLink to="/mot-de-passe-oublie" />}>
-                            Mot de passe oublié ?
-                          </Link>
-                        )}
                         spacing="mb-1v"
                       />
+                      <Link size="sm" as={<RouterLink to="/mot-de-passe-oublie" />}>
+                        Mot de passe oublié ?
+                      </Link>
                       <Row spacing="my-2w">
                         <Col>
                           <ButtonGroup>
