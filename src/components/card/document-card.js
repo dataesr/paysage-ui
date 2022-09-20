@@ -14,9 +14,11 @@ export default function Card({
       <div className="fr-card__body">
         <div className="fr-card__content fr-py-1w">
           <Row>
-            <Col n="4" className="fr-pt-2w">
-              {iconElement}
-            </Col>
+            {iconElement && (
+              <Col n="4" className="fr-pt-2w">
+                {iconElement}
+              </Col>
+            )}
             <Col>
               {title ? (
                 <h4 className="fr-card__title">

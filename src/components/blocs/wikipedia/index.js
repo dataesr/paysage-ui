@@ -37,7 +37,7 @@ export default function Wikipedia({ apiObject, id }) {
       const links = sitelinks.map((element) => Object.keys(element).map((key) => ({
         lang: getWikipediaLang(key),
         link: getWikipediaLink(key, element),
-      }))).flat();
+      }))).flat().filter((element) => element.lang !== ('COMMONS'));
       links.sort((a, b) => {
         if (a.lang < b.lang) {
           return -1;
@@ -54,7 +54,7 @@ export default function Wikipedia({ apiObject, id }) {
   }, [apiObject, getWikipediaLink, id]);
 
   const renderCards = () => {
-    const list = data.filter((element) => element.lang !== ('COMMONS')).map((element) => (
+    const list = data.map((element) => (
       <WikipediaCard
         lang={element.lang}
         link={element.link}
