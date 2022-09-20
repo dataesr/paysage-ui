@@ -22,7 +22,7 @@ export default function StructureExportPage() {
   const handlePrint = useReactToPrint({
     content: () => componentRef.current,
     documentTitle: 'AwesomeFileName',
-    onAfterPrint: () => navigate(`/structures/${id}`),
+    // onAfterPrint: () => navigate(`/structures/${id}`),
     removeAfterPrint: true,
   });
 

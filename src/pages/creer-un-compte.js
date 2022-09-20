@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import {
-  ButtonGroup, Button, Breadcrumb, BreadcrumbItem, Container, Row, Col, TextInput, Text, Title, Icon, Stepper, Highlight,
+  ButtonGroup, Breadcrumb, BreadcrumbItem, Container, Row, Col, TextInput, Text, Title, Icon, Stepper, Highlight,
 } from '@dataesr/react-dsfr';
 import useAuth from '../hooks/useAuth';
 import useToast from '../hooks/useToast';
+import Button from '../components/button';
 import PasswordHint from '../components/password-hint';
 import { MAIL_REGEXP, PASSWORD_REGEXP, getPasswordValidationInfo } from '../utils/auth';
 

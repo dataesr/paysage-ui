@@ -7,9 +7,9 @@ import {
   Row,
   Title,
   TextInput,
-  Button,
 } from '@dataesr/react-dsfr';
 import { Link as RouterLink } from 'react-router-dom';
+import Button from '../../components/button';
 import useFetch from '../../hooks/useFetch';
 
 export default function TermsPage() {

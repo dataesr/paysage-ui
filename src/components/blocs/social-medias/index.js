@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import {
-  Button,
   Col,
   Modal,
   ModalContent,
@@ -9,6 +8,7 @@ import {
   Row,
   Title,
 } from '@dataesr/react-dsfr';
+import Button from '../../button';
 import PaysageSection from '../../sections/section';
 import SocialMediaForm from './form';
 import ExpendableListCards from '../../card/expendable-list-cards';

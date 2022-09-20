@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
-import { Button, ButtonGroup, Breadcrumb, BreadcrumbItem, Col, Container, Row, Title, Text, TextInput, File } from '@dataesr/react-dsfr';
+import { ButtonGroup, Breadcrumb, BreadcrumbItem, Col, Container, Row, Title, Text, TextInput, File } from '@dataesr/react-dsfr';
 import useToast from '../../hooks/useToast';
 import useAuth from '../../hooks/useAuth';
 import api from '../../utils/api';
 import Spinner from '../../components/spinner';
 import Avatar from '../../components/avatar';
+import Button from '../../components/button';
 
 export default function ProfilePage() {
   const { toast } = useToast();

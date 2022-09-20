@@ -1,5 +1,4 @@
 import {
-  Button,
   Col,
   Modal,
   ModalContent,
@@ -10,6 +9,7 @@ import {
 } from '@dataesr/react-dsfr';
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
+import Button from '../../button';
 
 import IdentifierForm from './form';
 import ExpendableListCards from '../../card/expendable-list-cards';

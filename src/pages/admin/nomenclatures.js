@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import { Link as RouterLink } from 'react-router-dom';
-import { Breadcrumb, BreadcrumbItem, Col, Container, Row, Text, Title, Modal, ModalTitle, ModalContent, TextInput, Badge, Tag } from '@dataesr/react-dsfr';
+import { Breadcrumb, BreadcrumbItem, Col, Container, Row, Text, Title, Modal, ModalTitle, ModalContent, TextInput, Badge, Tag, ButtonGroup } from '@dataesr/react-dsfr';
 import { useState } from 'react';
 import useFetch from '../../hooks/useFetch';
 import api from '../../utils/api';
@@ -50,13 +50,23 @@ function NomenclatureForm({ id, initialForm, onSave, onDelete }) {
               onTagsChange={(tags) => updateForm({ otherNames: tags })}
             />
           </Col>
+          <Col n="12">
+            <ButtonGroup isInlineFrom="md" align="right">
+              <Button onClick={handleSubmit} icon="ri-save-line">Enregistrer</Button>
+            </ButtonGroup>
+          </Col>
         </Row>
-        <Button onClick={handleSubmit} icon="ri-save-line">Enregistrer</Button>
         <hr />
         {id && (
-          <Button secondary onClick={handleDelete} color="error" icon="ri-delete-bin-2-line">
-            Supprimer
-          </Button>
+          <>
+            <Title as="h2" look="h6">Supprimer ce type de document</Title>
+            <Text>Attention ! Cette suppression sera définitive.</Text>
+            <ButtonGroup isInlineFrom="md">
+              <Button secondary onClick={handleDelete} color="error" icon="ri-delete-bin-2-line">
+                Supprimer
+              </Button>
+            </ButtonGroup>
+          </>
         )}
       </Container>
     </form>

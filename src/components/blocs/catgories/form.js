@@ -1,6 +1,5 @@
 import {
   ButtonGroup,
-  Button,
   Icon,
   Container,
   Col,
@@ -10,6 +9,7 @@ import {
 import PropTypes from 'prop-types';
 import { useState, useEffect } from 'react';
 import { v4 as uuidv4 } from 'uuid';
+import Button from '../../button';
 import DateInput from '../../date-input';
 import SearchBar from '../../search-bar';
 import validator from './validator';

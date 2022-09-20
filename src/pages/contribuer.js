@@ -2,7 +2,6 @@ import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import {
   Breadcrumb,
   BreadcrumbItem,
-  Button,
   Col,
   Container,
   Row,
@@ -10,7 +9,7 @@ import {
   Title,
 } from '@dataesr/react-dsfr';
 import { useState } from 'react';
-
+import Button from '../components/button';
 import CategoryAddPage from './categories/ajouter';
 import StructureAddPage from './structures/ajouter';
 import TermAddPage from './termes/ajouter';

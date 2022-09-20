@@ -2,7 +2,6 @@
 import PropTypes from 'prop-types';
 import {
   Alert,
-  Button,
   Col,
   Container,
   Icon,
@@ -15,6 +14,7 @@ import {
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
+import Button from '../../button';
 import validator from './validator';
 import DateInput from '../../date-input';
 import api from '../../../utils/api';

@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { Button, Col, Modal, ModalContent, ModalTitle, Row, Text, Title } from '@dataesr/react-dsfr';
+import { Col, Modal, ModalContent, ModalTitle, Row, Text, Title } from '@dataesr/react-dsfr';
 import PaysageSection from '../../sections/section';
 import EmailForm from './form';
 import api from '../../../utils/api';
 import ModifyCard from '../../card/modify-card';
 import ExpendableListCards from '../../card/expendable-list-cards';
 import CopyButton from '../../copy/copy-button';
+import Button from '../../button';
 
 export default function EmailsComponent({ apiObject, id }) {
   const [data, setData] = useState([]);

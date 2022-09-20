@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import {
-  Button,
   Col,
   Icon,
   Modal,
@@ -10,6 +9,7 @@ import {
   Row,
   Title,
 } from '@dataesr/react-dsfr';
+import Button from '../../button';
 import useToast from '../../../hooks/useToast';
 import DocumentCard from '../../card/document-card';
 import DocumentForm from './form';

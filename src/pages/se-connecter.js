@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import {
-  Container, Row, Col, TextInput, Text, Button, Link, Title, Breadcrumb, BreadcrumbItem, ButtonGroup, Stepper, Alert,
+  Container, Row, Col, TextInput, Text, Link, Title, Breadcrumb, BreadcrumbItem, ButtonGroup, Stepper, Alert,
 } from '@dataesr/react-dsfr';
+import Button from '../components/button';
 import useAuth from '../hooks/useAuth';
 import { MAIL_REGEXP, PASSWORD_REGEXP, OTP_REGEXP } from '../utils/auth';
 import useNotice from '../hooks/useNotice';
