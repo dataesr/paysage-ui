@@ -1,6 +1,5 @@
 import {
   ButtonGroup,
-  Icon,
   Container,
   Col,
   Row,
@@ -120,11 +119,8 @@ export default function EmailForm({ onSaveHandler }) {
         {savingErrors || null}
         <Row>
           <Col>
-            <ButtonGroup size="sm" isEquisized align="right" isInlineFrom="md">
-              <Button onClick={onSave}>
-                <Icon name="ri-save-line" size="lg" />
-                Sauvegarder
-              </Button>
+            <ButtonGroup isEquisized align="right" isInlineFrom="md">
+              <Button icon="ri-save-line" onClick={onSave}>Sauvegarder</Button>
             </ButtonGroup>
           </Col>
         </Row>

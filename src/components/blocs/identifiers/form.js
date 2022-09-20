@@ -1,5 +1,4 @@
 import {
-  ButtonGroup,
   Container,
   Col,
   Row,
@@ -10,9 +9,9 @@ import {
 } from '@dataesr/react-dsfr';
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
-import Button from '../../button';
 import api from '../../../utils/api';
 import DateInput from '../../date-input';
+import FormFooter from '../../forms/form-footer/form-footer';
 
 export default function IdentifierForm({ data, onDeleteHandler, onSaveHandler, enumKey }) {
   const [identifierType, setIdentifierType] = useState(null);
@@ -122,24 +121,11 @@ export default function IdentifierForm({ data, onDeleteHandler, onSaveHandler, e
             />
           </Col>
         </Row>
-        <hr />
-        <Row>
-          <Col>
-            <ButtonGroup isEquisized align="right" isInlineFrom="md">
-              {(data?.id) && (
-                <Button
-                  onClick={() => onDeleteHandler(data.id)}
-                  color="error"
-                  secondary
-                  icon="ri-chat-delete-line"
-                >
-                  Supprimer
-                </Button>
-              )}
-              <Button icon="ri-save-line" onClick={onSave}>Sauvegarder</Button>
-            </ButtonGroup>
-          </Col>
-        </Row>
+        <FormFooter
+          id={data?.id}
+          onSaveHandler={onSave}
+          onDeleteHandler={onDeleteHandler}
+        />
       </Container>
     </form>
   );

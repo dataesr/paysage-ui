@@ -1,6 +1,5 @@
 import {
   Alert,
-  ButtonGroup,
   Container,
   Col,
   Row,
@@ -10,9 +9,9 @@ import {
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
-import Button from '../../button';
 import api from '../../../utils/api';
 import validator from './validator';
+import FormFooter from '../../forms/form-footer/form-footer';
 
 export default function WeblinkForm({ data, onDeleteHandler, onSaveHandler, enumKey }) {
   const [savingErrors, setSavingErrors] = useState(null);
@@ -114,25 +113,12 @@ export default function WeblinkForm({ data, onDeleteHandler, onSaveHandler, enum
             />
           </Col>
         </Row>
-        <hr />
         {savingErrors || null}
-        <Row>
-          <Col>
-            <ButtonGroup isEquisized align="right" isInlineFrom="md">
-              {(data?.id) && (
-                <Button
-                  onClick={() => onDeleteHandler(data.id)}
-                  color="error"
-                  secondary
-                  icon="ri-chat-delete-line"
-                >
-                  Supprimer
-                </Button>
-              )}
-              <Button icon="ri-save-line" onClick={onSave}>Sauvegarder</Button>
-            </ButtonGroup>
-          </Col>
-        </Row>
+        <FormFooter
+          id={data?.id}
+          onSaveHandler={onSave}
+          onDeleteHandler={onDeleteHandler}
+        />
       </Container>
     </form>
   );

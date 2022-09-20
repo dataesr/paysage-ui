@@ -93,8 +93,11 @@ HR {
   color: var(--error-main-525);
   margin: 0;
 }
-.fr-btns--space-between {
+.flex--space-between {
   justify-content: space-between;
+}
+.flex--col-reverse {
+  flex-direction: column-reverse;
 }
 
 .fr-row--space-between {

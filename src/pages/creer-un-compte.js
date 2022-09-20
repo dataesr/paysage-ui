@@ -207,7 +207,7 @@ export default function SignUp() {
                         />
                         <Row spacing="my-2w">
                           <Col>
-                            <ButtonGroup className="fr-btns--space-between" isInlineFrom="sm">
+                            <ButtonGroup className="flex--space-between" isInlineFrom="sm">
                               <Button secondary icon="ri-arrow-drop-left-line" onClick={() => setStep(step - 1)}>
                                 Précédent
                               </Button>

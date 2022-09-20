@@ -1,5 +1,4 @@
 import {
-  ButtonGroup,
   Container,
   Col,
   Row,
@@ -8,7 +7,7 @@ import {
 } from '@dataesr/react-dsfr';
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
-import Button from '../../button';
+import FormFooter from '../../forms/form-footer/form-footer';
 import api from '../../../utils/api';
 
 export default function EmailForm({ data, onDeleteHandler, onSaveHandler }) {
@@ -69,28 +68,11 @@ export default function EmailForm({ data, onDeleteHandler, onSaveHandler }) {
             />
           </Col>
         </Row>
-        <hr />
-        <Row>
-          <Col>
-            <ButtonGroup
-              isEquisized
-              align="right"
-              isInlineFrom="md"
-            >
-              {(data?.id) && (
-                <Button
-                  onClick={() => onDeleteHandler(data.id)}
-                  color="error"
-                  secondary
-                  icon="ri-chat-delete-line"
-                >
-                  Supprimer
-                </Button>
-              )}
-              <Button icon="ri-save-line" onClick={onSave}>Sauvegarder</Button>
-            </ButtonGroup>
-          </Col>
-        </Row>
+        <FormFooter
+          id={data?.id}
+          onSaveHandler={onSave}
+          onDeleteHandler={onDeleteHandler}
+        />
       </Container>
     </form>
   );
