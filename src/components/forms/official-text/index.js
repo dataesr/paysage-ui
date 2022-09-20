@@ -302,7 +302,7 @@ export default function OfficiaTextForm({ data, from }) {
         <Col n="12" className="fr-pb-5w">
           <TextInput
             textarea
-            label="textExtract"
+            label="Résumé"
             value={otTextExtract}
             onChange={(e) => setTextExtract(e.target.value)}
           />
@@ -327,7 +327,7 @@ export default function OfficiaTextForm({ data, from }) {
                 value={otPublicationDate}
                 label="Date de publication"
                 onDateChange={(v) => setPublicationDate(v)}
-                isRequired
+                required
               />
             </Col>
             <Col n="6" className="fr-pl-5w">
