@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Col, Container, Icon, Modal, ModalContent, ModalTitle, Row, Tab, Tabs, Tile, Title } from '@dataesr/react-dsfr';
+import { Col, Container, Icon, ModalContent, ModalTitle, Row, Tab, Tabs, Tile, Title } from '@dataesr/react-dsfr';
+import Modal from '../../modal';
 import useFetch from '../../../hooks/useFetch';
 import api from '../../../utils/api';
 import { formatDescriptionDates } from '../../../utils/dates';
@@ -168,7 +169,7 @@ export default function LocalisationsComponent({ id, apiObject, currentLocalisat
         </Tabs>
       )}
 
-      <Modal size="lg" isOpen={isOpen} hide={() => setIsOpen(false)}>
+      <Modal size="full" isOpen={isOpen} hide={() => setIsOpen(false)}>
         <ModalTitle>
           {modalTitle}
         </ModalTitle>

@@ -76,8 +76,8 @@ export default function EmailsComponent({ apiObject, id }) {
         title={el.emailType.usualName}
         description={(
           <Row alignItems="middle">
-            <Text spacing="mr-1v mb-0">{el.value}</Text>
-            <CopyButton title="Copier l'identifiant" copyText={el.value} />
+            <Text spacing="mr-1v mb-0">{el.email}</Text>
+            <CopyButton title="Copier l'identifiant" copyText={el.email} />
           </Row>
         )}
         onClick={() => onClickModifyHandler(el)}

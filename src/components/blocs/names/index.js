@@ -6,7 +6,6 @@ import {
   CardDescription,
   CardTitle,
   Col,
-  Modal,
   ModalContent,
   ModalTitle,
   Row,
@@ -17,6 +16,7 @@ import EmptySection from '../../sections/empty';
 import NameForm from './form';
 import api from '../../../utils/api';
 import { formatDescriptionDates } from '../../../utils/dates';
+import Modal from '../../modal';
 
 export default function NamesComponent({ apiObject, id }) {
   const [data, setData] = useState([]);
@@ -126,7 +126,7 @@ export default function NamesComponent({ apiObject, id }) {
           </Col>
         ))}
       </Row>
-      <Modal isOpen={showModal} size="lg" hide={() => setShowModal(false)}>
+      <Modal isOpen={showModal} hide={() => setShowModal(false)}>
         <ModalTitle>{modalTitle}</ModalTitle>
         <ModalContent>{modalContent}</ModalContent>
       </Modal>

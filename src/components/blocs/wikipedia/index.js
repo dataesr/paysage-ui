@@ -54,7 +54,7 @@ export default function Wikipedia({ apiObject, id }) {
   }, [apiObject, getWikipediaLink, id]);
 
   const renderCards = () => {
-    const list = data.map((element) => (
+    const list = data.filter((element) => element.lang !== ('COMMONS')).map((element) => (
       <WikipediaCard
         lang={element.lang}
         link={element.link}
