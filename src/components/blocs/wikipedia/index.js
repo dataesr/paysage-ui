@@ -60,7 +60,7 @@ export default function Wikipedia({ apiObject, id }) {
         link={element.link}
       />
     ));
-    return <ExpendableListCards apiObject={apiObject} list={list} nCol="12 md-3" max="8" />;
+    return <ExpendableListCards apiObject={apiObject} list={list} nCol="12 md-3" max={4} order={['FR', 'EN', 'DE']} sortOn="props.lang" />;
   };
 
   if (!data) {
