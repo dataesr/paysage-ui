@@ -21,7 +21,6 @@ function NomenclatureForm({ id, initialForm, onSave, onDelete }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log('here', id, form);
     if (Object.keys(errors).length !== 0) return setShowErrors(true);
     return onSave(id, form);
   };
@@ -98,7 +97,6 @@ export default function NomenclaturesPage({ route, title }) {
   };
 
   const handleModalToggle = (item = {}) => {
-    console.log(item);
     const { id, ...rest } = item;
     setModalTitle(item?.id ? 'Modifier' : 'Ajouter');
     setModalContent(

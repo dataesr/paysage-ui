@@ -10,7 +10,7 @@ export default function ProtectedRoute({ roles }) {
 }
 
 ProtectedRoute.propTypes = {
-  roles: PropTypes.arrayOf([PropTypes.string]),
+  roles: PropTypes.arrayOf(PropTypes.string),
 };
 
 ProtectedRoute.defaultProps = {

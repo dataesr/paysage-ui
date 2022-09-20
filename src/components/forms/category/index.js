@@ -49,7 +49,6 @@ export default function CategoryAddForm() {
       });
       if (response.status === 201) {
         // TODO : toast + redirection
-        console.log('response', response);
         navigate(`../categories/${response.data.id}`);
       }
     } else {

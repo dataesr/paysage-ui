@@ -47,7 +47,6 @@ export default function Passwordless() {
   };
   const handleChangePassword = async (e) => {
     e.preventDefault();
-    console.log('handleChangePassword');
     if (!PASSWORD_REGEXP.test(password)) return setPasswordErrorDisplay('error');
     if (passwordConfirmationError) return setPasswordConfirmationError('Les deux mots de passe ne correspondent pas');
     const response = await changePassword({ email, password, otp });

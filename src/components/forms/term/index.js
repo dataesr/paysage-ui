@@ -49,7 +49,6 @@ export default function TermAddForm() {
       });
       if (response.status === 201) {
         // TODO : toast + redirection
-        console.log('response', response);
         navigate(`../termes/${response.data.id}`);
       }
     } else {
