@@ -30,7 +30,7 @@ export default function Header() {
 
   useEffect(() => {
     const getAutocompleteResult = async () => {
-      const response = await api.get(`/autocomplete?query=${debouncedQuery}&limit=10`); // &types=categories
+      const response = await api.get(`/autocomplete?query=${debouncedQuery}&limit=10`);
       setOptions(response.data?.data);
     };
     if (debouncedQuery) { getAutocompleteResult(); } else { setOptions([]); }

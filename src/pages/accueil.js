@@ -19,7 +19,7 @@ export default function HomePage() {
 
   useEffect(() => {
     const getAutocompleteResult = async () => {
-      const response = await api.get(`/autocomplete?query=${query}`); // &types=categories
+      const response = await api.get(`/autocomplete?query=${query}`);
       setOptions(response.data?.data);
     };
     if (query) { getAutocompleteResult(); } else { setOptions([]); }

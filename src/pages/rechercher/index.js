@@ -1,8 +1,9 @@
+import { Badge, Breadcrumb, BreadcrumbItem, Col, Container, Row, SideMenu, SideMenuLink, Text, Tile, TileBody, Title } from '@dataesr/react-dsfr';
 import PropTypes from 'prop-types';
 import { Link as RouterLink, useLocation, useSearchParams } from 'react-router-dom';
-import { Badge, Breadcrumb, BreadcrumbItem, Col, Container, Row, SideMenu, SideMenuLink, Text, Tile, TileBody, Title } from '@dataesr/react-dsfr';
-import useSearch from '../../hooks/useSearch';
+
 import Spinner from '../../components/spinner';
+import useSearch from '../../hooks/useSearch';
 import { getTypeFromUrl, getUrlFromType } from '../../utils/types-url-mapper';
 
 function SearchResults({ data }) {
@@ -34,7 +35,7 @@ SearchResults.defaultProps = {
   data: null,
 };
 
-const countTypes = 'structures%2Cpersons%2Ccategories%2Cprices%2Cprojects%2Cterms';
+const countTypes = 'categories%2Clegal%2Dcategories%2Cofficial%2Dtexts%2Cpersons%2Cprices%2Cprojects%2Cstructures%2Cterms';
 
 export default function SearchPage() {
   const { pathname } = useLocation();
