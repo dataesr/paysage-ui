@@ -4,9 +4,9 @@ import {
   Row,
   Title,
   TextInput,
-  Button,
 } from '@dataesr/react-dsfr';
 import { useNavigate } from 'react-router-dom';
+import Button from '../../components/button';
 import useFetch from '../../hooks/useFetch';
 
 export default function OfficialTextsPage() {

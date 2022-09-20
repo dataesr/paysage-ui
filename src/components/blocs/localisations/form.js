@@ -1,5 +1,5 @@
 import {
-  Icon,
+  ButtonGroup,
   Container,
   Col,
   Row,
@@ -31,7 +31,7 @@ export default function LocalisationForm({ data, onDeleteHandler, onSaveHandler 
   const [place, setPlace] = useState(null);
   const [country, setCountry] = useState(null); // required
   const [telephone, setTelephone] = useState(null);
-  // const [coordinates, setCoordinates] = useState(null); // {lat: null, lon: null}
+  const [coordinates, setCoordinates] = useState(null); // {lat: null, lon: null}
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
 
@@ -49,7 +49,7 @@ export default function LocalisationForm({ data, onDeleteHandler, onSaveHandler 
       setPlace(data.place || null);
       setCountry(data.country || null);
       setTelephone(data.telephone || null);
-      // setCoordinates(data.coordinates || null);
+      setCoordinates(data.coordinates || null);
       setStartDate(data.startDate || null);
       setEndDate(data.endDate || null);
     }
@@ -96,20 +96,40 @@ export default function LocalisationForm({ data, onDeleteHandler, onSaveHandler 
     }
   };
 
-  // const setGPS = (value) => {
-  //   const valueArr = value.split(',');
-  //   if (valueArr.length === 2) {
-  //     setCoordinates({ lat: valueArr[0], lng: valueArr[1] });
-  //   }
-  // };
+  const setGPS = (value) => {
+    const valueArr = value.split(',');
+    if (valueArr.length === 2) {
+      setCoordinates({ lat: valueArr[0], lng: valueArr[1] });
+    }
+  };
 
-  // const getGPSLabel = () => {
-  //   // if (coordinates?.lat && coordinates?.lng) {
-  //   //   return (`${coordinates.lat}, ${coordinates.lng}`);
-  //   // }
-  //   console.log('getGPSLabel');
-  //   return '';
-  // };
+  const getGPSLabel = () => {
+    if (coordinates?.lat && coordinates?.lng) {
+      return (`${coordinates.lat}, ${coordinates.lng}`);
+    }
+    return '';
+  };
+
+  const renderMap = () => {
+    if (coordinates?.lat && coordinates?.lng) {
+      return (
+        <Map
+          lat={coordinates.lat}
+          lng={coordinates.lng}
+          markers={[
+            {
+              address: 'currentLocalisation.address',
+              latLng: [
+                coordinates.lat,
+                coordinates.lng,
+              ],
+            },
+          ]}
+        />
+      );
+    }
+    return null;
+  };
 
   return (
     <form>
@@ -216,7 +236,7 @@ export default function LocalisationForm({ data, onDeleteHandler, onSaveHandler 
             </Title>
           </Col>
         </Row>
-        {/* <Row>
+        <Row>
           <Col n="md-4" className="fr-pr-2w">
             <TextInput
               label="Coordonnées (latitude, longitude)"
@@ -226,21 +246,9 @@ export default function LocalisationForm({ data, onDeleteHandler, onSaveHandler 
             />
           </Col>
           <Col>
-            <Map
-              lat={coordinates.lat}
-              lng={coordinates.lng}
-              markers={[
-                {
-                  address: 'currentLocalisation.address',
-                  latLng: [
-                    coordinates.lat,
-                    coordinates.lng,
-                  ],
-                },
-              ]}
-            />
+            {renderMap()}
           </Col>
-        </Row> */}
+        </Row>
         <Row className="fr-pt-5w">
           <Col>
             <Title as="h2" look="h3">
@@ -267,24 +275,21 @@ export default function LocalisationForm({ data, onDeleteHandler, onSaveHandler 
         </Row>
         <hr />
         {savingErrors || null}
-        <Row>
-          <Col>
+
+        <ButtonGroup align="right" isInlineFrom="md" className="fr-btns--space-between">
+          {(data?.id) && (
             <Button
-              onClick={() => onDeleteHandler(data?.id || null)}
+              onClick={() => onDeleteHandler(data.id)}
               color="error"
-              disabled={!data}
+              secondary
+              icon="ri-chat-delete-line"
             >
-              <Icon name="ri-chat-delete-line" size="lg" />
               Supprimer
             </Button>
-          </Col>
-          <Col className="text-right">
-            <Button onClick={onSave}>
-              <Icon name="ri-save-line" size="lg" />
-              Sauvegarder
-            </Button>
-          </Col>
-        </Row>
+          )}
+          <Button icon="ri-save-line" onClick={onSave}>Sauvegarder</Button>
+        </ButtonGroup>
+
       </Container>
     </form>
   );

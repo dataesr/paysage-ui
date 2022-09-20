@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { Button, Card, CardDescription, CardTitle, Col, Row, Title } from '@dataesr/react-dsfr';
+import { Card, CardDescription, CardTitle, Col, Row, Title } from '@dataesr/react-dsfr';
 import PaysageSection from '../../sections/section';
+import Button from '../../button';
 import EmptySection from '../../sections/empty';
 import api from '../../../utils/api';
 import { getRoute } from '../../../utils';

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Text, Row, Icon, Container } from '@dataesr/react-dsfr';
 import usePausableTimer from '../../hooks/usePausableTimer';

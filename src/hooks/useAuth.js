@@ -42,7 +42,6 @@ export function AuthContextProvider({ children }) {
   };
 
   const changePassword = async ({ email, password, otp }) => {
-    console.log('changePassword');
     const url = `${process.env.REACT_APP_API_URL}/recovery/password`;
     const body = JSON.stringify({ email, password });
     const headers = { 'X-Paysage-OTP': otp, 'Content-Type': 'application/json' };

@@ -78,13 +78,6 @@ HR {
   border-radius: 8px;
 }
 
-.bt-delete {
-  background-color: var(--error-main-525);
-  &:hover {
-    background-color: #ffa6a6;
-  }
-}
-
 .fr-background-alt {
   background-color: var(--background-alt-grey);
 }
@@ -165,4 +158,9 @@ HR {
 
 .hidden {
   visibility: hidden;
+}
+
+.print {
+  margin: 4rem;
+  font-size: 0.5rem;
 }

@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import {
-  Container, Row, Col, TextInput, Text, Button, Link, Title, Breadcrumb, BreadcrumbItem, ButtonGroup, Stepper, Alert,
+  Container, Row, Col, TextInput, Text, Link, Title, Breadcrumb, BreadcrumbItem, ButtonGroup, Stepper, Alert,
 } from '@dataesr/react-dsfr';
+import Button from '../components/button';
 import useAuth from '../hooks/useAuth';
 import { MAIL_REGEXP, PASSWORD_REGEXP, OTP_REGEXP } from '../utils/auth';
 import useNotice from '../hooks/useNotice';
@@ -86,14 +87,11 @@ export default function SignIn() {
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         type="password"
-                        messageType=""
-                        message={(
-                          <Link size="sm" as={<RouterLink to="/mot-de-passe-oublie" />}>
-                            Mot de passe oublié ?
-                          </Link>
-                        )}
                         spacing="mb-1v"
                       />
+                      <Link size="sm" as={<RouterLink to="/mot-de-passe-oublie" />}>
+                        Mot de passe oublié ?
+                      </Link>
                       <Row spacing="my-2w">
                         <Col>
                           <ButtonGroup>

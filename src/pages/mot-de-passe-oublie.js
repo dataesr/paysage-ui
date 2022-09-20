@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import {
-  Container, Row, Col, TextInput, Icon, Highlight, Text, Button, Link, Title, Breadcrumb, BreadcrumbItem, ButtonGroup, Stepper, Alert,
+  Container, Row, Col, TextInput, Icon, Highlight, Text, Link, Title, Breadcrumb, BreadcrumbItem, ButtonGroup, Stepper, Alert,
 } from '@dataesr/react-dsfr';
+import Button from '../components/button';
 import PasswordHint from '../components/password-hint';
 import useAuth from '../hooks/useAuth';
 import { MAIL_REGEXP, PASSWORD_REGEXP, OTP_REGEXP, getPasswordValidationInfo } from '../utils/auth';
@@ -47,7 +48,6 @@ export default function Passwordless() {
   };
   const handleChangePassword = async (e) => {
     e.preventDefault();
-    console.log('handleChangePassword');
     if (!PASSWORD_REGEXP.test(password)) return setPasswordErrorDisplay('error');
     if (passwordConfirmationError) return setPasswordConfirmationError('Les deux mots de passe ne correspondent pas');
     const response = await changePassword({ email, password, otp });

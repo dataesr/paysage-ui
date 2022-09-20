@@ -118,25 +118,44 @@ function User({
       <Modal isOpen={isEditModalOpen} size="lg" hide={() => setIsEditModalOpen(false)}>
         <ModalContent>
           <Container fluid>
-            <Title as="h2" look="h6">{`Modifier le role de ${firstName} ${lastName}`}</Title>
-            <Select
-              label="Séléctionnez un role"
-              selected={newRole}
-              onChange={(e) => { setNewRole(e.target.value); }}
-              options={roleOptions}
-            />
-            <Button onClick={() => handleEditUser(id, newRole)}>Changer le role</Button>
+            <Row>
+              <Col n="12">
+                <Title as="h2" look="h6">{`Modifier le role de ${firstName} ${lastName}`}</Title>
+              </Col>
+            </Row>
+            <Row gutters alignItems="bottom">
+              <Col n="12 md-6">
+                <Select
+                  label="Séléctionnez un role"
+                  selected={newRole}
+                  onChange={(e) => { setNewRole(e.target.value); }}
+                  options={roleOptions}
+                />
+              </Col>
+              <Col n="12 md-6">
+                <ButtonGroup alignItems="bottom" isInlineFrom="md">
+                  <Button
+                    className="fr-mb-0"
+                    onClick={() => handleEditUser(id, newRole)}
+                  >
+                    Changer le role
+                  </Button>
+                </ButtonGroup>
+              </Col>
+            </Row>
             <hr />
             <Title as="h2" look="h6">{`Désactiver le compte de ${firstName} ${lastName}`}</Title>
             <Text>En désactivant un utilisateur, il sera marqué comme supprimé et ne pourra plus se connecter à paysage.</Text>
-            <Button
-              secondary
-              color="error"
-              icon="ri-delete-bin-2-line"
-              onClick={() => handleSwitchDeleteUser(id, !isDeleted)}
-            >
-              Supprimer l'utilisateur
-            </Button>
+            <ButtonGroup isInlineFrom="md">
+              <Button
+                secondary
+                color="error"
+                icon="ri-delete-bin-2-line"
+                onClick={() => handleSwitchDeleteUser(id, !isDeleted)}
+              >
+                Supprimer l'utilisateur
+              </Button>
+            </ButtonGroup>
           </Container>
         </ModalContent>
       </Modal>

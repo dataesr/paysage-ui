@@ -1,7 +1,8 @@
-import { Button, Col } from '@dataesr/react-dsfr';
+import { Col } from '@dataesr/react-dsfr';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
+import Button from '../button';
 import Card from '.';
 import EmptySection from '../sections/empty';
 
@@ -29,8 +30,8 @@ export default function ExpendableListCards({ apiObject, list, max, nCol }) {
             descriptionElement={(
               <Button
                 tertiary
+                borderless
                 onClick={() => setShowAll(!showAll)}
-                hasBorder={false}
                 icon="ri-eye-line"
               >
                 Afficher tout
@@ -53,8 +54,8 @@ export default function ExpendableListCards({ apiObject, list, max, nCol }) {
           descriptionElement={(
             <Button
               tertiary
+              borderless
               onClick={() => setShowAll(!showAll)}
-              hasBorder={false}
               icon="ri-eye-off-line"
             >
               Réduire la liste

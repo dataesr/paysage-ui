@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import {
-  Button,
   Card,
   CardDescription,
   CardTitle,
@@ -11,6 +10,7 @@ import {
   Row,
   Title,
 } from '@dataesr/react-dsfr';
+import Button from '../../button';
 import PaysageSection from '../../sections/section';
 import EmptySection from '../../sections/empty';
 import NameForm from './form';

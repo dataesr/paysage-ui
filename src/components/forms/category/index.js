@@ -1,6 +1,5 @@
 import {
   Alert,
-  Button,
   Col,
   Container,
   Icon,
@@ -10,6 +9,7 @@ import {
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
+import Button from '../../button';
 import validator from './validator';
 import api from '../../../utils/api';
 
@@ -49,7 +49,6 @@ export default function CategoryAddForm() {
       });
       if (response.status === 201) {
         // TODO : toast + redirection
-        console.log('response', response);
         navigate(`../categories/${response.data.id}`);
       }
     } else {

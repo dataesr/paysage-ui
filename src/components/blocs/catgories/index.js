@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import {
-  Button,
   Col,
   Modal,
   ModalContent,
@@ -9,6 +8,7 @@ import {
   Row,
   Title,
 } from '@dataesr/react-dsfr';
+import Button from '../../button';
 import useToast from '../../../hooks/useToast';
 import api from '../../../utils/api';
 import { formatDescriptionDates } from '../../../utils/dates';
@@ -70,7 +70,6 @@ export default function NamesComponent({ apiObject, id }) {
       console.log(e);
     });
     setReloader(reloader + 1);
-    console.log('delete cat', idCat);
   };
 
   const onClickAddHandler = () => {

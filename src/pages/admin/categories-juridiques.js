@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import { Link as RouterLink } from 'react-router-dom';
-import { Breadcrumb, BreadcrumbItem, Col, Container, Row, Text, Title, Modal, ModalTitle, ModalContent, TextInput, Badge, Tag, Select } from '@dataesr/react-dsfr';
+import { Breadcrumb, BreadcrumbItem, Col, Container, Row, Text, Title, Modal, ModalTitle, ModalContent, TextInput, Badge, Tag, Select, ButtonGroup } from '@dataesr/react-dsfr';
 import { useState } from 'react';
 import useFetch from '../../hooks/useFetch';
 import api from '../../utils/api';
@@ -102,13 +102,23 @@ function LegalCategoriesForm({ id, initialForm, onSave, onDelete }) {
               onTagsChange={(tags) => updateForm({ otherNames: tags })}
             />
           </Col>
+          <Col n="12">
+            <ButtonGroup isInlineFrom="md" align="right">
+              <Button submit icon="ri-save-line">Enregistrer</Button>
+            </ButtonGroup>
+          </Col>
         </Row>
-        <Button submit icon="ri-save-line">Enregistrer</Button>
         <hr />
         {id && (
-          <Button secondary color="error" onClick={handleDelete} icon="ri-delete-bin-2-line">
-            Supprimer
-          </Button>
+          <>
+            <Title as="h2" look="h6">Supprimer cette catégorie juridique</Title>
+            <Text>Attention ! Cette suppression sera définitive.</Text>
+            <ButtonGroup isInlineFrom="md">
+              <Button secondary onClick={handleDelete} color="error" icon="ri-delete-bin-2-line">
+                Supprimer
+              </Button>
+            </ButtonGroup>
+          </>
         )}
       </Container>
     </form>

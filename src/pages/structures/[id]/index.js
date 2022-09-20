@@ -1,6 +1,13 @@
-import { Link as RouterLink, Outlet, useLocation, useParams } from 'react-router-dom';
-import { Badge, BadgeGroup, Breadcrumb, BreadcrumbItem, Col, Container, Icon, Row, SideMenu, SideMenuItem, SideMenuLink, Title } from '@dataesr/react-dsfr';
+import { useState } from 'react';
+import { Link as RouterLink, useNavigate, Outlet, useLocation, useParams } from 'react-router-dom';
+import {
+  Badge, BadgeGroup, Breadcrumb, BreadcrumbItem, ButtonGroup, Checkbox,
+  CheckboxGroup, Col, Container, Icon, Modal, ModalContent, ModalFooter,
+  ModalTitle, Row, SideMenu, SideMenuItem, SideMenuLink, Title,
+} from '@dataesr/react-dsfr';
+import Button from '../../../components/button';
 import useFetch from '../../../hooks/useFetch';
+import useForm from '../../../hooks/useForm';
 import CopyBadgeButton from '../../../components/copy/copy-badge-button';
 import StructurePresentationPage from './presentation';
 import StructureGouvernancePage from './gouvernance';
@@ -18,10 +25,16 @@ import StructurePrixEtRecompensesPage from './prix-et-recompenses';
 import StructureAgendaPage from './agenda';
 import StructureElementsLiesPage from './elements-lies';
 import StructureParticipationsPage from './participations';
+import StructureExportPage from './exporter';
 
 function StructureByIdPage() {
   const { id } = useParams();
   const { pathname } = useLocation();
+  const navigate = useNavigate();
+  const [isExportOpen, setIsExportOpen] = useState(false);
+  const [isFavorite, setIsFavorite] = useState(false);
+  const [isEditMode, setIsEditMode] = useState(false);
+  const { form, updateForm } = useForm({}, () => {});
 
   const { data, isLoading, error } = useFetch(`/structures/${id}`);
 
@@ -35,51 +48,15 @@ function StructureByIdPage() {
   if (error) return <>Erreur...</>;
   const pathnameSplitted = pathname.split('/');
   const section = menu[pathnameSplitted[pathnameSplitted.length - 1]];
-  console.log(section);
   return (
     <Container spacing="pb-6w">
       <Row>
         <Col n="12 md-3">
           <SideMenu buttonLabel="Navigation">
-            <SideMenuItem title="Présentation">
-              <SideMenuLink
-                asLink={<RouterLink to="presentation#" />}
-                className="sidemenu__item--active"
-              >
-                Localisation
-              </SideMenuLink>
-              <SideMenuLink asLink={<RouterLink to="presentation#informations" />}>
-                En un coup d’œil
-                <Icon className="ri-eye-2-line fr-ml-1w" />
-              </SideMenuLink>
-              <SideMenuLink asLink={<RouterLink to="presentation#historique-et-dates" />}>
-                Historique & dates
-              </SideMenuLink>
-              <SideMenuLink asLink={<RouterLink to="presentation#categories" />}>
-                Catégories
-              </SideMenuLink>
-              <SideMenuLink asLink={<RouterLink to="presentation#palmares-et-classements" />}>
-                Palmarès & classements
-              </SideMenuLink>
-              <SideMenuLink asLink={<RouterLink to="presentation#presence-sur-le-web" />}>
-                Présence sur le web
-              </SideMenuLink>
-              <SideMenuLink asLink={<RouterLink to="presentation#identifiants" />}>
-                Identifiants
-              </SideMenuLink>
-              <SideMenuLink asLink={<RouterLink to="presentation#chiffres-cles" />}>
-                Chiffres clés
-              </SideMenuLink>
-              <SideMenuLink asLink={<RouterLink to="presentation#gouvernance" />}>
-                Gouvenance
-              </SideMenuLink>
-              <SideMenuLink asLink={<RouterLink to="presentation#dernieres-actualites" />}>
-                Dernières actualités
-              </SideMenuLink>
-              <SideMenuLink asLink={<RouterLink to="presentation#suivi-dgesip" />}>
-                Suivi DGESIP
-              </SideMenuLink>
-            </SideMenuItem>
+            <SideMenuLink asLink={<RouterLink to="presentation#" />}>
+              En un coup d’œil
+              <Icon className="ri-eye-2-line fr-ml-1w" />
+            </SideMenuLink>
 
             <SideMenuLink asLink={<RouterLink to="gouvernance-et-referents" />}>
               Gouvernance et référents
@@ -159,26 +136,26 @@ function StructureByIdPage() {
           </SideMenu>
         </Col>
         <Col n="12 md-9">
-          <>
-            <Breadcrumb>
-              <BreadcrumbItem asLink={<RouterLink to="/" />}>
-                Accueil
+          <Breadcrumb>
+            <BreadcrumbItem asLink={<RouterLink to="/" />}>
+              Accueil
+            </BreadcrumbItem>
+            <BreadcrumbItem
+              asLink={<RouterLink to="/rechercher/structures" />}
+            >
+              Structures
+            </BreadcrumbItem>
+            {section && (
+              <BreadcrumbItem asLink={<RouterLink to="" />}>
+                {data?.currentName?.usualName}
               </BreadcrumbItem>
-              <BreadcrumbItem
-                asLink={<RouterLink to="/rechercher/structures" />}
-              >
-                Structures
-              </BreadcrumbItem>
-              {section && (
-                <BreadcrumbItem asLink={<RouterLink to="" />}>
-                  {data?.currentName?.usualName}
-                </BreadcrumbItem>
-              )}
-              {section && <BreadcrumbItem>{section}</BreadcrumbItem>}
-              {!section && (
-                <BreadcrumbItem>{data?.currentName?.usualName}</BreadcrumbItem>
-              )}
-            </Breadcrumb>
+            )}
+            {section && <BreadcrumbItem>{section}</BreadcrumbItem>}
+            {!section && (
+              <BreadcrumbItem>{data?.currentName?.usualName}</BreadcrumbItem>
+            )}
+          </Breadcrumb>
+          <Row className="fr-row--space-between">
             <Title as="h2">
               {data.currentName.usualName}
               <BadgeGroup>
@@ -193,9 +170,87 @@ function StructureByIdPage() {
                 />
               </BadgeGroup>
             </Title>
-            {section && <Title as="h3">{section}</Title>}
-            <Outlet />
-          </>
+            <ButtonGroup isInlineFrom="xs">
+              <Button
+                terciary
+                borderless
+                rounded
+                title="Exporter la fiche"
+                onClick={() => setIsExportOpen(true)}
+                icon="ri-download-2-fill"
+              />
+              <Button
+                terciary
+                borderless
+                rounded
+                title="Ajouter aux favoris"
+                onClick={() => setIsFavorite(!isFavorite)}
+                icon={`ri-star-${isFavorite ? 'fill' : 'line'}`}
+              />
+              <Button
+                terciary
+                borderless
+                rounded
+                title="Activer le mode édition"
+                onClick={() => setIsEditMode(!isEditMode)}
+                icon={`ri-edit-${isEditMode ? 'fill' : 'line'}`}
+              />
+            </ButtonGroup>
+            <Modal size="sm" isOpen={isExportOpen} hide={() => setIsExportOpen(false)}>
+              <ModalTitle>
+                Que souhaitez-vous exporter ?
+              </ModalTitle>
+              <ModalContent>
+                <CheckboxGroup>
+                  <Checkbox
+                    onChange={(e) => updateForm({ oeil: e.target.checked })}
+                    label="En un coup d’œil"
+                  />
+                  <Checkbox
+                    onChange={(e) => updateForm({ categories: e.target.checked })}
+                    label="Gouvernance et référents"
+                  />
+                  <Checkbox
+                    onChange={(e) => updateForm({ rh: e.target.checked })}
+                    label="Resources humaines"
+                  />
+                  <Checkbox
+                    onChange={(e) => updateForm({ budget: e.target.checked })}
+                    label="Budget"
+                  />
+                  <Checkbox
+                    onChange={(e) => updateForm({ budget: e.target.checked })}
+                    label="Offre de formation"
+                  />
+                  <Checkbox
+                    onChange={(e) => updateForm({ budget: e.target.checked })}
+                    label="Immobilier"
+                  />
+                  <Checkbox
+                    onChange={(e) => updateForm({ budget: e.target.checked })}
+                    label="Etudiants"
+                  />
+                  <Checkbox
+                    onChange={(e) => updateForm({ budget: e.target.checked })}
+                    label="Suivi DGSIP/DGRI"
+                  />
+                  <Checkbox
+                    onChange={(e) => updateForm({ budget: e.target.checked })}
+                    label="Agenda"
+                  />
+                </CheckboxGroup>
+              </ModalContent>
+              <ModalFooter>
+                <ButtonGroup>
+                  <Button onClick={() => navigate(`/structures/${id}/exporter?${new URLSearchParams(form)}`)}>
+                    Exporter
+                  </Button>
+                </ButtonGroup>
+              </ModalFooter>
+            </Modal>
+          </Row>
+          {section && <Row><Title as="h3">{section}</Title></Row>}
+          <Outlet />
         </Col>
       </Row>
     </Container>
@@ -212,6 +267,7 @@ export {
   StructureActualitesPage,
   StructureImmobilierPage,
   StructureEtudiantsPage,
+  StructureExportPage,
   StructureOffreDeFormationPage,
   StructureProjetsPage,
   StructureChiffresClesPage,

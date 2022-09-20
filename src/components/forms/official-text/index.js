@@ -2,7 +2,6 @@
 import PropTypes from 'prop-types';
 import {
   Alert,
-  Button,
   Col,
   Container,
   Icon,
@@ -15,6 +14,7 @@ import {
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
+import Button from '../../button';
 import validator from './validator';
 import DateInput from '../../date-input';
 import api from '../../../utils/api';
@@ -302,7 +302,7 @@ export default function OfficiaTextForm({ data, from }) {
         <Col n="12" className="fr-pb-5w">
           <TextInput
             textarea
-            label="textExtract"
+            label="Résumé"
             value={otTextExtract}
             onChange={(e) => setTextExtract(e.target.value)}
           />
@@ -327,7 +327,7 @@ export default function OfficiaTextForm({ data, from }) {
                 value={otPublicationDate}
                 label="Date de publication"
                 onDateChange={(v) => setPublicationDate(v)}
-                isRequired
+                required
               />
             </Col>
             <Col n="6" className="fr-pl-5w">

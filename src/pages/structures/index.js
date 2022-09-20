@@ -4,9 +4,9 @@ import {
   Row,
   Title,
   TextInput,
-  Button,
 } from '@dataesr/react-dsfr';
 import useFetch from '../../hooks/useFetch';
+import Button from '../../components/button';
 
 export default function StructuresPage() {
   const { data, error, isLoading } = useFetch('/structures');

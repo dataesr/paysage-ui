@@ -38,6 +38,7 @@ import {
   StructureAgendaPage,
   StructureElementsLiesPage,
   StructureParticipationsPage,
+  StructureExportPage,
 } from './pages/structures/[id]';
 
 import TermsPage from './pages/termes';
@@ -88,6 +89,7 @@ function App() {
 
             <Route path="/structures" element={<StructuresPage />} />
             <Route path="/structures/ajouter" element={<StructureAddPage />} />
+            <Route path="/structures/:id/exporter" element={<StructureExportPage />} />
             <Route path="/structures/:id" element={<StructureByIdPage />}>
               <Route path="" element={<Navigate to="presentation" replace />} />
               <Route path="presentation" element={<StructurePresentationPage />} />

@@ -1,5 +1,6 @@
 import { Link as RouterLink } from 'react-router-dom';
-import { Breadcrumb, BreadcrumbItem, Col, Row, Title, Text, Container, Button } from '@dataesr/react-dsfr';
+import { Breadcrumb, BreadcrumbItem, Col, Row, Title, Text, Container } from '@dataesr/react-dsfr';
+import Button from '../../components/button';
 import useAuth from '../../hooks/useAuth';
 
 export default function GroupsPage() {
