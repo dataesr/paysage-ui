@@ -71,7 +71,6 @@ export default function ProfilePage() {
   const saveInformations = async (e) => {
     e.preventDefault();
     const response = await api.patch('/me', { firstName, lastName, position, service });
-    console.log(response.data);
     setViewer(response.data);
     if (response.ok) return toast({ toastType: 'success', description: 'Les modifications ont été prises en compte' });
     return toast({ toastType: 'error', description: "Une erreur s'est produite" });

@@ -48,7 +48,6 @@ function StructureByIdPage() {
   if (error) return <>Erreur...</>;
   const pathnameSplitted = pathname.split('/');
   const section = menu[pathnameSplitted[pathnameSplitted.length - 1]];
-  console.log(section);
   return (
     <Container spacing="pb-6w">
       <Row>

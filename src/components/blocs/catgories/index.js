@@ -70,7 +70,6 @@ export default function NamesComponent({ apiObject, id }) {
       console.log(e);
     });
     setReloader(reloader + 1);
-    console.log('delete cat', idCat);
   };
 
   const onClickAddHandler = () => {
