@@ -4,6 +4,10 @@ import {
   Row,
   TextInput,
   Alert,
+  Title,
+  RadioGroup,
+  Radio,
+  Text,
 } from '@dataesr/react-dsfr';
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
@@ -11,8 +15,9 @@ import { v4 as uuidv4 } from 'uuid';
 import DateInput from '../../date-input';
 import validator from './validator';
 import FormFooter from '../../forms/form-footer/form-footer';
+import Map from '../../map';
 
-export default function EmailForm({ data, onDeleteHandler, onSaveHandler }) {
+export default function LocalisationForm({ data, onDeleteHandler, onSaveHandler }) {
   const [savingErrors, setSavingErrors] = useState(null);
   const [errors, setReturnedErrors] = useState([]);
 
@@ -28,6 +33,9 @@ export default function EmailForm({ data, onDeleteHandler, onSaveHandler }) {
   const [coordinates, setCoordinates] = useState(null); // {lat: null, lon: null}
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
+
+  // const lat = '48.84450';
+  // const lng = '2.276411';
 
   useEffect(() => {
     if (data) {
@@ -74,7 +82,7 @@ export default function EmailForm({ data, onDeleteHandler, onSaveHandler }) {
       place,
       country,
       telephone,
-      coordinates,
+      // coordinates,
       startDate,
       endDate,
     };
@@ -87,49 +95,87 @@ export default function EmailForm({ data, onDeleteHandler, onSaveHandler }) {
     }
   };
 
+  const setGPS = (value) => {
+    const valueArr = value.split(',');
+    if (valueArr.length === 2) {
+      setCoordinates({ lat: valueArr[0], lng: valueArr[1] });
+    }
+  };
+
+  const getGPSLabel = () => {
+    if (coordinates?.lat && coordinates?.lng) {
+      return (`${coordinates.lat}, ${coordinates.lng}`);
+    }
+    return '';
+  };
+
+  const renderMap = () => {
+    if (coordinates?.lat && coordinates?.lng) {
+      return (
+        <Map
+          lat={coordinates.lat}
+          lng={coordinates.lng}
+          markers={[
+            {
+              address: 'currentLocalisation.address',
+              latLng: [
+                coordinates.lat,
+                coordinates.lng,
+              ],
+            },
+          ]}
+        />
+      );
+    }
+    return null;
+  };
+
   return (
     <form>
       <Container>
         <Row>
-          <Col className="fr-pb-2w fr-pr-1w">
-            <TextInput
-              label="Commune"
-              value={locality || ''}
-              onChange={(e) => setLocality(e.target.value)}
-            />
-          </Col>
-          <Col className="fr-pb-2w fr-pl-1w">
-            <TextInput
-              label="Code commune"
-              value={cityId || ''}
-              onChange={(e) => setCityId(e.target.value)}
-            />
+          <Col>
+            <RadioGroup isInline>
+              <Radio label="France" defaultChecked />
+              <Radio label="Hors France" />
+            </RadioGroup>
           </Col>
         </Row>
         <Row>
-          <Col className="fr-pb-2w">
-            <TextInput
-              label="Mention de distribution"
-              value={distributionStatement || ''}
-              onChange={(e) => setDistributionStatement(e.target.value)}
-            />
+          <Col>
+            <TextInput label="Adresse recherchée" />
+          </Col>
+        </Row>
+
+        <Row className="fr-pt-5w">
+          <Col>
+            <Title as="h2" look="h3">
+              Coordonnées
+            </Title>
           </Col>
         </Row>
         <Row>
-          <Col className="fr-pb-2w">
+          <Col n="md-8" className="fr-pb-2w fr-pr-1w">
             <TextInput
               label="Adresse"
               value={address || ''}
               onChange={(e) => setAddress(e.target.value)}
             />
           </Col>
-        </Row>
-        <Row>
-          <Col className="fr-pb-2w fr-pr-1w">
+          <Col className="fr-pb-2w fr-pl-1w">
             <TextInput
               label="Lieu dit"
               value={place || ''}
               onChange={(e) => setPlace(e.target.value)}
+            />
+          </Col>
+        </Row>
+        <Row>
+          <Col className="fr-pb-2w fr-pr-1w">
+            <TextInput
+              label="Mention de distribution"
+              value={distributionStatement || ''}
+              onChange={(e) => setDistributionStatement(e.target.value)}
             />
           </Col>
           <Col className="fr-pb-2w fr-pl-1w">
@@ -140,15 +186,30 @@ export default function EmailForm({ data, onDeleteHandler, onSaveHandler }) {
             />
           </Col>
         </Row>
-        <Row>
-          <Col className="fr-pb-2w fr-pr-1w">
+        <Row gutters alignItems="bottom">
+          <Col n="md-3" className="fr-pb-2w fr-pr-1w">
+            <TextInput
+              label="Commune"
+              value={locality || ''}
+              onChange={(e) => setLocality(e.target.value)}
+            />
+          </Col>
+          <Col n="md-3" className="fr-pb-2w fr-pl-1w fr-pr-1w">
             <TextInput
               label="Code postal"
               value={postalCode || ''}
               onChange={(e) => setPostalCode(e.target.value)}
             />
           </Col>
-          <Col className="fr-pb-2w fr-pl-1w">
+          <Col className="fr-pb-2w fr-pl-1w fr-pr-1w">
+            <Text>{cityId || ''}</Text>
+            {/* <TextInput
+              label="Code commune"
+              value={cityId || ''}
+              onChange={(e) => setCityId(e.target.value)}
+            /> */}
+          </Col>
+          <Col n="md-4" className="fr-pb-2w fr-pl-1w">
             <TextInput
               label="Pays"
               value={country || ''}
@@ -158,23 +219,44 @@ export default function EmailForm({ data, onDeleteHandler, onSaveHandler }) {
           </Col>
         </Row>
         <Row>
-          <Col className="fr-pb-2w fr-pr-1w">
+          <Col n="md-6" className="fr-pr-1w">
             <TextInput
               label="Téléphone"
               value={telephone || ''}
               onChange={(e) => setTelephone(e.target.value)}
             />
           </Col>
-          <Col className="fr-pb-2w fr-pl-1w">
-            <TextInput
-              label="Coordonnées"
-              value={coordinates || ''}
-              onChange={(e) => setCoordinates(e.target.value)}
-            />
+        </Row>
+
+        <Row className="fr-pt-5w">
+          <Col>
+            <Title as="h2" look="h3">
+              Coordonnées GPS
+            </Title>
           </Col>
         </Row>
         <Row>
-          <Col className="fr-pb-2w fr-pr-1w">
+          <Col n="md-4" className="fr-pr-2w">
+            <TextInput
+              label="Coordonnées (latitude, longitude)"
+              hint="exemple : 48.84450, 2.276411"
+              value={getGPSLabel()}
+              onChange={(e) => setGPS(e.target.value)}
+            />
+          </Col>
+          <Col>
+            {renderMap()}
+          </Col>
+        </Row>
+        <Row className="fr-pt-5w">
+          <Col>
+            <Title as="h2" look="h3">
+              Dates
+            </Title>
+          </Col>
+        </Row>
+        <Row>
+          <Col className="fr-pb-2w fr-pl-1w fr-pr-1w">
             <DateInput
               value={startDate}
               label="Date de début"
@@ -201,14 +283,14 @@ export default function EmailForm({ data, onDeleteHandler, onSaveHandler }) {
   );
 }
 
-EmailForm.propTypes = {
+LocalisationForm.propTypes = {
   // eslint-disable-next-line react/forbid-prop-types
   data: PropTypes.object,
   onDeleteHandler: PropTypes.func,
   onSaveHandler: PropTypes.func.isRequired,
 };
 
-EmailForm.defaultProps = {
+LocalisationForm.defaultProps = {
   data: null,
   onDeleteHandler: null,
 };
