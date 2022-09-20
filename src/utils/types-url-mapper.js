@@ -1,11 +1,13 @@
 const URLTypesMapper = [
-  ['structures', 'structures'],
-  ['personnes', 'persons'],
   ['categories', 'categories'],
+  ['categories-juridiques', 'legal-categories'],
+  ['personnes', 'persons'],
   ['prix', 'prices'],
-  ['textes-officiels', 'official-texts'],
   ['projets', 'projects'],
+  ['structures', 'structures'],
   ['termes', 'terms'],
+  ['textes-officiels', 'official-texts'],
+  ['utilisateurs', 'users'],
 ];
 
 export function getTypeFromUrl(type) {
