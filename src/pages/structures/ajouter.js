@@ -234,10 +234,10 @@ function LocalisationStep({ globalForm, updateGlobalForm, setStep }) {
         <Col n="12 md-6" spacing="pb-3w">
           <TextInput
             label="Commune"
-            value={form.city}
-            onChange={(e) => updateForm({ city: e.target.value })}
-            message={(showErrors && errors.city) ? errors.city : null}
-            messageType={(showErrors && errors.city) ? 'error' : ''}
+            value={form.locality}
+            onChange={(e) => updateForm({ locality: e.target.value })}
+            message={(showErrors && errors.locality) ? errors.locality : null}
+            messageType={(showErrors && errors.locality) ? 'error' : ''}
           />
         </Col>
         <Col n="12 md-6" spacing="pb-3w">
@@ -369,10 +369,10 @@ function HistoryStep({ globalForm, handleSave, updateGlobalForm, setStep }) {
         <Col n="12 md-6" spacing="pb-3w">
           <TextInput
             label="Texte officiel de création"
-            value={form.city}
-            onChange={(e) => updateForm({ city: e.target.value })}
-            message={(showErrors && errors.city) ? errors.city : null}
-            messageType={(showErrors && errors.city) ? 'error' : ''}
+            value={form.creationOfficialTextId}
+            onChange={(e) => updateForm({ creationOfficialTextId: e.target.value })}
+            message={(showErrors && errors.creationOfficialTextId) ? errors.creationOfficialTextId : null}
+            messageType={(showErrors && errors.creationOfficialTextId) ? 'error' : ''}
           />
         </Col>
         <Col n="12 md-6" spacing="pb-3w">
@@ -385,10 +385,10 @@ function HistoryStep({ globalForm, handleSave, updateGlobalForm, setStep }) {
         <Col n="12 md-6" spacing="pb-3w">
           <TextInput
             label="Texte officiel de fermeture"
-            value={form.city}
-            onChange={(e) => updateForm({ city: e.target.value })}
-            message={(showErrors && errors.city) ? errors.city : null}
-            messageType={(showErrors && errors.city) ? 'error' : ''}
+            value={form.closureOfficialTextId}
+            onChange={(e) => updateForm({ closureOfficialTextId: e.target.value })}
+            message={(showErrors && errors.closureOfficialTextId) ? errors.closureOfficialTextId : null}
+            messageType={(showErrors && errors.closureOfficialTextId) ? 'error' : ''}
           />
         </Col>
       </Row>

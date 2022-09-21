@@ -1,9 +1,4 @@
-import { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
 import {
-  Card,
-  CardDescription,
-  CardTitle,
   Col,
   Modal,
   ModalContent,
@@ -11,12 +6,16 @@ import {
   Row,
   Title,
 } from '@dataesr/react-dsfr';
+import PropTypes from 'prop-types';
+import { useEffect, useState } from 'react';
+
 import Button from '../../button';
+import DocumentCard from '../../card/document-card';
+import ExpendableListCards from '../../card/expendable-list-cards';
 import PaysageSection from '../../sections/section';
-import EmptySection from '../../sections/empty';
-import WeblinkForm from './form';
-import api from '../../../utils/api';
 import { getEnumKey } from '../../../utils';
+import api from '../../../utils/api';
+import WeblinkForm from './form';
 
 export default function WeblinksComponent({ apiObject, id }) {
   const [data, setData] = useState([]);
@@ -89,6 +88,17 @@ export default function WeblinksComponent({ apiObject, id }) {
     setShowModal(true);
   };
 
+  const renderCards = () => {
+    const list = data.data.map((el) => (
+      <DocumentCard
+        downloadUrl={el.url}
+        onClick={() => onClickModifyHandler(el)}
+        title={el.type}
+      />
+    ));
+    return <ExpendableListCards apiObject={apiObject} list={list} nCol="12 md-3" />;
+  };
+
   if (!data?.data) {
     return (
       <PaysageSection dataPaysageMenu="Liens web" id="weblinks" isEmpty />
@@ -115,19 +125,7 @@ export default function WeblinksComponent({ apiObject, id }) {
         </Col>
       </Row>
       <Row>
-        {data.data.length === 0 ? <EmptySection apiObject={apiObject} /> : null}
-        {data.data.map((wl) => (
-          <Col n="3" key={wl.id}>
-            <Card
-              hasArrow={false}
-              onClick={() => onClickModifyHandler(wl)}
-              href="#"
-            >
-              <CardTitle>{wl.type}</CardTitle>
-              <CardDescription>{wl.value}</CardDescription>
-            </Card>
-          </Col>
-        ))}
+        {renderCards()}
       </Row>
       <Modal isOpen={showModal} size="lg" hide={() => setShowModal(false)}>
         <ModalTitle>{modalTitle}</ModalTitle>
