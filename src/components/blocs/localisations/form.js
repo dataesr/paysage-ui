@@ -16,6 +16,8 @@ import DateInput from '../../date-input';
 import validator from './validator';
 import FormFooter from '../../forms/form-footer/form-footer';
 import Map from '../../map';
+import SearchBar from '../../search-bar';
+import api from '../../../utils/api';
 
 export default function LocalisationForm({ data, onDeleteHandler, onSaveHandler }) {
   const [savingErrors, setSavingErrors] = useState(null);
@@ -34,8 +36,11 @@ export default function LocalisationForm({ data, onDeleteHandler, onSaveHandler 
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
 
-  // const lat = '48.84450';
-  // const lng = '2.276411';
+  const [isFrance, setIsFrance] = useState(true);
+
+  const [query, setQuery] = useState('');
+  const [scope, setScope] = useState(null);
+  const [options, setOptions] = useState([]);
 
   useEffect(() => {
     if (data) {
@@ -53,6 +58,17 @@ export default function LocalisationForm({ data, onDeleteHandler, onSaveHandler 
       setEndDate(data.endDate || null);
     }
   }, [data]);
+
+  useEffect(() => {
+    const getAutocompleteResult = async () => {
+      const url = (isFrance)
+        ? `https://api-adresse.data.gouv.fr/search/?q=${query}`
+        : `https://nominatim.openstreetmap.org/ui/search.html?q=${query}&format=json&addressDetails=1`;
+      const response = await fetch(url);
+      setOptions(response.data?.data);
+    };
+    if (query) { getAutocompleteResult(); } else { setOptions([]); }
+  }, [query]);
 
   const setErrors = (err) => {
     setReturnedErrors(errors);
@@ -130,20 +146,46 @@ export default function LocalisationForm({ data, onDeleteHandler, onSaveHandler 
     return null;
   };
 
+  const handleSelect = ({ id, name }) => {
+    // setCategoryId(id);
+    setScope(name);
+    setQuery('');
+    setOptions([]);
+  };
+
+  const handleUnselect = () => {
+    // setCategoryId(null);
+    setScope(null);
+    setQuery('');
+    setOptions([]);
+  };
+
   return (
     <form>
       <Container>
         <Row>
           <Col>
             <RadioGroup isInline>
-              <Radio label="France" defaultChecked />
-              <Radio label="Hors France" />
+              <Radio label="France" onChange={setIsFrance(true)} checked={isFrance} />
+              <Radio label="Hors France" onChange={setIsFrance(false)} checked={isFrance} />
             </RadioGroup>
           </Col>
         </Row>
         <Row>
           <Col>
-            <TextInput label="Adresse recherchée" />
+            <SearchBar
+              size="lg"
+              buttonLabel="Rechercher"
+              value={query}
+              label="Adresse recherchée"
+              hint="Recherchez et séléctionnez une adresse"
+              scope={scope}
+              placeholder={scope ? '' : 'Rechercher...'}
+              onChange={(e) => { setQuery(e.target.value); }}
+              options={options}
+              onSelect={handleSelect}
+              onDeleteScope={handleUnselect}
+            />
           </Col>
         </Row>
 
