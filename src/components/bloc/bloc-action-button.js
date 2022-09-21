@@ -14,11 +14,12 @@ export default function BlocActionButton({ children, onClick, icon }) {
 BlocActionButton.propTypes = {
   __TYPE: typeValidation('BlocActionButton'),
   children: PropTypes.node,
-  icon: PropTypes.string.isRequired,
+  icon: PropTypes.string,
   onClick: PropTypes.func.isRequired,
 };
 
 BlocActionButton.defaultProps = {
   __TYPE: 'BlocActionButton',
   children: null,
+  icon: 'ri-add-circle-line',
 };
