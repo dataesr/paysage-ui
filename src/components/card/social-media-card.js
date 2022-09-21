@@ -73,6 +73,6 @@ export default function SocialMediaCard({
 
 SocialMediaCard.propTypes = {
   mediaName: PropTypes.string.isRequired,
-  account: PropTypes.element.isRequired,
+  account: PropTypes.string.isRequired,
   onClick: PropTypes.func.isRequired,
 };
