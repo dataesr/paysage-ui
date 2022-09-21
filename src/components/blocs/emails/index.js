@@ -1,55 +1,34 @@
-import { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
-import { Col, Modal, ModalContent, ModalTitle, Row, Text, Title } from '@dataesr/react-dsfr';
-import PaysageSection from '../../sections/section';
+import { useState } from 'react';
+import { Modal, ModalContent, ModalTitle, Row, Text } from '@dataesr/react-dsfr';
 import EmailForm from './form';
 import api from '../../../utils/api';
 import ModifyCard from '../../card/modify-card';
 import ExpendableListCards from '../../card/expendable-list-cards';
 import CopyButton from '../../copy/copy-button';
-import Button from '../../button';
+import { Bloc, BlocActionButton, BlocContent, BlocModal, BlocTitle } from '../../bloc';
+import useFetch from '../../../hooks/useFetch';
+import useBlocUrl from '../../../hooks/useBlocUrl';
 
-export default function EmailsComponent({ apiObject, id }) {
-  const [data, setData] = useState([]);
+export default function EmailsComponent() {
+  const url = useBlocUrl('emails');
+  const { data, isLoading, error, reload } = useFetch(url);
   const [showModal, setShowModal] = useState(false);
   const [modalTitle, setModalTitle] = useState('');
   const [modalContent, setModalContent] = useState(null);
-  const [reloader, setReloader] = useState(0);
 
-  useEffect(() => {
-    const getData = async () => {
-      const response = await api
-        .get(`/${apiObject}/${id}/emails`)
-        .catch((e) => {
-          console.log(e);
-        });
-      if (response.ok) setData(response.data);
-    };
-    getData();
-    return () => {};
-  }, [apiObject, id, reloader]);
-
-  const onSaveHandler = async (body, emailId = null) => {
-    let method = 'post';
-    let url = `/${apiObject}/${id}/emails`;
-
-    if (emailId) {
-      method = 'patch';
-      url += `/${emailId}`;
-    }
-
-    const response = await api[method](url, body).catch((e) => { console.log(e); });
-
+  const onSaveHandler = async (body, id = null) => {
+    const method = id ? 'patch' : 'post';
+    const saveUrl = id ? `${url}/${id}` : url;
+    const response = await api[method](saveUrl, body).catch((e) => { console.log(e); });
     if (response.ok) {
-      setReloader((reloader + 1));
+      reload();
       setShowModal(false);
     }
   };
 
-  const onDeleteHandler = async (emailId) => {
-    const url = `/${apiObject}/${id}/emails/${emailId}`;
-    await api.delete(url).catch((e) => { console.log(e); });
-    setReloader(reloader + 1);
+  const onDeleteHandler = async (id) => {
+    await api.delete(`${url}/${id}`).catch((e) => { console.log(e); });
+    reload();
     setShowModal(false);
   };
 
@@ -72,6 +51,7 @@ export default function EmailsComponent({ apiObject, id }) {
   };
 
   const renderCards = () => {
+    if (!data) return null;
     const list = data.data.map((el) => (
       <ModifyCard
         title={el.emailType.usualName}
@@ -84,46 +64,20 @@ export default function EmailsComponent({ apiObject, id }) {
         onClick={() => onClickModifyHandler(el)}
       />
     ));
-    return <ExpendableListCards apiObject={apiObject} list={list} nCol="12 md-6" />;
+    return <ExpendableListCards list={list} nCol="12 md-6" />;
   };
 
-  if (!data?.data) {
-    return (
-      <PaysageSection dataPaysageMenu="Emails génériques" id="emails" isEmpty />
-    );
-  }
-
   return (
-    <PaysageSection dataPaysageMenu="Emails génériques" id="emails">
-      <Row>
-        <Col>
-          <Title as="h3" look="h6">
-            Boites emails génériques
-          </Title>
-        </Col>
-        <Col className="text-right">
-          <Button
-            onClick={onClickAddHandler}
-            size="sm"
-            secondary
-            icon="ri-add-circle-line"
-          >
-            Ajouter un email générique
-          </Button>
-        </Col>
-      </Row>
-      <Row>
-        {renderCards()}
-      </Row>
-      <Modal isOpen={showModal} size="lg" hide={() => setShowModal(false)}>
-        <ModalTitle>{modalTitle}</ModalTitle>
-        <ModalContent>{modalContent}</ModalContent>
-      </Modal>
-    </PaysageSection>
+    <Bloc isLoading={isLoading} error={error} data={data}>
+      <BlocTitle as="h3" look="h6">Boites emails génériques</BlocTitle>
+      <BlocActionButton onClick={onClickAddHandler} icon="ri-add-circle-line">Ajouter un email générique</BlocActionButton>
+      <BlocContent>{renderCards()}</BlocContent>
+      <BlocModal>
+        <Modal isOpen={showModal} size="lg" hide={() => setShowModal(false)}>
+          <ModalTitle>{modalTitle}</ModalTitle>
+          <ModalContent>{modalContent}</ModalContent>
+        </Modal>
+      </BlocModal>
+    </Bloc>
   );
 }
-
-EmailsComponent.propTypes = {
-  apiObject: PropTypes.string.isRequired,
-  id: PropTypes.string.isRequired,
-};

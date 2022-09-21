@@ -103,7 +103,7 @@ export default function SearchPage() {
           </SideMenu>
         </Col>
         <Col n="12 md-9">
-          {isLoading && <Row className="fr-my-2w fr-row--space-around"><Spinner /></Row>}
+          {isLoading && <Row className="fr-my-2w flex--space-around"><Spinner /></Row>}
           {error && <p>Erreur...</p>}
           {data && <SearchResults data={data} />}
         </Col>
