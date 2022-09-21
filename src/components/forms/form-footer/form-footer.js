@@ -14,11 +14,11 @@ export default function FormFooter({ id, onDeleteHandler, onSaveHandler }) {
       <hr />
       {confirm && (
         <Row>
-          <Col n="7">
+          <Col n="12 md-6">
             <Text bold>Etes-vous sur de vouloir supprimer cet élément ?</Text>
           </Col>
-          <Col>
-            <ButtonGroup isInlineFrom="md">
+          <Col n="12 md-6">
+            <ButtonGroup align="right" isInlineFrom="md">
               <Button
                 onClick={() => setConfirm(false)}
                 secondary
