@@ -111,17 +111,20 @@ HR {
 .flex--col-reverse {
   flex-direction: column-reverse;
 }
+.flex--grow {
+  flex-grow: 1;
+}
 
 .fr-row--space-between {
   justify-content: space-between;
 }
-.fr-row--space-around {
+.flex--space-around {
   justify-content: space-around;
 }
 .fr-row--baseline {
   align-items: baseline;
 }
-.fr-row--last-baseline {
+.flex--last-baseline {
   align-items: last baseline;
 }
 .fr-col--grow {

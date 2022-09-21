@@ -172,7 +172,7 @@ function StructureByIdPage() {
             </Title>
             <ButtonGroup isInlineFrom="xs">
               <Button
-                terciary
+                tertiary
                 borderless
                 rounded
                 title="Exporter la fiche"
@@ -180,7 +180,7 @@ function StructureByIdPage() {
                 icon="ri-download-2-fill"
               />
               <Button
-                terciary
+                tertiary
                 borderless
                 rounded
                 title="Ajouter aux favoris"
@@ -188,7 +188,7 @@ function StructureByIdPage() {
                 icon={`ri-star-${isFavorite ? 'fill' : 'line'}`}
               />
               <Button
-                terciary
+                tertiary
                 borderless
                 rounded
                 title="Activer le mode édition"

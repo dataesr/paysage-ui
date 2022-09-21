@@ -1,4 +1,4 @@
-import { Col } from '@dataesr/react-dsfr';
+import { Col, Row } from '@dataesr/react-dsfr';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
@@ -31,21 +31,17 @@ export default function ExpendableListCards({ apiObject, list, max, nCol, order,
   const cards = [...displayedCards, ...hiddenCards];
 
   if (cards.length <= max) {
-    return cards.map((el) => (
-      <Col n={nCol} key={uuidv4()} className="fr-p-1w">
-        {el}
-      </Col>
-    ));
+    return <Row gutters>{cards.map((el) => (<Col n={nCol} key={uuidv4()}>{el}</Col>))}</Row>;
   }
   if (!showAll) {
     return (
-      <>
+      <Row gutters>
         {cards.slice(0, max - 1).map((el) => (
-          <Col n={nCol} key={uuidv4()} className="fr-p-1w">
+          <Col n={nCol} key={uuidv4()}>
             {el}
           </Col>
         ))}
-        <Col n={nCol} className="fr-p-1w">
+        <Col n={nCol}>
           <Card
             descriptionElement={(
               <Button
@@ -59,17 +55,17 @@ export default function ExpendableListCards({ apiObject, list, max, nCol, order,
             )}
           />
         </Col>
-      </>
+      </Row>
     );
   }
   return (
-    <>
+    <Row gutters>
       {cards.map((el) => (
-        <Col n={nCol} key={uuidv4()} className="fr-p-1w">
+        <Col n={nCol} key={uuidv4()}>
           {el}
         </Col>
       ))}
-      <Col n={nCol} className="fr-p-1w">
+      <Col n={nCol}>
         <Card
           descriptionElement={(
             <Button
@@ -83,7 +79,7 @@ export default function ExpendableListCards({ apiObject, list, max, nCol, order,
           )}
         />
       </Col>
-    </>
+    </Row>
   );
 }
 
