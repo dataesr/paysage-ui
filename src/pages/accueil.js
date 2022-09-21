@@ -193,7 +193,7 @@ export default function HomePage() {
         </Col>
         <Col n="12 sm-6 md-4 lg-3">
           <Title as="h5">Document</Title>
-          <div className="color-tester bg-documents"><Text size="sm" spacing="m-0">green-archipel-main-557</Text></div>
+          <div className="color-tester bg-documents"><Text size="sm" spacing="m-0">transparent</Text></div>
         </Col>
         <Col n="12 sm-6 md-4 lg-3">
           <Title as="h5">Personnes</Title>
