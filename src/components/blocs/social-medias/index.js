@@ -1,13 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import PropTypes from 'prop-types';
-import {
-  Col,
-  Modal,
-  ModalContent,
-  ModalTitle,
-  Row,
-  Title,
-} from '@dataesr/react-dsfr';
+import { Col, Modal, ModalContent, ModalTitle, Row, Title } from '@dataesr/react-dsfr';
 import Button from '../../button';
 import PaysageSection from '../../sections/section';
 import SocialMediaForm from './form';
@@ -15,36 +8,23 @@ import ExpendableListCards from '../../card/expendable-list-cards';
 import api from '../../../utils/api';
 import { getEnumKey } from '../../../utils';
 import SocialMediaCard from '../../card/social-media-card';
+import useFetch from '../../../hooks/useFetch';
 
 export default function SocialMediasComponent({ apiObject, id }) {
-  const [data, setData] = useState([]);
+  const { data, isLoading, error, reload } = useFetch(`/${apiObject}/${id}/social-medias`);
   const [showModal, setShowModal] = useState(false);
   const [modalTitle, setModalTitle] = useState('');
   const [modalContent, setModalContent] = useState(null);
-  const [reloader, setReloader] = useState(0);
 
   const enumKey = getEnumKey(apiObject, 'social-medias');
 
-  useEffect(() => {
-    const getData = async () => {
-      const response = await api
-        .get(`/${apiObject}/${id}/social-medias`)
-        .catch((e) => {
-          console.log(e);
-        });
-      if (response.ok) setData(response.data);
-    };
-    getData();
-    return () => {};
-  }, [apiObject, id, reloader]);
-
-  const onSaveHandler = async (body, itemId = null) => {
+  const onSaveHandler = async (body) => {
     let method = 'post';
     let url = `/${apiObject}/${id}/social-medias`;
 
-    if (itemId) {
+    if (body.id) {
       method = 'patch';
-      url += `/${itemId}`;
+      url += `/${body.id}`;
     }
 
     const response = await api[method](url, body).catch((e) => {
@@ -52,7 +32,7 @@ export default function SocialMediasComponent({ apiObject, id }) {
     });
 
     if (response.ok) {
-      setReloader(reloader + 1);
+      reload();
       setShowModal(false);
     }
   };
@@ -62,7 +42,7 @@ export default function SocialMediasComponent({ apiObject, id }) {
     await api.delete(url).catch((e) => {
       console.log(e);
     });
-    setReloader(reloader + 1);
+    reload();
     setShowModal(false);
   };
 
@@ -105,7 +85,7 @@ export default function SocialMediasComponent({ apiObject, id }) {
   }
 
   return (
-    <PaysageSection dataPaysageMenu="Médias sociaux" id="socialMedias">
+    <PaysageSection dataPaysageMenu="Médias sociaux" id="socialMedias" data={data} isLoading={isLoading} error={error}>
       <Row>
         <Col>
           <Title as="h3" look="h6">
@@ -125,19 +105,6 @@ export default function SocialMediasComponent({ apiObject, id }) {
       </Row>
       <Row>
         {renderCards()}
-        {/* {data.data.length === 0 ? <EmptySection apiObject={apiObject} /> : null}
-        {data.data.map((sm) => (
-          <Col n="3" key={sm.id}>
-            <Card
-              hasArrow={false}
-              onClick={() => onClickModifyHandler(sm)}
-              href="#"
-            >
-              <CardTitle>{sm.type}</CardTitle>
-              <CardDescription>{sm.account}</CardDescription>
-            </Card>
-          </Col>
-        ))} */}
       </Row>
       <Modal isOpen={showModal} size="lg" hide={() => setShowModal(false)}>
         <ModalTitle>{modalTitle}</ModalTitle>
