@@ -1,13 +1,14 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link as RouterLink, useNavigate, Outlet, useLocation, useParams } from 'react-router-dom';
 import {
   Badge, BadgeGroup, Breadcrumb, BreadcrumbItem, ButtonGroup, Checkbox,
   CheckboxGroup, Col, Container, Icon, Modal, ModalContent, ModalFooter,
   ModalTitle, Row, SideMenu, SideMenuItem, SideMenuLink, Title,
 } from '@dataesr/react-dsfr';
-import Button from '../../../components/button';
 import useFetch from '../../../hooks/useFetch';
 import useForm from '../../../hooks/useForm';
+import useEditMode from '../../../hooks/useEditMode';
+import Button from '../../../components/button';
 import CopyBadgeButton from '../../../components/copy/copy-badge-button';
 import StructurePresentationPage from './presentation';
 import StructureGouvernancePage from './gouvernance';
@@ -29,14 +30,15 @@ import StructureExportPage from './exporter';
 
 function StructureByIdPage() {
   const { id } = useParams();
+  const { data, isLoading, error } = useFetch(`/structures/${id}`);
   const { pathname } = useLocation();
   const navigate = useNavigate();
+  const { editMode, reset, toggle } = useEditMode();
   const [isExportOpen, setIsExportOpen] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
-  const [isEditMode, setIsEditMode] = useState(false);
   const { form, updateForm } = useForm({}, () => {});
 
-  const { data, isLoading, error } = useFetch(`/structures/${id}`);
+  useEffect(() => { reset(); }, [reset]);
 
   const menu = {
     'chiffres-cles': 'Chiffres clés',
@@ -192,8 +194,8 @@ function StructureByIdPage() {
                 borderless
                 rounded
                 title="Activer le mode édition"
-                onClick={() => setIsEditMode(!isEditMode)}
-                icon={`ri-edit-${isEditMode ? 'fill' : 'line'}`}
+                onClick={() => toggle()}
+                icon={`ri-edit-${editMode ? 'fill' : 'line'}`}
               />
             </ButtonGroup>
             <Modal size="sm" isOpen={isExportOpen} hide={() => setIsExportOpen(false)}>
