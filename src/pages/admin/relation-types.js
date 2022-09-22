@@ -12,20 +12,31 @@ import { toString } from '../../utils/dates';
 import useForm from '../../hooks/useForm';
 import Button from '../../components/button';
 
+const objectNameMapper = [
+  { name: 'Personnes', object: 'persons' },
+  { name: 'Structures', object: 'structures' },
+  { name: 'Prix', object: 'prices' },
+  { name: 'Projets', object: 'projects' },
+  { name: 'Termes', object: 'terms' },
+  { name: 'Catégories', object: 'categories' },
+];
+
 function RelationTypesForm({ id, initialForm, onSave, onDelete }) {
   const validateForm = (body) => {
     const validationErrors = {};
     if (!body.name) { validationErrors.name = 'Le nom est obligatoire'; }
     if (!body.for?.length) { validationErrors.for = 'Ce champs est obligatoire'; }
-    if (body.priority > 99 || body.priority < 1) { validationErrors.for = 'Doit être compris en 1 (priorité forte) et 99 (priorité faible)'; }
+    const priority = parseInt(body.priority, 10);
+    if (priority > 99 || priority < 1) { validationErrors.for = 'Doit être compris en 1 (priorité forte) et 99 (priorité faible)'; }
     return validationErrors;
   };
-  const { form, updateForm, errors } = useForm({ for: [] }, validateForm);
+  const { form, updateForm, errors } = useForm(initialForm, validateForm);
   const [showErrors, setShowErrors] = useState(false);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (Object.keys(errors).length !== 0) return setShowErrors(true);
+    form.priority = parseInt(form.priority, 10);
     return onSave(id, form);
   };
 
@@ -52,7 +63,7 @@ function RelationTypesForm({ id, initialForm, onSave, onDelete }) {
             <TextInput label="Nom au féminin" value={form.feminineName} onChange={(e) => updateForm({ feminineName: e.target.value })} />
           </Col>
           <Col n="12" spacing="pb-3w">
-            <TextInput type="number" label="Priorité" value={form.priority} onChange={(e) => updateForm({ priority: e.target.value })} />
+            <TextInput type="number" step="1" min="1" max="99" label="Priorité" value={form.priority} onChange={(e) => updateForm({ priority: e.target.value })} />
           </Col>
           <Col n="12" spacing="pb-3w">
             <TagInput
@@ -69,36 +80,14 @@ function RelationTypesForm({ id, initialForm, onSave, onDelete }) {
               message={(showErrors && errors.for) ? errors.for : null}
               messageType={(showErrors && errors.for) ? 'error' : ''}
             >
-              <Checkbox
-                size="sm"
-                onChange={(e) => updateForm({ for: ((e.target.checked) ? [...form.for, 'persons'] : form.for.filter((f) => (f !== 'persons'))) })}
-                label="Personnes"
-              />
-              <Checkbox
-                size="sm"
-                onChange={(e) => updateForm({ for: ((e.target.checked) ? [...form.for, 'structures'] : form.for.filter((f) => (f !== 'structures'))) })}
-                label="Structures"
-              />
-              <Checkbox
-                size="sm"
-                onChange={(e) => updateForm({ for: ((e.target.checked) ? [...form.for, 'terms'] : form.for.filter((f) => (f !== 'terms'))) })}
-                label="Termes"
-              />
-              <Checkbox
-                size="sm"
-                onChange={(e) => updateForm({ for: ((e.target.checked) ? [...form.for, 'projects'] : form.for.filter((f) => (f !== 'projects'))) })}
-                label="Projets"
-              />
-              <Checkbox
-                size="sm"
-                onChange={(e) => updateForm({ for: ((e.target.checked) ? [...form.for, 'categories'] : form.for.filter((f) => (f !== 'categories'))) })}
-                label="Catégories"
-              />
-              <Checkbox
-                size="sm"
-                onChange={(e) => updateForm({ for: ((e.target.checked) ? [...form.for, 'prices'] : form.for.filter((f) => (f !== 'prices'))) })}
-                label="Prix"
-              />
+              {objectNameMapper.map((element) => (
+                <Checkbox
+                  checked={form.for.filter((f) => (f === element.object)).length}
+                  size="sm"
+                  onChange={(e) => updateForm({ for: ((e.target.checked) ? [...form.for, element.object] : form.for.filter((f) => (f !== element.object))) })}
+                  label={element.name}
+                />
+              ))}
             </CheckboxGroup>
           </Col>
           <Col n="12">
@@ -131,7 +120,7 @@ RelationTypesForm.propTypes = {
 };
 RelationTypesForm.defaultProps = {
   id: null,
-  initialForm: { for: [] },
+  initialForm: { for: [], priority: '99' },
 };
 
 export default function RelationTypesPage() {
@@ -161,15 +150,19 @@ export default function RelationTypesPage() {
 
   const handleModalToggle = (item = {}) => {
     const { id, ...rest } = item;
-    setModalTitle(item?.id ? 'Modifier' : 'Ajouter');
-    setModalContent(
-      <RelationTypesForm
-        id={id}
-        initialForm={rest}
-        onDelete={handleDelete}
-        onSave={handleSave}
-      />,
-    );
+    if (!id) {
+      setModalContent(<RelationTypesForm onDelete={handleDelete} onSave={handleSave} />);
+    } else {
+      setModalContent(
+        <RelationTypesForm
+          id={id}
+          initialForm={rest}
+          onDelete={handleDelete}
+          onSave={handleSave}
+        />,
+      );
+    }
+    setModalTitle(id ? 'Modifier' : 'Ajouter');
     setIsOpen(true);
   };
 
@@ -195,42 +188,56 @@ export default function RelationTypesPage() {
       </Row>
       <hr />
       {data.data?.map((item) => (
-        <div key={item.id}>
-          <Row className="fr-row--space-between">
-            <div className="flex--grow fr-pl-2w">
-              <Text spacing="my-1v" bold size="lg">{item.name}</Text>
-              <Text as="span" bold>Autres noms: </Text>
-              <Text as="span" bold>
-                Priorité:
-                {' '}
-                {item.priority}
-              </Text>
-              {item.otherNames.length ? item.otherNames.map((name) => <Tag as="span">{name}</Tag>) : <Text as="span">Aucun alias pour le moment</Text>}
-              <Text as="span" bold>S'applique à: </Text>
-              {item.for.map((object) => <Tag as="span">{object}</Tag>)}
-              <Text spacing="mt-2w mb-0" size="xs">
-                Crée le
-                {' '}
-                {toString(item.createdAt)}
-                {' par '}
-                {`${item.createdBy?.firstName} ${item.createdBy?.lastName}`}
-              </Text>
-              {item.updatedAt && (
-                <Text size="xs">
-                  Modifié le
+        <Container fluid key={item.id}>
+          <Row className="flex--space-between">
+            <Col className="flex--grow fr-pl-2w">
+              <Row><Text spacing="my-1v" bold size="lg">{item.name}</Text></Row>
+              <Row>
+                <Text as="span" bold className="fr-mb-2v">
+                  Priorité:
                   {' '}
-                  {toString(item.updatedAt)}
-                  {' par '}
-                  {`${item.updatedBy?.firstName} ${item.updatedBy?.lastName}`}
+                  <Badge text={item.priority} />
                 </Text>
-              )}
-            </div>
-            <div>
+              </Row>
+              <Row>
+                <Text as="span" bold className="fr-mb-2v">
+                  Autres noms:
+                  {' '}
+                  {item.otherNames.length ? item.otherNames.map((name) => <Tag key={name} as="span">{name}</Tag>) : <Text as="span">Aucun alias pour le moment</Text>}
+                </Text>
+              </Row>
+              <Row>
+                <Text as="span" bold className="fr-mb-2v">
+                  Appliquable aux:
+                  {' '}
+                  {item.for.map((object) => <Tag key={object} as="span">{object}</Tag>)}
+                </Text>
+              </Row>
+              <Row>
+                <Text spacing="mt-2w mb-0" size="xs">
+                  Crée le
+                  {' '}
+                  {toString(item.createdAt)}
+                  {' par '}
+                  {`${item.createdBy?.firstName} ${item.createdBy?.lastName}`}
+                </Text>
+                {item.updatedAt && (
+                  <Text size="xs">
+                    Modifié le
+                    {' '}
+                    {toString(item.updatedAt)}
+                    {' par '}
+                    {`${item.updatedBy?.firstName} ${item.updatedBy?.lastName}`}
+                  </Text>
+                )}
+              </Row>
+            </Col>
+            <Col className="text-right">
               <Button size="sm" secondary icon="ri-edit-line" onClick={() => handleModalToggle(item)}>Editer</Button>
-            </div>
+            </Col>
           </Row>
           <hr />
-        </div>
+        </Container>
       ))}
       <Modal size="lg" isOpen={isOpen} hide={() => setIsOpen(false)}>
         <ModalTitle>

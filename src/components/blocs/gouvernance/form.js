@@ -19,19 +19,22 @@ export default function GovernanceForm({ data, onDeleteHandler, onSaveHandler })
       errors.relatedObjectId = 'Vous devez séléctionner un objet à lier';
     }
     if (!body?.relationTypeId) {
-      errors.relatedObjectId = 'Vous devez séléctionner un type de liaison';
+      errors.relationTypeId = 'Vous devez séléctionner un type de liaison';
     }
     return errors;
   };
 
   const [showErrors, setShowErrors] = useState(false);
+
   const [relatedObjectQuery, setRelatedObjectQuery] = useState('');
   const [startDateOfficialTextQuery, setStartDateOfficialTextQuery] = useState('');
   const [endDateOfficialTextQuery, setEndDateOfficialTextQuery] = useState('');
-  const [relationTypesoptions, setRelationTypesOptions] = useState([]);
-  const [personsOptions, setPersonsOptions] = useState([]);
+
+  const [relationTypesOptions, setRelationTypesOptions] = useState([]);
+  const [relatedObjectOptions, setRelatedObjectOptions] = useState([]);
   const [startDateOfficialTextOptions, setStartDateOfficialTextOptions] = useState([]);
   const [endDateOfficialTextOptions, setEndDateOfficialTextOptions] = useState([]);
+
   const { form, updateForm, errors } = useForm(data, validator);
 
   useEffect(() => {
@@ -42,7 +45,7 @@ export default function GovernanceForm({ data, onDeleteHandler, onSaveHandler })
       if (response.ok) {
         setRelationTypesOptions(
           response.data.data.map((item) => ({
-            label: item.usualName,
+            label: item.name,
             value: item.id,
           })),
         );
@@ -52,14 +55,15 @@ export default function GovernanceForm({ data, onDeleteHandler, onSaveHandler })
       }
     };
     getOptions();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     const getAutocompleteResult = async () => {
       const response = await api.get(`/autocomplete?query=${relatedObjectQuery}&types=persons`);
-      setPersonsOptions(response.data?.data);
+      setRelatedObjectOptions(response.data?.data);
     };
-    if (relatedObjectQuery) { getAutocompleteResult(); } else { setPersonsOptions([]); }
+    if (relatedObjectQuery) { getAutocompleteResult(); } else { setRelatedObjectOptions([]); }
   }, [relatedObjectQuery]);
 
   useEffect(() => {
@@ -101,14 +105,21 @@ export default function GovernanceForm({ data, onDeleteHandler, onSaveHandler })
   };
 
   const handlePersonSelect = ({ id, name }) => {
+    console.log({ id, name });
     updateForm({ relatedObjectName: name, relatedObjectId: id });
-    relatedObjectQuery('');
-    setPersonsOptions([]);
+    setRelatedObjectQuery('');
+    setRelatedObjectOptions([]);
   };
   const handlePersonUnselect = () => {
     updateForm({ relatedObjectName: null, relatedObjectId: null });
-    relatedObjectQuery('');
-    setPersonsOptions([]);
+    setRelatedObjectQuery('');
+    setRelatedObjectOptions([]);
+  };
+
+  const handleSave = () => {
+    if (Object.keys(errors).length > 0) return setShowErrors(true);
+    console.log(form);
+    return onSaveHandler(form);
   };
 
   return (
@@ -125,7 +136,7 @@ export default function GovernanceForm({ data, onDeleteHandler, onSaveHandler })
               scope={form.relatedObjectName}
               placeholder={form.relatedObjectId ? '' : 'Rechercher...'}
               onChange={(e) => { updateForm({ relatedObjectId: null }); setRelatedObjectQuery(e.target.value); }}
-              options={personsOptions}
+              options={relatedObjectOptions}
               onSelect={handlePersonSelect}
               onDeleteScope={handlePersonUnselect}
             />
@@ -133,7 +144,7 @@ export default function GovernanceForm({ data, onDeleteHandler, onSaveHandler })
           <Col n="12" className="fr-pb-5w">
             <Select
               label="Type"
-              options={relationTypesoptions}
+              options={relationTypesOptions}
               selected={form.relationTypeId}
               onChange={(e) => updateForm({ relationTypeId: e.target.value })}
               tabIndex={0}
@@ -187,7 +198,7 @@ export default function GovernanceForm({ data, onDeleteHandler, onSaveHandler })
         </Row>
         <FormFooter
           id={data?.id}
-          onSaveHandler={onSaveHandler}
+          onSaveHandler={handleSave}
           onDeleteHandler={onDeleteHandler}
         />
       </Container>

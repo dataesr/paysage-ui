@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import PropTypes from 'prop-types';
 import { Modal, ModalContent, ModalTitle } from '@dataesr/react-dsfr';
 import api from '../../../utils/api';
 import ModifyCard from '../../card/modify-card';
@@ -7,59 +8,63 @@ import { Bloc, BlocActionButton, BlocContent, BlocModal, BlocTitle } from '../..
 import GovernanceForm from './form';
 import useFetch from '../../../hooks/useFetch';
 import useBlocUrl from '../../../hooks/useBlocUrl';
+import useNotice from '../../../hooks/useNotice';
 
 export default function Gouvernance({ governanceGroupId }) {
-  const url = useBlocUrl('relations-groups');
-  const { data, isLoading, error, reload } = useFetch(`${url}/${governanceGroupId}/relations`);
+  const { notice } = useNotice();
+  const url = useBlocUrl(`relations-groups/${governanceGroupId}/relations`);
+  const { data, isLoading, error, reload } = useFetch(url);
   const [showModal, setShowModal] = useState(false);
   const [modalTitle, setModalTitle] = useState('');
   const [modalContent, setModalContent] = useState(null);
 
   const onSaveHandler = async (body, id = null) => {
     const method = id ? 'patch' : 'post';
-    const saveUrl = id ? `${ url }/${governanceGroupId}/relations/${id}` : `${url}/${governanceGroupId}/relations`;
-    const response = await api[method](saveUrl, body).catch((e) => { console.log(e); });
+    const saveUrl = id ? `${url}/${id}` : url;
+    const response = await api[method](saveUrl, body)
+      .catch(() => { notice({ content: "Une erreur s'est produite.", autoDismissAfter: 10000, type: 'error' }); });
     if (response.ok) {
+      notice({ content: 'La relation a été ajoutée avec succès.', autoDismissAfter: 10000, type: 'success' });
       reload();
       setShowModal(false);
     }
   };
 
-  // const onDeleteHandler = async (id) => {
-  //   await api.delete(`${url}/${id}`).catch((e) => { console.log(e); });
-  //   reload();
-  //   setShowModal(false);
-  // };
+  const onDeleteHandler = async (id) => {
+    await api.delete(`${url}/${id}`).catch((e) => { console.log(e); });
+    reload();
+    setShowModal(false);
+  };
 
-  // const onClickModifyHandler = () => {
-  //   setModalTitle('Modification de gouvernance');
-  //   setModalContent(
-  //     <GovernanceForm
-  //       data={genericEmail}
-  //       onDeleteHandler={onDeleteHandler}
-  //       onSaveHandler={onSaveHandler}
-  //     />,
-  //   );
-  //   setShowModal(true);
-  // };
+  const onClickModifyHandler = (element) => {
+    setModalTitle('Modification de gouvernance');
+    setModalContent(
+      <GovernanceForm
+        data={element}
+        onDeleteHandler={onDeleteHandler}
+        onSaveHandler={onSaveHandler}
+      />,
+    );
+    setShowModal(true);
+  };
 
   const onClickAddHandler = () => {
-    setModalTitle('Ajout de gouvernant');
+    if (!governanceGroupId) { setModalTitle('Ajouter un gouvernant'); }
     setModalContent(<GovernanceForm onSaveHandler={onSaveHandler} />);
     setShowModal(true);
   };
 
   const renderCards = () => {
     if (!data && !data?.data?.length) return null;
-    const list = data.data.map((el) => (
+    const list = data.data.map((element) => (
       <ModifyCard
-        title={el.id}
+        title={element.id}
         description={(
           <pre alignItems="middle">
-            {JSON.stringify(el, null, 2)}
+            {JSON.stringify(element, null, 2)}
           </pre>
         )}
-        // onClick={() => onClickModifyHandler(el)}
+        onClick={() => onClickModifyHandler(element)}
       />
     ));
     return <ExpendableListCards list={list} nCol="12 md-6" />;
@@ -79,3 +84,11 @@ export default function Gouvernance({ governanceGroupId }) {
     </Bloc>
   );
 }
+
+Gouvernance.propTypes = {
+  governanceGroupId: PropTypes.string,
+};
+
+Gouvernance.defaultProps = {
+  governanceGroupId: null,
+};
