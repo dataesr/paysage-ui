@@ -81,8 +81,8 @@ export default function PersonByIdPage() {
               <Title as="h2">
                 {`${getData.data.lastName} ${getData.data.firstName}`}
               </Title>
-              <Tag className="mx-1 bg-personnes ">Personne</Tag>
-              {/* <Tag className="mx-1 bg-success">
+              <Tag className="fr-mx-1 bg-personnes ">Personne</Tag>
+              {/* <Tag className="fr-mx-1 bg-success">
                 {getData.data.structureStatus}
               </Tag> */}
 

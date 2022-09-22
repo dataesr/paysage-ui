@@ -1,0 +1,25 @@
+.fr-header__navbar .fr-btn--search::before {
+  font-size: 1.5rem;
+}
+
+.fr-header__navbar .fr-btn--menu::before {
+  font-size: 1.5rem;
+}
+
+.fr-radio-rich__img {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.fr-artwork-decorative {
+  fill: #ECECFF;
+}
+
+.fr-artwork-minor {
+  fill: #E1000F;
+}
+
+.fr-artwork-major {
+  fill: var(--background-action-high-blue-france);
+}

@@ -5,6 +5,7 @@ import AdminDashboardPage from './dashboard';
 import NomenclaturesPage from './nomenclatures';
 import AdminUsersPage from './users';
 import LegalCategoriesPage from './categories-juridiques';
+import RelationTypesPage from './relation-types';
 
 function AdminPage() {
   return (
@@ -31,6 +32,9 @@ function AdminPage() {
               <SideMenuLink asLink={<RouterLink to="/admin/nomenclatures/ministeres-de-tutelle" />}>
                 Ministères de tutelle
               </SideMenuLink>
+              <SideMenuLink asLink={<RouterLink to="/admin/types-de-relation" />}>
+                Types de relation
+              </SideMenuLink>
             </SideMenuItem>
           </SideMenu>
         </Col>
@@ -42,4 +46,4 @@ function AdminPage() {
   );
 }
 
-export { AdminDashboardPage, AdminPage, AdminUsersPage, NomenclaturesPage, LegalCategoriesPage };
+export { AdminDashboardPage, AdminPage, AdminUsersPage, NomenclaturesPage, LegalCategoriesPage, RelationTypesPage };

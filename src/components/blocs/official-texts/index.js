@@ -61,7 +61,7 @@ export default function OfficialTextsComponent({ id, apiObject }) {
               <CardTitle>{item.type}</CardTitle>
               <CardDescription>
                 {item.title}
-                <p className="mt-2 italic">{`publié le ${item.publicationDate}`}</p>
+                <p className="fr-mt-2 italic">{`publié le ${item.publicationDate}`}</p>
               </CardDescription>
             </Card>
           </Col>

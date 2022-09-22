@@ -407,7 +407,7 @@ export default function OfficiaTextForm({ data, from }) {
                   as="a"
                   key={uuidv4()}
                   onClick={() => deleteRelation(item)}
-                  className={`bg-${item.apiObject} mx-1`}
+                  className={`bg-${item.apiObject} fr-mx-1`}
                   closable
                 >
                   {item.label}

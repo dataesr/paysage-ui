@@ -3,48 +3,25 @@
 //     font-size: 90%;
 //   }
 // }
+HR {
+  margin: 24px 0 16px 0;
+  padding-bottom: 8px;
+}
+
 .text-right {
   text-align: right;
 }
 .text-center {
   text-align: center;
 }
-
-HR {
-  margin: 24px 0 16px 0;
-  padding-bottom: 8px;
-}
-
-.mx-1 {
-  margin: 0 4px;
-}
-
-.mt-2 {
-  margin-top: 8px;
-}
-
-.p-0 {
-  padding: 0;
-}
-
-.m-0 {
-  margin: 0;
-}
-
 .italic {
   font-style: italic;
 }
 
+
+
 .structures-tile {
   box-shadow: inset 0 0 0 1px var(--border-default-grey),inset 0 -0.25rem 0 0 var(--structures-color) !important;
-}
-
-.bg-structures {
-  background-color: var(--structures-color) !important;
-}
-
-.bg-persons {
-  background-color: var(--persons-color) !important;
 }
 
 .bg-categories {
@@ -54,20 +31,40 @@ HR {
   background-color: rgba(230,254,218, 0.7) !important;
 }
 
+.bg-documents {
+  background-color: var(--documents-color) !important;
+}
+
+.bg-legal-categories {
+  background-color: var(--legal-categories-color) !important;
+}
+
+.bg-official-texts {
+  background-color: var(--official-texts-color) !important;
+}
+
+.bg-persons {
+  background-color: var(--persons-color) !important;
+}
+
 .bg-prices {
   background-color: var(--prices-color) !important;
 }
 
-.bg-documents {
-  background-color: var(--documents-color) !important;
+.bg-projects {
+  background-color: var(--projects-color) !important;
+}
+
+.bg-structures {
+  background-color: var(--structures-color) !important;
 }
 
 .bg-terms {
   background-color: var(--terms-color) !important;
 }
 
-.bg-textes-officiels {
-  background-color: var(--textes-officiels-color) !important;
+.bg-users {
+  background-color: var(--users-color) !important;
 }
 
 .bullet {
@@ -93,28 +90,7 @@ HR {
   color: var(--error-main-525);
   margin: 0;
 }
-.flex--space-between {
-  justify-content: space-between;
-}
-.flex--col-reverse {
-  flex-direction: column-reverse;
-}
 
-.fr-row--space-between {
-  justify-content: space-between;
-}
-.fr-row--space-around {
-  justify-content: space-around;
-}
-.fr-row--baseline {
-  align-items: baseline;
-}
-.fr-row--last-baseline {
-  align-items: last baseline;
-}
-.fr-col--grow {
-  flex-grow: 1;
-}
 .fullwidth {
   width: 100%;
 }

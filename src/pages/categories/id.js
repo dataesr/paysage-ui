@@ -81,8 +81,8 @@ export default function CategoryByIdPage() {
               <Title as="h2">
                 {getData.data.usualNameFr}
               </Title>
-              <Tag className="mx-1 bg-personnes ">Catégorie</Tag>
-              {/* <Tag className="mx-1 bg-success">
+              <Tag className="fr-mx-1 bg-personnes ">Catégorie</Tag>
+              {/* <Tag className="fr-mx-1 bg-success">
                 {getData.data.structureStatus}
               </Tag> */}
 
