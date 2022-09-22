@@ -1,13 +1,15 @@
 import PropTypes from 'prop-types';
 import Card from './index';
 import Button from '../button';
+import useEditMode from '../../hooks/useEditMode';
 
 export default function ModifyCard({ title, description, onClick }) {
+  const { editMode } = useEditMode();
   return (
     <Card
       title={title}
       descriptionElement={description}
-      actionElement={(
+      actionElement={editMode && (
         <Button
           size="sm"
           onClick={onClick}

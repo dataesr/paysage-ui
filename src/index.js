@@ -4,6 +4,7 @@ import App from './App';
 import { AuthContextProvider } from './hooks/useAuth';
 import { ToastContextProvider } from './hooks/useToast';
 import { NoticeContextProvider } from './hooks/useNotice';
+import { EditModeContextProvider } from './hooks/useEditMode';
 // import reportWebVitals from './reportWebVitals';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -12,7 +13,9 @@ root.render(
     <NoticeContextProvider>
       <ToastContextProvider>
         <AuthContextProvider>
-          <App />
+          <EditModeContextProvider>
+            <App />
+          </EditModeContextProvider>
         </AuthContextProvider>
       </ToastContextProvider>
     </NoticeContextProvider>

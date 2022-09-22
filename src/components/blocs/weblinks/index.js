@@ -146,9 +146,7 @@ export default function WeblinksComponent({ apiObject, id }) {
           </Button>
         </Col>
       </Row>
-      <Row>
-        {renderCards()}
-      </Row>
+      {renderCards()}
       <Modal isOpen={showModal} size="lg" hide={() => setShowModal(false)}>
         <ModalTitle>{modalTitle}</ModalTitle>
         <ModalContent>{modalContent}</ModalContent>

@@ -5,8 +5,10 @@ import { Children, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Row, Highlight } from '@dataesr/react-dsfr';
 import Spinner from '../spinner';
+import useEditMode from '../../hooks/useEditMode';
 
 export default function Bloc({ children, data, error, isLoading }) {
+  const { editMode } = useEditMode();
   const [content, setContent] = useState(null);
   const header = Children.toArray(children).find((child) => child.props.__TYPE === 'BlocTitle');
   const action = Children.toArray(children).find((child) => child.props.__TYPE === 'BlocActionButton');
@@ -23,12 +25,8 @@ export default function Bloc({ children, data, error, isLoading }) {
   return (
     <div className="fr-container-fluid fr-mb-5w" as="section">
       <Row className="flex--nowrap flex--last-baseline">
-        <div className="flex--grow">
-          {header}
-        </div>
-        <div>
-          {action}
-        </div>
+        <div className="flex--grow">{header}</div>
+        {editMode && (<div>{action}</div>)}
       </Row>
       {content}
       {modal}
