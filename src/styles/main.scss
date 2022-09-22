@@ -90,7 +90,35 @@ HR {
   color: var(--error-main-525);
   margin: 0;
 }
+<<<<<<< HEAD
 
+=======
+.flex--space-between {
+  justify-content: space-between;
+}
+.flex--col-reverse {
+  flex-direction: column-reverse;
+}
+.flex--grow {
+  flex-grow: 1;
+}
+
+.fr-row--space-between {
+  justify-content: space-between;
+}
+.flex--space-around {
+  justify-content: space-around;
+}
+.fr-row--baseline {
+  align-items: baseline;
+}
+.flex--last-baseline {
+  align-items: last baseline;
+}
+.fr-col--grow {
+  flex-grow: 1;
+}
+>>>>>>> 6f41958aaa40bce916d1931cbc309d41209ef547
 .fullwidth {
   width: 100%;
 }

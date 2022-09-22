@@ -15,9 +15,9 @@ import WeblinkCard from '../../card/weblink-card';
 import PaysageSection from '../../sections/section';
 import { getEnumKey } from '../../../utils';
 import api from '../../../utils/api';
-import WeblinkForm from './form';
+import InternalPageForm from './form';
 
-export default function WeblinksComponent({ apiObject, id }) {
+export default function InternalPagesComponent({ apiObject, id }) {
   const [data, setData] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [modalTitle, setModalTitle] = useState('');
@@ -70,7 +70,7 @@ export default function WeblinksComponent({ apiObject, id }) {
   const onClickModifyHandler = (oneData) => {
     setModalTitle("Modification d'un lien web");
     setModalContent(
-      <WeblinkForm
+      <InternalPageForm
         data={oneData}
         onDeleteHandler={onDeleteHandler}
         onSaveHandler={onSaveHandler}
@@ -83,42 +83,40 @@ export default function WeblinksComponent({ apiObject, id }) {
   const onClickAddHandler = () => {
     setModalTitle("Ajout d'un lien web");
     setModalContent(
-      <WeblinkForm onSaveHandler={onSaveHandler} enumKey={enumKey} />,
+      <InternalPageForm onSaveHandler={onSaveHandler} enumKey={enumKey} />,
     );
     setShowModal(true);
   };
 
-  const weblinksTypes = {
-    Hal: 'Portail HAL',
-    Onisep: 'Page Onisep.fr',
-    POpenData: 'Plateforme Opendata',
-    DataGouvFr: 'Page sur data.gouv.fr',
-    scanR: 'Page scanR',
-    mooc: 'Compte FUN',
-    CanalU: 'Canal-U',
-    ServicePublic: 'Annuaire service public',
-    // 'Sujet d\'actualités sue le site web du journal Le Monde'
-    EdCF: 'Annuaire des écoles doctorales, campus France',
-    OE1: 'Editeur chez openedition',
-    OE2: 'Revues chez openedition',
-    OE3: 'Carnets Hypotheses OpenEdition',
-    hceres: 'Page HCERES',
-    EducPros: 'EducPros',
-    IUF: 'IUF',
-    jorfsearch: 'jorfsearch',
-    TalentCNRS: 'TalentCNRS',
-    TheConversation: 'TheConversation',
+  const internalPagesTypes = {
+    website: 'Lien web',
+    websiteRss: 'Flux RSS',
+    websiteOrganizationChart: 'Page sur l\'organisation/organigramme',
+    websiteGovernance: 'Page gouvernance',
+    websiteGeneralServices: 'Page services généraux',
+    websiteCommunication: 'Service communication',
+    // Page avec le lien vers l'organigramme
+    websiteSocialReport: 'Page bilan social',
+    websiteActivityReport: 'Page rapport d\'activité',
+    websitePress: 'Espace presse',
+    websitenews: 'Actualités',
+    websiteDirectory: 'Annuaire en ligne',
+    websiteCatForm: 'Catalogue de formations',
+    websiteAcademicComponents: 'Page liste des composantes',
+    websiteHistory: 'Page histoire',
+    websitePhotoLibrary: 'Photothèque',
+    websiteNewsCast: 'websiteNewsCast',
   };
   const renderCards = () => {
-    const list = data.data.filter((el) => Object.keys(weblinksTypes).includes(el.type)).map((el) => (
+    const list = data.data.filter((el) => Object.keys(internalPagesTypes).includes(el.type)).map((el) => (
       <WeblinkCard
         downloadUrl={el.url}
         onClick={() => onClickModifyHandler(el)}
-        title={weblinksTypes[el.type]}
+        title={internalPagesTypes[el.type]}
         type={el.type}
       />
     ));
-    return <ExpendableListCards apiObject={apiObject} list={list} nCol="12 md-4" order={Object.keys(weblinksTypes)} sortOn="props.type" />;
+    return <ExpendableListCards apiObject={apiObject} list={list} nCol="12 md-4" order={Object.keys(internalPagesTypes)} sortOn="props.type" />;
   };
 
   if (!data?.data) {
@@ -132,7 +130,7 @@ export default function WeblinksComponent({ apiObject, id }) {
       <Row>
         <Col>
           <Title as="h3" look="h6">
-            Liens web
+            Pages internes
           </Title>
         </Col>
         <Col className="text-right">
@@ -142,7 +140,7 @@ export default function WeblinksComponent({ apiObject, id }) {
             secondary
             icon="ri-add-circle-line"
           >
-            Ajouter un lien web
+            Ajouter une page interne
           </Button>
         </Col>
       </Row>
@@ -155,7 +153,7 @@ export default function WeblinksComponent({ apiObject, id }) {
   );
 }
 
-WeblinksComponent.propTypes = {
+InternalPagesComponent.propTypes = {
   apiObject: PropTypes.string.isRequired,
   id: PropTypes.string.isRequired,
 };

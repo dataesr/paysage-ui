@@ -1,5 +1,4 @@
 import {
-  Alert,
   Container,
   Col,
   Row,
@@ -8,17 +7,14 @@ import {
 } from '@dataesr/react-dsfr';
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
-import { v4 as uuidv4 } from 'uuid';
 import api from '../../../utils/api';
 import validator from './validator';
 import FormFooter from '../../forms/form-footer/form-footer';
+import useForm from '../../../hooks/useForm';
 
 export default function SocialMediaForm({ data, onDeleteHandler, onSaveHandler, enumKey }) {
-  const [savingErrors, setSavingErrors] = useState(null);
-  const [errors, setReturnedErrors] = useState([]);
-
-  const [socialMediaType, setSocialMediaType] = useState(null);
-  const [socialMediaAccount, setSocialMediaAccount] = useState(null);
+  const [showErrors, setShowErrors] = useState(false);
+  const { form, updateForm, errors } = useForm(data, validator);
 
   const [options, setOptions] = useState([]);
 
@@ -34,49 +30,19 @@ export default function SocialMediaForm({ data, onDeleteHandler, onSaveHandler, 
             value: item,
           })),
         );
-        if (!data) {
+        if (!data.type) {
           // valeur par défaut
-          setSocialMediaType(response.data[enumKey].enum[0]);
+          updateForm({ type: response.data[enumKey].enum[0] });
         }
       }
     };
     getOptions();
-
-    if (data) {
-      setSocialMediaType(data.type || null);
-      setSocialMediaAccount(data.account || null);
-    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data, enumKey]);
 
-  const setErrors = (err) => {
-    setReturnedErrors(errors);
-    setSavingErrors(
-      <Row>
-        <Col>
-          <ul>
-            {err.map((e) => (
-              <li key={uuidv4()}>
-                <Alert description={e.error} type="error" />
-              </li>
-            ))}
-          </ul>
-        </Col>
-      </Row>,
-    );
-  };
-
   const onSave = () => {
-    const body = {
-      type: socialMediaType,
-      account: socialMediaAccount,
-    };
-
-    const { ok, returnedErrors } = validator(body);
-    if (ok) {
-      onSaveHandler(body, data?.id || null);
-    } else {
-      setErrors(returnedErrors);
-    }
+    if (Object.keys(errors).length > 0) return setShowErrors(true);
+    return onSaveHandler(form);
   };
 
   return (
@@ -87,13 +53,12 @@ export default function SocialMediaForm({ data, onDeleteHandler, onSaveHandler, 
             <Select
               label="Type"
               options={options}
-              selected={socialMediaType}
-              onChange={(e) => setSocialMediaType(e.target.value)}
-              tanindex="0"
+              selected={form.type}
+              onChange={(e) => updateForm({ type: e.target.value })}
+              tabIndex={0}
               required
-              messageType={
-                errors.find((el) => el.field === 'type') ? 'error' : ''
-              }
+              message={(showErrors && errors.type) ? errors.type : null}
+              messageType={(showErrors && errors.type) ? 'error' : ''}
             />
           </Col>
         </Row>
@@ -101,16 +66,14 @@ export default function SocialMediaForm({ data, onDeleteHandler, onSaveHandler, 
           <Col>
             <TextInput
               label="Compte/URL"
-              value={socialMediaAccount || ''}
-              onChange={(e) => setSocialMediaAccount(e.target.value)}
+              value={form.account}
+              onChange={(e) => updateForm({ account: e.target.value })}
               required
-              messageType={
-                errors.find((el) => el.field === 'account') ? 'error' : ''
-              }
+              message={(showErrors && errors.account) ? errors.account : null}
+              messageType={(showErrors && errors.account) ? 'error' : ''}
             />
           </Col>
         </Row>
-        {savingErrors || null}
         <FormFooter
           id={data?.id}
           onSaveHandler={onSave}
@@ -130,6 +93,6 @@ SocialMediaForm.propTypes = {
 };
 
 SocialMediaForm.defaultProps = {
-  data: null,
+  data: {},
   onDeleteHandler: null,
 };

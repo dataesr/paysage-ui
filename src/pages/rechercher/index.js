@@ -35,7 +35,7 @@ SearchResults.defaultProps = {
   data: null,
 };
 
-const countTypes = 'categories%2Clegal%2Dcategories%2Cofficial%2Dtexts%2Cpersons%2Cprices%2Cprojects%2Cstructures%2Cterms';
+const countTypes = 'categories%2Clegal%2Dcategories%2Cofficial%2Dtexts%2Cpersons%2Cprices%2Cprojects%2Cstructures%2Cterms%2Cusers';
 
 export default function SearchPage() {
   const { pathname } = useLocation();
@@ -76,6 +76,12 @@ export default function SearchPage() {
                 <Badge type={(type === 'categories') ? 'info' : 'new'} text={counts.categories || '0'} />
               </Row>
             </SideMenuLink>
+            <SideMenuLink className={(type === 'categories-juridiques') ? 'sidemenu__item--active' : ''} asLink={<RouterLink to={`categories-juridiques?query=${query}`} />}>
+              <Row alignItems="top" className="fr-row--space-between fullwidth">
+                <Text spacing="pr-2v" bold>Catégories juridiques</Text>
+                <Badge type={(type === 'categories-juridiques') ? 'info' : 'new'} text={counts['legal-categories'] || '0'} />
+              </Row>
+            </SideMenuLink>
             <SideMenuLink className={(type === 'termes') ? 'sidemenu__item--active' : ''} asLink={<RouterLink to={`termes?query=${query}`} />}>
               <Row alignItems="top" className="fr-row--space-between fullwidth">
                 <Text spacing="pr-2v" bold>Termes</Text>
@@ -100,10 +106,16 @@ export default function SearchPage() {
                 <Badge type={(type === 'projets') ? 'info' : 'new'} text={counts.projects || '0'} />
               </Row>
             </SideMenuLink>
+            <SideMenuLink className={(type === 'utilisateurs') ? 'sidemenu__item--active' : ''} asLink={<RouterLink to={`utilisateurs?query=${query}`} />}>
+              <Row alignItems="top" className="fr-row--space-between fullwidth">
+                <Text spacing="pr-2v" bold>Utilisateurs</Text>
+                <Badge type={(type === 'utilisateurs') ? 'info' : 'new'} text={counts.users || '0'} />
+              </Row>
+            </SideMenuLink>
           </SideMenu>
         </Col>
         <Col n="12 md-9">
-          {isLoading && <Row className="fr-my-2w fr-row--space-around"><Spinner /></Row>}
+          {isLoading && <Row className="fr-my-2w flex--space-around"><Spinner /></Row>}
           {error && <p>Erreur...</p>}
           {data && <SearchResults data={data} />}
         </Col>

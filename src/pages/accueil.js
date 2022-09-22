@@ -184,16 +184,32 @@ export default function HomePage() {
       </Row>
       <Row gutters className="fr-pb-5w">
         <Col n="12 sm-6 md-4 lg-3">
-          <Title as="h5">Structures</Title>
-          <div className="color-tester bg-structures"><Text size="sm" spacing="m-0">blue-ecume-moon-675</Text></div>
+          <Title as="h5">Catégories</Title>
+          <div className="color-tester bg-categories"><Text size="sm" spacing="m-0">green-menthe-850</Text></div>
+        </Col>
+        <Col n="12 sm-6 md-4 lg-3">
+          <Title as="h5">Catégories juridiques</Title>
+          <div className="color-tester bg-legal-categories"><Text size="sm" spacing="m-0">MISSING</Text></div>
+        </Col>
+        <Col n="12 sm-6 md-4 lg-3">
+          <Title as="h5">Document</Title>
+          <div className="color-tester bg-documents"><Text size="sm" spacing="m-0">transparent</Text></div>
         </Col>
         <Col n="12 sm-6 md-4 lg-3">
           <Title as="h5">Personnes</Title>
           <div className="color-tester bg-persons"><Text size="sm" spacing="m-0">green-archipel-main-557</Text></div>
         </Col>
         <Col n="12 sm-6 md-4 lg-3">
-          <Title as="h5">Catégories</Title>
-          <div className="color-tester bg-categories"><Text size="sm" spacing="m-0">green-bourgeon-975</Text></div>
+          <Title as="h5">Prix scientifiques</Title>
+          <div className="color-tester bg-prices"><Text size="sm" spacing="m-0">blue-ecume-main-400</Text></div>
+        </Col>
+        <Col n="12 sm-6 md-4 lg-3">
+          <Title as="h5">Projets</Title>
+          <div className="color-tester bg-projects"><Text size="sm" spacing="m-0">MISSING</Text></div>
+        </Col>
+        <Col n="12 sm-6 md-4 lg-3">
+          <Title as="h5">Structures</Title>
+          <div className="color-tester bg-structures"><Text size="sm" spacing="m-0">blue-ecume-moon-675</Text></div>
         </Col>
         <Col n="12 sm-6 md-4 lg-3">
           <Title as="h5">Termes</Title>
@@ -201,7 +217,11 @@ export default function HomePage() {
         </Col>
         <Col n="12 sm-6 md-4 lg-3">
           <Title as="h5">Textes officiels</Title>
-          <div className="color-tester bg-textes-officiels"><Text size="sm" spacing="m-0">error-950</Text></div>
+          <div className="color-tester bg-official-texts"><Text size="sm" spacing="m-0">purple-glycine-200</Text></div>
+        </Col>
+        <Col n="12 sm-6 md-4 lg-3">
+          <Title as="h5">Utilisateurs</Title>
+          <div className="color-tester bg-users"><Text size="sm" spacing="m-0">MISSING</Text></div>
         </Col>
       </Row>
     </Container>
