@@ -1,12 +1,16 @@
 import { Col, Icon, Link, Row } from '@dataesr/react-dsfr';
 import PropTypes from 'prop-types';
 import './styles.modules.scss';
+import useEditMode from '../../hooks/useEditMode';
+import Button from '../button';
 
 export default function SocialMediaCard({
   mediaName,
   account,
   onClick,
 }) {
+  const { editMode } = useEditMode();
+
   const renderIcon = (iconType) => {
     let rxIcon = '';
     let iconColor = '';
@@ -58,11 +62,20 @@ export default function SocialMediaCard({
                 {mediaName}
                 <Link href={account} target="_blank" />
               </h4>
-              <div className="card-button">
-                <button onClick={onClick} type="button" className="bt-visible-on-over">
-                  <Icon className="ri-edit-line" size="lg" />
-                </button>
-              </div>
+              {editMode && (
+                <div className="card-button">
+                  <Button
+                    className="bt-visible-on-over"
+                    size="sm"
+                    onClick={onClick}
+                    color="text"
+                    tertiary
+                    borderless
+                    rounded
+                    icon="ri-edit-line"
+                  />
+                </div>
+              )}
             </Col>
           </Row>
         </div>

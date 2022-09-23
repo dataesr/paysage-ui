@@ -1,22 +1,21 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Col, Container, Icon, ModalContent, ModalTitle, Row, Tab, Tabs, Tile, Title } from '@dataesr/react-dsfr';
+import { Col, Container, Icon, ModalContent, ModalTitle, Row, Tab, Tabs, Tile } from '@dataesr/react-dsfr';
 import Modal from '../../modal';
 import useFetch from '../../../hooks/useFetch';
 import api from '../../../utils/api';
 import { formatDescriptionDates } from '../../../utils/dates';
 import Map from '../../map';
 import LocalisationForm from './form';
-import PaysageSection from '../../sections/section';
-import EmptySection from '../../sections/empty';
 import Button from '../../button';
+import { Bloc, BlocActionButton, BlocContent, BlocModal, BlocTitle } from '../../bloc';
 
 import styles from './styles.module.scss';
 
 export default function LocalisationsComponent({ id, apiObject, currentLocalisationId }) {
   const route = `/${apiObject}/${id}/localisations`;
   const { data, isLoading, error, reload } = useFetch(route);
-  const [isOpen, setIsOpen] = useState();
+  const [showModal, setShowModal] = useState(false);
   const [modalTitle, setModalTitle] = useState('');
   const [modalContent, setModalContent] = useState(null);
 
@@ -26,7 +25,7 @@ export default function LocalisationsComponent({ id, apiObject, currentLocalisat
     const response = await api[method](url, body);
     if (response.ok) {
       reload();
-      setIsOpen(false);
+      setShowModal(false);
     }
   };
 
@@ -35,7 +34,7 @@ export default function LocalisationsComponent({ id, apiObject, currentLocalisat
     const response = await api.delete(`${route}/${localisationId}`);
     if (response.ok) {
       reload();
-      setIsOpen(false);
+      setShowModal(false);
     }
   };
 
@@ -49,7 +48,7 @@ export default function LocalisationsComponent({ id, apiObject, currentLocalisat
       />,
     );
 
-    setIsOpen(true);
+    setShowModal(true);
   };
 
   const renderAdress = (localisation) => (
@@ -89,95 +88,80 @@ export default function LocalisationsComponent({ id, apiObject, currentLocalisat
   const currentLocalisation = data.data.find((item) => item.id === currentLocalisationId);
 
   return (
-    <PaysageSection dataPaysageMenu="Localisation" id="localisations">
-      <Row>
-        <Col>
-          <Title as="h3" look="h6">
-            Localisations
-          </Title>
-        </Col>
-        <Col className="text-right">
-          <Button
-            onClick={() => handleModalToggle()}
-            size="sm"
-            secondary
-            icon="ri-add-circle-line"
-          >
-            Ajouter une adresse
-          </Button>
-        </Col>
-      </Row>
-      {data.totalCount === 0 && <EmptySection apiObject={apiObject} />}
-      {data.totalCount === 1 && currentLocalisation?.coordinates && (
-        <Row>
-          <Col>
-            <Map
-              lat={currentLocalisation?.coordinates.lat}
-              lng={currentLocalisation?.coordinates.lng}
-              markers={[
-                {
-                  address: currentLocalisation.address,
-                  latLng: [
-                    currentLocalisation?.coordinates.lat,
-                    currentLocalisation?.coordinates.lng,
-                  ],
-                },
-              ]}
-            />
-          </Col>
-        </Row>
-      )}
-      {data.totalCount === 1 && currentLocalisation?.country && renderAdress(currentLocalisation)}
+    <Bloc isLoading={isLoading} error={error} data={data}>
+      <BlocTitle as="h3" look="h6">Localisations</BlocTitle>
+      <BlocActionButton onClick={() => handleModalToggle()}>Ajouter une adresse</BlocActionButton>
+      <BlocContent>
+        {
+          data.totalCount === 1 && currentLocalisation?.coordinates && (
+            <Row>
+              <Col>
+                <Map
+                  lat={currentLocalisation?.coordinates.lat}
+                  lng={currentLocalisation?.coordinates.lng}
+                  markers={[
+                    {
+                      address: currentLocalisation.address,
+                      latLng: [
+                        currentLocalisation?.coordinates.lat,
+                        currentLocalisation?.coordinates.lng,
+                      ],
+                    },
+                  ]}
+                />
+              </Col>
+            </Row>
+          )
+        }
+        {data.totalCount === 1 && currentLocalisation?.country && renderAdress(currentLocalisation)}
 
-      {data.totalCount > 1 && (
-        <Tabs>
-          <Tab label="Adresse actuelle" className="fr-p-2w">
-            {currentLocalisation?.coordinates ? (
-              <Row>
-                <Col>
-                  <Map
-                    lat={currentLocalisation?.coordinates.lat}
-                    lng={currentLocalisation?.coordinates.lng}
-                    markers={[
-                      {
-                        address: currentLocalisation.address,
-                        latLng: [
-                          currentLocalisation?.coordinates.lat,
-                          currentLocalisation?.coordinates.lng,
-                        ],
-                      },
-                    ]}
-                  />
-                </Col>
-              </Row>
-            ) : null}
-            {currentLocalisation?.address ? renderAdress(currentLocalisation) : null}
-          </Tab>
-          {(data.totalCount > 1) ? (
-            <Tab label="Historique des adresses" className="fr-p-2w">
-              <ul>
-                {
-                  data.data.map((item) => (
-                    <li key={`HistoriqueLocalisation${item.id}`}>
-                      {renderAdress(item)}
-                    </li>
-                  ))
-                }
-              </ul>
+        {data.totalCount > 1 && (
+          <Tabs>
+            <Tab label="Adresse actuelle" className="fr-p-2w">
+              {currentLocalisation?.coordinates ? (
+                <Row>
+                  <Col>
+                    <Map
+                      lat={currentLocalisation?.coordinates.lat}
+                      lng={currentLocalisation?.coordinates.lng}
+                      markers={[
+                        {
+                          address: currentLocalisation.address,
+                          latLng: [
+                            currentLocalisation?.coordinates.lat,
+                            currentLocalisation?.coordinates.lng,
+                          ],
+                        },
+                      ]}
+                    />
+                  </Col>
+                </Row>
+              ) : null}
+              {currentLocalisation?.address ? renderAdress(currentLocalisation) : null}
             </Tab>
-          ) : null}
-        </Tabs>
-      )}
-
-      <Modal size="full" isOpen={isOpen} hide={() => setIsOpen(false)}>
-        <ModalTitle>
-          {modalTitle}
-        </ModalTitle>
-        <ModalContent>
-          {modalContent}
-        </ModalContent>
-      </Modal>
-    </PaysageSection>
+            {(data.totalCount > 1) ? (
+              <Tab label="Historique des adresses" className="fr-p-2w">
+                <ul>
+                  {
+                    data.data.map((item) => (
+                      <li key={`HistoriqueLocalisation${item.id}`}>
+                        {renderAdress(item)}
+                      </li>
+                    ))
+                  }
+                </ul>
+              </Tab>
+            ) : null}
+          </Tabs>
+        )}
+      </BlocContent>
+      <BlocModal>
+        <Modal isOpen={showModal} size="lg" hide={() => setShowModal(false)}>
+          <ModalTitle>{modalTitle}</ModalTitle>
+          <ModalContent>{modalContent}</ModalContent>
+        </Modal>
+      </BlocModal>
+    </Bloc>
   );
 }
 

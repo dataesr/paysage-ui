@@ -1,6 +1,7 @@
 import { Col, Icon, Link, Row } from '@dataesr/react-dsfr';
 import PropTypes from 'prop-types';
-
+import useEditMode from '../../hooks/useEditMode';
+import Button from '../button';
 import './styles.modules.scss';
 
 export default function WeblinkCard({
@@ -10,6 +11,7 @@ export default function WeblinkCard({
   onClick,
   downloadUrl,
 }) {
+  const { editMode } = useEditMode();
   return (
     <div className="fr-card fr-enlarge-link fr-card--horizontal show-bt-on-over">
       <div className="fr-card__body">
@@ -28,11 +30,20 @@ export default function WeblinkCard({
                 </h4>
               ) : null}
               <div className="fr-card__desc">{descriptionElement}</div>
-              <div className="card-button">
-                <button onClick={onClick} type="button" className="bt-visible-on-over">
-                  <Icon className="ri-edit-line" size="lg" />
-                </button>
-              </div>
+              {editMode && (
+                <div className="card-button">
+                  <Button
+                    className="bt-visible-on-over"
+                    size="sm"
+                    onClick={onClick}
+                    color="text"
+                    tertiary
+                    borderless
+                    rounded
+                    icon="ri-edit-line"
+                  />
+                </div>
+              )}
             </Col>
           </Row>
         </div>

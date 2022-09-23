@@ -20,9 +20,7 @@ export default function SocialMediaForm({ data, onDeleteHandler, onSaveHandler, 
 
   useEffect(() => {
     const getOptions = async () => {
-      const response = await api.get('/docs/enums').catch((e) => {
-        console.log(e);
-      });
+      const response = await api.get('/docs/enums').catch((e) => { console.log(e); });
       if (response.ok) {
         setOptions(
           response.data[enumKey].enum.map((item) => ({
