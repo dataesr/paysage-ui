@@ -15,7 +15,14 @@ import useFetch from '../../../hooks/useFetch';
 
 const getInitialFormFromData = (data) => {
   if (!data.id) return {};
-  const { relatedObject, startDate, endDate } = data;
+  const {
+    relatedObject,
+    relationType,
+    startDate,
+    endDate,
+    startDateOfficialText,
+    endDateOfficialText,
+  } = data;
   let relatedObjectName;
   switch (relatedObject.type) {
   case 'person':
@@ -37,9 +44,13 @@ const getInitialFormFromData = (data) => {
   return ({
     startDate,
     endDate,
-    relationTypeId: data.relationType?.id,
+    relationTypeId: relationType?.id,
     relatedObjectName,
     relatedObjectId: data.relatedObject?.id,
+    startDateOfficialTextId: startDateOfficialText?.id,
+    startDateOfficialTextName: startDateOfficialText?.title,
+    endDateOfficialTextId: endDateOfficialText?.id,
+    endDateOfficialTextName: endDateOfficialText?.title,
   });
 };
 
@@ -129,7 +140,7 @@ export default function RelationForm({ forObjects, data, onDeleteHandler, onSave
 
   const handleSave = () => {
     if (Object.keys(errors).length > 0) return setShowErrors(true);
-    return onSaveHandler(form);
+    return onSaveHandler(form, data.id);
   };
 
   const relationTypesOptions = (relationTypes?.data)
@@ -183,7 +194,7 @@ export default function RelationForm({ forObjects, data, onDeleteHandler, onSave
               value={startDateOfficialTextQuery || ''}
               label="Texte officiel de début de relation"
               hint="Recherchez et séléctionnez un text officiel paysage"
-              scope={form.startDateOfficialTextId}
+              scope={form.startDateOfficialTextName}
               placeholder={form.startDateOfficialTextId ? '' : 'Rechercher...'}
               onChange={(e) => { updateForm({ startDateOfficialTextId: null }); setStartDateOfficialTextQuery(e.target.value); }}
               options={startDateOfficialTextOptions}
@@ -204,7 +215,7 @@ export default function RelationForm({ forObjects, data, onDeleteHandler, onSave
               value={endDateOfficialTextQuery || ''}
               label="Texte officiel de fin de relation"
               hint="Recherchez et séléctionnez une personne paysage"
-              scope={form.endDateOfficialTextId}
+              scope={form.endDateOfficialTextName}
               placeholder={form.endDateOfficialTextId ? '' : 'Rechercher...'}
               onChange={(e) => { updateForm({ endDateOfficialTextId: null }); setEndDateOfficialTextQuery(e.target.value); }}
               options={endDateOfficialTextOptions}
