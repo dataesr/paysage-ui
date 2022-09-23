@@ -68,7 +68,9 @@ export default function RelationsGroup({ groupId, groupName, groupAccepts }) {
     if (!data && !data?.data?.length) return null;
     const list = data.data.map((element) => (
       <ModifyCard
-        title={`${element.relatedObject?.firstName} ${element.relatedObject?.lastName}`.trim()}
+        // TODO:
+        // What to do with relatedObject! Shared Model or Card adaptability ?
+        title={`${element.relatedObject?.firstName} ${element.relatedObject?.lastName}`.trim() || element.id}
         description={(
           <Row alignItems="middle">
             <Text spacing="mr-1v mb-0">{element.relationType?.name || 'Appartient à la liste'}</Text>
