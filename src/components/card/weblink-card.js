@@ -1,4 +1,4 @@
-import { Col, Icon, Link, Row } from '@dataesr/react-dsfr';
+import { Col, Link, Row } from '@dataesr/react-dsfr';
 import PropTypes from 'prop-types';
 import useEditMode from '../../hooks/useEditMode';
 import Button from '../button';

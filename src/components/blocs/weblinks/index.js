@@ -8,7 +8,6 @@ import { useState } from 'react';
 
 import ExpendableListCards from '../../card/expendable-list-cards';
 import WeblinkCard from '../../card/weblink-card';
-import PaysageSection from '../../sections/section';
 import { getEnumKey } from '../../../utils';
 import api from '../../../utils/api';
 import WeblinkForm from './form';

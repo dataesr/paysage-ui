@@ -10,7 +10,6 @@ import { formatDescriptionDates } from '../../../utils/dates';
 import CategoryForm from './form';
 import DeleteCard from '../../card/delete-card';
 import ExpendableListCards from '../../card/expendable-list-cards';
-
 import { Bloc, BlocActionButton, BlocContent, BlocModal, BlocTitle } from '../../bloc';
 import useFetch from '../../../hooks/useFetch';
 import useBlocUrl from '../../../hooks/useBlocUrl';

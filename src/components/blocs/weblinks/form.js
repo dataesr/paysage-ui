@@ -1,5 +1,4 @@
 import {
-  Alert,
   Container,
   Col,
   Row,
@@ -8,7 +7,6 @@ import {
 } from '@dataesr/react-dsfr';
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
-import { v4 as uuidv4 } from 'uuid';
 import api from '../../../utils/api';
 import validator from './validator';
 import FormFooter from '../../forms/form-footer/form-footer';
