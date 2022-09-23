@@ -1,75 +1,40 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import PropTypes from 'prop-types';
 import {
-  Col,
   Modal,
   ModalContent,
   ModalTitle,
-  Row,
-  Title,
 } from '@dataesr/react-dsfr';
-import Button from '../../button';
-import useToast from '../../../hooks/useToast';
 import api from '../../../utils/api';
 import { formatDescriptionDates } from '../../../utils/dates';
 import CategoryForm from './form';
 import DeleteCard from '../../card/delete-card';
 import ExpendableListCards from '../../card/expendable-list-cards';
-import PaysageSection from '../../sections/section';
+import { Bloc, BlocActionButton, BlocContent, BlocModal, BlocTitle } from '../../bloc';
+import useFetch from '../../../hooks/useFetch';
+import useBlocUrl from '../../../hooks/useBlocUrl';
 
-export default function NamesComponent({ apiObject, id }) {
-  const { toast } = useToast();
-  const [data, setData] = useState([]);
+export default function NamesComponent({ apiObject }) {
+  const url = useBlocUrl('categories');
+  const { data, isLoading, error, reload } = useFetch(url);
   const [showModal, setShowModal] = useState(false);
   const [modalTitle, setModalTitle] = useState('');
   const [modalContent, setModalContent] = useState(null);
-  const [reloader, setReloader] = useState(0);
 
-  useEffect(() => {
-    const getData = async () => {
-      const response = await api
-        .get(`/${apiObject}/${id}/categories`)
-        .catch(() => {
-          toast({
-            toastType: 'error',
-            description: "Une erreur s'est produite",
-          });
-        });
-      if (response.ok) setData(response.data);
-    };
-    getData();
-    return () => {};
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [apiObject, id, reloader]);
-
-  const onSaveHandler = async (body, nameId = null) => {
-    let method = 'post';
-    let url = `/${apiObject}/${id}/categories`;
-
-    if (nameId) {
-      method = 'patch';
-      url += `/${nameId}`;
-    }
-
-    const response = await api[method](url, body).catch(() => {
-      toast({
-        toastType: 'error',
-        description: "Une erreur s'est produite",
-      });
-    });
-
+  const onSaveHandler = async (body) => {
+    const method = body.id ? 'patch' : 'post';
+    const saveUrl = body.id ? `${url}/${body.id}` : url;
+    const response = await api[method](saveUrl, body).catch((e) => { console.log(e); });
     if (response.ok) {
-      setReloader(reloader + 1);
+      reload();
       setShowModal(false);
     }
   };
 
-  const onClickDeleteHandler = async (idCat) => {
-    const url = `/${apiObject}/${id}/categories/${idCat}`;
-    await api.delete(url).catch((e) => {
-      console.log(e);
-    });
-    setReloader(reloader + 1);
+  const onDeleteHandler = async (itemId) => {
+    await api.delete(`${url}/${itemId}`).catch((e) => { console.log(e); });
+    reload();
+    setShowModal(false);
   };
 
   const onClickAddHandler = () => {
@@ -79,11 +44,12 @@ export default function NamesComponent({ apiObject, id }) {
   };
 
   const renderCards = () => {
+    if (!data) return null;
     const list = data.data.map((el) => (
       <DeleteCard
-        title={el.usualNameFr}
+        title={el.category?.usualNameFr}
         description={formatDescriptionDates(el.startDate, el.endDate)}
-        onClick={() => onClickDeleteHandler(el.id)}
+        onClick={() => onDeleteHandler(el.id)}
         bgColorClassName="bg-categories-light"
       />
     ));
@@ -92,41 +58,22 @@ export default function NamesComponent({ apiObject, id }) {
     );
   };
 
-  if (!data?.data) {
-    return <PaysageSection dataPaysageMenu="Categories" id="categories" isEmpty />;
-  }
-
   return (
-    <PaysageSection dataPaysageMenu="Categories" id="categories">
-      <Row>
-        <Col>
-          <Title as="h3" look="h6">
-            Catégories
-          </Title>
-        </Col>
-        <Col className="text-right">
-          <Button
-            onClick={onClickAddHandler}
-            size="sm"
-            secondary
-            icon="ri-add-circle-line"
-          >
-            Ajouter une catégorie
-          </Button>
-        </Col>
-      </Row>
-      <Row>
-        {renderCards()}
-      </Row>
-      <Modal isOpen={showModal} size="lg" hide={() => setShowModal(false)}>
-        <ModalTitle>{modalTitle}</ModalTitle>
-        <ModalContent>{modalContent}</ModalContent>
-      </Modal>
-    </PaysageSection>
+    <Bloc isLoading={isLoading} error={error} data={data}>
+      <BlocTitle as="h3" look="h6">Categories</BlocTitle>
+      <BlocActionButton onClick={onClickAddHandler}>Ajouter une catégorie</BlocActionButton>
+      <BlocContent>{renderCards()}</BlocContent>
+      <BlocModal>
+        <Modal isOpen={showModal} size="lg" hide={() => setShowModal(false)}>
+          <ModalTitle>{modalTitle}</ModalTitle>
+          <ModalContent>{modalContent}</ModalContent>
+        </Modal>
+      </BlocModal>
+    </Bloc>
+
   );
 }
 
 NamesComponent.propTypes = {
   apiObject: PropTypes.string.isRequired,
-  id: PropTypes.string.isRequired,
 };

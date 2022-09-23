@@ -1,5 +1,4 @@
 import {
-  Alert,
   Container,
   Col,
   Row,
@@ -8,18 +7,15 @@ import {
 } from '@dataesr/react-dsfr';
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
-import { v4 as uuidv4 } from 'uuid';
 import api from '../../../utils/api';
 import validator from './validator';
 import FormFooter from '../../forms/form-footer/form-footer';
+import useForm from '../../../hooks/useForm';
+import { WEBLINKS_TYPES } from '../../../utils/constants';
 
 export default function WeblinkForm({ data, onDeleteHandler, onSaveHandler, enumKey }) {
-  const [savingErrors, setSavingErrors] = useState(null);
-  const [errors, setReturnedErrors] = useState([]);
-
-  const [weblinkType, setWeblinkType] = useState(null);
-  const [weblinkUrl, setWeblinkUrl] = useState(null);
-  const [weblinkLanguage, setWeblinkLanguage] = useState(null);
+  const [showErrors, setShowErrors] = useState(false);
+  const { form, updateForm, errors } = useForm(data, validator);
 
   const [options, setOptions] = useState([]);
 
@@ -29,57 +25,29 @@ export default function WeblinkForm({ data, onDeleteHandler, onSaveHandler, enum
         console.log(e);
       });
       if (response.ok) {
-        setOptions(
-          response.data[enumKey].enum.map((item) => ({
-            label: item,
-            value: item,
-          })),
-        );
-        if (!data) {
-          // valeur par défaut
-          setWeblinkType(response.data[enumKey].enum[0]);
+        const opts = [];
+        response.data[enumKey].enum.forEach((item) => {
+          if (Object.keys(WEBLINKS_TYPES).includes(item)) {
+            opts.push({
+              label: WEBLINKS_TYPES[item],
+              value: item,
+            });
+          }
+        });
+        setOptions(opts);
+
+        if (!data?.type) {
+          updateForm({ type: response.data[enumKey].enum[0] });
         }
       }
     };
     getOptions();
-
-    if (data) {
-      setWeblinkType(data.type || null);
-      setWeblinkUrl(data.url || null);
-      setWeblinkLanguage(data.language || null);
-    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data, enumKey]);
 
-  const setErrors = (err) => {
-    setReturnedErrors(errors);
-    setSavingErrors(
-      <Row>
-        <Col>
-          <ul>
-            {err.map((e) => (
-              <li key={uuidv4()}>
-                <Alert description={e.error} type="error" />
-              </li>
-            ))}
-          </ul>
-        </Col>
-      </Row>,
-    );
-  };
-
   const onSave = () => {
-    const body = {
-      type: weblinkType,
-      url: weblinkUrl,
-      language: weblinkLanguage,
-    };
-
-    const { ok, returnedErrors } = validator(body);
-    if (ok) {
-      onSaveHandler(body, data?.id || null);
-    } else {
-      setErrors(returnedErrors);
-    }
+    if (Object.keys(errors).length > 0) return setShowErrors(true);
+    return onSaveHandler(form);
   };
 
   return (
@@ -90,13 +58,11 @@ export default function WeblinkForm({ data, onDeleteHandler, onSaveHandler, enum
             <Select
               label="Type"
               options={options}
-              selected={weblinkType}
-              onChange={(e) => setWeblinkType(e.target.value)}
-              tanindex="0"
-              required
-              messageType={
-                errors.find((el) => el.field === 'type') ? 'error' : ''
-              }
+              selected={form?.type}
+              onChange={(e) => updateForm({ type: e.target.value })}
+              tabIndex={0}
+              message={(showErrors && errors.type) ? errors.type : null}
+              messageType={(showErrors && errors.type) ? 'error' : ''}
             />
           </Col>
         </Row>
@@ -104,16 +70,14 @@ export default function WeblinkForm({ data, onDeleteHandler, onSaveHandler, enum
           <Col>
             <TextInput
               label="URL"
-              value={weblinkUrl || ''}
-              onChange={(e) => setWeblinkUrl(e.target.value)}
+              value={form?.url}
+              onChange={(e) => updateForm({ url: e.target.value })}
               required
-              messageType={
-                errors.find((el) => el.field === 'url') ? 'error' : ''
-              }
+              message={(showErrors && errors.url) ? errors.url : null}
+              messageType={(showErrors && errors.url) ? 'error' : ''}
             />
           </Col>
         </Row>
-        {savingErrors || null}
         <FormFooter
           id={data?.id}
           onSaveHandler={onSave}
@@ -132,6 +96,6 @@ WeblinkForm.propTypes = {
 };
 
 WeblinkForm.defaultProps = {
-  data: null,
+  data: {},
   onDeleteHandler: null,
 };

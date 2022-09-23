@@ -1,68 +1,42 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import PropTypes from 'prop-types';
 import {
   Card,
   CardDescription,
   CardTitle,
-  Col,
   ModalContent,
   ModalTitle,
-  Row,
-  Title,
 } from '@dataesr/react-dsfr';
-import Button from '../../button';
-import PaysageSection from '../../sections/section';
-import EmptySection from '../../sections/empty';
 import NameForm from './form';
 import api from '../../../utils/api';
 import { formatDescriptionDates } from '../../../utils/dates';
 import Modal from '../../modal';
 
-export default function NamesComponent({ apiObject, id }) {
-  const [data, setData] = useState([]);
+import { Bloc, BlocActionButton, BlocContent, BlocModal, BlocTitle } from '../../bloc';
+import useFetch from '../../../hooks/useFetch';
+import useBlocUrl from '../../../hooks/useBlocUrl';
+import ExpendableListCards from '../../card/expendable-list-cards';
+
+export default function NamesComponent({ apiObject }) {
+  const url = useBlocUrl('names');
+  const { data, isLoading, error, reload } = useFetch(url);
   const [showModal, setShowModal] = useState(false);
   const [modalTitle, setModalTitle] = useState('');
   const [modalContent, setModalContent] = useState(null);
-  const [reloader, setReloader] = useState(0);
 
-  useEffect(() => {
-    const getData = async () => {
-      const response = await api
-        .get(`/${apiObject}/${id}/names`)
-        .catch((e) => {
-          console.log(e);
-        });
-      if (response.ok) setData(response.data);
-    };
-    getData();
-    return () => {};
-  }, [apiObject, id, reloader]);
-
-  const onSaveHandler = async (body, nameId = null) => {
-    let method = 'post';
-    let url = `/${apiObject}/${id}/names`;
-
-    if (nameId) {
-      method = 'patch';
-      url += `/${nameId}`;
-    }
-
-    const response = await api[method](url, body).catch((e) => {
-      console.log(e);
-    });
-
+  const onSaveHandler = async (body) => {
+    const method = body.id ? 'patch' : 'post';
+    const saveUrl = body.id ? `${url}/${body.id}` : url;
+    const response = await api[method](saveUrl, body).catch((e) => { console.log(e); });
     if (response.ok) {
-      setReloader(reloader + 1);
+      reload();
       setShowModal(false);
     }
   };
 
-  const onDeleteHandler = async (nameId) => {
-    const url = `/${apiObject}/${id}/names/${nameId}`;
-    await api.delete(url).catch((e) => {
-      console.log(e);
-    });
-    setReloader(reloader + 1);
+  const onDeleteHandler = async (itemId) => {
+    await api.delete(`${url}/${itemId}`).catch((e) => { console.log(e); });
+    reload();
     setShowModal(false);
   };
 
@@ -84,57 +58,38 @@ export default function NamesComponent({ apiObject, id }) {
     setShowModal(true);
   };
 
-  if (!data?.data) {
-    return (
-      <PaysageSection dataPaysageMenu="Noms" id="names" isEmpty />
-    );
-  }
+  const renderCards = () => {
+    if (!data) return null;
+    const list = data.data.map((item) => (
+      <Card
+        hasArrow={false}
+        onClick={() => onClickModifyHandler(item)}
+        href="#"
+      >
+        <CardTitle>{item.usualName}</CardTitle>
+        <CardDescription>
+          {formatDescriptionDates(item.startDate, item.endDate)}
+        </CardDescription>
+      </Card>
+    ));
+    return <ExpendableListCards apiObject={apiObject} list={list} />;
+  };
 
   return (
-    <PaysageSection dataPaysageMenu="Noms" id="names">
-      <Row>
-        <Col>
-          <Title as="h3" look="h6">
-            Noms
-          </Title>
-        </Col>
-        <Col className="text-right">
-          <Button
-            onClick={onClickAddHandler}
-            size="sm"
-            secondary
-            icon="ri-add-circle-line"
-          >
-            Ajouter un nom
-          </Button>
-        </Col>
-      </Row>
-      <Row>
-        {data.data.length === 0 ? <EmptySection apiObject={apiObject} /> : null}
-        {data.data.map((item) => (
-          <Col n="4" key={item.id}>
-            <Card
-              hasArrow={false}
-              onClick={() => onClickModifyHandler(item)}
-              href="#"
-            >
-              <CardTitle>{item.usualName}</CardTitle>
-              <CardDescription>
-                {formatDescriptionDates(item.startDate, item.endDate)}
-              </CardDescription>
-            </Card>
-          </Col>
-        ))}
-      </Row>
-      <Modal isOpen={showModal} hide={() => setShowModal(false)}>
-        <ModalTitle>{modalTitle}</ModalTitle>
-        <ModalContent>{modalContent}</ModalContent>
-      </Modal>
-    </PaysageSection>
+    <Bloc isLoading={isLoading} error={error} data={data}>
+      <BlocTitle as="h3" look="h6">Noms</BlocTitle>
+      <BlocActionButton onClick={onClickAddHandler}>Ajouter un nom</BlocActionButton>
+      <BlocContent>{renderCards()}</BlocContent>
+      <BlocModal>
+        <Modal isOpen={showModal} size="lg" hide={() => setShowModal(false)}>
+          <ModalTitle>{modalTitle}</ModalTitle>
+          <ModalContent>{modalContent}</ModalContent>
+        </Modal>
+      </BlocModal>
+    </Bloc>
   );
 }
 
 NamesComponent.propTypes = {
   apiObject: PropTypes.string.isRequired,
-  id: PropTypes.string.isRequired,
 };
