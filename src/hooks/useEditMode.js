@@ -1,6 +1,7 @@
 import {
   createContext,
   useContext,
+  useEffect,
   useState,
   useCallback,
   useMemo,
@@ -13,17 +14,16 @@ export function EditModeContextProvider({ children }) {
   const [editMode, setEditMode] = useState(null);
 
   const reset = useCallback(() => {
-    const prefered = localStorage.getItem('prefers-edit-mode') || false;
-    if (prefered) setEditMode(prefered);
+    setEditMode(JSON.parse(localStorage.getItem('prefers-edit-mode')) || false);
   }, []);
 
   const toggle = useCallback(() => {
     setEditMode(!editMode);
   }, [editMode]);
 
-  useState(() => {
+  useEffect(() => {
     reset();
-  }, []);
+  }, [reset]);
 
   const value = useMemo(() => ({ editMode, reset, toggle }), [editMode, reset, toggle]);
 

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Modal, ModalContent, ModalTitle } from '@dataesr/react-dsfr';
+import { Modal, ModalContent, ModalTitle, Row, Text } from '@dataesr/react-dsfr';
 import api from '../../../utils/api';
 import ModifyCard from '../../card/modify-card';
 import ExpendableListCards from '../../card/expendable-list-cards';
@@ -9,6 +9,7 @@ import RelationForm from './form';
 import useFetch from '../../../hooks/useFetch';
 import useBlocUrl from '../../../hooks/useBlocUrl';
 import useNotice from '../../../hooks/useNotice';
+import { formatDescriptionDates } from '../../../utils/dates';
 
 export default function RelationsGroup({ groupId, groupName, groupAccepts }) {
   const { notice } = useNotice();
@@ -67,11 +68,12 @@ export default function RelationsGroup({ groupId, groupName, groupAccepts }) {
     if (!data && !data?.data?.length) return null;
     const list = data.data.map((element) => (
       <ModifyCard
-        title={element.id}
+        title={`${element.relatedObject?.firstName} ${element.relatedObject?.lastName}`.trim()}
         description={(
-          <pre>
-            {JSON.stringify(element, null, 2)}
-          </pre>
+          <Row alignItems="middle">
+            <Text spacing="mr-1v mb-0">{element.relationType?.name || 'Appartient à la liste'}</Text>
+            <Text spacing="mr-1v mb-0">{formatDescriptionDates(element.startDate, element.endDate)}</Text>
+          </Row>
         )}
         onClick={() => onClickModifyHandler(element)}
       />

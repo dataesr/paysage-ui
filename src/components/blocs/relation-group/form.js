@@ -15,7 +15,7 @@ import useFetch from '../../../hooks/useFetch';
 
 const getInitialFormFromData = (data) => {
   if (!data.id) return {};
-  const { relatedObject } = data;
+  const { relatedObject, startDate, endDate } = data;
   let relatedObjectName;
   switch (relatedObject.type) {
   case 'person':
@@ -35,6 +35,8 @@ const getInitialFormFromData = (data) => {
     break;
   }
   return ({
+    startDate,
+    endDate,
     relationTypeId: data.relationType?.id,
     relatedObjectName,
     relatedObjectId: data.relatedObject?.id,

@@ -14,8 +14,8 @@ const themes = [
   { label: 'Thème du système', value: null, svg: <System /> },
 ];
 const views = [
-  { label: 'Mode normal', hint: 'Afficher les pages en mode vue par défaut.', value: 'false', svg: <View /> },
-  { label: 'Mode édition', hint: 'Afficher les pages en mode édition par défaut.', value: 'true', svg: <Edit /> },
+  { label: 'Mode normal', hint: 'Afficher les pages en mode vue par défaut.', value: false, svg: <View /> },
+  { label: 'Mode édition', hint: 'Afficher les pages en mode édition par défaut.', value: true, svg: <Edit /> },
 ];
 
 export default function PreferencesPage() {
@@ -63,9 +63,9 @@ export default function PreferencesPage() {
           <RadioGroup
             isInline
             legend="Choisissez un mode d'affichage des page par défaut"
-            value={window.localStorage.getItem('prefers-edit-mode')}
+            value={JSON.parse(localStorage.getItem('prefers-edit-mode'))}
             onChange={(value) => {
-              window.localStorage.setItem('prefers-edit-mode', value);
+              localStorage.setItem('prefers-edit-mode', value);
             }}
           >
             {views.map((view) => (
