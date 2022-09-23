@@ -133,7 +133,7 @@ export default function NomenclaturesPage({ route, title }) {
           </Breadcrumb>
         </Col>
       </Row>
-      <Row className="fr-row--space-between fr-row--baseline">
+      <Row className="fr-row--space-between flex--baseline">
         <Row alignItems="top">
           <Title className="fr-pr-1v" as="h2" look="h3">{title}</Title>
           <Badge type="info" text={data?.totalCount} />
@@ -144,7 +144,7 @@ export default function NomenclaturesPage({ route, title }) {
       {data.data?.map((item) => (
         <>
           <Row className="fr-row--space-between">
-            <div className="fr-col--grow fr-pl-2w">
+            <div className="flex--grow fr-pl-2w">
               <Text spacing="my-1v" bold size="lg">{item.usualName}</Text>
               <Text as="span" bold>Autres noms: </Text>
               {item.otherNames.length ? item.otherNames.map((name) => <Tag as="span">{name}</Tag>) : <Text as="span">Aucun alias pour le moment</Text>}

@@ -4,5 +4,5 @@ export default function useUrl(blocPath) {
   const { id } = useParams();
   const { pathname } = useLocation();
   const api = pathname.split('/')?.[1];
-  return `/${api}/${id}/${blocPath}`;
+  return blocPath ? `/${api}/${id}/${blocPath}` : `/${api}/${id}`;
 }

@@ -56,7 +56,7 @@ function User({
         <div>
           <Avatar name={`${firstName} ${lastName}`} src={avatar} />
         </div>
-        <div className="fr-col--grow fr-pl-2w">
+        <div className="flex--grow fr-pl-2w">
           <Text as="span" spacing="my-1v" bold size="lg">
             {`${firstName} ${lastName} `}
             {isDeleted && <Badge className="fr-mx-1w" isSmall type="error" text="Supprimé" />}

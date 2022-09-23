@@ -13,7 +13,7 @@ export function EditModeContextProvider({ children }) {
   const [editMode, setEditMode] = useState(null);
 
   const reset = useCallback(() => {
-    const prefered = localStorage.getItem('__paysage_prefered_edit_mode__') || false;
+    const prefered = localStorage.getItem('prefers-edit-mode') || false;
     if (prefered) setEditMode(prefered);
   }, []);
 

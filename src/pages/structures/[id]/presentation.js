@@ -4,7 +4,7 @@ import Categories from '../../../components/blocs/catgories';
 import ChiffresClesPresentation from '../../../components/blocs/chiffres-cles-presentation';
 import DernieresActualites from '../../../components/blocs/dernieres-actualites';
 import Emails from '../../../components/blocs/emails';
-import GouvernancePresentation from '../../../components/blocs/gouvernance-presentation';
+// import GouvernancePresentation from '../../../components/blocs/gouvernance';
 import HistoriqueEtDates from '../../../components/blocs/historique-et-dates';
 import Identifiers from '../../../components/blocs/identifiers';
 import Informations from '../../../components/blocs/informations';
@@ -56,8 +56,8 @@ export default function StructurePresentationPage() {
       <div id="chiffres-cles">
         <ChiffresClesPresentation apiObject="structures" id={id} />
       </div>
-      <div id="gouvernance">
-        <GouvernancePresentation apiObject="structures" id={id} />
+      {/* <GouvernancePresentation apiObject="structures" id={id} /> */}
+      <div id="email">
         <Emails apiObject="structures" id={id} />
       </div>
       <div id="dernieres-actualites">
