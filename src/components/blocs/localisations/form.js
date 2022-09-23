@@ -48,7 +48,7 @@ export default function LocalisationForm({ data, onDeleteHandler, onSaveHandler 
 
   const onSave = () => {
     if (Object.keys(errors).length > 0) return setShowErrors(true);
-    return onSaveHandler(form);
+    return onSaveHandler(form.id, form);
   };
 
   const setGPS = (value) => {
