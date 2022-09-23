@@ -8,6 +8,11 @@ HR {
   padding-bottom: 8px;
 }
 
+.leaflet-control {
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
 .text-right {
   text-align: right;
 }

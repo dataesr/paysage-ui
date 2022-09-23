@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useRef } from 'react';
 import { useReactToPrint } from 'react-to-print';
 
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
@@ -6,8 +6,7 @@ import { Badge, BadgeGroup, Col, Container, Row, Title } from '@dataesr/react-ds
 import useFetch from '../../../hooks/useFetch';
 import CopyBadgeButton from '../../../components/copy/copy-badge-button';
 
-import Categories from '../../../components/blocs/catgories';
-import Identifiers from '../../../components/blocs/identifiers';
+import StructurePresentationPage from './presentation';
 
 export default function StructureExportPage() {
   const { id } = useParams();
@@ -17,20 +16,16 @@ export default function StructureExportPage() {
   const { data, isLoading, error } = useFetch(`/structures/${id}`);
   const componentRef = useRef();
 
-  const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(false);
 
   const handlePrint = useReactToPrint({
     content: () => componentRef.current,
     documentTitle: 'AwesomeFileName',
-    // onAfterPrint: () => navigate(`/structures/${id}`),
+    onAfterPrint: () => navigate(`/structures/${id}`),
     removeAfterPrint: true,
   });
 
-  useEffect(() => {
-    if (!isLoading && componentRef && componentRef.current) {
-      setTimeout(() => handlePrint(), 1000);
-    }
-  }, [isLoading, componentRef.current]);
+  setTimeout(() => handlePrint(), 1000);
 
   if (isLoading) return <>Chargement...</>;
   if (error) return <>Erreur...</>;
@@ -53,8 +48,7 @@ export default function StructureExportPage() {
                 />
               </BadgeGroup>
             </Title>
-            {searchParams.get('categories') && <Categories apiObject="structures" id={id} />}
-            {searchParams.get('identifiants') && <Identifiers apiObject="structures" id={id} />}
+            {searchParams.get('oeil') && <StructurePresentationPage />}
           </Col>
         </Row>
       </Container>

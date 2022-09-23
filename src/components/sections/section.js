@@ -2,19 +2,13 @@ import PropTypes from 'prop-types';
 
 export default function Section({ children, dataPaysageMenu, id, isEmpty }) {
   return (
-    <div
+    <section
       className="fr-container-fluid fr-mb-5w"
-      as="section"
       data-paysage-menu={dataPaysageMenu}
       id={id}
     >
-      {isEmpty ? <>...</> : (
-        // eslint-disable-next-line react/jsx-no-useless-fragment
-        <>
-          { children }
-        </>
-      )}
-    </div>
+      {isEmpty ? <>...</> : children}
+    </section>
   );
 }
 

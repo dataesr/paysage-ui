@@ -2,23 +2,22 @@ import useFetch from '../../../hooks/useFetch';
 import useUrl from '../../../hooks/useBlocUrl';
 import useHashScroll from '../../../hooks/useHashScroll';
 import Spinner from '../../../components/spinner';
-import Governance from '../../../components/blocs/gouvernance';
+import RelationGroup from '../../../components/blocs/relation-group';
 
 export default function StructureGouvernancePage() {
   useHashScroll();
   const url = useUrl();
-  const { data, isLoading, error } = useFetch(`${url}/relations-groups`);
+  const { data, isLoading, error } = useFetch(`${url}/relations-groups?filters[name][$in]=Gouvernance&filters[name][$in]=Référents MESR&limit=2`);
 
   if (isLoading) return <Spinner size={48} />;
   if (error) return <>Erreur...</>;
   if (data && data.data) {
-    console.log(data.data);
-    const governanceGroupId = data.data.filter((element) => (element.name === 'Gouvernance'))?.[0].id;
-    const referentGroupId = data.data.filter((element) => (element.name === 'Référents MESR'))?.[0].id;
+    const governanceGroup = data.data.find((element) => (element.name === 'Gouvernance'));
+    const referentGroup = data.data.find((element) => (element.name === 'Référents MESR'));
     return (
       <>
-        {governanceGroupId && <Governance governanceGroupId={governanceGroupId} />}
-        {referentGroupId && <Governance governanceGroupId={referentGroupId} />}
+        {governanceGroup?.id && <RelationGroup groupId={governanceGroup.id} groupName={governanceGroup.name} groupAccepts={governanceGroup.accepts} />}
+        {referentGroup?.id && <RelationGroup groupId={referentGroup.id} groupName={referentGroup.name} groupAccepts={referentGroup.accepts} />}
       </>
     );
   }

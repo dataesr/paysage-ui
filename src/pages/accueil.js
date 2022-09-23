@@ -146,10 +146,10 @@ export default function HomePage() {
       </Row>
       <Row gutters className="fr-pb-5w">
         <ButtonGroup size="sm" isInlineFrom="md">
-          <Button color="inherit">Bouton</Button>
-          <Button secondary color="inherit">Bouton</Button>
-          <Button tertiary color="inherit">Bouton</Button>
-          <Button tertiary borderless color="inherit">Bouton</Button>
+          <Button>Bouton</Button>
+          <Button secondary>Bouton</Button>
+          <Button tertiary>Bouton</Button>
+          <Button tertiary borderless>Bouton</Button>
         </ButtonGroup>
       </Row>
       <Row className="fr-pb-2w">

@@ -11,18 +11,50 @@ import DateInput from '../../date-input';
 import SearchBar from '../../search-bar';
 import FormFooter from '../../forms/form-footer/form-footer';
 import api from '../../../utils/api';
+import useFetch from '../../../hooks/useFetch';
 
-export default function GovernanceForm({ data, onDeleteHandler, onSaveHandler }) {
-  const validator = (body) => {
-    const errors = {};
-    if (!body?.relatedObjectId) {
-      errors.relatedObjectId = 'Vous devez séléctionner un objet à lier';
-    }
-    if (!body?.relationTypeId) {
-      errors.relationTypeId = 'Vous devez séléctionner un type de liaison';
-    }
-    return errors;
-  };
+const getInitialFormFromData = (data) => {
+  if (!data.id) return {};
+  const { relatedObject } = data;
+  let relatedObjectName;
+  switch (relatedObject.type) {
+  case 'person':
+    relatedObjectName = `${relatedObject.firstName} ${relatedObject.lastName}`.trim();
+    break;
+  case 'structure':
+    relatedObjectName = relatedObject.currentName.usualName;
+    break;
+  case 'price':
+    relatedObjectName = relatedObject.nameFr;
+    break;
+  case 'project':
+    relatedObjectName = relatedObject.nameFr;
+    break;
+  default:
+    relatedObjectName = relatedObject.usualNameFr;
+    break;
+  }
+  return ({
+    relationTypeId: data.relationType?.id,
+    relatedObjectName,
+    relatedObjectId: data.relatedObject?.id,
+  });
+};
+
+const validator = (body) => {
+  const errors = {};
+  if (!body?.relatedObjectId) {
+    errors.relatedObjectId = 'Vous devez séléctionner un objet à lier';
+  }
+  return errors;
+};
+
+export default function RelationForm({ forObjects, data, onDeleteHandler, onSaveHandler }) {
+  const relationTypeUrl = (forObjects.length > 1)
+    ? `/relation-types?limit=500&filters[for][$in]=${forObjects.join('&filters[for][$in]=') }`
+    : `/relation-types?limit=500&filters[for]=${forObjects[0]}`;
+
+  const { data: relationTypes } = useFetch(relationTypeUrl);
 
   const [showErrors, setShowErrors] = useState(false);
 
@@ -30,41 +62,19 @@ export default function GovernanceForm({ data, onDeleteHandler, onSaveHandler })
   const [startDateOfficialTextQuery, setStartDateOfficialTextQuery] = useState('');
   const [endDateOfficialTextQuery, setEndDateOfficialTextQuery] = useState('');
 
-  const [relationTypesOptions, setRelationTypesOptions] = useState([]);
   const [relatedObjectOptions, setRelatedObjectOptions] = useState([]);
   const [startDateOfficialTextOptions, setStartDateOfficialTextOptions] = useState([]);
   const [endDateOfficialTextOptions, setEndDateOfficialTextOptions] = useState([]);
 
-  const { form, updateForm, errors } = useForm(data, validator);
-
-  useEffect(() => {
-    const getOptions = async () => {
-      const response = await api.get('/relation-types?limit=500').catch((e) => {
-        console.log(e);
-      });
-      if (response.ok) {
-        setRelationTypesOptions(
-          response.data.data.map((item) => ({
-            label: item.name,
-            value: item.id,
-          })),
-        );
-        if (!data) { // valeur par défaut
-          updateForm({ relationTypeId: response.data.data[0].id });
-        }
-      }
-    };
-    getOptions();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const { form, updateForm, errors } = useForm(getInitialFormFromData(data), validator);
 
   useEffect(() => {
     const getAutocompleteResult = async () => {
-      const response = await api.get(`/autocomplete?query=${relatedObjectQuery}&types=persons`);
+      const response = await api.get(`/autocomplete?query=${relatedObjectQuery}&types=${forObjects.join(',')}`);
       setRelatedObjectOptions(response.data?.data);
     };
     if (relatedObjectQuery) { getAutocompleteResult(); } else { setRelatedObjectOptions([]); }
-  }, [relatedObjectQuery]);
+  }, [relatedObjectQuery, forObjects]);
 
   useEffect(() => {
     const getAutocompleteResult = async () => {
@@ -104,13 +114,12 @@ export default function GovernanceForm({ data, onDeleteHandler, onSaveHandler })
     setStartDateOfficialTextOptions([]);
   };
 
-  const handlePersonSelect = ({ id, name }) => {
-    console.log({ id, name });
+  const handleRelatedObjectSelect = ({ id, name }) => {
     updateForm({ relatedObjectName: name, relatedObjectId: id });
     setRelatedObjectQuery('');
     setRelatedObjectOptions([]);
   };
-  const handlePersonUnselect = () => {
+  const handleRelatedObjectUnselect = () => {
     updateForm({ relatedObjectName: null, relatedObjectId: null });
     setRelatedObjectQuery('');
     setRelatedObjectOptions([]);
@@ -118,9 +127,15 @@ export default function GovernanceForm({ data, onDeleteHandler, onSaveHandler })
 
   const handleSave = () => {
     if (Object.keys(errors).length > 0) return setShowErrors(true);
-    console.log(form);
     return onSaveHandler(form);
   };
+
+  const relationTypesOptions = (relationTypes?.data)
+    ? [
+      { label: 'Appartient à la liste', value: null },
+      ...relationTypes.data.map((element) => ({ label: element.name, value: element.id })),
+    ]
+    : [{ label: 'Appartient à la liste', value: null }];
 
   return (
     <form>
@@ -130,15 +145,15 @@ export default function GovernanceForm({ data, onDeleteHandler, onSaveHandler })
             <SearchBar
               buttonLabel="Rechercher"
               value={relatedObjectQuery || ''}
-              label="Personne"
-              hint="Recherchez et séléctionnez une personne paysage"
+              label="Objet paysage à lier"
+              hint="Recherchez dans les objects paysage"
               required
               scope={form.relatedObjectName}
               placeholder={form.relatedObjectId ? '' : 'Rechercher...'}
               onChange={(e) => { updateForm({ relatedObjectId: null }); setRelatedObjectQuery(e.target.value); }}
               options={relatedObjectOptions}
-              onSelect={handlePersonSelect}
-              onDeleteScope={handlePersonUnselect}
+              onSelect={handleRelatedObjectSelect}
+              onDeleteScope={handleRelatedObjectUnselect}
             />
           </Col>
           <Col n="12" className="fr-pb-5w">
@@ -206,14 +221,15 @@ export default function GovernanceForm({ data, onDeleteHandler, onSaveHandler })
   );
 }
 
-GovernanceForm.propTypes = {
-  // eslint-disable-next-line react/forbid-prop-types
+RelationForm.propTypes = {
+  forObjects: PropTypes.arrayOf(PropTypes.string),
   data: PropTypes.object,
   onDeleteHandler: PropTypes.func,
   onSaveHandler: PropTypes.func.isRequired,
 };
 
-GovernanceForm.defaultProps = {
+RelationForm.defaultProps = {
+  forObjects: [''],
   data: {},
   onDeleteHandler: null,
 };

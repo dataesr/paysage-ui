@@ -81,7 +81,7 @@ export default function NamesComponent({ apiObject, id }) {
   const renderCards = () => {
     const list = data.data.map((el) => (
       <DeleteCard
-        title={el.category.usualNameFr}
+        title={el.usualNameFr}
         description={formatDescriptionDates(el.startDate, el.endDate)}
         onClick={() => onClickDeleteHandler(el.id)}
         bgColorClassName="bg-categories-light"

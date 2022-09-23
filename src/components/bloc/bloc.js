@@ -1,36 +1,28 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable react/forbid-prop-types */
-/* eslint-disable react/no-unused-prop-types */
-import { Children, useEffect, useState } from 'react';
+import { Children } from 'react';
 import PropTypes from 'prop-types';
-import { Row, Highlight } from '@dataesr/react-dsfr';
+import { Container, Row, Highlight } from '@dataesr/react-dsfr';
 import Spinner from '../spinner';
 import useEditMode from '../../hooks/useEditMode';
 
 export default function Bloc({ children, data, error, isLoading }) {
   const { editMode } = useEditMode();
-  const [content, setContent] = useState(null);
   const header = Children.toArray(children).find((child) => child.props.__TYPE === 'BlocTitle');
   const action = Children.toArray(children).find((child) => child.props.__TYPE === 'BlocActionButton');
   const modal = Children.toArray(children).find((child) => child.props.__TYPE === 'BlocModal');
   const blocContent = Children.toArray(children).find((child) => child.props.__TYPE === 'BlocContent');
 
-  useEffect(() => {
-    if (isLoading) setContent(<Row className="fr-my-2w flex--space-around"><Spinner /></Row>);
-    if (error) setContent(<Highlight style={{ borderColor: 'var(--border-color)' }}>Une erreur s'est produite au chargement des données</Highlight>);
-    if (!data?.data?.length) setContent(<Highlight style={{ borderColor: 'var(--border-color)' }}>Cette section est vide pour le moment</Highlight>);
-    if (data?.data?.length) setContent(blocContent);
-  }, [data, error, isLoading]);
-
   return (
-    <div className="fr-container-fluid fr-mb-5w" as="section">
-      <Row className="flex--nowrap flex--last-baseline">
+    <Container fluid className="fr-mb-5w" as="section">
+      <Row className="flex--nowrap">
         <div className="flex--grow">{header}</div>
         {editMode && (<div>{action}</div>)}
       </Row>
-      {content}
+      {isLoading && <Row className="fr-my-2w flex--space-around"><Spinner /></Row>}
+      {error && <Highlight style={{ borderColor: 'var(--border-color)' }}>Une erreur s'est produite lors du chargement des données</Highlight>}
+      {(!error && !isLoading && !data?.totalCount) && <Highlight style={{ borderColor: 'var(--border-color)' }}>Cette section est vide pour le moment</Highlight>}
+      {data?.totalCount ? blocContent : null}
       {modal}
-    </div>
+    </Container>
   );
 }
 

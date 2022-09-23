@@ -85,7 +85,6 @@ export default function SocialMediaForm({ data, onDeleteHandler, onSaveHandler, 
 }
 
 SocialMediaForm.propTypes = {
-  // eslint-disable-next-line react/forbid-prop-types
   data: PropTypes.object,
   onDeleteHandler: PropTypes.func,
   onSaveHandler: PropTypes.func.isRequired,

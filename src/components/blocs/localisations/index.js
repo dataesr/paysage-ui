@@ -184,6 +184,5 @@ export default function LocalisationsComponent({ id, apiObject, currentLocalisat
 LocalisationsComponent.propTypes = {
   apiObject: PropTypes.string.isRequired,
   id: PropTypes.string.isRequired,
-  // eslint-disable-next-line react/forbid-prop-types
   currentLocalisationId: PropTypes.string.isRequired,
 };

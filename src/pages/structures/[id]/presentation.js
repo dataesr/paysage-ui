@@ -1,5 +1,5 @@
 import { useParams } from 'react-router-dom';
-
+import { Row, Title, Icon } from '@dataesr/react-dsfr';
 import Categories from '../../../components/blocs/catgories';
 import ChiffresClesPresentation from '../../../components/blocs/chiffres-cles-presentation';
 import DernieresActualites from '../../../components/blocs/dernieres-actualites';
@@ -7,7 +7,6 @@ import Emails from '../../../components/blocs/emails';
 // import GouvernancePresentation from '../../../components/blocs/gouvernance';
 import HistoriqueEtDates from '../../../components/blocs/historique-et-dates';
 import Identifiers from '../../../components/blocs/identifiers';
-import Informations from '../../../components/blocs/informations';
 import Localisations from '../../../components/blocs/localisations';
 import Names from '../../../components/blocs/names';
 import PalmaresEtClassements from '../../../components/blocs/palmares-et-classements';
@@ -27,15 +26,18 @@ export default function StructurePresentationPage() {
   if (error) return <>Erreur...</>;
   return (
     <>
+      <Row>
+        <Title as="h1" look="h3">
+          En un coup d’œil
+          <Icon className="ri-eye-2-line fr-ml-1w" />
+        </Title>
+      </Row>
       <div id="localisation">
         <Localisations
           apiObject="structures"
           id={id}
           currentLocalisationId={data.currentLocalisation.id || null}
         />
-      </div>
-      <div id="informations">
-        <Informations apiObject="structures" id={id} />
       </div>
       <div id="historique-et-dates">
         <HistoriqueEtDates apiObject="structures" id={id} />

@@ -9,7 +9,7 @@ import useFocusTrap from './useFocusTrap';
 import ModalClose from './ModalClose';
 import dataAttributes from './data-attributes';
 
-import styles from './styles.module.scss';
+// import styles from './styles.module.scss';
 // import '@gouvfr/dsfr/dist/component/modal/modal.css';
 
 /**
@@ -92,7 +92,7 @@ const ModalDialog = ({
     closeComponent = canClose ? <ModalClose hide={handleAnimatedUnmount} /> : null;
   }
   const component = (
-    // eslint-disable-next-line
+    // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions
     <dialog
       aria-labelledby="fr-modal-title-modal"
       className={`${_className} {styles.Modal}`}

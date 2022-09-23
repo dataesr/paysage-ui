@@ -3,9 +3,8 @@ import PropTypes from 'prop-types';
 
 export default function SubSection({ children, title }) {
   return (
-    <div
+    <section
       className="fr-container-fluid fr-mt-5w"
-      as="section"
     >
       <Title as="h3">
         {title}
@@ -13,7 +12,7 @@ export default function SubSection({ children, title }) {
       <div className="fr-ml-5w">
         { children }
       </div>
-    </div>
+    </section>
   );
 }
 

@@ -9,6 +9,7 @@ export default function TagInput({ label, hint, tags, onTagsChange }) {
   const handleKeyDown = (e) => {
     if ([13, 9, 66].includes(e.keyCode) && input) {
       e.preventDefault();
+      if (values.includes(input.trim())) return;
       const newValues = [...values, input.trim()];
       setValues(newValues);
       setInput('');
@@ -40,10 +41,9 @@ export default function TagInput({ label, hint, tags, onTagsChange }) {
         <Row>
           <Col className="fr-pt-2w">
             <TagGroup>
-              {values.map((tag, i) => (
+              {values.map((tag) => (
                 <Tag
-                  // eslint-disable-next-line react/no-array-index-key
-                  key={`tag-${i}`}
+                  key={tag}
                   className="fr-mr-1w"
                   onClick={() => handleDeleteClick(tag)}
                 >

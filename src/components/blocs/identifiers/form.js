@@ -132,7 +132,6 @@ export default function IdentifierForm({ data, onDeleteHandler, onSaveHandler, e
 }
 
 IdentifierForm.propTypes = {
-  // eslint-disable-next-line react/forbid-prop-types
   data: PropTypes.object,
   onDeleteHandler: PropTypes.func,
   onSaveHandler: PropTypes.func.isRequired,

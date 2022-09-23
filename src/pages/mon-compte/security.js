@@ -15,7 +15,6 @@ export default function SecurityPage() {
   const validator = (body) => {
     const errors = { newPassword: getPasswordValidationInfo(body.newPassword) };
     const passwordValidationInfo = getPasswordValidationInfo(body.newPassword);
-    console.log(passwordValidationInfo);
     errors.newPassword = passwordValidationInfo;
     if (body.newPassword !== body.passwordConfirmation) { errors.passwordConfirmation = 'Les deux mots de passe ne correspondent pas.'; }
     return errors;
@@ -29,10 +28,10 @@ export default function SecurityPage() {
     if (errors.passwordConfirmation) return setShowErrors(true);
     if (Object.values(errors.newPassword).filter((err) => (err !== true)).length !== 0) return setShowErrors(true);
     const { newPassword, currentPassword } = form;
-    const errorNotice = { content: "Une erreur s'est produite. Le mot de passe n'a pas été modifié", autoDismissAfter: 10000, type: 'error' };
+    const errorNotice = { content: "Une erreur s'est produite. Le mot de passe n'a pas été modifié", autoDismissAfter: 6000, type: 'error' };
     const response = await api.put('/me/password', { newPassword, currentPassword }).catch(() => notice(errorNotice));
     if (!response.ok || response?.error) return notice(errorNotice);
-    notice({ content: 'Votre mot de passe a été modifié avec succès !', autoDismissAfter: 10000, type: 'success' });
+    notice({ content: 'Votre mot de passe a été modifié avec succès !', autoDismissAfter: 6000, type: 'success' });
     return updateForm({ newPassword: '', currentPassword: '', passwordConfirmation: '' });
   };
 

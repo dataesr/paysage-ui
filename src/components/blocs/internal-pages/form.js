@@ -125,7 +125,6 @@ export default function InternalPageForm({ data, onDeleteHandler, onSaveHandler,
 }
 
 InternalPageForm.propTypes = {
-  // eslint-disable-next-line react/forbid-prop-types
   data: PropTypes.object,
   onDeleteHandler: PropTypes.func,
   onSaveHandler: PropTypes.func.isRequired,

@@ -101,6 +101,7 @@ export default function Header() {
             <SearchBar
               size="md"
               buttonLabel="Rechercher"
+              hideLabel
               value={query}
               label="Rechercher dans paysage"
               placeholder="Rechercher..."

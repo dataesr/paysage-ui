@@ -1,4 +1,3 @@
-/* eslint-disable default-case */
 import { Highlight } from '@dataesr/react-dsfr';
 import PropTypes from 'prop-types';
 

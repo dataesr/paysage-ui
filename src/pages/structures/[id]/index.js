@@ -244,7 +244,11 @@ function StructureByIdPage() {
               </ModalContent>
               <ModalFooter>
                 <ButtonGroup>
-                  <Button onClick={() => navigate(`/structures/${id}/exporter?${new URLSearchParams(form)}`)}>
+                  <Button onClick={() => {
+                    if (editMode) { toggle(); }
+                    navigate(`/structures/${id}/exporter?${new URLSearchParams(form)}`);
+                  }}
+                  >
                     Exporter
                   </Button>
                 </ButtonGroup>

@@ -1,8 +1,8 @@
-/* eslint-disable react/require-default-props */
-/* eslint-disable react/jsx-closing-tag-location */
-import React, {
+import {
+  createContext,
   useState,
   useCallback,
+  useContext,
   useMemo,
 } from 'react';
 import { createPortal } from 'react-dom';
@@ -17,7 +17,7 @@ ToastContainer.propTypes = {
   children: PropTypes.node.isRequired,
 };
 
-const ToastContext = React.createContext();
+const ToastContext = createContext();
 
 // Provider
 // ==============================
@@ -38,31 +38,34 @@ export function ToastContextProvider({ children }) {
   const value = useMemo(() => ({
     toast, remove, toasts,
   }), [toast, remove, toasts]);
+  const content = (
+    <ToastContainer>
+      {
+        toasts.map((toastOptions) => (
+          <Toast
+            key={toastOptions.id}
+            remove={remove}
+            {...toastOptions}
+          />
+        ))
+      }
+    </ToastContainer>
+  );
   return (
     <ToastContext.Provider value={value}>
       {children}
-      {createPortal(<ToastContainer>
-        {
-          toasts.map((toastOptions) => (
-            <Toast
-              key={toastOptions.id}
-              remove={remove}
-              {...toastOptions}
-            />
-          ))
-        }
-      </ToastContainer>, document.body)}
+      {createPortal(content, document.body)}
     </ToastContext.Provider>
   );
 }
 
 ToastContextProvider.propTypes = {
-  children: PropTypes.node,
+  children: PropTypes.node.isRequired,
 };
 
 // Hook
 // ==============================
-const useToast = () => React.useContext(ToastContext);
+const useToast = () => useContext(ToastContext);
 
 /* @component */
 export default useToast;

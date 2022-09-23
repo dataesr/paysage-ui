@@ -8,7 +8,6 @@ const { MapContainer, TileLayer, Marker, Popup } = ReactLeaflet;
 
 export default function Map({ markers, height, width, lat, lng }) {
   useEffect(() => {
-    // eslint-disable-next-line no-underscore-dangle
     delete L.Icon.Default.prototype._getIconUrl;
     L.Icon.Default.mergeOptions({
       iconUrl:
@@ -50,7 +49,6 @@ Map.defaultProps = {
 };
 
 Map.propTypes = {
-  // eslint-disable-next-line react/forbid-prop-types
   markers: PropTypes.array,
   height: PropTypes.string,
   width: PropTypes.string,

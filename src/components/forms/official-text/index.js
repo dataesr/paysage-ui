@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import PropTypes from 'prop-types';
 import {
   Alert,
@@ -442,7 +441,6 @@ export default function OfficiaTextForm({ data, from }) {
 }
 
 OfficiaTextForm.propTypes = {
-  // eslint-disable-next-line react/forbid-prop-types
   data: PropTypes.object,
   from: PropTypes.string.isRequired,
 };

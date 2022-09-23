@@ -3,6 +3,7 @@
     "jsx-a11y/anchor-is-valid": "off",
     "react/jsx-filename-extension": 0,
     "react/react-in-jsx-scope": 0,
+    "react/forbid-prop-types": 0,
     "react/no-unescaped-entities": 0,
     "no-unused-vars": "warn",
     "template-curly-spacing": "off",
@@ -13,8 +14,7 @@
     "react/prop-types": "warn",
     "import/prefer-default-export": 0,
     "no-underscore-dangle": 0,
-    "no-console": 0,
-    // "react/forbid-prop-types": 0,
+    "no-console": "warn",
     "indent": [
       "warn",
       2,

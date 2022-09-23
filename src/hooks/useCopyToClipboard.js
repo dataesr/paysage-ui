@@ -1,4 +1,3 @@
-/* eslint-disable consistent-return */
 import { useEffect, useState } from 'react';
 
 export default function useCopyToClipboard(resetTimeout = 1500) {
@@ -15,10 +14,11 @@ export default function useCopyToClipboard(resetTimeout = 1500) {
       .catch(() => { setCopyStatus('Erreur'); });
   };
   useEffect(() => {
+    let timeoutId;
     if (copyStatus) {
-      const timeoutId = setTimeout(() => setCopyStatus(null), resetTimeout);
-      return () => clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => setCopyStatus(null), resetTimeout);
     }
+    return () => clearTimeout(timeoutId);
   }, [copyStatus, resetTimeout]);
 
   return [copyStatus, copy];

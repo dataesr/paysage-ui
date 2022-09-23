@@ -79,7 +79,6 @@ export default function EmailForm({ data, onDeleteHandler, onSaveHandler }) {
 }
 
 EmailForm.propTypes = {
-  // eslint-disable-next-line react/forbid-prop-types
   data: PropTypes.object,
   onDeleteHandler: PropTypes.func,
   onSaveHandler: PropTypes.func.isRequired,

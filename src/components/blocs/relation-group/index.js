@@ -5,14 +5,14 @@ import api from '../../../utils/api';
 import ModifyCard from '../../card/modify-card';
 import ExpendableListCards from '../../card/expendable-list-cards';
 import { Bloc, BlocActionButton, BlocContent, BlocModal, BlocTitle } from '../../bloc';
-import GovernanceForm from './form';
+import RelationForm from './form';
 import useFetch from '../../../hooks/useFetch';
 import useBlocUrl from '../../../hooks/useBlocUrl';
 import useNotice from '../../../hooks/useNotice';
 
-export default function Gouvernance({ governanceGroupId }) {
+export default function RelationsGroup({ groupId, groupName, groupAccepts }) {
   const { notice } = useNotice();
-  const url = useBlocUrl(`relations-groups/${governanceGroupId}/relations`);
+  const url = useBlocUrl(`relations-groups/${groupId}/relations`);
   const { data, isLoading, error, reload } = useFetch(url);
   const [showModal, setShowModal] = useState(false);
   const [modalTitle, setModalTitle] = useState('');
@@ -22,24 +22,33 @@ export default function Gouvernance({ governanceGroupId }) {
     const method = id ? 'patch' : 'post';
     const saveUrl = id ? `${url}/${id}` : url;
     const response = await api[method](saveUrl, body)
-      .catch(() => { notice({ content: "Une erreur s'est produite.", autoDismissAfter: 10000, type: 'error' }); });
+      .catch(() => { notice({ content: "Une erreur s'est produite.", autoDismissAfter: 6000, type: 'error' }); });
     if (response.ok) {
-      notice({ content: 'La relation a été ajoutée avec succès.', autoDismissAfter: 10000, type: 'success' });
+      notice({ content: 'La relation a été ajoutée avec succès.', autoDismissAfter: 6000, type: 'success' });
       reload();
-      setShowModal(false);
+    } else {
+      notice({ content: "Une erreur s'est produite.", autoDismissAfter: 6000, type: 'error' });
     }
+    setShowModal(false);
   };
 
   const onDeleteHandler = async (id) => {
-    await api.delete(`${url}/${id}`).catch((e) => { console.log(e); });
-    reload();
+    const response = await api.delete(`${url}/${id}`).catch(() => {
+      notice({ content: "Une erreur s'est produite. L'élément n'a pas pu être supprimé", autoDismissAfter: 6000, type: 'error' });
+    });
+    if (response.ok) {
+      reload();
+    } else {
+      notice({ content: "Une erreur s'est produite. L'élément n'a pas pu être supprimé", autoDismissAfter: 6000, type: 'error' });
+    }
     setShowModal(false);
   };
 
   const onClickModifyHandler = (element) => {
-    setModalTitle('Modification de gouvernance');
+    setModalTitle('Modifier la relation');
     setModalContent(
-      <GovernanceForm
+      <RelationForm
+        forObjects={groupAccepts}
         data={element}
         onDeleteHandler={onDeleteHandler}
         onSaveHandler={onSaveHandler}
@@ -49,8 +58,8 @@ export default function Gouvernance({ governanceGroupId }) {
   };
 
   const onClickAddHandler = () => {
-    if (!governanceGroupId) { setModalTitle('Ajouter un gouvernant'); }
-    setModalContent(<GovernanceForm onSaveHandler={onSaveHandler} />);
+    if (!groupId) { setModalTitle('Ajouter une relation'); }
+    setModalContent(<RelationForm forObjects={groupAccepts} onSaveHandler={onSaveHandler} />);
     setShowModal(true);
   };
 
@@ -60,7 +69,7 @@ export default function Gouvernance({ governanceGroupId }) {
       <ModifyCard
         title={element.id}
         description={(
-          <pre alignItems="middle">
+          <pre>
             {JSON.stringify(element, null, 2)}
           </pre>
         )}
@@ -72,8 +81,8 @@ export default function Gouvernance({ governanceGroupId }) {
 
   return (
     <Bloc isLoading={isLoading} error={error} data={data}>
-      <BlocTitle as="h3" look="h6">Gouvernance</BlocTitle>
-      <BlocActionButton onClick={onClickAddHandler}>Ajouter un gouvernant</BlocActionButton>
+      <BlocTitle as="h3" look="h6">{groupName}</BlocTitle>
+      <BlocActionButton onClick={onClickAddHandler}>Ajouter un élément</BlocActionButton>
       <BlocContent>{renderCards()}</BlocContent>
       <BlocModal>
         <Modal isOpen={showModal} size="lg" hide={() => setShowModal(false)}>
@@ -85,10 +94,12 @@ export default function Gouvernance({ governanceGroupId }) {
   );
 }
 
-Gouvernance.propTypes = {
-  governanceGroupId: PropTypes.string,
+RelationsGroup.propTypes = {
+  groupId: PropTypes.string.isRequired,
+  groupName: PropTypes.string.isRequired,
+  groupAccepts: PropTypes.arrayOf(PropTypes.string),
 };
 
-Gouvernance.defaultProps = {
-  governanceGroupId: null,
+RelationsGroup.defaultProps = {
+  groupAccepts: [''],
 };

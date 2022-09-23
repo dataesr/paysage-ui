@@ -51,6 +51,6 @@ Notice.propTypes = {
 
 Notice.defaultProps = {
   content: '',
-  autoDismissAfter: 8000,
+  autoDismissAfter: 6000,
   type: 'info',
 };

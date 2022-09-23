@@ -278,7 +278,6 @@ export default function LocalisationForm({ data, onDeleteHandler, onSaveHandler 
 }
 
 LocalisationForm.propTypes = {
-  // eslint-disable-next-line react/forbid-prop-types
   data: PropTypes.object,
   onDeleteHandler: PropTypes.func,
   onSaveHandler: PropTypes.func.isRequired,

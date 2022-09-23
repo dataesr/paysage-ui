@@ -1,9 +1,8 @@
-/* eslint-disable react/no-array-index-key */
 import { forwardRef, useLayoutEffect, useRef, useState } from 'react';
 
 import PropTypes from 'prop-types';
 import { v4 as uuidv4 } from 'uuid';
-import classnames from 'classnames';
+import classNames from 'classnames';
 import { Badge, Icon, Text } from '@dataesr/react-dsfr';
 import styles from './styles.module.scss';
 
@@ -21,6 +20,7 @@ const SearchBar = forwardRef((props, ref) => {
   const {
     size,
     label,
+    hideLabel,
     buttonLabel,
     placeholder,
     onSearch,
@@ -38,10 +38,11 @@ const SearchBar = forwardRef((props, ref) => {
   const inputId = useRef(uuidv4());
   const hintId = useRef(uuidv4());
   const scopeRef = useRef();
-  const _className = classnames('fr-search-bar', 'fr-mt-2v', {
+  const _className = classNames('fr-search-bar', {
     'fr-search-bar--lg': (size === 'lg'),
   }, className);
-  const _classNameButton = classnames('fr-btn', { 'fr-btn--lg': (size === 'lg') });
+  const _classNameButton = classNames('fr-btn', { 'fr-btn--lg': (size === 'lg') });
+  const _classNameLabel = classNames(styles.label, { 'fr-label': hideLabel, 'fr-mb-2v': !hideLabel });
   const [activeSuggestionIndex, setActiveSuggestionIndex] = useState(null);
   const [showOptions, setShowOptions] = useState(false);
   const [inputPadding, setInputPadding] = useState(0);
@@ -68,6 +69,7 @@ const SearchBar = forwardRef((props, ref) => {
         onSelect(options[activeSuggestionIndex]);
       }
     } else if (e.keyCode === 8) {
+      // User pressed the backspace key
       handleDeleteScope();
     } else if (e.keyCode === 38) {
       // User pressed the up arrow
@@ -92,7 +94,7 @@ const SearchBar = forwardRef((props, ref) => {
   }, [scope]);
 
   const colorFamily = 'new';
-  const scopeClassNames = classnames(
+  const scopeclassNames = classNames(
     'fr-badge',
     styles.badge,
     {
@@ -106,10 +108,10 @@ const SearchBar = forwardRef((props, ref) => {
       onBlur={() => setShowOptions(false)}
       onFocus={() => setShowOptions(true)}
       role="search"
-      className={classnames(styles.form, _className)}
+      className={classNames(styles.form, _className)}
     >
       <div className={styles.searchbar}>
-        <label className={styles.label} htmlFor={inputId.current}>
+        <label className={_classNameLabel} htmlFor={inputId.current}>
           {label}
           {required && <span className="error"> *</span>}
           {hint && (
@@ -120,7 +122,7 @@ const SearchBar = forwardRef((props, ref) => {
         </label>
         <div className={_className}>
           {scope && (
-            <button onClick={handleDeleteScope} type="button" ref={scopeRef} className={scopeClassNames}>
+            <button onClick={handleDeleteScope} type="button" ref={scopeRef} className={scopeclassNames}>
               {scope}
               {isScopeSelected && <span className="ri-1x icon-right ds-fr--v-sub ri-close-line ds-fr-badge-icon" />}
             </button>
@@ -153,9 +155,8 @@ const SearchBar = forwardRef((props, ref) => {
             <ul className={styles.list} onMouseLeave={() => setActiveSuggestionIndex(null)}>
               {options.map((option, i) => (
                 <li
-                  key={i}
-                  id={`${inputId.current}-option-${i}`}
-                  className={classnames(`${styles.item}`, { [styles.hovered]: (i === activeSuggestionIndex) })}
+                  key={option.id}
+                  className={classNames(`${styles.item}`, { [styles.hovered]: (i === activeSuggestionIndex) })}
                   onMouseEnter={() => setActiveSuggestionIndex(i)}
                 >
                   <button
@@ -188,6 +189,7 @@ SearchBar.defaultProps = {
   value: '',
   hint: '',
   required: false,
+  hideLabel: false,
   scope: null,
   className: '',
   label: '',
@@ -205,6 +207,7 @@ SearchBar.propTypes = {
   value: PropTypes.string,
   hint: PropTypes.string,
   required: PropTypes.bool,
+  hideLabel: PropTypes.bool,
   scope: PropTypes.string,
   className: PropTypes.oneOfType([
     PropTypes.string,
