@@ -2,7 +2,7 @@ import useFetch from '../../../hooks/useFetch';
 import useUrl from '../../../hooks/useBlocUrl';
 import useHashScroll from '../../../hooks/useHashScroll';
 import Spinner from '../../../components/spinner';
-import RelationGroup from '../../../components/blocs/relation-group';
+import Relations from '../../../components/blocs/relations';
 
 export default function StructureGouvernancePage() {
   useHashScroll();
@@ -16,8 +16,8 @@ export default function StructureGouvernancePage() {
     const referentGroup = data.data.find((element) => (element.name === 'Référents MESR'));
     return (
       <>
-        {governanceGroup?.id && <RelationGroup groupId={governanceGroup.id} groupName={governanceGroup.name} groupAccepts={governanceGroup.accepts} />}
-        {referentGroup?.id && <RelationGroup groupId={referentGroup.id} groupName={referentGroup.name} groupAccepts={referentGroup.accepts} />}
+        {governanceGroup?.id && <Relations group={governanceGroup} />}
+        {referentGroup?.id && <Relations group={referentGroup} />}
       </>
     );
   }

@@ -9,7 +9,7 @@ import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import api from '../../../utils/api';
 import validator from './validator';
-import FormFooter from '../../forms/form-footer/form-footer';
+import FormFooter from '../../forms/form-footer';
 import useForm from '../../../hooks/useForm';
 import { WEBLINKS_TYPES } from '../../../utils/constants';
 

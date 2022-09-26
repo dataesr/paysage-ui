@@ -9,50 +9,10 @@ import PropTypes from 'prop-types';
 import useForm from '../../../hooks/useForm';
 import DateInput from '../../date-input';
 import SearchBar from '../../search-bar';
-import FormFooter from '../../forms/form-footer/form-footer';
+import FormFooter from '../form-footer';
 import api from '../../../utils/api';
 import useFetch from '../../../hooks/useFetch';
-
-const getInitialFormFromData = (data) => {
-  if (!data.id) return {};
-  const {
-    relatedObject,
-    relationType,
-    startDate,
-    endDate,
-    startDateOfficialText,
-    endDateOfficialText,
-  } = data;
-  let relatedObjectName;
-  switch (relatedObject.type) {
-  case 'person':
-    relatedObjectName = `${relatedObject.firstName} ${relatedObject.lastName}`.trim();
-    break;
-  case 'structure':
-    relatedObjectName = relatedObject.currentName.usualName;
-    break;
-  case 'price':
-    relatedObjectName = relatedObject.nameFr;
-    break;
-  case 'project':
-    relatedObjectName = relatedObject.nameFr;
-    break;
-  default:
-    relatedObjectName = relatedObject.usualNameFr;
-    break;
-  }
-  return ({
-    startDate,
-    endDate,
-    relationTypeId: relationType?.id,
-    relatedObjectName,
-    relatedObjectId: data.relatedObject?.id,
-    startDateOfficialTextId: startDateOfficialText?.id,
-    startDateOfficialTextName: startDateOfficialText?.title,
-    endDateOfficialTextId: endDateOfficialText?.id,
-    endDateOfficialTextName: endDateOfficialText?.title,
-  });
-};
+import parseRelatedElement from '../../../utils/parse-related-element';
 
 const validator = (body) => {
   const errors = {};
@@ -62,9 +22,9 @@ const validator = (body) => {
   return errors;
 };
 
-export default function RelationForm({ forObjects, data, onDeleteHandler, onSaveHandler }) {
+export default function RelationForm({ id, forObjects, initialForm, onDelete, onSave }) {
   const relationTypeUrl = (forObjects.length > 1)
-    ? `/relation-types?limit=500&filters[for][$in]=${forObjects.join('&filters[for][$in]=') }`
+    ? `/relation-types?limit=500&filters[for][$in]=${forObjects.join('&filters[for][$in]=')}`
     : `/relation-types?limit=500&filters[for]=${forObjects[0]}`;
 
   const { data: relationTypes } = useFetch(relationTypeUrl);
@@ -79,7 +39,7 @@ export default function RelationForm({ forObjects, data, onDeleteHandler, onSave
   const [startDateOfficialTextOptions, setStartDateOfficialTextOptions] = useState([]);
   const [endDateOfficialTextOptions, setEndDateOfficialTextOptions] = useState([]);
 
-  const { form, updateForm, errors } = useForm(getInitialFormFromData(data), validator);
+  const { form, updateForm, errors } = useForm(parseRelatedElement(initialForm), validator);
 
   useEffect(() => {
     const getAutocompleteResult = async () => {
@@ -105,8 +65,8 @@ export default function RelationForm({ forObjects, data, onDeleteHandler, onSave
     if (endDateOfficialTextQuery) { getAutocompleteResult(); } else { setEndDateOfficialTextOptions([]); }
   }, [endDateOfficialTextQuery]);
 
-  const handleEndDateOfficialTextSelect = ({ id, name }) => {
-    updateForm({ endDateOfficialTextName: name, endDateOfficialTextId: id });
+  const handleEndDateOfficialTextSelect = ({ id: endDateOfficialTextId, name }) => {
+    updateForm({ endDateOfficialTextName: name, endDateOfficialTextId });
     setEndDateOfficialTextQuery('');
     setEndDateOfficialTextOptions([]);
   };
@@ -116,8 +76,8 @@ export default function RelationForm({ forObjects, data, onDeleteHandler, onSave
     setEndDateOfficialTextOptions([]);
   };
 
-  const handleStartDateOfficialTextSelect = ({ id, name }) => {
-    updateForm({ startDateOfficialTextName: name, startDateOfficialTextId: id });
+  const handleStartDateOfficialTextSelect = ({ id: startDateOfficialTextId, name }) => {
+    updateForm({ startDateOfficialTextName: name, startDateOfficialTextId });
     setStartDateOfficialTextQuery('');
     setStartDateOfficialTextOptions([]);
   };
@@ -127,8 +87,8 @@ export default function RelationForm({ forObjects, data, onDeleteHandler, onSave
     setStartDateOfficialTextOptions([]);
   };
 
-  const handleRelatedObjectSelect = ({ id, name }) => {
-    updateForm({ relatedObjectName: name, relatedObjectId: id });
+  const handleRelatedObjectSelect = ({ id: relatedObjectId, name }) => {
+    updateForm({ relatedObjectName: name, relatedObjectId });
     setRelatedObjectQuery('');
     setRelatedObjectOptions([]);
   };
@@ -140,7 +100,7 @@ export default function RelationForm({ forObjects, data, onDeleteHandler, onSave
 
   const handleSave = () => {
     if (Object.keys(errors).length > 0) return setShowErrors(true);
-    return onSaveHandler(form, data.id);
+    return onSave(form, id);
   };
 
   const relationTypesOptions = (relationTypes?.data)
@@ -225,9 +185,9 @@ export default function RelationForm({ forObjects, data, onDeleteHandler, onSave
           </Col>
         </Row>
         <FormFooter
-          id={data?.id}
+          id={id}
           onSaveHandler={handleSave}
-          onDeleteHandler={onDeleteHandler}
+          onDeleteHandler={onDelete}
         />
       </Container>
     </form>
@@ -235,14 +195,16 @@ export default function RelationForm({ forObjects, data, onDeleteHandler, onSave
 }
 
 RelationForm.propTypes = {
+  id: PropTypes.string,
   forObjects: PropTypes.arrayOf(PropTypes.string),
-  data: PropTypes.object,
-  onDeleteHandler: PropTypes.func,
-  onSaveHandler: PropTypes.func.isRequired,
+  initialForm: PropTypes.object,
+  onDelete: PropTypes.func,
+  onSave: PropTypes.func.isRequired,
 };
 
 RelationForm.defaultProps = {
+  id: null,
   forObjects: [''],
-  data: {},
-  onDeleteHandler: null,
+  initialForm: {},
+  onDelete: null,
 };

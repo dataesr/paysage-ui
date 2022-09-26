@@ -12,7 +12,7 @@ import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import DateInput from '../../date-input';
 import validator from './validator';
-import FormFooter from '../../forms/form-footer/form-footer';
+import FormFooter from '../../forms/form-footer';
 import Map from '../../map';
 import SearchBar from '../../search-bar';
 import useForm from '../../../hooks/useForm';

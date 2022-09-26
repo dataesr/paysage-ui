@@ -4,18 +4,38 @@ import useFetch from '../../../hooks/useFetch';
 import useUrl from '../../../hooks/useBlocUrl';
 import useHashScroll from '../../../hooks/useHashScroll';
 import Spinner from '../../../components/spinner';
-import RelationGroup from '../../../components/blocs/relation-group';
+import Relations from '../../../components/blocs/relations';
 import { Bloc, BlocTitle, BlocActionButton, BlocContent, BlocModal } from '../../../components/bloc';
-import RelationsGroupForm from '../../../components/forms/relations-group';
+import RelationGroupForm from '../../../components/forms/relations-group';
+import api from '../../../utils/api';
+import useNotice from '../../../hooks/useNotice';
+
+const deleteError = { content: "Une erreur s'est produite. L'élément n'a pas pu être supprimé", autoDismissAfter: 6000, type: 'error' };
+const saveError = { content: "Une erreur s'est produite.", autoDismissAfter: 6000, type: 'error' };
+const saveSuccess = { content: 'Le groupe a été ajoutée avec succès.', autoDismissAfter: 6000, type: 'success' };
+const deleteSuccess = { content: 'Le groupe a été supprimée avec succès.', autoDismissAfter: 6000, type: 'success' };
 
 export default function StructureElementLiesPage() {
   useHashScroll();
-  const url = useUrl();
-  const { data, isLoading, error } = useFetch(`${url}/relations-groups?filters[name][$nin]=Gouvernance&filters[name][$nin]=Référents MESR&filters[name][$nin]=Catégories&limit=50`);
+  const url = useUrl('relations-groups');
+  const { data, isLoading, error, reload } = useFetch(`${url}?filters[name][$nin]=Gouvernance&filters[name][$nin]=Référents MESR&filters[name][$nin]=Catégories&limit=50`);
   const [isOpen, setIsOpen] = useState();
+  const notice = useNotice();
 
-  const handleDelete = () => {};
-  const handleSave = () => {};
+  const handleDelete = async (id) => {
+    if (!id) return;
+    await api.delete(`${url}/${id}`)
+      .then(() => { reload(); notice(deleteSuccess); })
+      .catch(() => notice(deleteError));
+    setIsOpen(false);
+  };
+  const handleSave = async (body) => {
+    await api.post(url, body)
+      .then(() => { reload(); notice(saveSuccess); })
+      .catch(() => notice(saveError));
+    setIsOpen(false);
+  };
+
   if (isLoading) return <Spinner size={48} />;
   if (error) return <>Erreur...</>;
   if (data && data.data) {
@@ -23,8 +43,8 @@ export default function StructureElementLiesPage() {
     const otherGroups = data.data.filter((element) => (element.name !== 'Structures internes'));
     const renderBlocs = () => (
       <>
-        {internalStructuresGroup?.id && <RelationGroup groupId={internalStructuresGroup.id} groupName={internalStructuresGroup.name} groupAccepts={internalStructuresGroup.accepts} />}
-        {otherGroups?.length && otherGroups?.map((group) => (<RelationGroup key={group.id} groupId={group.id} groupName={group.name} groupAccepts={group.accepts} />))}
+        {internalStructuresGroup?.id && <Relations group={internalStructuresGroup} />}
+        {(otherGroups?.length !== 0) && otherGroups?.map((group) => (<Relations key={group.id} group={group} reloader={reload} />))}
       </>
     );
     return (
@@ -34,9 +54,9 @@ export default function StructureElementLiesPage() {
         <BlocContent>{renderBlocs()}</BlocContent>
         <BlocModal>
           <Modal isOpen={isOpen} size="lg" hide={() => setIsOpen(false)}>
-            <ModalTitle>Ajouter un </ModalTitle>
+            <ModalTitle>Ajouter un groupe d'éléments liés</ModalTitle>
             <ModalContent>
-              <RelationsGroupForm
+              <RelationGroupForm
                 onDelete={handleDelete}
                 onSave={handleSave}
               />

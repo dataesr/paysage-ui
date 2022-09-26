@@ -2,7 +2,7 @@ import useFetch from '../../../hooks/useFetch';
 import useUrl from '../../../hooks/useBlocUrl';
 import useHashScroll from '../../../hooks/useHashScroll';
 import Spinner from '../../../components/spinner';
-import RelationGroup from '../../../components/blocs/relation-group';
+import Relations from '../../../components/blocs/relations';
 
 export default function StructureCategoriesPage() {
   useHashScroll();
@@ -13,7 +13,7 @@ export default function StructureCategoriesPage() {
   if (error) return <>Erreur...</>;
   if (data && data.data) {
     const group = data.data.find((element) => (element.name === 'Catégories'));
-    if (group.id) { return <RelationGroup groupId={group.id} groupName={group.name} groupAccepts={group.accepts} />; }
+    if (group.id) { return <Relations group={group} />; }
   }
   return null;
 }
