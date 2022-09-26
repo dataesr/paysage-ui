@@ -1,6 +1,6 @@
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { ButtonGroup, Col, Container, Row, Text, Title } from '@dataesr/react-dsfr';
+import { ButtonGroup, Col, Container, Icon, Row, Text, Title } from '@dataesr/react-dsfr';
 import TagInput from '../components/tag-input';
 import useToast from '../hooks/useToast';
 import useNotice from '../hooks/useNotice';
@@ -8,6 +8,7 @@ import ModifyCard from '../components/card/modify-card';
 import SearchBar from '../components/search-bar';
 import api from '../utils/api';
 import Button from '../components/button';
+import { DropdownButton, DropdownButtonItem } from '../components/dropdown-button';
 
 export default function HomePage() {
   const { toast } = useToast();
@@ -15,6 +16,8 @@ export default function HomePage() {
   const [tags, setTags] = useState([]);
   const [query, setQuery] = useState('');
   const [options, setOptions] = useState([]);
+  const [isFav, setIsFav] = useState(false);
+  const [isEdit, setIsEdit] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -54,6 +57,39 @@ export default function HomePage() {
           onSearch={handleSearch}
           onSelect={handleSearchRedirection}
         />
+      </Row>
+      <Row className="fr-pb-5w">
+        <Title as="h2">Dropdown button</Title>
+      </Row>
+      <Row className="flex--space-between fr-pb-5w">
+        <DropdownButton title="Options">
+          <DropdownButtonItem asLink={<Link to="/structures" />}>
+            <Icon size="xl" name="ri-download-2-fill" color="var(--border-action-high-blue-france)" />
+            Exporter
+          </DropdownButtonItem>
+          <DropdownButtonItem onClick={() => setIsFav(!isFav)}>
+            <Icon size="xl" name={`ri-star-${isFav ? 'fill' : 'line'}`} color="var(--border-action-high-blue-france)" />
+            {isFav ? 'Retirer des favoris' : 'Ajouter aux favoris'}
+          </DropdownButtonItem>
+          <DropdownButtonItem onClick={() => setIsEdit(!isEdit)}>
+            <Icon size="xl" name={`ri-edit-${isEdit ? 'fill' : 'line'}`} color="var(--border-action-high-blue-france)" />
+            {isEdit ? 'Désactiver le mode édition' : 'Activer le mode édition'}
+          </DropdownButtonItem>
+        </DropdownButton>
+        <DropdownButton align="right" title="options">
+          <DropdownButtonItem asLink={<Link to="/structures" />}>
+            Exporter
+            <Icon iconPosition="right" size="xl" name="ri-download-2-fill" color="var(--border-action-high-blue-france)" />
+          </DropdownButtonItem>
+          <DropdownButtonItem onClick={() => setIsFav(!isFav)}>
+            {isFav ? 'Retirer des favoris' : 'Ajouter aux favoris'}
+            <Icon iconPosition="right" size="xl" name={`ri-star-${isFav ? 'fill' : 'line'}`} color="var(--border-action-high-blue-france)" />
+          </DropdownButtonItem>
+          <DropdownButtonItem onClick={() => setIsEdit(!isEdit)}>
+            {isEdit ? 'Désactiver le mode édition' : 'Activer le mode édition'}
+            <Icon iconPosition="right" size="xl" name={`ri-edit-${isEdit ? 'fill' : 'line'}`} color="var(--border-action-high-blue-france)" />
+          </DropdownButtonItem>
+        </DropdownButton>
       </Row>
       <Row className="fr-pb-5w">
         <Title as="h2">Toast Tester</Title>

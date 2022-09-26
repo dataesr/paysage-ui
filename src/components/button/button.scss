@@ -1,3 +1,8 @@
+.fr-btn {
+  SPAN {
+    pointer-events: none;
+  }
+}
 // BUTTON SUCCESS
 .btn-success.fr-btn.btn-primary {
   --hover: var(--background-action-high-success-hover);

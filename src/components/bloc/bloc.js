@@ -18,8 +18,8 @@ export default function Bloc({ children, data, error, isLoading }) {
         {editMode && (<div>{action}</div>)}
       </Row>
       {isLoading && <Row className="fr-my-2w flex--space-around"><Spinner /></Row>}
-      {error && <Highlight style={{ borderColor: 'var(--border-color)' }}>Une erreur s'est produite lors du chargement des données</Highlight>}
-      {(!error && !isLoading && !data?.totalCount) && <Highlight style={{ borderColor: 'var(--border-color)' }}>Cette section est vide pour le moment</Highlight>}
+      {error && <Highlight color="var(--page-border)">Une erreur s'est produite lors du chargement des données</Highlight>}
+      {(!error && !isLoading && !data?.totalCount) && <Highlight color="var(--page-border)">Cette section est vide pour le moment</Highlight>}
       {data?.totalCount ? blocContent : null}
       {modal}
     </Container>

@@ -1,0 +1,21 @@
+.dropdown {
+  position: relative;
+  margin-bottom: 1rem;
+}
+
+.dropdown-list {
+  white-space: nowrap;
+  width: auto !important;
+}
+
+.align-right {
+  right: 0;
+  LI {
+    BUTTON {
+      text-align: right;
+    }
+    A {
+      text-align: right;
+    }
+  }
+}

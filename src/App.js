@@ -22,6 +22,7 @@ import ProtectedRoute from './components/protected-route';
 import StructuresPage from './pages/structures';
 import {
   StructureByIdPage,
+  StructureCategoriesPage,
   StructurePresentationPage,
   StructureGouvernancePage,
   StructureRHPage,
@@ -94,6 +95,7 @@ function App() {
             <Route path="/structures/:id" element={<StructureByIdPage />}>
               <Route path="" element={<Navigate to="presentation" replace />} />
               <Route path="presentation" element={<StructurePresentationPage />} />
+              <Route path="categories" element={<StructureCategoriesPage />} />
               <Route path="gouvernance-et-referents" element={<StructureGouvernancePage />} />
               <Route path="ressource-humaines" element={<StructureRHPage />} />
               <Route path="budget" element={<StructureBudgetPage />} />
