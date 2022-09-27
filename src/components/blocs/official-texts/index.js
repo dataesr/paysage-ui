@@ -1,62 +1,24 @@
-import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import PropTypes from 'prop-types';
-import { Card, CardDescription, CardTitle, Col, Row, Title } from '@dataesr/react-dsfr';
-import PaysageSection from '../../sections/section';
-import Button from '../../button';
-import EmptySection from '../../sections/empty';
-import api from '../../../utils/api';
-import { getRoute } from '../../../utils';
+import { useNavigate, useParams } from 'react-router-dom';
+import { Card, CardDescription, CardTitle, Col, Row } from '@dataesr/react-dsfr';
+import { Bloc, BlocActionButton, BlocContent, BlocTitle } from '../../bloc';
+import useUrl from '../../../hooks/useBlocUrl';
+import useFetch from '../../../hooks/useFetch';
 
-export default function OfficialTextsComponent({ id, apiObject }) {
-  const [data, setData] = useState([]);
+export default function OfficialTextsComponent() {
+  const { id } = useParams();
+  const url = useUrl();
+  const { data, isLoading, error } = useFetch(`/official-texts?filters[relatesTo]=${id}`);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const getData = async () => {
-      const response = await api
-        .get(`/official-texts?filters[relatesTo]=${id}`)
-        .catch((e) => {
-          console.log(e);
-        });
-      if (response.ok) setData(response.data);
-    };
-    getData();
-    return () => {};
-  }, [id]);
-
-  if (!data?.data) {
+  const renderCards = () => {
+    if (!data && !data?.data?.length) return null;
     return (
-      <PaysageSection dataPaysageMenu="Textes officiels" id="officialTexts" isEmpty />
-    );
-  }
-
-  return (
-    <PaysageSection dataPaysageMenu="Textes officiels" id="officialTexts">
-      <Row>
-        <Col>
-          <Title as="h3" look="h6">
-            Textes officiels
-          </Title>
-        </Col>
-        <Col className="text-right">
-          <Button
-            onClick={() => navigate(`/textes-officiels/ajouter/${getRoute(apiObject)}/${id}`)}
-            size="sm"
-            secondary
-            icon="ri-add-circle-line"
-          >
-            Ajouter un texte officiel
-          </Button>
-        </Col>
-      </Row>
-      <Row>
-        {data.data.length === 0 ? <EmptySection apiObject={apiObject} /> : null}
+      <Row gutters>
         {data.data.map((item) => (
           <Col n="4" key={item.id}>
             <Card
               hasArrow
-              href={`/textes-officiels/${item.id}/${getRoute(apiObject)}/${id}`}
+              href={`/textes-officiels/${item.id}/${url}`}
             >
               <CardTitle>{item.type}</CardTitle>
               <CardDescription>
@@ -67,11 +29,16 @@ export default function OfficialTextsComponent({ id, apiObject }) {
           </Col>
         ))}
       </Row>
-    </PaysageSection>
+    );
+  };
+
+  return (
+    <Bloc isLoading={isLoading} error={error} data={data}>
+      <BlocTitle as="h3" look="h6">Textes officiels</BlocTitle>
+      <BlocActionButton onClick={() => navigate(`/textes-officiels/ajouter?redirect=${url}/textes-officiels`)}>
+        Ajouter un texte officiel
+      </BlocActionButton>
+      <BlocContent>{renderCards()}</BlocContent>
+    </Bloc>
   );
 }
-
-OfficialTextsComponent.propTypes = {
-  apiObject: PropTypes.string.isRequired,
-  id: PropTypes.string.isRequired,
-};

@@ -109,10 +109,10 @@ export default function Relations({ group, reloader }) {
       return (
         <Row gutters>
           <Col n="12 md-6">
-            <Map height="300px" markers={markers} zoom={8} />
+            <Map height="320px" markers={markers} zoom={8} />
           </Col>
           <Col n="12 md-6">
-            <ScrallableListCards height="300px" cards={list} nCol="12" />
+            <ScrallableListCards height="320px" cards={list} nCol="12" />
           </Col>
         </Row>
       );

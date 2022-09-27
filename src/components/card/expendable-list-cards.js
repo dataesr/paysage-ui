@@ -4,12 +4,9 @@ import { useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import Button from '../button';
 import Card from '.';
-import EmptySection from '../sections/empty';
 
-export default function ExpendableListCards({ apiObject, list, max, nCol, order, sortOn }) {
+export default function ExpendableListCards({ list, max, nCol, order, sortOn }) {
   const [showAll, setShowAll] = useState(false);
-
-  if (list.length === 0) return <EmptySection apiObject={apiObject} />;
 
   function getPath(path, obj) {
     if (path) {
@@ -84,7 +81,6 @@ export default function ExpendableListCards({ apiObject, list, max, nCol, order,
 }
 
 ExpendableListCards.propTypes = {
-  apiObject: PropTypes.string,
   list: PropTypes.arrayOf(PropTypes.element).isRequired,
   max: PropTypes.number,
   nCol: PropTypes.string,
@@ -93,7 +89,6 @@ ExpendableListCards.propTypes = {
 };
 
 ExpendableListCards.defaultProps = {
-  apiObject: '',
   max: 6,
   nCol: '12 md-4',
   order: [],

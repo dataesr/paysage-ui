@@ -72,7 +72,7 @@ export default function InternalPagesComponent({ apiObject }) {
         type={el.type}
       />
     ));
-    return <ExpendableListCards apiObject={apiObject} list={list} nCol="12 md-4" order={Object.keys(INTERNAL_PAGES_TYPES)} sortOn="props.type" />;
+    return <ExpendableListCards list={list} nCol="12 md-4" order={Object.keys(INTERNAL_PAGES_TYPES)} sortOn="props.type" />;
   };
 
   return (

@@ -2,7 +2,7 @@ import { Col } from '@dataesr/react-dsfr';
 import PropTypes from 'prop-types';
 import { v4 as uuidv4 } from 'uuid';
 
-export default function ScrallableListCards({ cards, nCol, height }) {
+export default function ScrollableListCards({ cards, nCol, height }) {
   if (!cards.length) return null;
   return (
     <div
@@ -18,13 +18,13 @@ export default function ScrallableListCards({ cards, nCol, height }) {
   );
 }
 
-ScrallableListCards.propTypes = {
+ScrollableListCards.propTypes = {
   cards: PropTypes.arrayOf(PropTypes.element).isRequired,
   nCol: PropTypes.string,
   height: PropTypes.string,
 };
 
-ScrallableListCards.defaultProps = {
+ScrollableListCards.defaultProps = {
   nCol: '12 md-4',
   height: '300px',
 };

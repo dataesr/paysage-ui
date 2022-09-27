@@ -14,7 +14,6 @@ import useToast from '../../../hooks/useToast';
 import DocumentCard from '../../card/document-card';
 import DocumentForm from './form';
 import ExpendableListCards from '../../card/expendable-list-cards';
-import PaysageSection from '../../sections/section';
 import api from '../../../utils/api';
 
 export default function DocumentsComponent({ apiObject, id }) {
@@ -148,12 +147,12 @@ export default function DocumentsComponent({ apiObject, id }) {
 
   if (!data?.data) {
     return (
-      <PaysageSection dataPaysageMenu="Documents" id="documents" isEmpty />
+      <div dataPaysageMenu="Documents" id="documents" isEmpty />
     );
   }
 
   return (
-    <PaysageSection dataPaysageMenu="Documents" id="documents">
+    <div dataPaysageMenu="Documents" id="documents">
       <Row>
         <Col>
           <Title as="h3" look="h6">
@@ -178,7 +177,7 @@ export default function DocumentsComponent({ apiObject, id }) {
         <ModalTitle>{modalTitle}</ModalTitle>
         <ModalContent>{modalContent}</ModalContent>
       </Modal>
-    </PaysageSection>
+    </div>
   );
 }
 

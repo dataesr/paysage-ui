@@ -1,14 +1,9 @@
-import {
-  Col,
-  Row,
-  Title,
-} from '@dataesr/react-dsfr';
 import PropTypes from 'prop-types';
 import { useCallback, useEffect, useState } from 'react';
 
+import { Bloc, BlocContent, BlocTitle } from '../../bloc';
 import ExpendableListCards from '../../card/expendable-list-cards';
 import WikipediaCard from '../../card/wikipedia-card';
-import PaysageSection from '../../sections/section';
 import api from '../../../utils/api';
 
 export default function Wikipedia({ apiObject, id }) {
@@ -63,23 +58,11 @@ export default function Wikipedia({ apiObject, id }) {
     return <ExpendableListCards apiObject={apiObject} list={list} nCol="12 md-3" max={4} order={['FR', 'EN', 'DE']} sortOn="props.lang" />;
   };
 
-  if (!data) {
-    return <PaysageSection dataPaysageMenu="Wikipédia" id="wikipedia" isEmpty />;
-  }
-
   return (
-    <PaysageSection dataPaysageMenu="Wikipédia" id="wikipedia">
-      <Row>
-        <Col>
-          <Title as="h3" look="h6">
-            Wikipédia
-          </Title>
-        </Col>
-      </Row>
-      <Row>
-        {renderCards()}
-      </Row>
-    </PaysageSection>
+    <Bloc isLoading={!data} error={false} data={data}>
+      <BlocTitle as="h3" look="h6">Wikipédia</BlocTitle>
+      <BlocContent>{renderCards()}</BlocContent>
+    </Bloc>
   );
 }
 
