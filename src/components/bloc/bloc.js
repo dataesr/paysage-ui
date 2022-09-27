@@ -35,7 +35,7 @@ Bloc.propTypes = {
 
 Bloc.defaultProps = {
   children: null,
-  data: null,
+  data: {},
   isLoading: null,
   error: null,
 };
