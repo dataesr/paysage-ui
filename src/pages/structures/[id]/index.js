@@ -129,7 +129,7 @@ function StructureByIdPage() {
 
             <SideMenuItem title="Eléments liés">
               <SideMenuLink asLink={<RouterLink to="elements-lies#" />}>
-                Structure internes
+                Structures internes
               </SideMenuLink>
 
               <SideMenuLink asLink={<RouterLink to="elements-lies" />}>

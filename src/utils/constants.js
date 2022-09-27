@@ -39,3 +39,25 @@ export const WEBLINKS_TYPES = {
   TalentCNRS: 'TalentCNRS',
   TheConversation: 'TheConversation',
 };
+
+export const STRUCTURES_CREATION_REASONS = [
+  'Création',
+  'Essaimage',
+  'Fusion',
+  'Scission fusion',
+  'Scission',
+  'Subtitution',
+  'Succession',
+  'autre',
+];
+
+export const STRUCTURES_CLOSURE_REASONS = [
+  'Dissolution',
+  'Fusion',
+  'Intégration',
+  'Liquidation',
+  'Scission',
+  'Subtitution',
+  'Succession',
+  'autre',
+];
