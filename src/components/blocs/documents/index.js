@@ -1,52 +1,28 @@
-import { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
+import { useState } from 'react';
 import {
-  Col,
   Icon,
   Modal,
   ModalContent,
   ModalTitle,
-  Row,
-  Title,
 } from '@dataesr/react-dsfr';
-import Button from '../../button';
+import { useParams } from 'react-router-dom';
+import { Bloc, BlocActionButton, BlocContent, BlocModal, BlocTitle } from '../../bloc';
 import useToast from '../../../hooks/useToast';
 import DocumentCard from '../../card/document-card';
 import DocumentForm from './form';
 import ExpendableListCards from '../../card/expendable-list-cards';
 import api from '../../../utils/api';
+import useFetch from '../../../hooks/useFetch';
 
-export default function DocumentsComponent({ apiObject, id }) {
+export default function DocumentsComponent() {
   const { toast } = useToast();
-  const [data, setData] = useState([]);
+  const { id } = useParams();
+  const { data, isLoading, error, reload } = useFetch(`/documents?filters[relatesTo]=${id}`);
   const [showModal, setShowModal] = useState(false);
   const [modalTitle, setModalTitle] = useState('');
   const [modalContent, setModalContent] = useState(null);
-  const [reloader, setReloader] = useState(0);
 
-  useEffect(() => {
-    const getData = async () => {
-      const response = await api
-        .get(
-          `/documents?filters[relatesTo]=${id}`,
-        )
-        .catch(() => {
-          toast({
-            toastType: 'error',
-            description: "Une erreur s'est produite",
-          });
-        });
-      if (response.ok) setData(response.data);
-    };
-    getData();
-    return () => {};
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [apiObject, id, reloader]);
-
-  const onSaveHandler = async (
-    body,
-    // itemId = null,
-  ) => {
+  const onSaveHandler = async (body) => {
     const formData = new FormData();
     formData.append('documentTypeId', body.type);
     if (body.title) formData.append('title', body.title);
@@ -69,19 +45,10 @@ export default function DocumentsComponent({ apiObject, id }) {
         toastType: 'success',
         description: 'Le document à été ajouté',
       });
-      setReloader(reloader + 1);
+      reload();
       setShowModal(false);
     }
   };
-
-  // const onDeleteHandler = async (itemId) => {
-  //   const url = `/documents/${apiObject}/${id}/social-medias/${itemId}`;
-  //   await api.delete(url).catch((e) => {
-  //     console.log(e);
-  //   });
-  //   setReloader(reloader + 1);
-  //   setShowModal(false);
-  // };
 
   const onClickModifyHandler = (oneData) => {
     setModalTitle("Modification d'un document");
@@ -142,46 +109,20 @@ export default function DocumentsComponent({ apiObject, id }) {
         downloadUrl={doc.url}
       />
     ));
-    return <ExpendableListCards apiObject={apiObject} list={list} nCol="12 md-6" />;
+    return <ExpendableListCards list={list} nCol="12 md-6" />;
   };
 
-  if (!data?.data) {
-    return (
-      <div dataPaysageMenu="Documents" id="documents" isEmpty />
-    );
-  }
-
   return (
-    <div dataPaysageMenu="Documents" id="documents">
-      <Row>
-        <Col>
-          <Title as="h3" look="h6">
-            Documents
-          </Title>
-        </Col>
-        <Col className="text-right">
-          <Button
-            onClick={onClickAddHandler}
-            size="sm"
-            secondary
-            icon="ri-add-circle-line"
-          >
-            Ajouter un document
-          </Button>
-        </Col>
-      </Row>
-      <Row>
-        {renderCards()}
-      </Row>
-      <Modal isOpen={showModal} size="lg" hide={() => setShowModal(false)}>
-        <ModalTitle>{modalTitle}</ModalTitle>
-        <ModalContent>{modalContent}</ModalContent>
-      </Modal>
-    </div>
+    <Bloc isLoading={isLoading} error={error} data={data}>
+      <BlocTitle as="h3" look="h6">Documents</BlocTitle>
+      <BlocActionButton onClick={onClickAddHandler}>Ajouter un document</BlocActionButton>
+      <BlocContent>{renderCards()}</BlocContent>
+      <BlocModal>
+        <Modal isOpen={showModal} size="lg" hide={() => setShowModal(false)}>
+          <ModalTitle>{modalTitle}</ModalTitle>
+          <ModalContent>{modalContent}</ModalContent>
+        </Modal>
+      </BlocModal>
+    </Bloc>
   );
 }
-
-DocumentsComponent.propTypes = {
-  apiObject: PropTypes.string.isRequired,
-  id: PropTypes.string.isRequired,
-};
