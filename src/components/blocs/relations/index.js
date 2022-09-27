@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Modal, ModalContent, ModalTitle, Row, Text } from '@dataesr/react-dsfr';
+import { Col, Modal, ModalContent, ModalTitle, Row, Text } from '@dataesr/react-dsfr';
 import api from '../../../utils/api';
 import ModifyCard from '../../card/modify-card';
 import ExpendableListCards from '../../card/expendable-list-cards';
@@ -12,6 +12,8 @@ import useBlocUrl from '../../../hooks/useBlocUrl';
 import useNotice from '../../../hooks/useNotice';
 import { formatDescriptionDates } from '../../../utils/dates';
 import parseRelatedElement from '../../../utils/parse-related-element';
+import Map from '../../map/auto-bound-map';
+import ScrallableListCards from '../../card/scrollable-list-card';
 
 const deleteError = { content: "Une erreur s'est produite. L'élément n'a pas pu être supprimé", autoDismissAfter: 6000, type: 'error' };
 const saveError = { content: "Une erreur s'est produite.", autoDismissAfter: 6000, type: 'error' };
@@ -74,6 +76,20 @@ export default function Relations({ group, reloader }) {
   // What to do with relatedObject! Shared Model or Card adaptability ?
   const renderCards = () => {
     if (!data && !data?.data?.length) return null;
+    const structures = data.data.filter((element) => (element.relatedObject?.type === 'structure' && element.relatedObject?.currentLocalisation?.geometry?.coordinates));
+    const markers = structures.map((element) => {
+      const { coordinates } = element.relatedObject.currentLocalisation.geometry;
+      const markersCoordinates = [...coordinates];
+      const reversed = markersCoordinates.reverse();
+      return ({
+        latLng: reversed,
+        address: `${element.relatedObject.currentName.usualName}
+         ${element.relatedObject.currentLocalisation?.address},
+         ${element.relatedObject.currentLocalisation?.postalCode},
+         ${element.relatedObject.currentLocalisation?.locality}`,
+      });
+    });
+    // console.log(markers);
     const list = data.data.map((element) => {
       const related = parseRelatedElement(element);
       return (
@@ -89,7 +105,21 @@ export default function Relations({ group, reloader }) {
         />
       );
     });
-    return <ExpendableListCards list={list} nCol="12 md-6" />;
+    if (structures.length) {
+      return (
+        <Row gutters>
+          <Col n="12 md-6">
+            <Map height="300px" markers={markers} zoom={8} />
+          </Col>
+          <Col n="12 md-6">
+            <ScrallableListCards height="300px" cards={list} nCol="12" />
+          </Col>
+        </Row>
+      );
+    }
+    return (
+      <ExpendableListCards list={list} nCol="12 md-6" />
+    );
   };
 
   return (
