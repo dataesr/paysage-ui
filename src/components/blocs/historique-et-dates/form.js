@@ -9,7 +9,7 @@ import {
 import PropTypes from 'prop-types';
 import api from '../../../utils/api';
 import validator from './validator';
-import FormFooter from '../../forms/form-footer/form-footer';
+import FormFooter from '../../forms/form-footer';
 import useForm from '../../../hooks/useForm';
 import { STRUCTURES_CREATION_REASONS, STRUCTURES_CLOSURE_REASONS } from '../../../utils/constants';
 import DateInput from '../../date-input';
