@@ -13,7 +13,7 @@ import { v4 as uuidv4 } from 'uuid';
 import DateInput from '../../date-input';
 import TagInput from '../../tag-input';
 import validator from './validator';
-import FormFooter from '../../forms/form-footer/form-footer';
+import FormFooter from '../../forms/form-footer';
 
 export default function EmailForm({ data, onDeleteHandler, onSaveHandler }) {
   const [savingErrors, setSavingErrors] = useState(null);

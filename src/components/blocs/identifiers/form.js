@@ -12,7 +12,7 @@ import { useEffect, useState } from 'react';
 import api from '../../../utils/api';
 import DateInput from '../../date-input';
 import validator from './validator';
-import FormFooter from '../../forms/form-footer/form-footer';
+import FormFooter from '../../forms/form-footer';
 import useForm from '../../../hooks/useForm';
 
 export default function IdentifierForm({ data, onDeleteHandler, onSaveHandler, enumKey }) {

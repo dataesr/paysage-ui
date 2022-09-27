@@ -11,22 +11,23 @@ import useEditMode from '../../../hooks/useEditMode';
 import Button from '../../../components/button';
 import CopyBadgeButton from '../../../components/copy/copy-badge-button';
 import StructurePresentationPage from './presentation';
-import StructureGouvernancePage from './gouvernance';
-import StructureRHPage from './ressources-humaines';
-import StructureBudgetPage from './budget';
-import StructureAnalyseEtRessourcesStrategiquesPage from './analyses-et-ressources-strategiques';
 import StructureActualitesPage from './actualites';
-import StructureImmobilierPage from './immobilier';
-import StructureEtudiantsPage from './etudiants';
-import StructureOffreDeFormationPage from './offre-de-formation';
-import StructureProjetsPage from './projets';
-import StructureChiffresClesPage from './chiffres-cles';
-import StructureTextesOfficielsPage from './textes-officiels';
-import StructurePrixEtRecompensesPage from './prix-et-recompenses';
 import StructureAgendaPage from './agenda';
+import StructureAnalyseEtRessourcesStrategiquesPage from './analyses-et-ressources-strategiques';
+import StructureBudgetPage from './budget';
+import StructureCategoriesPage from './categories';
+import StructureChiffresClesPage from './chiffres-cles';
 import StructureElementsLiesPage from './elements-lies';
-import StructureParticipationsPage from './participations';
+import StructureEtudiantsPage from './etudiants';
 import StructureExportPage from './exporter';
+import StructureGouvernancePage from './gouvernance';
+import StructureImmobilierPage from './immobilier';
+import StructureOffreDeFormationPage from './offre-de-formation';
+import StructureParticipationsPage from './participations';
+import StructurePrixEtRecompensesPage from './prix-et-recompenses';
+import StructureProjetsPage from './projets';
+import StructureRHPage from './ressources-humaines';
+import StructureTextesOfficielsPage from './textes-officiels';
 
 function StructureByIdPage() {
   const { id } = useParams();
@@ -88,6 +89,10 @@ function StructureByIdPage() {
 
             <SideMenuLink asLink={<RouterLink to="actualites" />}>
               Actualités
+            </SideMenuLink>
+
+            <SideMenuLink asLink={<RouterLink to="categories" />}>
+              Catégories
             </SideMenuLink>
 
             <SideMenuLink asLink={<RouterLink to="immobilier" />}>
@@ -157,7 +162,7 @@ function StructureByIdPage() {
               <BreadcrumbItem>{data?.currentName?.usualName}</BreadcrumbItem>
             )}
           </Breadcrumb>
-          <Row className="fr-row--space-between">
+          <Row className="flex--space-between flex--wrap-reverse">
             <Title as="h2">
               {data.currentName.usualName}
               <BadgeGroup>
@@ -172,7 +177,7 @@ function StructureByIdPage() {
                 />
               </BadgeGroup>
             </Title>
-            <ButtonGroup isInlineFrom="xs">
+            <ButtonGroup align="right" isInlineFrom="xs">
               <Button
                 tertiary
                 borderless
@@ -265,6 +270,7 @@ function StructureByIdPage() {
 
 export {
   StructureByIdPage,
+  StructureCategoriesPage,
   StructurePresentationPage,
   StructureGouvernancePage,
   StructureRHPage,

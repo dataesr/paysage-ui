@@ -7,7 +7,7 @@ import {
 } from '@dataesr/react-dsfr';
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
-import FormFooter from '../../forms/form-footer/form-footer';
+import FormFooter from '../../forms/form-footer';
 import api from '../../../utils/api';
 
 export default function EmailForm({ data, onDeleteHandler, onSaveHandler }) {

@@ -10,10 +10,6 @@
   flex-grow: 1;
 }
 
-.fr-row--space-between {
-  justify-content: space-between;
-}
-
 .flex--space-around {
   justify-content: space-around;
 }
@@ -28,4 +24,12 @@
 
 .flex--grow {
   flex-grow: 1;
+}
+
+.flex--wrap-reverse {
+  flex-wrap: wrap-reverse;
+}
+
+.flex--nowrap {
+  flex-wrap: nowrap;
 }
