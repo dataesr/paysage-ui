@@ -1,10 +1,4 @@
-import {
-  Modal,
-  ModalContent,
-  ModalTitle,
-  Row,
-  Text,
-} from '@dataesr/react-dsfr';
+import { Modal, ModalContent, ModalTitle, Row, Text } from '@dataesr/react-dsfr';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 
@@ -12,13 +6,15 @@ import IdentifierForm from './form';
 import ExpendableListCards from '../../card/expendable-list-cards';
 import ModifyCard from '../../card/modify-card';
 import CopyButton from '../../copy/copy-button';
+import { Bloc, BlocActionButton, BlocContent, BlocModal, BlocTitle } from '../../bloc';
 import { getEnumKey } from '../../../utils';
 import api from '../../../utils/api';
-import { Bloc, BlocActionButton, BlocContent, BlocModal, BlocTitle } from '../../bloc';
+import useToast from '../../../hooks/useToast';
 import useFetch from '../../../hooks/useFetch';
 import useBlocUrl from '../../../hooks/useBlocUrl';
 
 export default function IdentifiersComponent({ apiObject }) {
+  const { toast } = useToast();
   const url = useBlocUrl('identifiers');
   const { data, isLoading, error, reload } = useFetch(url);
   const [showModal, setShowModal] = useState(false);
@@ -30,15 +26,31 @@ export default function IdentifiersComponent({ apiObject }) {
   const onSaveHandler = async (body) => {
     const method = body.id ? 'patch' : 'post';
     const saveUrl = body.id ? `${url}/${body.id}` : url;
-    const response = await api[method](saveUrl, body).catch((e) => { console.log(e); });
+    const response = await api[method](saveUrl, body)
+      .catch(() => {
+        toast({
+          toastType: 'error',
+          description: "Une erreur s'est produite",
+        });
+      });
     if (response.ok) {
+      toast({
+        toastType: 'success',
+        description: "L'identifiant à été ajouté",
+      });
       reload();
       setShowModal(false);
     }
   };
 
   const onDeleteHandler = async (itemId) => {
-    await api.delete(`${url}/${itemId}`).catch((e) => { console.log(e); });
+    await api.delete(`${url}/${itemId}`)
+      .catch(() => {
+        toast({
+          toastType: 'error',
+          description: "Une erreur s'est produite",
+        });
+      });
     reload();
     setShowModal(false);
   };

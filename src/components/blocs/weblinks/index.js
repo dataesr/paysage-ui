@@ -15,8 +15,10 @@ import { Bloc, BlocActionButton, BlocContent, BlocModal, BlocTitle } from '../..
 import useFetch from '../../../hooks/useFetch';
 import useBlocUrl from '../../../hooks/useBlocUrl';
 import { WEBLINKS_TYPES } from '../../../utils/constants';
+import useToast from '../../../hooks/useToast';
 
 export default function WeblinksComponent({ apiObject }) {
+  const { toast } = useToast();
   const url = useBlocUrl('weblinks');
   const { data, isLoading, error, reload } = useFetch(url);
   const [showModal, setShowModal] = useState(false);
@@ -28,15 +30,31 @@ export default function WeblinksComponent({ apiObject }) {
   const onSaveHandler = async (body) => {
     const method = body.id ? 'patch' : 'post';
     const saveUrl = body.id ? `${url}/${body.id}` : url;
-    const response = await api[method](saveUrl, body).catch((e) => { console.log(e); });
+    const response = await api[method](saveUrl, body)
+      .catch(() => {
+        toast({
+          toastType: 'error',
+          description: "Une erreur s'est produite",
+        });
+      });
     if (response.ok) {
+      toast({
+        toastType: 'success',
+        description: 'Le lien à été ajouté',
+      });
       reload();
       setShowModal(false);
     }
   };
 
   const onDeleteHandler = async (itemId) => {
-    await api.delete(`${url}/${itemId}`).catch((e) => { console.log(e); });
+    await api.delete(`${url}/${itemId}`)
+      .catch(() => {
+        toast({
+          toastType: 'error',
+          description: "Une erreur s'est produite",
+        });
+      });
     reload();
     setShowModal(false);
   };

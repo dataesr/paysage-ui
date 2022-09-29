@@ -9,10 +9,12 @@ import Map from '../../map';
 import LocalisationForm from './form';
 import Button from '../../button';
 import { Bloc, BlocActionButton, BlocContent, BlocModal, BlocTitle } from '../../bloc';
+import useToast from '../../../hooks/useToast';
 
 import styles from './styles.module.scss';
 
 export default function LocalisationsComponent({ id, apiObject, currentLocalisationId }) {
+  const { toast } = useToast();
   const route = `/${apiObject}/${id}/localisations`;
   const { data, isLoading, error, reload } = useFetch(route);
   const [showModal, setShowModal] = useState(false);
@@ -22,8 +24,18 @@ export default function LocalisationsComponent({ id, apiObject, currentLocalisat
   const handleSave = async (localisationId, body) => {
     const method = localisationId ? 'patch' : 'post';
     const url = localisationId ? `${route}/${localisationId}` : route;
-    const response = await api[method](url, body);
+    const response = await api[method](url, body)
+      .catch(() => {
+        toast({
+          toastType: 'error',
+          description: "Une erreur s'est produite",
+        });
+      });
     if (response.ok) {
+      toast({
+        toastType: 'success',
+        description: "L'adresse a été ajoutée",
+      });
       reload();
       setShowModal(false);
     }
@@ -33,6 +45,10 @@ export default function LocalisationsComponent({ id, apiObject, currentLocalisat
     if (!localisationId) return;
     const response = await api.delete(`${route}/${localisationId}`);
     if (response.ok) {
+      toast({
+        toastType: 'success',
+        description: "L'adresse a été supprimée",
+      });
       reload();
       setShowModal(false);
     }

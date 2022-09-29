@@ -12,12 +12,14 @@ import HistoDatesForm from './form';
 import api from '../../../utils/api';
 import Modal from '../../modal';
 import { Bloc, BlocActionButton, BlocContent, BlocModal, BlocTitle } from '../../bloc';
+import useToast from '../../../hooks/useToast';
 import useFetch from '../../../hooks/useFetch';
 import useBlocUrl from '../../../hooks/useBlocUrl';
 import ModifyCard from '../../card/modify-card';
 import { formatDescriptionDates } from '../../../utils/dates';
 
 export default function HistoriqueEtDates() {
+  const { toast } = useToast();
   const url = useBlocUrl('');
   const { data, isLoading, error, reload } = useFetch(url);
   const [showModal, setShowModal] = useState(false);
@@ -25,8 +27,17 @@ export default function HistoriqueEtDates() {
   const [modalContent, setModalContent] = useState(null);
 
   const onSaveHandler = async (body) => {
-    const response = await api.patch(url, body).catch((e) => { console.log(e); });
+    const response = await api.patch(url, body).catch(() => {
+      toast({
+        toastType: 'error',
+        description: "Une erreur s'est produite",
+      });
+    });
     if (response.ok) {
+      toast({
+        toastType: 'success',
+        description: 'Donnée mise à jour',
+      });
       reload();
       setShowModal(false);
     }
@@ -138,15 +149,3 @@ export default function HistoriqueEtDates() {
     </Bloc>
   );
 }
-
-// creationReason
-// creationDate
-// creationOfficialTextId
-
-// closureReason
-// closureDate
-// closureOfficialTextId
-
-// descriptionEn
-// descriptionFr
-// structureStatus
