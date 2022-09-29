@@ -17,11 +17,13 @@ import SearchBar from '../../search-bar';
 
 export default function WeblinkForm({ data, onDeleteHandler, onSaveHandler }) {
   // const [showErrors, setShowErrors] = useState(false);
-  const [query, setQuery] = useState('');
-  const [scope, setScope] = useState(null);
-  const [optionsTOCreation, setOptionsCreation] = useState([data.creationOfficialTextId]);
+  const [queryTOCreation, setQueryTOCreation] = useState('');
+  const [scopeTOCreation, setScopeTOCreation] = useState(null);
+  const [optionsTOCreation, setOptionsCreation] = useState([]);
 
-  const [optionsTOClosure, setOptionsClosure] = useState([data.creationOfficialTextId]);
+  const [queryTOClosure, setQueryTOClosure] = useState('');
+  const [scopeTOClosure, setScopeTOClosure] = useState(null);
+  const [optionsTOClosure, setOptionsClosure] = useState([]);
 
   const { form, updateForm } = useForm(data, validator);
 
@@ -34,24 +36,45 @@ export default function WeblinkForm({ data, onDeleteHandler, onSaveHandler }) {
   // };
 
   useEffect(() => {
-    const getAutocompleteResult = async () => {
-      const response = await api.get(`/autocomplete?query=${query}&types=officialTexts`);
+    const getAutocompleteResultCreation = async () => {
+      const response = await api.get(`/autocomplete?query=${queryTOCreation}&types=officialTexts`);
       setOptionsCreation(response.data?.data);
     };
-    if (query) { getAutocompleteResult(); } else { setOptionsCreation([]); }
-  }, [query]);
+    if (queryTOCreation) { getAutocompleteResultCreation(); } else { setOptionsCreation([]); }
+  }, [queryTOCreation]);
 
-  const handleSelect = ({ id, name }) => {
+  useEffect(() => {
+    const getAutocompleteResultClosure = async () => {
+      const response = await api.get(`/autocomplete?query=${queryTOClosure}&types=officialTexts`);
+      setOptionsClosure(response.data?.data);
+    };
+    if (queryTOClosure) { getAutocompleteResultClosure(); } else { setOptionsClosure([]); }
+  }, [queryTOClosure]);
+
+  const handleSelectCreation = ({ id, name }) => {
     updateForm({ creationOfficialTextId: id });
-    setScope(name);
-    setQuery('');
+    setScopeTOCreation(name);
+    setQueryTOCreation('');
     setOptionsCreation([]);
   };
-  const handleUnselect = () => {
+  const handleUnselectCreation = () => {
     updateForm({ creationOfficialTextId: null });
-    setScope(null);
-    setQuery('');
+    setScopeTOCreation(null);
+    setQueryTOCreation('');
     setOptionsCreation([]);
+  };
+
+  const handleSelectClosure = ({ id, name }) => {
+    updateForm({ closureOfficialTextId: id });
+    setScopeTOClosure(name);
+    setQueryTOClosure('');
+    setOptionsClosure([]);
+  };
+  const handleUnselectClosure = () => {
+    updateForm({ closureOfficialTextId: null });
+    setScopeTOClosure(null);
+    setQueryTOClosure('');
+    setOptionsClosure([]);
   };
 
   return (
@@ -92,22 +115,38 @@ export default function WeblinkForm({ data, onDeleteHandler, onSaveHandler }) {
             <SearchBar
               size="lg"
               buttonLabel="Rechercher"
-              value={query}
-              label="Texte officiel de création"
+              value={queryTOCreation}
+              label="Ajouter/remplacer le texte officiel de création"
               hint="Recherchez et séléctionnez un texte officiel présent dans paysage"
-              scope={scope}
-              placeholder={scope ? '' : 'Rechercher...'}
-              onChange={(e) => { updateForm({ creationOfficialTextId: null }); setQuery(e.target.value); }}
+              scope={scopeTOCreation}
+              placeholder={scopeTOCreation ? '' : 'Rechercher...'}
+              onChange={(e) => { updateForm({ creationOfficialTextId: null }); setQueryTOCreation(e.target.value); }}
               options={optionsTOCreation}
-              onSelect={handleSelect}
-              onDeleteScope={handleUnselect}
+              onSelect={handleSelectCreation}
+              onDeleteScope={handleUnselectCreation}
             />
           </Col>
         </Row>
         {
-          (data?.creationOfficialText) ? (
+          (data?.creationOfficialText && form.creationOfficialTextId === data?.creationOfficialText.id) ? (
             <Row>
-              {JSON.stringify(data?.creationOfficialText)}
+              <Col className="fr-p-1w">
+                <div className="fr-tile fr-enlarge-link fr-tile--horizontal">
+                  <div className="fr-tile__body">
+                    <h4 className="fr-tile__title">
+                      <a
+                        className="fr-tile__link"
+                        href={`/textes-officiels/${data?.creationOfficialText.id}`}
+                      >
+                        {data?.creationOfficialText.title}
+                      </a>
+                    </h4>
+                    <p className="fr-tile__desc">
+                      {`${data?.creationOfficialText.type} publié le ${data?.creationOfficialText.publicationDate}`}
+                    </p>
+                  </div>
+                </div>
+              </Col>
             </Row>
           ) : null
         }
@@ -137,6 +176,47 @@ export default function WeblinkForm({ data, onDeleteHandler, onSaveHandler }) {
             />
           </Col>
         </Row>
+        <Row className="fr-pt-2w">
+          <Col>
+            <SearchBar
+              size="lg"
+              buttonLabel="Rechercher"
+              value={queryTOClosure}
+              label="Ajouter/remplacer le texte officiel de fermeture"
+              hint="Recherchez et séléctionnez un texte officiel présent dans paysage"
+              scope={scopeTOClosure}
+              placeholder={scopeTOClosure ? '' : 'Rechercher...'}
+              onChange={(e) => { updateForm({ closureOfficialTextId: null }); setQueryTOClosure(e.target.value); }}
+              options={optionsTOClosure}
+              onSelect={handleSelectClosure}
+              onDeleteScope={handleUnselectClosure}
+            />
+          </Col>
+        </Row>
+        {
+          (data?.closureOfficialText && form.closureOfficialTextId === data?.closureOfficialText.id) ? (
+            <Row>
+              <Col className="fr-p-1w">
+                <div className="fr-tile fr-enlarge-link fr-tile--horizontal">
+                  <div className="fr-tile__body">
+                    <h4 className="fr-tile__title">
+                      <a
+                        className="fr-tile__link"
+                        href={`/textes-officiels/${data?.closureOfficialText.id}`}
+                      >
+                        {data?.closureOfficialText.title}
+                      </a>
+                    </h4>
+                    <p className="fr-tile__desc">
+                      {`${data?.closureOfficialText.type} publié le ${data?.closureOfficialText.publicationDate}`}
+                    </p>
+                  </div>
+                </div>
+              </Col>
+            </Row>
+          ) : null
+        }
+
         <FormFooter
           id={data?.id}
           onSaveHandler={() => onSaveHandler(form)}
