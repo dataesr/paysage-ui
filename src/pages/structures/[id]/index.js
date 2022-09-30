@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react';
 import { Link as RouterLink, useNavigate, Outlet, useLocation, useParams } from 'react-router-dom';
 import {
   Badge, BadgeGroup, Breadcrumb, BreadcrumbItem, ButtonGroup, Checkbox,
-  CheckboxGroup, Col, Container, Icon, Modal, ModalContent, ModalFooter,
-  ModalTitle, Row, SideMenu, SideMenuItem, SideMenuLink, Title,
+  CheckboxGroup, Col, Container, Highlight, Icon, Modal, ModalContent, ModalFooter,
+  ModalTitle, Radio, RadioGroup, Row, SideMenu, SideMenuItem, SideMenuLink, TextInput, Title,
 } from '@dataesr/react-dsfr';
 import useFetch from '../../../hooks/useFetch';
 import useForm from '../../../hooks/useForm';
@@ -29,18 +29,61 @@ import StructurePrixEtRecompensesPage from './prix-et-recompenses';
 import StructureProjetsPage from './projets';
 import StructureRHPage from './ressources-humaines';
 import StructureTextesOfficielsPage from './textes-officiels';
+import { DropdownButton, DropdownButtonItem } from '../../../components/dropdown-button';
+import api from '../../../utils/api';
+import useToast from '../../../hooks/useToast';
 
 function StructureByIdPage() {
+  const { toast } = useToast();
   const { id } = useParams();
-  const { data, isLoading, error } = useFetch(`/structures/${id}`);
+  const url = `/structures/${id}`;
+  const { data, isLoading, error, reload } = useFetch(url);
   const { pathname } = useLocation();
   const navigate = useNavigate();
   const { editMode, reset, toggle } = useEditMode();
   const [isExportOpen, setIsExportOpen] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
-  const { form, updateForm } = useForm({}, () => {});
+  const { form, updateForm } = useForm({}, () => { });
+
+  const [isStatusModalOpen, setIsStatusModalOpen] = useState(false);
+  const [status, setSatus] = useState('inactive');
+
+  const [isDescriptionModalOpen, setIsDescriptionModalOpen] = useState(false);
+  const [descriptionFr, setDescriptionFr] = useState('');
+  const [descriptionEn, setDescriptionEn] = useState('');
 
   useEffect(() => { reset(); }, [reset]);
+
+  useEffect(() => { setSatus(data?.structureStatus); }, [data?.structureStatus]);
+  useEffect(() => { setDescriptionFr(data?.descriptionFr); }, [data?.descriptionFr]);
+  useEffect(() => { setDescriptionEn(data?.descriptionEn); }, [data?.descriptionEn]);
+
+  const onSaveHandler = async (target) => {
+    const body = {};
+    if (target === 'status') {
+      body.structureStatus = status;
+    }
+    if (target === 'description') {
+      body.descriptionFr = descriptionFr;
+      body.descriptionEn = descriptionEn;
+    }
+    const response = await api.patch(url, body)
+      .catch(() => {
+        toast({
+          toastType: 'error',
+          description: "Une erreur s'est produite",
+        });
+      });
+    if (response.ok) {
+      toast({
+        toastType: 'success',
+        description: 'Sauvegade ok',
+      });
+      reload();
+      setIsStatusModalOpen(false);
+      setIsDescriptionModalOpen(false);
+    }
+  };
 
   const menu = {
     'chiffres-cles': 'Chiffres clés',
@@ -178,11 +221,21 @@ function StructureByIdPage() {
                 />
                 <Badge
                   colorFamily="green-emeraude"
-                  text={data.active || 'active'}
+                  text={data.structureStatus || 'active'}
                 />
               </BadgeGroup>
             </Title>
             <ButtonGroup align="right" isInlineFrom="xs">
+              <DropdownButton align="right" title="options">
+                <DropdownButtonItem onClick={() => setIsStatusModalOpen(true)}>
+                  Modifier le statut
+                  <Icon iconPosition="right" size="xl" name="ri-edit-line" color="var(--border-action-high-blue-france)" />
+                </DropdownButtonItem>
+                <DropdownButtonItem onClick={() => setIsDescriptionModalOpen(true)}>
+                  Ajouter/Modifier la description
+                  <Icon iconPosition="right" size="xl" name="ri-edit-line" color="var(--border-action-high-blue-france)" />
+                </DropdownButtonItem>
+              </DropdownButton>
               <Button
                 tertiary
                 borderless
@@ -264,8 +317,62 @@ function StructureByIdPage() {
                 </ButtonGroup>
               </ModalFooter>
             </Modal>
+
+            <Modal size="md" isOpen={isStatusModalOpen} hide={() => setIsStatusModalOpen(false)}>
+              <ModalTitle>
+                Modification du statut
+              </ModalTitle>
+              <ModalContent>
+                <RadioGroup isInline>
+                  <Radio
+                    label="Actif"
+                    value="active"
+                    checked={status === 'active'}
+                    onChange={(e) => setSatus(e.target.value)}
+                  />
+                  <Radio
+                    label="Inactif"
+                    value="inactive"
+                    checked={status === 'inactive'}
+                    onChange={(e) => setSatus(e.target.value)}
+                  />
+                  <Radio
+                    label="A venir"
+                    value="forthcoming"
+                    checked={status === 'forthcoming'}
+                    onChange={(e) => setSatus(e.target.value)}
+                  />
+                </RadioGroup>
+              </ModalContent>
+              <ModalFooter>
+                <ButtonGroup>
+                  <Button onClick={() => onSaveHandler('status')}>
+                    Sauvegarder
+                  </Button>
+                </ButtonGroup>
+              </ModalFooter>
+            </Modal>
+
+            <Modal size="md" isOpen={isDescriptionModalOpen} hide={() => setIsDescriptionModalOpen(false)}>
+              <ModalTitle>
+                Modification de la description
+              </ModalTitle>
+              <ModalContent>
+                <TextInput textarea label="Description française" onChange={(e) => setDescriptionFr(e.target.value)} value={descriptionFr} />
+                <TextInput textarea label="Description anglaise" onChange={(e) => setDescriptionEn(e.target.value)} value={descriptionEn} />
+              </ModalContent>
+              <ModalFooter>
+                <ButtonGroup>
+                  <Button onClick={() => onSaveHandler('description')}>
+                    Sauvegarder
+                  </Button>
+                </ButtonGroup>
+              </ModalFooter>
+            </Modal>
           </Row>
           {section && <Row><Title as="h3">{section}</Title></Row>}
+          {descriptionFr && <Highlight>{descriptionFr}</Highlight>}
+          {descriptionEn && <Highlight>{descriptionEn}</Highlight>}
           <Outlet />
         </Col>
       </Row>

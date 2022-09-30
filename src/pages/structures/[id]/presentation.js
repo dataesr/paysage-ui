@@ -38,29 +38,29 @@ export default function StructurePresentationPage() {
         />
       </div>
       <div id="historique-et-dates">
-        <HistoriqueEtDates apiObject="structures" id={id} />
-        <Names apiObject="structures" id={id} />
+        <HistoriqueEtDates />
+        <Names apiObject="structures" />
       </div>
       <div id="palmares-et-classements">
-        <PalmaresEtClassements apiObject="structures" id={id} />
+        <PalmaresEtClassements />
       </div>
       <div id="presence-sur-le-web">
-        <PresenceSurLeWeb apiObject="structures" id={id} />
+        <PresenceSurLeWeb apiObject="structures" />
       </div>
       <div id="identifiants">
-        <Identifiers apiObject="structures" id={id} />
+        <Identifiers apiObject="structures" />
       </div>
       <div id="chiffres-cles">
-        <ChiffresClesPresentation apiObject="structures" id={id} />
+        <ChiffresClesPresentation />
       </div>
       <div id="email">
-        <Emails apiObject="structures" id={id} />
+        <Emails />
       </div>
       <div id="dernieres-actualites">
-        <DernieresActualites apiObject="structures" id={id} />
+        <DernieresActualites />
       </div>
       <div id="suivi-dgesip">
-        <SuiviDGESIP apiObject="structures" id={id} />
+        <SuiviDGESIP />
       </div>
     </>
   );

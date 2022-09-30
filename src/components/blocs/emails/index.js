@@ -8,8 +8,10 @@ import CopyButton from '../../copy/copy-button';
 import { Bloc, BlocActionButton, BlocContent, BlocModal, BlocTitle } from '../../bloc';
 import useFetch from '../../../hooks/useFetch';
 import useBlocUrl from '../../../hooks/useBlocUrl';
+import useToast from '../../../hooks/useToast';
 
 export default function EmailsComponent() {
+  const { toast } = useToast();
   const url = useBlocUrl('emails');
   const { data, isLoading, error, reload } = useFetch(url);
   const [showModal, setShowModal] = useState(false);
@@ -19,15 +21,31 @@ export default function EmailsComponent() {
   const onSaveHandler = async (body, id = null) => {
     const method = id ? 'patch' : 'post';
     const saveUrl = id ? `${url}/${id}` : url;
-    const response = await api[method](saveUrl, body).catch((e) => { console.log(e); });
+    const response = await api[method](saveUrl, body)
+      .catch(() => {
+        toast({
+          toastType: 'error',
+          description: "Une erreur s'est produite",
+        });
+      });
     if (response.ok) {
+      toast({
+        toastType: 'success',
+        description: "L'adresse email à été ajoutée",
+      });
       reload();
       setShowModal(false);
     }
   };
 
   const onDeleteHandler = async (id) => {
-    await api.delete(`${url}/${id}`).catch((e) => { console.log(e); });
+    await api.delete(`${url}/${id}`)
+      .catch(() => {
+        toast({
+          toastType: 'error',
+          description: "Une erreur s'est produite",
+        });
+      });
     reload();
     setShowModal(false);
   };
