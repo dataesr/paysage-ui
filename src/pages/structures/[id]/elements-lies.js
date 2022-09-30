@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Modal, ModalTitle, ModalContent } from '@dataesr/react-dsfr';
 import useFetch from '../../../hooks/useFetch';
-import useUrl from '../../../hooks/useBlocUrl';
+import useUrl from '../../../hooks/useUrl';
 import useHashScroll from '../../../hooks/useHashScroll';
 import Spinner from '../../../components/spinner';
 import Relations from '../../../components/blocs/relations';
@@ -17,7 +17,7 @@ const deleteSuccess = { content: 'Le groupe a été supprimée avec succès.', a
 
 export default function StructureElementLiesPage() {
   useHashScroll();
-  const url = useUrl('relations-groups');
+  const { url } = useUrl('relations-groups');
   const { data, isLoading, error, reload } = useFetch(`${url}?filters[name][$nin]=Gouvernance&filters[name][$nin]=Référents MESR&filters[name][$nin]=Catégories&limit=50`);
   const [isOpen, setIsOpen] = useState();
   const notice = useNotice();

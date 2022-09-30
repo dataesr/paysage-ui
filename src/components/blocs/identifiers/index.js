@@ -1,5 +1,4 @@
 import { Modal, ModalContent, ModalTitle, Row, Text } from '@dataesr/react-dsfr';
-import PropTypes from 'prop-types';
 import { useState } from 'react';
 
 import IdentifierForm from './form';
@@ -11,11 +10,11 @@ import { getEnumKey } from '../../../utils';
 import api from '../../../utils/api';
 import useToast from '../../../hooks/useToast';
 import useFetch from '../../../hooks/useFetch';
-import useBlocUrl from '../../../hooks/useBlocUrl';
+import useUrl from '../../../hooks/useUrl';
 
-export default function IdentifiersComponent({ apiObject }) {
+export default function IdentifiersComponent() {
   const { toast } = useToast();
-  const url = useBlocUrl('identifiers');
+  const { url, apiObject } = useUrl('identifiers');
   const { data, isLoading, error, reload } = useFetch(url);
   const [showModal, setShowModal] = useState(false);
   const [modalTitle, setModalTitle] = useState('');
@@ -105,7 +104,3 @@ export default function IdentifiersComponent({ apiObject }) {
     </Bloc>
   );
 }
-
-IdentifiersComponent.propTypes = {
-  apiObject: PropTypes.string.isRequired,
-};

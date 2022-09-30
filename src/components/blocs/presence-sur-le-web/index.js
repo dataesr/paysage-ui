@@ -1,22 +1,17 @@
-import PropTypes from 'prop-types';
 import { Title } from '@dataesr/react-dsfr';
 import InternalPagesComponent from '../internal-pages';
 import SocialMedias from '../social-medias';
 import Weblinks from '../weblinks';
 import Wikipedia from '../wikipedia';
 
-export default function PresenceSurLeWeb({ apiObject }) {
+export default function PresenceSurLeWeb() {
   return (
     <>
       <Title>Présence sur le web</Title>
-      <Weblinks apiObject={apiObject} />
-      <InternalPagesComponent apiObject={apiObject} />
-      <SocialMedias apiObject={apiObject} />
-      <Wikipedia apiObject={apiObject} />
+      <Weblinks />
+      <InternalPagesComponent />
+      <SocialMedias />
+      <Wikipedia />
     </>
   );
 }
-
-PresenceSurLeWeb.propTypes = {
-  apiObject: PropTypes.string.isRequired,
-};

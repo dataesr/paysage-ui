@@ -8,7 +8,7 @@ import { Bloc, BlocActionButton, BlocContent, BlocModal, BlocTitle } from '../..
 import RelationsForm from '../../forms/relations';
 import RelationsGroupForm from '../../forms/relations-group';
 import useFetch from '../../../hooks/useFetch';
-import useBlocUrl from '../../../hooks/useBlocUrl';
+import useUrl from '../../../hooks/useUrl';
 import useNotice from '../../../hooks/useNotice';
 import { formatDescriptionDates } from '../../../utils/dates';
 import { parseRelatedElement } from '../../../utils/parse-related-element';
@@ -25,7 +25,7 @@ const deleteGroupeSuccess = { content: 'Le groupe a été supprimée avec succè
 export default function Relations({ group, reloader }) {
   const { id: groupId, name: groupName, accepts: groupAccepts } = group;
   const { notice } = useNotice();
-  const listUrl = useBlocUrl('relations-groups');
+  const { url: listUrl } = useUrl('relations-groups');
   const url = `${listUrl}/${groupId}/relations`;
   const { data, isLoading, error, reload } = useFetch(url);
   const [showModal, setShowModal] = useState(false);

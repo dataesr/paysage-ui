@@ -3,7 +3,6 @@ import {
   ModalContent,
   ModalTitle,
 } from '@dataesr/react-dsfr';
-import PropTypes from 'prop-types';
 import { useState } from 'react';
 
 import ExpendableListCards from '../../card/expendable-list-cards';
@@ -13,13 +12,13 @@ import api from '../../../utils/api';
 import WeblinkForm from './form';
 import { Bloc, BlocActionButton, BlocContent, BlocModal, BlocTitle } from '../../bloc';
 import useFetch from '../../../hooks/useFetch';
-import useBlocUrl from '../../../hooks/useBlocUrl';
+import useUrl from '../../../hooks/useUrl';
 import { WEBLINKS_TYPES } from '../../../utils/constants';
 import useToast from '../../../hooks/useToast';
 
-export default function WeblinksComponent({ apiObject }) {
+export default function WeblinksComponent() {
   const { toast } = useToast();
-  const url = useBlocUrl('weblinks');
+  const { url, apiObject } = useUrl('weblinks');
   const { data, isLoading, error, reload } = useFetch(url);
   const [showModal, setShowModal] = useState(false);
   const [modalTitle, setModalTitle] = useState('');
@@ -107,7 +106,3 @@ export default function WeblinksComponent({ apiObject }) {
     </Bloc>
   );
 }
-
-WeblinksComponent.propTypes = {
-  apiObject: PropTypes.string.isRequired,
-};

@@ -3,7 +3,6 @@ import {
   ModalContent,
   ModalTitle,
 } from '@dataesr/react-dsfr';
-import PropTypes from 'prop-types';
 import { useState } from 'react';
 
 import ExpendableListCards from '../../card/expendable-list-cards';
@@ -13,11 +12,11 @@ import api from '../../../utils/api';
 import InternalPageForm from './form';
 import { Bloc, BlocActionButton, BlocContent, BlocModal, BlocTitle } from '../../bloc';
 import useFetch from '../../../hooks/useFetch';
-import useBlocUrl from '../../../hooks/useBlocUrl';
+import useUrl from '../../../hooks/useUrl';
 import { INTERNAL_PAGES_TYPES } from '../../../utils/constants';
 
-export default function InternalPagesComponent({ apiObject }) {
-  const url = useBlocUrl('weblinks');
+export default function InternalPagesComponent() {
+  const { url, apiObject } = useUrl('weblinks');
   const { data, isLoading, error, reload } = useFetch(url);
   const [showModal, setShowModal] = useState(false);
   const [modalTitle, setModalTitle] = useState('');
@@ -89,7 +88,3 @@ export default function InternalPagesComponent({ apiObject }) {
     </Bloc>
   );
 }
-
-InternalPagesComponent.propTypes = {
-  apiObject: PropTypes.string.isRequired,
-};

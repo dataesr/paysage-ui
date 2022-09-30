@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import PropTypes from 'prop-types';
 import {
   Card,
   CardDescription,
@@ -13,13 +12,13 @@ import { formatDescriptionDates } from '../../../utils/dates';
 import Modal from '../../modal';
 import { Bloc, BlocActionButton, BlocContent, BlocModal, BlocTitle } from '../../bloc';
 import useFetch from '../../../hooks/useFetch';
-import useBlocUrl from '../../../hooks/useBlocUrl';
+import useUrl from '../../../hooks/useUrl';
 import ExpendableListCards from '../../card/expendable-list-cards';
 import useToast from '../../../hooks/useToast';
 
-export default function NamesComponent({ apiObject }) {
+export default function NamesComponent() {
   const { toast } = useToast();
-  const url = useBlocUrl('names');
+  const { url, apiObject } = useUrl('names');
   const { data, isLoading, error, reload } = useFetch(url);
   const [showModal, setShowModal] = useState(false);
   const [modalTitle, setModalTitle] = useState('');
@@ -106,7 +105,3 @@ export default function NamesComponent({ apiObject }) {
     </Bloc>
   );
 }
-
-NamesComponent.propTypes = {
-  apiObject: PropTypes.string.isRequired,
-};

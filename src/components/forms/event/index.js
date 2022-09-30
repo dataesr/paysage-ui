@@ -1,8 +1,6 @@
 import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import {
-  Col, Container, File, Icon, Radio, RadioGroup, Row, Tag, TagGroup, TextInput,
-} from '@dataesr/react-dsfr';
+import { Col, Container, File, Icon, Radio, RadioGroup, Row, Tag, TagGroup, Text, TextInput } from '@dataesr/react-dsfr';
 import useNotice from '../../../hooks/useNotice';
 import useForm from '../../../hooks/useForm';
 import api from '../../../utils/api';
@@ -19,7 +17,7 @@ export default function EventForm({ id, initialForm, onSave, onDelete }) {
     return validationErrors;
   };
 
-  const { form, updateForm, errors } = useForm(initialForm, validateForm);
+  const { form, updateForm, errors } = useForm({ files: [], ...initialForm }, validateForm);
   const [showErrors, setShowErrors] = useState(false);
   const [filesErrors, setFilesErrors] = useState(false);
   const [files, setFiles] = useState([]);
@@ -71,7 +69,11 @@ export default function EventForm({ id, initialForm, onSave, onDelete }) {
       }
       formData.append('files', files);
       api.post('/files', formData, { 'Content-Type': 'multipart/form-data' })
-        .then((response) => { updateForm({ files: [...form.files, ...response.data.data] }); setFilesErrors(false); setFiles([]); })
+        .then((response) => {
+          updateForm({ files: [...form.files, ...response.data.data] });
+          setFilesErrors(false);
+          setFiles([]);
+        })
         .catch(() => { setFilesErrors(true); setFiles([]); });
     };
     if (files && files.length) saveFiles();
@@ -139,6 +141,7 @@ export default function EventForm({ id, initialForm, onSave, onDelete }) {
               message={(filesErrors) ? "Une erreur est survenue à l'ajout des fichiers" : null}
               messageType={(filesErrors) ? 'error' : ''}
             />
+            {(filesErrors) ? <Text size="xs" className="fr-error-text">Une erreur est survenue à l'ajout des fichiers. Veuillez réessayer</Text> : null}
             {(form.files?.length > 0) && (
               <Row spacing="mt-2w">
                 <TagGroup>
@@ -193,5 +196,5 @@ EventForm.propTypes = {
 };
 EventForm.defaultProps = {
   id: null,
-  initialForm: { type: 'suivi', relatedObjects: [] },
+  initialForm: { type: 'suivi', relatedObjects: [], files: [] },
 };

@@ -1,15 +1,14 @@
-import PropTypes from 'prop-types';
 import { useCallback, useEffect, useState } from 'react';
 
 import { Bloc, BlocContent, BlocTitle } from '../../bloc';
 import ExpendableListCards from '../../card/expendable-list-cards';
 import WikipediaCard from '../../card/wikipedia-card';
 import api from '../../../utils/api';
-import useUrl from '../../../hooks/useBlocUrl';
+import useUrl from '../../../hooks/useUrl';
 
-export default function Wikipedia({ apiObject }) {
+export default function Wikipedia() {
   const [data, setData] = useState([]);
-  const url = useUrl('identifiers');
+  const { url, apiObject } = useUrl('identifiers');
 
   const getWikipediaLang = (key) => key.slice(0, key.length - 4).toUpperCase();
   const getWikipediaLink = useCallback((key, element) => `https://${key.slice(0, key.length - 4).toUpperCase()}.wikipedia.org/wiki/${element[key].title.replace(' ', '_')}`, []);
@@ -67,7 +66,3 @@ export default function Wikipedia({ apiObject }) {
     </Bloc>
   );
 }
-
-Wikipedia.propTypes = {
-  apiObject: PropTypes.string.isRequired,
-};

@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import PropTypes from 'prop-types';
 import { Modal, ModalContent, ModalTitle } from '@dataesr/react-dsfr';
 import SocialMediaForm from './form';
 import ExpendableListCards from '../../card/expendable-list-cards';
@@ -8,12 +7,12 @@ import { getEnumKey } from '../../../utils';
 import SocialMediaCard from '../../card/social-media-card';
 import { Bloc, BlocActionButton, BlocContent, BlocModal, BlocTitle } from '../../bloc';
 import useFetch from '../../../hooks/useFetch';
-import useBlocUrl from '../../../hooks/useBlocUrl';
+import useUrl from '../../../hooks/useUrl';
 import useToast from '../../../hooks/useToast';
 
-export default function SocialMediasComponent({ apiObject }) {
+export default function SocialMediasComponent() {
   const { toast } = useToast();
-  const url = useBlocUrl('social-medias');
+  const { url, apiObject } = useUrl('social-medias');
   const { data, isLoading, error, reload } = useFetch(url);
   const [showModal, setShowModal] = useState(false);
   const [modalTitle, setModalTitle] = useState('');
@@ -100,7 +99,3 @@ export default function SocialMediasComponent({ apiObject }) {
     </Bloc>
   );
 }
-
-SocialMediasComponent.propTypes = {
-  apiObject: PropTypes.string.isRequired,
-};
