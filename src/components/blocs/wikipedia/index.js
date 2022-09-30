@@ -5,9 +5,11 @@ import { Bloc, BlocContent, BlocTitle } from '../../bloc';
 import ExpendableListCards from '../../card/expendable-list-cards';
 import WikipediaCard from '../../card/wikipedia-card';
 import api from '../../../utils/api';
+import useUrl from '../../../hooks/useBlocUrl';
 
-export default function Wikipedia({ apiObject, id }) {
+export default function Wikipedia({ apiObject }) {
   const [data, setData] = useState([]);
+  const url = useUrl('identifiers');
 
   const getWikipediaLang = (key) => key.slice(0, key.length - 4).toUpperCase();
   const getWikipediaLink = useCallback((key, element) => `https://${key.slice(0, key.length - 4).toUpperCase()}.wikipedia.org/wiki/${element[key].title.replace(' ', '_')}`, []);
@@ -15,14 +17,14 @@ export default function Wikipedia({ apiObject, id }) {
   useEffect(() => {
     const getData = async () => {
       const wikidatas = await api
-        .get(`/${apiObject}/${id}/identifiers`)
+        .get(url)
         .then((response) => response?.data?.data.filter((identifier) => identifier.type === 'Wikidata'))
         .catch((e) => {
           console.log(e);
         });
       const sitelinks = await Promise.all(wikidatas.map(async (wikidata) => {
-        const url = `https://www.wikidata.org/w/api.php?format=json&origin=*&action=wbgetentities&props=sitelinks&ids=${wikidata.value}`;
-        const response = await fetch(url);
+        const wikiUrl = `https://www.wikidata.org/w/api.php?format=json&origin=*&action=wbgetentities&props=sitelinks&ids=${wikidata.value}`;
+        const response = await fetch(wikiUrl);
         if (response.ok) {
           const json = await response.json();
           return json.entities[wikidata.value].sitelinks;
@@ -46,7 +48,7 @@ export default function Wikipedia({ apiObject, id }) {
     };
     getData();
     return () => {};
-  }, [apiObject, getWikipediaLink, id]);
+  }, [apiObject, getWikipediaLink, url]);
 
   const renderCards = () => {
     const list = data.map((element) => (
@@ -68,5 +70,4 @@ export default function Wikipedia({ apiObject, id }) {
 
 Wikipedia.propTypes = {
   apiObject: PropTypes.string.isRequired,
-  id: PropTypes.string.isRequired,
 };
