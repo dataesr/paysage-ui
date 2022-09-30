@@ -19,6 +19,7 @@ import StructureCategoriesPage from './categories';
 import StructureChiffresClesPage from './chiffres-cles';
 import StructureElementsLiesPage from './elements-lies';
 import StructureEtudiantsPage from './etudiants';
+import StructureEvenementsPage from './evenements';
 import StructureExportPage from './exporter';
 import StructureGouvernancePage from './gouvernance';
 import StructureImmobilierPage from './immobilier';
@@ -86,6 +87,10 @@ function StructureByIdPage() {
                 Evaluation HCERES
               </SideMenuLink>
             </SideMenuItem>
+
+            <SideMenuLink asLink={<RouterLink to="evenements" />}>
+              Evènements
+            </SideMenuLink>
 
             <SideMenuLink asLink={<RouterLink to="actualites" />}>
               Actualités
@@ -279,6 +284,7 @@ export {
   StructureActualitesPage,
   StructureImmobilierPage,
   StructureEtudiantsPage,
+  StructureEvenementsPage,
   StructureExportPage,
   StructureOffreDeFormationPage,
   StructureProjetsPage,

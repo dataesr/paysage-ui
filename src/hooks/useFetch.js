@@ -3,7 +3,7 @@ import api from '../utils/api';
 
 export default function useFetch(url, headers) {
   const [data, setData] = useState(null);
-  const [error, setError] = useState('');
+  const [error, setError] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [reloads, setReloads] = useState(0);
 
@@ -26,10 +26,9 @@ export default function useFetch(url, headers) {
     setError(false);
     setData(null);
 
-    fetchData().catch((e) => {
+    fetchData().catch(() => {
       setIsLoading(false);
       setError(true);
-      console.log(e);
     });
   }, [url, headers, reloads]);
 

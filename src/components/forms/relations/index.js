@@ -12,7 +12,7 @@ import SearchBar from '../../search-bar';
 import FormFooter from '../form-footer';
 import api from '../../../utils/api';
 import useFetch from '../../../hooks/useFetch';
-import parseRelatedElement from '../../../utils/parse-related-element';
+import { parseRelatedElement } from '../../../utils/parse-related-element';
 
 const validator = (body) => {
   const errors = {};

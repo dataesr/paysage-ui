@@ -1,0 +1,52 @@
+
+.timeline-new {
+  --timeline-color: var(--background-action-high-yellow-moutarde-hover) !important;
+}
+.timeline {
+  --timeline-color: var(--background-action-high-blue-france);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+
+  &::before {
+    background-color: var(--timeline-color);
+    content: "";
+    height: 100%;
+    left: 0;
+    margin: 0 0 0 19px;
+    position: absolute;
+    width: 2px;
+  }
+}
+
+.timeline-item {
+  display: flex;
+  flex-direction: row;
+  min-height: 7rem;
+}
+.timeline-date {
+  background-color: var(--background-default-grey);
+  position: absolute;
+  text-align: center;
+  width: 40px;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: .5rem 0;
+  
+  &::before {
+    content: "\eb25";
+    color: var(--timeline-color);
+    font-family: remixicon !important;
+    font-size: 1.5rem;
+    width: 40px;
+  }
+}
+.timeline-content {
+  flex-grow: 1;
+  padding-top: .5rem !important;
+  padding-left: 4rem !important;
+}
+

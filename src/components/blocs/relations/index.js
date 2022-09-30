@@ -11,7 +11,7 @@ import useFetch from '../../../hooks/useFetch';
 import useBlocUrl from '../../../hooks/useBlocUrl';
 import useNotice from '../../../hooks/useNotice';
 import { formatDescriptionDates } from '../../../utils/dates';
-import parseRelatedElement from '../../../utils/parse-related-element';
+import { parseRelatedElement } from '../../../utils/parse-related-element';
 import Map from '../../map/auto-bound-map';
 import ScrallableListCards from '../../card/scrollable-list-card';
 

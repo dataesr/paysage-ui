@@ -40,6 +40,7 @@ import {
   StructureElementsLiesPage,
   StructureParticipationsPage,
   StructureExportPage,
+  StructureEvenementsPage,
 } from './pages/structures/[id]';
 
 import TermsPage from './pages/termes';
@@ -96,6 +97,7 @@ function App() {
               <Route path="" element={<Navigate to="presentation" replace />} />
               <Route path="presentation" element={<StructurePresentationPage />} />
               <Route path="categories" element={<StructureCategoriesPage />} />
+              <Route path="evenements" element={<StructureEvenementsPage />} />
               <Route path="gouvernance-et-referents" element={<StructureGouvernancePage />} />
               <Route path="ressource-humaines" element={<StructureRHPage />} />
               <Route path="budget" element={<StructureBudgetPage />} />
