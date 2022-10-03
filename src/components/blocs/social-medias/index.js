@@ -3,7 +3,6 @@ import { Modal, ModalContent, ModalTitle } from '@dataesr/react-dsfr';
 import SocialMediaForm from './form';
 import ExpendableListCards from '../../card/expendable-list-cards';
 import api from '../../../utils/api';
-import { getEnumKey } from '../../../utils';
 import SocialMediaCard from '../../card/social-media-card';
 import { Bloc, BlocActionButton, BlocContent, BlocModal, BlocTitle } from '../../bloc';
 import useFetch from '../../../hooks/useFetch';
@@ -12,13 +11,11 @@ import useToast from '../../../hooks/useToast';
 
 export default function SocialMediasComponent() {
   const { toast } = useToast();
-  const { url, apiObject } = useUrl('social-medias');
+  const { url } = useUrl('social-medias');
   const { data, isLoading, error, reload } = useFetch(url);
   const [showModal, setShowModal] = useState(false);
   const [modalTitle, setModalTitle] = useState('');
   const [modalContent, setModalContent] = useState(null);
-
-  const enumKey = getEnumKey(apiObject, 'social-medias');
 
   const onSaveHandler = async (body) => {
     const method = body.id ? 'patch' : 'post';
@@ -59,7 +56,6 @@ export default function SocialMediasComponent() {
         data={oneData}
         onDeleteHandler={onDeleteHandler}
         onSaveHandler={onSaveHandler}
-        enumKey={enumKey}
       />,
     );
     setShowModal(true);
@@ -68,7 +64,7 @@ export default function SocialMediasComponent() {
   const onClickAddHandler = () => {
     setModalTitle("Ajout d'un réseau social");
     setModalContent(
-      <SocialMediaForm onSaveHandler={onSaveHandler} enumKey={enumKey} />,
+      <SocialMediaForm onSaveHandler={onSaveHandler} />,
     );
     setShowModal(true);
   };
@@ -82,7 +78,7 @@ export default function SocialMediasComponent() {
         onClick={() => onClickModifyHandler(item)}
       />
     ));
-    return <ExpendableListCards apiObject={apiObject} list={list} />;
+    return <ExpendableListCards list={list} />;
   };
 
   return (

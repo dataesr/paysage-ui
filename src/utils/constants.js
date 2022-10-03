@@ -1,4 +1,4 @@
-export const INTERNAL_PAGES_TYPES = {
+export const ENUMS_LABELS_MAPPER = {
   website: 'Lien web',
   websiteRss: 'Flux RSS',
   websiteOrganizationChart: 'Page sur l\'organisation/organigramme',
@@ -16,9 +16,6 @@ export const INTERNAL_PAGES_TYPES = {
   websiteHistory: 'Page histoire',
   websitePhotoLibrary: 'Photothèque',
   websiteNewsCast: 'websiteNewsCast',
-};
-
-export const WEBLINKS_TYPES = {
   Hal: 'Portail HAL',
   Onisep: 'Page Onisep.fr',
   POpenData: 'Plateforme Opendata',

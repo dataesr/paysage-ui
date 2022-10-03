@@ -8,27 +8,23 @@ import useUrl from '../../../hooks/useUrl';
 
 export default function Wikipedia() {
   const [data, setData] = useState([]);
-  const { url, apiObject } = useUrl('identifiers');
+  const { url } = useUrl('identifiers?filters[type]=Wikidata');
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(false);
 
   const getWikipediaLang = (key) => key.slice(0, key.length - 4).toUpperCase();
   const getWikipediaLink = useCallback((key, element) => `https://${key.slice(0, key.length - 4).toUpperCase()}.wikipedia.org/wiki/${element[key].title.replace(' ', '_')}`, []);
 
   useEffect(() => {
     const getData = async () => {
-      const wikidatas = await api
-        .get(url)
-        .then((response) => response?.data?.data.filter((identifier) => identifier.type === 'Wikidata'))
-        .catch((e) => {
-          console.log(e);
-        });
+      const wikidatas = await api.get(url)
+        .then((response) => response?.data?.data)
+        .catch(() => setError(true));
       const sitelinks = await Promise.all(wikidatas.map(async (wikidata) => {
         const wikiUrl = `https://www.wikidata.org/w/api.php?format=json&origin=*&action=wbgetentities&props=sitelinks&ids=${wikidata.value}`;
-        const response = await fetch(wikiUrl);
-        if (response.ok) {
-          const json = await response.json();
-          return json.entities[wikidata.value].sitelinks;
-        }
-        return {};
+        const response = await fetch(wikiUrl).catch(() => setError(true));
+        const json = await response.json();
+        return json?.entities?.[wikidata.value]?.sitelinks;
       }));
       const links = sitelinks.map((element) => Object.keys(element).map((key) => ({
         lang: getWikipediaLang(key),
@@ -45,9 +41,10 @@ export default function Wikipedia() {
       });
       setData(links);
     };
+    setIsLoading(true);
     getData();
-    return () => {};
-  }, [apiObject, getWikipediaLink, url]);
+    setIsLoading(false);
+  }, [getWikipediaLink, url]);
 
   const renderCards = () => {
     const list = data.map((element) => (
@@ -56,11 +53,11 @@ export default function Wikipedia() {
         link={element.link}
       />
     ));
-    return <ExpendableListCards apiObject={apiObject} list={list} nCol="12 md-3" max={4} order={['FR', 'EN', 'DE']} sortOn="props.lang" />;
+    return <ExpendableListCards list={list} nCol="12 md-3" max={4} order={['FR', 'EN', 'DE']} sortOn="props.lang" />;
   };
 
   return (
-    <Bloc isLoading={!data} error={false} data={data}>
+    <Bloc isLoading={isLoading} error={error} data={data}>
       <BlocTitle as="h3" look="h6">Wikipédia</BlocTitle>
       <BlocContent>{renderCards()}</BlocContent>
     </Bloc>
