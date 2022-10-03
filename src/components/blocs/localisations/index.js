@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import PropTypes from 'prop-types';
 import { Col, Container, Icon, ModalContent, ModalTitle, Row, Tab, Tabs, Tile } from '@dataesr/react-dsfr';
 import Modal from '../../modal';
 import useFetch from '../../../hooks/useFetch';
+import useUrl from '../../../hooks/useUrl';
 import api from '../../../utils/api';
 import { formatDescriptionDates } from '../../../utils/dates';
 import Map from '../../map';
@@ -13,9 +13,9 @@ import useToast from '../../../hooks/useToast';
 
 import styles from './styles.module.scss';
 
-export default function LocalisationsComponent({ id, apiObject, currentLocalisationId }) {
+export default function LocalisationsComponent() {
   const { toast } = useToast();
-  const route = `/${apiObject}/${id}/localisations`;
+  const { url: route } = useUrl('localisations');
   const { data, isLoading, error, reload } = useFetch(route);
   const [showModal, setShowModal] = useState(false);
   const [modalTitle, setModalTitle] = useState('');
@@ -101,7 +101,7 @@ export default function LocalisationsComponent({ id, apiObject, currentLocalisat
   if (error) return <div>Erreur</div>;
   if (isLoading) return <div>Chargement</div>;
 
-  const currentLocalisation = data.data.find((item) => item.id === currentLocalisationId);
+  const currentLocalisation = data.data.find((item) => item.current === true);
 
   return (
     <Bloc isLoading={isLoading} error={error} data={data}>
@@ -180,9 +180,3 @@ export default function LocalisationsComponent({ id, apiObject, currentLocalisat
     </Bloc>
   );
 }
-
-LocalisationsComponent.propTypes = {
-  apiObject: PropTypes.string.isRequired,
-  id: PropTypes.string.isRequired,
-  currentLocalisationId: PropTypes.string.isRequired,
-};

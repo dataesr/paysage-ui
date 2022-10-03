@@ -10,7 +10,6 @@ import Identifiers from '../../components/blocs/identifiers';
 import Weblinks from '../../components/blocs/weblinks';
 import SocialMedias from '../../components/blocs/social-medias';
 import OfficialTexts from '../../components/blocs/official-texts';
-import Documents from '../../components/blocs/documents';
 
 export default function PersonByIdPage() {
   const { id } = useParams();
@@ -92,7 +91,6 @@ export default function PersonByIdPage() {
               <Weblinks apiObject="persons" id={getData.data.id} />
               <SocialMedias apiObject="persons" id={getData.data.id} />
               <OfficialTexts apiObject="persons" id={getData.data.id} />
-              <Documents apiObject="persons" id={getData.data.id} />
 
               {/* <div>
                 <pre>{JSON.stringify(getData.data, null, 2)}</pre>

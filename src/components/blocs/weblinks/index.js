@@ -3,60 +3,41 @@ import {
   ModalContent,
   ModalTitle,
 } from '@dataesr/react-dsfr';
-import PropTypes from 'prop-types';
 import { useState } from 'react';
 
 import ExpendableListCards from '../../card/expendable-list-cards';
 import WeblinkCard from '../../card/weblink-card';
-import { getEnumKey } from '../../../utils';
 import api from '../../../utils/api';
-import WeblinkForm from './form';
+import WeblinkForm from '../../forms/weblinks';
 import { Bloc, BlocActionButton, BlocContent, BlocModal, BlocTitle } from '../../bloc';
 import useFetch from '../../../hooks/useFetch';
-import useBlocUrl from '../../../hooks/useBlocUrl';
-import { WEBLINKS_TYPES } from '../../../utils/constants';
+import useUrl from '../../../hooks/useUrl';
+import { KEEP_TYPES } from './constants';
+import useEnums from '../../../hooks/useEnums';
 import useToast from '../../../hooks/useToast';
 
-export default function WeblinksComponent({ apiObject }) {
-  const { toast } = useToast();
-  const { url } = useBlocUrl('weblinks');
+export default function Weblink() {
+  const { url, apiObject } = useUrl('weblinks');
   const { data, isLoading, error, reload } = useFetch(url);
   const [showModal, setShowModal] = useState(false);
   const [modalTitle, setModalTitle] = useState('');
   const [modalContent, setModalContent] = useState(null);
-
-  const enumKey = getEnumKey(apiObject, 'weblinks');
+  const { weblinks } = useEnums();
+  const { toast } = useToast();
+  const options = weblinks[apiObject].filter((type) => KEEP_TYPES.includes(type.value));
 
   const onSaveHandler = async (body) => {
     const method = body.id ? 'patch' : 'post';
     const saveUrl = body.id ? `${url}/${body.id}` : url;
-    const response = await api[method](saveUrl, body)
-      .catch(() => {
-        toast({
-          toastType: 'error',
-          description: "Une erreur s'est produite",
-        });
-      });
-    if (response.ok) {
-      toast({
-        toastType: 'success',
-        description: 'Le lien à été ajouté',
-      });
-      reload();
-      setShowModal(false);
-    }
+    await api[method](saveUrl, body)
+      .then(() => { toast({ toastType: 'success', description: 'Le lien à été ajouté' }); reload(); setShowModal(false); })
+      .catch(() => { toast({ toastType: 'error', description: "Une erreur s'est produite" }); });
   };
 
   const onDeleteHandler = async (itemId) => {
     await api.delete(`${url}/${itemId}`)
-      .catch(() => {
-        toast({
-          toastType: 'error',
-          description: "Une erreur s'est produite",
-        });
-      });
-    reload();
-    setShowModal(false);
+      .then(() => { reload(); setShowModal(false); })
+      .catch(() => { toast({ toastType: 'error', description: "Une erreur s'est produite" }); });
   };
 
   const onClickModifyHandler = (oneData) => {
@@ -66,7 +47,7 @@ export default function WeblinksComponent({ apiObject }) {
         data={oneData}
         onDeleteHandler={onDeleteHandler}
         onSaveHandler={onSaveHandler}
-        enumKey={enumKey}
+        options={options}
       />,
     );
     setShowModal(true);
@@ -75,22 +56,23 @@ export default function WeblinksComponent({ apiObject }) {
   const onClickAddHandler = () => {
     setModalTitle("Ajout d'un lien web");
     setModalContent(
-      <WeblinkForm onSaveHandler={onSaveHandler} enumKey={enumKey} />,
+      <WeblinkForm onSaveHandler={onSaveHandler} options={options} />,
     );
     setShowModal(true);
   };
 
   const renderCards = () => {
     if (!data) return null;
-    const list = data.data.filter((el) => Object.keys(WEBLINKS_TYPES).includes(el.type)).map((el) => (
+    const filteredList = data.data.filter((el) => KEEP_TYPES.includes(el.type));
+    const list = filteredList.map((el) => (
       <WeblinkCard
         downloadUrl={el.url}
         onClick={() => onClickModifyHandler(el)}
-        title={WEBLINKS_TYPES[el.type]}
+        title={options.find((type) => (el.type === type.value))?.label}
         type={el.type}
       />
     ));
-    return <ExpendableListCards list={list} nCol="12 md-4" order={Object.keys(WEBLINKS_TYPES)} sortOn="props.type" />;
+    return <ExpendableListCards list={list} nCol="12 md-4" order={KEEP_TYPES} sortOn="props.type" />;
   };
 
   return (
@@ -107,7 +89,3 @@ export default function WeblinksComponent({ apiObject }) {
     </Bloc>
   );
 }
-
-WeblinksComponent.propTypes = {
-  apiObject: PropTypes.string.isRequired,
-};

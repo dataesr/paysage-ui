@@ -8,10 +8,10 @@ import { Bloc, BlocActionButton, BlocContent, BlocModal, BlocTitle } from '../..
 import RelationsForm from '../../forms/relations';
 import RelationsGroupForm from '../../forms/relations-group';
 import useFetch from '../../../hooks/useFetch';
-import useBlocUrl from '../../../hooks/useBlocUrl';
+import useUrl from '../../../hooks/useUrl';
 import useNotice from '../../../hooks/useNotice';
 import { formatDescriptionDates } from '../../../utils/dates';
-import parseRelatedElement from '../../../utils/parse-related-element';
+import { parseRelatedElement } from '../../../utils/parse-related-element';
 import Map from '../../map/auto-bound-map';
 import ScrallableListCards from '../../card/scrollable-list-card';
 
@@ -25,9 +25,9 @@ const deleteGroupeSuccess = { content: 'Le groupe a été supprimée avec succè
 export default function Relations({ group, reloader }) {
   const { id: groupId, name: groupName, accepts: groupAccepts } = group;
   const { notice } = useNotice();
-  const { url } = useBlocUrl('relations-groups');
-  const url2 = `${url}/${groupId}/relations`;
-  const { data, isLoading, error, reload } = useFetch(url2);
+  const { url: listUrl } = useUrl('relations-groups');
+  const url = `${listUrl}/${groupId}/relations`;
+  const { data, isLoading, error, reload } = useFetch(url);
   const [showModal, setShowModal] = useState(false);
   const [showListModal, setShowListModal] = useState(false);
   const [modalTitle, setModalTitle] = useState('');

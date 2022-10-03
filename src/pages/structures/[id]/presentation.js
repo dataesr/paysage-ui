@@ -9,7 +9,6 @@ import Localisations from '../../../components/blocs/localisations';
 import Names from '../../../components/blocs/names';
 import PalmaresEtClassements from '../../../components/blocs/palmares-et-classements';
 import PresenceSurLeWeb from '../../../components/blocs/presence-sur-le-web';
-import SuiviDGESIP from '../../../components/blocs/suivi-dgesip';
 import Spinner from '../../../components/spinner';
 import useFetch from '../../../hooks/useFetch';
 import useHashScroll from '../../../hooks/useHashScroll';
@@ -58,9 +57,6 @@ export default function StructurePresentationPage() {
       </div>
       <div id="dernieres-actualites">
         <DernieresActualites />
-      </div>
-      <div id="suivi-dgesip">
-        <SuiviDGESIP />
       </div>
     </>
   );

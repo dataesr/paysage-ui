@@ -1,6 +1,8 @@
 import { useNavigate, Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { ButtonGroup, Col, Container, Icon, Row, Text, Title } from '@dataesr/react-dsfr';
+import {
+  Badge, BadgeGroup, ButtonGroup, Col, Container, Download,
+  Icon, Row, Text, Title } from '@dataesr/react-dsfr';
 import TagInput from '../components/tag-input';
 import useToast from '../hooks/useToast';
 import useNotice from '../hooks/useNotice';
@@ -9,6 +11,7 @@ import SearchBar from '../components/search-bar';
 import api from '../utils/api';
 import Button from '../components/button';
 import { DropdownButton, DropdownButtonItem } from '../components/dropdown-button';
+import { Timeline, TimelineItem } from '../components/timeline';
 
 export default function HomePage() {
   const { toast } = useToast();
@@ -90,6 +93,40 @@ export default function HomePage() {
             <Icon iconPosition="right" size="xl" name={`ri-edit-${isEdit ? 'fill' : 'line'}`} color="var(--border-action-high-blue-france)" />
           </DropdownButtonItem>
         </DropdownButton>
+      </Row>
+      <Row className="fr-pb-5w">
+        <Title as="h2">Timeline tester</Title>
+      </Row>
+      <Row className="fr-pb-5w">
+        <Timeline>
+          <TimelineItem date="2022-05-04">
+            Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+          </TimelineItem>
+          <TimelineItem date="2014-12-10">
+            <BadgeGroup>
+              <Badge isSmall text="évènement" />
+              <Badge isSmall text="Suivi" colorFamily="blue-ecume" />
+            </BadgeGroup>
+            <Text>
+              Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+              Lorem Ipsum has been the industry's standard dummy text ever since the 1500s
+            </Text>
+            <Text bold>
+              Documents associés à l'évenement:
+            </Text>
+            <Row>
+              <Download
+                label="label"
+                file="null"
+                metaData=""
+                description="Fichier de bilan"
+              />
+            </Row>
+          </TimelineItem>
+          <TimelineItem date="2011-09-28">
+            Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+          </TimelineItem>
+        </Timeline>
       </Row>
       <Row className="fr-pb-5w">
         <Title as="h2">Toast Tester</Title>

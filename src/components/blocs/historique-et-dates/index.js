@@ -14,13 +14,13 @@ import Modal from '../../modal';
 import { Bloc, BlocActionButton, BlocContent, BlocModal, BlocTitle } from '../../bloc';
 import useToast from '../../../hooks/useToast';
 import useFetch from '../../../hooks/useFetch';
-import useBlocUrl from '../../../hooks/useBlocUrl';
+import useUrl from '../../../hooks/useUrl';
 import ModifyCard from '../../card/modify-card';
 import { formatDescriptionDates } from '../../../utils/dates';
 
 export default function HistoriqueEtDates() {
   const { toast } = useToast();
-  const { url } = useBlocUrl('');
+  const { url } = useUrl('');
   const { data, isLoading, error, reload } = useFetch(url);
   const [showModal, setShowModal] = useState(false);
   const [modalTitle, setModalTitle] = useState('');

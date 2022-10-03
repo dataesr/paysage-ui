@@ -7,12 +7,12 @@ import ExpendableListCards from '../../card/expendable-list-cards';
 import CopyButton from '../../copy/copy-button';
 import { Bloc, BlocActionButton, BlocContent, BlocModal, BlocTitle } from '../../bloc';
 import useFetch from '../../../hooks/useFetch';
-import useBlocUrl from '../../../hooks/useBlocUrl';
+import useUrl from '../../../hooks/useUrl';
 import useToast from '../../../hooks/useToast';
 
 export default function EmailsComponent() {
   const { toast } = useToast();
-  const { url } = useBlocUrl('emails');
+  const { url } = useUrl('emails');
   const { data, isLoading, error, reload } = useFetch(url);
   const [showModal, setShowModal] = useState(false);
   const [modalTitle, setModalTitle] = useState('');

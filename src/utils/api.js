@@ -1,18 +1,14 @@
 const setDefaultHeaders = (requestHeaders = {}) => {
   const accessToken = localStorage.getItem('__paysage_access__');
-  const { 'Content-Type': contentType, ...rest } = requestHeaders;
-  if (contentType === 'multipart/form-data') {
-    return {
-      Accept: 'application/json',
-      Authorization: `Bearer ${accessToken}`,
-      ...rest,
-    };
-  }
-  return {
-    'Content-Type': 'application/json',
-    Accept: 'application/json',
+  const { 'Content-Type': contentType, Accept, ...rest } = requestHeaders;
+  const defaultHeaders = {
     Authorization: `Bearer ${accessToken}`,
-    ...requestHeaders,
+  };
+  if (!contentType) defaultHeaders['Content-Type'] = 'application/json';
+  if (!Accept) defaultHeaders.Accept = 'application/json';
+  return {
+    ...defaultHeaders,
+    ...rest,
   };
 };
 
@@ -46,8 +42,10 @@ async function customFetch({ method, url, body, headers }) {
   const response = await fetch(requestUrl, options);
   if (response.status === 204) return response;
   if (response.ok) {
-    const json = await response.json();
-    response.data = json;
+    if (response.headers.get('content-type').startsWith('application/json')) {
+      const json = await response.json();
+      response.data = json;
+    }
     return response;
   }
 
