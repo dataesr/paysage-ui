@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import { BlocContent, BlocTitle } from '../../bloc';
 import ExpendableListCards from '../../card/expendable-list-cards';
-import ModifyCard from '../../card/modify-card';
+import Card from '../../card';
 
 export default function ChiffresClesPresentation({ apiObject, data }) {
   const renderCards = () => {
@@ -13,7 +13,7 @@ export default function ChiffresClesPresentation({ apiObject, data }) {
       { key: `Résultat net comptable en ${data.exercice}`, value: data.netAccountingResult },
     ];
     const list = all.map((el) => (
-      <ModifyCard
+      <Card
         title={el.key}
         description={(
           <Row alignItems="middle">
