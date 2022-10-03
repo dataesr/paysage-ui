@@ -13,10 +13,10 @@ import CopyBadgeButton from '../../../components/copy/copy-badge-button';
 import StructurePresentationPage from './presentation';
 import StructureActualitesPage from './actualites';
 import StructureAgendaPage from './agenda';
-import StructureAnalyseEtRessourcesStrategiquesPage from './analyses-et-ressources-strategiques';
 import StructureBudgetPage from './budget';
 import StructureCategoriesPage from './categories';
 import StructureChiffresClesPage from './chiffres-cles';
+import StructureDocumentsPage from './documents';
 import StructureElementsLiesPage from './elements-lies';
 import StructureEtudiantsPage from './etudiants';
 import StructureEvenementsPage from './evenements';
@@ -117,22 +117,12 @@ function StructureByIdPage() {
               Budget
             </SideMenuLink>
 
-            <SideMenuItem title="Analyse & ressources stratégiques">
-              <SideMenuLink asLink={<RouterLink to="analyse-et-ressources-strategiques#notes-du-conseiller" />}>
-                Notes du conseiller
-              </SideMenuLink>
-
-              <SideMenuLink asLink={<RouterLink to="analyse-et-ressources-strategiques#documents" />}>
-                Documents associés
-              </SideMenuLink>
-
-              <SideMenuLink asLink={<RouterLink to="analyse-et-ressources-strategiques#evaluations-hceres" />}>
-                Evaluation HCERES
-              </SideMenuLink>
-            </SideMenuItem>
-
             <SideMenuLink asLink={<RouterLink to="evenements" />}>
               Evènements
+            </SideMenuLink>
+
+            <SideMenuLink asLink={<RouterLink to="documents" />}>
+              Ressources stratégiques
             </SideMenuLink>
 
             <SideMenuLink asLink={<RouterLink to="actualites" />}>
@@ -226,16 +216,18 @@ function StructureByIdPage() {
               </BadgeGroup>
             </Title>
             <ButtonGroup align="right" isInlineFrom="xs">
-              <DropdownButton align="right" title="options">
-                <DropdownButtonItem onClick={() => setIsStatusModalOpen(true)}>
-                  Modifier le statut
-                  <Icon iconPosition="right" size="xl" name="ri-edit-line" color="var(--border-action-high-blue-france)" />
-                </DropdownButtonItem>
-                <DropdownButtonItem onClick={() => setIsDescriptionModalOpen(true)}>
-                  Ajouter/Modifier la description
-                  <Icon iconPosition="right" size="xl" name="ri-edit-line" color="var(--border-action-high-blue-france)" />
-                </DropdownButtonItem>
-              </DropdownButton>
+              {editMode && (
+                <DropdownButton align="right" title="options">
+                  <DropdownButtonItem onClick={() => setIsStatusModalOpen(true)}>
+                    Modifier le statut
+                    <Icon iconPosition="right" size="xl" name="ri-edit-line" color="var(--border-action-high-blue-france)" />
+                  </DropdownButtonItem>
+                  <DropdownButtonItem onClick={() => setIsDescriptionModalOpen(true)}>
+                    Ajouter/Modifier la description
+                    <Icon iconPosition="right" size="xl" name="ri-edit-line" color="var(--border-action-high-blue-france)" />
+                  </DropdownButtonItem>
+                </DropdownButton>
+              )}
               <Button
                 tertiary
                 borderless
@@ -381,24 +373,24 @@ function StructureByIdPage() {
 }
 
 export {
+  StructureActualitesPage,
+  StructureAgendaPage,
+  StructureBudgetPage,
   StructureByIdPage,
   StructureCategoriesPage,
-  StructurePresentationPage,
-  StructureGouvernancePage,
-  StructureRHPage,
-  StructureBudgetPage,
-  StructureAnalyseEtRessourcesStrategiquesPage,
-  StructureActualitesPage,
-  StructureImmobilierPage,
+  StructureChiffresClesPage,
+  StructureDocumentsPage,
+  StructureElementsLiesPage,
   StructureEtudiantsPage,
   StructureEvenementsPage,
   StructureExportPage,
+  StructureGouvernancePage,
+  StructureImmobilierPage,
   StructureOffreDeFormationPage,
-  StructureProjetsPage,
-  StructureChiffresClesPage,
-  StructureTextesOfficielsPage,
-  StructurePrixEtRecompensesPage,
-  StructureAgendaPage,
-  StructureElementsLiesPage,
   StructureParticipationsPage,
+  StructurePresentationPage,
+  StructurePrixEtRecompensesPage,
+  StructureProjetsPage,
+  StructureRHPage,
+  StructureTextesOfficielsPage,
 };

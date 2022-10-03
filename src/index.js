@@ -5,6 +5,7 @@ import { AuthContextProvider } from './hooks/useAuth';
 import { ToastContextProvider } from './hooks/useToast';
 import { NoticeContextProvider } from './hooks/useNotice';
 import { EditModeContextProvider } from './hooks/useEditMode';
+import { EnumContextProvider } from './hooks/useEnums';
 // import reportWebVitals from './reportWebVitals';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -14,7 +15,9 @@ root.render(
       <ToastContextProvider>
         <AuthContextProvider>
           <EditModeContextProvider>
-            <App />
+            <EnumContextProvider>
+              <App />
+            </EnumContextProvider>
           </EditModeContextProvider>
         </AuthContextProvider>
       </ToastContextProvider>

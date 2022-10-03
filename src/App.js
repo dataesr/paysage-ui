@@ -21,26 +21,26 @@ import ProtectedRoute from './components/protected-route';
 
 import StructuresPage from './pages/structures';
 import {
-  StructureByIdPage,
-  StructureCategoriesPage,
-  StructurePresentationPage,
-  StructureGouvernancePage,
-  StructureRHPage,
-  StructureBudgetPage,
-  StructureAnalyseEtRessourcesStrategiquesPage,
   StructureActualitesPage,
-  StructureImmobilierPage,
-  StructureEtudiantsPage,
-  StructureOffreDeFormationPage,
-  StructureProjetsPage,
-  StructureChiffresClesPage,
-  StructureTextesOfficielsPage,
-  StructurePrixEtRecompensesPage,
   StructureAgendaPage,
+  StructureByIdPage,
+  StructureBudgetPage,
+  StructureCategoriesPage,
+  StructureChiffresClesPage,
+  StructureDocumentsPage,
   StructureElementsLiesPage,
-  StructureParticipationsPage,
-  StructureExportPage,
+  StructureEtudiantsPage,
   StructureEvenementsPage,
+  StructureExportPage,
+  StructureGouvernancePage,
+  StructureImmobilierPage,
+  StructureOffreDeFormationPage,
+  StructureParticipationsPage,
+  StructurePresentationPage,
+  StructureProjetsPage,
+  StructurePrixEtRecompensesPage,
+  StructureRHPage,
+  StructureTextesOfficielsPage,
 } from './pages/structures/[id]';
 
 import TermsPage from './pages/termes';
@@ -98,10 +98,10 @@ function App() {
               <Route path="presentation" element={<StructurePresentationPage />} />
               <Route path="categories" element={<StructureCategoriesPage />} />
               <Route path="evenements" element={<StructureEvenementsPage />} />
+              <Route path="documents" element={<StructureDocumentsPage />} />
               <Route path="gouvernance-et-referents" element={<StructureGouvernancePage />} />
               <Route path="ressource-humaines" element={<StructureRHPage />} />
               <Route path="budget" element={<StructureBudgetPage />} />
-              <Route path="analyse-et-ressources-strategiques" element={<StructureAnalyseEtRessourcesStrategiquesPage />} />
               <Route path="actualites" element={<StructureActualitesPage />} />
               <Route path="immobilier" element={<StructureImmobilierPage />} />
               <Route path="etudiants" element={<StructureEtudiantsPage />} />

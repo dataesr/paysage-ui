@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
 import api from '../utils/api';
 
-export default function useFetch(url, headers) {
+export default function useFetch(url, headers, options) {
+  // const { filters = {}, skip = 0, limit = 20, sort } = options;
   const [data, setData] = useState(null);
+  // const [hasMore, setHasMore] = useState(false);
   const [error, setError] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [reloads, setReloads] = useState(0);
@@ -10,26 +12,21 @@ export default function useFetch(url, headers) {
   const reload = () => setReloads(reloads + 1);
 
   useEffect(() => {
-    const fetchData = async () => {
-      const response = await api.get(url, headers);
-      if (response.ok) {
+    const fetchData = () => api.get(url, headers)
+      .then((response) => {
         setData(response.data);
+        // if (response.totalCount > (skip + limit)) setHasMore(true);
         setIsLoading(false);
         setError(false);
-        return;
-      }
-      setIsLoading(false);
-      setError(true);
-    };
-
+      })
+      .catch(() => {
+        setIsLoading(false);
+        setError(true);
+      });
     setIsLoading(true);
     setError(false);
     setData(null);
-
-    fetchData().catch(() => {
-      setIsLoading(false);
-      setError(true);
-    });
+    fetchData();
   }, [url, headers, reloads]);
 
   return { data, error, isLoading, reload };

@@ -115,38 +115,12 @@ export default function HomePage() {
               Documents associés à l'évenement:
             </Text>
             <Row>
-              <Col>
-                <Download
-                  label="label"
-                  file="null"
-                  metaData=""
-                  description="Fichier de bilan"
-                />
-              </Col>
-              <Col>
-                <Download
-                  label="label"
-                  file="null"
-                  metaData=""
-                  description="Fichier de bilan"
-                />
-              </Col>
-              <Col>
-                <Download
-                  label="powerpoint-MESR.pptx"
-                  file="null"
-                  metaData=""
-                  description="Fichier de bilan"
-                />
-              </Col>
-              <Col>
-                <Download
-                  label="Bilan-social_2021.pdf"
-                  file="null"
-                  metaData=""
-                  description="Fichier de bilan"
-                />
-              </Col>
+              <Download
+                label="label"
+                file="null"
+                metaData=""
+                description="Fichier de bilan"
+              />
             </Row>
           </TimelineItem>
           <TimelineItem date="2011-09-28">

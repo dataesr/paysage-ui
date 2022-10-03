@@ -1,4 +1,6 @@
-import React, {
+import {
+  createContext,
+  useContext,
   useState,
   useCallback,
   useMemo,
@@ -7,7 +9,7 @@ import { createPortal } from 'react-dom';
 import PropTypes from 'prop-types';
 import Notice from '../components/notice';
 
-const NoticeContext = React.createContext();
+const NoticeContext = createContext();
 
 export function NoticeContextProvider({ children }) {
   const [currentNotice, setCurrentNotice] = useState(null);
@@ -32,5 +34,5 @@ NoticeContextProvider.propTypes = {
 
 // Hook
 // ==============================
-const useNotice = () => React.useContext(NoticeContext);
+const useNotice = () => useContext(NoticeContext);
 export default useNotice;

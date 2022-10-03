@@ -15,14 +15,14 @@ import {
 } from '../../../components/bloc';
 import Button from '../../../components/button';
 import { Download } from '../../../components/download';
-import EventForm from '../../../components/forms/event';
+import DocumentForm from '../../../components/forms/documents';
 import { Timeline, TimelineItem } from '../../../components/timeline';
 
-export default function StructureEvenementsPage() {
+export default function StructureDocumentsPage() {
   const { editMode } = useEditMode();
   const { id: resourceId } = useParams();
   const navigate = useNavigate();
-  const url = `/follow-ups?filters[relatesTo]=${resourceId}&sort=-eventDate&limit=50`;
+  const url = `/documents?filters[relatesTo]=${resourceId}&sort=-startDate&limit=50`;
   const { data, isLoading, error, reload } = useFetch(url);
   const { notice } = useNotice();
   useHashScroll();
@@ -30,15 +30,15 @@ export default function StructureEvenementsPage() {
   const [modalTitle, setModalTitle] = useState(null);
   const [modalContent, setModalContent] = useState(null);
 
-  const saveEvent = (body, id = null) => {
+  const saveDocument = (body, id = null) => {
     const method = id ? 'patch' : 'post';
-    const saveUrl = id ? `/follow-ups/${id}` : '/follow-ups';
+    const saveUrl = id ? `/documents/${id}` : '/documents';
     api[method](saveUrl, body)
       .then(() => { reload(); notice(saveSuccess); setIsOpen(false); })
       .catch(() => notice(saveError));
   };
 
-  const deleteEvent = (id) => api.delete(`/follow-ups/${id}`)
+  const deleteDocument = (id) => api.delete(`/documents/${id}`)
     .then(() => { reload(); notice(deleteSuccess); setIsOpen(false); })
     .catch(() => notice(deleteError));
 
@@ -47,13 +47,13 @@ export default function StructureEvenementsPage() {
     const relatedObjects = element?.relatedObjects?.length
       ? element?.relatedObjects.filter((rel) => rel.id !== resourceId).map((rel) => parseRelatedObject(rel))
       : [];
-    setModalTitle(element?.id ? "Modifier l'évènement" : 'Ajouter un évènement');
+    setModalTitle(element?.id ? 'Modifier le document' : 'Ajouter un document');
     setModalContent(
-      <EventForm
+      <DocumentForm
         id={element?.id}
-        initialForm={element?.id ? { ...element, relatedObjects, currentObjectId: resourceId } : { type: 'suivi', currentObjectId: resourceId }}
-        onDelete={deleteEvent}
-        onSave={saveEvent}
+        initialForm={element?.id ? { ...element, relatedObjects, currentObjectId: resourceId } : { currentObjectId: resourceId }}
+        onDelete={deleteDocument}
+        onSave={saveDocument}
       />,
     );
     setIsOpen(true);
@@ -64,7 +64,7 @@ export default function StructureEvenementsPage() {
     return (
       <Timeline>
         {data.data.map((event) => (
-          <TimelineItem date={event.eventDate} key={event.id}>
+          <TimelineItem date={event.startDate} key={event.id}>
             <Row className="flex--space-between">
               <BadgeGroup><Badge text={event.type} /></BadgeGroup>
               {editMode && <Button onClick={() => onOpenModalHandler(event)} size="sm" icon="ri-edit-line" title="Editer l'évènement" tertiary borderless rounded />}
@@ -81,7 +81,7 @@ export default function StructureEvenementsPage() {
             )}
             {(event?.files?.length > 0) && (
               <>
-                <Text spacing="mb-1w" bold>Fichiers associés à l'évènement : </Text>
+                <Text spacing="mb-1w" bold>Fichiers : </Text>
                 <Row>{event.files.map((file) => (<Download key={file.url} file={file} />))}</Row>
               </>
             )}
@@ -93,9 +93,9 @@ export default function StructureEvenementsPage() {
 
   return (
     <Bloc isLoading={isLoading} error={error} data={data}>
-      <BlocTitle as="h3" look="h6">Évènements</BlocTitle>
+      <BlocTitle as="h3" look="h6">Documents</BlocTitle>
       <BlocActionButton onClick={() => onOpenModalHandler()}>
-        Ajouter un évènement
+        Ajouter un document
       </BlocActionButton>
       <BlocContent>{renderContent()}</BlocContent>
       <BlocModal>
