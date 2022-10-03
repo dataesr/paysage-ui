@@ -51,7 +51,7 @@ export default function StructurePresentationPage() {
         <Identifiers apiObject="structures" />
       </div>
       <div id="chiffres-cles">
-        <ChiffresClesPresentation apiObject="structures" data={data || null} />
+        <ChiffresClesPresentation data={data || null} />
       </div>
       <div id="email">
         <Emails />
