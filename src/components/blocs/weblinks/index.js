@@ -90,7 +90,7 @@ export default function WeblinksComponent({ apiObject }) {
         type={el.type}
       />
     ));
-    return <ExpendableListCards apiObject={apiObject} list={list} nCol="12 md-4" order={Object.keys(WEBLINKS_TYPES)} sortOn="props.type" />;
+    return <ExpendableListCards list={list} nCol="12 md-4" order={Object.keys(WEBLINKS_TYPES)} sortOn="props.type" />;
   };
 
   return (

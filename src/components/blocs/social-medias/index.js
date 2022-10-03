@@ -83,7 +83,7 @@ export default function SocialMediasComponent({ apiObject }) {
         onClick={() => onClickModifyHandler(item)}
       />
     ));
-    return <ExpendableListCards apiObject={apiObject} list={list} />;
+    return <ExpendableListCards list={list} />;
   };
 
   return (

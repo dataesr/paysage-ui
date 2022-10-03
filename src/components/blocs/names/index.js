@@ -89,7 +89,7 @@ export default function NamesComponent({ apiObject }) {
         </CardDescription>
       </Card>
     ));
-    return <ExpendableListCards apiObject={apiObject} list={list} />;
+    return <ExpendableListCards list={list} />;
   };
 
   return (
