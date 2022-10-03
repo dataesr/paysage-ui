@@ -13,7 +13,7 @@ import useToast from '../../../hooks/useToast';
 
 export default function SocialMediasComponent({ apiObject }) {
   const { toast } = useToast();
-  const url = useBlocUrl('social-medias');
+  const { url } = useBlocUrl('social-medias');
   const { data, isLoading, error, reload } = useFetch(url);
   const [showModal, setShowModal] = useState(false);
   const [modalTitle, setModalTitle] = useState('');

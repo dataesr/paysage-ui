@@ -15,7 +15,7 @@ import useBlocUrl from '../../../hooks/useBlocUrl';
 
 export default function IdentifiersComponent({ apiObject }) {
   const { toast } = useToast();
-  const url = useBlocUrl('identifiers');
+  const { url } = useBlocUrl('identifiers');
   const { data, isLoading, error, reload } = useFetch(url);
   const [showModal, setShowModal] = useState(false);
   const [modalTitle, setModalTitle] = useState('');
@@ -88,7 +88,7 @@ export default function IdentifiersComponent({ apiObject }) {
         onClick={() => onClickModifyHandler(el)}
       />
     ));
-    return <ExpendableListCards apiObject={apiObject} list={list} />;
+    return <ExpendableListCards list={list} />;
   };
 
   return (

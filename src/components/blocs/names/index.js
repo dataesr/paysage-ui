@@ -19,7 +19,7 @@ import useToast from '../../../hooks/useToast';
 
 export default function NamesComponent({ apiObject }) {
   const { toast } = useToast();
-  const url = useBlocUrl('names');
+  const { url } = useBlocUrl('names');
   const { data, isLoading, error, reload } = useFetch(url);
   const [showModal, setShowModal] = useState(false);
   const [modalTitle, setModalTitle] = useState('');

@@ -1,12 +1,12 @@
 import { useNavigate, useParams } from 'react-router-dom';
 import { Card, CardDescription, CardTitle, Col, Row } from '@dataesr/react-dsfr';
 import { Bloc, BlocActionButton, BlocContent, BlocTitle } from '../../bloc';
-import useUrl from '../../../hooks/useBlocUrl';
+import useBlocUrl from '../../../hooks/useBlocUrl';
 import useFetch from '../../../hooks/useFetch';
 
 export default function OfficialTextsComponent() {
   const { id } = useParams();
-  const url = useUrl();
+  const { url } = useBlocUrl();
   const { data, isLoading, error } = useFetch(`/official-texts?filters[relatesTo]=${id}`);
   const navigate = useNavigate();
 

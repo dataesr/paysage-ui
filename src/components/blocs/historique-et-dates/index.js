@@ -20,7 +20,7 @@ import { formatDescriptionDates } from '../../../utils/dates';
 
 export default function HistoriqueEtDates() {
   const { toast } = useToast();
-  const url = useBlocUrl('');
+  const { url } = useBlocUrl('');
   const { data, isLoading, error, reload } = useFetch(url);
   const [showModal, setShowModal] = useState(false);
   const [modalTitle, setModalTitle] = useState('');

@@ -17,7 +17,7 @@ import useBlocUrl from '../../../hooks/useBlocUrl';
 import { INTERNAL_PAGES_TYPES } from '../../../utils/constants';
 
 export default function InternalPagesComponent({ apiObject }) {
-  const url = useBlocUrl('weblinks');
+  const { url } = useBlocUrl('weblinks');
   const { data, isLoading, error, reload } = useFetch(url);
   const [showModal, setShowModal] = useState(false);
   const [modalTitle, setModalTitle] = useState('');

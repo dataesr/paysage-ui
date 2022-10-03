@@ -19,7 +19,7 @@ import useToast from '../../../hooks/useToast';
 
 export default function WeblinksComponent({ apiObject }) {
   const { toast } = useToast();
-  const url = useBlocUrl('weblinks');
+  const { url } = useBlocUrl('weblinks');
   const { data, isLoading, error, reload } = useFetch(url);
   const [showModal, setShowModal] = useState(false);
   const [modalTitle, setModalTitle] = useState('');

@@ -12,7 +12,7 @@ import useToast from '../../../hooks/useToast';
 
 export default function EmailsComponent() {
   const { toast } = useToast();
-  const url = useBlocUrl('emails');
+  const { url } = useBlocUrl('emails');
   const { data, isLoading, error, reload } = useFetch(url);
   const [showModal, setShowModal] = useState(false);
   const [modalTitle, setModalTitle] = useState('');
