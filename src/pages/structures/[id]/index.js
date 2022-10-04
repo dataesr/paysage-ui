@@ -10,16 +10,11 @@ import useForm from '../../../hooks/useForm';
 import useEditMode from '../../../hooks/useEditMode';
 import Button from '../../../components/button';
 import CopyBadgeButton from '../../../components/copy/copy-badge-button';
+import Spinner from '../../../components/spinner';
 import StructurePresentationPage from './presentation';
-import StructureActualitesPage from './actualites';
-import StructureAgendaPage from './agenda';
 import StructureBudgetPage from './budget';
-import StructureCategoriesPage from './categories';
-import StructureChiffresClesPage from './chiffres-cles';
-import StructureDocumentsPage from './documents';
 import StructureElementsLiesPage from './elements-lies';
 import StructureEtudiantsPage from './etudiants';
-import StructureEvenementsPage from './evenements';
 import StructureExportPage from './exporter';
 import StructureGouvernancePage from './gouvernance';
 import StructureImmobilierPage from './immobilier';
@@ -28,7 +23,6 @@ import StructureParticipationsPage from './participations';
 import StructurePrixEtRecompensesPage from './prix-et-recompenses';
 import StructureProjetsPage from './projets';
 import StructureRHPage from './ressources-humaines';
-import StructureTextesOfficielsPage from './textes-officiels';
 import { DropdownButton, DropdownButtonItem } from '../../../components/dropdown-button';
 import api from '../../../utils/api';
 import useToast from '../../../hooks/useToast';
@@ -91,7 +85,7 @@ function StructureByIdPage() {
     presentation: null,
     'prix-et-recompenses': 'Prix scientifiques et récompenses',
   };
-  if (isLoading) return <>Chargement...</>;
+  if (isLoading) return <Row className="fr-my-2w flex--space-around"><Spinner /></Row>;
   if (error) return <>Erreur...</>;
   const pathnameSplitted = pathname.split('/');
   const section = menu[pathnameSplitted[pathnameSplitted.length - 1]];
@@ -101,81 +95,72 @@ function StructureByIdPage() {
         <Col n="12 md-3">
           <SideMenu buttonLabel="Navigation">
             <SideMenuLink asLink={<RouterLink to="presentation#" />}>
+              <Icon name="ri-eye-2-line" size="1x" />
               En un coup d’œil
-              <Icon className="ri-eye-2-line fr-ml-1w" />
             </SideMenuLink>
-
-            <SideMenuLink asLink={<RouterLink to="gouvernance-et-referents" />}>
-              Gouvernance et référents
-            </SideMenuLink>
-
-            <SideMenuLink asLink={<RouterLink to="ressource-humaines" />}>
-              Ressources humaines
-            </SideMenuLink>
-
-            <SideMenuLink asLink={<RouterLink to="budget" />}>
-              Budget
-            </SideMenuLink>
-
-            <SideMenuLink asLink={<RouterLink to="evenements" />}>
-              Evènements
-            </SideMenuLink>
-
-            <SideMenuLink asLink={<RouterLink to="documents" />}>
-              Ressources stratégiques
-            </SideMenuLink>
-
             <SideMenuLink asLink={<RouterLink to="actualites" />}>
+              <Icon name="ri-newspaper-line" size="1x" />
               Actualités
             </SideMenuLink>
-
-            <SideMenuLink asLink={<RouterLink to="categories" />}>
-              Catégories
+            <SideMenuLink asLink={<RouterLink to="gouvernance-et-referents" />}>
+              <Icon name="ri-team-line" size="1x" />
+              Gouvernance et référents
             </SideMenuLink>
-
-            <SideMenuLink asLink={<RouterLink to="immobilier" />}>
-              Immobilier
+            <SideMenuLink asLink={<RouterLink to="evenements" />}>
+              <Icon name="ri-calendar-line" size="1x" />
+              Evènements
             </SideMenuLink>
-
-            <SideMenuLink asLink={<RouterLink to="etudiants" />}>
-              Etudiants
+            <SideMenuLink asLink={<RouterLink to="documents" />}>
+              <Icon name="ri-folders-line" size="1x" />
+              Ressources
             </SideMenuLink>
-
-            <SideMenuLink asLink={<RouterLink to="offre-de-formation" />}>
-              Offres de formation
-            </SideMenuLink>
-
-            <SideMenuLink asLink={<RouterLink to="projets" />}>
-              Projets
-            </SideMenuLink>
-
-            <SideMenuLink asLink={<RouterLink to="chiffres-cles" />}>
-              Chiffres clés
-            </SideMenuLink>
-
-            <SideMenuLink asLink={<RouterLink to="textes-officiels" />}>
-              Textes officiels
-            </SideMenuLink>
-
-            <SideMenuLink asLink={<RouterLink to="prix-et-recompenses" />}>
-              Prix & récompenses
-            </SideMenuLink>
-
-            <SideMenuLink asLink={<RouterLink to="agenda" />}>
-              Agenda
-            </SideMenuLink>
-
-            <SideMenuItem title="Eléments liés">
-              <SideMenuLink asLink={<RouterLink to="elements-lies#" />}>
-                Structures internes
+            <SideMenuItem
+              // expandedDefault
+              title={(
+                <>
+                  <Icon name="ri-bar-chart-grouped-line" size="1x" />
+                  Chiffres clés
+                </>
+              )}
+            >
+              <SideMenuLink asLink={<RouterLink to="immobilier" />}>
+                Immobilier
               </SideMenuLink>
-
-              <SideMenuLink asLink={<RouterLink to="elements-lies" />}>
-                Autres listes
+              <SideMenuLink asLink={<RouterLink to="etudiants" />}>
+                Etudiants
+              </SideMenuLink>
+              <SideMenuLink asLink={<RouterLink to="offre-de-formation" />}>
+                Offres de formation
+              </SideMenuLink>
+              <SideMenuLink asLink={<RouterLink to="ressource-humaines" />}>
+                Ressources humaines
+              </SideMenuLink>
+              <SideMenuLink asLink={<RouterLink to="budget" />}>
+                Budget
               </SideMenuLink>
             </SideMenuItem>
-
+            <SideMenuLink asLink={<RouterLink to="categories" />}>
+              <Icon name="ri-price-tag-3-line" size="1x" />
+              Catégories
+            </SideMenuLink>
+            <SideMenuLink asLink={<RouterLink to="textes-officiels" />}>
+              <Icon name="ri-git-repository-line" size="1x" />
+              Textes officiels
+            </SideMenuLink>
+            <SideMenuLink asLink={<RouterLink to="projets" />}>
+              <Icon name="ri-booklet-line" size="1x" />
+              Projets
+            </SideMenuLink>
+            <SideMenuLink asLink={<RouterLink to="prix-et-recompenses" />}>
+              <Icon name="ri-award-line" size="1x" />
+              Prix & récompenses
+            </SideMenuLink>
+            <SideMenuLink asLink={<RouterLink to="elements-lies" />}>
+              <Icon name="ri-links-line" size="1x" />
+              Eléments liés
+            </SideMenuLink>
             <SideMenuLink asLink={<RouterLink to="participations" />}>
+              <Icon name="ri-links-line" size="1x" />
               Participations
             </SideMenuLink>
           </SideMenu>
@@ -186,7 +171,7 @@ function StructureByIdPage() {
               Accueil
             </BreadcrumbItem>
             <BreadcrumbItem
-              asLink={<RouterLink to="/rechercher/structures" />}
+              asLink={<RouterLink to="/rechercher/structures&query=" />}
             >
               Structures
             </BreadcrumbItem>
@@ -276,24 +261,16 @@ function StructureByIdPage() {
                     label="Budget"
                   />
                   <Checkbox
-                    onChange={(e) => updateForm({ budget: e.target.checked })}
+                    onChange={(e) => updateForm({ of: e.target.checked })}
                     label="Offre de formation"
                   />
                   <Checkbox
-                    onChange={(e) => updateForm({ budget: e.target.checked })}
+                    onChange={(e) => updateForm({ immobilier: e.target.checked })}
                     label="Immobilier"
                   />
                   <Checkbox
-                    onChange={(e) => updateForm({ budget: e.target.checked })}
+                    onChange={(e) => updateForm({ etudiants: e.target.checked })}
                     label="Etudiants"
-                  />
-                  <Checkbox
-                    onChange={(e) => updateForm({ budget: e.target.checked })}
-                    label="Suivi DGSIP/DGRI"
-                  />
-                  <Checkbox
-                    onChange={(e) => updateForm({ budget: e.target.checked })}
-                    label="Agenda"
                   />
                 </CheckboxGroup>
               </ModalContent>
@@ -373,16 +350,10 @@ function StructureByIdPage() {
 }
 
 export {
-  StructureActualitesPage,
-  StructureAgendaPage,
   StructureBudgetPage,
   StructureByIdPage,
-  StructureCategoriesPage,
-  StructureChiffresClesPage,
-  StructureDocumentsPage,
   StructureElementsLiesPage,
   StructureEtudiantsPage,
-  StructureEvenementsPage,
   StructureExportPage,
   StructureGouvernancePage,
   StructureImmobilierPage,
@@ -392,5 +363,4 @@ export {
   StructurePrixEtRecompensesPage,
   StructureProjetsPage,
   StructureRHPage,
-  StructureTextesOfficielsPage,
 };

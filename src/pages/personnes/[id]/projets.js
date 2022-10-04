@@ -2,12 +2,12 @@ import { Text } from '@dataesr/react-dsfr';
 
 import useHashScroll from '../../../hooks/useHashScroll';
 
-export default function StructureActualitesPage() {
+export default function PersonnesProjetsPage() {
   useHashScroll();
 
   return (
     <Text>
-      Pas d'actualité pour le moment
+      Projets
     </Text>
   );
 }

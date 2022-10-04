@@ -87,7 +87,7 @@ export default function EmailsComponent() {
 
   return (
     <Bloc isLoading={isLoading} error={error} data={data}>
-      <BlocTitle as="h3" look="h6">Boites emails génériques</BlocTitle>
+      <BlocTitle as="h3" look="h4">Boites emails génériques</BlocTitle>
       <BlocActionButton onClick={onClickAddHandler}>Ajouter un email générique</BlocActionButton>
       <BlocContent>{renderCards()}</BlocContent>
       <BlocModal>

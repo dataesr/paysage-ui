@@ -40,7 +40,7 @@ export default function FormFooter({ id, onDeleteHandler, onSaveHandler }) {
         <Row>
           <Col>
             <ButtonGroup isInlineFrom="md" className={classnames}>
-              {(id) ? (
+              {(id && onDeleteHandler) ? (
                 <Button
                   onClick={() => setConfirm(true)}
                   color="error"

@@ -2,12 +2,12 @@ import { Text } from '@dataesr/react-dsfr';
 
 import useHashScroll from '../../../hooks/useHashScroll';
 
-export default function StructureAgendaPage() {
+export default function PersonnesParticipationsPage() {
   useHashScroll();
 
   return (
     <Text>
-      Agenda/événements
+      Participations
     </Text>
   );
 }

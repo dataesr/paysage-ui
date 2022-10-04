@@ -9,7 +9,6 @@ import HomePage from './pages/accueil';
 import Layout from './components/layout';
 import OfficialTextsByIdPage from './pages/textes-officiels/id';
 import OfficialTextsPage from './pages/textes-officiels';
-import PersonByIdPage from './pages/personnes/id';
 import PersonsPage from './pages/personnes';
 import Passwordless from './pages/mot-de-passe-oublie';
 import ProjectsPage from './pages/projets';
@@ -21,16 +20,10 @@ import ProtectedRoute from './components/protected-route';
 
 import StructuresPage from './pages/structures';
 import {
-  StructureActualitesPage,
-  StructureAgendaPage,
   StructureByIdPage,
   StructureBudgetPage,
-  StructureCategoriesPage,
-  StructureChiffresClesPage,
-  StructureDocumentsPage,
   StructureElementsLiesPage,
   StructureEtudiantsPage,
-  StructureEvenementsPage,
   StructureExportPage,
   StructureGouvernancePage,
   StructureImmobilierPage,
@@ -40,8 +33,12 @@ import {
   StructureProjetsPage,
   StructurePrixEtRecompensesPage,
   StructureRHPage,
-  StructureTextesOfficielsPage,
 } from './pages/structures/[id]';
+
+import {
+  PersonByIdPage,
+  PersonPresentationPage,
+} from './pages/personnes/[id]';
 
 import TermsPage from './pages/termes';
 import TermByIdPage from './pages/termes/id';
@@ -52,6 +49,11 @@ import { AdminPage, AdminDashboardPage, AdminUsersPage, NomenclaturesPage, Legal
 
 import './styles/index.scss';
 import SearchPage from './pages/rechercher';
+import CategoriesOutlet from './components/outlets/categories';
+import AgendaOutlet from './components/outlets/evenements';
+import DocumentsOutlet from './components/outlets/documents';
+import ActualitesOutlet from './components/outlets/actualites';
+import OfficialTextsOutlet from './components/outlets/textes-officiels';
 
 function App() {
   return (
@@ -96,21 +98,19 @@ function App() {
             <Route path="/structures/:id" element={<StructureByIdPage />}>
               <Route path="" element={<Navigate to="presentation" replace />} />
               <Route path="presentation" element={<StructurePresentationPage />} />
-              <Route path="categories" element={<StructureCategoriesPage />} />
-              <Route path="evenements" element={<StructureEvenementsPage />} />
-              <Route path="documents" element={<StructureDocumentsPage />} />
+              <Route path="actualites" element={<ActualitesOutlet />} />
+              <Route path="evenements" element={<AgendaOutlet />} />
+              <Route path="categories" element={<CategoriesOutlet />} />
+              <Route path="documents" element={<DocumentsOutlet />} />
+              <Route path="textes-officiels" element={<OfficialTextsOutlet />} />
               <Route path="gouvernance-et-referents" element={<StructureGouvernancePage />} />
-              <Route path="ressource-humaines" element={<StructureRHPage />} />
               <Route path="budget" element={<StructureBudgetPage />} />
-              <Route path="actualites" element={<StructureActualitesPage />} />
+              <Route path="ressource-humaines" element={<StructureRHPage />} />
               <Route path="immobilier" element={<StructureImmobilierPage />} />
               <Route path="etudiants" element={<StructureEtudiantsPage />} />
               <Route path="offre-de-formation" element={<StructureOffreDeFormationPage />} />
               <Route path="projets" element={<StructureProjetsPage />} />
-              <Route path="chiffres-cles" element={<StructureChiffresClesPage />} />
-              <Route path="textes-officiels" element={<StructureTextesOfficielsPage />} />
               <Route path="prix-et-recompenses" element={<StructurePrixEtRecompensesPage />} />
-              <Route path="agenda" element={<StructureAgendaPage />} />
               <Route path="elements-lies" element={<StructureElementsLiesPage />} />
               <Route path="participations" element={<StructureParticipationsPage />} />
             </Route>
@@ -121,7 +121,15 @@ function App() {
 
             <Route path="/personnes" element={<PersonsPage />} />
             <Route path="/personnes/ajouter" element={<PersonAddPage />} />
-            <Route path="/personnes/:id" element={<PersonByIdPage />} />
+            <Route path="/personnes/:id" element={<PersonByIdPage />}>
+              <Route path="" element={<Navigate to="presentation" replace />} />
+              <Route path="presentation" element={<PersonPresentationPage />} />
+              <Route path="actualites" element={<ActualitesOutlet />} />
+              <Route path="evenements" element={<AgendaOutlet />} />
+              <Route path="categories" element={<CategoriesOutlet />} />
+              <Route path="documents" element={<DocumentsOutlet />} />
+              <Route path="textes-officiels" element={<OfficialTextsOutlet />} />
+            </Route>
 
             <Route path="/projets/ajouter" element={<ProjectAddPage />} />
             <Route path="/projets" element={<ProjectsPage />} />

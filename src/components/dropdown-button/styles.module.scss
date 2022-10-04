@@ -6,6 +6,32 @@
 .dropdown-list {
   white-space: nowrap;
   width: auto !important;
+  --idle: #0000;
+  --hover: var(--background-overlap-grey-hover);
+  --active: var(--background-overlap-grey-active);
+  background-color: var(--background-overlap-grey);
+  box-shadow: inset 0 1px 0 0 var(--border-open-blue-france);
+  margin-bottom: 2rem;
+  padding: 0;
+  pointer-events: auto;
+}
+
+.dropdown-item {
+  padding: .75rem 1rem;
+  font-size: .875rem;
+  line-height: 1.5rem;
+  width: 100%;
+}
+
+.menu {
+  filter: drop-shadow(var(--overlap-shadow));
+  pointer-events: none;
+  position: absolute;
+  top: 100%;
+  z-index: calc(var(--ground) + 1000);
+  margin: -4px -1rem;
+  padding: 4px 1rem;
+  width: auto;
 }
 
 .align-right {

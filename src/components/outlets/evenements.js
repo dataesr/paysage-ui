@@ -1,28 +1,28 @@
 import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Badge, BadgeGroup, Modal, ModalContent, ModalTitle, Row, Tag, TagGroup, Text } from '@dataesr/react-dsfr';
-import useEditMode from '../../../hooks/useEditMode';
-import useFetch from '../../../hooks/useFetch';
-import useHashScroll from '../../../hooks/useHashScroll';
-import useNotice from '../../../hooks/useNotice';
+import useEditMode from '../../hooks/useEditMode';
+import useFetch from '../../hooks/useFetch';
+import useHashScroll from '../../hooks/useHashScroll';
+import useNotice from '../../hooks/useNotice';
 
-import api from '../../../utils/api';
-import { saveError, saveSuccess, deleteError, deleteSuccess } from '../../../utils/notice-contents';
-import { parseRelatedObject } from '../../../utils/parse-related-element';
+import api from '../../utils/api';
+import { saveError, saveSuccess, deleteError, deleteSuccess } from '../../utils/notice-contents';
+import { parseRelatedObject } from '../../utils/parse-related-element';
 
 import {
   Bloc, BlocContent, BlocActionButton, BlocTitle, BlocModal,
-} from '../../../components/bloc';
-import Button from '../../../components/button';
-import { Download } from '../../../components/download';
-import DocumentForm from '../../../components/forms/documents';
-import { Timeline, TimelineItem } from '../../../components/timeline';
+} from '../bloc';
+import Button from '../button';
+import { Download } from '../download';
+import EventForm from '../forms/event';
+import { Timeline, TimelineItem } from '../timeline';
 
-export default function StructureDocumentsPage() {
+export default function AgendaOutlet() {
   const { editMode } = useEditMode();
   const { id: resourceId } = useParams();
   const navigate = useNavigate();
-  const url = `/documents?filters[relatesTo]=${resourceId}&sort=-startDate&limit=50`;
+  const url = `/follow-ups?filters[relatesTo]=${resourceId}&sort=-eventDate&limit=50`;
   const { data, isLoading, error, reload } = useFetch(url);
   const { notice } = useNotice();
   useHashScroll();
@@ -30,15 +30,15 @@ export default function StructureDocumentsPage() {
   const [modalTitle, setModalTitle] = useState(null);
   const [modalContent, setModalContent] = useState(null);
 
-  const saveDocument = (body, id = null) => {
+  const saveEvent = (body, id = null) => {
     const method = id ? 'patch' : 'post';
-    const saveUrl = id ? `/documents/${id}` : '/documents';
+    const saveUrl = id ? `/follow-ups/${id}` : '/follow-ups';
     api[method](saveUrl, body)
       .then(() => { reload(); notice(saveSuccess); setIsOpen(false); })
       .catch(() => notice(saveError));
   };
 
-  const deleteDocument = (id) => api.delete(`/documents/${id}`)
+  const deleteEvent = (id) => api.delete(`/follow-ups/${id}`)
     .then(() => { reload(); notice(deleteSuccess); setIsOpen(false); })
     .catch(() => notice(deleteError));
 
@@ -47,13 +47,13 @@ export default function StructureDocumentsPage() {
     const relatedObjects = element?.relatedObjects?.length
       ? element?.relatedObjects.filter((rel) => rel.id !== resourceId).map((rel) => parseRelatedObject(rel))
       : [];
-    setModalTitle(element?.id ? 'Modifier le document' : 'Ajouter un document');
+    setModalTitle(element?.id ? "Modifier l'évènement" : 'Ajouter un évènement');
     setModalContent(
-      <DocumentForm
+      <EventForm
         id={element?.id}
-        initialForm={element?.id ? { ...element, relatedObjects, currentObjectId: resourceId } : { currentObjectId: resourceId }}
-        onDelete={deleteDocument}
-        onSave={saveDocument}
+        initialForm={element?.id ? { ...element, relatedObjects, currentObjectId: resourceId } : { type: 'suivi', currentObjectId: resourceId }}
+        onDelete={deleteEvent}
+        onSave={saveEvent}
       />,
     );
     setIsOpen(true);
@@ -64,7 +64,7 @@ export default function StructureDocumentsPage() {
     return (
       <Timeline>
         {data.data.map((event) => (
-          <TimelineItem date={event.startDate} key={event.id}>
+          <TimelineItem date={event.eventDate} key={event.id}>
             <Row className="flex--space-between">
               <BadgeGroup><Badge text={event.type} /></BadgeGroup>
               {editMode && <Button onClick={() => onOpenModalHandler(event)} size="sm" icon="ri-edit-line" title="Editer l'évènement" tertiary borderless rounded />}
@@ -81,7 +81,7 @@ export default function StructureDocumentsPage() {
             )}
             {(event?.files?.length > 0) && (
               <>
-                <Text spacing="mb-1w" bold>Fichiers : </Text>
+                <Text spacing="mb-1w" bold>Fichiers associés à l'évènement : </Text>
                 <Row>{event.files.map((file) => (<Download key={file.url} file={file} />))}</Row>
               </>
             )}
@@ -93,9 +93,9 @@ export default function StructureDocumentsPage() {
 
   return (
     <Bloc isLoading={isLoading} error={error} data={data}>
-      <BlocTitle as="h3" look="h6">Documents</BlocTitle>
+      <BlocTitle as="h2" look="h3">Évènements</BlocTitle>
       <BlocActionButton onClick={() => onOpenModalHandler()}>
-        Ajouter un document
+        Ajouter un évènement
       </BlocActionButton>
       <BlocContent>{renderContent()}</BlocContent>
       <BlocModal>

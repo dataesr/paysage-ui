@@ -62,7 +62,7 @@ export function DropdownButton({
           title={title}
           {...remainingProps}
         />
-        <div ref={listRef} className={`fr-menu ${(align === 'right') ? styles['align-right'] : ''} ${isExpanded ? 'fr-collapse--expanded' : 'fr-collapse'}`} id={id.current}>
+        <div ref={listRef} className={`${styles.menu} ${(align === 'right') ? styles['align-right'] : ''} ${isExpanded ? 'fr-collapse--expanded' : 'fr-collapse'}`} id={id.current}>
           <ul className={`${styles['dropdown-list']} fr-menu__list`}>
             {children}
           </ul>
@@ -103,7 +103,7 @@ export function DropdownButtonItem({
       {asLink ? (
         <Link
           as={asLink}
-          className="fr-nav__link"
+          className={styles['dropdown-item']}
           onClick={onClick}
         >
           {children}
@@ -111,7 +111,7 @@ export function DropdownButtonItem({
       ) : (
         <button
           type="button"
-          className="fr-nav__link"
+          className={styles['dropdown-item']}
           onClick={onClick}
         >
           {children}

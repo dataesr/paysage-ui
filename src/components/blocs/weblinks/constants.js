@@ -1,5 +1,24 @@
-export const KEEP_TYPES = [
+export const INTERNAL_PAGES_TYPES = [
+  'website',
+  'websiteRss',
+  'websiteOrganizationChart',
+  'websiteGovernance',
+  'websiteGeneralServices',
+  'websiteCommunication',
+  'websiteSocialReport',
+  'websiteActivityReport',
+  'websitePress',
+  'websitenews',
+  'websiteDirectory',
+  'websiteCatForm',
+  'websiteAcademicComponents',
+  'websiteHistory',
+  'websitePhotoLibrary',
+  'websiteNewsCast',
   '',
+];
+
+export const WEBLINKS_TYPES = [
   'Hal',
   'Onisep',
   'POpenData',
@@ -19,4 +38,9 @@ export const KEEP_TYPES = [
   'jorfsearch',
   'TalentCNRS',
   'TheConversation',
+  '',
+];
+
+export const PALMARES_TYPES = [
+  'rankingShanghai', '',
 ];

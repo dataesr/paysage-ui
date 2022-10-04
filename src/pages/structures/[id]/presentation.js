@@ -1,63 +1,38 @@
-import { useParams } from 'react-router-dom';
 import { Row, Title, Icon } from '@dataesr/react-dsfr';
 import ChiffresClesPresentation from '../../../components/blocs/chiffres-cles-presentation';
-import DernieresActualites from '../../../components/blocs/dernieres-actualites';
 import Emails from '../../../components/blocs/emails';
 import HistoriqueEtDates from '../../../components/blocs/historique-et-dates';
 import Identifiers from '../../../components/blocs/identifiers';
 import Localisations from '../../../components/blocs/localisations';
 import Names from '../../../components/blocs/names';
-import PalmaresEtClassements from '../../../components/blocs/palmares-et-classements';
-import PresenceSurLeWeb from '../../../components/blocs/presence-sur-le-web';
-import Spinner from '../../../components/spinner';
-import useFetch from '../../../hooks/useFetch';
+import Weblinks from '../../../components/blocs/weblinks';
+import SocialMedias from '../../../components/blocs/social-medias';
+import Wikipedia from '../../../components/blocs/wikipedia';
 import useHashScroll from '../../../hooks/useHashScroll';
+import { INTERNAL_PAGES_TYPES, WEBLINKS_TYPES, PALMARES_TYPES } from '../../../components/blocs/weblinks/constants';
 
 export default function StructurePresentationPage() {
-  const { id } = useParams();
-
-  const { data, isLoading, error } = useFetch(`/structures/${id}`);
   useHashScroll();
-
-  if (isLoading) return <Spinner size={48} />;
-  if (error) return <>Erreur...</>;
   return (
     <>
       <Row>
-        <Title as="h1" look="h3">
+        <Title as="h2" look="h3">
           En un coup d’œil
           <Icon className="ri-eye-2-line fr-ml-1w" />
         </Title>
       </Row>
-      <div id="localisation">
-        <Localisations
-          apiObject="structures"
-          id={id}
-          currentLocalisationId={data.currentLocalisation.id || null}
-        />
-      </div>
-      <div id="historique-et-dates">
-        <HistoriqueEtDates />
-        <Names apiObject="structures" />
-      </div>
-      <div id="palmares-et-classements">
-        <PalmaresEtClassements />
-      </div>
-      <div id="presence-sur-le-web">
-        <PresenceSurLeWeb apiObject="structures" />
-      </div>
-      <div id="identifiants">
-        <Identifiers apiObject="structures" />
-      </div>
-      <div id="chiffres-cles">
-        <ChiffresClesPresentation />
-      </div>
-      <div id="email">
-        <Emails />
-      </div>
-      <div id="dernieres-actualites">
-        <DernieresActualites />
-      </div>
+      <Localisations />
+      <HistoriqueEtDates />
+      <Names />
+      <Title as="h3" look="h4">Présence sur le web</Title>
+      <Weblinks types={WEBLINKS_TYPES} />
+      <Weblinks types={INTERNAL_PAGES_TYPES} title="Pages internes" />
+      <SocialMedias />
+      <Weblinks types={PALMARES_TYPES} title="Palmarès et classements" />
+      <Wikipedia />
+      <Identifiers />
+      <ChiffresClesPresentation />
+      <Emails />
     </>
   );
 }

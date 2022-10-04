@@ -6,7 +6,6 @@ import ExpendableListCards from '../../card/expendable-list-cards';
 import ModifyCard from '../../card/modify-card';
 import CopyButton from '../../copy/copy-button';
 import { Bloc, BlocActionButton, BlocContent, BlocModal, BlocTitle } from '../../bloc';
-import { getEnumKey } from '../../../utils';
 import api from '../../../utils/api';
 import useToast from '../../../hooks/useToast';
 import useFetch from '../../../hooks/useFetch';
@@ -19,8 +18,6 @@ export default function IdentifiersComponent() {
   const [showModal, setShowModal] = useState(false);
   const [modalTitle, setModalTitle] = useState('');
   const [modalContent, setModalContent] = useState(null);
-
-  const enumKey = getEnumKey(apiObject, 'identifiers');
 
   const onSaveHandler = async (body) => {
     const method = body.id ? 'patch' : 'post';
@@ -61,7 +58,6 @@ export default function IdentifiersComponent() {
         data={genericEmail}
         onDeleteHandler={onDeleteHandler}
         onSaveHandler={onSaveHandler}
-        enumKey={enumKey}
       />,
     );
     setShowModal(true);
@@ -69,7 +65,7 @@ export default function IdentifiersComponent() {
 
   const onClickAddHandler = () => {
     setModalTitle("Ajout d'un identifiant");
-    setModalContent(<IdentifierForm onSaveHandler={onSaveHandler} enumKey={enumKey} />);
+    setModalContent(<IdentifierForm onSaveHandler={onSaveHandler} />);
     setShowModal(true);
   };
 
@@ -92,7 +88,7 @@ export default function IdentifiersComponent() {
 
   return (
     <Bloc isLoading={isLoading} error={error} data={data}>
-      <BlocTitle as="h3" look="h6">Identifiants</BlocTitle>
+      <BlocTitle as="h3" look="h4">Identifiants</BlocTitle>
       <BlocActionButton onClick={onClickAddHandler}>Ajouter un identifiant</BlocActionButton>
       <BlocContent>{renderCards()}</BlocContent>
       <BlocModal>

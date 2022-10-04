@@ -83,7 +83,7 @@ export default function SocialMediasComponent() {
 
   return (
     <Bloc isLoading={isLoading} error={error} data={data}>
-      <BlocTitle as="h3" look="h6">Réseaux sociaux</BlocTitle>
+      <BlocTitle as="h4" look="h6">Réseaux sociaux</BlocTitle>
       <BlocActionButton onClick={onClickAddHandler}>Ajouter un réseau social</BlocActionButton>
       <BlocContent>{renderCards()}</BlocContent>
       <BlocModal>

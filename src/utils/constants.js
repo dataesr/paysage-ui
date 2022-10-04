@@ -35,6 +35,8 @@ export const ENUMS_LABELS_MAPPER = {
   jorfsearch: 'jorfsearch',
   TalentCNRS: 'TalentCNRS',
   TheConversation: 'TheConversation',
+  personal: 'Page personnelle',
+  official: 'Page officielle',
 };
 
 export const STRUCTURES_CREATION_REASONS = [

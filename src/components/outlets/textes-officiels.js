@@ -1,13 +1,12 @@
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Card, CardDescription, CardTitle, Col, Row } from '@dataesr/react-dsfr';
-import { Bloc, BlocActionButton, BlocContent, BlocTitle } from '../../bloc';
-import useUrl from '../../../hooks/useUrl';
-import useFetch from '../../../hooks/useFetch';
+import { Bloc, BlocActionButton, BlocContent, BlocTitle } from '../bloc';
+import useUrl from '../../hooks/useUrl';
+import useFetch from '../../hooks/useFetch';
 
-export default function OfficialTextsComponent() {
-  const { id } = useParams();
-  const { url } = useUrl();
-  const { data, isLoading, error } = useFetch(`/official-texts?filters[relatesTo]=${id}`);
+export default function OfficialTextsOutlet() {
+  const { url, id } = useUrl();
+  const { data, isLoading, error } = useFetch(`/official-texts?filters[relatesTo]=${id}&limit=500`);
   const navigate = useNavigate();
 
   const renderCards = () => {
@@ -34,7 +33,7 @@ export default function OfficialTextsComponent() {
 
   return (
     <Bloc isLoading={isLoading} error={error} data={data}>
-      <BlocTitle as="h3" look="h6">Textes officiels</BlocTitle>
+      <BlocTitle as="h2" look="h3">Textes officiels</BlocTitle>
       <BlocActionButton onClick={() => navigate(`/textes-officiels/ajouter?redirect=${url}/textes-officiels`)}>
         Ajouter un texte officiel
       </BlocActionButton>

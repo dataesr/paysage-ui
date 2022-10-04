@@ -123,47 +123,14 @@ export default function Header() {
           <>
             <NavItem
               title="Je contribue"
+              asLink={<RouterLink to="/contribuer" />}
               current={pathname.startsWith('/contribuer')}
-            >
-              <NavSubItem
-                current={
-                  pathname.startsWith('/contribuer')
-                  && !pathname.endsWith('/import')
-                }
-                title="Ajouter un nouvel objet"
-                asLink={<RouterLink to="/contribuer" />}
-              />
-            </NavItem>
+            />
             <NavItem
               title="Je recherche"
+              asLink={<RouterLink to="/rechercher?query=" />}
               current={pathname.startsWith('/rechercher')}
-            >
-              <NavSubItem
-                current={pathname.startsWith('/personnes')}
-                title="Rechercher des personnes"
-                asLink={<RouterLink to="/personnes" />}
-              />
-              <NavSubItem
-                current={pathname.startsWith('/structures')}
-                title="Rechercher des structures"
-                asLink={<RouterLink to="/structures" />}
-              />
-              <NavSubItem
-                current={pathname.startsWith('/termes')}
-                title="Rechercher des termes"
-                asLink={<RouterLink to="/termes" />}
-              />
-              <NavSubItem
-                current={pathname.startsWith('/categories')}
-                title="Rechercher des catégories"
-                asLink={<RouterLink to="/categories" />}
-              />
-              <NavSubItem
-                current={pathname.startsWith('/textes-officiels')}
-                title="Rechercher des textes officiels"
-                asLink={<RouterLink to="/textes-officiels" />}
-              />
-            </NavItem>
+            />
           </>
         )}
         <NavItem title="Ressources" current={pathname.startsWith('/ressources')}>

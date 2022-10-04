@@ -58,7 +58,7 @@ export default function Wikipedia() {
 
   return (
     <Bloc isLoading={isLoading} error={error} data={data}>
-      <BlocTitle as="h3" look="h6">Wikipédia</BlocTitle>
+      <BlocTitle as="h4" look="h6">Wikipédia</BlocTitle>
       <BlocContent>{renderCards()}</BlocContent>
     </Bloc>
   );

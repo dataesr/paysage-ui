@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import {
   Modal,
   ModalContent,
@@ -12,11 +13,11 @@ import WeblinkForm from '../../forms/weblinks';
 import { Bloc, BlocActionButton, BlocContent, BlocModal, BlocTitle } from '../../bloc';
 import useFetch from '../../../hooks/useFetch';
 import useUrl from '../../../hooks/useUrl';
-import { KEEP_TYPES } from './constants';
 import useEnums from '../../../hooks/useEnums';
 import useToast from '../../../hooks/useToast';
+import useNotice from '../../../hooks/useNotice';
 
-export default function Weblink() {
+export default function Weblinks({ types, title }) {
   const { url, apiObject } = useUrl('weblinks');
   const { data, isLoading, error, reload } = useFetch(url);
   const [showModal, setShowModal] = useState(false);
@@ -24,13 +25,16 @@ export default function Weblink() {
   const [modalContent, setModalContent] = useState(null);
   const { weblinks } = useEnums();
   const { toast } = useToast();
-  const options = weblinks[apiObject].filter((type) => KEEP_TYPES.includes(type.value));
+  const { notice } = useNotice();
+  const options = types?.length
+    ? weblinks[apiObject]?.filter((type) => types.includes(type.value))
+    : weblinks[apiObject];
 
   const onSaveHandler = async (body) => {
     const method = body.id ? 'patch' : 'post';
     const saveUrl = body.id ? `${url}/${body.id}` : url;
     await api[method](saveUrl, body)
-      .then(() => { toast({ toastType: 'success', description: 'Le lien à été ajouté' }); reload(); setShowModal(false); })
+      .then(() => { notice({ type: 'success', content: 'Le lien à été ajouté' }); reload(); setShowModal(false); })
       .catch(() => { toast({ toastType: 'error', description: "Une erreur s'est produite" }); });
   };
 
@@ -41,7 +45,7 @@ export default function Weblink() {
   };
 
   const onClickModifyHandler = (oneData) => {
-    setModalTitle("Modification d'un lien web");
+    setModalTitle("Modification d'un lien");
     setModalContent(
       <WeblinkForm
         data={oneData}
@@ -54,7 +58,7 @@ export default function Weblink() {
   };
 
   const onClickAddHandler = () => {
-    setModalTitle("Ajout d'un lien web");
+    setModalTitle("Ajout d'un lien");
     setModalContent(
       <WeblinkForm onSaveHandler={onSaveHandler} options={options} />,
     );
@@ -63,7 +67,9 @@ export default function Weblink() {
 
   const renderCards = () => {
     if (!data) return null;
-    const filteredList = data.data.filter((el) => KEEP_TYPES.includes(el.type));
+    const filteredList = types.length
+      ? data.data.filter((el) => types.includes(el.type))
+      : data.data;
     const list = filteredList.map((el) => (
       <WeblinkCard
         downloadUrl={el.url}
@@ -72,13 +78,13 @@ export default function Weblink() {
         type={el.type}
       />
     ));
-    return <ExpendableListCards list={list} nCol="12 md-4" order={KEEP_TYPES} sortOn="props.type" />;
+    return <ExpendableListCards list={list} nCol="12 md-4" order={types} sortOn="props.type" />;
   };
 
   return (
     <Bloc isLoading={isLoading} error={error} data={data}>
-      <BlocTitle as="h3" look="h6">Liens web</BlocTitle>
-      <BlocActionButton onClick={onClickAddHandler}>Ajouter un lien web</BlocActionButton>
+      <BlocTitle as="h4" look="h6">{title}</BlocTitle>
+      <BlocActionButton onClick={onClickAddHandler}>Ajouter un lien</BlocActionButton>
       <BlocContent>{renderCards()}</BlocContent>
       <BlocModal>
         <Modal isOpen={showModal} size="lg" hide={() => setShowModal(false)}>
@@ -89,3 +95,13 @@ export default function Weblink() {
     </Bloc>
   );
 }
+
+Weblinks.propTypes = {
+  types: PropTypes.arrayOf(PropTypes.string),
+  title: PropTypes.string,
+};
+
+Weblinks.defaultProps = {
+  types: [],
+  title: 'Liens web',
+};

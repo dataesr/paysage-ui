@@ -24,8 +24,13 @@ export function EnumContextProvider({ children }) {
         setEnums({
           weblinks: {
             structures: [DEFAULT_SELECT, ...getOptions(data, 'StructureWeblinkTypesEnum')],
+            persons: [DEFAULT_SELECT, ...getOptions(data, 'PersonWeblinkTypesEnum')],
           },
           socialMedias: [DEFAULT_SELECT, ...getOptions(data, 'SocialmediaTypesEnum')],
+          identifiers: {
+            persons: [DEFAULT_SELECT, ...getOptions(data, 'PersonIdentifierTypesEnum')],
+            structures: [DEFAULT_SELECT, ...getOptions(data, 'StructureIdentifierTypesEnum')],
+          },
         });
       })
       .catch(() => { setEnums({}); });
