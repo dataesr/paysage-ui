@@ -1,14 +1,14 @@
 import { Col, Row, Text } from '@dataesr/react-dsfr';
-import { useParams } from 'react-router-dom';
 
 import { BlocContent, BlocTitle } from '../../bloc';
 import Card from '../../card';
 import Spinner from '../../spinner';
 import useFetch from '../../../hooks/useFetch';
+import useUrl from '../../../hooks/useUrl';
 
 export default function ChiffresClesPresentation() {
-  const { id } = useParams();
-  const { data, isLoading, error } = useFetch(`/structures/${id}`);
+  const { url } = useUrl();
+  const { data, isLoading, error } = useFetch(url);
 
   if (isLoading) return <Spinner size={48} />;
   if (error) return <>Erreur...</>;
