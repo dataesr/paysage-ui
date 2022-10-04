@@ -87,7 +87,7 @@ export default function IdentifiersComponent() {
         onClick={() => onClickModifyHandler(el)}
       />
     ));
-    return <ExpendableListCards apiObject={apiObject} list={list} />;
+    return <ExpendableListCards list={list} />;
   };
 
   return (

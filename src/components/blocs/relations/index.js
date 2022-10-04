@@ -46,13 +46,13 @@ export default function Relations({ group, reloader }) {
   };
 
   const onSaveListHandler = async (body, id = null) => {
-    const saveUrl = `${listUrl}/${id}`;
+    const saveUrl = `${url}/${id}`;
     await api.patch(saveUrl, body).then(() => { notice(saveGroupeSuccess); reloader(); }).catch(() => notice(saveError));
     return setShowListModal(false);
   };
 
   const onDeleteListHandler = async (id) => {
-    await api.delete(`${listUrl}/${id}`)
+    await api.delete(`${url}/${id}`)
       .then(() => { notice(deleteGroupeSuccess); reloader(); })
       .catch(() => notice(deleteError));
     return setShowListModal(false);

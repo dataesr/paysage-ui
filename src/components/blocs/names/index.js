@@ -18,7 +18,7 @@ import useToast from '../../../hooks/useToast';
 
 export default function NamesComponent() {
   const { toast } = useToast();
-  const { url, apiObject } = useUrl('names');
+  const { url } = useUrl('names');
   const { data, isLoading, error, reload } = useFetch(url);
   const [showModal, setShowModal] = useState(false);
   const [modalTitle, setModalTitle] = useState('');
@@ -88,7 +88,7 @@ export default function NamesComponent() {
         </CardDescription>
       </Card>
     ));
-    return <ExpendableListCards apiObject={apiObject} list={list} />;
+    return <ExpendableListCards list={list} />;
   };
 
   return (
