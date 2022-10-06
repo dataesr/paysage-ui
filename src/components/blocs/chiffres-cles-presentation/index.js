@@ -4,6 +4,7 @@ import { BlocContent, BlocTitle } from '../../bloc';
 import Card from '../../card';
 import Spinner from '../../spinner';
 import useFetch from '../../../hooks/useFetch';
+import cleanNumber from '../../../hooks/useNumbers';
 import useUrl from '../../../hooks/useUrl';
 
 export default function ChiffresClesPresentation() {
@@ -14,8 +15,8 @@ export default function ChiffresClesPresentation() {
   if (error) return <>Erreur...</>;
 
   const all = [];
-  if (data && data.academicYear && data.population) all.push({ key: `Nombre d'étudiants inscrits en ${data.academicYear}`, value: data.population });
-  if (data && data.exercice && data.netAccountingResult) all.push({ key: `Résultat net comptable en ${data.exercice}`, value: `${data.netAccountingResult} €` });
+  if (data && data.academicYear && data.population) all.push({ key: `Nombre d'étudiants inscrits en ${data.academicYear}`, value: data.population.toLocaleString('fr-FR') });
+  if (data && data.exercice && data.netAccountingResult) all.push({ key: `Résultat net comptable en ${data.exercice}`, value: `${cleanNumber(data.netAccountingResult)}€` });
 
   const renderCards = () => all.map((el) => (
     <Col n="12 md-6">
