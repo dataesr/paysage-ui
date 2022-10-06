@@ -7,7 +7,7 @@ import useFetch from '../../../hooks/useFetch';
 import cleanNumber from '../../../hooks/useNumbers';
 import useUrl from '../../../hooks/useUrl';
 
-export default function ChiffresClesPresentation() {
+export default function ChiffresCles() {
   const { url } = useUrl();
   const { data, isLoading, error } = useFetch(url);
 
