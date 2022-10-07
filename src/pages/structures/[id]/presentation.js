@@ -1,6 +1,6 @@
 import { Row, Title, Icon } from '@dataesr/react-dsfr';
 
-import ChiffresClesPresentation from '../../../components/blocs/chiffres-cles-presentation';
+import ChiffresCles from '../../../components/blocs/chiffres-cles';
 import Emails from '../../../components/blocs/emails';
 import HistoriqueEtDates from '../../../components/blocs/historique-et-dates';
 import Identifiers from '../../../components/blocs/identifiers';
@@ -25,6 +25,7 @@ export default function StructurePresentationPage() {
       <Localisations />
       <HistoriqueEtDates />
       <Names />
+      <ChiffresCles />
       <Title as="h3" look="h4">Présence sur le web</Title>
       <Weblinks types={WEBLINKS_TYPES} />
       <Weblinks types={INTERNAL_PAGES_TYPES} title="Pages internes" />
@@ -32,7 +33,6 @@ export default function StructurePresentationPage() {
       <Weblinks types={PALMARES_TYPES} title="Palmarès et classements" />
       <Wikipedia />
       <Identifiers />
-      <ChiffresClesPresentation />
       <Emails />
     </>
   );
