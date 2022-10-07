@@ -1,0 +1,76 @@
+.fr-card__body {
+  // background-color: var(--background-default-grey-hover) !important;
+
+  .card-button{
+    position: absolute;
+    top: .25rem;
+    right: .25rem;
+    z-index: 1;
+  }
+}
+
+.structures-title {
+  color: var(--structures-color) !important;
+}
+
+.persons-title {
+  color: var(--persons-color) !important;
+}
+
+.prices-title {
+  color: var(--prices-color) !important;
+}
+
+.projects-title {
+  color: var(--projects-color) !important;
+}
+
+.terms-title {
+  color: var(--terms-color) !important;
+}
+.categories-title {
+  color: var(--categories-color) !important;
+}
+.legal-categories-title {
+  color: var(--legal-categories-color) !important;
+}
+.structures-border {
+  border-left: .25rem solid var(--structures-color);
+}
+
+.persons-border {
+  border-left: .25rem solid var(--persons-color);
+}
+
+.prices-border {
+  border-left: .25rem solid var(--prices-color);
+}
+
+.projects-border {
+  border-left: .25rem solid var(--projects-color);
+}
+
+.terms-border {
+  border-left: .25rem solid var(--terms-color);
+}
+.categories-border {
+  border-left: .25rem solid var(--categories-color);
+}
+.legal-categories-border {
+  border-left: .25rem solid var(--legal-categories-color);
+}
+
+.card-body {
+  position: relative;
+}
+
+.card-end {
+  margin-top: 0 !important;
+  width: fit-content;
+}
+
+.edit-button {
+  position: absolute;
+  top: .25rem;
+  right: .25rem;
+}

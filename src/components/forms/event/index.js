@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { Col, Container, File, Icon, Radio, RadioGroup, Row, Tag, TagGroup, Text, TextInput } from '@dataesr/react-dsfr';
+import { Alert, Col, Container, File, Icon, Radio, RadioGroup, Row, Tag, TagGroup, Text, TextInput } from '@dataesr/react-dsfr';
 import useNotice from '../../../hooks/useNotice';
 import useForm from '../../../hooks/useForm';
 import api from '../../../utils/api';
@@ -36,9 +36,9 @@ export default function EventForm({ id, initialForm, onSave, onDelete }) {
     return onSave({ ...rest, relatesTo }, id);
   };
 
-  const handleObjectSelect = ({ id: relatedObjectId, name }) => {
+  const handleObjectSelect = ({ id: relatedObjectId, name: displayName }) => {
     const currentRelatedObjects = form.relatedObjects?.length ? form.relatedObjects : [];
-    updateForm({ relatedObjects: [...currentRelatedObjects, { id: relatedObjectId, name }] });
+    updateForm({ relatedObjects: [...currentRelatedObjects, { id: relatedObjectId, displayName }] });
     setQuery('');
     setOptions([]);
   };
@@ -82,6 +82,14 @@ export default function EventForm({ id, initialForm, onSave, onDelete }) {
   return (
     <form>
       <Container fluid>
+        {/* <Row spacing="mb-2w">
+          <Col n="12">
+            <Alert
+              title="Avez-vous vérifié que l'évènement n'existe pas ?"
+              description="Utilisez la barre de recherche principale pour vérifier que l'évènement n'existe pas encore."
+            />
+          </Col>
+        </Row> */}
         <Row>
           <Col n="12" spacing="pb-2w">
             <RadioGroup
@@ -170,7 +178,7 @@ export default function EventForm({ id, initialForm, onSave, onDelete }) {
                 <TagGroup>
                   {form.relatedObjects.map((element) => (
                     <Tag key={element.id} onClick={() => handleObjectDelete(element.id)}>
-                      {element.name}
+                      {element.displayName}
                       <Icon iconPosition="right" name="ri-close-line" />
                     </Tag>
                   ))}

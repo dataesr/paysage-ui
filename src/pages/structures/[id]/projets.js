@@ -1,13 +1,13 @@
-import { Text } from '@dataesr/react-dsfr';
+import Relations from '../../../components/blocs/relations-by-tag';
 
-import useHashScroll from '../../../hooks/useHashScroll';
-
-export default function StructureProjetsPage() {
-  useHashScroll();
-
+export default function StructureProjectsPage() {
   return (
-    <Text>
-      Projets
-    </Text>
+    <Relations
+      tag="participations"
+      blocName="Participations à des projets"
+      resourceType="projects"
+      relatedObjectTypes={['structures']}
+      inverse
+    />
   );
 }

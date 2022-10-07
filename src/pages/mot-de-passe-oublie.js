@@ -38,7 +38,7 @@ export default function Passwordless() {
     if (emailError) return setEmailErrorDisplay(true);
     const response = await requestPasswordChangeEmail({ email });
     const newCode = /Un nouveau code à été envoyé/i;
-    if (newCode.test(response.error)) return setStep(2);
+    if (newCode.test(response.message)) return setStep(2);
     return setRequestOtpError("Une erreur s'est produite");
   };
   const handleValidateOTP = (e) => {

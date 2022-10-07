@@ -8,7 +8,6 @@ import useNotice from '../../hooks/useNotice';
 
 import api from '../../utils/api';
 import { saveError, saveSuccess, deleteError, deleteSuccess } from '../../utils/notice-contents';
-import { parseRelatedObject } from '../../utils/parse-related-element';
 
 import {
   Bloc, BlocContent, BlocActionButton, BlocTitle, BlocModal,
@@ -45,7 +44,7 @@ export default function DocumentsOutlet() {
   const onOpenModalHandler = (element) => {
     // Transform relatedObjects to use as managment value inside the form
     const relatedObjects = element?.relatedObjects?.length
-      ? element?.relatedObjects.filter((rel) => rel.id !== resourceId).map((rel) => parseRelatedObject(rel))
+      ? element?.relatedObjects.filter((rel) => rel.id !== resourceId)
       : [];
     setModalTitle(element?.id ? 'Modifier le document' : 'Ajouter un document');
     setModalContent(
@@ -73,10 +72,7 @@ export default function DocumentsOutlet() {
             {event.description && <Text spacing="mb-1w">{event.description}</Text>}
             {event.relatedObjects && (
               <TagGroup>
-                {event.relatedObjects.map((related) => {
-                  const { name: relatedName, url: relatedUrl, id: relatedId } = parseRelatedObject(related);
-                  return <Tag iconPosition="right" icon="ri-arrow-right-line" onClick={() => navigate(relatedUrl)} key={relatedId}>{relatedName}</Tag>;
-                })}
+                {event.relatedObjects.map((related) => <Tag iconPosition="right" icon="ri-arrow-right-line" onClick={() => navigate(related.href)} key={related.id}>{related.displayName}</Tag>)}
               </TagGroup>
             )}
             {(event?.files?.length > 0) && (

@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link as RouterLink, useNavigate, Outlet } from 'react-router-dom';
 import {
-  Badge,
   BadgeGroup, Breadcrumb, BreadcrumbItem, ButtonGroup, Checkbox,
   CheckboxGroup, Col, Container, Icon, Modal, ModalContent, ModalFooter,
   ModalTitle, Row, SideMenu, SideMenuLink, Title,
@@ -18,14 +17,9 @@ import Spinner from '../../../components/spinner';
 import api from '../../../utils/api';
 import useNotice from '../../../hooks/useNotice';
 
-import PersonPresentationPage from './presentation';
-import PersonMandats from './mandats';
-import PersonCategories from './categories';
-import PersonProjets from './projets';
-import PersonPrices from './prix-et-recompenses';
-import PersonsRelatedElements from './elements-lies';
+import CategoriePresentationPage from './presentation';
 
-function PersonByIdPage() {
+function CategoryByIdPage() {
   const { url, id } = useUrl();
   const { data, isLoading, error, reload } = useFetch(url);
   const navigate = useNavigate();
@@ -45,8 +39,6 @@ function PersonByIdPage() {
   if (isLoading) return <Row className="fr-my-2w flex--space-around"><Spinner /></Row>;
   if (error) return <>Erreur...</>;
   if (!data) return null;
-  const personName = `${data.firstName} ${data.lastName}`.trim();
-  const genreIcon = (data.gender === 'Homme') ? 'ri-men-line' : 'ri-women-line';
   return (
     <Container spacing="pb-6w">
       <Row>
@@ -60,10 +52,6 @@ function PersonByIdPage() {
               <Icon name="ri-newspaper-line" size="1x" />
               Actualités
             </SideMenuLink>
-            <SideMenuLink asLink={<RouterLink to="mandats" />}>
-              <Icon name="ri-building-line" size="1x" />
-              Rôles et Mandats
-            </SideMenuLink>
             <SideMenuLink asLink={<RouterLink to="evenements" />}>
               <Icon name="ri-calendar-line" size="1x" />
               Evènements
@@ -74,7 +62,7 @@ function PersonByIdPage() {
             </SideMenuLink>
             <SideMenuLink asLink={<RouterLink to="categories" />}>
               <Icon name="ri-price-tag-3-line" size="1x" />
-              Catégories et termes
+              Catégories
             </SideMenuLink>
             <SideMenuLink asLink={<RouterLink to="textes-officiels" />}>
               <Icon name="ri-git-repository-line" size="1x" />
@@ -86,11 +74,7 @@ function PersonByIdPage() {
             </SideMenuLink>
             <SideMenuLink asLink={<RouterLink to="prix-et-recompenses" />}>
               <Icon name="ri-award-line" size="1x" />
-              Prix & récompenses
-            </SideMenuLink>
-            <SideMenuLink asLink={<RouterLink to="elements-lies" />}>
-              <Icon name="ri-links-line" size="1x" />
-              Eléments liés
+              Prix
             </SideMenuLink>
             <SideMenuLink asLink={<RouterLink to="participations" />}>
               <Icon name="ri-links-line" size="1x" />
@@ -106,20 +90,19 @@ function PersonByIdPage() {
             <BreadcrumbItem
               asLink={<RouterLink to="/rechercher/personnes?query=" />}
             >
-              Personnes
+              Catégories
             </BreadcrumbItem>
-            <BreadcrumbItem>{personName}</BreadcrumbItem>
+            <BreadcrumbItem>{data.usualName}</BreadcrumbItem>
           </Breadcrumb>
           <Row className="flex--space-between flex--wrap-reverse">
             <Title as="h2">
-              {personName}
+              {data.usualName}
               <BadgeGroup>
                 <CopyBadgeButton
                   colorFamily="yellow-tournesol"
                   text={data.id}
                   lowercase
                 />
-                {data.gender && <Badge type="info" text={data.gender} icon={(data.gender === 'Autre') ? '' : genreIcon} />}
               </BadgeGroup>
             </Title>
             <ButtonGroup align="right" isInlineFrom="xs">
@@ -132,7 +115,7 @@ function PersonByIdPage() {
                       <ModalTitle>
                         Modifier les informations de
                         {' '}
-                        {personName}
+                        {data.usualName}
                       </ModalTitle>
                       <ModalContent>
                         <PersonForm id={data.id} initialForm={data} onSave={onSave} />
@@ -186,7 +169,7 @@ function PersonByIdPage() {
                 <ButtonGroup>
                   <Button onClick={() => {
                     if (editMode) { toggle(); }
-                    navigate(`/personnes/${id}/exporter?${new URLSearchParams(form)}`);
+                    navigate(`/categories/${id}/exporter?${new URLSearchParams(form)}`);
                   }}
                   >
                     Exporter
@@ -203,11 +186,6 @@ function PersonByIdPage() {
 }
 
 export {
-  PersonByIdPage,
-  PersonPresentationPage,
-  PersonMandats,
-  PersonCategories,
-  PersonProjets,
-  PersonPrices,
-  PersonsRelatedElements,
+  CategoriePresentationPage,
+  CategoryByIdPage,
 };

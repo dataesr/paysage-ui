@@ -13,7 +13,7 @@ import useUrl from '../../../hooks/useUrl';
 
 export default function IdentifiersComponent() {
   const { toast } = useToast();
-  const { url, apiObject } = useUrl('identifiers');
+  const { url } = useUrl('identifiers');
   const { data, isLoading, error, reload } = useFetch(url);
   const [showModal, setShowModal] = useState(false);
   const [modalTitle, setModalTitle] = useState('');
@@ -83,7 +83,7 @@ export default function IdentifiersComponent() {
         onClick={() => onClickModifyHandler(el)}
       />
     ));
-    return <ExpendableListCards apiObject={apiObject} list={list} />;
+    return <ExpendableListCards list={list} />;
   };
 
   return (

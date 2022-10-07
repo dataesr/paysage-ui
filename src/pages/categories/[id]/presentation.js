@@ -7,7 +7,7 @@ import useFetch from '../../../hooks/useFetch';
 import useHashScroll from '../../../hooks/useHashScroll';
 import useUrl from '../../../hooks/useUrl';
 
-export default function PersonPresentationPage() {
+export default function CategoriesPresentationPage() {
   useHashScroll();
   const { url } = useUrl();
   const { data, isLoading, error } = useFetch(url);
@@ -26,24 +26,6 @@ export default function PersonPresentationPage() {
           Né le:
           {' '}
           {data.birthDate}
-          {' '}
-        </Text>
-        <Text>
-          Mort le:
-          {' '}
-          {data.deathDate}
-          {' '}
-        </Text>
-        <Text>
-          Activité:
-          {' '}
-          {data.activity}
-          {' '}
-        </Text>
-        <Text>
-          Commentaire:
-          {' '}
-          {data.comment}
           {' '}
         </Text>
       </Row>

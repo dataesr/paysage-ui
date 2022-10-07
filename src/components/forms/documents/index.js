@@ -40,9 +40,9 @@ export default function DocumentsForm({ id, initialForm, onSave, onDelete }) {
     return onSave({ ...rest, relatesTo }, id);
   };
 
-  const handleObjectSelect = ({ id: relatedObjectId, name }) => {
+  const handleObjectSelect = ({ id: relatedObjectId, name: displayName }) => {
     const currentRelatedObjects = form.relatedObjects?.length ? form.relatedObjects : [];
-    updateForm({ relatedObjects: [...currentRelatedObjects, { id: relatedObjectId, name }] });
+    updateForm({ relatedObjects: [...currentRelatedObjects, { id: relatedObjectId, displayName }] });
     setQuery('');
     setOptions([]);
   };
@@ -90,6 +90,14 @@ export default function DocumentsForm({ id, initialForm, onSave, onDelete }) {
   return (
     <form>
       <Container fluid>
+        {/* <Row spacing="mb-2w">
+          <Col n="12">
+            <Alert
+              title="Avez-vous vérifié que le document n'existe pas ?"
+              description="Utilisez la barre de recherche principale pour vérifier que le document n'existe pas encore."
+            />
+          </Col>
+        </Row> */}
         <Row>
           <Col n="12" spacing="pb-2w">
             <Select
@@ -179,7 +187,8 @@ export default function DocumentsForm({ id, initialForm, onSave, onDelete }) {
                 <TagGroup>
                   {form.relatedObjects.map((element) => (
                     <Tag key={element.id} onClick={() => handleObjectDelete(element.id)}>
-                      {element.name}
+                      {/* {element.displayName} */}
+                      {element.id}
                       <Icon iconPosition="right" name="ri-close-line" />
                     </Tag>
                   ))}

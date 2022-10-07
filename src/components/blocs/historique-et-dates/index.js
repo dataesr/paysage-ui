@@ -129,7 +129,7 @@ export default function HistoriqueEtDates() {
   };
 
   return (
-    <Bloc isLoading={isLoading} error={error} data={data}>
+    <Bloc isLoading={isLoading} error={error} data={data} noBadge>
       <BlocTitle as="h3" look="h6">Historique & dates</BlocTitle>
       <BlocActionButton onClick={onClickAddHandler}>Ajouter une donnée historique</BlocActionButton>
       <BlocContent>

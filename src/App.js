@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Navigate, Routes, Route } from 'react-router-dom';
 
+import Redirect from './components/redirect';
 import CategoriesAddPage from './pages/categories/ajouter';
 import CategoriesPage from './pages/categories';
 import CategoryByIdPage from './pages/categories/id';
@@ -22,13 +23,13 @@ import StructuresPage from './pages/structures';
 import {
   StructureByIdPage,
   StructureBudgetPage,
+  StructureCategoriesPage,
   StructureElementsLiesPage,
   StructureEtudiantsPage,
   StructureExportPage,
   StructureGouvernancePage,
   StructureImmobilierPage,
   StructureOffreDeFormationPage,
-  StructureParticipationsPage,
   StructurePresentationPage,
   StructureProjetsPage,
   StructurePrixEtRecompensesPage,
@@ -37,7 +38,12 @@ import {
 
 import {
   PersonByIdPage,
+  PersonCategories,
+  PersonMandats,
   PersonPresentationPage,
+  PersonPrices,
+  PersonProjets,
+  PersonsRelatedElements,
 } from './pages/personnes/[id]';
 
 import TermsPage from './pages/termes';
@@ -49,11 +55,11 @@ import { AdminPage, AdminDashboardPage, AdminUsersPage, NomenclaturesPage, Legal
 
 import './styles/index.scss';
 import SearchPage from './pages/rechercher';
-import CategoriesOutlet from './components/outlets/categories';
 import AgendaOutlet from './components/outlets/evenements';
 import DocumentsOutlet from './components/outlets/documents';
 import ActualitesOutlet from './components/outlets/actualites';
 import OfficialTextsOutlet from './components/outlets/textes-officiels';
+import ParticipationsOutlet from './components/outlets/participations';
 
 function App() {
   return (
@@ -100,19 +106,22 @@ function App() {
               <Route path="presentation" element={<StructurePresentationPage />} />
               <Route path="actualites" element={<ActualitesOutlet />} />
               <Route path="evenements" element={<AgendaOutlet />} />
-              <Route path="categories" element={<CategoriesOutlet />} />
+              <Route path="categories" element={<StructureCategoriesPage />} />
               <Route path="documents" element={<DocumentsOutlet />} />
               <Route path="textes-officiels" element={<OfficialTextsOutlet />} />
               <Route path="gouvernance-et-referents" element={<StructureGouvernancePage />} />
-              <Route path="budget" element={<StructureBudgetPage />} />
-              <Route path="ressource-humaines" element={<StructureRHPage />} />
-              <Route path="immobilier" element={<StructureImmobilierPage />} />
-              <Route path="etudiants" element={<StructureEtudiantsPage />} />
-              <Route path="offre-de-formation" element={<StructureOffreDeFormationPage />} />
+              <Route path="chiffres-cles">
+                <Route path="" element={<Navigate to="etudiants" replace />} />
+                <Route path="budget" element={<StructureBudgetPage />} />
+                <Route path="ressource-humaines" element={<StructureRHPage />} />
+                <Route path="immobilier" element={<StructureImmobilierPage />} />
+                <Route path="etudiants" element={<StructureEtudiantsPage />} />
+                <Route path="offre-de-formation" element={<StructureOffreDeFormationPage />} />
+              </Route>
               <Route path="projets" element={<StructureProjetsPage />} />
               <Route path="prix-et-recompenses" element={<StructurePrixEtRecompensesPage />} />
               <Route path="elements-lies" element={<StructureElementsLiesPage />} />
-              <Route path="participations" element={<StructureParticipationsPage />} />
+              <Route path="participations" element={<ParticipationsOutlet />} />
             </Route>
 
             <Route path="/categories" element={<CategoriesPage />} />
@@ -121,14 +130,21 @@ function App() {
 
             <Route path="/personnes" element={<PersonsPage />} />
             <Route path="/personnes/ajouter" element={<PersonAddPage />} />
+            <Route path="/persons/:id" element={<Redirect />} />
             <Route path="/personnes/:id" element={<PersonByIdPage />}>
               <Route path="" element={<Navigate to="presentation" replace />} />
               <Route path="presentation" element={<PersonPresentationPage />} />
+              <Route path="categories" element={<PersonCategories />} />
+              <Route path="mandats" element={<PersonMandats />} />
+              <Route path="projets" element={<PersonProjets />} />
               <Route path="actualites" element={<ActualitesOutlet />} />
               <Route path="evenements" element={<AgendaOutlet />} />
-              <Route path="categories" element={<CategoriesOutlet />} />
+              <Route path="prix-et-recompenses" element={<PersonPrices />} />
+              <Route path="categories" element={<PersonCategories />} />
               <Route path="documents" element={<DocumentsOutlet />} />
               <Route path="textes-officiels" element={<OfficialTextsOutlet />} />
+              <Route path="elements-lies" element={<PersonsRelatedElements />} />
+              <Route path="participations" element={<ParticipationsOutlet />} />
             </Route>
 
             <Route path="/projets/ajouter" element={<ProjectAddPage />} />
@@ -136,6 +152,7 @@ function App() {
 
             <Route path="/termes" element={<TermsPage />} />
             <Route path="/termes/ajouter" element={<TermsAddPage />} />
+            <Route path="/terms/:id" element={<Redirect />} />
             <Route path="/termes/:id" element={<TermByIdPage />} />
 
             <Route path="/textes-officiels" element={<OfficialTextsPage />} />

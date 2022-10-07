@@ -1,20 +1,25 @@
 import { Children } from 'react';
 import PropTypes from 'prop-types';
-import { Container, Row, Highlight, ButtonGroup } from '@dataesr/react-dsfr';
+import { Container, Row, Highlight, ButtonGroup, Badge } from '@dataesr/react-dsfr';
 import Spinner from '../spinner';
 import useEditMode from '../../hooks/useEditMode';
 
-export default function Bloc({ children, data, error, isLoading }) {
+export default function Bloc({ children, data, error, isLoading, hideOnEmptyView, noBadge }) {
   const { editMode } = useEditMode();
   const header = Children.toArray(children).find((child) => child.props.__TYPE === 'BlocTitle');
   const actions = Children.toArray(children).filter((child) => child.props.__TYPE === 'BlocActionButton');
   const modals = Children.toArray(children).filter((child) => child.props.__TYPE === 'BlocModal');
   const blocContent = Children.toArray(children).find((child) => child.props.__TYPE === 'BlocContent');
-
+  if (!editMode && !data?.totalCount && hideOnEmptyView) return null;
   return (
     <Container fluid className="fr-mb-5w" as="section">
       <Row className="flex--nowrap">
-        <div className="flex--grow">{header}</div>
+        <div className="flex--grow">
+          <Row className="flex flex--start">
+            {header}
+            {!noBadge && <Badge className="fr-ml-1v" type="info" text={data?.totalCount} />}
+          </Row>
+        </div>
         {(editMode) && (<ButtonGroup size="sm" isInlineFrom="xs">{actions.map((element) => <div key={element.id}>{element}</div>)}</ButtonGroup>)}
       </Row>
       {isLoading && <Row className="fr-my-2w flex--space-around"><Spinner /></Row>}
@@ -31,6 +36,8 @@ Bloc.propTypes = {
   data: PropTypes.object,
   isLoading: PropTypes.bool,
   error: PropTypes.bool,
+  hideOnEmptyView: PropTypes.bool,
+  noBadge: PropTypes.bool,
 };
 
 Bloc.defaultProps = {
@@ -38,4 +45,6 @@ Bloc.defaultProps = {
   data: {},
   isLoading: null,
   error: null,
+  hideOnEmptyView: false,
+  noBadge: false,
 };

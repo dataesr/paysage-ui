@@ -14,15 +14,17 @@ export function toString(date, time = false) {
     year: 'numeric',
     month: 'long',
     day: 'numeric',
+  };
+  const timeOptions = {
     hour: 'numeric',
     minute: 'numeric',
     second: 'numeric',
   };
-  if (time) return new Date(date).toLocaleString('fr-FR', options);
+  if (time) return new Date(date).toLocaleString('fr-FR', { ...options, timeOptions });
   return new Date(date).toLocaleDateString('fr-FR', options);
 }
 
-function reverseDate(d) {
+export function reverseDate(d) {
   const arrDate = d.split('-');
   switch (arrDate.length) {
   case 2:
@@ -40,27 +42,27 @@ export function formatDescriptionDates(startDate = null, endDate = null) {
   if (!startDate && !endDate) { return null; }
   if (!startDate && endDate) {
     if (endDate.split('-').length === 1) {
-      return `jusqu'à ${reverseDate(endDate)}`;
+      return `jusqu'à ${toString(endDate)}`;
     }
-    return `jusqu'au ${reverseDate(endDate)}`;
+    return `jusqu'au ${toString(endDate)}`;
   }
   if (startDate && !endDate) {
     if (startDate.split('-').length === 1) {
-      return `depuis ${reverseDate(startDate)}`;
+      return `depuis ${toString(startDate)}`;
     }
-    return `depuis le ${reverseDate(startDate)}`;
+    return `depuis le ${toString(startDate)}`;
   }
   if (startDate && endDate) {
     let ret = '';
     if (startDate.split('-').length === 1) {
-      ret = `de ${reverseDate(startDate)} `;
+      ret = `de ${toString(startDate)} `;
     } else {
-      ret = `du ${reverseDate(startDate)} `;
+      ret = `du ${toString(startDate)} `;
     }
     if (endDate.split('-').length === 1) {
-      ret += `à ${reverseDate(endDate)} `;
+      ret += `à ${toString(endDate)} `;
     } else {
-      ret += `au ${reverseDate(endDate)}`;
+      ret += `au ${toString(endDate)}`;
     }
     return ret;
   }

@@ -1,6 +1,6 @@
 import { Col, Icon, Link, Row } from '@dataesr/react-dsfr';
 import PropTypes from 'prop-types';
-import './styles.modules.scss';
+import './styles.module.scss';
 import useEditMode from '../../hooks/useEditMode';
 import Button from '../button';
 
@@ -50,7 +50,7 @@ export default function SocialMediaCard({
   };
 
   return (
-    <div className="fr-card fr-enlarge-link fr-card--horizontal show-bt-on-over">
+    <div className="fr-card fr-enlarge-link fr-card--grey fr-card--horizontal show-bt-on-over">
       <div className="fr-card__body">
         <div className="fr-card__content fr-py-1w">
           <Row>

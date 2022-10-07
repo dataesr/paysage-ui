@@ -2,7 +2,7 @@ import { Icon, Text } from '@dataesr/react-dsfr';
 
 import useHashScroll from '../../hooks/useHashScroll';
 
-export default function ActualitesOutlet() {
+export default function ParticipationsOutlet() {
   useHashScroll();
   return (
     <Text size="lg" bold className="fr-mt-5w">

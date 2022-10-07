@@ -2,7 +2,7 @@ import { Col, Link, Row } from '@dataesr/react-dsfr';
 import PropTypes from 'prop-types';
 import useEditMode from '../../hooks/useEditMode';
 import Button from '../button';
-import './styles.modules.scss';
+import './styles.module.scss';
 
 export default function WeblinkCard({
   title,
@@ -13,7 +13,7 @@ export default function WeblinkCard({
 }) {
   const { editMode } = useEditMode();
   return (
-    <div className="fr-card fr-enlarge-link fr-card--horizontal show-bt-on-over">
+    <div className="fr-card fr-enlarge-link fr-card--horizontal fr-card--grey show-bt-on-over">
       <div className="fr-card__body">
         <div className="fr-card__content fr-py-1w">
           <Row>

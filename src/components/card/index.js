@@ -1,9 +1,9 @@
 import PropTypes from 'prop-types';
-import './styles.modules.scss';
+import './styles.module.scss';
 
 export default function Card({ title, descriptionElement, actionElement, bgColorClassName }) {
   return (
-    <div className="fr-card fr-enlarge-link fr-card--horizontal show-bt-on-over">
+    <div className="fr-card fr-enlarge-link fr-card--horizontal fr-card--grey show-bt-on-over">
       <div className={`fr-card__body ${bgColorClassName}`}>
         <div className="fr-card__content fr-py-1w">
           {title ? <h4 className="fr-card__title">{title}</h4> : null}

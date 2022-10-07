@@ -4,11 +4,12 @@ import useFetch from '../../../hooks/useFetch';
 import useUrl from '../../../hooks/useUrl';
 import useHashScroll from '../../../hooks/useHashScroll';
 import Spinner from '../../../components/spinner';
-import Relations from '../../../components/blocs/relations';
+import RelationsByGroup from '../../../components/blocs/relations-by-group';
 import { Bloc, BlocTitle, BlocActionButton, BlocContent, BlocModal } from '../../../components/bloc';
 import RelationGroupForm from '../../../components/forms/relations-group';
 import api from '../../../utils/api';
 import useNotice from '../../../hooks/useNotice';
+import RelationsByTag from '../../../components/blocs/relations-by-tag';
 
 const deleteError = { content: "Une erreur s'est produite. L'élément n'a pas pu être supprimé", autoDismissAfter: 6000, type: 'error' };
 const saveError = { content: "Une erreur s'est produite.", autoDismissAfter: 6000, type: 'error' };
@@ -18,7 +19,7 @@ const deleteSuccess = { content: 'Le groupe a été supprimée avec succès.', a
 export default function StructureElementLiesPage() {
   useHashScroll();
   const { url } = useUrl('relations-groups');
-  const { data, isLoading, error, reload } = useFetch(`${url}?filters[name][$nin]=Gouvernance&filters[name][$nin]=Référents MESR&filters[name][$nin]=Catégories&limit=50`);
+  const { data, isLoading, error, reload } = useFetch(`${url}?limit=500`);
   const [isOpen, setIsOpen] = useState();
   const notice = useNotice();
 
@@ -38,20 +39,26 @@ export default function StructureElementLiesPage() {
 
   if (isLoading) return <Spinner size={48} />;
   if (error) return <>Erreur...</>;
-  if (data && data.data) {
-    const internalStructuresGroup = data.data.find((element) => (element.name === 'Structures internes'));
-    const otherGroups = data.data.filter((element) => (element.name !== 'Structures internes'));
-    const renderBlocs = () => (
-      <>
-        {internalStructuresGroup?.id && <Relations group={internalStructuresGroup} />}
-        {(otherGroups?.length !== 0) && otherGroups?.map((group) => (<Relations key={group.id} group={group} reloader={reload} />))}
-      </>
-    );
-    return (
+  return (
+    <>
+      <RelationsByTag
+        tag="structures-internes"
+        blocName="Structures internes"
+        resourceType="structures"
+        relatedObjectTypes={['structures']}
+      />
+      <RelationsByTag
+        tag="structures-internes"
+        blocName="Structures parentes"
+        resourceType="structures"
+        relatedObjectTypes={['structures']}
+        inverse
+      />
+      <hr />
       <Bloc isLoading={isLoading} error={error} data={data}>
-        <BlocTitle as="h2" look="h4">Eléments liés</BlocTitle>
+        <BlocTitle as="h2" look="h4">Autres listes</BlocTitle>
         <BlocActionButton onClick={() => setIsOpen(true)}>Ajouter une liste</BlocActionButton>
-        <BlocContent>{renderBlocs()}</BlocContent>
+        <BlocContent>{(data.data?.length !== 0) && data.data?.map((group) => (<RelationsByGroup key={group.id} group={group} reloader={reload} />))}</BlocContent>
         <BlocModal>
           <Modal isOpen={isOpen} size="lg" hide={() => setIsOpen(false)}>
             <ModalTitle>Ajouter un groupe d'éléments liés</ModalTitle>
@@ -64,7 +71,6 @@ export default function StructureElementLiesPage() {
           </Modal>
         </BlocModal>
       </Bloc>
-    );
-  }
-  return null;
+    </>
+  );
 }

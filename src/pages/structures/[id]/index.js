@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Link as RouterLink, useNavigate, Outlet, useLocation, useParams } from 'react-router-dom';
+import { Link as RouterLink, useNavigate, Outlet, useParams } from 'react-router-dom';
 import {
   Badge, BadgeGroup, Breadcrumb, BreadcrumbItem, ButtonGroup, Checkbox,
   CheckboxGroup, Col, Container, Highlight, Icon, Modal, ModalContent, ModalFooter,
@@ -12,17 +12,17 @@ import Button from '../../../components/button';
 import CopyBadgeButton from '../../../components/copy/copy-badge-button';
 import Spinner from '../../../components/spinner';
 import StructurePresentationPage from './presentation';
-import StructureBudgetPage from './budget';
+import StructureBudgetPage from './chiffres-cles/budget';
+import StructureCategoriesPage from './categories';
 import StructureElementsLiesPage from './elements-lies';
-import StructureEtudiantsPage from './etudiants';
+import StructureEtudiantsPage from './chiffres-cles/etudiants';
 import StructureExportPage from './exporter';
 import StructureGouvernancePage from './gouvernance';
-import StructureImmobilierPage from './immobilier';
-import StructureOffreDeFormationPage from './offre-de-formation';
-import StructureParticipationsPage from './participations';
+import StructureImmobilierPage from './chiffres-cles/immobilier';
+import StructureOffreDeFormationPage from './chiffres-cles/offre-de-formation';
 import StructurePrixEtRecompensesPage from './prix-et-recompenses';
 import StructureProjetsPage from './projets';
-import StructureRHPage from './ressources-humaines';
+import StructureRHPage from './chiffres-cles/ressources-humaines';
 import { DropdownButton, DropdownButtonItem } from '../../../components/dropdown-button';
 import api from '../../../utils/api';
 import useToast from '../../../hooks/useToast';
@@ -32,7 +32,6 @@ function StructureByIdPage() {
   const { id } = useParams();
   const url = `/structures/${id}`;
   const { data, isLoading, error, reload } = useFetch(url);
-  const { pathname } = useLocation();
   const navigate = useNavigate();
   const { editMode, reset, toggle } = useEditMode();
   const [isExportOpen, setIsExportOpen] = useState(false);
@@ -79,16 +78,8 @@ function StructureByIdPage() {
     }
   };
 
-  const menu = {
-    'chiffres-cles': 'Chiffres clés',
-    actualites: 'Actualités',
-    presentation: null,
-    'prix-et-recompenses': 'Prix scientifiques et récompenses',
-  };
   if (isLoading) return <Row className="fr-my-2w flex--space-around"><Spinner /></Row>;
   if (error) return <>Erreur...</>;
-  const pathnameSplitted = pathname.split('/');
-  const section = menu[pathnameSplitted[pathnameSplitted.length - 1]];
   return (
     <Container spacing="pb-6w">
       <Row>
@@ -123,25 +114,25 @@ function StructureByIdPage() {
                 </>
               )}
             >
-              <SideMenuLink asLink={<RouterLink to="immobilier" />}>
+              <SideMenuLink asLink={<RouterLink to="chiffres-cles/immobilier" />}>
                 Immobilier
               </SideMenuLink>
-              <SideMenuLink asLink={<RouterLink to="etudiants" />}>
+              <SideMenuLink asLink={<RouterLink to="chiffres-cles/etudiants" />}>
                 Etudiants
               </SideMenuLink>
-              <SideMenuLink asLink={<RouterLink to="offre-de-formation" />}>
+              <SideMenuLink asLink={<RouterLink to="chiffres-cles/offre-de-formation" />}>
                 Offres de formation
               </SideMenuLink>
-              <SideMenuLink asLink={<RouterLink to="ressource-humaines" />}>
+              <SideMenuLink asLink={<RouterLink to="chiffres-cles/ressource-humaines" />}>
                 Ressources humaines
               </SideMenuLink>
-              <SideMenuLink asLink={<RouterLink to="budget" />}>
+              <SideMenuLink asLink={<RouterLink to="chiffres-cles/budget" />}>
                 Budget
               </SideMenuLink>
             </SideMenuItem>
             <SideMenuLink asLink={<RouterLink to="categories" />}>
               <Icon name="ri-price-tag-3-line" size="1x" />
-              Catégories
+              Catégories et termes
             </SideMenuLink>
             <SideMenuLink asLink={<RouterLink to="textes-officiels" />}>
               <Icon name="ri-git-repository-line" size="1x" />
@@ -175,15 +166,7 @@ function StructureByIdPage() {
             >
               Structures
             </BreadcrumbItem>
-            {section && (
-              <BreadcrumbItem asLink={<RouterLink to="" />}>
-                {data?.currentName?.usualName}
-              </BreadcrumbItem>
-            )}
-            {section && <BreadcrumbItem>{section}</BreadcrumbItem>}
-            {!section && (
-              <BreadcrumbItem>{data?.currentName?.usualName}</BreadcrumbItem>
-            )}
+            <BreadcrumbItem>{data?.currentName?.usualName}</BreadcrumbItem>
           </Breadcrumb>
           <Row className="flex--space-between flex--wrap-reverse">
             <Title as="h2">
@@ -339,7 +322,6 @@ function StructureByIdPage() {
               </ModalFooter>
             </Modal>
           </Row>
-          {section && <Row><Title as="h3">{section}</Title></Row>}
           {descriptionFr && <Highlight>{descriptionFr}</Highlight>}
           {descriptionEn && <Highlight>{descriptionEn}</Highlight>}
           <Outlet />
@@ -352,13 +334,13 @@ function StructureByIdPage() {
 export {
   StructureBudgetPage,
   StructureByIdPage,
+  StructureCategoriesPage,
   StructureElementsLiesPage,
   StructureEtudiantsPage,
   StructureExportPage,
   StructureGouvernancePage,
   StructureImmobilierPage,
   StructureOffreDeFormationPage,
-  StructureParticipationsPage,
   StructurePresentationPage,
   StructurePrixEtRecompensesPage,
   StructureProjetsPage,

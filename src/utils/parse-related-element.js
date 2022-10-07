@@ -1,17 +1,20 @@
 export function getRelatedObjectName(relatedObject) {
   let relatedObjectName;
-  switch (relatedObject.type) {
-  case 'person':
+  switch (relatedObject.collection) {
+  case 'persons':
     relatedObjectName = `${relatedObject.firstName} ${relatedObject.lastName}`.trim();
     break;
-  case 'structure':
+  case 'structures':
     relatedObjectName = relatedObject.currentName.usualName;
     break;
-  case 'price':
+  case 'prices':
     relatedObjectName = relatedObject.nameFr;
     break;
-  case 'project':
+  case 'projects':
     relatedObjectName = relatedObject.nameFr;
+    break;
+  case 'legal-categories':
+    relatedObjectName = relatedObject.longNameFr;
     break;
   default:
     relatedObjectName = relatedObject.usualNameFr;
@@ -25,6 +28,9 @@ export function getRelatedObjectUrl(relatedObject) {
   switch (relatedObject.type) {
   case 'person':
     url = `/persons/${relatedObject.id}`;
+    break;
+  case 'legal-category':
+    url = `/categories-juridiques/${relatedObject.id}`;
     break;
   case 'category':
     url = `/categories/${relatedObject.id}`;
@@ -53,7 +59,7 @@ export function parseRelatedObject(relatedObject) {
     id: relatedObject.id,
     name: getRelatedObjectName(relatedObject),
     url: getRelatedObjectUrl(relatedObject),
-    type: relatedObject.type,
+    type: relatedObject.collection,
   };
 }
 
@@ -62,6 +68,8 @@ export function parseRelatedElement(data) {
   const {
     relatedObject,
     relationType,
+    resource,
+    resourceId,
     startDate,
     endDate,
     startDateOfficialText,
@@ -70,10 +78,12 @@ export function parseRelatedElement(data) {
   return ({
     startDate,
     endDate,
+    resourceId,
+    resourceName: resource.displayName,
+    relatedObjectId: relatedObject?.id,
+    relatedObjectName: relatedObject.displayName,
     relationTypeId: relationType?.id,
     relationTypeName: relationType?.name,
-    relatedObjectName: getRelatedObjectName(relatedObject),
-    relatedObjectId: data.relatedObject?.id,
     startDateOfficialTextId: startDateOfficialText?.id,
     startDateOfficialTextName: startDateOfficialText?.title,
     endDateOfficialTextId: endDateOfficialText?.id,

@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Col, Modal, ModalContent, ModalTitle, Row, Text } from '@dataesr/react-dsfr';
+import { Col, Modal, ModalContent, ModalTitle, Row } from '@dataesr/react-dsfr';
 import api from '../../../utils/api';
-import ModifyCard from '../../card/modify-card';
 import ExpendableListCards from '../../card/expendable-list-cards';
 import { Bloc, BlocActionButton, BlocContent, BlocModal, BlocTitle } from '../../bloc';
 import RelationsForm from '../../forms/relations';
@@ -10,10 +9,9 @@ import RelationsGroupForm from '../../forms/relations-group';
 import useFetch from '../../../hooks/useFetch';
 import useUrl from '../../../hooks/useUrl';
 import useNotice from '../../../hooks/useNotice';
-import { formatDescriptionDates } from '../../../utils/dates';
-import { parseRelatedElement } from '../../../utils/parse-related-element';
 import Map from '../../map/auto-bound-map';
 import ScrallableListCards from '../../card/scrollable-list-card';
+import RelationCard from '../../card/relation-card';
 
 const deleteError = { content: "Une erreur s'est produite. L'élément n'a pas pu être supprimé", autoDismissAfter: 6000, type: 'error' };
 const saveError = { content: "Une erreur s'est produite.", autoDismissAfter: 6000, type: 'error' };
@@ -22,11 +20,11 @@ const deleteSuccess = { content: 'La relation a été supprimée avec succès.',
 const saveGroupeSuccess = { content: 'Le groupe a été modifié avec succès.', autoDismissAfter: 6000, type: 'success' };
 const deleteGroupeSuccess = { content: 'Le groupe a été supprimée avec succès.', autoDismissAfter: 6000, type: 'success' };
 
-export default function Relations({ group, reloader }) {
+export default function RelationsByGroup({ group, reloader }) {
   const { id: groupId, name: groupName, accepts: groupAccepts } = group;
   const { notice } = useNotice();
-  const { url: listUrl } = useUrl('relations-groups');
-  const url = `${listUrl}/${groupId}/relations`;
+  const { id: resourceId, apiObject, url: listUrl } = useUrl('relations-groups');
+  const url = `/relations?filters[relationsGroupId]=${groupId}`;
   const { data, isLoading, error, reload } = useFetch(url);
   const [showModal, setShowModal] = useState(false);
   const [showListModal, setShowListModal] = useState(false);
@@ -35,13 +33,15 @@ export default function Relations({ group, reloader }) {
 
   const onSaveElementHandler = async (body, id = null) => {
     const method = id ? 'patch' : 'post';
-    const saveUrl = id ? `${url}/${id}` : url;
-    await api[method](saveUrl, body).then(() => { notice(saveSuccess); reload(); }).catch(() => notice(saveError));
+    const saveUrl = id ? `/relations/${id}` : '/relations';
+    await api[method](saveUrl, { ...body, resourceId, relationsGroupId: groupId })
+      .then(() => { notice(saveSuccess); reload(); })
+      .catch(() => notice(saveError));
     return setShowModal(false);
   };
 
   const onDeleteElementHandler = async (id) => {
-    await api.delete(`${url}/${id}`).then(() => { notice(deleteSuccess); reload(); }).catch(() => notice(deleteError));
+    await api.delete(`/relations/${id}`).then(() => { notice(deleteSuccess); reload(); }).catch(() => notice(deleteError));
     return setShowModal(false);
   };
 
@@ -63,7 +63,8 @@ export default function Relations({ group, reloader }) {
     setModalContent(
       <RelationsForm
         id={element?.id}
-        forObjects={groupAccepts}
+        resourceType={apiObject}
+        relatedObjectTypes={groupAccepts}
         initialForm={element || {}}
         onDelete={onDeleteElementHandler}
         onSave={onSaveElementHandler}
@@ -90,21 +91,12 @@ export default function Relations({ group, reloader }) {
       });
     });
     // console.log(markers);
-    const list = data.data.map((element) => {
-      const related = parseRelatedElement(element);
-      return (
-        <ModifyCard
-          title={related.relatedObjectName}
-          description={(
-            <Row alignItems="middle" className="italic">
-              <Text spacing="mr-1v mb-0">{related.relationTypeName || 'Appartient à la liste'}</Text>
-              <Text spacing="mr-1v mb-0">{formatDescriptionDates(related.startDate, related.endDate)}</Text>
-            </Row>
-          )}
-          onClick={() => onOpenModalHandler(element)}
-        />
-      );
-    });
+    const list = data.data.map((element) => (
+      <RelationCard
+        relation={element}
+        onEdit={() => onOpenModalHandler(element)}
+      />
+    ));
     if (structures.length) {
       return (
         <Row gutters>
@@ -151,11 +143,11 @@ export default function Relations({ group, reloader }) {
   );
 }
 
-Relations.propTypes = {
+RelationsByGroup.propTypes = {
   group: PropTypes.shape.isRequired,
   reloader: PropTypes.func,
 };
 
-Relations.defaultProps = {
+RelationsByGroup.defaultProps = {
   reloader: null,
 };
