@@ -26,8 +26,7 @@ export default function SignIn() {
     e.preventDefault();
     if (validateEmail(email) && (validatePassword(password) === true)) {
       const response = await requestSignInEmail({ email, password });
-      const serverMessage = /Un nouveau code à été envoyé/i;
-      if (serverMessage.test(response.message)) { setStep(2); } else { setMatchError(true); }
+      if (response.message) { setStep(2); } else { setMatchError(true); }
     } else { setMatchError(true); }
   };
   const handleSignIn = async (e) => {
