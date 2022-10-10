@@ -15,7 +15,7 @@ export default function ChiffresCles() {
   if (error) return <>Erreur...</>;
 
   const all = [];
-  if (data && data.academicYear && data.population) all.push({ key: `Nombre d'étudiants inscrits en ${data.academicYear}`, value: data.population.toLocaleString('fr-FR') });
+  if (data && data.year && data.population) all.push({ key: `Nombre d'étudiants inscrits en ${data.year}`, value: data.population.toLocaleString('fr-FR') });
   if (data && data.exercice && data.netAccountingResult) all.push({ key: `Résultat net comptable en ${data.exercice}`, value: `${cleanNumber(data.netAccountingResult)}€` });
 
   const renderCards = () => all.map((el) => (
