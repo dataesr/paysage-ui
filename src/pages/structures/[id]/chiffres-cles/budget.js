@@ -1,5 +1,4 @@
 import { Icon, Row, Text, Title } from '@dataesr/react-dsfr';
-import { useEffect, useState } from 'react';
 
 import {
   Bloc,
@@ -16,95 +15,86 @@ import useUrl from '../../../../hooks/useUrl';
 
 export default function StructureBudgetPage() {
   useHashScroll();
-  const [year, setYear] = useState('');
-  const [financialBalance, setFinancialBalance] = useState([]);
-  const [operatingCycle, setOperatingCycle] = useState([]);
-  const [activityFinancing, setActivityFinancing] = useState([]);
-  const [investmentsSelfFinancing, setInvestmentsSelfFinancing] = useState([]);
-  const [gbcpIndicators, setGbcpIndicators] = useState([]);
-
   const { url } = useUrl('keynumbers');
   const { data, isLoading, error } = useFetch(`${url}/finance`);
 
-  useEffect(() => {
-    const sortedData = data?.data.sort((a, b) => b.exercice - a.exercice) || [];
-    const lastData = sortedData?.[0];
-    setYear(lastData?.exercice);
+  const sortedData = data?.data.sort((a, b) => b.exercice - a.exercice) || [];
+  const lastData = sortedData?.[0];
+  const year = lastData?.exercice;
 
-    setFinancialBalance([{
-      key: 'Résultat net comptable',
-      value: `${cleanNumber(lastData?.resultat_net_comptable).toLocaleString('fr-FR')}€`,
-      info: 'Le résultat net comptable mesure les ressources nettes restant à l’établissement à l’issue de l’exercice',
-    }, {
-      key: 'Résultat net comptable hors SIE',
-      value: `${cleanNumber(lastData?.resultat_net_comptable_hors_sie)}€`,
-      info: 'Résultat de l’établissement hors SIE (périmètre agrégé)',
-    }, {
-      key: 'Capacité d’autofinancement',
-      value: `${cleanNumber(lastData?.capacite_d_autofinancement)}€`,
-      info: 'Excédent dégagé pendant l’exercice qui permettra d’assurer tout ou partie de l’investissement de l’année et d’augmenter le fonds de roulement.',
-    }, {
-      key: 'CAF / Produits encaissables',
-      value: `${cleanNumber(lastData?.caf_produits_encaissables)} %`,
-      info: 'Part de la CAF dans les produits encaissables',
-    }]);
+  const financialBalance = ([{
+    key: 'Résultat net comptable',
+    value: `${cleanNumber(lastData?.resultat_net_comptable).toLocaleString('fr-FR')}€`,
+    info: 'Le résultat net comptable mesure les ressources nettes restant à l’établissement à l’issue de l’exercice',
+  }, {
+    key: 'Résultat net comptable hors SIE',
+    value: `${cleanNumber(lastData?.resultat_net_comptable_hors_sie)}€`,
+    info: 'Résultat de l’établissement hors SIE (périmètre agrégé)',
+  }, {
+    key: 'Capacité d’autofinancement',
+    value: `${cleanNumber(lastData?.capacite_d_autofinancement)}€`,
+    info: 'Excédent dégagé pendant l’exercice qui permettra d’assurer tout ou partie de l’investissement de l’année et d’augmenter le fonds de roulement.',
+  }, {
+    key: 'CAF / Produits encaissables',
+    value: `${cleanNumber(lastData?.caf_produits_encaissables)} %`,
+    info: 'Part de la CAF dans les produits encaissables',
+  }]);
 
-    setOperatingCycle([{
-      key: 'Besoin en fonds de roulement',
-      value: `${cleanNumber(lastData?.besoin_en_fonds_de_roulement)}€`,
-      info: 'Le besoin en fonds de roulement mesure le décalage entre les encaissements et les décaissements du cycle d’activité',
-    }, {
-      key: 'Fonds de roulement en jours de charges décaissables',
-      value: `${cleanNumber(lastData?.fonds_de_roulement_en_jours_de_charges_decaissables)} jours`,
-      info: 'Fonds de roulement exprimé en jours de dépenses de fonctionnement décaissables',
-    }, {
-      key: 'Fonds de roulement net global',
-      value: `${cleanNumber(lastData?.fonds_de_roulement_net_global)}€`,
-      info: 'Ressource mise à disposition de l’établissement pour financer des emplois (investissements). Il constitue une marge de sécurité financière destinée à financer une partie de l’actif circulant',
-    }, {
-      key: 'Trésorerie',
-      value: `${cleanNumber(lastData?.tresorerie)}€`,
-      info: 'Liquidités immédiatement disponibles (caisse, banque, Valeurs Mobilières de Placement)',
-    }, {
-      key: 'Trésorerie en jours de charges décaissables',
-      value: `${cleanNumber(lastData?.tresorerie_en_jours_de_charges_decaissables)} jours`,
-      info: 'Expression de la trésorerie en nombre de jours de dépenses de fonctionnement décaissables',
-    }]);
+  const operatingCycle = ([{
+    key: 'Besoin en fonds de roulement',
+    value: `${cleanNumber(lastData?.besoin_en_fonds_de_roulement)}€`,
+    info: 'Le besoin en fonds de roulement mesure le décalage entre les encaissements et les décaissements du cycle d’activité',
+  }, {
+    key: 'Fonds de roulement en jours de charges décaissables',
+    value: `${cleanNumber(lastData?.fonds_de_roulement_en_jours_de_charges_decaissables)} jours`,
+    info: 'Fonds de roulement exprimé en jours de dépenses de fonctionnement décaissables',
+  }, {
+    key: 'Fonds de roulement net global',
+    value: `${cleanNumber(lastData?.fonds_de_roulement_net_global)}€`,
+    info: 'Ressource mise à disposition de l’établissement pour financer des emplois (investissements). Il constitue une marge de sécurité financière destinée à financer une partie de l’actif circulant',
+  }, {
+    key: 'Trésorerie',
+    value: `${cleanNumber(lastData?.tresorerie)}€`,
+    info: 'Liquidités immédiatement disponibles (caisse, banque, Valeurs Mobilières de Placement)',
+  }, {
+    key: 'Trésorerie en jours de charges décaissables',
+    value: `${cleanNumber(lastData?.tresorerie_en_jours_de_charges_decaissables)} jours`,
+    info: 'Expression de la trésorerie en nombre de jours de dépenses de fonctionnement décaissables',
+  }]);
 
-    setActivityFinancing([{
-      key: 'Charges décaissables / Produits encaissables',
-      value: `${cleanNumber(lastData?.charges_decaissables_produits_encaissables)} %`,
-      info: 'Part des charges décaissables dans les produits encaissables',
-    }, {
-      key: 'Dépenses de personnel / Produits encaissables',
-      value: `${cleanNumber(lastData?.depenses_de_personnel_produits_encaissables)} %`,
-      info: 'Poids des dépenses de personnel au regard des produits encaissables',
-    }, {
-      key: 'Ressources propres / Produits encaissables',
-      value: `${cleanNumber(lastData?.ressources_propres_produits_encaissables)} %`,
-      info: 'Poids des ressources propres au sein des recettes encaissables',
-    }, {
-      key: 'Taux de rémunération des permanents',
-      value: `${cleanNumber(lastData?.taux_de_remuneration_des_permanents)} %`,
-      info: 'Rémunération des personnels permanents / total des dépenses de personnel',
-    }]);
+  const activityFinancing = ([{
+    key: 'Charges décaissables / Produits encaissables',
+    value: `${cleanNumber(lastData?.charges_decaissables_produits_encaissables)} %`,
+    info: 'Part des charges décaissables dans les produits encaissables',
+  }, {
+    key: 'Dépenses de personnel / Produits encaissables',
+    value: `${cleanNumber(lastData?.depenses_de_personnel_produits_encaissables)} %`,
+    info: 'Poids des dépenses de personnel au regard des produits encaissables',
+  }, {
+    key: 'Ressources propres / Produits encaissables',
+    value: `${cleanNumber(lastData?.ressources_propres_produits_encaissables)} %`,
+    info: 'Poids des ressources propres au sein des recettes encaissables',
+  }, {
+    key: 'Taux de rémunération des permanents',
+    value: `${cleanNumber(lastData?.taux_de_remuneration_des_permanents)} %`,
+    info: 'Rémunération des personnels permanents / total des dépenses de personnel',
+  }]);
 
-    setInvestmentsSelfFinancing([{
-      key: 'CAF / Acquisitions d’immobilisations',
-      value: `${cleanNumber(lastData?.caf_acquisitions_d_immobilisations)} %`,
-      info: 'Part de la capacité d’autofinancement permettant de financer les investissements de l’exercice',
-    }, {
-      key: 'Capacité d’autofinancement',
-      value: `${cleanNumber(lastData?.capacite_d_autofinancement)}€`,
-      info: 'Excédent dégagé pendant l’exercice qui permettra d’assurer tout ou partie de l’investissement de l’année et d’augmenter le fonds de roulement.',
-    }]);
+  const investmentsSelfFinancing = ([{
+    key: 'CAF / Acquisitions d’immobilisations',
+    value: `${cleanNumber(lastData?.caf_acquisitions_d_immobilisations)} %`,
+    info: 'Part de la capacité d’autofinancement permettant de financer les investissements de l’exercice',
+  }, {
+    key: 'Capacité d’autofinancement',
+    value: `${cleanNumber(lastData?.capacite_d_autofinancement)}€`,
+    info: 'Excédent dégagé pendant l’exercice qui permettra d’assurer tout ou partie de l’investissement de l’année et d’augmenter le fonds de roulement.',
+  }]);
 
-    setGbcpIndicators([{
-      key: 'Solde budgétaire',
-      value: `${cleanNumber(lastData?.solde_budgetaire)}€`,
-      info: 'Solde des encaissements et des décaissements sur opérations budgétaires',
-    }]);
-  }, [data]);
+  const gbcpIndicators = ([{
+    key: 'Solde budgétaire',
+    value: `${cleanNumber(lastData?.solde_budgetaire)}€`,
+    info: 'Solde des encaissements et des décaissements sur opérations budgétaires',
+  }]);
 
   const renderCards = (all) => {
     const list = all.map((el) => (
