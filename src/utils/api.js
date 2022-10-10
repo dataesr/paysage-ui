@@ -20,7 +20,10 @@ const catchInvalidToken = async () => {
     headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
   };
   const response = await fetch(`${process.env.REACT_APP_API_URL}/token`, options);
-  if (!response.ok) return null;
+  if (!response.ok) {
+    window.location.href = '/se-connecter';
+    return null;
+  }
   const tokens = await response.json();
   const { accessToken: access, refreshToken: refresh } = tokens;
   localStorage.setItem('__paysage_access__', access);
