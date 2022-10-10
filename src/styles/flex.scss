@@ -1,46 +1,46 @@
 .flex {
-  display: flex;
+  display: flex !important;
 }
 
 .flex--space-between {
-  justify-content: space-between;
+  justify-content: space-between !important;
 }
 
 .flex--col-reverse {
-  flex-direction: column-reverse;
+  flex-direction: column-reverse !important;
 }
 
 .flex--grow {
-  flex-grow: 1;
+  flex-grow: 1 !important;
 }
 
 .flex--space-around {
-  justify-content: space-around;
+  justify-content: space-around !important;
 }
 
 .flex--baseline {
-  align-items: baseline;
+  align-items: baseline !important;
 }
 
 .flex--start {
-  align-items: flex-start;
+  align-items: flex-start !important;
 }
 .flex--center {
-  align-items: center;
+  align-items: center !important;
 }
 
 .flex--last-baseline {
-  align-items: last baseline;
+  align-items: last baseline !important;
 }
 
 .flex--grow {
-  flex-grow: 1;
+  flex-grow: 1 !important;
 }
 
 .flex--wrap-reverse {
-  flex-wrap: wrap-reverse;
+  flex-wrap: wrap-reverse !important;
 }
 
 .flex--nowrap {
-  flex-wrap: nowrap;
+  flex-wrap: nowrap !important;
 }
