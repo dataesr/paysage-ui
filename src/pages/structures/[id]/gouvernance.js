@@ -1,4 +1,5 @@
 import RelationsByTag from '../../../components/blocs/relations-by-tag';
+import MandateForm from '../../../components/forms/mandate';
 
 export default function StructureGouvernancePage() {
   return (
@@ -8,18 +9,21 @@ export default function StructureGouvernancePage() {
         blocName="Gouvernance"
         resourceType="structures"
         relatedObjectTypes={['persons']}
+        Form={MandateForm}
       />
       <RelationsByTag
         tag="referentMESR"
         blocName="Référents MESR"
         resourceType="structures"
         relatedObjectTypes={['persons']}
+        Form={MandateForm}
       />
       <RelationsByTag
         tag="referentAutre"
         blocName="Référents DGQuelqueChose"
         resourceType="structures"
         relatedObjectTypes={['persons']}
+        Form={MandateForm}
       />
     </>
   );

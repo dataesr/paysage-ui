@@ -56,7 +56,7 @@ function Toast({
         onClick={() => remove(id)}
         className="toast-btn-close"
       >
-        <Icon color="var(--grey-50-1000)" size="lg" name="ri-close-line" />
+        <Icon size="lg" name="ri-close-line" />
       </button>
       <Container fluid className="toast-content">
         <Row>

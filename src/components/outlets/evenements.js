@@ -50,7 +50,7 @@ export default function AgendaOutlet() {
     setModalContent(
       <EventForm
         id={element?.id}
-        initialForm={element?.id ? { ...element, relatedObjects, currentObjectId: resourceId } : { type: 'suivi', currentObjectId: resourceId }}
+        data={element?.id ? { ...element, relatedObjects, currentObjectId: resourceId } : { type: 'suivi', currentObjectId: resourceId }}
         onDelete={deleteEvent}
         onSave={saveEvent}
       />,
@@ -89,7 +89,7 @@ export default function AgendaOutlet() {
 
   return (
     <Bloc isLoading={isLoading} error={error} data={data}>
-      <BlocTitle as="h2" look="h3">Évènements</BlocTitle>
+      <BlocTitle as="h2" look="h6">Évènements</BlocTitle>
       <BlocActionButton onClick={() => onOpenModalHandler()}>
         Ajouter un évènement
       </BlocActionButton>

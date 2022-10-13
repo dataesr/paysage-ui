@@ -7,31 +7,47 @@ import {
   Select,
   TextInput,
 } from '@dataesr/react-dsfr';
-import FormFooter from '../../forms/form-footer';
+import FormFooter from '../form-footer';
 import useForm from '../../../hooks/useForm';
 import useEnums from '../../../hooks/useEnums';
+import PaysageBlame from '../../paysage-blame';
 
-export default function SocialMediaForm({ data, onDeleteHandler, onSaveHandler }) {
-  const validator = (body) => {
-    const ret = {};
-    if (!body?.account) ret.account = 'Le compte/url du media social est obligatoire';
-    if (!body?.type) ret.type = 'Le type du media social est obligatoire';
-    return ret;
-  };
+function validate(body) {
+  const ret = {};
+  if (!body?.account) ret.account = 'Le compte/url du media social est obligatoire';
+  if (!body?.type) ret.type = 'Le type du media social est obligatoire';
+  return ret;
+}
+
+function sanitize(form) {
+  const fields = ['account', 'type'];
+  const body = {};
+  Object.keys(form).forEach((key) => { if (fields.includes(key)) { body[key] = form[key]; } });
+  return body;
+}
+
+export default function SocialMediaForm({ id, data, onDelete, onSave }) {
   const { socialMedias } = useEnums();
   const [showErrors, setShowErrors] = useState(false);
-  const { form, updateForm, errors } = useForm(data, validator);
+  const { form, updateForm, errors } = useForm(data, validate);
 
-  const onSave = () => {
+  const onSubmitHandler = () => {
     if (Object.keys(errors).length > 0) return setShowErrors(true);
-    return onSaveHandler(form);
+    const body = sanitize(form);
+    return onSave(body, id);
   };
 
   return (
     <form>
-      <Container>
-        <Row>
-          <Col>
+      <Container fluid>
+        <PaysageBlame
+          createdBy={data.createdBy}
+          updatedBy={data.updatedBy}
+          updatedAt={data.updatedAt}
+          createdAt={data.createdAt}
+        />
+        <Row gutters>
+          <Col n="12">
             <Select
               label="Type"
               options={socialMedias}
@@ -43,9 +59,7 @@ export default function SocialMediaForm({ data, onDeleteHandler, onSaveHandler }
               messageType={(showErrors && errors.type) ? 'error' : ''}
             />
           </Col>
-        </Row>
-        <Row className="fr-pt-2w">
-          <Col>
+          <Col n="12">
             <TextInput
               label="Compte/URL"
               value={form.account}
@@ -58,8 +72,8 @@ export default function SocialMediaForm({ data, onDeleteHandler, onSaveHandler }
         </Row>
         <FormFooter
           id={data?.id}
-          onSaveHandler={onSave}
-          onDeleteHandler={onDeleteHandler}
+          onSaveHandler={onSubmitHandler}
+          onDeleteHandler={onDelete}
         />
       </Container>
     </form>
@@ -67,12 +81,14 @@ export default function SocialMediaForm({ data, onDeleteHandler, onSaveHandler }
 }
 
 SocialMediaForm.propTypes = {
+  id: PropTypes.string,
   data: PropTypes.object,
-  onDeleteHandler: PropTypes.func,
-  onSaveHandler: PropTypes.func.isRequired,
+  onDelete: PropTypes.func,
+  onSave: PropTypes.func.isRequired,
 };
 
 SocialMediaForm.defaultProps = {
+  id: null,
   data: {},
-  onDeleteHandler: null,
+  onDelete: null,
 };

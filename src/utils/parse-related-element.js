@@ -69,16 +69,11 @@ export function parseRelatedElement(data) {
     relatedObject,
     relationType,
     resource,
-    resourceId,
-    startDate,
-    endDate,
     startDateOfficialText,
     endDateOfficialText,
   } = data;
   return ({
-    startDate,
-    endDate,
-    resourceId,
+    ...data,
     resourceName: resource.displayName,
     relatedObjectId: relatedObject?.id,
     relatedObjectName: relatedObject.displayName,

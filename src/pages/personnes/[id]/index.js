@@ -119,7 +119,7 @@ function PersonByIdPage() {
                   text={data.id}
                   lowercase
                 />
-                {data.gender && <Badge type="info" text={data.gender} icon={(data.gender === 'Autre') ? '' : genreIcon} />}
+                {data.gender && <Badge type="success" text={data.gender} icon={(data.gender === 'Autre') ? '' : genreIcon} />}
               </BadgeGroup>
             </Title>
             <ButtonGroup align="right" isInlineFrom="xs">
@@ -135,7 +135,7 @@ function PersonByIdPage() {
                         {personName}
                       </ModalTitle>
                       <ModalContent>
-                        <PersonForm id={data.id} initialForm={data} onSave={onSave} />
+                        <PersonForm id={data.id} data={data} onSave={onSave} />
                       </ModalContent>
                     </Modal>
                   </DropdownButtonItem>

@@ -9,13 +9,13 @@ import { toString } from '../../utils/dates';
 import useForm from '../../hooks/useForm';
 import Button from '../../components/button';
 
-function LegalCategoriesForm({ id, initialForm, onSave, onDelete }) {
+function LegalCategoriesForm({ id, data, onSave, onDelete }) {
   const validateForm = (body) => {
     const validationErrors = {};
     if (!body.longNameFr) { validationErrors.longNameFr = 'Le nom long en français est obligatoire'; }
     return validationErrors;
   };
-  const { form, updateForm, errors } = useForm(initialForm, validateForm);
+  const { form, updateForm, errors } = useForm(data, validateForm);
   const [showErrors, setShowErrors] = useState(false);
 
   const handleSubmit = (e) => {
@@ -126,13 +126,13 @@ function LegalCategoriesForm({ id, initialForm, onSave, onDelete }) {
 }
 LegalCategoriesForm.propTypes = {
   id: PropTypes.string,
-  initialForm: PropTypes.oneOfType([PropTypes.shape, null]),
+  data: PropTypes.oneOfType([PropTypes.shape, null]),
   onSave: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired,
 };
 LegalCategoriesForm.defaultProps = {
   id: null,
-  initialForm: {
+  data: {
     inseeCode: '',
     longNameFr: '',
     shortNameFr: '',
@@ -184,7 +184,7 @@ export default function LegalCategoriesPage() {
     setModalContent(
       <LegalCategoriesForm
         id={id}
-        initialForm={rest}
+        data={rest}
         onDelete={handleDelete}
         onSave={handleSave}
       />,

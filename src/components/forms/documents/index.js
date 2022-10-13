@@ -8,20 +8,28 @@ import api from '../../../utils/api';
 import DateInput from '../../date-input';
 import FormFooter from '../form-footer';
 import SearchBar from '../../search-bar';
+import PaysageBlame from '../../paysage-blame';
 
-export default function DocumentsForm({ id, initialForm, onSave, onDelete }) {
-  const validateForm = (body) => {
-    const validationErrors = {};
-    if (!body.title) { validationErrors.title = "Le titre de l'évènement est obligatoire."; }
-    if (!body.startDate) { validationErrors.eventDate = 'Une date est obligatoire.'; }
-    if (!body.documentTypeId) { validationErrors.type = 'Le type est obligatoire.'; }
-    if (!body.files?.length) { validationErrors.files = 'Un fichier est obligatoire'; }
-    return validationErrors;
-  };
+function validate(body) {
+  const validationErrors = {};
+  if (!body.title) { validationErrors.title = "Le titre de l'évènement est obligatoire."; }
+  if (!body.startDate) { validationErrors.eventDate = 'Une date est obligatoire.'; }
+  if (!body.documentTypeId) { validationErrors.type = 'Le type est obligatoire.'; }
+  if (!body.files?.length) { validationErrors.files = 'Un fichier est obligatoire'; }
+  return validationErrors;
+}
 
+function sanitize(form) {
+  const fields = ['title', 'description', 'documentTypeId', 'files', 'startDate', 'endDate', 'relatesTo'];
+  const body = {};
+  Object.keys(form).forEach((key) => { if (fields.includes(key)) { body[key] = form[key]; } });
+  return body;
+}
+
+export default function DocumentsForm({ id, data, onSave, onDelete }) {
   const { data: documentTypes } = useFetch('/document-types?limit=500');
 
-  const { form, updateForm, errors } = useForm({ files: [], documentTypeId: '', ...initialForm }, validateForm);
+  const { form, updateForm, errors } = useForm({ files: [], documentTypeId: '', ...data }, validate);
   const [showErrors, setShowErrors] = useState(false);
   const [filesErrors, setFilesErrors] = useState(false);
   const [files, setFiles] = useState([]);
@@ -30,14 +38,11 @@ export default function DocumentsForm({ id, initialForm, onSave, onDelete }) {
   const { notice } = useNotice();
 
   const handleSubmit = () => {
-    // Get ids of the related objects to conform to api post model
-    // Add _a minima_ current object id to relatesTo list
-    // Remove form managment values from form
     const relatesTo = form.relatedObjects?.length ? form.relatedObjects.map((element) => element.id) : [];
     if (form.currentObjectId) relatesTo.push(form.currentObjectId);
-    const { relatedObjects, currentObjectId, ...rest } = form;
     if (Object.keys(errors).length !== 0) return setShowErrors(true);
-    return onSave({ ...rest, relatesTo }, id);
+    const body = sanitize({ ...form, relatesTo });
+    return onSave(body, id);
   };
 
   const handleObjectSelect = ({ id: relatedObjectId, name: displayName }) => {
@@ -89,15 +94,13 @@ export default function DocumentsForm({ id, initialForm, onSave, onDelete }) {
 
   return (
     <form>
+      <PaysageBlame
+        createdBy={data.createdBy}
+        updatedBy={data.updatedBy}
+        updatedAt={data.updatedAt}
+        createdAt={data.createdAt}
+      />
       <Container fluid>
-        {/* <Row spacing="mb-2w">
-          <Col n="12">
-            <Alert
-              title="Avez-vous vérifié que le document n'existe pas ?"
-              description="Utilisez la barre de recherche principale pour vérifier que le document n'existe pas encore."
-            />
-          </Col>
-        </Row> */}
         <Row>
           <Col n="12" spacing="pb-2w">
             <Select
@@ -208,11 +211,11 @@ export default function DocumentsForm({ id, initialForm, onSave, onDelete }) {
 }
 DocumentsForm.propTypes = {
   id: PropTypes.string,
-  initialForm: PropTypes.oneOfType([PropTypes.shape, null]),
+  data: PropTypes.oneOfType([PropTypes.shape, null]),
   onSave: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired,
 };
 DocumentsForm.defaultProps = {
   id: null,
-  initialForm: { relatedObjects: [], files: [] },
+  data: { relatedObjects: [], files: [] },
 };

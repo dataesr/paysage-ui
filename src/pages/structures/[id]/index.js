@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { Link as RouterLink, useNavigate, Outlet, useParams } from 'react-router-dom';
 import {
   Badge, BadgeGroup, Breadcrumb, BreadcrumbItem, ButtonGroup, Checkbox,
@@ -26,6 +26,7 @@ import StructureRHPage from './chiffres-cles/ressources-humaines';
 import { DropdownButton, DropdownButtonItem } from '../../../components/dropdown-button';
 import api from '../../../utils/api';
 import useToast from '../../../hooks/useToast';
+import useShortcuts from '../../../hooks/useShortcuts';
 
 function StructureByIdPage() {
   const { toast } = useToast();
@@ -36,7 +37,7 @@ function StructureByIdPage() {
   const { editMode, reset, toggle } = useEditMode();
   const [isExportOpen, setIsExportOpen] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
-  const { form, updateForm } = useForm({}, () => { });
+  const { form, updateForm } = useForm({}, () => {});
 
   const [isStatusModalOpen, setIsStatusModalOpen] = useState(false);
   const [status, setSatus] = useState('inactive');
@@ -46,10 +47,10 @@ function StructureByIdPage() {
   const [descriptionEn, setDescriptionEn] = useState('');
 
   useEffect(() => { reset(); }, [reset]);
-
   useEffect(() => { setSatus(data?.structureStatus); }, [data?.structureStatus]);
   useEffect(() => { setDescriptionFr(data?.descriptionFr); }, [data?.descriptionFr]);
   useEffect(() => { setDescriptionEn(data?.descriptionEn); }, [data?.descriptionEn]);
+  useShortcuts(['Control', 'e'], useCallback(() => toggle(), [toggle]));
 
   const onSaveHandler = async (target) => {
     const body = {};

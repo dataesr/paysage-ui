@@ -1,16 +1,12 @@
 import { BrowserRouter as Router, Navigate, Routes, Route } from 'react-router-dom';
 
 import Redirect from './components/redirect';
-import CategoriesAddPage from './pages/categories/ajouter';
-import CategoriesPage from './pages/categories';
-import CategoryByIdPage from './pages/categories/id';
 import { ContributePage, PersonAddPage, ProjectAddPage, StructureAddPage, OfficialTextAddPage } from './pages/contribuer';
 import HelpPage from './pages/aide';
 import HomePage from './pages/accueil';
 import Layout from './components/layout';
 import OfficialTextsByIdPage from './pages/textes-officiels/id';
 import OfficialTextsPage from './pages/textes-officiels';
-import PersonsPage from './pages/personnes';
 import Passwordless from './pages/mot-de-passe-oublie';
 import ProjectsPage from './pages/projets';
 import RessourcesExternesPage from './pages/resources-externes';
@@ -36,6 +32,7 @@ import {
   StructureRHPage,
 } from './pages/structures/[id]';
 
+import PersonsPage from './pages/personnes';
 import {
   PersonByIdPage,
   PersonCategories,
@@ -47,8 +44,20 @@ import {
 } from './pages/personnes/[id]';
 
 import TermsPage from './pages/termes';
-import TermByIdPage from './pages/termes/id';
 import TermsAddPage from './pages/termes/ajouter';
+import { TermByIdPage, TermPresentationPage, TermCategories } from './pages/termes/[id]';
+
+import {
+  ProjectByIdPage,
+  ProjectPresentationPage,
+  ProjectCategories,
+  ProjectPrices,
+  ProjectRelatedElements,
+} from './pages/projets/[id]';
+
+import CategoriesAddPage from './pages/categories/ajouter';
+import CategoriesPage from './pages/categories';
+import { CategoryByIdPage, CategoryPresentationPage, CategoryCategories } from './pages/categories/[id]';
 
 import { AccountPage, ProfilePage, PreferencesPage, SecurityPage, GroupsPage } from './pages/mon-compte';
 import { AdminPage, AdminDashboardPage, AdminUsersPage, NomenclaturesPage, LegalCategoriesPage, RelationTypesPage } from './pages/admin';
@@ -126,7 +135,15 @@ function App() {
 
             <Route path="/categories" element={<CategoriesPage />} />
             <Route path="/categories/ajouter" element={<CategoriesAddPage />} />
-            <Route path="/categories/:id" element={<CategoryByIdPage />} />
+            <Route path="/categories/:id" element={<CategoryByIdPage />}>
+              <Route path="" element={<Navigate to="presentation" replace />} />
+              <Route path="presentation" element={<CategoryPresentationPage />} />
+              <Route path="categories" element={<CategoryCategories />} />
+              <Route path="actualites" element={<ActualitesOutlet />} />
+              <Route path="evenements" element={<AgendaOutlet />} />
+              <Route path="documents" element={<DocumentsOutlet />} />
+              <Route path="textes-officiels" element={<OfficialTextsOutlet />} />
+            </Route>
 
             <Route path="/personnes" element={<PersonsPage />} />
             <Route path="/personnes/ajouter" element={<PersonAddPage />} />
@@ -134,7 +151,6 @@ function App() {
             <Route path="/personnes/:id" element={<PersonByIdPage />}>
               <Route path="" element={<Navigate to="presentation" replace />} />
               <Route path="presentation" element={<PersonPresentationPage />} />
-              <Route path="categories" element={<PersonCategories />} />
               <Route path="mandats" element={<PersonMandats />} />
               <Route path="projets" element={<PersonProjets />} />
               <Route path="actualites" element={<ActualitesOutlet />} />
@@ -147,16 +163,37 @@ function App() {
               <Route path="participations" element={<ParticipationsOutlet />} />
             </Route>
 
-            <Route path="/projets/ajouter" element={<ProjectAddPage />} />
-            <Route path="/projets" element={<ProjectsPage />} />
-
             <Route path="/termes" element={<TermsPage />} />
             <Route path="/termes/ajouter" element={<TermsAddPage />} />
             <Route path="/terms/:id" element={<Redirect />} />
-            <Route path="/termes/:id" element={<TermByIdPage />} />
+            <Route path="/termes/:id" element={<TermByIdPage />}>
+              <Route path="" element={<Navigate to="presentation" replace />} />
+              <Route path="presentation" element={<TermPresentationPage />} />
+              <Route path="categories" element={<TermCategories />} />
+              <Route path="actualites" element={<ActualitesOutlet />} />
+              <Route path="evenements" element={<AgendaOutlet />} />
+              <Route path="documents" element={<DocumentsOutlet />} />
+              <Route path="textes-officiels" element={<OfficialTextsOutlet />} />
+            </Route>
+
+            <Route path="/projets/ajouter" element={<ProjectAddPage />} />
+            <Route path="/projets" element={<ProjectsPage />} />
+            <Route path="/projects/:id" element={<Redirect />} />
+            <Route path="/projets/:id" element={<ProjectByIdPage />}>
+              <Route path="" element={<Navigate to="presentation" replace />} />
+              <Route path="presentation" element={<ProjectPresentationPage />} />
+              <Route path="categories" element={<ProjectCategories />} />
+              <Route path="actualites" element={<ActualitesOutlet />} />
+              <Route path="evenements" element={<AgendaOutlet />} />
+              <Route path="prix-et-recompenses" element={<ProjectPrices />} />
+              <Route path="documents" element={<DocumentsOutlet />} />
+              <Route path="textes-officiels" element={<OfficialTextsOutlet />} />
+              <Route path="elements-lies" element={<ProjectRelatedElements />} />
+            </Route>
 
             <Route path="/textes-officiels" element={<OfficialTextsPage />} />
             <Route path="/textes-officiels/ajouter" element={<OfficialTextAddPage />} />
+            <Route path="/official-texts/:id" element={<Redirect />} />
             <Route path="/textes-officiels/:id" element={<OfficialTextsByIdPage />} />
 
             <Route path="/contribuer" element={<ContributePage />} />

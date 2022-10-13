@@ -37,6 +37,14 @@ export const ENUMS_LABELS_MAPPER = {
   TheConversation: 'TheConversation',
   personal: 'Page personnelle',
   official: 'Page officielle',
+  // structures ranking
+  rankingShanghai: 'Classement de Shanghai',
+  rankingThe: 'Classement de TimeHigherEducation',
+  rankingScimago: 'Classement Scimago',
+  rankingQs: 'Classement QS',
+  rankingUmultirank: 'Classement Umultirank',
+  rankingLeiden: 'Classement de Leiden',
+  rankingWebometrics: 'Classement Webometrics',
 };
 
 export const STRUCTURES_CREATION_REASONS = [

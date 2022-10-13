@@ -10,35 +10,56 @@ import {
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 import DateInput from '../../date-input';
-import validator from './validator';
-import FormFooter from '../../forms/form-footer';
+import FormFooter from '../form-footer';
 import useForm from '../../../hooks/useForm';
 import useUrl from '../../../hooks/useUrl';
 import useEnums from '../../../hooks/useEnums';
+import PaysageBlame from '../../paysage-blame';
 
-export default function IdentifierForm({ data, onDeleteHandler, onSaveHandler }) {
+function validate(body) {
+  const ret = {};
+  if (!body?.value) ret.value = "La valeur de l'identifiant est obligatoire";
+  if (!body?.type) ret.type = "Le type de l'identifiant est obligatoire";
+  return ret;
+}
+
+function sanitize(form) {
+  const fields = ['type', 'value', 'startDate', 'endDate', 'active'];
+  const body = {};
+  Object.keys(form).forEach((key) => { if (fields.includes(key)) { body[key] = form[key]; } });
+  return body;
+}
+
+export default function IdentifierForm({ id, data, onDelete, onSave }) {
   const [showErrors, setShowErrors] = useState(false);
-  const { form, updateForm, errors } = useForm({ active: true, ...data }, validator);
+  const { form, updateForm, errors } = useForm({ active: true, ...data }, validate);
   const { apiObject } = useUrl();
   const { identifiers } = useEnums();
   const options = identifiers?.[apiObject];
 
-  const onSave = () => {
+  const handleSubmit = () => {
     if (Object.keys(errors).length > 0) return setShowErrors(true);
-    return onSaveHandler(form);
+    const body = sanitize(form);
+    return onSave(body, id);
   };
 
   return (
     <form>
-      <Container>
-        <Row>
-          <Col>
+      <Container fluid>
+        <PaysageBlame
+          createdBy={data.createdBy}
+          updatedBy={data.updatedBy}
+          updatedAt={data.updatedAt}
+          createdAt={data.createdAt}
+        />
+        <Row gutters>
+          <Col n="12">
             <RadioGroup isInline>
               <Radio
                 label="Actif"
                 value
                 checked={form?.active}
-                onChange={(e) => updateForm({ active: true })}
+                onChange={() => updateForm({ active: true })}
               />
               <Radio
                 label="Inactif"
@@ -48,9 +69,7 @@ export default function IdentifierForm({ data, onDeleteHandler, onSaveHandler })
               />
             </RadioGroup>
           </Col>
-        </Row>
-        <Row>
-          <Col>
+          <Col n="12">
             <Select
               label="Type"
               options={options}
@@ -61,9 +80,7 @@ export default function IdentifierForm({ data, onDeleteHandler, onSaveHandler })
               messageType={(showErrors && errors.type) ? 'error' : ''}
             />
           </Col>
-        </Row>
-        <Row className="fr-pt-2w">
-          <Col>
+          <Col n="12">
             <TextInput
               label="Valeur"
               value={form?.value}
@@ -73,18 +90,14 @@ export default function IdentifierForm({ data, onDeleteHandler, onSaveHandler })
               messageType={(showErrors && errors.value) ? 'error' : ''}
             />
           </Col>
-        </Row>
-        <Row className="fr-pt-3w">
-          <Col>
+          <Col n="12">
             <DateInput
               value={form?.startDate}
               label="Date de début"
               onDateChange={(value) => updateForm({ startDate: value })}
             />
           </Col>
-        </Row>
-        <Row>
-          <Col>
+          <Col n="12">
             <DateInput
               value={form?.endDate}
               label="Date de début"
@@ -94,8 +107,8 @@ export default function IdentifierForm({ data, onDeleteHandler, onSaveHandler })
         </Row>
         <FormFooter
           id={data?.id}
-          onSaveHandler={onSave}
-          onDeleteHandler={onDeleteHandler}
+          onSaveHandler={handleSubmit}
+          onDeleteHandler={onDelete}
         />
       </Container>
     </form>
@@ -103,12 +116,14 @@ export default function IdentifierForm({ data, onDeleteHandler, onSaveHandler })
 }
 
 IdentifierForm.propTypes = {
+  id: PropTypes.string,
   data: PropTypes.object,
-  onDeleteHandler: PropTypes.func,
-  onSaveHandler: PropTypes.func.isRequired,
+  onDelete: PropTypes.func,
+  onSave: PropTypes.func.isRequired,
 };
 
 IdentifierForm.defaultProps = {
-  data: null,
-  onDeleteHandler: null,
+  id: null,
+  data: {},
+  onDelete: null,
 };

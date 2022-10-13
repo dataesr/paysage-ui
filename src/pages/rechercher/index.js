@@ -11,12 +11,13 @@ function SearchResults({ data }) {
     return (
       <Row as="ul" gutters>
         {data.map((element) => (
-          <Col n="12 md-6 lg-4" as="li" key={element.id}>
-            <Tile color={`var(--${element.type}-color)`}>
+          <Col n="12 lg-6" as="li" key={element.id}>
+            <Tile horizontal color={`var(--${element.type}-color)`}>
               <TileBody
                 titleAs="h5"
                 title={element.name}
                 asLink={<RouterLink to={`/${getUrlFromType(element.type)}/${element.id}`} />}
+                description="Un attribut eventuel de l'objet paysage qui sera remonté par l'api"
               />
             </Tile>
           </Col>
@@ -43,6 +44,8 @@ export default function SearchPage() {
   const query = searchParams.get('query');
   const pathnameSplitted = pathname.split('/');
   const type = pathnameSplitted[pathnameSplitted.length - 1];
+  // TODO: Get counts and search result in the same query
+  //       Set unset types if url is /rechercher/
   const { counts } = useSearch(countTypes, query, 0);
   const { data, isLoading, error } = useSearch(getTypeFromUrl(type), query, 10);
 
@@ -58,6 +61,12 @@ export default function SearchPage() {
       <Row>
         <Col n="12 md-3">
           <SideMenu buttonLabel="Filtrer par objet">
+            <SideMenuLink className={(type === 'rechercher') ? 'sidemenu__item--active' : ''} asLink={<RouterLink to={`/rechercher?query=${query}`} />}>
+              <Row alignItems="top" className="fr-row--space-between fullwidth">
+                <Text spacing="pr-2v" bold>Tous les objets</Text>
+                <Badge type={(type === 'rechercher') ? 'info' : 'new'} text={Object.values(counts).reduce((accumulator, value) => accumulator + value, 0)} />
+              </Row>
+            </SideMenuLink>
             <SideMenuLink className={(type === 'structures') ? 'sidemenu__item--active' : ''} asLink={<RouterLink to={`structures?query=${query}`} />}>
               <Row alignItems="top" className="fr-row--space-between fullwidth">
                 <Text spacing="pr-2v" bold>Structures</Text>

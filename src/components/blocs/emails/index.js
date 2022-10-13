@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Modal, ModalContent, ModalTitle, Row, Text } from '@dataesr/react-dsfr';
-import EmailForm from './form';
+import EmailForm from '../../forms/emails';
 import api from '../../../utils/api';
 import ModifyCard from '../../card/modify-card';
 import ExpendableListCards from '../../card/expendable-list-cards';
@@ -8,63 +8,43 @@ import CopyButton from '../../copy/copy-button';
 import { Bloc, BlocActionButton, BlocContent, BlocModal, BlocTitle } from '../../bloc';
 import useFetch from '../../../hooks/useFetch';
 import useUrl from '../../../hooks/useUrl';
-import useToast from '../../../hooks/useToast';
+import useNotice from '../../../hooks/useNotice';
+import { deleteError, saveError, saveSuccess, deleteSuccess } from '../../../utils/notice-contents';
 
 export default function EmailsComponent() {
-  const { toast } = useToast();
   const { url } = useUrl('emails');
   const { data, isLoading, error, reload } = useFetch(url);
+  const { notice } = useNotice();
   const [showModal, setShowModal] = useState(false);
   const [modalTitle, setModalTitle] = useState('');
   const [modalContent, setModalContent] = useState(null);
 
-  const onSaveHandler = async (body, id = null) => {
-    const method = id ? 'patch' : 'post';
-    const saveUrl = id ? `${url}/${id}` : url;
-    const response = await api[method](saveUrl, body)
-      .catch(() => {
-        toast({
-          toastType: 'error',
-          description: "Une erreur s'est produite",
-        });
-      });
-    if (response.ok) {
-      toast({
-        toastType: 'success',
-        description: "L'adresse email à été ajoutée",
-      });
-      reload();
-      setShowModal(false);
-    }
+  const onSaveHandler = async (body, itemId) => {
+    const method = itemId ? 'patch' : 'post';
+    const saveUrl = itemId ? `${url}/${itemId}` : url;
+    await api[method](saveUrl, body)
+      .then(() => { notice(saveSuccess); reload(); })
+      .catch(() => notice(saveError));
+    return setShowModal(false);
   };
 
-  const onDeleteHandler = async (id) => {
-    await api.delete(`${url}/${id}`)
-      .catch(() => {
-        toast({
-          toastType: 'error',
-          description: "Une erreur s'est produite",
-        });
-      });
-    reload();
-    setShowModal(false);
+  const onDeleteHandler = async (itemId) => {
+    await api.delete(`${url}/${itemId}`)
+      .then(() => { notice(deleteSuccess); reload(); })
+      .catch(() => notice(deleteError));
+    return setShowModal(false);
   };
 
-  const onClickModifyHandler = (genericEmail) => {
-    setModalTitle("Modification d'une boite email générique");
+  const onOpenModalHandler = (element) => {
+    setModalTitle(element?.id ? "Modification d'une boite email générique" : "Ajout d'une boite email générique");
     setModalContent(
       <EmailForm
-        data={genericEmail}
-        onDeleteHandler={onDeleteHandler}
-        onSaveHandler={onSaveHandler}
+        id={element?.id}
+        data={element || {}}
+        onDelete={onDeleteHandler}
+        onSave={onSaveHandler}
       />,
     );
-    setShowModal(true);
-  };
-
-  const onClickAddHandler = () => {
-    setModalTitle("Ajout d'une boite email générique");
-    setModalContent(<EmailForm onSaveHandler={onSaveHandler} />);
     setShowModal(true);
   };
 
@@ -79,7 +59,7 @@ export default function EmailsComponent() {
             <CopyButton title="Copier l'identifiant" copyText={el.email} />
           </Row>
         )}
-        onClick={() => onClickModifyHandler(el)}
+        onClick={() => onOpenModalHandler(el)}
       />
     ));
     return <ExpendableListCards list={list} nCol="12 md-6" />;
@@ -88,7 +68,7 @@ export default function EmailsComponent() {
   return (
     <Bloc isLoading={isLoading} error={error} data={data}>
       <BlocTitle as="h3" look="h4">Boites emails génériques</BlocTitle>
-      <BlocActionButton onClick={onClickAddHandler}>Ajouter un email générique</BlocActionButton>
+      <BlocActionButton onClick={() => onOpenModalHandler()}>Ajouter un email générique</BlocActionButton>
       <BlocContent>{renderCards()}</BlocContent>
       <BlocModal>
         <Modal isOpen={showModal} size="lg" hide={() => setShowModal(false)}>

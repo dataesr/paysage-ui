@@ -21,7 +21,7 @@ const objectNameMapper = [
   { name: 'Catégories', object: 'categories' },
 ];
 
-function RelationTypesForm({ id, initialForm, onSave, onDelete }) {
+function RelationTypesForm({ id, data, onSave, onDelete }) {
   const validateForm = (body) => {
     const validationErrors = {};
     if (!body.name) { validationErrors.name = 'Le nom est obligatoire'; }
@@ -30,7 +30,7 @@ function RelationTypesForm({ id, initialForm, onSave, onDelete }) {
     if (priority > 99 || priority < 1) { validationErrors.for = 'Doit être compris en 1 (priorité forte) et 99 (priorité faible)'; }
     return validationErrors;
   };
-  const { form, updateForm, errors } = useForm(initialForm, validateForm);
+  const { form, updateForm, errors } = useForm(data, validateForm);
   const [showErrors, setShowErrors] = useState(false);
 
   const handleSubmit = (e) => {
@@ -114,13 +114,13 @@ function RelationTypesForm({ id, initialForm, onSave, onDelete }) {
 }
 RelationTypesForm.propTypes = {
   id: PropTypes.string,
-  initialForm: PropTypes.oneOfType([PropTypes.shape, null]),
+  data: PropTypes.oneOfType([PropTypes.shape, null]),
   onSave: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired,
 };
 RelationTypesForm.defaultProps = {
   id: null,
-  initialForm: { for: [], priority: '99' },
+  data: { for: [], priority: '99' },
 };
 
 export default function RelationTypesPage() {
@@ -156,7 +156,7 @@ export default function RelationTypesPage() {
       setModalContent(
         <RelationTypesForm
           id={id}
-          initialForm={rest}
+          data={rest}
           onDelete={handleDelete}
           onSave={handleSave}
         />,

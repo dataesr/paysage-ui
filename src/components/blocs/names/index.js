@@ -6,7 +6,7 @@ import {
   ModalContent,
   ModalTitle,
 } from '@dataesr/react-dsfr';
-import NameForm from './form';
+import NameForm from '../../forms/names';
 import api from '../../../utils/api';
 import { formatDescriptionDates } from '../../../utils/dates';
 import Modal from '../../modal';
@@ -14,63 +14,43 @@ import { Bloc, BlocActionButton, BlocContent, BlocModal, BlocTitle } from '../..
 import useFetch from '../../../hooks/useFetch';
 import useUrl from '../../../hooks/useUrl';
 import ExpendableListCards from '../../card/expendable-list-cards';
-import useToast from '../../../hooks/useToast';
+import useNotice from '../../../hooks/useNotice';
+import { deleteError, saveError, saveSuccess, deleteSuccess } from '../../../utils/notice-contents';
 
 export default function NamesComponent() {
-  const { toast } = useToast();
+  const { notice } = useNotice();
   const { url } = useUrl('names');
   const { data, isLoading, error, reload } = useFetch(url);
   const [showModal, setShowModal] = useState(false);
   const [modalTitle, setModalTitle] = useState('');
   const [modalContent, setModalContent] = useState(null);
 
-  const onSaveHandler = async (body) => {
-    const method = body.id ? 'patch' : 'post';
-    const saveUrl = body.id ? `${url}/${body.id}` : url;
-    const response = await api[method](saveUrl, body)
-      .catch(() => {
-        toast({
-          toastType: 'error',
-          description: "Une erreur s'est produite",
-        });
-      });
-    if (response.ok) {
-      toast({
-        toastType: 'success',
-        description: 'Le nom à été ajouté',
-      });
-      reload();
-      setShowModal(false);
-    }
+  const onSaveHandler = async (body, itemId) => {
+    const method = itemId ? 'patch' : 'post';
+    const saveUrl = itemId ? `${url}/${itemId}` : url;
+    await api[method](saveUrl, body)
+      .then(() => { notice(saveSuccess); reload(); })
+      .catch(() => notice(saveError));
+    return setShowModal(false);
   };
 
   const onDeleteHandler = async (itemId) => {
     await api.delete(`${url}/${itemId}`)
-      .catch(() => {
-        toast({
-          toastType: 'error',
-          description: "Une erreur s'est produite",
-        });
-      });
-    reload();
-    setShowModal(false);
+      .then(() => { notice(deleteSuccess); reload(); })
+      .catch(() => notice(deleteError));
+    return setShowModal(false);
   };
 
-  const onClickModifyHandler = (Name) => {
-    setModalTitle("Modification d'un nom");
+  const onOpenModalHandler = (element) => {
+    setModalTitle(element?.id ? "Modification d'un nom" : "Ajout d'un nom");
     setModalContent(
       <NameForm
-        data={Name}
-        onDeleteHandler={onDeleteHandler}
-        onSaveHandler={onSaveHandler}
+        id={element?.id}
+        data={element || {}}
+        onDelete={onDeleteHandler}
+        onSave={onSaveHandler}
       />,
     );
-    setShowModal(true);
-  };
-
-  const onClickAddHandler = () => {
-    setModalTitle("Ajout d'un nom");
-    setModalContent(<NameForm onSaveHandler={onSaveHandler} />);
     setShowModal(true);
   };
 
@@ -79,7 +59,7 @@ export default function NamesComponent() {
     const list = data.data.map((item) => (
       <Card
         hasArrow={false}
-        onClick={() => onClickModifyHandler(item)}
+        onClick={() => onOpenModalHandler(item)}
         href="#"
       >
         <CardTitle>{item.usualName}</CardTitle>
@@ -94,7 +74,7 @@ export default function NamesComponent() {
   return (
     <Bloc isLoading={isLoading} error={error} data={data}>
       <BlocTitle as="h3" look="h6">Noms</BlocTitle>
-      <BlocActionButton onClick={onClickAddHandler}>Ajouter un nom</BlocActionButton>
+      <BlocActionButton onClick={() => onOpenModalHandler()}>Ajouter un nom</BlocActionButton>
       <BlocContent>{renderCards()}</BlocContent>
       <BlocModal>
         <Modal isOpen={showModal} size="lg" hide={() => setShowModal(false)}>

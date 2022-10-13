@@ -9,14 +9,14 @@ import { toString } from '../../utils/dates';
 import useForm from '../../hooks/useForm';
 import Button from '../../components/button';
 
-function NomenclatureForm({ id, initialForm, onSave, onDelete }) {
+function NomenclatureForm({ id, data, onSave, onDelete }) {
   const validateForm = (body) => {
     const validationErrors = {};
     if (!body.usualName) { validationErrors.usualName = 'Le nom usuel est obligatoire'; }
     return validationErrors;
   };
 
-  const { form, updateForm, errors } = useForm(initialForm, validateForm);
+  const { form, updateForm, errors } = useForm(data, validateForm);
   const [showErrors, setShowErrors] = useState(false);
 
   const handleSubmit = (e) => {
@@ -73,13 +73,13 @@ function NomenclatureForm({ id, initialForm, onSave, onDelete }) {
 }
 NomenclatureForm.propTypes = {
   id: PropTypes.string,
-  initialForm: PropTypes.oneOfType([PropTypes.shape, null]),
+  data: PropTypes.oneOfType([PropTypes.shape, null]),
   onSave: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired,
 };
 NomenclatureForm.defaultProps = {
   id: null,
-  initialForm: { usualName: null, otherNames: [] },
+  data: { usualName: null, otherNames: [] },
 };
 
 export default function NomenclaturesPage({ route, title }) {
@@ -112,7 +112,7 @@ export default function NomenclaturesPage({ route, title }) {
     setModalContent(
       <NomenclatureForm
         id={id}
-        initialForm={rest}
+        data={rest}
         onDelete={handleDelete}
         onSave={handleSave}
       />,

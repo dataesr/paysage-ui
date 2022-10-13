@@ -17,7 +17,9 @@ const saveError = { content: "Une erreur s'est produite.", autoDismissAfter: 600
 const saveSuccess = { content: 'La relation a été ajoutée avec succès.', autoDismissAfter: 6000, type: 'success' };
 const deleteSuccess = { content: 'La relation a été supprimée avec succès.', autoDismissAfter: 6000, type: 'success' };
 
-export default function RelationsByTag({ blocName, tag, resourceType, relatedObjectTypes, inverse, noRelationType }) {
+// const modelKeys = ['resourceId', 'relatedObjectId', ]
+
+export default function RelationsByTag({ blocName, tag, resourceType, relatedObjectTypes, inverse, noRelationType, Form }) {
   const queryObject = inverse ? 'relatedObjectId' : 'resourceId';
   const { notice } = useNotice();
   const { id: resourceId } = useUrl();
@@ -37,6 +39,8 @@ export default function RelationsByTag({ blocName, tag, resourceType, relatedObj
       postBody.resourceId = resourceId;
     }
     postBody.relationTag = tag;
+
+    // Object.keys(postBody).forEach((key) => validKeys.includes(key) || delete userInput[key]);
     await api[method](saveUrl, postBody).then(() => { notice(saveSuccess); reload(); }).catch(() => notice(saveError));
     return setShowModal(false);
   };
@@ -49,12 +53,12 @@ export default function RelationsByTag({ blocName, tag, resourceType, relatedObj
   const onOpenModalHandler = (element) => {
     setModalTitle(element?.id ? 'Modifier la relation' : 'Ajouter une relation');
     setModalContent(
-      <RelationsForm
+      <Form
         inverse={inverse}
         id={element?.id}
         resourceType={resourceType}
         relatedObjectTypes={relatedObjectTypes}
-        initialForm={element || {}}
+        data={element || {}}
         onDelete={onDeleteElementHandler}
         onSave={onSaveElementHandler}
         noRelationType={noRelationType}
@@ -125,6 +129,7 @@ RelationsByTag.propTypes = {
   relatedObjectTypes: PropTypes.arrayOf(PropTypes.string),
   inverse: PropTypes.bool,
   noRelationType: PropTypes.bool,
+  Form: PropTypes.func,
 };
 
 RelationsByTag.defaultProps = {
@@ -133,4 +138,5 @@ RelationsByTag.defaultProps = {
   inverse: false,
   noRelationType: false,
   blocName: '',
+  Form: RelationsForm,
 };

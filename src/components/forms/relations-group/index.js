@@ -4,6 +4,7 @@ import { useState } from 'react';
 import TagInput from '../../tag-input';
 import useForm from '../../../hooks/useForm';
 import FormFooter from '../form-footer';
+import PaysageBlame from '../../paysage-blame';
 
 const objectNameMapper = [
   { name: 'Personnes', object: 'persons' },
@@ -14,28 +15,41 @@ const objectNameMapper = [
   { name: 'Catégories', object: 'categories' },
 ];
 
-const validateForm = (body) => {
+function validate(body) {
   const validationErrors = {};
   if (!body.name) { validationErrors.name = 'Le nom est obligatoire'; }
   if (!body.accepts?.length) { validationErrors.accepts = 'Ce champs est obligatoire'; }
   const priority = parseInt(body.priority, 10);
   if (priority > 99 || priority < 1) { validationErrors.accepts = 'Doit être compris en 1 (priorité forte) et 99 (priorité faible)'; }
   return validationErrors;
-};
+}
+function sanitize(form) {
+  const fields = ['name', 'otherNames', 'accepts', 'priority'];
+  const body = {};
+  Object.keys(form).forEach((key) => { if (fields.includes(key)) { body[key] = form[key]; } });
+  return body;
+}
 
-export default function RelationGroupForm({ id, initialForm, onSave, onDelete }) {
-  const { form, updateForm, errors } = useForm(initialForm, validateForm);
+export default function RelationGroupForm({ id, data, onSave, onDelete }) {
+  const { form, updateForm, errors } = useForm(data, validate);
   const [showErrors, setShowErrors] = useState(false);
 
   const handleSave = () => {
     if (Object.keys(errors).length !== 0) return setShowErrors(true);
     form.priority = parseInt(form.priority, 10);
-    return onSave(form, id);
+    const body = sanitize(form);
+    return onSave(body, id);
   };
 
   return (
     <form>
       <Container fluid>
+        <PaysageBlame
+          createdBy={data.createdBy}
+          updatedBy={data.updatedBy}
+          updatedAt={data.updatedAt}
+          createdAt={data.createdAt}
+        />
         <Row>
           <Col n="12" spacing="pb-3w">
             <TextInput
@@ -87,12 +101,12 @@ export default function RelationGroupForm({ id, initialForm, onSave, onDelete })
 }
 RelationGroupForm.propTypes = {
   id: PropTypes.string,
-  initialForm: PropTypes.oneOfType([PropTypes.shape, null]),
+  data: PropTypes.oneOfType([PropTypes.shape, null]),
   onSave: PropTypes.func.isRequired,
   onDelete: PropTypes.func,
 };
 RelationGroupForm.defaultProps = {
   id: null,
-  initialForm: { accepts: [], priority: '99' },
+  data: { accepts: [], priority: '99' },
   onDelete: null,
 };

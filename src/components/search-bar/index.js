@@ -124,7 +124,6 @@ const SearchBar = forwardRef((props, ref) => {
           {scope && (
             <button onClick={handleDeleteScope} type="button" ref={scopeRef} className={scopeclassNames}>
               {scope}
-              {isScopeSelected && <span className="ri-1x icon-right ds-fr--v-sub ri-close-line ds-fr-badge-icon" />}
             </button>
           )}
           <input

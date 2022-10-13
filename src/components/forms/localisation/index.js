@@ -6,54 +6,78 @@ import {
   Title,
   RadioGroup,
   Radio,
-  Text,
 } from '@dataesr/react-dsfr';
 import PropTypes from 'prop-types';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import DateInput from '../../date-input';
-import validator from './validator';
-import FormFooter from '../../forms/form-footer';
-import Map from '../../map';
+import FormFooter from '../form-footer';
+import Map from '../../map/auto-bound-map';
 import SearchBar from '../../search-bar';
 import useForm from '../../../hooks/useForm';
+import useAuth from '../../../hooks/useAuth';
+import useDebounce from '../../../hooks/useDebounce';
 
-export default function LocalisationForm({ data, onDeleteHandler, onSaveHandler }) {
+function validate(body) {
+  const errors = {};
+  if (!body?.country) errors.country = 'Le pays est obligatoire';
+  return errors;
+}
+
+function sanitize(form) {
+  const fields = [
+    'cityId', 'distributionStatement', 'address', 'postOfficeBoxNumber', 'postalCode',
+    'locality', 'place', 'country', 'telephone', 'coordinates', 'startDate', 'endDate',
+  ];
+  const body = {};
+  Object.keys(form).forEach((key) => { if (fields.includes(key)) { body[key] = form[key]; } });
+  return body;
+}
+
+export default function LocalisationForm({ id, data, onDelete, onSave }) {
+  const { viewer } = useAuth();
   const [showErrors, setShowErrors] = useState(false);
-  const { form, updateForm, errors } = useForm(data, validator);
+  const { form, updateForm, errors } = useForm(data, validate);
   const [isFrance, setIsFrance] = useState(true);
   const [query, setQuery] = useState('');
+  const debouncedQuery = useDebounce(query, 1500);
   const [scope, setScope] = useState(null);
   const [options, setOptions] = useState([]);
 
   useEffect(() => {
     const getAutocompleteResult = async () => {
       const url = (isFrance)
-        ? `https://api-adresse.data.gouv.fr/search/?q=${query}`
-        : `https://nominatim.openstreetmap.org/ui/search.html?q=${query}&format=json&addressDetails=1`;
+        ? `https://api-adresse.data.gouv.fr/search/?q=${debouncedQuery}`
+        : `https://nominatim.openstreetmap.org/search?q=${debouncedQuery}&format=jsonv2&addressdetails=1`;
       const response = await fetch(url);
       const respJson = await response.json();
-      const opt = respJson.features.map((element) => ({
-        name: `${element.properties.label} (${element.properties.context}})`,
-        data: element,
-      }));
+      const opt = (isFrance)
+        ? respJson.features.map((element) => ({
+          name: `${element.properties.label} (${element.properties.context}})`,
+          data: element,
+        }))
+        : respJson.map((element) => ({
+          name: element?.display_name,
+          data: element,
+        }));
 
       setOptions(opt);
     };
-    if (query.length > 0) {
+    if (debouncedQuery.length > 3) {
       getAutocompleteResult();
     } else {
       setOptions([]);
     }
-  }, [query, isFrance]);
+  }, [debouncedQuery, isFrance]);
 
-  const onSave = () => {
+  const handleSubmit = () => {
     if (Object.keys(errors).length > 0) return setShowErrors(true);
-    return onSaveHandler(form.id, form);
+    const body = sanitize(form);
+    return onSave(body, id);
   };
 
   const setGPS = (value) => {
-    const valueArr = value.split(',');
-    if (valueArr.length === 2) {
+    const valueArr = value?.split(',');
+    if (valueArr?.length === 2) {
       updateForm({
         coordinates: {
           lat: valueArr[0],
@@ -70,47 +94,32 @@ export default function LocalisationForm({ data, onDeleteHandler, onSaveHandler 
     return '';
   };
 
-  const renderMap = () => {
-    if (form.coordinates?.lat && form.coordinates?.lng) {
-      return (
-        <>
-          <TextInput
-            label="Coordonnées (latitude, longitude)"
-            hint="exemple : 48.84450, 2.276411"
-            value={getGPSLabel()}
-            onChange={(e) => setGPS(e.target.value)}
-          />
-          <Map
-            lat={form.coordinates.lat}
-            lng={form.coordinates.lng}
-            markers={[
-              {
-                address: 'currentLocalisation.address',
-                latLng: [
-                  form.coordinates.lat,
-                  form.coordinates.lng,
-                ],
-              },
-            ]}
-          />
-        </>
-      );
-    }
-    return null;
-  };
-
   const handleSelect = (element) => {
-    console.log('handleSelect', element);
-    updateForm({
-      address: element.data.properties.name,
-      cityId: element.data.properties.citycode,
-      postalCode: element.data.properties.postcode,
-      locality: element.data.properties.city,
-      coordinates: {
-        lat: element.data.geometry.coordinates[1],
-        lng: element.data.geometry.coordinates[0],
-      },
-    });
+    if (!element.data?.osm_id) {
+      updateForm({
+        address: element.data.properties.name,
+        cityId: element.data.properties.citycode,
+        postalCode: element.data.properties.postcode,
+        country: 'France',
+        locality: element.data.properties.city,
+        coordinates: {
+          lat: element.data.geometry.coordinates[1],
+          lng: element.data.geometry.coordinates[0],
+        },
+      });
+    } else {
+      updateForm({
+        address: element.data?.display_name,
+        cityId: null,
+        postalCode: element.data?.address.postcode,
+        locality: element.data?.address.city,
+        country: element.data?.address.country,
+        coordinates: {
+          lat: element.data?.lat,
+          lng: element.data?.lon,
+        },
+      });
+    }
     // setScope(name);
     setQuery('');
     setOptions([]);
@@ -122,19 +131,27 @@ export default function LocalisationForm({ data, onDeleteHandler, onSaveHandler 
     setOptions([]);
   };
 
+  const onMarkerDragEnd = useCallback((e) => {
+    const marker = e.target;
+    const position = marker.getLatLng();
+    updateForm({ coordinates: { lat: position.lat, lng: position.lng } });
+  }, [updateForm]);
+
+  const markers = (form.coordinates?.lat && form.coordinates?.lng)
+    ? [{ address: form.address, latLng: [form.coordinates?.lat, form.coordinates?.lng] }]
+    : [];
+
   return (
     <form>
-      <Container>
-        <Row>
-          <Col>
+      <Container fluid>
+        <Row gutters>
+          <Col n="12">
             <RadioGroup isInline>
               <Radio label="France" onChange={() => setIsFrance(true)} checked={isFrance} />
               <Radio label="Hors France" onChange={() => setIsFrance(false)} checked={!isFrance} />
             </RadioGroup>
           </Col>
-        </Row>
-        <Row>
-          <Col>
+          <Col n="12">
             <SearchBar
               size="lg"
               buttonLabel="Rechercher"
@@ -149,68 +166,60 @@ export default function LocalisationForm({ data, onDeleteHandler, onSaveHandler 
               onDeleteScope={handleUnselect}
             />
           </Col>
-        </Row>
-
-        <Row className="fr-pt-5w">
-          <Col>
-            <Title as="h2" look="h3">
-              Coordonnées
-            </Title>
-          </Col>
-        </Row>
-        <Row>
-          <Col n="md-8" className="fr-pb-2w fr-pr-1w">
+          <Col n="12"><Title as="h2" look="h3" spacing="mb-0">Coordonnées</Title></Col>
+          <Col n="12 md-8">
             <TextInput
               label="Adresse"
               value={form.address}
               onChange={(e) => updateForm({ address: e.target.value })}
-              // message={(showErrors && errors.address) ? errors.address : null}
-              // messageType={(showErrors && errors.address) ? 'error' : ''}
+            // message={(showErrors && errors.address) ? errors.address : null}
+            // messageType={(showErrors && errors.address) ? 'error' : ''}
             />
           </Col>
-          <Col className="fr-pb-2w fr-pl-1w">
+          <Col n="12 md-4">
             <TextInput
               label="Lieu dit"
               value={form.place}
               onChange={(e) => updateForm({ place: e.target.value })}
             />
           </Col>
-        </Row>
-        <Row>
-          <Col className="fr-pb-2w fr-pr-1w">
+          <Col n="12 md-6">
             <TextInput
               label="Mention de distribution"
               value={form.distributionStatement}
               onChange={(e) => updateForm({ distributionStatement: e.target.value })}
             />
           </Col>
-          <Col className="fr-pb-2w fr-pl-1w">
+          <Col n="12 md-6">
             <TextInput
               label="Numéro de boite postale"
               value={form.postOfficeBoxNumber}
               onChange={(e) => updateForm({ postOfficeBoxNumber: e.target.value })}
             />
           </Col>
-        </Row>
-        <Row gutters alignItems="bottom">
-          <Col n="md-3" className="fr-pb-2w fr-pr-1w">
+          <Col n="12 md-3">
             <TextInput
               label="Commune"
               value={form.locality}
               onChange={(e) => updateForm({ locality: e.target.value })}
             />
           </Col>
-          <Col n="md-3" className="fr-pb-2w fr-pl-1w fr-pr-1w">
+          <Col n="12 md-3">
             <TextInput
               label="Code postal"
               value={form.postalCode}
               onChange={(e) => updateForm({ postalCode: e.target.value })}
             />
           </Col>
-          <Col className="fr-pb-2w fr-pl-1w fr-pr-1w">
-            <Text>{form.cityId || ''}</Text>
+          <Col n="12 md-3">
+            <TextInput
+              disabled={viewer.role !== 'admin'}
+              label="Code ville"
+              value={form.cityId}
+              onChange={(e) => updateForm({ postalCode: e.target.value })}
+            />
           </Col>
-          <Col n="md-4" className="fr-pb-2w fr-pl-1w">
+          <Col n="md-6">
             <TextInput
               label="Pays"
               value={form.country}
@@ -220,8 +229,6 @@ export default function LocalisationForm({ data, onDeleteHandler, onSaveHandler 
               messageType={(showErrors && errors.country) ? 'error' : ''}
             />
           </Col>
-        </Row>
-        <Row>
           <Col n="md-6" className="fr-pr-1w">
             <TextInput
               label="Téléphone"
@@ -229,29 +236,26 @@ export default function LocalisationForm({ data, onDeleteHandler, onSaveHandler 
               onChange={(e) => updateForm({ telephone: e.target.value })}
             />
           </Col>
-        </Row>
 
-        <Row className="fr-pt-5w">
-          <Col>
-            <Title as="h2" look="h3">
-              Coordonnées GPS
-            </Title>
+          <Col n="12"><Title as="h2" look="h3" spacing="mb-0">Coordonnées GPS</Title></Col>
+          <Col n="12">
+            <TextInput
+              label="Coordonnées (exemple : 48.84450, 2.276411)"
+              hint="Vous pouvez modifier les coordonnées en déplaçant le marqueur sur la carte"
+              value={getGPSLabel()}
+              onChange={(e) => setGPS(e.target.value)}
+            />
           </Col>
-        </Row>
-        <Row>
-          <Col>
-            {renderMap()}
+          <Col n="12">
+            <Map
+              lat={form.coordinates?.lat || 48.8534100}
+              lng={form.coordinates?.lng || 2.3488000}
+              markers={markers}
+              onMarkerDragEnd={onMarkerDragEnd}
+            />
           </Col>
-        </Row>
-        <Row className="fr-pt-5w">
-          <Col>
-            <Title as="h2" look="h3">
-              Dates
-            </Title>
-          </Col>
-        </Row>
-        <Row>
-          <Col className="fr-pb-2w fr-pl-1w fr-pr-1w">
+          <Col n="12"><Title as="h2" look="h3" spacing="mb-0">Dates</Title></Col>
+          <Col n="12">
             <DateInput
               value={form.startDate}
               label="Date de début"
@@ -259,7 +263,7 @@ export default function LocalisationForm({ data, onDeleteHandler, onSaveHandler 
               isRequired
             />
           </Col>
-          <Col className="fr-pb-2w fr-pl-1w">
+          <Col n="12">
             <DateInput
               value={form.endDate}
               label="Date de fin"
@@ -269,8 +273,8 @@ export default function LocalisationForm({ data, onDeleteHandler, onSaveHandler 
         </Row>
         <FormFooter
           id={data?.id}
-          onSaveHandler={onSave}
-          onDeleteHandler={onDeleteHandler}
+          onSaveHandler={handleSubmit}
+          onDeleteHandler={onDelete}
         />
       </Container>
     </form>
@@ -278,12 +282,14 @@ export default function LocalisationForm({ data, onDeleteHandler, onSaveHandler 
 }
 
 LocalisationForm.propTypes = {
+  id: PropTypes.string,
   data: PropTypes.object,
-  onDeleteHandler: PropTypes.func,
-  onSaveHandler: PropTypes.func.isRequired,
+  onDelete: PropTypes.func,
+  onSave: PropTypes.func.isRequired,
 };
 
 LocalisationForm.defaultProps = {
+  id: null,
   data: {},
-  onDeleteHandler: null,
+  onDelete: null,
 };

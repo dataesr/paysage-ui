@@ -17,7 +17,8 @@ import Spinner from '../../../components/spinner';
 import api from '../../../utils/api';
 import useNotice from '../../../hooks/useNotice';
 
-import CategoriePresentationPage from './presentation';
+import CategoryPresentationPage from './presentation';
+import CategoryCategories from './categories';
 
 function CategoryByIdPage() {
   const { url, id } = useUrl();
@@ -62,23 +63,11 @@ function CategoryByIdPage() {
             </SideMenuLink>
             <SideMenuLink asLink={<RouterLink to="categories" />}>
               <Icon name="ri-price-tag-3-line" size="1x" />
-              Catégories
+              Catégories et termes
             </SideMenuLink>
             <SideMenuLink asLink={<RouterLink to="textes-officiels" />}>
               <Icon name="ri-git-repository-line" size="1x" />
               Textes officiels
-            </SideMenuLink>
-            <SideMenuLink asLink={<RouterLink to="projets" />}>
-              <Icon name="ri-booklet-line" size="1x" />
-              Projets
-            </SideMenuLink>
-            <SideMenuLink asLink={<RouterLink to="prix-et-recompenses" />}>
-              <Icon name="ri-award-line" size="1x" />
-              Prix
-            </SideMenuLink>
-            <SideMenuLink asLink={<RouterLink to="participations" />}>
-              <Icon name="ri-links-line" size="1x" />
-              Participations
             </SideMenuLink>
           </SideMenu>
         </Col>
@@ -92,11 +81,11 @@ function CategoryByIdPage() {
             >
               Catégories
             </BreadcrumbItem>
-            <BreadcrumbItem>{data.usualName}</BreadcrumbItem>
+            <BreadcrumbItem>{data.usualNameFr}</BreadcrumbItem>
           </Breadcrumb>
           <Row className="flex--space-between flex--wrap-reverse">
             <Title as="h2">
-              {data.usualName}
+              {data.usualNameFr}
               <BadgeGroup>
                 <CopyBadgeButton
                   colorFamily="yellow-tournesol"
@@ -115,10 +104,10 @@ function CategoryByIdPage() {
                       <ModalTitle>
                         Modifier les informations de
                         {' '}
-                        {data.usualName}
+                        {data.usualNameFr}
                       </ModalTitle>
                       <ModalContent>
-                        <PersonForm id={data.id} initialForm={data} onSave={onSave} />
+                        <PersonForm id={data.id} data={data} onSave={onSave} />
                       </ModalContent>
                     </Modal>
                   </DropdownButtonItem>
@@ -159,10 +148,6 @@ function CategoryByIdPage() {
                     onChange={(e) => updateForm({ oeil: e.target.checked })}
                     label="En un coup d’œil"
                   />
-                  <Checkbox
-                    onChange={(e) => updateForm({ categories: e.target.checked })}
-                    label="Mandats"
-                  />
                 </CheckboxGroup>
               </ModalContent>
               <ModalFooter>
@@ -186,6 +171,7 @@ function CategoryByIdPage() {
 }
 
 export {
-  CategoriePresentationPage,
   CategoryByIdPage,
+  CategoryPresentationPage,
+  CategoryCategories,
 };

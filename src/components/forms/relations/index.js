@@ -13,8 +13,16 @@ import FormFooter from '../form-footer';
 import api from '../../../utils/api';
 import useFetch from '../../../hooks/useFetch';
 import { parseRelatedElement } from '../../../utils/parse-related-element';
+import PaysageBlame from '../../paysage-blame';
 
-export default function RelationForm({ id, resourceType, relatedObjectTypes, initialForm, onDelete, onSave, inverse, noRelationType }) {
+function sanitize(form) {
+  const fields = ['resourceId', 'relatedObjectId', 'relationTypeId', 'relationsGroupId', 'relationTag',
+    'startDateOfficialTextId', 'endDateOfficialTextId', 'startDate', 'endDate'];
+  const body = {};
+  Object.keys(form).forEach((key) => { if (fields.includes(key)) { body[key] = form[key]; } });
+  return body;
+}
+export default function RelationForm({ id, resourceType, relatedObjectTypes, data, onDelete, onSave, inverse, noRelationType }) {
   const validator = (body) => {
     const errors = {};
     if (!body?.relatedObjectId && !inverse) {
@@ -43,7 +51,7 @@ export default function RelationForm({ id, resourceType, relatedObjectTypes, ini
   const [startDateOfficialTextOptions, setStartDateOfficialTextOptions] = useState([]);
   const [endDateOfficialTextOptions, setEndDateOfficialTextOptions] = useState([]);
 
-  const { form, updateForm, errors } = useForm(parseRelatedElement(initialForm), validator);
+  const { form, updateForm, errors } = useForm(parseRelatedElement(data), validator);
 
   useEffect(() => {
     const getAutocompleteResult = async () => {
@@ -124,7 +132,8 @@ export default function RelationForm({ id, resourceType, relatedObjectTypes, ini
 
   const handleSave = () => {
     if (Object.keys(errors).length > 0) return setShowErrors(true);
-    return onSave(form, id);
+    const body = sanitize(form);
+    return onSave(body, id);
   };
 
   const relationTypesOptions = (relationTypes?.data)
@@ -136,6 +145,12 @@ export default function RelationForm({ id, resourceType, relatedObjectTypes, ini
   return (
     <form>
       <Container>
+        <PaysageBlame
+          createdBy={data.createdBy}
+          updatedBy={data.updatedBy}
+          updatedAt={data.updatedAt}
+          createdAt={data.createdAt}
+        />
         <Row>
           {inverse
             ? (
@@ -243,7 +258,7 @@ RelationForm.propTypes = {
   id: PropTypes.string,
   relatedObjectTypes: PropTypes.arrayOf(PropTypes.string),
   resourceType: PropTypes.string.isRequired,
-  initialForm: PropTypes.object,
+  data: PropTypes.object,
   onDelete: PropTypes.func,
   onSave: PropTypes.func.isRequired,
   inverse: PropTypes.bool,
@@ -253,7 +268,7 @@ RelationForm.propTypes = {
 RelationForm.defaultProps = {
   id: null,
   relatedObjectTypes: [''],
-  initialForm: {},
+  data: {},
   onDelete: null,
   inverse: false,
   noRelationType: false,

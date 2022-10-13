@@ -9,27 +9,43 @@ import PropTypes from 'prop-types';
 import { useState } from 'react';
 import FormFooter from '../form-footer';
 import useForm from '../../../hooks/useForm';
+import PaysageBlame from '../../paysage-blame';
+
+function validate(body) {
+  const ret = {};
+  if (!body?.type) ret.type = 'Le type est obligatoire';
+  if (!body?.url) ret.url = "L'URL est obligatoire";
+  return ret;
+}
+
+function sanitize(form) {
+  const fields = ['type', 'url', 'language'];
+  const body = {};
+  Object.keys(form).forEach((key) => { if (fields.includes(key)) { body[key] = form[key]; } });
+  return body;
+}
 
 export default function WeblinkForm({ data, onDeleteHandler, onSaveHandler, options }) {
-  const validator = (body) => {
-    const ret = {};
-    if (!body?.type) ret.type = 'Le type est obligatoire';
-    if (!body?.url) ret.url = "L'URL est obligatoire";
-    return ret;
-  };
   const [showErrors, setShowErrors] = useState(false);
-  const { form, updateForm, errors } = useForm(data, validator);
+  const { form, updateForm, errors } = useForm(data, validate);
 
   const onSave = () => {
     if (Object.keys(errors).length > 0) return setShowErrors(true);
-    return onSaveHandler(form);
+    const body = sanitize(form);
+    return onSaveHandler(body);
   };
 
   return (
     <form>
-      <Container>
-        <Row>
-          <Col>
+      <Container fluid>
+        <PaysageBlame
+          createdBy={data.createdBy}
+          updatedBy={data.updatedBy}
+          updatedAt={data.updatedAt}
+          createdAt={data.createdAt}
+        />
+        <Row gutters>
+          <Col n="12">
             <Select
               label="Type"
               options={options}
@@ -40,9 +56,7 @@ export default function WeblinkForm({ data, onDeleteHandler, onSaveHandler, opti
               messageType={(showErrors && errors.type) ? 'error' : null}
             />
           </Col>
-        </Row>
-        <Row className="fr-pt-2w">
-          <Col>
+          <Col n="12">
             <TextInput
               label="URL"
               value={form?.url}

@@ -1,70 +1,47 @@
 import { useState } from 'react';
 import { Modal, ModalContent, ModalTitle } from '@dataesr/react-dsfr';
-import SocialMediaForm from './form';
+import SocialMediaForm from '../../forms/social-media';
 import ExpendableListCards from '../../card/expendable-list-cards';
 import api from '../../../utils/api';
 import SocialMediaCard from '../../card/social-media-card';
 import { Bloc, BlocActionButton, BlocContent, BlocModal, BlocTitle } from '../../bloc';
 import useFetch from '../../../hooks/useFetch';
 import useUrl from '../../../hooks/useUrl';
-import useToast from '../../../hooks/useToast';
+import useNotice from '../../../hooks/useNotice';
+import { deleteError, saveError, saveSuccess, deleteSuccess } from '../../../utils/notice-contents';
 
 export default function SocialMediasComponent() {
-  const { toast } = useToast();
   const { url } = useUrl('social-medias');
+  const { notice } = useNotice();
   const { data, isLoading, error, reload } = useFetch(url);
   const [showModal, setShowModal] = useState(false);
   const [modalTitle, setModalTitle] = useState('');
   const [modalContent, setModalContent] = useState(null);
 
-  const onSaveHandler = async (body) => {
-    const method = body.id ? 'patch' : 'post';
-    const saveUrl = body.id ? `${url}/${body.id}` : url;
-    const response = await api[method](saveUrl, body)
-      .catch(() => {
-        toast({
-          toastType: 'error',
-          description: "Une erreur s'est produite",
-        });
-      });
-    if (response.ok) {
-      toast({
-        toastType: 'success',
-        description: 'Le réseau social à été ajouté',
-      });
-      reload();
-      setShowModal(false);
-    }
+  const onSaveHandler = async (body, itemId) => {
+    const method = itemId ? 'patch' : 'post';
+    const saveUrl = itemId ? `${url}/${itemId}` : url;
+    await api[method](saveUrl, body)
+      .then(() => { notice(saveSuccess); reload(); })
+      .catch(() => notice(saveError));
+    return setShowModal(false);
   };
 
   const onDeleteHandler = async (itemId) => {
     await api.delete(`${url}/${itemId}`)
-      .catch(() => {
-        toast({
-          toastType: 'error',
-          description: "Une erreur s'est produite",
-        });
-      });
-    reload();
-    setShowModal(false);
+      .then(() => { notice(deleteSuccess); reload(); })
+      .catch(() => notice(deleteError));
+    return setShowModal(false);
   };
-
-  const onClickModifyHandler = (oneData) => {
-    setModalTitle("Modification d'un réseau social");
+  const onOpenModalHandler = (element) => {
+    setModalTitle(element?.id ? "Modification d'un réseau social" : "Ajout d'un réseau social");
     setModalContent(
       <SocialMediaForm
-        data={oneData}
-        onDeleteHandler={onDeleteHandler}
-        onSaveHandler={onSaveHandler}
+        id={element?.id}
+        data={element || {}}
+        onDelete={onDeleteHandler}
+        onSave={onSaveHandler}
       />,
-    );
-    setShowModal(true);
-  };
-
-  const onClickAddHandler = () => {
-    setModalTitle("Ajout d'un réseau social");
-    setModalContent(
-      <SocialMediaForm onSaveHandler={onSaveHandler} />,
     );
     setShowModal(true);
   };
@@ -75,7 +52,7 @@ export default function SocialMediasComponent() {
       <SocialMediaCard
         mediaName={item.type}
         account={item.account}
-        onClick={() => onClickModifyHandler(item)}
+        onClick={() => onOpenModalHandler(item)}
       />
     ));
     return <ExpendableListCards list={list} />;
@@ -84,7 +61,7 @@ export default function SocialMediasComponent() {
   return (
     <Bloc isLoading={isLoading} error={error} data={data}>
       <BlocTitle as="h4" look="h6">Réseaux sociaux</BlocTitle>
-      <BlocActionButton onClick={onClickAddHandler}>Ajouter un réseau social</BlocActionButton>
+      <BlocActionButton onClick={() => onOpenModalHandler()}>Ajouter un réseau social</BlocActionButton>
       <BlocContent>{renderCards()}</BlocContent>
       <BlocModal>
         <Modal isOpen={showModal} size="lg" hide={() => setShowModal(false)}>

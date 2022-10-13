@@ -50,7 +50,7 @@ export default function DocumentsOutlet() {
     setModalContent(
       <DocumentForm
         id={element?.id}
-        initialForm={element?.id ? { ...element, relatedObjects, currentObjectId: resourceId } : { currentObjectId: resourceId }}
+        data={element?.id ? { ...element, relatedObjects, currentObjectId: resourceId } : { currentObjectId: resourceId }}
         onDelete={deleteDocument}
         onSave={saveDocument}
       />,
@@ -89,7 +89,7 @@ export default function DocumentsOutlet() {
 
   return (
     <Bloc isLoading={isLoading} error={error} data={data}>
-      <BlocTitle as="h2" look="h3">Documents</BlocTitle>
+      <BlocTitle as="h2" look="h6">Documents</BlocTitle>
       <BlocActionButton onClick={() => onOpenModalHandler()}>
         Ajouter un document
       </BlocActionButton>

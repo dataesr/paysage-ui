@@ -1,43 +1,98 @@
-import { useNavigate } from 'react-router-dom';
-import { Card, CardDescription, CardTitle, Col, Row } from '@dataesr/react-dsfr';
-import { Bloc, BlocActionButton, BlocContent, BlocTitle } from '../bloc';
-import useUrl from '../../hooks/useUrl';
+import { useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import { Badge, BadgeGroup, Modal, ModalContent, ModalTitle, Row, Tag, TagGroup, Text } from '@dataesr/react-dsfr';
+import useEditMode from '../../hooks/useEditMode';
 import useFetch from '../../hooks/useFetch';
+import useHashScroll from '../../hooks/useHashScroll';
+import useNotice from '../../hooks/useNotice';
 
-export default function OfficialTextsOutlet() {
-  const { url, id } = useUrl();
-  const { data, isLoading, error } = useFetch(`/official-texts?filters[relatesTo]=${id}&limit=500`);
+import api from '../../utils/api';
+import { saveError, saveSuccess, deleteError, deleteSuccess } from '../../utils/notice-contents';
+
+import {
+  Bloc, BlocContent, BlocActionButton, BlocTitle, BlocModal,
+} from '../bloc';
+import Button from '../button';
+import OfficialTextForm from '../forms/official-text';
+import { Timeline, TimelineItem } from '../timeline';
+
+export default function OfficialTextOutlet() {
+  const { editMode } = useEditMode();
+  const { id: resourceId } = useParams();
   const navigate = useNavigate();
+  const url = `/official-texts?filters[relatesTo]=${resourceId}&sort=-publicationDate&limit=50`;
+  const { data, isLoading, error, reload } = useFetch(url);
+  const { notice } = useNotice();
+  useHashScroll();
+  const [isOpen, setIsOpen] = useState(false);
+  const [modalTitle, setModalTitle] = useState(null);
+  const [modalContent, setModalContent] = useState(null);
 
-  const renderCards = () => {
-    if (!data && !data?.data?.length) return null;
+  const saveOfficialText = (body, id = null) => {
+    const method = id ? 'patch' : 'post';
+    const saveUrl = id ? `/official-texts/${id}` : '/official-texts';
+    api[method](saveUrl, body)
+      .then(() => { reload(); notice(saveSuccess); setIsOpen(false); })
+      .catch(() => notice(saveError));
+  };
+
+  const deleteOfficialText = (id) => api.delete(`/official-texts/${id}`)
+    .then(() => { reload(); notice(deleteSuccess); setIsOpen(false); })
+    .catch(() => notice(deleteError));
+
+  const onOpenModalHandler = (element) => {
+    // Transform relatedObjects to use as managment value inside the form
+    const relatedObjects = element?.relatedObjects?.length
+      ? element?.relatedObjects.filter((rel) => rel.id !== resourceId)
+      : [];
+    setModalTitle(element?.id ? 'Modifier le document' : 'Ajouter un document');
+    setModalContent(
+      <OfficialTextForm
+        id={element?.id}
+        data={element?.id ? { ...element, relatedObjects, currentObjectId: resourceId } : { currentObjectId: resourceId }}
+        onDelete={deleteOfficialText}
+        onSave={saveOfficialText}
+      />,
+    );
+    setIsOpen(true);
+  };
+
+  const renderContent = () => {
+    if (!data || !data.data.length) return null;
     return (
-      <Row gutters>
-        {data.data.map((item) => (
-          <Col n="4" key={item.id}>
-            <Card
-              hasArrow
-              href={`/textes-officiels/${item.id}/${url}`}
-            >
-              <CardTitle>{item.type}</CardTitle>
-              <CardDescription>
-                {item.title}
-                <p className="fr-mt-2 italic">{`publié le ${item.publicationDate}`}</p>
-              </CardDescription>
-            </Card>
-          </Col>
+      <Timeline>
+        {data.data.map((event) => (
+          <TimelineItem date={event.publicationDate} key={event.id}>
+            <Row className="flex--space-between">
+              <BadgeGroup><Badge text={event.type} /></BadgeGroup>
+              {editMode && <Button onClick={() => onOpenModalHandler(event)} size="sm" icon="ri-edit-line" title="Editer l'évènement" tertiary borderless rounded />}
+            </Row>
+            <Text spacing="mb-1w" size="lead" bold>{event.title}</Text>
+            {event.description && <Text spacing="mb-1w">{event.description}</Text>}
+            {event.relatedObjects && (
+              <TagGroup>
+                {event.relatedObjects.map((related) => <Tag iconPosition="right" icon="ri-arrow-right-line" onClick={() => navigate(related.href)} key={related.id}>{related.displayName}</Tag>)}
+              </TagGroup>
+            )}
+          </TimelineItem>
         ))}
-      </Row>
+      </Timeline>
     );
   };
 
   return (
     <Bloc isLoading={isLoading} error={error} data={data}>
-      <BlocTitle as="h2" look="h3">Textes officiels</BlocTitle>
-      <BlocActionButton onClick={() => navigate(`/textes-officiels/ajouter?redirect=${url}/textes-officiels`)}>
+      <BlocTitle as="h2" look="h6">Texte officiel</BlocTitle>
+      <BlocActionButton onClick={() => onOpenModalHandler()}>
         Ajouter un texte officiel
       </BlocActionButton>
-      <BlocContent>{renderCards()}</BlocContent>
+      <BlocContent>{renderContent()}</BlocContent>
+      <BlocModal>
+        <Modal isOpen={isOpen} size="lg" hide={() => setIsOpen(false)}>
+          <ModalTitle>{modalTitle}</ModalTitle>
+          <ModalContent>{modalContent}</ModalContent>
+        </Modal>
+      </BlocModal>
     </Bloc>
   );
 }

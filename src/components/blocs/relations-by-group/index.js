@@ -65,7 +65,7 @@ export default function RelationsByGroup({ group, reloader }) {
         id={element?.id}
         resourceType={apiObject}
         relatedObjectTypes={groupAccepts}
-        initialForm={element || {}}
+        data={element || {}}
         onDelete={onDeleteElementHandler}
         onSave={onSaveElementHandler}
       />,
@@ -132,7 +132,7 @@ export default function RelationsByGroup({ group, reloader }) {
           <ModalContent>
             <RelationsGroupForm
               id={groupId}
-              initialForm={group}
+              data={group}
               onDelete={onDeleteListHandler}
               onSave={onSaveListHandler}
             />

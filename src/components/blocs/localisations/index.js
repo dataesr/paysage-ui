@@ -6,61 +6,45 @@ import useUrl from '../../../hooks/useUrl';
 import api from '../../../utils/api';
 import { formatDescriptionDates } from '../../../utils/dates';
 import Map from '../../map';
-import LocalisationForm from './form';
+import LocalisationForm from '../../forms/localisation';
 import Button from '../../button';
 import { Bloc, BlocActionButton, BlocContent, BlocModal, BlocTitle } from '../../bloc';
-import useToast from '../../../hooks/useToast';
-
+import { deleteError, saveError, saveSuccess, deleteSuccess } from '../../../utils/notice-contents';
 import styles from './styles.module.scss';
+import useNotice from '../../../hooks/useNotice';
 
 export default function LocalisationsComponent() {
-  const { toast } = useToast();
-  const { url: route } = useUrl('localisations');
-  const { data, isLoading, error, reload } = useFetch(route);
+  const { notice } = useNotice();
+  const { url } = useUrl('localisations');
+  const { data, isLoading, error, reload } = useFetch(url);
   const [showModal, setShowModal] = useState(false);
   const [modalTitle, setModalTitle] = useState('');
   const [modalContent, setModalContent] = useState(null);
 
-  const handleSave = async (localisationId, body) => {
-    const method = localisationId ? 'patch' : 'post';
-    const url = localisationId ? `${route}/${localisationId}` : route;
-    const response = await api[method](url, body)
-      .catch(() => {
-        toast({
-          toastType: 'error',
-          description: "Une erreur s'est produite",
-        });
-      });
-    if (response.ok) {
-      toast({
-        toastType: 'success',
-        description: "L'adresse a été ajoutée",
-      });
-      reload();
-      setShowModal(false);
-    }
+  const onSaveHandler = async (body, itemId) => {
+    const method = itemId ? 'patch' : 'post';
+    const saveUrl = itemId ? `${url}/${itemId}` : url;
+    await api[method](saveUrl, body)
+      .then(() => { notice(saveSuccess); reload(); })
+      .catch(() => notice(saveError));
+    return setShowModal(false);
   };
 
-  const handleDelete = async (localisationId) => {
-    if (!localisationId) return;
-    const response = await api.delete(`${route}/${localisationId}`);
-    if (response.ok) {
-      toast({
-        toastType: 'success',
-        description: "L'adresse a été supprimée",
-      });
-      reload();
-      setShowModal(false);
-    }
+  const onDeleteHandler = async (itemId) => {
+    await api.delete(`${url}/${itemId}`)
+      .then(() => { notice(deleteSuccess); reload(); })
+      .catch(() => notice(deleteError));
+    return setShowModal(false);
   };
 
-  const handleModalToggle = (item = {}) => {
-    setModalTitle(item?.id ? 'Modifier' : 'Ajouter');
+  const handleModalToggle = (item) => {
+    setModalTitle(item?.id ? 'Modifier la localisation' : 'Ajouter une localisation');
     setModalContent(
       <LocalisationForm
+        id={item?.id}
         data={item}
-        onDeleteHandler={handleDelete}
-        onSaveHandler={handleSave}
+        onDelete={onDeleteHandler}
+        onSave={onSaveHandler}
       />,
     );
 

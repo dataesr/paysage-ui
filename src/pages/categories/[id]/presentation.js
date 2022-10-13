@@ -1,4 +1,4 @@
-import { Row, Title, Text, Icon } from '@dataesr/react-dsfr';
+import { Row, Title, Icon } from '@dataesr/react-dsfr';
 import Identifiers from '../../../components/blocs/identifiers';
 import SocialMedias from '../../../components/blocs/social-medias';
 import Weblinks from '../../../components/blocs/weblinks';
@@ -7,7 +7,7 @@ import useFetch from '../../../hooks/useFetch';
 import useHashScroll from '../../../hooks/useHashScroll';
 import useUrl from '../../../hooks/useUrl';
 
-export default function CategoriesPresentationPage() {
+export default function CategoryPresentationPage() {
   useHashScroll();
   const { url } = useUrl();
   const { data, isLoading, error } = useFetch(url);
@@ -22,12 +22,9 @@ export default function CategoriesPresentationPage() {
         </Title>
       </Row>
       <Row className="flex--col-reverse">
-        <Text>
-          Né le:
-          {' '}
-          {data.birthDate}
-          {' '}
-        </Text>
+        <pre>
+          {JSON.stringify(data, null, 2)}
+        </pre>
       </Row>
       <Title as="h3" look="h4">Présence sur le web</Title>
       <Weblinks />

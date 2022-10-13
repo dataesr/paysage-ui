@@ -1,23 +1,31 @@
 import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { Alert, Col, Container, File, Icon, Radio, RadioGroup, Row, Tag, TagGroup, Text, TextInput } from '@dataesr/react-dsfr';
+import { Col, Container, File, Icon, Radio, RadioGroup, Row, Tag, TagGroup, Text, TextInput } from '@dataesr/react-dsfr';
 import useNotice from '../../../hooks/useNotice';
 import useForm from '../../../hooks/useForm';
 import api from '../../../utils/api';
 import DateInput from '../../date-input';
 import FormFooter from '../form-footer';
 import SearchBar from '../../search-bar';
+import PaysageBlame from '../../paysage-blame';
 
-export default function EventForm({ id, initialForm, onSave, onDelete }) {
-  const validateForm = (body) => {
-    const validationErrors = {};
-    if (!body.title) { validationErrors.title = "Le titre de l'évènement est obligatoire"; }
-    if (!body.eventDate) { validationErrors.eventDate = "La date de l'évènement est obligatoire"; }
-    if (!body.type) { validationErrors.type = "Le type de l'évènement est obligatoire"; }
-    return validationErrors;
-  };
+function validate(body) {
+  const validationErrors = {};
+  if (!body.title) { validationErrors.title = "Le titre de l'évènement est obligatoire"; }
+  if (!body.eventDate) { validationErrors.eventDate = "La date de l'évènement est obligatoire"; }
+  if (!body.type) { validationErrors.type = "Le type de l'évènement est obligatoire"; }
+  return validationErrors;
+}
 
-  const { form, updateForm, errors } = useForm({ files: [], ...initialForm }, validateForm);
+function sanitize(form) {
+  const fields = ['title', 'description', 'type', 'files', 'eventDate', 'relatesTo'];
+  const body = {};
+  Object.keys(form).forEach((key) => { if (fields.includes(key)) { body[key] = form[key]; } });
+  return body;
+}
+
+export default function EventForm({ id, data, onSave, onDelete }) {
+  const { form, updateForm, errors } = useForm({ files: [], ...data }, validate);
   const [showErrors, setShowErrors] = useState(false);
   const [filesErrors, setFilesErrors] = useState(false);
   const [files, setFiles] = useState([]);
@@ -31,9 +39,9 @@ export default function EventForm({ id, initialForm, onSave, onDelete }) {
     // Remove form managment values from form
     const relatesTo = form.relatedObjects?.length ? form.relatedObjects.map((element) => element.id) : [];
     if (form.currentObjectId) relatesTo.push(form.currentObjectId);
-    const { relatedObjects, currentObjectId, ...rest } = form;
     if (Object.keys(errors).length !== 0) return setShowErrors(true);
-    return onSave({ ...rest, relatesTo }, id);
+    const body = sanitize({ ...form, relatesTo });
+    return onSave(body, id);
   };
 
   const handleObjectSelect = ({ id: relatedObjectId, name: displayName }) => {
@@ -81,15 +89,13 @@ export default function EventForm({ id, initialForm, onSave, onDelete }) {
 
   return (
     <form>
+      <PaysageBlame
+        createdBy={data.createdBy}
+        updatedBy={data.updatedBy}
+        updatedAt={data.updatedAt}
+        createdAt={data.createdAt}
+      />
       <Container fluid>
-        {/* <Row spacing="mb-2w">
-          <Col n="12">
-            <Alert
-              title="Avez-vous vérifié que l'évènement n'existe pas ?"
-              description="Utilisez la barre de recherche principale pour vérifier que l'évènement n'existe pas encore."
-            />
-          </Col>
-        </Row> */}
         <Row>
           <Col n="12" spacing="pb-2w">
             <RadioGroup
@@ -198,11 +204,11 @@ export default function EventForm({ id, initialForm, onSave, onDelete }) {
 }
 EventForm.propTypes = {
   id: PropTypes.string,
-  initialForm: PropTypes.oneOfType([PropTypes.shape, null]),
+  data: PropTypes.oneOfType([PropTypes.shape, null]),
   onSave: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired,
 };
 EventForm.defaultProps = {
   id: null,
-  initialForm: { type: 'suivi', relatedObjects: [], files: [] },
+  data: { type: 'suivi', relatedObjects: [], files: [] },
 };

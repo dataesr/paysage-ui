@@ -5,7 +5,6 @@ import {
   ModalTitle,
 } from '@dataesr/react-dsfr';
 import { useState } from 'react';
-
 import ExpendableListCards from '../../card/expendable-list-cards';
 import WeblinkCard from '../../card/weblink-card';
 import api from '../../../utils/api';
@@ -14,8 +13,8 @@ import { Bloc, BlocActionButton, BlocContent, BlocModal, BlocTitle } from '../..
 import useFetch from '../../../hooks/useFetch';
 import useUrl from '../../../hooks/useUrl';
 import useEnums from '../../../hooks/useEnums';
-import useToast from '../../../hooks/useToast';
 import useNotice from '../../../hooks/useNotice';
+import { deleteError, saveError, saveSuccess, deleteSuccess } from '../../../utils/notice-contents';
 
 export default function Weblinks({ types, title }) {
   const { url, apiObject } = useUrl('weblinks');
@@ -24,7 +23,6 @@ export default function Weblinks({ types, title }) {
   const [modalTitle, setModalTitle] = useState('');
   const [modalContent, setModalContent] = useState(null);
   const { weblinks } = useEnums();
-  const { toast } = useToast();
   const { notice } = useNotice();
   const options = types?.length
     ? weblinks[apiObject]?.filter((type) => types.includes(type.value))
@@ -34,14 +32,16 @@ export default function Weblinks({ types, title }) {
     const method = body.id ? 'patch' : 'post';
     const saveUrl = body.id ? `${url}/${body.id}` : url;
     await api[method](saveUrl, body)
-      .then(() => { notice({ type: 'success', content: 'Le lien à été ajouté' }); reload(); setShowModal(false); })
-      .catch(() => { toast({ toastType: 'error', description: "Une erreur s'est produite" }); });
+      .then(() => { notice(saveSuccess); reload(); })
+      .catch(() => notice(saveError));
+    return setShowModal(false);
   };
 
   const onDeleteHandler = async (itemId) => {
     await api.delete(`${url}/${itemId}`)
-      .then(() => { reload(); setShowModal(false); })
-      .catch(() => { toast({ toastType: 'error', description: "Une erreur s'est produite" }); });
+      .then(() => { notice(deleteSuccess); reload(); })
+      .catch(() => notice(deleteError));
+    return setShowModal(false);
   };
 
   const onClickModifyHandler = (oneData) => {
@@ -65,6 +65,11 @@ export default function Weblinks({ types, title }) {
     setShowModal(true);
   };
 
+  const getElementsCount = () => {
+    if (!data) return null;
+    return data.data.filter((el) => types.includes(el.type))?.length;
+  };
+
   const renderCards = () => {
     if (!data) return null;
     const filteredList = types.length
@@ -82,7 +87,7 @@ export default function Weblinks({ types, title }) {
   };
 
   return (
-    <Bloc isLoading={isLoading} error={error} data={data}>
+    <Bloc isLoading={isLoading} error={error} data={{ totalCount: getElementsCount() }}>
       <BlocTitle as="h4" look="h6">{title}</BlocTitle>
       <BlocActionButton onClick={onClickAddHandler}>Ajouter un lien</BlocActionButton>
       <BlocContent>{renderCards()}</BlocContent>

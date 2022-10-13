@@ -38,44 +38,62 @@
   }
   @media only screen and (min-width: 992px) {
     bottom: 30px;
-    left: calc(50vw - 160px);
-    padding: 12px;
+    right: 30px;
+    padding: 24px;
   }
   .toast-info {
-    border: 1px solid var(--info-main-525);
+    // border: 1px solid var(--info-main-525);
+    border-radius: 0.25rem;
+    --hover: var(--background-contrast-info-hover) !important;
+    --active: var(--background-contrast-info-active) !important;
+    background-color: var(--background-contrast-info) !important;
+    color: var(--text-default-info) !important;
 
     >.toast-colored-box {
       background-color: var(--info-main-525);
     }
   }
-
+  
   .toast-warning {
-    border: 1px solid var(--warning-main-525);
-
+    // border: 1px solid var(--warning-main-525);
+    --hover: var(--background-contrast-warning-hover) !important;
+    --active: var(--background-contrast-warning-active) !important;
+    background-color: var(--background-contrast-warning) !important;
+    color: var(--text-default-warning) !important;
+    
     >.toast-colored-box {
       background-color: var(--warning-main-525);
     }
   }
 
   .toast-success {
-    border: 1px solid var(--success-main-525);
-
+    // border: 1px solid var(--success-main-525);
+    --hover: var(--background-contrast-success-hover) !important;
+    --active: var(--background-contrast-success-active) !important;
+    background-color: var(--background-contrast-success) !important;
+    color: var(--text-default-success) !important;
+    
+    
     >.toast-colored-box {
       background-color: var(--success-main-525);
     }
   }
 
   .toast-error {
-    border: 1px solid var(--error-main-525);
+    // border: 1px solid var(--error-main-525);
+    --hover: var(--background-contrast-error-hover) !important;
+    --active: var(--background-contrast-error-active) !important;
+    background-color: var(--background-contrast-error) !important;
+    color: var(--text-default-error) !important;
 
     >.toast-colored-box {
       background-color: var(--error-main-525);
     }
   }
-
+  
   .toast {
+    border-radius: 0.25rem;
     position: relative;
-    background: var(--background-default-grey-hover);
     box-shadow: 0 6px 18px 0 rgba(0, 0, 18, 0.16);
     display: flex;
     flex-wrap: nowrap;
@@ -94,7 +112,7 @@
         animation-play-state: paused;
       }
     }
-
+    
     .toast-btn-close {
       position: absolute;
       right: 2px;
@@ -102,7 +120,7 @@
       border-radius: 100%;
       height: 32px;
       width: 32px;
-
+      
       SPAN {
         padding-bottom: 6px;
         margin-right: 0px;
@@ -123,8 +141,10 @@
       width: 40px;
       background: rgba(0, 0, 18, 0.16);
     }
-
+    
     .toast-colored-box {
+      border-top-left-radius: 0.25rem;
+      border-bottom-left-radius: 0.25rem;
       width: 40px;
       position: absolute;
       top: 0;

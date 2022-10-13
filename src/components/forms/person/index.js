@@ -11,22 +11,31 @@ import useForm from '../../../hooks/useForm';
 import DateInput from '../../date-input';
 import TagInput from '../../tag-input';
 import FormFooter from '../form-footer';
+import PaysageBlame from '../../paysage-blame';
 
-export default function PersonForm({ id, initialForm, onSave, onDelete }) {
-  const validator = (body) => {
-    const validationErrors = {};
-    if (!body.firstName) { validationErrors.title = 'Le prénom est obligatoire.'; }
-    if (!body.lastName) { validationErrors.eventDate = 'Le nom est obligatoire.'; }
-    if (!body.gender) { validationErrors.type = 'Le genre est obligatoire.'; }
-    return validationErrors;
-  };
+function validate(body) {
+  const validationErrors = {};
+  if (!body.firstName) { validationErrors.title = 'Le prénom est obligatoire.'; }
+  if (!body.lastName) { validationErrors.eventDate = 'Le nom est obligatoire.'; }
+  if (!body.gender) { validationErrors.type = 'Le genre est obligatoire.'; }
+  return validationErrors;
+}
 
-  const { form, updateForm, errors } = useForm(initialForm, validator);
+function sanitize(form) {
+  const fields = ['gender', 'firstName', 'lastName', 'otherNames', 'birthDate', 'deathDate', 'activity', 'comment'];
+  const body = {};
+  Object.keys(form).forEach((key) => { if (fields.includes(key)) { body[key] = form[key]; } });
+  return body;
+}
+
+export default function PersonForm({ id, data, onSave, onDelete }) {
+  const { form, updateForm, errors } = useForm(data, validate);
   const [showErrors, setShowErrors] = useState(false);
 
   const handleSubmit = () => {
     if (Object.keys(errors).length !== 0) return setShowErrors(true);
-    return onSave(form);
+    const body = sanitize(form);
+    return onSave(body);
   };
   const genderOptions = [
     { value: '', label: 'Selectionner' },
@@ -37,6 +46,12 @@ export default function PersonForm({ id, initialForm, onSave, onDelete }) {
 
   return (
     <form>
+      <PaysageBlame
+        createdBy={data.createdBy}
+        updatedBy={data.updatedBy}
+        updatedAt={data.updatedAt}
+        createdAt={data.createdAt}
+      />
       <Container fluid className="fr-pb-6w">
         <Row className="fr-pb-5w">
           <Col n="12" spacing="pb-2w">
@@ -117,12 +132,12 @@ export default function PersonForm({ id, initialForm, onSave, onDelete }) {
 
 PersonForm.propTypes = {
   id: PropTypes.string,
-  initialForm: PropTypes.oneOfType([PropTypes.shape, null]),
+  data: PropTypes.oneOfType([PropTypes.shape, null]),
   onSave: PropTypes.func.isRequired,
   onDelete: PropTypes.func,
 };
 PersonForm.defaultProps = {
   id: null,
-  initialForm: {},
+  data: {},
   onDelete: null,
 };

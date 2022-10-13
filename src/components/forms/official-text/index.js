@@ -1,205 +1,61 @@
 import PropTypes from 'prop-types';
 import {
-  Alert,
   Col,
   Container,
   Icon,
   Row,
   Select,
   Tag,
+  TagGroup,
   TextInput,
   Title,
 } from '@dataesr/react-dsfr';
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { v4 as uuidv4 } from 'uuid';
-import Button from '../../button';
-import validator from './validator';
 import DateInput from '../../date-input';
 import api from '../../../utils/api';
-import useToast from '../../../hooks/useToast';
+import useForm from '../../../hooks/useForm';
+import FormFooter from '../form-footer';
+import SearchBar from '../../search-bar';
 
-export default function OfficiaTextForm({ data, from }) {
-  const navigate = useNavigate();
-  const [savingErrors, setSavingErrors] = useState(null);
-  const [errors, setReturnedErrors] = useState([]);
-  const { toast } = useToast();
+function validator(body) {
+  const ret = {};
+  if (!body.nature) ret.nature = 'La nature du texte officiel est obligatoire';
+  if (!body.type) ret.type = 'Le type du texte officiel est obligatoire';
+  if (!body.title) ret.title = 'Le titre du texte officiel est obligatoire';
+  if (!body.pageUrl) ret.pageUrl = "L'URL de destination du texte officiel est obligatoire";
+  if (!body.publicationDate) ret.publicationDate = 'La date de publication du texte officiel est obligatoire';
+  return ret;
+}
+function sanitize(form) {
+  const fields = ['nature', 'type', 'jorftext', 'nor', 'title', 'pageUrl', 'boesrId', 'joId', 'publicationDate',
+    'signatureDate', 'startDate', 'previsionalEndDate', 'endDate', 'textExtract', 'comment', 'relatesTo'];
+  const body = {};
+  Object.keys(form).forEach((key) => { if (fields.includes(key)) { body[key] = form[key]; } });
+  return body;
+}
 
-  const [otNature, setNature] = useState('Publication au JO');
-  const [otType, setType] = useState('Loi');
-  const [otJorftext, setJorftext] = useState(null);
-  const [otNor, setNor] = useState(null);
-  const [otTitle, setTitle] = useState(null);
-  const [otPageUrl, setPageUrl] = useState(null);
-  const [otBoesrId, setBoesrId] = useState(null);
-  const [otJoId, setJoId] = useState(null);
-  const [otStartDate, setStartDate] = useState(null);
-  const [otEndDate, setEndDate] = useState(null);
-  const [otPublicationDate, setPublicationDate] = useState(null);
-  const [otSignatureDate, setSignatureDate] = useState(null);
-  const [otPrevisionalEndDate, setPrevisionalEndDate] = useState(null);
-  const [otTextExtract, setTextExtract] = useState(null);
-  const [otComment, setComment] = useState(null);
+export default function OfficiaTextForm({ id, data, onSave, onDelete }) {
+  const [showErrors, setShowErrors] = useState(false);
+  const [query, setQuery] = useState('');
+  const [options, setOptions] = useState('');
+  const { form, updateForm, errors } = useForm(data, validator);
 
-  const [otRelatesTo, setRelatesTo] = useState([]);
-
-  const [relatesToSearch, setRelatesToSearch] = useState(null);
-  const [relatesToSearchResult, setRelatesToSearchResult] = useState([]);
+  const handleSubmit = () => {
+    const relatesTo = form.relatedObjects?.length ? form.relatedObjects.map((element) => element.id) : [];
+    if (form.currentObjectId) relatesTo.push(form.currentObjectId);
+    const { relatedObjects, currentObjectId, ...rest } = form;
+    if (Object.keys(errors).length !== 0) return setShowErrors(true);
+    const body = sanitize({ ...rest, relatesTo });
+    return onSave(body, id);
+  };
 
   useEffect(() => {
-    // init si data (modif)
-    if (data) {
-      setNature(data.nature || null);
-      setType(data.type || null);
-      setJorftext(data.jorftext || null);
-      setNor(data.nor || null);
-      setTitle(data.title || null);
-      setPageUrl(data.pageUrl || null);
-      setBoesrId(data.boesrId || null);
-      setJoId(data.joId || null);
-      setStartDate(data.startDate || null);
-      setEndDate(data.endDate || null);
-      setPublicationDate(data.publicationDate || null);
-      setSignatureDate(data.signatureDate || null);
-      setPrevisionalEndDate(data.previsionalEndDate || null);
-      setTextExtract(data.textExtract || null);
-      setComment(data.comment || null);
-
-      const relatedCategories = data.relatedCategories.map((el) => ({
-        id: el.id,
-        label: 'cat',
-        apiObject: 'categories',
-      }));
-      const relatedPersons = data.relatedPersons.map((el) => ({
-        id: el.id,
-        label: `${el.lastName} ${el.firstName}`,
-        apiObject: 'persons',
-      }));
-      const relatedStructures = data.relatedStructures.map((el) => ({
-        id: el.id,
-        label: el.currentName.usualName,
-        apiObject: 'structures',
-      }));
-      setRelatesTo(
-        relatedCategories.concat(relatedPersons).concat(relatedStructures),
-      );
-    }
-  }, [data]);
-
-  const setErrors = (err) => {
-    setReturnedErrors(errors);
-    setSavingErrors(
-      <Row>
-        <Col>
-          <ul>
-            {err.map((e) => (
-              <li key={uuidv4()}>
-                <Alert description={e.error} type="error" />
-              </li>
-            ))}
-          </ul>
-        </Col>
-      </Row>,
-    );
-  };
-
-  const onRelatesToSearch = (e) => {
-    const needle = e.target.value;
-    setRelatesToSearch(needle);
-
-    let result = [];
-
-    if (needle) {
-      // TODO : requete API
-      result = [
-        { id: 'G1r6y', label: 'Normandie Université', apiObject: 'structures' },
-        {
-          id: 'QYw7j',
-          label:
-            'Institut national des sciences appliquées Centre Val de Loire',
-          apiObject: 'structures',
-        },
-        { id: 'p25Q3', label: 'Université de Caen', apiObject: 'structures' },
-        { id: 'EWw2c', label: 'Péglion Jérémy', apiObject: 'persons' },
-        { id: 'McQOf', label: 'Ma nouvelle catégorie', apiObject: 'categories' },
-      ];
-    }
-
-    setRelatesToSearchResult(result);
-  };
-
-  const onSaveHandler = async () => {
-    const body = {
-      nature: otNature,
-      type: otType,
-      jorftext: otJorftext,
-      nor: otNor,
-      title: otTitle,
-      pageUrl: otPageUrl,
-      boesrId: otBoesrId,
-      joId: otJoId,
-      publicationDate: otPublicationDate,
-      signatureDate: otSignatureDate,
-      startDate: otStartDate,
-      previsionalEndDate: otPrevisionalEndDate,
-      endDate: otEndDate,
-      textExtract: otTextExtract,
-      comment: otComment,
-      relatesTo: otRelatesTo.map((item) => item.id),
+    const getAutocompleteResult = async () => {
+      const response = await api.get(`/autocomplete?query=${query}`);
+      setOptions(response.data?.data);
     };
-
-    const { ok, returnedErrors } = validator(body);
-    if (ok) {
-      let response = null;
-      if (data?.id) {
-        response = await api.patch(`/official-texts/${data.id}`, body).catch((e) => {
-          console.log(e);
-        });
-      } else {
-        response = await api.post('/official-texts', body).catch((e) => {
-          console.log(e);
-        });
-      }
-      switch (response.status) {
-      case 200:
-        toast({
-          toastType: 'success',
-          title: 'Le texte officiel à été mise à jour',
-        });
-        break;
-      case 201:
-        toast({
-          toastType: 'success',
-          title: 'Le texte officiel été ajouté',
-        });
-        break;
-      default:
-        toast({
-          toastType: 'error',
-          title: "Erreur lors de l'enregistrement",
-        });
-        break;
-      }
-
-      navigate(from || '/textes-officiels');
-    } else {
-      setErrors(returnedErrors);
-    }
-  };
-
-  const onAddRelatesTo = (item) => {
-    const newOtRelatesTo = [...otRelatesTo];
-    if (!newOtRelatesTo.find((el) => el.id === item.id)) {
-      newOtRelatesTo.push(item);
-      setRelatesTo(newOtRelatesTo);
-    }
-    setRelatesToSearchResult([]);
-    setRelatesToSearch('');
-  };
-
-  const deleteRelation = (item) => {
-    setRelatesTo(otRelatesTo.filter((ele) => ele.id !== item.id));
-  };
+    if (query) { getAutocompleteResult(); } else { setOptions([]); }
+  }, [query]);
 
   const natureOptions = [
     { value: 'Publication au JO', label: 'Publication au JO' },
@@ -215,236 +71,188 @@ export default function OfficiaTextForm({ data, from }) {
     { value: 'Circulaire', label: 'Circulaire' },
   ];
 
+  const handleObjectSelect = ({ id: relatedObjectId, name: displayName }) => {
+    const currentRelatedObjects = form.relatedObjects?.length ? form.relatedObjects : [];
+    updateForm({ relatedObjects: [...currentRelatedObjects, { id: relatedObjectId, displayName }] });
+    setQuery('');
+    setOptions([]);
+  };
+
+  const handleObjectDelete = (objectId) => {
+    updateForm({ relatedObjects: form.relatedObjects.filter((o) => o.id !== objectId) });
+    setQuery('');
+    setOptions([]);
+  };
+
   return (
     <Container fluid className="fr-pb-6w">
-      <Row>
-        <Col className="fr-pr-5w fr-pb-5w">
+      <Row gutters className="flex--last-baseline">
+        <Col n="12 md-6">
           <Select
             label="Nature"
             options={natureOptions}
-            selected={otNature}
-            onChange={(e) => setNature(e.target.value)}
+            selected={form.nature}
+            onChange={(e) => updateForm({ nature: e.target.value })}
             required
+            message={(showErrors && errors.nature) ? errors.nature : null}
+            messageType={(showErrors && errors.nature) ? 'error' : ''}
           />
         </Col>
-        <Col className="fr-pl-5w fr-pb-5w">
+        <Col n="12 md-6">
           <Select
             label="Type"
             options={typeOptions}
-            selected={otType}
-            onChange={(e) => setType(e.target.value)}
+            selected={form.type}
+            onChange={(e) => updateForm({ type: e.target.value })}
             required
+            message={(showErrors && errors.type) ? errors.type : null}
+            messageType={(showErrors && errors.type) ? 'error' : ''}
           />
         </Col>
-      </Row>
-      <Row>
-        <Col className="fr-pr-5w fr-pb-5w">
+        <Col n="12 md-6">
           <TextInput
             label="Numéro jorftext pour les publications au JO"
             hint="Uniquement si Publication au JO"
-            value={otJorftext}
-            onChange={(e) => setJorftext(e.target.value)}
+            value={form.jorftext}
+            onChange={(e) => updateForm({ jorftext: e.target.value })}
           />
         </Col>
-        <Col className="fr-pl-5w fr-pb-5w">
+        <Col n="12 md-6">
           <TextInput
             label="Numéro NOR du texte officiel"
             hint="(système normalisé de numérotation des textes officiels publiés en France)"
-            value={otNor}
-            onChange={(e) => setNor(e.target.value)}
+            value={form.nor}
+            onChange={(e) => updateForm({ nor: e.target.value })}
           />
         </Col>
-      </Row>
-      <Row>
-        <Col className="fr-pb-5w">
+        <Col n="12">
           <TextInput
             label="Titre du texte officiel"
-            value={otTitle}
-            onChange={(e) => setTitle(e.target.value)}
+            value={form.title}
+            onChange={(e) => updateForm({ title: e.target.value })}
             required
-            messageType={
-              errors.find((el) => el.field === 'title') ? 'error' : ''
-            }
+            message={(showErrors && errors.title) ? errors.title : null}
+            messageType={(showErrors && errors.title) ? 'error' : ''}
           />
         </Col>
-      </Row>
-      <Row>
-        <Col className="fr-pb-5w">
+        <Col n="12">
           <TextInput
             label="URL"
-            value={otPageUrl}
-            onChange={(e) => setPageUrl(e.target.value)}
+            value={form.pageUrl}
+            onChange={(e) => updateForm({ pageUrl: e.target.value })}
             required
-            messageType={
-              errors.find((el) => el.field === 'pageUrl') ? 'error' : ''
-            }
+            message={(showErrors && errors.pageUrl) ? errors.pageUrl : null}
+            messageType={(showErrors && errors.pageUrl) ? 'error' : ''}
           />
         </Col>
-      </Row>
-      <Row>
-        <Col className="fr-pr-5w fr-pb-5w">
+        <Col n="12 md-6">
           <TextInput
             label="Numéro du BOESR où a été publié le texte"
-            value={otBoesrId}
-            onChange={(e) => setBoesrId(e.target.value)}
+            value={form.boesrId}
+            onChange={(e) => updateForm({ boesrId: e.target.value })}
           />
         </Col>
-        <Col className="fr-pl-5w fr-pb-5w">
+        <Col n="12 md-6">
           <TextInput
             label="Numéro du décret ou de l’arrêté"
-            value={otJoId}
-            onChange={(e) => setJoId(e.target.value)}
+            value={form.joId}
+            onChange={(e) => updateForm({ joId: e.target.value })}
           />
         </Col>
-      </Row>
-      <Row>
-        <Col n="12" className="fr-pb-5w">
+        <Col n="12">
           <TextInput
             textarea
             label="Résumé"
-            value={otTextExtract}
-            onChange={(e) => setTextExtract(e.target.value)}
+            value={form.textExtract}
+            onChange={(e) => updateForm({ textExtract: e.target.value })}
           />
           <TextInput
             textarea
             label="Commentaires"
-            value={otComment}
-            onChange={(e) => setComment(e.target.value)}
+            value={form.comment}
+            onChange={(e) => updateForm({ comment: e.target.value })}
           />
         </Col>
-      </Row>
-      <Row>
-        <Col n="12" className="fr-pb-5w">
-          <Row>
-            <Col>
-              <Title as="h3">Dates</Title>
-            </Col>
-          </Row>
-          <Row>
-            <Col n="6" className="fr-pr-5w">
-              <DateInput
-                value={otPublicationDate}
-                label="Date de publication"
-                onDateChange={(v) => setPublicationDate(v)}
-                required
-              />
-            </Col>
-            <Col n="6" className="fr-pl-5w">
-              <DateInput
-                value={otSignatureDate}
-                label="Date de signature"
-                onDateChange={(v) => setSignatureDate(v)}
-              />
-            </Col>
-            <Col n="6" className="fr-pr-5w">
-              <DateInput
-                value={otStartDate}
-                label="Date de début"
-                onDateChange={(v) => setStartDate(v)}
-              />
-            </Col>
-            <Col n="6" className="fr-pl-5w">
-              <DateInput
-                value={otEndDate}
-                label="Date de fin"
-                onDateChange={(v) => setEndDate(v)}
-              />
-            </Col>
-            <Col n="6" className="fr-pr-5w">
-              <DateInput
-                value={otPrevisionalEndDate}
-                label="Date de fin prévisionnelle"
-                onDateChange={(v) => setPrevisionalEndDate(v)}
-              />
-            </Col>
-          </Row>
-        </Col>
-      </Row>
-      <hr />
-      <Row>
-        <Col>
-          <Title as="h3">Eléments liés à ce texte officiel</Title>
-        </Col>
-      </Row>
-      <Row>
-        <Col>
-          <TextInput
-            label="Rechercher un objet pour l'ajouter"
-            value={relatesToSearch}
-            onChange={onRelatesToSearch}
-            // TODO : search
+        <Col n="12"><Title spacing="mb-0" as="h3" look="h5">Dates</Title></Col>
+        <Col n="12">
+          <DateInput
+            value={form.publicationDate}
+            label="Date de publication"
+            onDateChange={(v) => updateForm({ publicationDate: v })}
+            required
+            message={(showErrors && errors.publicationDate) ? errors.publicationDate : null}
+            messageType={(showErrors && errors.publicationDate) ? 'error' : ''}
           />
         </Col>
-      </Row>
-      {relatesToSearchResult ? (
-        <Row>
-          <Col>
-            <ul>
-              {relatesToSearchResult.map((item) => (
-                <li key={uuidv4()}>
-                  <Row>
-                    <Col n="8">{item.label}</Col>
-                    <Col>
-                      <Button onClick={() => onAddRelatesTo(item)} size="sm">
-                        <Icon name="ri-links-fill" size="lg" />
-                        Ajouter la liaison
-                      </Button>
-                    </Col>
-                  </Row>
-                </li>
-              ))}
-            </ul>
-          </Col>
-        </Row>
-      ) : null}
-      {otRelatesTo ? (
-        <>
-          <Row>
-            <Col className="fr-mb-5v">
-              {otRelatesTo.map((item) => (
-                <Tag
-                  as="a"
-                  key={uuidv4()}
-                  onClick={() => deleteRelation(item)}
-                  className={`bg-${item.apiObject} fr-mx-1`}
-                  closable
-                >
-                  {item.label}
-                </Tag>
-              ))}
-            </Col>
-          </Row>
-          <Row>
-            <Col>
-              <span className="bullet bg-structures" />
-              Structures
-              <span className="bullet bg-persons" />
-              Personnes
-              <span className="bullet bg-categories" />
-              Catégories
-            </Col>
-          </Row>
-        </>
-      ) : null}
-      <hr />
-      {savingErrors || null}
-      <Row>
-        <Col className="text-right">
-          <Button onClick={onSaveHandler} size="sm">
-            <Icon name="ri-save-line" size="lg" />
-            {data?.id ? 'Modifier' : 'Ajouter'}
-          </Button>
+        <Col n="12">
+          <DateInput
+            value={form.signatureDate}
+            label="Date de signature"
+            onDateChange={(v) => updateForm({ signatureDate: v })}
+          />
+        </Col>
+        <Col n="12">
+          <DateInput
+            value={form.startDate}
+            label="Date de début"
+            onDateChange={(v) => updateForm({ startDate: v })}
+          />
+        </Col>
+        <Col n="12">
+          <DateInput
+            value={form.endDate}
+            label="Date de fin"
+            onDateChange={(v) => updateForm({ endDate: v })}
+          />
+        </Col>
+        <Col n="12">
+          <DateInput
+            value={form.previsionalEndDate}
+            label="Date de fin prévisionnelle"
+            onDateChange={(v) => updateForm({ previsionalEndDate: v })}
+          />
+        </Col>
+        <Col n="12"><Title spacing="mb-0" as="h3" look="h5">Eléments liés</Title></Col>
+        <Col n="12">
+          <SearchBar
+            buttonLabel="Rechercher"
+            value={query || ''}
+            label="Lier d'autres objets paysage à ce texte officiel"
+            placeholder="Rechercher..."
+            onChange={(e) => { setQuery(e.target.value); }}
+            options={options}
+            onSelect={handleObjectSelect}
+          />
+          {(form.relatedObjects?.length > 0) && (
+            <Row spacing="mt-2w">
+              <TagGroup>
+                {form.relatedObjects.map((element) => (
+                  <Tag key={element.id} onClick={() => handleObjectDelete(element.id)}>
+                    {element.displayName}
+                    <Icon iconPosition="right" name="ri-close-line" />
+                  </Tag>
+                ))}
+              </TagGroup>
+            </Row>
+          )}
         </Col>
       </Row>
+      <FormFooter
+        id={id || null}
+        onSaveHandler={handleSubmit}
+        onDeleteHandler={onDelete}
+      />
     </Container>
   );
 }
 
 OfficiaTextForm.propTypes = {
-  data: PropTypes.object,
-  from: PropTypes.string.isRequired,
+  id: PropTypes.string,
+  data: PropTypes.oneOfType([PropTypes.shape, null]),
+  onSave: PropTypes.func.isRequired,
+  onDelete: PropTypes.func.isRequired,
 };
-
 OfficiaTextForm.defaultProps = {
-  data: null,
+  id: null,
+  data: { relatedObjects: [] },
 };

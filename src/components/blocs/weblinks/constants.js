@@ -42,5 +42,12 @@ export const WEBLINKS_TYPES = [
 ];
 
 export const PALMARES_TYPES = [
-  'rankingShanghai', '',
+  'rankingShanghai',
+  'rankingThe',
+  'rankingScimago',
+  'rankingQs',
+  'rankingUmultirank',
+  'rankingLeiden',
+  'rankingWebometrics',
+  '',
 ];

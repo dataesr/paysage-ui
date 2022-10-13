@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import L, { latLngBounds } from 'leaflet';
 import { MapContainer, TileLayer, Marker, useMap, Popup } from 'react-leaflet';
@@ -25,12 +26,13 @@ SetMap.propTypes = {
   markers: PropTypes.array,
 };
 
-export default function Map({ markers, height, width }) {
+export default function Map({ markers, height, width, onMarkerDragEnd }) {
+  const eventHandlers = useMemo(() => ({ dragend(e) { return onMarkerDragEnd(e); } }), [onMarkerDragEnd]);
   return (
     <MapContainer
       center={[48.866667, 2.333333]}
       zoom={6}
-      maxZoom={13}
+      // maxZoom={18}
       style={{ width, height }}
       scrollWheelZoom={false}
       attributionControl
@@ -40,7 +42,7 @@ export default function Map({ markers, height, width }) {
         url="https://tile.jawg.io/jawg-sunny/{z}/{x}/{y}.png?access-token=5V4ER9yrsLxoHQrAGQuYNu4yWqXNqKAM6iaX5D1LGpRNTBxvQL3enWXpxMQqTrY8"
       />
       {markers.map((marker) => (
-        <Marker position={marker.latLng} key={marker.latLng}>
+        <Marker position={marker.latLng} key={marker.latLng} draggable={!!onMarkerDragEnd} eventHandlers={eventHandlers}>
           <Popup>{marker.address}</Popup>
         </Marker>
       ))}
@@ -53,10 +55,12 @@ Map.defaultProps = {
   markers: [],
   height: '300px',
   width: '100%',
+  onMarkerDragEnd: null,
 };
 
 Map.propTypes = {
   markers: PropTypes.array,
   height: PropTypes.string,
   width: PropTypes.string,
+  onMarkerDragEnd: PropTypes.func,
 };
