@@ -61,14 +61,15 @@ jobs:
       - uses: actions/checkout@v2
       - uses: dataesr/slack-notifier-action@v1
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN}}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
           slack_token: ${{ secrets.SLACK_TOKEN }}
           slack_channel: ${{ env.SLACK_NOTIFICATION_CHANNEL}}
           deployment_url: ${{ env.DEPLOYMENT_URL }}
       - name: Create the Mattermost Message
         run: |
-          echo "{\"text\":\"testing github action :tada:\"}" > mattermost.json
+          echo "{\"text\":\"${{ github.actor }} ${{ github.event_name }} sur la branche ${{ github.ref }} de ${{ github.repository }}\nStaging deployment\"}" > mattermost.json
       - uses: mattermost/action-mattermost-notify@master
         env:
-          MATTERMOST_WEBHOOK_URL: ${{ secrets.MATTERMOST_WEBHOOK_URL }}
           MATTERMOST_CHANNEL: 'Paysage'
+          MATTERMOST_USERNAME: 'mattermost-bot'
+          MATTERMOST_WEBHOOK_URL: ${{ secrets.MATTERMOST_WEBHOOK_URL }}
