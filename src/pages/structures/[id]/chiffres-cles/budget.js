@@ -102,7 +102,7 @@ export default function StructureBudgetPage() {
         title={(
           <>
             <span>{el.key}</span>
-            <Icon className="ri-map-pin-fill fr-pr-1w" />
+            <Icon name="ri-information-fill" className="fr-pr-1w" title={el.info} />
           </>
         )}
         descriptionElement={(
