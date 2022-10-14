@@ -1,4 +1,4 @@
-import { Col, Icon, Row, Text } from '@dataesr/react-dsfr';
+import { Col, Icon, Row, Text, Title } from '@dataesr/react-dsfr';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 
@@ -167,7 +167,11 @@ export default function StructureEtudiantsPage() {
     value: lastData?.diplomecapa,
   }, {
     text: 'étudiants inscrits en Licence',
-    value: lastData?.diplomelic_l_aut,
+    value: (lastData?.diplomelic_l_aut || 0) + (lastData?.diplomelic_l_las || 0),
+  }, {
+    text: 'étudiants inscrits en Licence accès santé',
+    value: lastData?.diplomelic_l_las,
+    prefix: 'dont',
   }, {
     text: 'étudiants inscrits préparant un diplôme universitaire de technologie',
     value: lastData?.diplomedut,
@@ -185,6 +189,12 @@ export default function StructureEtudiantsPage() {
     text: 'étudiants inscrits en formations d\'ingénieurs',
     value: lastData?.diplomeing,
   }, {
+    text: 'étudiants inscrits en PASS et PluriPASS',
+    value: lastData?.diplomesante_pass,
+  }, {
+    text: 'étudiants inscrits en Diplôme d\'État d\'infirmier',
+    value: lastData?.diplomesante_infirmier,
+  }, {
     text: 'étudiants inscrits en PACES',
     value: lastData?.diplomesante_paces,
   }, {
@@ -193,6 +203,12 @@ export default function StructureEtudiantsPage() {
   }, {
     text: 'étudiants inscrits dans les autres formations de santé',
     value: lastData?.diplomesante_autres_form,
+  }, {
+    text: 'étudiants inscrits en Doctorat',
+    value: lastData?.diplomedoct,
+  }, {
+    text: 'étudiants inscrits en HDR',
+    value: lastData?.diplomehdr,
   }, {
     text: 'étudiants inscrits dans les diplômes d\'établissement',
     value: lastData?.diplomedu,
@@ -332,7 +348,7 @@ export default function StructureEtudiantsPage() {
     title: { text: 'Évolution de la part des étudiants inscrits en mobilité internationale (en %)' },
     tooltip: {
       // eslint-disable-next-line react/no-this-in-sfc
-      formatter() { return `Part de mobilité internationale : <b>${this.point.x} %</b>`; },
+      formatter() { return `Part de mobilité internationale : <b>${this.point.y.toFixed(1)} %</b>`; },
     },
   };
 
@@ -378,16 +394,18 @@ export default function StructureEtudiantsPage() {
     const list = all
       .filter((item) => item?.value)
       .map((item) => {
-        let title = item.value.toLocaleString('fr-FR');
-        title = item?.prefix ? `${item.prefix} ${title}` : title;
+        let value = Number(item.value).toLocaleString('fr-FR');
+        value = item?.prefix ? `${item.prefix} ${value}` : value;
         const total = item?.percentTotal ? item.percentTotal : lastData?.effectif;
-        title = (item?.isPercent === undefined && total) ? `${title} (${cleanNumber((item.value / total) * 100)} %)` : title;
+        value = (item?.isPercent === undefined && total) ? `${value} (${cleanNumber((item.value / total) * 100)} %)` : value;
         return (
           <Card
-            title={title}
+            title={value}
             descriptionElement={(
               <Row alignItems="middle">
-                <Text spacing="mr-1v mb-0">{item.text}</Text>
+                <Text spacing="mr-1v mb-0">
+                  {item.text}
+                </Text>
               </Row>
             )}
           />
@@ -400,8 +418,12 @@ export default function StructureEtudiantsPage() {
   if (error) return <>Erreur...</>;
   return (
     <>
+      <Title as="h3">
+        <Icon name="ri-user-fill" className="fr-pl-1w" />
+        Les étudiants inscrits
+      </Title>
       <Bloc isLoading={isLoading} error={error} data={data} noBadge>
-        <BlocTitle as="h3" look="h6">
+        <BlocTitle as="h4">
           {`Situation en ${year} - Source : SISE`}
         </BlocTitle>
         <BlocContent>
@@ -424,7 +446,7 @@ export default function StructureEtudiantsPage() {
         </BlocContent>
       </Bloc>
       <Bloc isLoading={isLoading} error={error} data={data} noBadge>
-        <BlocTitle as="h3" look="h6">
+        <BlocTitle as="h4">
           Évolution historique
         </BlocTitle>
         <BlocContent>
@@ -481,7 +503,7 @@ export default function StructureEtudiantsPage() {
         </BlocContent>
       </Bloc>
       <Bloc isLoading={isLoading} error={error} data={data} noBadge>
-        <BlocTitle as="h3" look="h6">
+        <BlocTitle as="h4">
           Ressources en ligne : #dataESR
         </BlocTitle>
         <BlocContent>
