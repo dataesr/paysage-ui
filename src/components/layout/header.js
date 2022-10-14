@@ -140,7 +140,7 @@ export default function Header() {
             asLink={<RouterLink to="/ressources-externes" />}
           />
         </NavItem>
-        {(viewer?.id && (['admin', 'user'].includes(viewer?.role))) && (
+        {(viewer?.id && (['admin'].includes(viewer?.role))) && (
           <NavItem
             title="Administration"
             current={pathname.startsWith('/admin')}
