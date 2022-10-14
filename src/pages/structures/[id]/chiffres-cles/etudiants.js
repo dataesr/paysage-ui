@@ -18,7 +18,7 @@ import useUrl from '../../../../hooks/useUrl';
 
 export default function StructureEtudiantsPage() {
   useHashScroll();
-  const { url } = useUrl('keynumbers');
+  const { id, url } = useUrl('keynumbers');
   const { data, isLoading, error } = useFetch(`${url}/population`);
 
   const sortedData = data?.data.sort((a, b) => a.annee - b.annee) || [];
@@ -505,7 +505,7 @@ export default function StructureEtudiantsPage() {
                     Données agrégées en open data
                   </>
                 )}
-                downloadUrl="https://data.enseignementsup-recherche.gouv.fr/explore/dataset/fr-esr-statistiques-sur-les-effectifs-d-etudiants-inscrits-par-etablissement/table/?refine.etablissement_id_paysage=7CYWd&sort=-annee_universitaire"
+                downloadUrl={`https://data.enseignementsup-recherche.gouv.fr/explore/dataset/fr-esr-statistiques-sur-les-effectifs-d-etudiants-inscrits-par-etablissement/table/?refine.etablissement_id_paysage=${id}&sort=-annee_universitaire`}
               />
             </Col>
             <Col n="12 md-6">
@@ -516,7 +516,7 @@ export default function StructureEtudiantsPage() {
                     Données croisées en open data
                   </>
                 )}
-                downloadUrl="https://data.enseignementsup-recherche.gouv.fr/explore/dataset/fr-esr-sise-effectifs-d-etudiants-inscrits-esr-public/table/?refine.etablissement_id_paysage=7CYWd&sort=-rentree"
+                downloadUrl={`https://data.enseignementsup-recherche.gouv.fr/explore/dataset/fr-esr-sise-effectifs-d-etudiants-inscrits-esr-public/table/?refine.etablissement_id_paysage=${id}&sort=-rentree`}
               />
             </Col>
             <Col n="12 md-6">
@@ -527,7 +527,7 @@ export default function StructureEtudiantsPage() {
                     Liste des principaux diplômes et formations préparés en open data
                   </>
                 )}
-                downloadUrl="https://data.enseignementsup-recherche.gouv.fr/explore/dataset/fr-esr-principaux-diplomes-et-formations-prepares-etablissements-publics/table/?refine.etablissement_id_paysage=7CYWd"
+                downloadUrl={`https://data.enseignementsup-recherche.gouv.fr/explore/dataset/fr-esr-principaux-diplomes-et-formations-prepares-etablissements-publics/table/?refine.etablissement_id_paysage=${id}`}
               />
             </Col>
           </Row>
