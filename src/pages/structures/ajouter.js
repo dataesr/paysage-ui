@@ -52,7 +52,7 @@ function IdentifiersStep({ globalForm, updateGlobalForm, setStep }) {
     <>
       <Row>
         <Text>
-          Si vous connaissez des identifiants de la structure, renseignez-les, ils pourrons vous aider à remplir certains champs dans le reste du formulaire.
+          Si vous connaissez des identifiants de la structure, renseignez-les, ils pourront vous aider à remplir certains champs dans le reste du formulaire.
           <br />
           Si vous ne connaissez pas d'identifiant, allez directement à l'étape suivante.
         </Text>
@@ -71,7 +71,7 @@ function IdentifiersStep({ globalForm, updateGlobalForm, setStep }) {
         <Col n="12 md-6" spacing="pb-3w">
           <TextInput
             label="Identifiant Wikidata"
-            hint="Système Informatique pour le Répertoire des Entreprises sur le Territoire"
+            hint="Wikidata"
             value={form.wikidata}
             onChange={(e) => updateForm({ wikidata: e.target.value })}
             message={(showErrors && errors.wikidata) ? errors.wikidata : null}
@@ -91,7 +91,7 @@ function IdentifiersStep({ globalForm, updateGlobalForm, setStep }) {
         <Col n="12 md-6" spacing="pb-3w">
           <TextInput
             label="Identifiant ROR"
-            hint="Registre des organismes de recherche https://ror.org"
+            hint="Registre des Organismes de Recherche https://ror.org"
             value={form.ror}
             onChange={(e) => updateForm({ ror: e.target.value })}
             message={(showErrors && errors.ror) ? errors.ror : null}
