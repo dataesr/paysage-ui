@@ -1,4 +1,4 @@
-import { Row, Text } from '@dataesr/react-dsfr';
+import { Col, Icon, Row, Text } from '@dataesr/react-dsfr';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 
@@ -9,6 +9,7 @@ import {
 } from '../../../../components/bloc';
 import Card from '../../../../components/card';
 import ExpendableListCards from '../../../../components/card/expendable-list-cards';
+import WeblinkCard from '../../../../components/card/weblink-card';
 import Spinner from '../../../../components/spinner';
 import useFetch from '../../../../hooks/useFetch';
 import useHashScroll from '../../../../hooks/useHashScroll';
@@ -93,15 +94,15 @@ export default function StructureEtudiantsPage() {
     const thirdCyclePopulationRate = (thirdCyclePopulation / totalPopulation) * 100;
     LMDData = [{
       name: '1er cycle',
-      tooltipName: `${firstCyclePopulation.toLocaleString('fr-FR')} étudiants inscrits en 1er cycle (${cleanNumber(firstCyclePopulationRate)} %)`,
+      value: firstCyclePopulation,
       y: firstCyclePopulationRate,
     }, {
       name: '2ème cycle',
-      tooltipName: `${secondCyclePopulation.toLocaleString('fr-FR')} étudiants inscrits en 2ème cycle (${cleanNumber(secondCyclePopulationRate)} %)`,
+      value: secondCyclePopulation,
       y: secondCyclePopulationRate,
     }, {
       name: '3ème cycle',
-      tooltipName: `${thirdCyclePopulation.toLocaleString('fr-FR')} étudiants inscrits en 3ème cycle (${cleanNumber(thirdCyclePopulationRate)} %)`,
+      value: thirdCyclePopulation,
       y: thirdCyclePopulationRate,
     }];
     // Graph 2: Pie about the population by discipline
@@ -117,52 +118,44 @@ export default function StructureEtudiantsPage() {
     const santePopulationRate = (santePopulation / totalPopulation) * 100;
     disciplinesData = [{
       name: 'Droit, sciences économiques, AES',
-      tooltipName: `${DSAPopulation.toLocaleString('fr-FR')} étudiants inscrits en Droit, sciences économiques, AES (${cleanNumber(DSAPopulationRate)} %)`,
+      value: DSAPopulation,
       y: DSAPopulationRate,
     }, {
       name: 'Lettres, langues et sciences humaines',
-      tooltipName: `${LLSHPopulation.toLocaleString('fr-FR')} étudiants inscrits en Droit, sciences économiques, AES (${cleanNumber(LLSHPopulationRate)} %)`,
+      value: LLSHPopulation,
       y: LLSHPopulationRate,
     }, {
       name: 'Sciences et sciences de l\'ingénieur',
-      tooltipName: `${SIPopulation.toLocaleString('fr-FR')} étudiants inscrits en Droit, sciences économiques, AES (${cleanNumber(SIPopulationRate)} %)`,
+      value: SIPopulation,
       y: SIPopulationRate,
     }, {
       name: 'STAPS',
-      tooltipName: `${stapsPopulation.toLocaleString('fr-FR')} étudiants inscrits en Droit, sciences économiques, AES (${cleanNumber(stapsPopulationRate)} %)`,
+      value: stapsPopulation,
       y: stapsPopulationRate,
     }, {
       name: 'Santé',
-      tooltipName: `${santePopulation.toLocaleString('fr-FR')} étudiants inscrits en Droit, sciences économiques, AES (${cleanNumber(santePopulationRate)} %)`,
+      value: santePopulation,
       y: santePopulationRate,
     }];
   }
   const LMDOptions = {
     ...commonOptions,
     chart: { type: 'pie' },
-    series: [{
-      name: 'Brands',
-      colorByPoint: true,
-      data: LMDData,
-    }],
+    series: [{ data: LMDData }],
     title: { text: 'Répartition des effectifs par cycle LMD' },
     tooltip: {
-      // eslint-disable-next-line object-shorthand, func-names, react/no-this-in-sfc
-      formatter: function () { return this.point.tooltipName; },
+      // eslint-disable-next-line react/no-this-in-sfc
+      formatter() { return `<b>${this.point.value.toLocaleString('fr-FR')}</b> étudiants inscrits en ${this.point.name} (${cleanNumber(this.point.y)} %)`; },
     },
   };
   const disciplinesOptions = {
     ...commonOptions,
     chart: { type: 'pie' },
-    series: [{
-      name: 'Brands',
-      colorByPoint: true,
-      data: disciplinesData,
-    }],
+    series: [{ data: disciplinesData }],
     title: { text: 'Répartition des effectifs par grande discipline' },
     tooltip: {
-      // eslint-disable-next-line object-shorthand, func-names, react/no-this-in-sfc
-      formatter: function () { return this.point.tooltipName; },
+      // eslint-disable-next-line react/no-this-in-sfc
+      formatter() { return `<b>${this.point.value.toLocaleString('fr-FR')}</b> étudiants inscrits en ${this.point.name} (${cleanNumber(this.point.y)} %)`; },
     },
   };
 
@@ -332,40 +325,53 @@ export default function StructureEtudiantsPage() {
 
   const rateMobilityOptions = {
     ...commonOptions,
+    legend: { enabled: false },
     series: [{
       data: sortedData.map((item) => ((item?.mobilite_internm || 0) / item.effectif) * 100),
     }],
     title: { text: 'Évolution de la part des étudiants inscrits en mobilité internationale (en %)' },
+    tooltip: {
+      // eslint-disable-next-line react/no-this-in-sfc
+      formatter() { return `Part de mobilité internationale : <b>${this.point.x} %</b>`; },
+    },
   };
 
   const rateNewBachelorsOptions = {
     ...commonOptions,
     series: [{
-      name: '% de nouveaux bacheliers issus d\'un bac général',
+      name: 'Nouveaux bacheliers issus d\'un bac général',
       data: sortedData.map((item) => ((item?.nbaca || 0) / item.nouv_bachelier) * 100),
     }, {
-      name: '% de nouveaux bacheliers issus d\'un bac technologique',
+      name: 'Nouveaux bacheliers issus d\'un bac technologique',
       data: sortedData.map((item) => (((item?.nouv_bachelier || 0) - ((item?.nbaca || 0) + (item?.nbac6 || 0))) / item.nouv_bachelier) * 100),
     }, {
-      name: '% de nouveaux bacheliers issus d\'un bac professionnel',
+      name: 'Nouveaux bacheliers issus d\'un bac professionnel',
       data: sortedData.map((item) => ((item?.nbac6 || 0) / item.nouv_bachelier) * 100),
     }],
     title: { text: 'Répartitions des nouveaux bacheliers' },
+    tooltip: {
+      // eslint-disable-next-line react/no-this-in-sfc
+      formatter() { return `Part des ${this.series.name.toLowerCase()} en ${categories[this.point.x]} : <b>${this.point.y.toFixed(1)} %</b>`; },
+    },
   };
 
   const ageNewBachelorsOptions = {
     ...commonOptions,
     series: [{
-      name: '% de nouveaux bacheliers en avance au bac d\'un an ou plus',
+      name: 'Nouveaux bacheliers en avance au bac d\'un an ou plus',
       data: sortedData.map((item) => ((item?.nbac_ageavance || 0) / item.nouv_bachelier) * 100),
     }, {
-      name: '% de nouveaux bacheliers à l\'heure au bac',
+      name: 'Nouveaux bacheliers à l\'heure au bac',
       data: sortedData.map((item) => ((item?.nbac_agea_l_heure || 0) / item.nouv_bachelier) * 100),
     }, {
-      name: '% de nouveaux bacheliers en retard au bac d\'un an ou plus',
+      name: 'Nouveaux bacheliers en retard au bac d\'un an ou plus',
       data: sortedData.map((item) => ((item?.nbac_ageretard || 0) / item.nouv_bachelier) * 100),
     }],
     title: { text: 'Âge au bac des nouveaux bacheliers' },
+    tooltip: {
+      // eslint-disable-next-line react/no-this-in-sfc
+      formatter() { return `Part des ${this.series.name.toLowerCase()} en ${categories[this.point.x]} : <b>${this.point.y.toFixed(1)} %</b>`; },
+    },
   };
 
   const renderCards = (all) => {
@@ -373,9 +379,9 @@ export default function StructureEtudiantsPage() {
       .filter((item) => item?.value)
       .map((item) => {
         let title = item.value.toLocaleString('fr-FR');
-        const total = item?.percentTotal ? item.percentTotal : lastData?.effectif;
-        if (item?.isPercent === undefined && total) title += ` (${cleanNumber((item.value / total) * 100)} %)`;
         title = item?.prefix ? `${item.prefix} ${title}` : title;
+        const total = item?.percentTotal ? item.percentTotal : lastData?.effectif;
+        title = (item?.isPercent === undefined && total) ? `${title} (${cleanNumber((item.value / total) * 100)} %)` : title;
         return (
           <Card
             title={title}
@@ -393,54 +399,140 @@ export default function StructureEtudiantsPage() {
   if (isLoading) return <Spinner size={48} />;
   if (error) return <>Erreur...</>;
   return (
-    <Bloc isLoading={isLoading} error={error} data={data}>
-      <BlocTitle as="h3" look="h6">
-        {`Situation en ${year} - Source : SISE`}
-      </BlocTitle>
-      <BlocContent>
-        {renderCards(tiles)}
-        <HighchartsReact
-          highcharts={Highcharts}
-          options={LMDOptions}
-        />
-        <HighchartsReact
-          highcharts={Highcharts}
-          options={disciplinesOptions}
-        />
-        {renderCards(tiles2)}
-        <HighchartsReact
-          highcharts={Highcharts}
-          options={populationOptions}
-        />
-        <HighchartsReact
-          highcharts={Highcharts}
-          options={populationCycleOptions}
-        />
-        <HighchartsReact
-          highcharts={Highcharts}
-          options={populationDisciplineOptions}
-        />
-        <HighchartsReact
-          highcharts={Highcharts}
-          options={populationDiplomaOptions}
-        />
-        <HighchartsReact
-          highcharts={Highcharts}
-          options={populationOtherDiplomaOptions}
-        />
-        <HighchartsReact
-          highcharts={Highcharts}
-          options={rateMobilityOptions}
-        />
-        <HighchartsReact
-          highcharts={Highcharts}
-          options={rateNewBachelorsOptions}
-        />
-        <HighchartsReact
-          highcharts={Highcharts}
-          options={ageNewBachelorsOptions}
-        />
-      </BlocContent>
-    </Bloc>
+    <>
+      <Bloc isLoading={isLoading} error={error} data={data} noBadge>
+        <BlocTitle as="h3" look="h6">
+          {`Situation en ${year} - Source : SISE`}
+        </BlocTitle>
+        <BlocContent>
+          {renderCards(tiles)}
+          <Row gutters>
+            <Col n="12 md-6">
+              <HighchartsReact
+                highcharts={Highcharts}
+                options={LMDOptions}
+              />
+            </Col>
+            <Col n="12 md-6">
+              <HighchartsReact
+                highcharts={Highcharts}
+                options={disciplinesOptions}
+              />
+            </Col>
+          </Row>
+          {renderCards(tiles2)}
+        </BlocContent>
+      </Bloc>
+      <Bloc isLoading={isLoading} error={error} data={data} noBadge>
+        <BlocTitle as="h3" look="h6">
+          Évolution historique
+        </BlocTitle>
+        <BlocContent>
+          <Row gutters>
+            <Col n="12 md-6">
+              <HighchartsReact
+                highcharts={Highcharts}
+                options={populationOptions}
+              />
+            </Col>
+            <Col n="12 md-6">
+              <HighchartsReact
+                highcharts={Highcharts}
+                options={populationCycleOptions}
+              />
+            </Col>
+            <Col n="12 md-6">
+              <HighchartsReact
+                highcharts={Highcharts}
+                options={populationDisciplineOptions}
+              />
+            </Col>
+            <Col n="12 md-6">
+              <HighchartsReact
+                highcharts={Highcharts}
+                options={populationDiplomaOptions}
+              />
+            </Col>
+            <Col n="12 md-6">
+              <HighchartsReact
+                highcharts={Highcharts}
+                options={populationOtherDiplomaOptions}
+              />
+            </Col>
+            <Col n="12 md-6">
+              <HighchartsReact
+                highcharts={Highcharts}
+                options={rateMobilityOptions}
+              />
+            </Col>
+            <Col n="12 md-6">
+              <HighchartsReact
+                highcharts={Highcharts}
+                options={rateNewBachelorsOptions}
+              />
+            </Col>
+            <Col n="12 md-6">
+              <HighchartsReact
+                highcharts={Highcharts}
+                options={ageNewBachelorsOptions}
+              />
+            </Col>
+          </Row>
+        </BlocContent>
+      </Bloc>
+      <Bloc isLoading={isLoading} error={error} data={data} noBadge>
+        <BlocTitle as="h3" look="h6">
+          Ressources en ligne : #dataESR
+        </BlocTitle>
+        <BlocContent>
+          <Row gutters>
+            <Col n="12 md-6">
+              <WeblinkCard
+                title={(
+                  <>
+                    <Icon className="ri-table-line" />
+                    Tableau de bord de l'enseignement supérieur : les étudiants par établissements
+                  </>
+                )}
+                downloadUrl="https://dataesr.fr/FR/T525/P883/tableau_de_bord_de_l_enseignement_superieur_les_etudiants_par_etablissements_avec_doubles_inscriptions_cpge_-_resultats_pour_sise"
+              />
+            </Col>
+            <Col n="12 md-6">
+              <WeblinkCard
+                title={(
+                  <>
+                    <Icon className="ri-table-line" />
+                    Données agrégées en open data
+                  </>
+                )}
+                downloadUrl="https://data.enseignementsup-recherche.gouv.fr/explore/dataset/fr-esr-statistiques-sur-les-effectifs-d-etudiants-inscrits-par-etablissement/table/?refine.etablissement_id_paysage=7CYWd&sort=-annee_universitaire"
+              />
+            </Col>
+            <Col n="12 md-6">
+              <WeblinkCard
+                title={(
+                  <>
+                    <Icon className="ri-table-line" />
+                    Données croisées en open data
+                  </>
+                )}
+                downloadUrl="https://data.enseignementsup-recherche.gouv.fr/explore/dataset/fr-esr-sise-effectifs-d-etudiants-inscrits-esr-public/table/?refine.etablissement_id_paysage=7CYWd&sort=-rentree"
+              />
+            </Col>
+            <Col n="12 md-6">
+              <WeblinkCard
+                title={(
+                  <>
+                    <Icon className="ri-table-line" />
+                    Liste des principaux diplômes et formations préparés en open data
+                  </>
+                )}
+                downloadUrl="https://data.enseignementsup-recherche.gouv.fr/explore/dataset/fr-esr-principaux-diplomes-et-formations-prepares-etablissements-publics/table/?refine.etablissement_id_paysage=7CYWd"
+              />
+            </Col>
+          </Row>
+        </BlocContent>
+      </Bloc>
+    </>
   );
 }

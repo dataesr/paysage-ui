@@ -22,7 +22,7 @@ export default function StructureBudgetPage() {
   const lastData = sortedData?.[0];
   const year = lastData?.exercice;
 
-  const financialBalance = ([{
+  const financialBalance = [{
     key: 'Résultat net comptable',
     value: `${cleanNumber(lastData?.resultat_net_comptable).toLocaleString('fr-FR')}€`,
     info: 'Le résultat net comptable mesure les ressources nettes restant à l’établissement à l’issue de l’exercice',
@@ -38,9 +38,9 @@ export default function StructureBudgetPage() {
     key: 'CAF / Produits encaissables',
     value: `${cleanNumber(lastData?.caf_produits_encaissables)} %`,
     info: 'Part de la CAF dans les produits encaissables',
-  }]);
+  }];
 
-  const operatingCycle = ([{
+  const operatingCycle = [{
     key: 'Besoin en fonds de roulement',
     value: `${cleanNumber(lastData?.besoin_en_fonds_de_roulement)}€`,
     info: 'Le besoin en fonds de roulement mesure le décalage entre les encaissements et les décaissements du cycle d’activité',
@@ -60,9 +60,9 @@ export default function StructureBudgetPage() {
     key: 'Trésorerie en jours de charges décaissables',
     value: `${cleanNumber(lastData?.tresorerie_en_jours_de_charges_decaissables)} jours`,
     info: 'Expression de la trésorerie en nombre de jours de dépenses de fonctionnement décaissables',
-  }]);
+  }];
 
-  const activityFinancing = ([{
+  const activityFinancing = [{
     key: 'Charges décaissables / Produits encaissables',
     value: `${cleanNumber(lastData?.charges_decaissables_produits_encaissables)} %`,
     info: 'Part des charges décaissables dans les produits encaissables',
@@ -78,9 +78,9 @@ export default function StructureBudgetPage() {
     key: 'Taux de rémunération des permanents',
     value: `${cleanNumber(lastData?.taux_de_remuneration_des_permanents)} %`,
     info: 'Rémunération des personnels permanents / total des dépenses de personnel',
-  }]);
+  }];
 
-  const investmentsSelfFinancing = ([{
+  const investmentsSelfFinancing = [{
     key: 'CAF / Acquisitions d’immobilisations',
     value: `${cleanNumber(lastData?.caf_acquisitions_d_immobilisations)} %`,
     info: 'Part de la capacité d’autofinancement permettant de financer les investissements de l’exercice',
@@ -88,13 +88,13 @@ export default function StructureBudgetPage() {
     key: 'Capacité d’autofinancement',
     value: `${cleanNumber(lastData?.capacite_d_autofinancement)}€`,
     info: 'Excédent dégagé pendant l’exercice qui permettra d’assurer tout ou partie de l’investissement de l’année et d’augmenter le fonds de roulement.',
-  }]);
+  }];
 
-  const gbcpIndicators = ([{
+  const gbcpIndicators = [{
     key: 'Solde budgétaire',
     value: `${cleanNumber(lastData?.solde_budgetaire)}€`,
     info: 'Solde des encaissements et des décaissements sur opérations budgétaires',
-  }]);
+  }];
 
   const renderCards = (all) => {
     const list = all.map((el) => (
@@ -118,7 +118,7 @@ export default function StructureBudgetPage() {
   if (isLoading) return <Spinner size={48} />;
   if (error) return <>Erreur...</>;
   return (
-    <Bloc isLoading={isLoading} error={error} data={data}>
+    <Bloc isLoading={isLoading} error={error} data={data} noBadge>
       <BlocTitle as="h3" look="h6">
         {`Données financières - Situation en ${year}`}
       </BlocTitle>
