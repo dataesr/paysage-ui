@@ -21,7 +21,7 @@ const catchInvalidToken = async () => {
   };
   const response = await fetch(`${process.env.REACT_APP_API_URL}/token`, options);
   if (!response.ok) {
-    window.location.href = '/se-connecter';
+    window.location.href = '/';
     return null;
   }
   const tokens = await response.json();
