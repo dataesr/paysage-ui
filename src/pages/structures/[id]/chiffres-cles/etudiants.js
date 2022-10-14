@@ -22,10 +22,14 @@ export default function StructureEtudiantsPage() {
 
   const sortedData = data?.data.sort((a, b) => a.annee - b.annee) || [];
   const lastData = sortedData?.[sortedData.length - 1];
-  const name = lastData?.etablissement_lib || 'Structure sans nom';
   const year = lastData?.annee_universitaire || '';
+  const categories = sortedData.map((item) => item.annee);
+  const commonOptions = {
+    credits: { enabled: false },
+    xAxis: { categories },
+  };
 
-  const tiles = ([{
+  const tiles = [{
     text: 'inscriptions totales (inscriptions principales et secondes)',
     value: lastData?.effectif_total,
     isPercent: false,
@@ -74,7 +78,7 @@ export default function StructureEtudiantsPage() {
     text: 'nouveaux bacheliers en retard au bac d\'un an ou plus',
     value: lastData?.nbac_ageretard,
     percentTotal: lastData?.nouv_bachelier,
-  }]);
+  }];
 
   let LMDData = [];
   let disciplinesData = [];
@@ -134,8 +138,8 @@ export default function StructureEtudiantsPage() {
     }];
   }
   const LMDOptions = {
+    ...commonOptions,
     chart: { type: 'pie' },
-    credits: { enabled: false },
     series: [{
       name: 'Brands',
       colorByPoint: true,
@@ -148,8 +152,8 @@ export default function StructureEtudiantsPage() {
     },
   };
   const disciplinesOptions = {
+    ...commonOptions,
     chart: { type: 'pie' },
-    credits: { enabled: false },
     series: [{
       name: 'Brands',
       colorByPoint: true,
@@ -162,46 +166,207 @@ export default function StructureEtudiantsPage() {
     },
   };
 
-  const categories = sortedData.map((item) => item.annee);
-  const populationData = sortedData.map((item) => item?.effectif || 0);
-  const populationOptions = ({
-    credits: { enabled: false },
-    series: [{ name, data: populationData }],
-    title: { text: 'Evolution des effectifs' },
-    xAxis: { categories },
-  });
+  const tiles2 = [{
+    text: 'étudiants inscrits préparant un diplôme d\'accès aux études universitaires',
+    value: lastData?.diplomedaeu,
+  }, {
+    text: 'étudiants inscrits en Capacité en droit',
+    value: lastData?.diplomecapa,
+  }, {
+    text: 'étudiants inscrits en Licence',
+    value: lastData?.diplomelic_l_aut,
+  }, {
+    text: 'étudiants inscrits préparant un diplôme universitaire de technologie',
+    value: lastData?.diplomedut,
+  }, {
+    text: 'étudiants inscrits en Licence professionnelle',
+    value: lastData?.diplomelic_pro,
+  }, {
+    text: 'étudiants inscrits en Master',
+    value: (lastData?.diplomemast_m_autres || 0) + (lastData?.diplomemast_m_enseignement || 0),
+  }, {
+    text: 'étudiants inscrits en Master enseignement',
+    value: lastData?.diplomemast_m_enseignement,
+    prefix: 'dont',
+  }, {
+    text: 'étudiants inscrits en formations d\'ingénieurs',
+    value: lastData?.diplomeing,
+  }, {
+    text: 'étudiants inscrits en PACES',
+    value: lastData?.diplomesante_paces,
+  }, {
+    text: 'étudiants inscrits dans les formations paramédicales',
+    value: lastData?.diplomesante_paramedical,
+  }, {
+    text: 'étudiants inscrits dans les autres formations de santé',
+    value: lastData?.diplomesante_autres_form,
+  }, {
+    text: 'étudiants inscrits dans les diplômes d\'établissement',
+    value: lastData?.diplomedu,
+  }];
 
-  const populationDataLicence = sortedData.map((item) => item?.cursus_lmdl || 0);
-  const populationDataMaster = sortedData.map((item) => item?.cursus_lmdm || 0);
-  const populationDataDoctorat = sortedData.map((item) => item?.cursus_lmdd || 0);
-  const populationCycleOptions = ({
-    credits: { enabled: false },
+  const populationOptions = {
+    ...commonOptions,
+    series: [{
+      name: lastData?.etablissement_lib || 'Structure sans nom',
+      data: sortedData.map((item) => item?.effectif || 0),
+    }],
+    title: { text: 'Evolution des effectifs' },
+  };
+
+  const populationCycleOptions = {
+    ...commonOptions,
     series: [
-      { name: 'Etudiants inscrits en 1er cycle', data: populationDataLicence },
-      { name: 'Etudiants inscrits en 2ème cycle', data: populationDataMaster },
-      { name: 'Etudiants inscrits en 3ème cycle', data: populationDataDoctorat },
+      {
+        name: 'Etudiants inscrits en 1er cycle',
+        data: sortedData.map((item) => item?.cursus_lmdl || 0),
+      },
+      {
+        name: 'Etudiants inscrits en 2ème cycle',
+        data: sortedData.map((item) => item?.cursus_lmdm || 0),
+      },
+      {
+        name: 'Etudiants inscrits en 3ème cycle',
+        data: sortedData.map((item) => item?.cursus_lmdd || 0),
+      },
     ],
     title: { text: 'Évolution des effectifs par cycle' },
-    xAxis: { categories },
-  });
+  };
 
-  const populationDataDSA = sortedData.map((item) => item?.gd_discisciplinedsa || 0);
-  const populationDataLLSH = sortedData.map((item) => item?.gd_discisciplinellsh || 0);
-  const populationDataSI = sortedData.map((item) => item?.gd_discisciplinesi || 0);
-  const populationDataStaps = sortedData.map((item) => item?.gd_discisciplinestaps || 0);
-  const populationDataSante = sortedData.map((item) => item?.gd_discisciplinesante || 0);
-  const populationDisciplineOptions = ({
-    credits: { enabled: false },
+  const populationDisciplineOptions = {
+    ...commonOptions,
     series: [
-      { name: 'Etudiants inscrits en Droit, sciences économiques, AES', data: populationDataDSA },
-      { name: 'Etudiants inscrits en Lettres, langues et sciences humaines', data: populationDataLLSH },
-      { name: 'Etudiants inscrits en Sciences et sciences de l\'ingénieur', data: populationDataSI },
-      { name: 'Etudiants inscrits en STAPS', data: populationDataStaps },
-      { name: 'Etudiants inscrits en Santé', data: populationDataSante },
+      {
+        name: 'Etudiants inscrits en Droit, sciences économiques, AES',
+        data: sortedData.map((item) => item?.gd_discisciplinedsa || 0),
+      },
+      {
+        name: 'Etudiants inscrits en Lettres, langues et sciences humaines',
+        data: sortedData.map((item) => item?.gd_discisciplinellsh || 0),
+      },
+      {
+        name: 'Etudiants inscrits en Sciences et sciences de l\'ingénieur',
+        data: sortedData.map((item) => item?.gd_discisciplinesi || 0),
+      },
+      {
+        name: 'Etudiants inscrits en STAPS',
+        data: sortedData.map((item) => item?.gd_discisciplinestaps || 0),
+      },
+      {
+        name: 'Etudiants inscrits en Santé',
+        data: sortedData.map((item) => item?.gd_discisciplinesante || 0),
+      },
     ],
     title: { text: 'Évolution des effectifs par discipline' },
-    xAxis: { categories },
-  });
+  };
+
+  const populationDiplomaOptions = {
+    ...commonOptions,
+    series: [
+      {
+        name: 'Etudiants inscrits préparant un diplôme universitaire de technologie',
+        data: sortedData.map((item) => item?.diplomedut || 0),
+      },
+      {
+        name: 'Etudiants inscrits en Licence',
+        data: sortedData.map((item) => item?.diplomelic_l_aut || 0),
+      },
+      {
+        name: 'Etudiants inscrits en Master',
+        data: sortedData.map((item) => (item?.diplomemast_m_autres || 0) + (item?.diplomemast_m_enseignement || 0)),
+      },
+      {
+        name: 'Etudiants inscrits en formations d\'ingénieurs',
+        data: sortedData.map((item) => item?.diplomeing || 0),
+      },
+      {
+        name: 'Etudiants inscrits en Doctorat',
+        data: sortedData.map((item) => item?.diplomehdr || 0),
+      },
+    ],
+    title: { text: 'Évolution des effectifs dans les principaux diplômes' },
+  };
+
+  const populationOtherDiplomaOptions = {
+    ...commonOptions,
+    series: [
+      {
+        name: 'Etudiants inscrits préparant un diplôme d\'accès aux études universitaires',
+        data: sortedData.map((item) => item?.diplomedaeu || 0),
+      },
+      {
+        name: 'Etudiants inscrits en Capacité en droit',
+        data: sortedData.map((item) => item?.diplomecapa || 0),
+      },
+      {
+        name: 'Etudiants inscrits en Licence professionnelle',
+        data: sortedData.map((item) => item?.diplomelic_pro || 0),
+      },
+      {
+        name: 'Etudiants inscrits en Master enseignement (dont)',
+        data: sortedData.map((item) => item?.diplomemast_m_enseignement || 0),
+      },
+      {
+        name: 'Etudiants inscrits en PACES',
+        data: sortedData.map((item) => item?.diplomesante_paces || 0),
+      },
+      {
+        name: 'Etudiants inscrits dans les formations paramédicales',
+        data: sortedData.map((item) => item?.diplomesante_paramedical || 0),
+      },
+      {
+        name: 'Etudiants inscrits dans les autres formations de santé',
+        data: sortedData.map((item) => item?.diplomesante_autres_form || 0),
+      },
+      {
+        name: 'Etudiants inscrits en HDR',
+        data: sortedData.map((item) => item?.diplomehdr || 0),
+      },
+      {
+        name: 'Etudiants inscrits dans les diplômes d\'établissement',
+        data: sortedData.map((item) => item?.diplomeautres_form || 0),
+      },
+    ],
+    title: { text: 'Évolution des effectifs dans d\'autres types de diplômes' },
+  };
+
+  const rateMobilityOptions = {
+    ...commonOptions,
+    series: [{
+      data: sortedData.map((item) => ((item?.mobilite_internm || 0) / item.effectif) * 100),
+    }],
+    title: { text: 'Évolution de la part des étudiants inscrits en mobilité internationale (en %)' },
+  };
+
+  const rateNewBachelorsOptions = {
+    ...commonOptions,
+    series: [{
+      name: '% de nouveaux bacheliers issus d\'un bac général',
+      data: sortedData.map((item) => ((item?.nbaca || 0) / item.nouv_bachelier) * 100),
+    }, {
+      name: '% de nouveaux bacheliers issus d\'un bac technologique',
+      data: sortedData.map((item) => (((item?.nouv_bachelier || 0) - ((item?.nbaca || 0) + (item?.nbac6 || 0))) / item.nouv_bachelier) * 100),
+    }, {
+      name: '% de nouveaux bacheliers issus d\'un bac professionnel',
+      data: sortedData.map((item) => ((item?.nbac6 || 0) / item.nouv_bachelier) * 100),
+    }],
+    title: { text: 'Répartitions des nouveaux bacheliers' },
+  };
+
+  const ageNewBachelorsOptions = {
+    ...commonOptions,
+    series: [{
+      name: '% de nouveaux bacheliers en avance au bac d\'un an ou plus',
+      data: sortedData.map((item) => ((item?.nbac_ageavance || 0) / item.nouv_bachelier) * 100),
+    }, {
+      name: '% de nouveaux bacheliers à l\'heure au bac',
+      data: sortedData.map((item) => ((item?.nbac_agea_l_heure || 0) / item.nouv_bachelier) * 100),
+    }, {
+      name: '% de nouveaux bacheliers en retard au bac d\'un an ou plus',
+      data: sortedData.map((item) => ((item?.nbac_ageretard || 0) / item.nouv_bachelier) * 100),
+    }],
+    title: { text: 'Âge au bac des nouveaux bacheliers' },
+  };
 
   const renderCards = (all) => {
     const list = all
@@ -210,6 +375,7 @@ export default function StructureEtudiantsPage() {
         let title = item.value.toLocaleString('fr-FR');
         const total = item?.percentTotal ? item.percentTotal : lastData?.effectif;
         if (item?.isPercent === undefined && total) title += ` (${cleanNumber((item.value / total) * 100)} %)`;
+        title = item?.prefix ? `${item.prefix} ${title}` : title;
         return (
           <Card
             title={title}
@@ -227,35 +393,54 @@ export default function StructureEtudiantsPage() {
   if (isLoading) return <Spinner size={48} />;
   if (error) return <>Erreur...</>;
   return (
-    <>
-      <Bloc isLoading={isLoading} error={error} data={data}>
-        <BlocTitle as="h3" look="h6">
-          {`Situation en ${year} - Source : SISE`}
-        </BlocTitle>
-        <BlocContent>
-          {renderCards(tiles)}
-        </BlocContent>
-      </Bloc>
-      <HighchartsReact
-        highcharts={Highcharts}
-        options={LMDOptions}
-      />
-      <HighchartsReact
-        highcharts={Highcharts}
-        options={disciplinesOptions}
-      />
-      <HighchartsReact
-        highcharts={Highcharts}
-        options={populationOptions}
-      />
-      <HighchartsReact
-        highcharts={Highcharts}
-        options={populationCycleOptions}
-      />
-      <HighchartsReact
-        highcharts={Highcharts}
-        options={populationDisciplineOptions}
-      />
-    </>
+    <Bloc isLoading={isLoading} error={error} data={data}>
+      <BlocTitle as="h3" look="h6">
+        {`Situation en ${year} - Source : SISE`}
+      </BlocTitle>
+      <BlocContent>
+        {renderCards(tiles)}
+        <HighchartsReact
+          highcharts={Highcharts}
+          options={LMDOptions}
+        />
+        <HighchartsReact
+          highcharts={Highcharts}
+          options={disciplinesOptions}
+        />
+        {renderCards(tiles2)}
+        <HighchartsReact
+          highcharts={Highcharts}
+          options={populationOptions}
+        />
+        <HighchartsReact
+          highcharts={Highcharts}
+          options={populationCycleOptions}
+        />
+        <HighchartsReact
+          highcharts={Highcharts}
+          options={populationDisciplineOptions}
+        />
+        <HighchartsReact
+          highcharts={Highcharts}
+          options={populationDiplomaOptions}
+        />
+        <HighchartsReact
+          highcharts={Highcharts}
+          options={populationOtherDiplomaOptions}
+        />
+        <HighchartsReact
+          highcharts={Highcharts}
+          options={rateMobilityOptions}
+        />
+        <HighchartsReact
+          highcharts={Highcharts}
+          options={rateNewBachelorsOptions}
+        />
+        <HighchartsReact
+          highcharts={Highcharts}
+          options={ageNewBachelorsOptions}
+        />
+      </BlocContent>
+    </Bloc>
   );
 }
