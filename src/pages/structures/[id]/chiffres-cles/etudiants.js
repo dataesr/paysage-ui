@@ -13,8 +13,8 @@ import WeblinkCard from '../../../../components/card/weblink-card';
 import Spinner from '../../../../components/spinner';
 import useFetch from '../../../../hooks/useFetch';
 import useHashScroll from '../../../../hooks/useHashScroll';
-import cleanNumber from '../../../../hooks/useNumbers';
 import useUrl from '../../../../hooks/useUrl';
+import cleanNumber from '../../../../utils/cleanNumbers';
 
 export default function StructureEtudiantsPage() {
   useHashScroll();

@@ -4,8 +4,8 @@ import { BlocContent, BlocTitle } from '../../bloc';
 import Card from '../../card';
 import Spinner from '../../spinner';
 import useFetch from '../../../hooks/useFetch';
-import cleanNumber from '../../../hooks/useNumbers';
 import useUrl from '../../../hooks/useUrl';
+import cleanNumber from '../../../utils/cleanNumbers';
 
 export default function ChiffresCles() {
   const { url } = useUrl();
