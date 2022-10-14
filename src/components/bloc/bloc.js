@@ -1,3 +1,4 @@
+/* eslint-disable react/no-array-index-key */
 import { Children } from 'react';
 import PropTypes from 'prop-types';
 import { Container, Row, Highlight, ButtonGroup, Badge } from '@dataesr/react-dsfr';
@@ -20,7 +21,7 @@ export default function Bloc({ children, data, error, isLoading, hideOnEmptyView
             {!noBadge && <Badge className="fr-ml-1v" type="info" text={data?.totalCount} />}
           </Row>
         </div>
-        {(editMode) && (<ButtonGroup size="sm" isInlineFrom="xs">{actions.map((element) => <div key={element.id}>{element}</div>)}</ButtonGroup>)}
+        {(editMode) && (<ButtonGroup size="sm" isInlineFrom="xs">{actions.map((element, i) => <div key={i}>{element}</div>)}</ButtonGroup>)}
       </Row>
       {isLoading && <Row className="fr-my-2w flex--space-around"><Spinner /></Row>}
       {error && <Highlight color="var(--page-border)">Une erreur s'est produite lors du chargement des données</Highlight>}

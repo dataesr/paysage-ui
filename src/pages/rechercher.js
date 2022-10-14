@@ -2,9 +2,9 @@ import { Badge, Breadcrumb, BreadcrumbItem, Col, Container, Row, SideMenu, SideM
 import PropTypes from 'prop-types';
 import { Link as RouterLink, useLocation, useSearchParams } from 'react-router-dom';
 
-import Spinner from '../../components/spinner';
-import useSearch from '../../hooks/useSearch';
-import { getTypeFromUrl, getUrlFromType } from '../../utils/types-url-mapper';
+import Spinner from '../components/spinner';
+import useSearch from '../hooks/useSearch';
+import { getTypeFromUrl, getUrlFromType } from '../utils/types-url-mapper';
 
 function SearchResults({ data }) {
   if (data && data.length) {

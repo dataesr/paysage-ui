@@ -1,8 +1,8 @@
-import Relations from '../../../components/blocs/relations-by-tag';
+import RelationsByTag from '../../../components/blocs/relations-by-tag';
 
 export default function StructureProjectsPage() {
   return (
-    <Relations
+    <RelationsByTag
       tag="participations"
       blocName="Participations à des projets"
       resourceType="projects"

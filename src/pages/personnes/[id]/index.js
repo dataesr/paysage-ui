@@ -24,6 +24,7 @@ import PersonCategories from './categories';
 import PersonProjets from './projets';
 import PersonPrices from './prix-et-recompenses';
 import PersonsRelatedElements from './elements-lies';
+import { saveError, saveSuccess } from '../../../utils/notice-contents';
 
 function PersonByIdPage() {
   const { url, id } = useUrl();
@@ -38,9 +39,12 @@ function PersonByIdPage() {
 
   useEffect(() => { reset(); }, [reset]);
 
-  const onSave = async (body) => api.patch(url, body)
-    .then(() => { reload(); setIsFormModalOpen(false); notice({ content: 'Informations sauvegardées', type: 'success' }); })
-    .catch(() => { setIsFormModalOpen(false); notice({ content: 'Une erreur est survenue.', type: 'error' }); });
+  const onSave = async (body) => {
+    await api.patch(url, body)
+      .then(() => { reload(); notice(saveSuccess); })
+      .catch(() => { notice(saveError); });
+    return setIsFormModalOpen(false);
+  };
 
   if (isLoading) return <Row className="fr-my-2w flex--space-around"><Spinner /></Row>;
   if (error) return <>Erreur...</>;
@@ -113,7 +117,8 @@ function PersonByIdPage() {
           <Row className="flex--space-between flex--wrap-reverse">
             <Title as="h2">
               {personName}
-              <BadgeGroup>
+              <BadgeGroup className="fr-pt-1w">
+                <Badge text="personne" type="info" />
                 <CopyBadgeButton
                   colorFamily="yellow-tournesol"
                   text={data.id}

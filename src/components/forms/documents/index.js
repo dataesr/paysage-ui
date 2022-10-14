@@ -101,8 +101,8 @@ export default function DocumentsForm({ id, data, onSave, onDelete }) {
         createdAt={data.createdAt}
       />
       <Container fluid>
-        <Row>
-          <Col n="12" spacing="pb-2w">
+        <Row gutters>
+          <Col n="12">
             <Select
               label="Type du document"
               options={documentTypesOptions}
@@ -113,7 +113,7 @@ export default function DocumentsForm({ id, data, onSave, onDelete }) {
               messageType={(showErrors && errors.documentTypeId) ? 'error' : ''}
             />
           </Col>
-          <Col n="12" spacing="pb-2w">
+          <Col n="12">
             <TextInput
               label="Nom du document"
               required
@@ -123,7 +123,7 @@ export default function DocumentsForm({ id, data, onSave, onDelete }) {
               messageType={(showErrors && errors.title) ? 'error' : ''}
             />
           </Col>
-          <Col n="12" spacing="pb-2w">
+          <Col n="12">
             <TextInput
               label="Description du document"
               value={form.description || ''}
@@ -132,7 +132,7 @@ export default function DocumentsForm({ id, data, onSave, onDelete }) {
               messageType={(showErrors && errors.description) ? 'error' : ''}
             />
           </Col>
-          <Col n="12" spacing="pb-2w">
+          <Col n="12">
             <DateInput
               required
               value={form.startDate || ''}
@@ -143,7 +143,7 @@ export default function DocumentsForm({ id, data, onSave, onDelete }) {
               messageType={(showErrors && errors.startDate) ? 'error' : ''}
             />
           </Col>
-          <Col n="12" spacing="pb-2w">
+          <Col n="12">
             <DateInput
               required
               value={form.endDate || ''}
@@ -151,7 +151,7 @@ export default function DocumentsForm({ id, data, onSave, onDelete }) {
               onDateChange={((v) => updateForm({ endDate: v }))}
             />
           </Col>
-          <Col n="12" spacing="pb-2w">
+          <Col n="12">
             <File
               required
               label="Ajouter des fichiers"
@@ -175,7 +175,7 @@ export default function DocumentsForm({ id, data, onSave, onDelete }) {
               </Row>
             )}
           </Col>
-          <Col n="12" spacing="pb-2w">
+          <Col n="12">
             <SearchBar
               buttonLabel="Rechercher"
               value={query || ''}

@@ -5,10 +5,12 @@ function getRoute(apiObject) {
   switch (apiObject) {
   case 'persons':
     return 'personnes';
-  case 'terms':
-    return 'termes';
+  case 'prices':
+    return 'prix';
   case 'projects':
     return 'projets';
+  case 'terms':
+    return 'termes';
   case 'official-texts':
     return 'textes-officiels';
 

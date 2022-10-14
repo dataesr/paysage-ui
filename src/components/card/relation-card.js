@@ -1,12 +1,13 @@
-import { Text, Link } from '@dataesr/react-dsfr';
+import { Text, Link, TagGroup, Tag } from '@dataesr/react-dsfr';
 import PropTypes from 'prop-types';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import useEditMode from '../../hooks/useEditMode';
 import { formatDescriptionDates, toString } from '../../utils/dates';
 import Button from '../button';
 import styles from './styles.module.scss';
 
 export default function RelationCard({ relation, inverse, onEdit }) {
+  const navigate = useNavigate();
   const { editMode } = useEditMode();
   const color = inverse ? relation.resource.collection : relation.relatedObject.collection;
   return (
@@ -18,6 +19,16 @@ export default function RelationCard({ relation, inverse, onEdit }) {
             {' '}
             {formatDescriptionDates(relation.startDate || null, relation.endDate || null)}
           </div>
+          {(relation.otherAssociatedObjects?.length > 0) && (
+            <div className="fr-card__desc">
+              <Text as="span" size="sm" bold>Structures associées:</Text>
+              <TagGroup>
+                {relation.otherAssociatedObjects.map(
+                  (related) => <Tag iconPosition="right" icon="ri-arrow-right-line" onClick={() => navigate(related.href)} key={related.id}>{related.displayName}</Tag>,
+                )}
+              </TagGroup>
+            </div>
+          )}
           <p className={`fr-card__title ${styles[`${color}-title`]}`}>
             {inverse
               ? <RouterLink to={relation.resource.href}>{relation.resource?.displayName}</RouterLink>
@@ -41,7 +52,7 @@ export default function RelationCard({ relation, inverse, onEdit }) {
               )}
             </div>
           )}
-          {editMode && <Button size="md" onClick={onEdit} tertiary borderless rounded icon="ri-edit-line" className={styles['edit-button']} />}
+          {(editMode && onEdit) && <Button size="md" onClick={onEdit} tertiary borderless rounded icon="ri-edit-line" className={styles['edit-button']} />}
         </div>
       </div>
     </div>

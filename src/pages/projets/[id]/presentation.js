@@ -1,18 +1,12 @@
 import { Row, Title, Icon } from '@dataesr/react-dsfr';
 import Identifiers from '../../../components/blocs/identifiers';
+import RelationsByTag from '../../../components/blocs/relations-by-tag';
 import SocialMedias from '../../../components/blocs/social-medias';
 import Weblinks from '../../../components/blocs/weblinks';
-import Spinner from '../../../components/spinner';
-import useFetch from '../../../hooks/useFetch';
 import useHashScroll from '../../../hooks/useHashScroll';
-import useUrl from '../../../hooks/useUrl';
 
 export default function ProjectPresentationPage() {
   useHashScroll();
-  const { url } = useUrl();
-  const { data, isLoading, error } = useFetch(url);
-  if (isLoading) return <Row className="fr-my-2w flex--space-around"><Spinner /></Row>;
-  if (error) return <Row className="fr-my-2w flex--space-around">Erreur...</Row>;
   return (
     <>
       <Row>
@@ -21,11 +15,12 @@ export default function ProjectPresentationPage() {
           <Icon className="ri-eye-2-line fr-ml-1w" />
         </Title>
       </Row>
-      <Row className="flex--col-reverse">
-        <pre>
-          {JSON.stringify(data, null, 2)}
-        </pre>
-      </Row>
+      <RelationsByTag
+        tag="participations"
+        blocName="Participations"
+        resourceType="projects"
+        relatedObjectTypes={['structures', 'persons']}
+      />
       <Title as="h3" look="h4">Présence sur le web</Title>
       <Weblinks />
       <SocialMedias />

@@ -1,19 +1,19 @@
 import RelationsByTag from '../../../components/blocs/relations-by-tag';
 
-export default function PersonCategories() {
+export default function PriceCategories() {
   return (
     <>
       <RelationsByTag
-        tag="persons-categories"
+        tag="prices-categories"
         blocName="Catégories"
-        resourceType="persons"
+        resourceType="prices"
         relatedObjectTypes={['categories']}
         noRelationType
       />
       <RelationsByTag
-        tag="persons-terms"
+        tag="prices-terms"
         blocName="Termes"
-        resourceType="persons"
+        resourceType="prices"
         relatedObjectTypes={['terms']}
         noRelationType
       />

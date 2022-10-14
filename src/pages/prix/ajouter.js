@@ -1,15 +1,15 @@
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { Breadcrumb, BreadcrumbItem, Col, Container, Row, Title } from '@dataesr/react-dsfr';
-import ProjectForm from '../../components/forms/project';
+import PriceForm from '../../components/forms/price';
 import api from '../../utils/api';
 import useNotice from '../../hooks/useNotice';
 import { saveError, saveSuccess } from '../../utils/notice-contents';
 
-export default function ProjectAddPage() {
+export default function PriceAddPage() {
   const navigate = useNavigate();
   const { notice } = useNotice();
-  const onSave = async (body) => api.post('/projects', body)
-    .then((response) => { notice(saveSuccess); navigate(`/projets/${response.data.id}`); })
+  const onSave = async (body) => api.post('/prices', body)
+    .then((response) => { notice(saveSuccess); navigate(`/prix/${response.data.id}`); })
     .catch(() => { notice(saveError); });
 
   return (
@@ -23,17 +23,17 @@ export default function ProjectAddPage() {
             <BreadcrumbItem asLink={<RouterLink to="/contribuer" />}>
               Ajouter un nouvel objet
             </BreadcrumbItem>
-            <BreadcrumbItem>Ajouter un projet</BreadcrumbItem>
+            <BreadcrumbItem>Ajouter un prix</BreadcrumbItem>
           </Breadcrumb>
         </Col>
       </Row>
       <Row>
         <Col>
-          <Title as="h2">Ajouter un projet</Title>
+          <Title as="h2">Ajouter un prix</Title>
         </Col>
       </Row>
 
-      <ProjectForm onSave={onSave} />
+      <PriceForm onSave={onSave} />
     </Container>
   );
 }

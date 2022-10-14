@@ -1,12 +1,13 @@
 import { Row, Title, Icon } from '@dataesr/react-dsfr';
 import Identifiers from '../../../components/blocs/identifiers';
-import SocialMedias from '../../../components/blocs/social-medias';
-import Weblinks from '../../../components/blocs/weblinks';
 import RelationsByTag from '../../../components/blocs/relations-by-tag';
+import Weblinks from '../../../components/blocs/weblinks';
 import useHashScroll from '../../../hooks/useHashScroll';
+import LaureateForm from '../../../components/forms/laureate';
 
-export default function CategoryPresentationPage() {
+export default function PricePresentationPage() {
   useHashScroll();
+
   return (
     <>
       <Row>
@@ -16,16 +17,13 @@ export default function CategoryPresentationPage() {
         </Title>
       </Row>
       <RelationsByTag
-        tag="structures-categories"
-        blocName="Structures de la catégorie"
-        resourceType="structures"
-        relatedObjectTypes={['categories']}
-        noRelationType
-        inverse
+        tag="prix"
+        blocName="Lauréats"
+        resourceType="prices"
+        relatedObjectTypes={['persons', 'structures']}
+        Form={LaureateForm}
       />
-      <Title as="h3" look="h4">Présence sur le web</Title>
       <Weblinks />
-      <SocialMedias />
       <Identifiers />
     </>
   );

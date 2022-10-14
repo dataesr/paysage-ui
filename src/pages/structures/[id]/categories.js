@@ -4,21 +4,21 @@ export default function StructureCategoriesPage() {
   return (
     <>
       <RelationsByTag
-        tag="legal-categories"
+        tag="structures-legal-categories"
         blocName="Catégories juridiques"
         resourceType="structures"
         relatedObjectTypes={['legal-categories']}
         noRelationType
       />
       <RelationsByTag
-        tag="categories"
+        tag="structures-categories"
         blocName="Catégories"
         resourceType="structures"
         relatedObjectTypes={['categories']}
         noRelationType
       />
       <RelationsByTag
-        tag="terms"
+        tag="structures-terms"
         blocName="Termes"
         resourceType="structures"
         relatedObjectTypes={['terms']}

@@ -1,39 +1,159 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import { Col, Container, Row, Title } from '@dataesr/react-dsfr';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import {
+  Badge,
+  BadgeGroup, Breadcrumb, BreadcrumbItem, ButtonGroup, Checkbox,
+  CheckboxGroup, Col, Container, Icon, Modal, ModalContent, ModalFooter,
+  ModalTitle, Row, Title,
+} from '@dataesr/react-dsfr';
+import useForm from '../../hooks/useForm';
+import useEditMode from '../../hooks/useEditMode';
+import Button from '../../components/button';
+import CopyBadgeButton from '../../components/copy/copy-badge-button';
+import { DropdownButton, DropdownButtonItem } from '../../components/dropdown-button';
+import useUrl from '../../hooks/useUrl';
+import Spinner from '../../components/spinner';
 import api from '../../utils/api';
+import useNotice from '../../hooks/useNotice';
 import OfficiaTextForm from '../../components/forms/official-text';
+import { saveError, saveSuccess } from '../../utils/notice-contents';
+import useFetch from '../../hooks/useFetch';
+import RelatedObjectCard from '../../components/card/related-object-card';
+import { Bloc, BlocContent, BlocTitle } from '../../components/bloc';
 
 export default function OfficialTextByIdPage() {
-  const { id, route, idFrom } = useParams();
-  const [data, setData] = useState();
+  const { url, id } = useUrl();
+  const { data, isLoading, error, reload } = useFetch(url);
+  const navigate = useNavigate();
+  const { notice } = useNotice();
+  const { editMode, reset, toggle } = useEditMode();
+  const [isExportOpen, setIsExportOpen] = useState(false);
+  const [isFavorite, setIsFavorite] = useState(false);
+  const { form, updateForm } = useForm({}, () => { });
+  const [isFormModalOpen, setIsFormModalOpen] = useState(false);
 
-  useEffect(() => {
-    const getData = async () => {
-      const response = await api.get(`/official-texts/${id}`).catch((e) => {
-        console.log(e);
-      });
-      if (response.ok) setData(response.data);
-    };
-    getData();
-    return () => {};
-  }, [id]);
+  useEffect(() => { reset(); }, [reset]);
 
-  let from = null;
-  if (route && idFrom) {
-    from = `/${route}/${idFrom}`;
-  }
+  const onSave = async (body) => api.patch(url, body)
+    .then(() => { reload(); setIsFormModalOpen(false); notice(saveSuccess); })
+    .catch(() => { setIsFormModalOpen(false); notice(saveError); });
 
-  if (!data) return <h1>Loading</h1>;
+  const renderCards = () => {
+    if (!data || !data?.relatedObjects?.length) return null;
+    return (
+      <Row gutters>
+        {data.relatedObjects.map((element) => (
+          <Col n="12 md-6 lg-4"><RelatedObjectCard key={element.id} relatedObject={element} /></Col>
+        ))}
+      </Row>
+    );
+  };
+
+  if (isLoading) return <Row className="fr-my-2w flex--space-around"><Spinner /></Row>;
+  if (error) return <>Erreur...</>;
+  if (!data) return null;
   return (
-    <Container as="main">
+    <Container spacing="pb-6w">
       <Row>
-        <Col>
-          <Title as="h2">Page de modification d'un texte officiel</Title>
+        <Col n="12">
+          <Breadcrumb>
+            <BreadcrumbItem asLink={<RouterLink to="/" />}>
+              Accueil
+            </BreadcrumbItem>
+            <BreadcrumbItem
+              asLink={<RouterLink to="/rechercher/personnes?query=" />}
+            >
+              Textes officiels
+            </BreadcrumbItem>
+            <BreadcrumbItem>{data.title}</BreadcrumbItem>
+          </Breadcrumb>
+          <Row className="flex--space-between flex--wrap-reverse">
+            <Title as="h2">
+              {data.title}
+              <BadgeGroup className="fr-pt-1w">
+                <Badge text="texte officiel" type="info" />
+                <CopyBadgeButton
+                  colorFamily="yellow-tournesol"
+                  text={data.id}
+                  lowercase
+                />
+              </BadgeGroup>
+            </Title>
+            <ButtonGroup align="right" isInlineFrom="xs">
+              {editMode && (
+                <DropdownButton align="right" title="options">
+                  <DropdownButtonItem onClick={() => setIsFormModalOpen(true)}>
+                    Modifier les informations
+                    <Icon iconPosition="right" size="xl" name="ri-edit-line" color="var(--border-action-high-blue-france)" />
+                    <Modal size="lg" isOpen={isFormModalOpen} hide={() => setIsFormModalOpen(false)}>
+                      <ModalTitle>
+                        Modifier les informations
+                      </ModalTitle>
+                      <ModalContent>
+                        <OfficiaTextForm id={data.id} data={data} onSave={onSave} />
+                      </ModalContent>
+                    </Modal>
+                  </DropdownButtonItem>
+                </DropdownButton>
+              )}
+              <Button
+                tertiary
+                borderless
+                rounded
+                title="Exporter la fiche"
+                onClick={() => setIsExportOpen(true)}
+                icon="ri-download-2-fill"
+              />
+              <Button
+                tertiary
+                borderless
+                rounded
+                title="Ajouter aux favoris"
+                onClick={() => setIsFavorite(!isFavorite)}
+                icon={`ri-star-${isFavorite ? 'fill' : 'line'}`}
+              />
+              <Button
+                tertiary
+                borderless
+                rounded
+                title="Activer le mode édition"
+                onClick={() => toggle()}
+                icon={`ri-edit-${editMode ? 'fill' : 'line'}`}
+              />
+            </ButtonGroup>
+            <Modal size="sm" isOpen={isExportOpen} hide={() => setIsExportOpen(false)}>
+              <ModalTitle>
+                Que souhaitez-vous exporter ?
+              </ModalTitle>
+              <ModalContent>
+                <CheckboxGroup>
+                  <Checkbox
+                    onChange={(e) => updateForm({ oeil: e.target.checked })}
+                    label="En un coup d’œil"
+                  />
+                </CheckboxGroup>
+              </ModalContent>
+              <ModalFooter>
+                <ButtonGroup>
+                  <Button onClick={() => {
+                    if (editMode) { toggle(); }
+                    navigate(`/textes-officiels/${id}/exporter?${new URLSearchParams(form)}`);
+                  }}
+                  >
+                    Exporter
+                  </Button>
+                </ButtonGroup>
+              </ModalFooter>
+            </Modal>
+          </Row>
+          <Bloc data={{ totalCount: data?.relatedObjects?.length }} error={error} isLoading={isLoading}>
+            <BlocTitle as="h3" look="h6">Objets liés au texte officiel</BlocTitle>
+            <BlocContent>
+              {renderCards()}
+            </BlocContent>
+          </Bloc>
         </Col>
       </Row>
-
-      <OfficiaTextForm data={data} from={from} />
     </Container>
   );
 }

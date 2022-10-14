@@ -172,16 +172,10 @@ function StructureByIdPage() {
           <Row className="flex--space-between flex--wrap-reverse">
             <Title as="h2">
               {data.currentName.usualName}
-              <BadgeGroup>
-                <CopyBadgeButton
-                  colorFamily="yellow-tournesol"
-                  text={data.id}
-                  lowercase
-                />
-                <Badge
-                  colorFamily="green-emeraude"
-                  text={data.structureStatus || 'active'}
-                />
+              <BadgeGroup className="fr-pt-1w">
+                <Badge type="info" text="structure" />
+                <Badge colorFamily="green-emeraude" text={data.structureStatus || 'active'} />
+                <CopyBadgeButton colorFamily="yellow-tournesol" text={data.id} lowercase />
               </BadgeGroup>
             </Title>
             <ButtonGroup align="right" isInlineFrom="xs">

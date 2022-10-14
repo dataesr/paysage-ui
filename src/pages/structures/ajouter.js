@@ -24,7 +24,6 @@ import Map from '../../components/map';
 import useForm from '../../hooks/useForm';
 import useNotice from '../../hooks/useNotice';
 import api from '../../utils/api';
-import { initializeStructure } from '../../utils/objects-init';
 
 const steps = ['Identifiants', 'Dénominations', 'Adresse', 'Création et fermeture'];
 
@@ -423,7 +422,6 @@ export default function StructureAddPage() {
       setStep({ step: 1 });
     });
     if (response.ok) {
-      initializeStructure(response.data.id);
       navigate(`/structures/${response.data.id}`);
     } else {
       notice({ content: "Une erreur s'est produite lors de l'envoi", autoDismissAfter: 0, type: 'error' });

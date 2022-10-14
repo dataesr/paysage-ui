@@ -10,7 +10,6 @@ import useFetch from '../../../hooks/useFetch';
 import useUrl from '../../../hooks/useUrl';
 import useNotice from '../../../hooks/useNotice';
 import Map from '../../map/auto-bound-map';
-import ScrallableListCards from '../../card/scrollable-list-card';
 import RelationCard from '../../card/relation-card';
 
 const deleteError = { content: "Une erreur s'est produite. L'élément n'a pas pu être supprimé", autoDismissAfter: 6000, type: 'error' };
@@ -100,11 +99,11 @@ export default function RelationsByGroup({ group, reloader }) {
     if (structures.length) {
       return (
         <Row gutters>
-          <Col n="12 md-6">
+          <Col n="12">
             <Map height="320px" markers={markers} zoom={8} />
           </Col>
-          <Col n="12 md-6">
-            <ScrallableListCards height="320px" cards={list} nCol="12" />
+          <Col n="12">
+            <ExpendableListCards list={list} nCol="12 md-6" />
           </Col>
         </Row>
       );

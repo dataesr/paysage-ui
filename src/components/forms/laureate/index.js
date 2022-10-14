@@ -19,10 +19,12 @@ import { parseRelatedElement } from '../../../utils/parse-related-element';
 import PaysageBlame from '../../paysage-blame';
 
 function sanitize(form) {
+  const newForm = { ...form };
+  if (newForm.otherAssociatedObjects?.length) newForm.otherAssociatedObjectIds = newForm.otherAssociatedObjects.map((associated) => associated.id);
   const fields = ['resourceId', 'relatedObjectId', 'relationTypeId', 'relationsGroupId', 'relationTag',
-    'startDateOfficialTextId', 'endDateOfficialTextId', 'startDate', 'endDate', 'associatedObjectIds'];
+    'startDateOfficialTextId', 'endDateOfficialTextId', 'startDate', 'endDate', 'otherAssociatedObjectIds'];
   const body = {};
-  Object.keys(form).forEach((key) => { if (fields.includes(key)) { body[key] = form[key]; } });
+  Object.keys(newForm).forEach((key) => { if (fields.includes(key)) { body[key] = newForm[key]; } });
   return body;
 }
 
@@ -94,21 +96,21 @@ export default function LaureateForm({ id, resourceType, relatedObjectTypes, dat
 
   useEffect(() => {
     const getAutocompleteResult = async () => {
-      const response = await api.get(`/autocomplete?query=${associatedQuery}&type=structures`);
+      const response = await api.get(`/autocomplete?query=${associatedQuery}&types=structures`);
       setAssociatedOptions(response.data?.data);
     };
     if (associatedQuery) { getAutocompleteResult(); } else { setAssociatedOptions([]); }
   }, [associatedQuery]);
 
   const handleObjectSelect = ({ id: associatedObjectId, name: displayName }) => {
-    const currentAssociatedObjects = form.associatedObjects?.length ? form.associatedObjects : [];
-    updateForm({ associatedObjects: [...currentAssociatedObjects, { id: associatedObjectId, displayName }] });
+    const currentAssociatedObjects = form.otherAssociatedObjects?.length ? form.otherAssociatedObjects : [];
+    updateForm({ otherAssociatedObjects: [...currentAssociatedObjects, { id: associatedObjectId, displayName }] });
     setAssociatedQuery('');
     setAssociatedOptions([]);
   };
 
   const handleObjectDelete = (objectId) => {
-    updateForm({ associatedObjects: form.associatedObjects.filter((o) => o.id !== objectId) });
+    updateForm({ otherAssociatedObjects: form.otherAssociatedObjects.filter((o) => o.id !== objectId) });
     setAssociatedQuery('');
     setAssociatedOptions([]);
   };
@@ -224,10 +226,10 @@ export default function LaureateForm({ id, resourceType, relatedObjectTypes, dat
               options={associatedOptions}
               onSelect={handleObjectSelect}
             />
-            {(form.relatedObjects?.length > 0) && (
+            {(form.otherAssociatedObjects?.length > 0) && (
               <Row spacing="mt-2w">
                 <TagGroup>
-                  {form.relatedObjects.map((element) => (
+                  {form.otherAssociatedObjects.map((element) => (
                     <Tag key={element.id} onClick={() => handleObjectDelete(element.id)}>
                       {element.displayName}
                       <Icon iconPosition="right" name="ri-close-line" />

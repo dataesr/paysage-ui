@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link as RouterLink, useNavigate, Outlet } from 'react-router-dom';
 import {
+  Badge,
   BadgeGroup, Breadcrumb, BreadcrumbItem, ButtonGroup, Checkbox,
   CheckboxGroup, Col, Container, Icon, Modal, ModalContent, ModalFooter,
   ModalTitle, Row, SideMenu, SideMenuLink, Title,
@@ -11,7 +12,6 @@ import useEditMode from '../../../hooks/useEditMode';
 import Button from '../../../components/button';
 import CopyBadgeButton from '../../../components/copy/copy-badge-button';
 import { DropdownButton, DropdownButtonItem } from '../../../components/dropdown-button';
-import PersonForm from '../../../components/forms/person';
 import useUrl from '../../../hooks/useUrl';
 import Spinner from '../../../components/spinner';
 import api from '../../../utils/api';
@@ -19,6 +19,8 @@ import useNotice from '../../../hooks/useNotice';
 
 import TermPresentationPage from './presentation';
 import TermCategories from './categories';
+import { saveError, saveSuccess } from '../../../utils/notice-contents';
+import TermForm from '../../../components/forms/term';
 
 function TermByIdPage() {
   const { url, id } = useUrl();
@@ -34,8 +36,8 @@ function TermByIdPage() {
   useEffect(() => { reset(); }, [reset]);
 
   const onSave = async (body) => api.patch(url, body)
-    .then(() => { reload(); setIsFormModalOpen(false); notice({ content: 'Informations sauvegardées', type: 'success' }); })
-    .catch(() => { setIsFormModalOpen(false); notice({ content: 'Une erreur est survenue.', type: 'error' }); });
+    .then(() => { reload(); setIsFormModalOpen(false); notice(saveSuccess); })
+    .catch(() => { setIsFormModalOpen(false); notice(saveError); });
 
   if (isLoading) return <Row className="fr-my-2w flex--space-around"><Spinner /></Row>;
   if (error) return <>Erreur...</>;
@@ -86,7 +88,8 @@ function TermByIdPage() {
           <Row className="flex--space-between flex--wrap-reverse">
             <Title as="h2">
               {data.usualNameFr}
-              <BadgeGroup>
+              <BadgeGroup className="fr-pt-1w">
+                <Badge text="terme" type="info" />
                 <CopyBadgeButton
                   colorFamily="yellow-tournesol"
                   text={data.id}
@@ -107,7 +110,7 @@ function TermByIdPage() {
                         {data.usualNameFr}
                       </ModalTitle>
                       <ModalContent>
-                        <PersonForm id={data.id} data={data} onSave={onSave} />
+                        <TermForm id={data.id} data={data} onSave={onSave} />
                       </ModalContent>
                     </Modal>
                   </DropdownButtonItem>

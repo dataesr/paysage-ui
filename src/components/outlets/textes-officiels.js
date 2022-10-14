@@ -28,10 +28,10 @@ export default function OfficialTextOutlet() {
   const [modalTitle, setModalTitle] = useState(null);
   const [modalContent, setModalContent] = useState(null);
 
-  const saveOfficialText = (body, id = null) => {
+  const saveOfficialText = async (body, id) => {
     const method = id ? 'patch' : 'post';
     const saveUrl = id ? `/official-texts/${id}` : '/official-texts';
-    api[method](saveUrl, body)
+    await api[method](saveUrl, body)
       .then(() => { reload(); notice(saveSuccess); setIsOpen(false); })
       .catch(() => notice(saveError));
   };

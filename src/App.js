@@ -6,16 +6,13 @@ import HelpPage from './pages/aide';
 import HomePage from './pages/accueil';
 import Layout from './components/layout';
 import OfficialTextsByIdPage from './pages/textes-officiels/id';
-import OfficialTextsPage from './pages/textes-officiels';
 import Passwordless from './pages/mot-de-passe-oublie';
-import ProjectsPage from './pages/projets';
 import RessourcesExternesPage from './pages/resources-externes';
 import SignIn from './pages/se-connecter';
 import SignUp from './pages/creer-un-compte';
 
 import ProtectedRoute from './components/protected-route';
 
-import StructuresPage from './pages/structures';
 import {
   StructureByIdPage,
   StructureBudgetPage,
@@ -32,7 +29,6 @@ import {
   StructureRHPage,
 } from './pages/structures/[id]';
 
-import PersonsPage from './pages/personnes';
 import {
   PersonByIdPage,
   PersonCategories,
@@ -43,7 +39,6 @@ import {
   PersonsRelatedElements,
 } from './pages/personnes/[id]';
 
-import TermsPage from './pages/termes';
 import TermsAddPage from './pages/termes/ajouter';
 import { TermByIdPage, TermPresentationPage, TermCategories } from './pages/termes/[id]';
 
@@ -56,7 +51,6 @@ import {
 } from './pages/projets/[id]';
 
 import CategoriesAddPage from './pages/categories/ajouter';
-import CategoriesPage from './pages/categories';
 import { CategoryByIdPage, CategoryPresentationPage, CategoryCategories } from './pages/categories/[id]';
 
 import { AccountPage, ProfilePage, PreferencesPage, SecurityPage, GroupsPage } from './pages/mon-compte';
@@ -69,6 +63,8 @@ import DocumentsOutlet from './components/outlets/documents';
 import ActualitesOutlet from './components/outlets/actualites';
 import OfficialTextsOutlet from './components/outlets/textes-officiels';
 import ParticipationsOutlet from './components/outlets/participations';
+import PriceAddPage from './pages/prix/ajouter';
+import { PriceByIdPage, PriceCategories, PricePresentationPage } from './pages/prix/[id]';
 
 function App() {
   return (
@@ -107,7 +103,6 @@ function App() {
 
             <Route path="/rechercher/*" element={<SearchPage />} />
 
-            <Route path="/structures" element={<StructuresPage />} />
             <Route path="/structures/ajouter" element={<StructureAddPage />} />
             <Route path="/structures/:id/exporter" element={<StructureExportPage />} />
             <Route path="/structures/:id" element={<StructureByIdPage />}>
@@ -133,7 +128,6 @@ function App() {
               <Route path="participations" element={<ParticipationsOutlet />} />
             </Route>
 
-            <Route path="/categories" element={<CategoriesPage />} />
             <Route path="/categories/ajouter" element={<CategoriesAddPage />} />
             <Route path="/categories/:id" element={<CategoryByIdPage />}>
               <Route path="" element={<Navigate to="presentation" replace />} />
@@ -145,7 +139,6 @@ function App() {
               <Route path="textes-officiels" element={<OfficialTextsOutlet />} />
             </Route>
 
-            <Route path="/personnes" element={<PersonsPage />} />
             <Route path="/personnes/ajouter" element={<PersonAddPage />} />
             <Route path="/persons/:id" element={<Redirect />} />
             <Route path="/personnes/:id" element={<PersonByIdPage />}>
@@ -163,7 +156,6 @@ function App() {
               <Route path="participations" element={<ParticipationsOutlet />} />
             </Route>
 
-            <Route path="/termes" element={<TermsPage />} />
             <Route path="/termes/ajouter" element={<TermsAddPage />} />
             <Route path="/terms/:id" element={<Redirect />} />
             <Route path="/termes/:id" element={<TermByIdPage />}>
@@ -176,8 +168,19 @@ function App() {
               <Route path="textes-officiels" element={<OfficialTextsOutlet />} />
             </Route>
 
+            <Route path="/prix/ajouter" element={<PriceAddPage />} />
+            <Route path="/prices/:id" element={<Redirect />} />
+            <Route path="/prix/:id" element={<PriceByIdPage />}>
+              <Route path="" element={<Navigate to="presentation" replace />} />
+              <Route path="presentation" element={<PricePresentationPage />} />
+              <Route path="categories" element={<PriceCategories />} />
+              <Route path="actualites" element={<ActualitesOutlet />} />
+              <Route path="evenements" element={<AgendaOutlet />} />
+              <Route path="documents" element={<DocumentsOutlet />} />
+              <Route path="textes-officiels" element={<OfficialTextsOutlet />} />
+            </Route>
+
             <Route path="/projets/ajouter" element={<ProjectAddPage />} />
-            <Route path="/projets" element={<ProjectsPage />} />
             <Route path="/projects/:id" element={<Redirect />} />
             <Route path="/projets/:id" element={<ProjectByIdPage />}>
               <Route path="" element={<Navigate to="presentation" replace />} />
@@ -191,7 +194,6 @@ function App() {
               <Route path="elements-lies" element={<ProjectRelatedElements />} />
             </Route>
 
-            <Route path="/textes-officiels" element={<OfficialTextsPage />} />
             <Route path="/textes-officiels/ajouter" element={<OfficialTextAddPage />} />
             <Route path="/official-texts/:id" element={<Redirect />} />
             <Route path="/textes-officiels/:id" element={<OfficialTextsByIdPage />} />

@@ -22,7 +22,7 @@ function validate(body) {
 }
 
 function sanitize(form) {
-  const fields = ['gender', 'firstName', 'lastName', 'otherNames', 'birthDate', 'deathDate', 'activity', 'comment'];
+  const fields = ['gender', 'firstName', 'lastName', 'otherNames', 'birthDate', 'deathDate', 'activity'];
   const body = {};
   Object.keys(form).forEach((key) => { if (fields.includes(key)) { body[key] = form[key]; } });
   return body;
@@ -53,19 +53,10 @@ export default function PersonForm({ id, data, onSave, onDelete }) {
         createdAt={data.createdAt}
       />
       <Container fluid className="fr-pb-6w">
-        <Row className="fr-pb-5w">
-          <Col n="12" spacing="pb-2w">
-            <Select
-              label="Genre"
-              options={genderOptions}
-              selected={form.gender || ''}
-              onChange={(e) => updateForm({ gender: e.target.value })}
-              message={(showErrors && errors.gender) ? errors.gender : null}
-              messageType={(showErrors && errors.gender) ? 'error' : ''}
-            />
-          </Col>
-          <Col n="12" spacing="pb-2w">
+        <Row gutters>
+          <Col n="12 md-6">
             <TextInput
+              required
               label="Prénom"
               value={form.firstName}
               onChange={(e) => updateForm({ firstName: e.target.value })}
@@ -73,7 +64,7 @@ export default function PersonForm({ id, data, onSave, onDelete }) {
               messageType={(showErrors && errors.fistName) ? 'error' : ''}
             />
           </Col>
-          <Col n="12" spacing="pb-2w">
+          <Col n="12 md-6">
             <TextInput
               required
               label="Nom"
@@ -83,40 +74,44 @@ export default function PersonForm({ id, data, onSave, onDelete }) {
               messageType={(showErrors && errors.lastName) ? 'error' : ''}
             />
           </Col>
-          <Col n="12" spacing="pb-3w">
-            <TagInput
-              label="Autres noms -- alias"
-              hint='Validez votre ajout avec la touche "Entrée" afin de valider votre ajout'
-              tags={form.otherNames || []}
-              onTagsChange={(tags) => updateForm({ otherNames: tags })}
+          <Col n="12 md-6">
+            <Select
+              required
+              label="Genre"
+              options={genderOptions}
+              selected={form.gender || ''}
+              onChange={(e) => updateForm({ gender: e.target.value })}
+              message={(showErrors && errors.gender) ? errors.gender : null}
+              messageType={(showErrors && errors.gender) ? 'error' : ''}
             />
           </Col>
-          <Col n="12" spacing="pb-2w">
-            <DateInput
-              value={form.birthDate || ''}
-              label="Date de naissance"
-              onDateChange={((v) => updateForm({ birthDate: v }))}
-            />
-          </Col>
-          <Col n="12" spacing="pb-2w">
-            <DateInput
-              value={form.deathDate || ''}
-              label="Date de décès"
-              onDateChange={((v) => updateForm({ deathDate: v }))}
-            />
-          </Col>
-          <Col n="12" spacing="pb-2w">
+          <Col n="12 md-6">
             <TextInput
               label="Activité"
               value={form.activity}
               onChange={(e) => updateForm({ activity: e.target.value })}
             />
           </Col>
-          <Col n="12" spacing="pb-2w">
-            <TextInput
-              label="Commentaire"
-              value={form.comment}
-              onChange={(e) => updateForm({ comment: e.target.value })}
+          <Col n="12 md-6">
+            <DateInput
+              value={form.birthDate || ''}
+              label="Date de naissance"
+              onDateChange={((v) => updateForm({ birthDate: v }))}
+            />
+          </Col>
+          <Col n="12 md-6">
+            <DateInput
+              value={form.deathDate || ''}
+              label="Date de décès"
+              onDateChange={((v) => updateForm({ deathDate: v }))}
+            />
+          </Col>
+          <Col n="12 md-6">
+            <TagInput
+              label="Autres noms -- alias"
+              hint='Validez votre ajout avec la touche "Entrée" afin de valider votre ajout'
+              tags={form.otherNames || []}
+              onTagsChange={(tags) => updateForm({ otherNames: tags })}
             />
           </Col>
         </Row>

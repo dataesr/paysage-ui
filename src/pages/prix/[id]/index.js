@@ -12,17 +12,17 @@ import useEditMode from '../../../hooks/useEditMode';
 import Button from '../../../components/button';
 import CopyBadgeButton from '../../../components/copy/copy-badge-button';
 import { DropdownButton, DropdownButtonItem } from '../../../components/dropdown-button';
+import PriceForm from '../../../components/forms/price';
 import useUrl from '../../../hooks/useUrl';
 import Spinner from '../../../components/spinner';
 import api from '../../../utils/api';
 import useNotice from '../../../hooks/useNotice';
 
-import CategoryPresentationPage from './presentation';
-import CategoryCategories from './categories';
-import CategoryForm from '../../../components/forms/category';
+import PricePresentationPage from './presentation';
+import PriceCategories from './categories';
 import { saveError, saveSuccess } from '../../../utils/notice-contents';
 
-function CategoryByIdPage() {
+function PriceByIdPage() {
   const { url, id } = useUrl();
   const { data, isLoading, error, reload } = useFetch(url);
   const navigate = useNavigate();
@@ -81,15 +81,15 @@ function CategoryByIdPage() {
             <BreadcrumbItem
               asLink={<RouterLink to="/rechercher/personnes?query=" />}
             >
-              Catégories
+              Prix
             </BreadcrumbItem>
-            <BreadcrumbItem>{data.usualNameFr}</BreadcrumbItem>
+            <BreadcrumbItem>{data.nameFr}</BreadcrumbItem>
           </Breadcrumb>
           <Row className="flex--space-between flex--wrap-reverse">
             <Title as="h2">
-              {data.usualNameFr}
+              {data.nameFr}
               <BadgeGroup className="fr-pt-1w">
-                <Badge text="catégories" type="info" />
+                <Badge type="info" text="prix" />
                 <CopyBadgeButton
                   colorFamily="yellow-tournesol"
                   text={data.id}
@@ -107,10 +107,10 @@ function CategoryByIdPage() {
                       <ModalTitle>
                         Modifier les informations de
                         {' '}
-                        {data.usualNameFr}
+                        {data.nameFr}
                       </ModalTitle>
                       <ModalContent>
-                        <CategoryForm id={data.id} data={data} onSave={onSave} />
+                        <PriceForm id={data.id} data={data} onSave={onSave} />
                       </ModalContent>
                     </Modal>
                   </DropdownButtonItem>
@@ -157,7 +157,7 @@ function CategoryByIdPage() {
                 <ButtonGroup>
                   <Button onClick={() => {
                     if (editMode) { toggle(); }
-                    navigate(`/categories/${id}/exporter?${new URLSearchParams(form)}`);
+                    navigate(`/prix/${id}/exporter?${new URLSearchParams(form)}`);
                   }}
                   >
                     Exporter
@@ -174,7 +174,7 @@ function CategoryByIdPage() {
 }
 
 export {
-  CategoryByIdPage,
-  CategoryPresentationPage,
-  CategoryCategories,
+  PriceByIdPage,
+  PricePresentationPage,
+  PriceCategories,
 };

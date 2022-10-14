@@ -10,14 +10,11 @@ import useFetch from '../../../hooks/useFetch';
 import useUrl from '../../../hooks/useUrl';
 import useNotice from '../../../hooks/useNotice';
 import Map from '../../map/auto-bound-map';
-import ScrallableListCards from '../../card/scrollable-list-card';
 
 const deleteError = { content: "Une erreur s'est produite. L'élément n'a pas pu être supprimé", autoDismissAfter: 6000, type: 'error' };
 const saveError = { content: "Une erreur s'est produite.", autoDismissAfter: 6000, type: 'error' };
 const saveSuccess = { content: 'La relation a été ajoutée avec succès.', autoDismissAfter: 6000, type: 'success' };
 const deleteSuccess = { content: 'La relation a été supprimée avec succès.', autoDismissAfter: 6000, type: 'success' };
-
-// const modelKeys = ['resourceId', 'relatedObjectId', ]
 
 export default function RelationsByTag({ blocName, tag, resourceType, relatedObjectTypes, inverse, noRelationType, Form }) {
   const queryObject = inverse ? 'relatedObjectId' : 'resourceId';
@@ -39,8 +36,6 @@ export default function RelationsByTag({ blocName, tag, resourceType, relatedObj
       postBody.resourceId = resourceId;
     }
     postBody.relationTag = tag;
-
-    // Object.keys(postBody).forEach((key) => validKeys.includes(key) || delete userInput[key]);
     await api[method](saveUrl, postBody).then(() => { notice(saveSuccess); reload(); }).catch(() => notice(saveError));
     return setShowModal(false);
   };
@@ -93,11 +88,11 @@ export default function RelationsByTag({ blocName, tag, resourceType, relatedObj
     if (structures.length) {
       return (
         <Row gutters>
-          <Col n="12 md-6">
+          <Col n="12">
             <Map height="320px" markers={markers} zoom={8} />
           </Col>
-          <Col n="12 md-6">
-            <ScrallableListCards height="320px" cards={list} nCol="12" />
+          <Col n="12">
+            <ExpendableListCards list={list} nCol="6" />
           </Col>
         </Row>
       );

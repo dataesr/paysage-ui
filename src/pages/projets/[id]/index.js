@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link as RouterLink, useNavigate, Outlet } from 'react-router-dom';
 import {
+  Badge,
   BadgeGroup, Breadcrumb, BreadcrumbItem, ButtonGroup, Checkbox,
   CheckboxGroup, Col, Container, Icon, Modal, ModalContent, ModalFooter,
   ModalTitle, Row, SideMenu, SideMenuLink, Title,
@@ -11,7 +12,7 @@ import useEditMode from '../../../hooks/useEditMode';
 import Button from '../../../components/button';
 import CopyBadgeButton from '../../../components/copy/copy-badge-button';
 import { DropdownButton, DropdownButtonItem } from '../../../components/dropdown-button';
-import PersonForm from '../../../components/forms/person';
+import ProjectForm from '../../../components/forms/project';
 import useUrl from '../../../hooks/useUrl';
 import Spinner from '../../../components/spinner';
 import api from '../../../utils/api';
@@ -21,6 +22,7 @@ import ProjectPresentationPage from './presentation';
 import ProjectCategories from './categories';
 import ProjectPrices from './prix-et-recompenses';
 import ProjectRelatedElements from './elements-lies';
+import { saveError, saveSuccess } from '../../../utils/notice-contents';
 
 function ProjectByIdPage() {
   const { url, id } = useUrl();
@@ -36,8 +38,8 @@ function ProjectByIdPage() {
   useEffect(() => { reset(); }, [reset]);
 
   const onSave = async (body) => api.patch(url, body)
-    .then(() => { reload(); setIsFormModalOpen(false); notice({ content: 'Informations sauvegardées', type: 'success' }); })
-    .catch(() => { setIsFormModalOpen(false); notice({ content: 'Une erreur est survenue.', type: 'error' }); });
+    .then(() => { reload(); setIsFormModalOpen(false); notice(saveSuccess); })
+    .catch(() => { setIsFormModalOpen(false); notice(saveError); });
 
   if (isLoading) return <Row className="fr-my-2w flex--space-around"><Spinner /></Row>;
   if (error) return <>Erreur...</>;
@@ -71,10 +73,6 @@ function ProjectByIdPage() {
               <Icon name="ri-git-repository-line" size="1x" />
               Textes officiels
             </SideMenuLink>
-            <SideMenuLink asLink={<RouterLink to="projets" />}>
-              <Icon name="ri-booklet-line" size="1x" />
-              Projets
-            </SideMenuLink>
             <SideMenuLink asLink={<RouterLink to="prix-et-recompenses" />}>
               <Icon name="ri-award-line" size="1x" />
               Prix & récompenses
@@ -95,12 +93,13 @@ function ProjectByIdPage() {
             >
               Catégories
             </BreadcrumbItem>
-            <BreadcrumbItem>{data.usualNameFr}</BreadcrumbItem>
+            <BreadcrumbItem>{data.nameFr}</BreadcrumbItem>
           </Breadcrumb>
           <Row className="flex--space-between flex--wrap-reverse">
             <Title as="h2">
-              {data.usualNameFr}
-              <BadgeGroup>
+              {data.nameFr}
+              <BadgeGroup className="fr-pt-1w">
+                <Badge type="info" text="projet" />
                 <CopyBadgeButton
                   colorFamily="yellow-tournesol"
                   text={data.id}
@@ -118,10 +117,10 @@ function ProjectByIdPage() {
                       <ModalTitle>
                         Modifier les informations de
                         {' '}
-                        {data.usualNameFr}
+                        {data.nameFr}
                       </ModalTitle>
                       <ModalContent>
-                        <PersonForm id={data.id} data={data} onSave={onSave} />
+                        <ProjectForm id={data.id} data={data} onSave={onSave} />
                       </ModalContent>
                     </Modal>
                   </DropdownButtonItem>
@@ -168,7 +167,7 @@ function ProjectByIdPage() {
                 <ButtonGroup>
                   <Button onClick={() => {
                     if (editMode) { toggle(); }
-                    navigate(`/categories/${id}/exporter?${new URLSearchParams(form)}`);
+                    navigate(`/projets/${id}/exporter?${new URLSearchParams(form)}`);
                   }}
                   >
                     Exporter

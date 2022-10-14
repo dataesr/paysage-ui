@@ -16,6 +16,7 @@ import api from '../../../utils/api';
 import useForm from '../../../hooks/useForm';
 import FormFooter from '../form-footer';
 import SearchBar from '../../search-bar';
+import PaysageBlame from '../../paysage-blame';
 
 function validator(body) {
   const ret = {};
@@ -50,6 +51,15 @@ export default function OfficiaTextForm({ id, data, onSave, onDelete }) {
   };
 
   useEffect(() => {
+    if (!showErrors) return;
+    const field = Object.keys(errors)?.[0];
+    if (field) {
+      const element = document.getElementsByName(field);
+      if (element?.length) element[0].scrollIntoView({ block: 'start', inline: 'nearest', behavior: 'smooth' });
+    }
+  }, [showErrors, errors]);
+
+  useEffect(() => {
     const getAutocompleteResult = async () => {
       const response = await api.get(`/autocomplete?query=${query}`);
       setOptions(response.data?.data);
@@ -58,11 +68,13 @@ export default function OfficiaTextForm({ id, data, onSave, onDelete }) {
   }, [query]);
 
   const natureOptions = [
+    { value: '', label: 'Séléctionnez' },
     { value: 'Publication au JO', label: 'Publication au JO' },
     { value: 'Publication au BOESR', label: 'Publication au BOESR' },
   ];
 
   const typeOptions = [
+    { value: '', label: 'Séléctionnez' },
     { value: 'Loi', label: 'Loi' },
     { value: 'Décret', label: 'Décret' },
     { value: 'Ordonnance', label: 'Ordonnance' },
@@ -86,11 +98,18 @@ export default function OfficiaTextForm({ id, data, onSave, onDelete }) {
 
   return (
     <Container fluid className="fr-pb-6w">
+      <PaysageBlame
+        createdBy={data.createdBy}
+        updatedBy={data.updatedBy}
+        updatedAt={data.updatedAt}
+        createdAt={data.createdAt}
+      />
       <Row gutters className="flex--last-baseline">
         <Col n="12 md-6">
           <Select
             label="Nature"
             options={natureOptions}
+            name="nature"
             selected={form.nature}
             onChange={(e) => updateForm({ nature: e.target.value })}
             required
@@ -103,6 +122,7 @@ export default function OfficiaTextForm({ id, data, onSave, onDelete }) {
             label="Type"
             options={typeOptions}
             selected={form.type}
+            name="type"
             onChange={(e) => updateForm({ type: e.target.value })}
             required
             message={(showErrors && errors.type) ? errors.type : null}
@@ -113,6 +133,7 @@ export default function OfficiaTextForm({ id, data, onSave, onDelete }) {
           <TextInput
             label="Numéro jorftext pour les publications au JO"
             hint="Uniquement si Publication au JO"
+            name="jorftext"
             value={form.jorftext}
             onChange={(e) => updateForm({ jorftext: e.target.value })}
           />
@@ -131,6 +152,7 @@ export default function OfficiaTextForm({ id, data, onSave, onDelete }) {
             value={form.title}
             onChange={(e) => updateForm({ title: e.target.value })}
             required
+            name="title"
             message={(showErrors && errors.title) ? errors.title : null}
             messageType={(showErrors && errors.title) ? 'error' : ''}
           />
@@ -141,6 +163,7 @@ export default function OfficiaTextForm({ id, data, onSave, onDelete }) {
             value={form.pageUrl}
             onChange={(e) => updateForm({ pageUrl: e.target.value })}
             required
+            name="pageUrl"
             message={(showErrors && errors.pageUrl) ? errors.pageUrl : null}
             messageType={(showErrors && errors.pageUrl) ? 'error' : ''}
           />
@@ -180,6 +203,7 @@ export default function OfficiaTextForm({ id, data, onSave, onDelete }) {
             label="Date de publication"
             onDateChange={(v) => updateForm({ publicationDate: v })}
             required
+            name="publicationDate"
             message={(showErrors && errors.publicationDate) ? errors.publicationDate : null}
             messageType={(showErrors && errors.publicationDate) ? 'error' : ''}
           />
@@ -250,9 +274,10 @@ OfficiaTextForm.propTypes = {
   id: PropTypes.string,
   data: PropTypes.oneOfType([PropTypes.shape, null]),
   onSave: PropTypes.func.isRequired,
-  onDelete: PropTypes.func.isRequired,
+  onDelete: PropTypes.func,
 };
 OfficiaTextForm.defaultProps = {
   id: null,
   data: { relatedObjects: [] },
+  onDelete: null,
 };
