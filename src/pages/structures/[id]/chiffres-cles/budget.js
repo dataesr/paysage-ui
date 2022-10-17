@@ -17,10 +17,9 @@ import cleanNumber from '../../../../utils/cleanNumbers';
 export default function StructureBudgetPage() {
   useHashScroll();
   const { id, url } = useUrl('keynumbers');
-  const { data, isLoading, error } = useFetch(`${url}/finance`);
+  const { data, isLoading, error } = useFetch(`${url}/finance?sort=-exercice&limit=2`);
 
-  const sortedData = data?.data.sort((a, b) => b.exercice - a.exercice) || [];
-  const lastData = (Number(sortedData?.[0]?.exercice) === new Date().getFullYear()) ? sortedData?.[1] : sortedData?.[0];
+  const lastData = (Number(data?.data?.[0]?.exercice) === new Date().getFullYear()) ? data?.data?.[1] : data?.data?.[0];
   const year = lastData?.exercice;
 
   const financialBalance = [{
