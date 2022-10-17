@@ -1,10 +1,13 @@
 import { useEffect, useState } from 'react';
 import api from '../utils/api';
 
-export default function useFetch(url, headers, options) {
-  // const { filters = {}, skip = 0, limit = 20, sort } = options;
+// TODO: Add options and pagination functionnality
+// const { filters = {}, skip = 0, limit = 20, sort } = options;
+// const [hasMore, setHasMore] = useState(false);
+// if (response.totalCount > (skip + limit)) setHasMore(true);
+
+export default function useFetch(url, headers) {
   const [data, setData] = useState(null);
-  // const [hasMore, setHasMore] = useState(false);
   const [error, setError] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [reloads, setReloads] = useState(0);
@@ -15,7 +18,6 @@ export default function useFetch(url, headers, options) {
     const fetchData = () => api.get(url, headers)
       .then((response) => {
         setData(response.data);
-        // if (response.totalCount > (skip + limit)) setHasMore(true);
         setIsLoading(false);
         setError(false);
       })

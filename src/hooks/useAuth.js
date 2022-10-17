@@ -1,56 +1,83 @@
-import { useState,
+import {
+  useState,
   createContext,
   useContext,
   useMemo,
   useEffect,
+  useCallback,
 } from 'react';
 import PropTypes from 'prop-types';
 import api from '../utils/api';
 
 const AuthContext = createContext();
 
+async function refreshToken() {
+  const refresh = localStorage.getItem('__paysage_refresh__');
+  if (!refresh) return false;
+  const url = `${process.env.REACT_APP_API_URL}/token`;
+  const body = JSON.stringify({ refreshToken: refresh });
+  const headers = { 'Content-Type': 'application/json' };
+  const data = await fetch(url, { method: 'POST', body, headers })
+    .then((response) => response.json())
+    .catch(() => false);
+  if (!data || data.error) return false;
+  localStorage.setItem('__paysage_access__', data.accessToken);
+  localStorage.setItem('__paysage_refresh__', data.refreshToken);
+  return true;
+}
+
 export function AuthContextProvider({ children }) {
   const [viewer, setViewer] = useState({});
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    setIsLoading(true);
-    const fetchUser = async () => {
-      const { data } = await api.get('/me').catch(() => setIsLoading(false));
-      setViewer(data || {});
-      setIsLoading(false);
-    };
-    if (!localStorage.getItem('__paysage_access__')) setIsLoading(false); else fetchUser();
+  const fetchViewer = useCallback(async () => {
+    await api.get('/me')
+      .then((response) => { if (response.ok) setViewer(response.data); });
+    setIsLoading(false);
   }, []);
 
-  const requestSignInEmail = async ({ email, password }) => {
+  useEffect(() => {
+    setIsLoading(true);
+    if (localStorage.getItem('__paysage_refresh__')) {
+      refreshToken()
+        .then((result) => { if (result) fetchViewer(); else setIsLoading(false); })
+        .catch(() => setIsLoading(false));
+    } else { setIsLoading(false); }
+    const refresher = setInterval(async () => refreshToken(), (1000 * 60));
+    return () => clearInterval(refresher);
+  }, [fetchViewer]);
+
+  const requestSignInEmail = useCallback(async ({ email, password }) => {
     const url = `${process.env.REACT_APP_API_URL}/signin`;
     const body = JSON.stringify({ email, password });
     const headers = { 'X-Paysage-OTP-Method': 'email', 'Content-Type': 'application/json' };
-    const response = await fetch(url, { method: 'POST', body, headers })
-      .catch(() => { console.log('Erreur inattendue'); });
-    return response.json();
-  };
+    return fetch(url, { method: 'POST', body, headers })
+      .then((response) => response.json())
+      .then((data) => data)
+      .catch(() => ({ error: 'Erreur innatendue' }));
+  }, []);
 
-  const requestPasswordChangeEmail = async ({ email }) => {
+  const requestPasswordChangeEmail = useCallback(async ({ email }) => {
     const url = `${process.env.REACT_APP_API_URL}/recovery/password`;
     const body = JSON.stringify({ email });
     const headers = { 'X-Paysage-OTP-Method': 'email', 'Content-Type': 'application/json' };
-    const response = await fetch(url, { method: 'POST', body, headers })
-      .catch(() => { console.log('Erreur inattendue'); });
-    return response.json();
-  };
+    return fetch(url, { method: 'POST', body, headers })
+      .then((response) => response.json())
+      .then((data) => data)
+      .catch(() => ({ error: 'Erreur innatendue' }));
+  }, []);
 
-  const changePassword = async ({ email, password, otp }) => {
+  const changePassword = useCallback(async ({ email, password, otp }) => {
     const url = `${process.env.REACT_APP_API_URL}/recovery/password`;
     const body = JSON.stringify({ email, password });
     const headers = { 'X-Paysage-OTP': otp, 'Content-Type': 'application/json' };
-    const response = await fetch(url, { method: 'POST', body, headers })
-      .catch(() => { console.log('Erreur inattendue'); });
-    return response.json();
-  };
+    return fetch(url, { method: 'POST', body, headers })
+      .then((response) => response.json())
+      .then((data) => data)
+      .catch(() => ({ error: 'Erreur innatendue' }));
+  }, []);
 
-  const signin = async ({ email, password, otp }) => {
+  const signin = useCallback(async ({ email, password, otp }) => {
     const url = `${process.env.REACT_APP_API_URL}/signin`;
     const body = JSON.stringify({ email, password });
     const headers = { 'X-Paysage-OTP': otp, 'Content-Type': 'application/json' };
@@ -59,16 +86,15 @@ export function AuthContextProvider({ children }) {
     if (response.ok) {
       const data = await response.json()
         .catch(() => { console.log('Erreur inattendue'); });
-      const { accessToken, refreshToken } = data;
-      localStorage.setItem('__paysage_access__', accessToken);
-      localStorage.setItem('__paysage_refresh__', refreshToken);
+      localStorage.setItem('__paysage_access__', data.accessToken);
+      localStorage.setItem('__paysage_refresh__', data.refreshToken);
       const { data: user } = await api.get('/me');
       setViewer(user || {});
     }
     return response;
-  };
+  }, []);
 
-  const signup = async ({
+  const signup = useCallback(async ({
     email, password, firstName, lastName,
   }) => {
     const url = `${process.env.REACT_APP_API_URL}/signup`;
@@ -80,13 +106,13 @@ export function AuthContextProvider({ children }) {
     const data = await response.json().catch(() => { console.log('Erreur inattendue'); });
     response.data = data;
     return response;
-  };
+  }, []);
 
-  const signout = () => {
+  const signout = useCallback(() => {
     localStorage.removeItem('__paysage_access__');
     localStorage.removeItem('__paysage_refresh__');
     setViewer({});
-  };
+  }, []);
 
   const value = useMemo(() => ({
     isLoading,
@@ -98,7 +124,7 @@ export function AuthContextProvider({ children }) {
     changePassword,
     requestSignInEmail,
     requestPasswordChangeEmail,
-  }), [viewer, isLoading]);
+  }), [viewer, isLoading, signout, signin, signup, changePassword, requestPasswordChangeEmail, requestSignInEmail]);
   return (
     <AuthContext.Provider value={value}>
       {children}

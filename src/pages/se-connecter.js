@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import {
   Container, Row, Col, TextInput, Text, Link, Title, Breadcrumb, BreadcrumbItem, ButtonGroup, Stepper, Alert,
@@ -11,7 +11,7 @@ import useNotice from '../hooks/useNotice';
 export default function SignIn() {
   const navigate = useNavigate();
   const { notice } = useNotice();
-  const { requestSignInEmail, signin, viewer } = useAuth();
+  const { requestSignInEmail, signin } = useAuth();
   const [step, setStep] = useState(1);
   const [otp, setOtp] = useState('');
   const [email, setEmail] = useState('');
@@ -25,8 +25,8 @@ export default function SignIn() {
   const requestOtp = async (e) => {
     e.preventDefault();
     if (validateEmail(email) && (validatePassword(password) === true)) {
-      const response = await requestSignInEmail({ email, password });
-      if (response.message) { setStep(2); } else { setMatchError(true); }
+      const { message } = await requestSignInEmail({ email, password });
+      if (message) { setStep(2); } else { setMatchError(true); }
     } else { setMatchError(true); }
   };
   const handleSignIn = async (e) => {
@@ -35,10 +35,6 @@ export default function SignIn() {
     const response = await signin({ email, password, otp });
     if (response.ok) { navigate('/'); } else { notice({ content: response.data.message }); }
   };
-
-  useEffect(() => {
-    if (viewer?.id) { navigate('/'); }
-  }, [viewer, navigate]);
 
   return (
     <Container spacing="mb-6w">

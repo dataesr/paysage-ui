@@ -6,29 +6,7 @@ const setDefaultHeaders = (requestHeaders = {}) => {
   };
   if (!contentType) defaultHeaders['Content-Type'] = 'application/json';
   if (!Accept) defaultHeaders.Accept = 'application/json';
-  return {
-    ...defaultHeaders,
-    ...rest,
-  };
-};
-
-const catchInvalidToken = async () => {
-  const refreshToken = localStorage.getItem('__paysage_refresh__');
-  const options = {
-    method: 'POST',
-    body: JSON.stringify({ refreshToken }),
-    headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-  };
-  const response = await fetch(`${process.env.REACT_APP_API_URL}/token`, options);
-  if (!response.ok) {
-    window.location.href = '/';
-    return null;
-  }
-  const tokens = await response.json();
-  const { accessToken: access, refreshToken: refresh } = tokens;
-  localStorage.setItem('__paysage_access__', access);
-  localStorage.setItem('__paysage_refresh__', refresh);
-  return access;
+  return { ...defaultHeaders, ...rest };
 };
 
 async function customFetch({ method, url, body, headers }) {
@@ -50,19 +28,6 @@ async function customFetch({ method, url, body, headers }) {
       response.data = json;
     }
     return response;
-  }
-
-  if (response.status === 401) {
-    const newAccessToken = await catchInvalidToken();
-    if (newAccessToken) {
-      options.headers.Authorization = `Bearer ${newAccessToken}`;
-      const retry = await fetch(requestUrl, options);
-      if (retry.ok) {
-        const rjson = await retry.json();
-        retry.data = rjson;
-        return retry;
-      }
-    }
   }
   throw new Error();
 }

@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import { BrowserRouter as Router } from 'react-router-dom';
 import App from './App';
 import { AuthContextProvider } from './hooks/useAuth';
 import { ToastContextProvider } from './hooks/useToast';
@@ -11,17 +12,19 @@ import { EnumContextProvider } from './hooks/useEnums';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <NoticeContextProvider>
-      <ToastContextProvider>
-        <AuthContextProvider>
-          <EditModeContextProvider>
-            <EnumContextProvider>
-              <App />
-            </EnumContextProvider>
-          </EditModeContextProvider>
-        </AuthContextProvider>
-      </ToastContextProvider>
-    </NoticeContextProvider>
+    <Router>
+      <NoticeContextProvider>
+        <ToastContextProvider>
+          <AuthContextProvider>
+            <EditModeContextProvider>
+              <EnumContextProvider>
+                <App />
+              </EnumContextProvider>
+            </EditModeContextProvider>
+          </AuthContextProvider>
+        </ToastContextProvider>
+      </NoticeContextProvider>
+    </Router>
   </React.StrictMode>,
 );
 
