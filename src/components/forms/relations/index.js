@@ -26,10 +26,10 @@ export default function RelationForm({ id, resourceType, relatedObjectTypes, dat
   const validator = (body) => {
     const errors = {};
     if (!body?.relatedObjectId && !inverse) {
-      errors.relatedObjectId = 'Vous devez séléctionner un objet à lier';
+      errors.relatedObjectId = 'Vous devez sélectionner un objet à lier';
     }
     if (!body?.resourceId && inverse) {
-      errors.relatedObjectId = 'Vous devez séléctionner un objet à lier';
+      errors.relatedObjectId = 'Vous devez sélectionner un objet à lier';
     }
     return errors;
   };
@@ -159,7 +159,7 @@ export default function RelationForm({ id, resourceType, relatedObjectTypes, dat
                   buttonLabel="Rechercher"
                   value={resourceQuery || ''}
                   label="Objet paysage à lier"
-                  hint="Recherchez dans les objects paysage"
+                  hint="Rechercher dans les objects paysage"
                   required
                   scope={form.resourceName}
                   placeholder={form.resourceId ? '' : 'Rechercher...'}
@@ -176,7 +176,7 @@ export default function RelationForm({ id, resourceType, relatedObjectTypes, dat
                   buttonLabel="Rechercher"
                   value={relatedObjectQuery || ''}
                   label="Objet paysage à lier"
-                  hint="Recherchez dans les objects paysage"
+                  hint="Rechercher dans les objects paysage"
                   required
                   scope={form.relatedObjectName}
                   placeholder={form.relatedObjectId ? '' : 'Rechercher...'}
@@ -213,7 +213,7 @@ export default function RelationForm({ id, resourceType, relatedObjectTypes, dat
               buttonLabel="Rechercher"
               value={startDateOfficialTextQuery || ''}
               label="Texte officiel de début de relation"
-              hint="Recherchez et séléctionnez un text officiel paysage"
+              hint="Rechercher et sélectionner un texte officiel"
               scope={form.startDateOfficialTextName}
               placeholder={form.startDateOfficialTextId ? '' : 'Rechercher...'}
               onChange={(e) => { updateForm({ startDateOfficialTextId: null }); setStartDateOfficialTextQuery(e.target.value); }}
@@ -234,7 +234,7 @@ export default function RelationForm({ id, resourceType, relatedObjectTypes, dat
               buttonLabel="Rechercher"
               value={endDateOfficialTextQuery || ''}
               label="Texte officiel de fin de relation"
-              hint="Recherchez et séléctionnez une personne paysage"
+              hint="Rechercher et sélectionner une personne"
               scope={form.endDateOfficialTextName}
               placeholder={form.endDateOfficialTextId ? '' : 'Rechercher...'}
               onChange={(e) => { updateForm({ endDateOfficialTextId: null }); setEndDateOfficialTextQuery(e.target.value); }}

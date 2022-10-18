@@ -126,7 +126,7 @@ function User({
             <Row gutters alignItems="bottom">
               <Col n="12 md-6">
                 <Select
-                  label="Séléctionnez un role"
+                  label="Sélectionner un rôle"
                   selected={newRole}
                   onChange={(e) => { setNewRole(e.target.value); }}
                   options={roleOptions}

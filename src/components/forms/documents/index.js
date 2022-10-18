@@ -89,8 +89,8 @@ export default function DocumentsForm({ id, data, onSave, onDelete }) {
   }, [updateForm, files, notice, form]);
 
   const documentTypesOptions = (documentTypes?.data) ? [
-    { label: 'Séléctionnez un type', value: '' }, ...documentTypes.data.map((element) => ({ label: element.usualName, value: element.id })),
-  ] : [{ label: 'Séléctionnez un type', value: '' }];
+    { label: 'Sélectionner un type', value: '' }, ...documentTypes.data.map((element) => ({ label: element.usualName, value: element.id })),
+  ] : [{ label: 'Sélectionner un type', value: '' }];
 
   return (
     <form>
@@ -137,7 +137,7 @@ export default function DocumentsForm({ id, data, onSave, onDelete }) {
               required
               value={form.startDate || ''}
               label="Date de début de validité du document"
-              hint="Une date approximée à l'année permet de séléctionner une plage de temps. (e.g. Bilan social -> 2022)"
+              hint="Une date approximée à l'année permet de sélectionner une plage de temps. (e.g. Bilan social -> 2022)"
               onDateChange={((v) => updateForm({ startDate: v }))}
               message={(showErrors && errors.startDate) ? errors.startDate : null}
               messageType={(showErrors && errors.startDate) ? 'error' : ''}

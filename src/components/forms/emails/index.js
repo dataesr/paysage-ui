@@ -38,8 +38,8 @@ export default function EmailForm({ id, data, onDelete, onSave }) {
   };
 
   const emailTypesOptions = (emailTypes?.data) ? [
-    { label: "Séléctionnez un type d'email", value: '' }, ...emailTypes.data.map((element) => ({ label: element.usualName, value: element.id })),
-  ] : [{ label: "Séléctionnez un type d'email", value: '' }];
+    { label: "Sélectionner un type d'email", value: '' }, ...emailTypes.data.map((element) => ({ label: element.usualName, value: element.id })),
+  ] : [{ label: "Sélectionner un type d'email", value: '' }];
 
   return (
     <form>

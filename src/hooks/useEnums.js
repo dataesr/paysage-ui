@@ -10,7 +10,7 @@ import { ENUMS_LABELS_MAPPER } from '../utils/constants';
 
 const EnumContext = createContext();
 
-const DEFAULT_SELECT = { label: 'Séléctionnez un type', value: '' };
+const DEFAULT_SELECT = { label: 'Sélectionner un type', value: '' };
 const getOptions = (enums, enumKey) => enums[enumKey]?.enum
   .map((item) => ({ label: ENUMS_LABELS_MAPPER[item] || item, value: item }));
 

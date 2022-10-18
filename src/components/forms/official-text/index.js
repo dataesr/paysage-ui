@@ -68,13 +68,13 @@ export default function OfficiaTextForm({ id, data, onSave, onDelete }) {
   }, [query]);
 
   const natureOptions = [
-    { value: '', label: 'Séléctionnez' },
+    { value: '', label: 'Sélectionner' },
     { value: 'Publication au JO', label: 'Publication au JO' },
     { value: 'Publication au BOESR', label: 'Publication au BOESR' },
   ];
 
   const typeOptions = [
-    { value: '', label: 'Séléctionnez' },
+    { value: '', label: 'Sélectionner' },
     { value: 'Loi', label: 'Loi' },
     { value: 'Décret', label: 'Décret' },
     { value: 'Ordonnance', label: 'Ordonnance' },

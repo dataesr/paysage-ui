@@ -157,7 +157,7 @@ export default function LocalisationForm({ id, data, onDelete, onSave }) {
               buttonLabel="Rechercher"
               value={query}
               label="Adresse recherchée"
-              hint="Recherchez et séléctionnez une adresse"
+              hint="Rechercher et sélectionner une adresse"
               scope={scope}
               placeholder={scope ? '' : 'Rechercher...'}
               onChange={(e) => { setQuery(e.target.value); }}

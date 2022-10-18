@@ -117,7 +117,7 @@ export default function WeblinkForm({ data, onDeleteHandler, onSaveHandler }) {
               buttonLabel="Rechercher"
               value={queryTOCreation}
               label="Ajouter/remplacer le texte officiel de création"
-              hint="Recherchez et séléctionnez un texte officiel présent dans paysage"
+              hint="Rechercher et sélectionner un texte officiel"
               scope={scopeTOCreation}
               placeholder={scopeTOCreation ? '' : 'Rechercher...'}
               onChange={(e) => { updateForm({ creationOfficialTextId: null }); setQueryTOCreation(e.target.value); }}
@@ -183,7 +183,7 @@ export default function WeblinkForm({ data, onDeleteHandler, onSaveHandler }) {
               buttonLabel="Rechercher"
               value={queryTOClosure}
               label="Ajouter/remplacer le texte officiel de fermeture"
-              hint="Recherchez et séléctionnez un texte officiel présent dans paysage"
+              hint="Rechercher et sélectionner un texte officiel présent dans paysage"
               scope={scopeTOClosure}
               placeholder={scopeTOClosure ? '' : 'Rechercher...'}
               onChange={(e) => { updateForm({ closureOfficialTextId: null }); setQueryTOClosure(e.target.value); }}
