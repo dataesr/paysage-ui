@@ -1,32 +1,34 @@
-import { useEffect, useState, useCallback } from 'react';
-import { Link as RouterLink, useNavigate, Outlet, useParams } from 'react-router-dom';
 import {
   Badge, BadgeGroup, Breadcrumb, BreadcrumbItem, ButtonGroup, Checkbox,
   CheckboxGroup, Col, Container, Highlight, Icon, Modal, ModalContent, ModalFooter,
   ModalTitle, Radio, RadioGroup, Row, SideMenu, SideMenuItem, SideMenuLink, TextInput, Title,
 } from '@dataesr/react-dsfr';
-import useFetch from '../../../hooks/useFetch';
-import useForm from '../../../hooks/useForm';
-import useEditMode from '../../../hooks/useEditMode';
+import { useEffect, useState, useCallback } from 'react';
+import { Link as RouterLink, useNavigate, Outlet, useParams } from 'react-router-dom';
+
 import Button from '../../../components/button';
 import CopyBadgeButton from '../../../components/copy/copy-badge-button';
+import { DropdownButton, DropdownButtonItem } from '../../../components/dropdown-button';
 import Spinner from '../../../components/spinner';
-import StructurePresentationPage from './presentation';
-import StructureBudgetPage from './chiffres-cles/budget';
+import useEditMode from '../../../hooks/useEditMode';
+import useFetch from '../../../hooks/useFetch';
+import useForm from '../../../hooks/useForm';
+import useShortcuts from '../../../hooks/useShortcuts';
+import useToast from '../../../hooks/useToast';
 import StructureCategoriesPage from './categories';
-import StructureElementsLiesPage from './elements-lies';
+import StructureBudgetPage from './chiffres-cles/budget';
 import StructureEtudiantsPage from './chiffres-cles/etudiants';
+import StructureImmobilierPage from './chiffres-cles/immobilier';
+import StructureInsertionProfessionnellePage from './chiffres-cles/insertion-professionnelle';
+import StructureOffreDeFormationPage from './chiffres-cles/offre-de-formation';
+import StructureRHPage from './chiffres-cles/ressources-humaines';
+import StructureElementsLiesPage from './elements-lies';
 import StructureExportPage from './exporter';
 import StructureGouvernancePage from './gouvernance';
-import StructureImmobilierPage from './chiffres-cles/immobilier';
-import StructureOffreDeFormationPage from './chiffres-cles/offre-de-formation';
+import StructurePresentationPage from './presentation';
 import StructurePrixEtRecompensesPage from './prix-et-recompenses';
 import StructureProjetsPage from './projets';
-import StructureRHPage from './chiffres-cles/ressources-humaines';
-import { DropdownButton, DropdownButtonItem } from '../../../components/dropdown-button';
 import api from '../../../utils/api';
-import useToast from '../../../hooks/useToast';
-import useShortcuts from '../../../hooks/useShortcuts';
 
 function StructureByIdPage() {
   const { toast } = useToast();
@@ -124,11 +126,14 @@ function StructureByIdPage() {
               <SideMenuLink asLink={<RouterLink to="chiffres-cles/offre-de-formation" />}>
                 Offres de formation
               </SideMenuLink>
-              <SideMenuLink asLink={<RouterLink to="chiffres-cles/ressource-humaines" />}>
+              <SideMenuLink asLink={<RouterLink to="chiffres-cles/ressources-humaines" />}>
                 Ressources humaines
               </SideMenuLink>
               <SideMenuLink asLink={<RouterLink to="chiffres-cles/budget" />}>
                 Budget
+              </SideMenuLink>
+              <SideMenuLink asLink={<RouterLink to="chiffres-cles/insertion-professionnelle" />}>
+                Insertion professionnelle
               </SideMenuLink>
             </SideMenuItem>
             <SideMenuLink asLink={<RouterLink to="categories" />}>
@@ -335,6 +340,7 @@ export {
   StructureExportPage,
   StructureGouvernancePage,
   StructureImmobilierPage,
+  StructureInsertionProfessionnellePage,
   StructureOffreDeFormationPage,
   StructurePresentationPage,
   StructurePrixEtRecompensesPage,
