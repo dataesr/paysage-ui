@@ -21,8 +21,10 @@ export default function Header() {
   const { pathname } = useLocation();
   const { viewer, signout } = useAuth();
   const [searchParams, setSearchParams] = useSearchParams();
+  const initialPage = searchParams.get('page');
   const initialQuery = searchParams.get('query');
 
+  const [page, setPage] = useState(initialPage || 1);
   const [query, setQuery] = useState(initialQuery || '');
   const debouncedQuery = useDebounce(query, 500);
   const [options, setOptions] = useState([]);
@@ -37,19 +39,23 @@ export default function Header() {
   }, [debouncedQuery]);
 
   useEffect(() => {
-    if (!pathname.startsWith('/rechercher')) { setQuery(''); }
+    if (!pathname.startsWith('/rechercher')) {
+      setPage(1);
+      setQuery('');
+    }
   }, [pathname]);
 
   const handleSearchRedirection = ({ id, type }) => {
     navigate(`/${type}/${id}`);
-    setQuery('');
     setOptions([]);
+    setPage(1);
+    setQuery('');
   };
   const handleSearch = () => {
     if (pathname.startsWith('/rechercher')) {
-      setSearchParams({ query });
+      setSearchParams({ page, query });
     } else {
-      navigate(`/rechercher/structures?query=${query}`);
+      navigate(`/rechercher/structures?query=${query}&page=1`);
     }
     setOptions([]);
   };
@@ -105,7 +111,7 @@ export default function Header() {
               value={query}
               label="Rechercher dans paysage"
               placeholder="Rechercher..."
-              onChange={(e) => setQuery(e.target.value)}
+              onChange={(e) => { setPage(1); setQuery(e.target.value); }}
               options={options}
               onSearch={handleSearch}
               onSelect={handleSearchRedirection}
@@ -128,7 +134,7 @@ export default function Header() {
             />
             <NavItem
               title="Je recherche"
-              asLink={<RouterLink to="/rechercher?query=" />}
+              asLink={<RouterLink to="/rechercher?query=&page=1" />}
               current={pathname.startsWith('/rechercher')}
             />
           </>
