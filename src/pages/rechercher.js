@@ -135,7 +135,7 @@ export default function SearchPage() {
           {isLoading && <Row className="fr-my-2w flex--space-around"><Spinner /></Row>}
           {error && <p>Erreur...</p>}
           {data && <SearchResults data={data} />}
-          {!!resultsCount && pageCount > 1 && (
+          {!!resultsCount && (
             <Row className="flex--space-around fr-pt-2w">
               <Pagination currentPage={Number(currentPage)} pageCount={pageCount} onClick={(page) => { setSearchParams({ page, query }); }} className="lalilou" />
             </Row>
