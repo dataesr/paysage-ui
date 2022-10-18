@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Link as RouterLink, useLocation, useSearchParams } from 'react-router-dom';
 
 import Spinner from '../components/spinner';
+import useHashScroll from '../hooks/useHashScroll';
 import useSearch from '../hooks/useSearch';
 import { getTypeFromUrl, getUrlFromType } from '../utils/types-url-mapper';
 
@@ -39,8 +40,9 @@ SearchResults.defaultProps = {
 const countTypes = 'categories%2Clegal%2Dcategories%2Cofficial%2Dtexts%2Cpersons%2Cprices%2Cprojects%2Cstructures%2Cterms%2Cusers';
 
 export default function SearchPage() {
+  useHashScroll();
   const { pathname } = useLocation();
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const query = searchParams.get('query');
   const currentPage = searchParams.get('page');
   const itemsPerPage = 10;
@@ -134,8 +136,8 @@ export default function SearchPage() {
           {error && <p>Erreur...</p>}
           {data && <SearchResults data={data} />}
           {!!resultsCount && pageCount > 1 && (
-            <Row as="ul" className="fr-pt-2w">
-              <Pagination currentPage={Number(currentPage)} pageCount={pageCount} buildURL={(page) => `${pathname}?query=${query}&page=${page}`} className="lalilou" />
+            <Row className="flex--space-around fr-pt-2w">
+              <Pagination currentPage={Number(currentPage)} pageCount={pageCount} onClick={(page) => { setSearchParams({ page, query }); }} className="lalilou" />
             </Row>
           )}
         </Col>
