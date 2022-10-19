@@ -16,6 +16,7 @@ function SetMap({ markers }) {
     shadowUrl:
       'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
   });
+  if (map.getZoom() > 12) map.setZoom(12);
   return null;
 }
 SetMap.defaultProps = {

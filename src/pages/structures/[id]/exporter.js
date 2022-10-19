@@ -20,6 +20,8 @@ import StructurePrixEtRecompensesPage from './prix-et-recompenses';
 import StructureProjectsPage from './projets';
 import StructureElementLiesPage from './elements-lies';
 import Spinner from '../../../components/spinner';
+import OfficialTextOutlet from '../../../components/outlets/textes-officiels';
+import ActualitesOutlet from '../../../components/outlets/actualites';
 
 export default function StructureExportPage() {
   const { id } = useParams();
@@ -32,7 +34,7 @@ export default function StructureExportPage() {
 
   const handlePrint = useReactToPrint({
     content: () => componentRef.current,
-    documentTitle: 'AwesomeFileName',
+    documentTitle: `paysage_structure_${data?.currentName?.usualName}_${id}.pdf`,
     onAfterPrint: () => navigate(`/structures/${id}`),
     removeAfterPrint: true,
   });
@@ -44,6 +46,7 @@ export default function StructureExportPage() {
 
   if (isLoading) return <>Chargement...</>;
   if (error) return <>Erreur...</>;
+  if (!data) return null;
   return (
     <div className="print" ref={componentRef}>
       <Container spacing="pb-6w">
@@ -51,23 +54,24 @@ export default function StructureExportPage() {
           <Col n="12">
             <Title as="h2">
               {data.currentName.usualName}
-              <BadgeGroup>
-                <CopyBadgeButton
-                  colorFamily="yellow-tournesol"
-                  text={data.id}
-                  lowercase
-                />
-                <Badge
-                  colorFamily="green-emeraude"
-                  text={data.active || 'active'}
-                />
+              <BadgeGroup className="fr-pt-1w">
+                <Badge type="info" text="structure" />
+                <Badge colorFamily="green-emeraude" text={data.structureStatus || 'active'} />
+                <CopyBadgeButton colorFamily="yellow-tournesol" text={data.id} lowercase />
               </BadgeGroup>
             </Title>
             {searchParams.get('oeil') && <StructurePresentationPage />}
+            <div className="pagebreak" />
+            {searchParams.get('actualites') && <ActualitesOutlet />}
+            <div className="pagebreak" />
             {searchParams.get('gouvernance') && <StructureGouvernancePage />}
+            <div className="pagebreak" />
             {searchParams.get('event') && <AgendaOutlet />}
+            <div className="pagebreak" />
             {searchParams.get('resources') && <DocumentsOutlet />}
+            <div className="pagebreak" />
             {searchParams.get('categories') && <StructureCategoriesPage />}
+            <div className="pagebreak" />
             {searchParams.get('chiffres') && (
               <>
                 <StructureBudgetPage />
@@ -77,8 +81,13 @@ export default function StructureExportPage() {
                 <StructureInsertionProfessionnellePage />
               </>
             )}
+            <div className="pagebreak" />
+            {searchParams.get('textes') && <OfficialTextOutlet />}
+            <div className="pagebreak" />
             {searchParams.get('prix') && <StructurePrixEtRecompensesPage />}
+            <div className="pagebreak" />
             {searchParams.get('projets') && <StructureProjectsPage />}
+            <div className="pagebreak" />
             {searchParams.get('elements') && <StructureElementLiesPage />}
           </Col>
         </Row>

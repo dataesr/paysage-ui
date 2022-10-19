@@ -165,6 +165,14 @@ HR {
   SECTION {
     page-break-inside: avoid !important;
   }
+  .fr-col-md-6 {
+    flex: 0 0 50% !important;
+    max-width: 50% !important;
+    width: 50% !important;
+  }
+  .pagebreak {
+    page-break-before: always;
+  }
 }
 @page {
   margin: 1cm .5cm 1cm .5cm;
@@ -182,6 +190,6 @@ HR {
   bottom: 0;
   z-index: calc(var(--ground) + 1000);
   cursor: pointer;
-  background-color: rgba(#161616, 0.5);
+  background-color: rgba(#161616, 0.85);
   color: var(--text-inverted-grey);
 }

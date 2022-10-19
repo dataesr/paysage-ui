@@ -33,6 +33,7 @@ import {
 import {
   PersonByIdPage,
   PersonCategories,
+  PersonExportPage,
   PersonMandats,
   PersonPresentationPage,
   PersonPrices,
@@ -145,6 +146,7 @@ function App() {
           </Route>
 
           <Route path="/personnes/ajouter" element={<PersonAddPage />} />
+          <Route path="/personnes/:id/exporter" element={<PersonExportPage />} />
           <Route path="/persons/:id" element={<Redirect />} />
           <Route path="/personnes/:id" element={<PersonByIdPage />}>
             <Route path="" element={<Navigate to="presentation" replace />} />

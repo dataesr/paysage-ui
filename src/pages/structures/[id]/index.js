@@ -41,11 +41,13 @@ function StructureByIdPage() {
   const [isFavorite, setIsFavorite] = useState(false);
   const { form, updateForm } = useForm({
     oeil: true,
+    actualites: true,
     gouvernance: true,
     evenements: true,
     resources: true,
     categories: true,
     chiffres: true,
+    textes: true,
     prix: true,
     projets: true,
     elements: true,
@@ -243,6 +245,11 @@ function StructureByIdPage() {
                     label="En un coup d’œil"
                   />
                   <Checkbox
+                    checked={form.actualites}
+                    onChange={(e) => updateForm({ actualites: e.target.checked })}
+                    label="Actualités"
+                  />
+                  <Checkbox
                     checked={form.gouvernance}
                     onChange={(e) => updateForm({ gouvernance: e.target.checked })}
                     label="Gouvernance et référents"
@@ -271,6 +278,11 @@ function StructureByIdPage() {
                     checked={form.prix}
                     onChange={(e) => updateForm({ prix: e.target.checked })}
                     label="Prix et récompenses"
+                  />
+                  <Checkbox
+                    checked={form.textes}
+                    onChange={(e) => updateForm({ textes: e.target.checked })}
+                    label="Textes officiels"
                   />
                   <Checkbox
                     checked={form.projets}

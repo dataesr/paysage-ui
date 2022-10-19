@@ -24,6 +24,7 @@ import PersonCategories from './categories';
 import PersonProjets from './projets';
 import PersonPrices from './prix-et-recompenses';
 import PersonsRelatedElements from './elements-lies';
+import PersonExportPage from './exporter';
 import { saveError, saveSuccess } from '../../../utils/notice-contents';
 
 function PersonByIdPage() {
@@ -34,7 +35,17 @@ function PersonByIdPage() {
   const { editMode, reset, toggle } = useEditMode();
   const [isExportOpen, setIsExportOpen] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
-  const { form, updateForm } = useForm({}, () => {});
+  const { form, updateForm } = useForm({
+    oeil: true,
+    actualites: true,
+    mandats: true,
+    evenements: true,
+    ressources: true,
+    categories: true,
+    textes: true,
+    prix: true,
+    elements: true,
+  }, () => {});
   const [isFormModalOpen, setIsFormModalOpen] = useState(false);
 
   useEffect(() => { reset(); }, [reset]);
@@ -178,12 +189,49 @@ function PersonByIdPage() {
               <ModalContent>
                 <CheckboxGroup>
                   <Checkbox
+                    checked={form.oeil}
                     onChange={(e) => updateForm({ oeil: e.target.checked })}
                     label="En un coup d’œil"
                   />
                   <Checkbox
+                    checked={form.actualites}
+                    onChange={(e) => updateForm({ actualites: e.target.checked })}
+                    label="Actualités"
+                  />
+                  <Checkbox
+                    checked={form.mandats}
+                    onChange={(e) => updateForm({ mandats: e.target.checked })}
+                    label="Rôles et Mandats"
+                  />
+                  <Checkbox
+                    checked={form.evenements}
+                    onChange={(e) => updateForm({ evenements: e.target.checked })}
+                    label="Evènements"
+                  />
+                  <Checkbox
+                    checked={form.ressources}
+                    onChange={(e) => updateForm({ ressources: e.target.checked })}
+                    label="Ressources"
+                  />
+                  <Checkbox
+                    checked={form.categories}
                     onChange={(e) => updateForm({ categories: e.target.checked })}
-                    label="Mandats"
+                    label="Catégories et termes"
+                  />
+                  <Checkbox
+                    checked={form.textes}
+                    onChange={(e) => updateForm({ textes: e.target.checked })}
+                    label="Textes officiels"
+                  />
+                  <Checkbox
+                    checked={form.prix}
+                    onChange={(e) => updateForm({ prix: e.target.checked })}
+                    label="Prix & récompenses"
+                  />
+                  <Checkbox
+                    checked={form.elements}
+                    onChange={(e) => updateForm({ elements: e.target.checked })}
+                    label="Eléments liés"
                   />
                 </CheckboxGroup>
               </ModalContent>
@@ -209,6 +257,7 @@ function PersonByIdPage() {
 
 export {
   PersonByIdPage,
+  PersonExportPage,
   PersonPresentationPage,
   PersonMandats,
   PersonCategories,
