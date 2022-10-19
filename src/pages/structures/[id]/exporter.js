@@ -2,7 +2,7 @@ import { useRef, useState } from 'react';
 import { useReactToPrint } from 'react-to-print';
 
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
-import { Badge, BadgeGroup, Col, Container, Row, Title } from '@dataesr/react-dsfr';
+import { Badge, BadgeGroup, Col, Container, Row, Text, Title } from '@dataesr/react-dsfr';
 import useFetch from '../../../hooks/useFetch';
 import CopyBadgeButton from '../../../components/copy/copy-badge-button';
 
@@ -19,6 +19,7 @@ import StructureInsertionProfessionnellePage from './chiffres-cles/insertion-pro
 import StructurePrixEtRecompensesPage from './prix-et-recompenses';
 import StructureProjectsPage from './projets';
 import StructureElementLiesPage from './elements-lies';
+import Spinner from '../../../components/spinner';
 
 export default function StructureExportPage() {
   const { id } = useParams();
@@ -28,8 +29,6 @@ export default function StructureExportPage() {
 
   const { data, isLoading, error } = useFetch(`/structures/${id}`);
   const componentRef = useRef();
-
-  // const [loading, setLoading] = useState(false);
 
   const handlePrint = useReactToPrint({
     content: () => componentRef.current,
@@ -41,7 +40,7 @@ export default function StructureExportPage() {
   setTimeout(() => {
     setLoading(false);
     handlePrint();
-  }, 3000);
+  }, 5000);
 
   if (isLoading) return <>Chargement...</>;
   if (error) return <>Erreur...</>;
@@ -83,6 +82,12 @@ export default function StructureExportPage() {
             {searchParams.get('elements') && <StructureElementLiesPage />}
           </Col>
         </Row>
+        {loading && (
+          <Row alignItems="center" justifyContent="middle" className="overlay">
+            <Spinner />
+            <Text size="lead" bold>Préparation de l'exportation</Text>
+          </Row>
+        )}
       </Container>
     </div>
   );

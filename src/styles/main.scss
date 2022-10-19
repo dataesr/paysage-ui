@@ -163,9 +163,25 @@ HR {
     font-size: 70% !important;
   }
   SECTION {
-    page-break-inside: avoid;
+    page-break-inside: avoid !important;
   }
 }
- @page {
-   margin: 1cm .5cm 1cm .5cm;
-  }
+@page {
+  margin: 1cm .5cm 1cm .5cm;
+}
+
+.overlay {
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: calc(var(--ground) + 1000);
+  cursor: pointer;
+  background-color: rgba(#161616, 0.5);
+  color: var(--text-inverted-grey);
+}

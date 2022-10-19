@@ -39,7 +39,17 @@ function StructureByIdPage() {
   const { editMode, reset, toggle } = useEditMode();
   const [isExportOpen, setIsExportOpen] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
-  const { form, updateForm } = useForm({}, () => {});
+  const { form, updateForm } = useForm({
+    oeil: true,
+    gouvernance: true,
+    evenements: true,
+    resources: true,
+    categories: true,
+    chiffres: true,
+    prix: true,
+    projets: true,
+    elements: true,
+  }, () => {});
 
   const [isStatusModalOpen, setIsStatusModalOpen] = useState(false);
   const [status, setSatus] = useState('inactive');
@@ -228,38 +238,47 @@ function StructureByIdPage() {
               <ModalContent>
                 <CheckboxGroup>
                   <Checkbox
+                    checked={form.oeil}
                     onChange={(e) => updateForm({ oeil: e.target.checked })}
                     label="En un coup d’œil"
                   />
                   <Checkbox
+                    checked={form.gouvernance}
                     onChange={(e) => updateForm({ gouvernance: e.target.checked })}
                     label="Gouvernance et référents"
                   />
                   <Checkbox
-                    onChange={(e) => updateForm({ event: e.target.checked })}
+                    checked={form.evenements}
+                    onChange={(e) => updateForm({ evenements: e.target.checked })}
                     label="Evènements"
                   />
                   <Checkbox
+                    checked={form.resources}
                     onChange={(e) => updateForm({ resources: e.target.checked })}
                     label="Ressources"
                   />
                   <Checkbox
+                    checked={form.categories}
                     onChange={(e) => updateForm({ categories: e.target.checked })}
                     label="Categories et termes"
                   />
                   <Checkbox
+                    checked={form.chiffres}
                     onChange={(e) => updateForm({ chiffres: e.target.checked })}
                     label="Chiffres clés"
                   />
                   <Checkbox
+                    checked={form.prix}
                     onChange={(e) => updateForm({ prix: e.target.checked })}
                     label="Prix et récompenses"
                   />
                   <Checkbox
-                    onChange={(e) => updateForm({ prix: e.target.checked })}
+                    checked={form.projets}
+                    onChange={(e) => updateForm({ projets: e.target.checked })}
                     label="Projets"
                   />
                   <Checkbox
+                    checked={form.elements}
                     onChange={(e) => updateForm({ elements: e.target.checked })}
                     label="Eléments liés"
                   />
