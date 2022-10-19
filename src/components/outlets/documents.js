@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Badge, BadgeGroup, Modal, ModalContent, ModalTitle, Row, Tag, TagGroup, Text } from '@dataesr/react-dsfr';
+import { Badge, BadgeGroup, Col, Highlight, Modal, ModalContent, ModalTitle, Row, Tag, TagGroup, Text } from '@dataesr/react-dsfr';
 import useEditMode from '../../hooks/useEditMode';
 import useFetch from '../../hooks/useFetch';
 import useHashScroll from '../../hooks/useHashScroll';
@@ -15,13 +15,12 @@ import {
 import Button from '../button';
 import { Download } from '../download';
 import DocumentForm from '../forms/documents';
-import { Timeline, TimelineItem } from '../timeline';
 
 export default function DocumentsOutlet() {
   const { editMode } = useEditMode();
   const { id: resourceId } = useParams();
   const navigate = useNavigate();
-  const url = `/documents?filters[relatesTo]=${resourceId}&sort=-startDate&limit=50`;
+  const url = `/documents?filters[relatesTo]=${resourceId}&sort=-startDate&limit=500`;
   const { data, isLoading, error, reload } = useFetch(url);
   const { notice } = useNotice();
   useHashScroll();
@@ -61,29 +60,45 @@ export default function DocumentsOutlet() {
   const renderContent = () => {
     if (!data || !data.data.length) return null;
     return (
-      <Timeline>
+      <Row gutters>
         {data.data.map((event) => (
-          <TimelineItem date={event.startDate} key={event.id}>
-            <Row className="flex--space-between">
-              <BadgeGroup><Badge text={event.type} /></BadgeGroup>
-              {editMode && <Button onClick={() => onOpenModalHandler(event)} size="sm" icon="ri-edit-line" title="Editer l'évènement" tertiary borderless rounded />}
-            </Row>
-            <Text spacing="mb-1w" size="lead" bold>{event.title}</Text>
-            {event.description && <Text spacing="mb-1w">{event.description}</Text>}
-            {event.relatedObjects && (
-              <TagGroup>
-                {event.relatedObjects.map((related) => <Tag iconPosition="right" icon="ri-arrow-right-line" onClick={() => navigate(related.href)} key={related.id}>{related.displayName}</Tag>)}
-              </TagGroup>
-            )}
-            {(event?.files?.length > 0) && (
-              <>
-                <Text spacing="mb-1w" bold>Fichiers : </Text>
-                <Row>{event.files.map((file) => (<Download key={file.url} file={file} />))}</Row>
-              </>
-            )}
-          </TimelineItem>
+          <Col n="12 md-6" key={event.id}>
+            <div className="fr-card fr-card--sm fr-card--shadow">
+              <div className="fr-card__body">
+                <div className="fr-card__content">
+                  <div className="fr-card__start">
+                    <Row className="flex--space-between">
+                      <BadgeGroup>
+                        <Badge text={event.documentType.usualName} />
+                        <Badge type="info" text={event.startDate.slice(0, 4)} />
+                      </BadgeGroup>
+                      {editMode && <Button onClick={() => onOpenModalHandler(event)} size="sm" icon="ri-edit-line" title="Editer le document" tertiary borderless rounded />}
+                    </Row>
+                  </div>
+                  <p className="fr-card__title">{event.title}</p>
+                  {event.description && <div className="fr-card__desc">{event.description}</div>}
+                  <div className="fr-card__end">
+                    {(event.relatedObjects.length > 1) && <Text spacing="mb-1w" bold>Autres objets associés :</Text>}
+                    {event.relatedObjects && (
+                      <TagGroup>
+                        {event.relatedObjects
+                          .filter((related) => (related.id !== resourceId))
+                          .map((related) => <Tag iconPosition="right" icon="ri-arrow-right-line" onClick={() => navigate(related.href)} key={related.id}>{related.displayName}</Tag>)}
+                      </TagGroup>
+                    )}
+                    {(event?.files?.length > 0) && (
+                      <>
+                        <Text spacing="mb-1w" bold>{(event.files?.length > 1) ? 'Fichiers :' : 'Fichier :'}</Text>
+                        <Row>{event.files.map((file) => (<Download key={file.url} file={file} />))}</Row>
+                      </>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </Col>
         ))}
-      </Timeline>
+      </Row>
     );
   };
 

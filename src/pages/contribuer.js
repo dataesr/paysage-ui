@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import {
   Breadcrumb,
@@ -16,8 +17,21 @@ import TermAddPage from './termes/ajouter';
 import OfficialTextAddPage from './textes-officiels/ajouter';
 import PersonAddPage from './personnes/ajouter';
 import ProjectAddPage from './projets/ajouter';
+import SearchBar from '../components/search-bar';
+import api from '../utils/api';
 
 export default function ContributePage() {
+  const [query, setQuery] = useState('');
+  const [options, setOptions] = useState([]);
+
+  useEffect(() => {
+    const getAutocompleteResult = async () => {
+      const response = await api.get(`/autocomplete?query=${query}`);
+      setOptions(response.data?.data);
+    };
+    if (query) { getAutocompleteResult(); } else { setOptions([]); }
+  }, [query]);
+
   const data = [
     { type: 'structures', icon: 'ri-building-line', name: 'Ajouter une structure', url: '/structures/ajouter' },
     { type: 'persons', icon: 'ri-user-3-line', name: 'Ajouter une personne', url: '/personnes/ajouter' },
@@ -42,11 +56,16 @@ export default function ContributePage() {
         <div className="fr-container">
           <div className="fr-notice__body">
             <p className="fr-notice__title">
-              Etes-vous sur que l'objet n'existe pas ?
+              Etes-vous sur que l'objet n'existe pas ? Utilisez la recherche pour vous en assurer.
             </p>
-            <p className="fr-notice__title">
-              Vérifiez en utilisant la barre de recherche principale avant d'ajouter un nouvel objet
-            </p>
+            <Col n="12 md-8 lg-6">
+              <SearchBar
+                value={query}
+                placeholder="Rechercher"
+                onChange={(e) => setQuery(e.target.value)}
+                options={options}
+              />
+            </Col>
           </div>
         </div>
       </div>

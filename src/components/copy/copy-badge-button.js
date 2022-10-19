@@ -29,7 +29,7 @@ function CopyBadgeButton({
   };
 
   return (
-    <button onClick={() => copy(text)} type="button" className={_className} {...remainingProps}>
+    <button title="Copier" onClick={() => copy(text)} type="button" className={_className} {...remainingProps}>
       <Icon
         iconPosition="right"
         verticalAlign="sub"
@@ -37,7 +37,7 @@ function CopyBadgeButton({
         size="1x"
         className="ds-fr-badge-icon"
       >
-        {text}
+        {copyStatus === 'Copié' ? 'COPIÉ' : text}
       </Icon>
     </button>
   );

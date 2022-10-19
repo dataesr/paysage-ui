@@ -4,10 +4,10 @@ import Button from '../button';
 import useViewport from '../../hooks/useViewport';
 import typeValidation from '../../utils/type-validation';
 
-export default function BlocActionButton({ children, onClick, icon, color }) {
+export default function BlocActionButton({ children, onClick, icon, color, isSmall }) {
   const { mobile } = useViewport();
-  return mobile
-    ? <Button color={color} size="sm" tertiary borderless onClick={onClick} icon={icon} title={children} />
+  return (mobile || isSmall)
+    ? <Button color={color} size="sm" tertiary borderless rounded onClick={onClick} icon={icon} title={children} />
     : <Button color={color} size="sm" secondary onClick={onClick} icon={icon}>{children}</Button>;
 }
 
@@ -17,6 +17,7 @@ BlocActionButton.propTypes = {
   icon: PropTypes.string,
   onClick: PropTypes.func.isRequired,
   color: PropTypes.string,
+  isSmall: PropTypes.bool,
 };
 
 BlocActionButton.defaultProps = {
@@ -24,4 +25,5 @@ BlocActionButton.defaultProps = {
   children: null,
   icon: 'ri-add-circle-line',
   color: null,
+  isSmall: false,
 };

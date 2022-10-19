@@ -2,10 +2,11 @@ import { Col, Container, Row, SideMenu, SideMenuItem, SideMenuLink } from '@data
 import { Link as RouterLink, Outlet } from 'react-router-dom';
 
 import AdminDashboardPage from './dashboard';
-import NomenclaturesPage from './nomenclatures';
+import AdminNomenclaturesPage from './nomenclatures';
 import AdminUsersPage from './users';
-import LegalCategoriesPage from './categories-juridiques';
-import RelationTypesPage from './relation-types';
+import AdminLegalCategoriesPage from './categories-juridiques';
+import AdminRelationTypesPage from './relation-types';
+import AdminGroupsPage from './groupes';
 
 function AdminPage() {
   return (
@@ -19,10 +20,13 @@ function AdminPage() {
             <SideMenuLink asLink={<RouterLink to="/admin/utilisateurs" />}>
               Utilisateurs
             </SideMenuLink>
-            <SideMenuLink asLink={<RouterLink to="/admin/categories-juridiques" />}>
-              Catégories juridiques
+            <SideMenuLink asLink={<RouterLink to="/admin/groupes" />}>
+              Groupes d'utilisateurs
             </SideMenuLink>
             <SideMenuItem expandedDefault title="Nomenclatures">
+              <SideMenuLink asLink={<RouterLink to="/admin/categories-juridiques" />}>
+                Catégories juridiques
+              </SideMenuLink>
               <SideMenuLink asLink={<RouterLink to="/admin/nomenclatures/types-de-document" />}>
                 Types de document
               </SideMenuLink>
@@ -46,4 +50,7 @@ function AdminPage() {
   );
 }
 
-export { AdminDashboardPage, AdminPage, AdminUsersPage, NomenclaturesPage, LegalCategoriesPage, RelationTypesPage };
+export {
+  AdminDashboardPage, AdminPage, AdminUsersPage, AdminNomenclaturesPage,
+  AdminLegalCategoriesPage, AdminRelationTypesPage, AdminGroupsPage,
+};

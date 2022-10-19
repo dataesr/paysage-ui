@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { Col, Container, File, Icon, Row, Select, Tag, TagGroup, Text, TextInput } from '@dataesr/react-dsfr';
+import { Col, Container, File, Icon, Radio, RadioGroup, Row, Select, Tag, TagGroup, Text, TextInput, Title } from '@dataesr/react-dsfr';
 import useNotice from '../../../hooks/useNotice';
 import useForm from '../../../hooks/useForm';
 import useFetch from '../../../hooks/useFetch';
@@ -9,6 +9,7 @@ import DateInput from '../../date-input';
 import FormFooter from '../form-footer';
 import SearchBar from '../../search-bar';
 import PaysageBlame from '../../paysage-blame';
+import useAuth from '../../../hooks/useAuth';
 
 function validate(body) {
   const validationErrors = {};
@@ -20,16 +21,17 @@ function validate(body) {
 }
 
 function sanitize(form) {
-  const fields = ['title', 'description', 'documentTypeId', 'files', 'startDate', 'endDate', 'relatesTo'];
+  const fields = ['title', 'description', 'documentTypeId', 'files', 'startDate', 'endDate', 'relatesTo', 'canAccess', 'isPublic'];
   const body = {};
   Object.keys(form).forEach((key) => { if (fields.includes(key)) { body[key] = form[key]; } });
   return body;
 }
 
 export default function DocumentsForm({ id, data, onSave, onDelete }) {
+  const { viewer } = useAuth();
   const { data: documentTypes } = useFetch('/document-types?limit=500');
 
-  const { form, updateForm, errors } = useForm({ files: [], documentTypeId: '', ...data }, validate);
+  const { form, updateForm, errors } = useForm({ files: [], canAccess: [], documentTypeId: '', isPublic: true, ...data }, validate);
   const [showErrors, setShowErrors] = useState(false);
   const [filesErrors, setFilesErrors] = useState(false);
   const [files, setFiles] = useState([]);
@@ -60,6 +62,14 @@ export default function DocumentsForm({ id, data, onSave, onDelete }) {
 
   const handleObjectFile = (url) => {
     updateForm({ files: [...form.files.filter((file) => file.url !== url)] });
+  };
+
+  const handleGroupSelect = (groupId) => {
+    if (form.canAccess.includes(groupId)) {
+      updateForm({ canAccess: [...form.canAccess.filter((group) => group !== groupId)] });
+    } else {
+      updateForm({ canAccess: [...form.canAccess, groupId] });
+    }
   };
 
   useEffect(() => {
@@ -104,7 +114,7 @@ export default function DocumentsForm({ id, data, onSave, onDelete }) {
         <Row gutters>
           <Col n="12">
             <Select
-              label="Type du document"
+              label="Type"
               options={documentTypesOptions}
               selected={form.documentTypeId}
               onChange={(e) => updateForm({ documentTypeId: e.target.value })}
@@ -115,7 +125,7 @@ export default function DocumentsForm({ id, data, onSave, onDelete }) {
           </Col>
           <Col n="12">
             <TextInput
-              label="Nom du document"
+              label="Nom"
               required
               value={form.title || ''}
               onChange={(e) => updateForm({ title: e.target.value })}
@@ -125,7 +135,7 @@ export default function DocumentsForm({ id, data, onSave, onDelete }) {
           </Col>
           <Col n="12">
             <TextInput
-              label="Description du document"
+              label="Description"
               value={form.description || ''}
               onChange={(e) => updateForm({ description: e.target.value })}
               message={(showErrors && errors.description) ? errors.description : null}
@@ -136,7 +146,7 @@ export default function DocumentsForm({ id, data, onSave, onDelete }) {
             <DateInput
               required
               value={form.startDate || ''}
-              label="Date de début de validité du document"
+              label="Date de début de validité"
               hint="Une date approximée à l'année permet de sélectionner une plage de temps. (e.g. Bilan social -> 2022)"
               onDateChange={((v) => updateForm({ startDate: v }))}
               message={(showErrors && errors.startDate) ? errors.startDate : null}
@@ -147,7 +157,7 @@ export default function DocumentsForm({ id, data, onSave, onDelete }) {
             <DateInput
               required
               value={form.endDate || ''}
-              label="Date de fin de validité du document"
+              label="Date de fin de validité"
               onDateChange={((v) => updateForm({ endDate: v }))}
             />
           </Col>
@@ -199,6 +209,40 @@ export default function DocumentsForm({ id, data, onSave, onDelete }) {
               </Row>
             )}
           </Col>
+          <Col n="12"><Title spacing="mb-0" as="h3" look="h5">Paramètres d'accès</Title></Col>
+          <Col n="12">
+            <RadioGroup required legend="Qui peut accéder au document" isInline>
+              <Radio
+                label="Accessible à tous"
+                value
+                checked={form?.isPublic}
+                onChange={() => updateForm({ isPublic: true })}
+              />
+              <Radio
+                label="Restreindre l'accès"
+                value={false}
+                checked={!form?.isPublic}
+                onChange={() => updateForm({ isPublic: false })}
+              />
+            </RadioGroup>
+          </Col>
+          {(!form.isPublic && viewer?.groups?.length > 0) && (
+            <Col n="12">
+              <Text>Séléctionner les groupes qui pourront accéder à la resource</Text>
+              <TagGroup className="fr-mt-1w">
+                {viewer.groups.map((group) => (
+                  <Tag
+                    size="sm"
+                    className="no-span"
+                    selected={form.canAccess?.includes(group.id)}
+                    onClick={() => handleGroupSelect(group.id)}
+                  >
+                    {group.acronym || group.name}
+                  </Tag>
+                ))}
+              </TagGroup>
+            </Col>
+          )}
         </Row>
         <FormFooter
           id={id || null}

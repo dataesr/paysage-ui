@@ -43,7 +43,7 @@ export function AuthContextProvider({ children }) {
         .then((result) => { if (result) fetchViewer(); else setIsLoading(false); })
         .catch(() => setIsLoading(false));
     } else { setIsLoading(false); }
-    const refresher = setInterval(async () => refreshToken(), (1000 * 60));
+    const refresher = setInterval(async () => refreshToken(), (1000 * 60 * 9));
     return () => clearInterval(refresher);
   }, [fetchViewer]);
 

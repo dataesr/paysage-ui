@@ -152,3 +152,9 @@ HR {
   border-color: var(--border-color);
 }
 
+.leaflet-control-zoom {
+  A {
+    background-image: none !important;
+  }
+}
+

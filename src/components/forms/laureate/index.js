@@ -3,7 +3,7 @@ import {
   Container,
   Col,
   Row,
-  Select,
+  // Select,
   TagGroup,
   Tag,
   Icon,
@@ -14,7 +14,7 @@ import DateInput from '../../date-input';
 import SearchBar from '../../search-bar';
 import FormFooter from '../form-footer';
 import api from '../../../utils/api';
-import useFetch from '../../../hooks/useFetch';
+// import useFetch from '../../../hooks/useFetch';
 import { parseRelatedElement } from '../../../utils/parse-related-element';
 import PaysageBlame from '../../paysage-blame';
 
@@ -39,25 +39,25 @@ export default function LaureateForm({ id, resourceType, relatedObjectTypes, dat
     }
     return errors;
   };
-  const relationTypeUrl = (relatedObjectTypes.length > 1)
-    ? `/relation-types?limit=500&filters[for][$in]=${relatedObjectTypes.join('&filters[for][$in]=')}`
-    : `/relation-types?limit=500&filters[for]=${relatedObjectTypes[0]}`;
+  // const relationTypeUrl = (relatedObjectTypes.length > 1)
+  //   ? `/relation-types?limit=500&filters[for][$in]=${relatedObjectTypes.join('&filters[for][$in]=')}`
+  //   : `/relation-types?limit=500&filters[for]=${relatedObjectTypes[0]}`;
 
-  const { data: relationTypes } = useFetch(relationTypeUrl);
+  // const { data: relationTypes } = useFetch(relationTypeUrl);
 
-  const [showErrors, setShowErrors] = useState(false);
+  // const [showErrors, setShowErrors] = useState(false);
 
   const [associatedQuery, setAssociatedQuery] = useState('');
   const [relatedObjectQuery, setRelatedObjectQuery] = useState('');
   const [resourceQuery, setResourceQuery] = useState('');
-  const [startDateOfficialTextQuery, setStartDateOfficialTextQuery] = useState('');
-  const [endDateOfficialTextQuery, setEndDateOfficialTextQuery] = useState('');
+  // const [startDateOfficialTextQuery, setStartDateOfficialTextQuery] = useState('');
+  // const [endDateOfficialTextQuery, setEndDateOfficialTextQuery] = useState('');
 
   const [associatedOptions, setAssociatedOptions] = useState([]);
   const [resourceOptions, setResourceOptions] = useState([]);
   const [relatedObjectOptions, setRelatedObjectOptions] = useState([]);
-  const [startDateOfficialTextOptions, setStartDateOfficialTextOptions] = useState([]);
-  const [endDateOfficialTextOptions, setEndDateOfficialTextOptions] = useState([]);
+  // const [startDateOfficialTextOptions, setStartDateOfficialTextOptions] = useState([]);
+  // const [endDateOfficialTextOptions, setEndDateOfficialTextOptions] = useState([]);
 
   const { form, updateForm, errors } = useForm(parseRelatedElement(data), validator);
 
@@ -78,21 +78,21 @@ export default function LaureateForm({ id, resourceType, relatedObjectTypes, dat
     if (resourceQuery) { getAutocompleteResult(); } else { setResourceOptions([]); }
   }, [resourceQuery, resourceType]);
 
-  useEffect(() => {
-    const getAutocompleteResult = async () => {
-      const response = await api.get(`/autocomplete?query=${startDateOfficialTextQuery}&types=official-texts`);
-      setStartDateOfficialTextOptions(response.data?.data);
-    };
-    if (startDateOfficialTextQuery) { getAutocompleteResult(); } else { setStartDateOfficialTextOptions([]); }
-  }, [startDateOfficialTextQuery]);
+  // useEffect(() => {
+  //   const getAutocompleteResult = async () => {
+  //     const response = await api.get(`/autocomplete?query=${startDateOfficialTextQuery}&types=official-texts`);
+  //     setStartDateOfficialTextOptions(response.data?.data);
+  //   };
+  //   if (startDateOfficialTextQuery) { getAutocompleteResult(); } else { setStartDateOfficialTextOptions([]); }
+  // }, [startDateOfficialTextQuery]);
 
-  useEffect(() => {
-    const getAutocompleteResult = async () => {
-      const response = await api.get(`/autocomplete?query=${endDateOfficialTextQuery}&types=official-texts`);
-      setEndDateOfficialTextOptions(response.data?.data);
-    };
-    if (endDateOfficialTextQuery) { getAutocompleteResult(); } else { setEndDateOfficialTextOptions([]); }
-  }, [endDateOfficialTextQuery]);
+  // useEffect(() => {
+  //   const getAutocompleteResult = async () => {
+  //     const response = await api.get(`/autocomplete?query=${endDateOfficialTextQuery}&types=official-texts`);
+  //     setEndDateOfficialTextOptions(response.data?.data);
+  //   };
+  //   if (endDateOfficialTextQuery) { getAutocompleteResult(); } else { setEndDateOfficialTextOptions([]); }
+  // }, [endDateOfficialTextQuery]);
 
   useEffect(() => {
     const getAutocompleteResult = async () => {
@@ -115,27 +115,27 @@ export default function LaureateForm({ id, resourceType, relatedObjectTypes, dat
     setAssociatedOptions([]);
   };
 
-  const handleEndDateOfficialTextSelect = ({ id: endDateOfficialTextId, name }) => {
-    updateForm({ endDateOfficialTextName: name, endDateOfficialTextId });
-    setEndDateOfficialTextQuery('');
-    setEndDateOfficialTextOptions([]);
-  };
-  const handleEndDateOfficialTextOptionsUnselect = () => {
-    updateForm({ endDateOfficialTextName: null, endDateOfficialTextId: null });
-    setEndDateOfficialTextQuery('');
-    setEndDateOfficialTextOptions([]);
-  };
+  // const handleEndDateOfficialTextSelect = ({ id: endDateOfficialTextId, name }) => {
+  //   updateForm({ endDateOfficialTextName: name, endDateOfficialTextId });
+  //   setEndDateOfficialTextQuery('');
+  //   setEndDateOfficialTextOptions([]);
+  // };
+  // const handleEndDateOfficialTextOptionsUnselect = () => {
+  //   updateForm({ endDateOfficialTextName: null, endDateOfficialTextId: null });
+  //   setEndDateOfficialTextQuery('');
+  //   setEndDateOfficialTextOptions([]);
+  // };
 
-  const handleStartDateOfficialTextSelect = ({ id: startDateOfficialTextId, name }) => {
-    updateForm({ startDateOfficialTextName: name, startDateOfficialTextId });
-    setStartDateOfficialTextQuery('');
-    setStartDateOfficialTextOptions([]);
-  };
-  const handleStartDateOfficialTextOptionsUnselect = () => {
-    updateForm({ startDateOfficialTextName: null, startDateOfficialTextId: null });
-    setStartDateOfficialTextQuery('');
-    setStartDateOfficialTextOptions([]);
-  };
+  // const handleStartDateOfficialTextSelect = ({ id: startDateOfficialTextId, name }) => {
+  //   updateForm({ startDateOfficialTextName: name, startDateOfficialTextId });
+  //   setStartDateOfficialTextQuery('');
+  //   setStartDateOfficialTextOptions([]);
+  // };
+  // const handleStartDateOfficialTextOptionsUnselect = () => {
+  //   updateForm({ startDateOfficialTextName: null, startDateOfficialTextId: null });
+  //   setStartDateOfficialTextQuery('');
+  //   setStartDateOfficialTextOptions([]);
+  // };
 
   const handleRelatedObjectSelect = ({ id: relatedObjectId, name }) => {
     updateForm({ relatedObjectName: name, relatedObjectId });
@@ -160,17 +160,17 @@ export default function LaureateForm({ id, resourceType, relatedObjectTypes, dat
   };
 
   const handleSave = () => {
-    if (Object.keys(errors).length > 0) return setShowErrors(true);
+    // if (Object.keys(errors).length > 0) return setShowErrors(true);
     const body = sanitize(form);
     return onSave(body, id);
   };
 
-  const relationTypesOptions = (relationTypes?.data)
-    ? [
-      { label: 'Appartient à la liste', value: null },
-      ...relationTypes.data.map((element) => ({ label: element.name, value: element.id })),
-    ]
-    : [{ label: 'Appartient à la liste', value: null }];
+  // const relationTypesOptions = (relationTypes?.data)
+  //   ? [
+  //     { label: 'Appartient à la liste', value: null },
+  //     ...relationTypes.data.map((element) => ({ label: element.name, value: element.id })),
+  //   ]
+  //   : [{ label: 'Appartient à la liste', value: null }];
   return (
     <form>
       <Container>
@@ -239,7 +239,7 @@ export default function LaureateForm({ id, resourceType, relatedObjectTypes, dat
               </Row>
             )}
           </Col>
-          <Col n="12" className="fr-pb-2w">
+          {/* <Col n="12" className="fr-pb-2w">
             <Select
               label="Type de relation"
               options={relationTypesOptions}
@@ -250,7 +250,7 @@ export default function LaureateForm({ id, resourceType, relatedObjectTypes, dat
               message={(showErrors && errors.relationTypeId) ? errors.relationTypeId : null}
               messageType={(showErrors && errors.relationTypeId) ? 'error' : ''}
             />
-          </Col>
+          </Col> */}
           <Col n="12" className="fr-pb-2w">
             <DateInput
               value={form.startDate || ''}
@@ -258,7 +258,7 @@ export default function LaureateForm({ id, resourceType, relatedObjectTypes, dat
               onDateChange={((v) => updateForm({ startDate: v }))}
             />
           </Col>
-          <Col n="12" className="fr-pb-2w">
+          {/* <Col n="12" className="fr-pb-2w">
             <SearchBar
               buttonLabel="Rechercher"
               value={startDateOfficialTextQuery || ''}
@@ -271,8 +271,8 @@ export default function LaureateForm({ id, resourceType, relatedObjectTypes, dat
               onSelect={handleStartDateOfficialTextSelect}
               onDeleteScope={handleStartDateOfficialTextOptionsUnselect}
             />
-          </Col>
-          <Col n="12" className="fr-pb-2w">
+          </Col> */}
+          {/* <Col n="12" className="fr-pb-2w">
             <DateInput
               value={form.endDate || ''}
               label="Date de fin"
@@ -292,7 +292,7 @@ export default function LaureateForm({ id, resourceType, relatedObjectTypes, dat
               onSelect={handleEndDateOfficialTextSelect}
               onDeleteScope={handleEndDateOfficialTextOptionsUnselect}
             />
-          </Col>
+          </Col> */}
         </Row>
         <FormFooter
           id={id}

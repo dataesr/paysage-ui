@@ -54,7 +54,10 @@ import CategoriesAddPage from './pages/categories/ajouter';
 import { CategoryByIdPage, CategoryPresentationPage, CategoryCategories } from './pages/categories/[id]';
 
 import { AccountPage, ProfilePage, PreferencesPage, SecurityPage, GroupsPage } from './pages/mon-compte';
-import { AdminPage, AdminDashboardPage, AdminUsersPage, NomenclaturesPage, LegalCategoriesPage, RelationTypesPage } from './pages/admin';
+import {
+  AdminPage, AdminDashboardPage, AdminUsersPage, AdminNomenclaturesPage,
+  AdminLegalCategoriesPage, AdminRelationTypesPage, AdminGroupsPage,
+} from './pages/admin';
 
 import './styles/index.scss';
 import SearchPage from './pages/rechercher';
@@ -82,12 +85,13 @@ function App() {
             <Route path="" element={<Navigate to="dashboard" replace />} />
             <Route path="dashboard" element={<AdminDashboardPage />} />
             <Route path="utilisateurs" element={<AdminUsersPage />} />
-            <Route path="categories-juridiques" element={<LegalCategoriesPage />} />
-            <Route path="types-de-relation" element={<RelationTypesPage />} />
+            <Route path="groupes" element={<AdminGroupsPage />} />
+            <Route path="categories-juridiques" element={<AdminLegalCategoriesPage />} />
+            <Route path="types-de-relation" element={<AdminRelationTypesPage />} />
             <Route path="nomenclatures" element={<Navigate to="nomenclatures/types-de-document" replace />} />
-            <Route path="nomenclatures/types-de-document" element={<NomenclaturesPage route="/document-types" title="Types de documents" />} />
-            <Route path="nomenclatures/ministeres-de-tutelle" element={<NomenclaturesPage route="/supervising-ministers" title="Ministères de tutelle" />} />
-            <Route path="nomenclatures/types-de-mail" element={<NomenclaturesPage route="/email-types" title="Types d'email" />} />
+            <Route path="nomenclatures/types-de-document" element={<AdminNomenclaturesPage route="/document-types" title="Types de documents" />} />
+            <Route path="nomenclatures/ministeres-de-tutelle" element={<AdminNomenclaturesPage route="/supervising-ministers" title="Ministères de tutelle" />} />
+            <Route path="nomenclatures/types-de-mail" element={<AdminNomenclaturesPage route="/email-types" title="Types d'email" />} />
           </Route>
         </Route>
 

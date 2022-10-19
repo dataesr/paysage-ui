@@ -49,7 +49,7 @@ export default function Header() {
     if (pathname.startsWith('/rechercher')) {
       setSearchParams({ query });
     } else {
-      navigate(`/rechercher/structures?query=${query}`);
+      navigate(query ? `/rechercher?query=${query}` : '/rechercher?query=');
     }
     setOptions([]);
   };

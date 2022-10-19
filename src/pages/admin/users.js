@@ -14,6 +14,8 @@ import {
   Select,
   Text,
   Title,
+  TagGroup,
+  Tag,
 } from '@dataesr/react-dsfr';
 import { Link as RouterLink } from 'react-router-dom';
 import Avatar from '../../components/avatar';
@@ -28,6 +30,9 @@ function User({
   handleSwitchDeleteUser,
   handleEditUser,
   handleActivateUser,
+  handleAddToGroup,
+  handleDeleteFromGroup,
+  groupOptions,
   id,
   email,
   firstName,
@@ -37,6 +42,7 @@ function User({
   avatar,
   service,
   position,
+  groups,
   isDeleted,
   createdAt,
   updatedAt,
@@ -44,6 +50,7 @@ function User({
 }) {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [newRole, setNewRole] = useState(role);
+  const [newGroup, setNewGroup] = useState(null);
 
   const roleOptions = [
     { value: 'admin', label: 'Administrateur' },
@@ -74,6 +81,14 @@ function User({
               {(service && position) && ' — '}
               {position}
             </Text>
+          )}
+          <Text spacing="mt-2w mb-0" bold>
+            Groupes :
+          </Text>
+          {(groups?.length > 0) && (
+            <TagGroup>
+              {groups.map((group) => (<Tag key={group.id}>{group.acronym || group.name}</Tag>))}
+            </TagGroup>
           )}
           <Text spacing="mt-2w mb-0" size="xs">
             Crée le
@@ -126,7 +141,7 @@ function User({
             <Row gutters alignItems="bottom">
               <Col n="12 md-6">
                 <Select
-                  label="Sélectionner un rôle"
+                  label="Séléctionnez un role"
                   selected={newRole}
                   onChange={(e) => { setNewRole(e.target.value); }}
                   options={roleOptions}
@@ -139,6 +154,55 @@ function User({
                     onClick={() => handleEditUser(id, newRole)}
                   >
                     Changer le role
+                  </Button>
+                </ButtonGroup>
+              </Col>
+            </Row>
+            <hr />
+            <Row>
+              <Col n="12">
+                <Title as="h2" look="h6">{`Modifier les groupes de ${firstName} ${lastName}`}</Title>
+              </Col>
+            </Row>
+            <Row>
+              <Col n="12">
+                {groups?.length
+                  ? (
+                    <>
+                      <Row>
+                        <Text bold spacing="mb-1w">{`Groupes de ${firstName} ${lastName}`}</Text>
+                      </Row>
+                      <Row spacing="pb-3w" justifyContent="middle">
+                        {groups?.map((group) => (
+                          <>
+                            <Text spacing="mb-0 mr-1w">
+                              {group.acronym || group.name}
+                            </Text>
+                            <Button color="error" icon="ri-delete-bin-2-line" size="sm" tertiary rounded borderless onClick={() => handleDeleteFromGroup(group.id, id)} />
+                          </>
+                        ))}
+                      </Row>
+                    </>
+                  )
+                  : <Text>{`${firstName} ${lastName} n'appartient à aucun groupe pour le moment.`}</Text>}
+              </Col>
+            </Row>
+            <Row gutters alignItems="bottom">
+              <Col n="12 md-6">
+                <Select
+                  label="Séléctionnez un groupe"
+                  selected={newGroup || ''}
+                  onChange={(e) => { setNewGroup(e.target.value); }}
+                  options={groupOptions}
+                />
+              </Col>
+              <Col n="12 md-6">
+                <ButtonGroup alignItems="bottom" isInlineFrom="md">
+                  <Button
+                    className="fr-mb-0"
+                    onClick={() => handleAddToGroup(newGroup, id)}
+                  >
+                    Ajouter
                   </Button>
                 </ButtonGroup>
               </Col>
@@ -168,6 +232,8 @@ User.defaultProps = {
   avatar: null,
   service: null,
   position: null,
+  groups: [],
+  groupOptions: [],
   updatedBy: {
     firstName: null,
     lastName: null,
@@ -177,8 +243,11 @@ User.defaultProps = {
 };
 User.propTypes = {
   handleEditUser: PropTypes.func.isRequired,
+  handleAddToGroup: PropTypes.func.isRequired,
+  handleDeleteFromGroup: PropTypes.func.isRequired,
   handleActivateUser: PropTypes.func.isRequired,
   handleSwitchDeleteUser: PropTypes.func.isRequired,
+  groupOptions: PropTypes.array,
   id: PropTypes.string.isRequired,
   email: PropTypes.string.isRequired,
   firstName: PropTypes.string.isRequired,
@@ -189,6 +258,7 @@ User.propTypes = {
   service: PropTypes.string,
   position: PropTypes.string,
   isDeleted: PropTypes.bool.isRequired,
+  groups: PropTypes.array,
   createdAt: PropTypes.string.isRequired,
   updatedAt: PropTypes.string.isRequired,
   updatedBy: PropTypes.shape({
@@ -202,6 +272,7 @@ User.propTypes = {
 export default function AdminUsersPage() {
   const { toast } = useToast();
   const { data, isLoading, error, reload } = useFetch('/admin/users?sort=-createdAt');
+  const { data: groups } = useFetch('/groups?limit=500');
 
   const toastError = () => toast({
     toastType: 'error',
@@ -231,6 +302,17 @@ export default function AdminUsersPage() {
     return reload();
   };
 
+  const handleAddToGroup = async (groupId, userId) => api.put(`/groups/${groupId}/members/${userId}`)
+    .then(() => reload())
+    .catch(() => toastError());
+
+  const handleDeleteFromGroup = (groupId, userId) => api.delete(`/groups/${groupId}/members/${userId}`)
+    .then(() => reload())
+    .catch(() => toastError());
+
+  const groupes = groups?.data?.map((group) => ({ value: group.id, label: group.acronym || group.name })) || [];
+  const groupOptions = [{ value: null, label: 'Séléctionnez un groupe' }, ...groupes];
+
   return (
     <Container>
       <Row>
@@ -255,6 +337,9 @@ export default function AdminUsersPage() {
             handleEditUser={handleEditUser}
             handleActivateUser={handleActivateUser}
             handleSwitchDeleteUser={handleSwitchDeleteUser}
+            handleAddToGroup={handleAddToGroup}
+            handleDeleteFromGroup={handleDeleteFromGroup}
+            groupOptions={groupOptions}
             {...item}
           />
         ))}
