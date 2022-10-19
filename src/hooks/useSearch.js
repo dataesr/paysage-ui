@@ -1,14 +1,14 @@
 import { useEffect, useState } from 'react';
 import api from '../utils/api';
 
-export default function useSearch(scopes, query = '', limit = 10) {
+export default function useSearch(scopes, query = '', limit = 10, start = 0) {
   const [data, setData] = useState(null);
   const [counts, setCounts] = useState({});
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   useEffect(() => {
     const fetchData = async () => {
-      const response = await api.get(`/autocomplete?types=${scopes}&query=${query}&limit=${limit}`);
+      const response = await api.get(`/autocomplete?types=${scopes}&query=${query}&limit=${limit}&start=${start}`);
       if (response.ok) {
         setData(response.data?.data);
         const responseCounts = {};
@@ -33,7 +33,7 @@ export default function useSearch(scopes, query = '', limit = 10) {
       setError(true);
       console.log(e);
     });
-  }, [scopes, query, limit]);
+  }, [limit, query, scopes, start]);
 
   return { data, counts, error, isLoading };
 }

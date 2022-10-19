@@ -14,14 +14,15 @@ import SignUp from './pages/creer-un-compte';
 import ProtectedRoute from './components/protected-route';
 
 import {
-  StructureByIdPage,
   StructureBudgetPage,
+  StructureByIdPage,
   StructureCategoriesPage,
   StructureElementsLiesPage,
   StructureEtudiantsPage,
   StructureExportPage,
   StructureGouvernancePage,
   StructureImmobilierPage,
+  StructureInsertionProfessionnellePage,
   StructureOffreDeFormationPage,
   StructurePresentationPage,
   StructureProjetsPage,
@@ -120,10 +121,11 @@ function App() {
             <Route path="chiffres-cles">
               <Route path="" element={<Navigate to="etudiants" replace />} />
               <Route path="budget" element={<StructureBudgetPage />} />
-              <Route path="ressource-humaines" element={<StructureRHPage />} />
+              <Route path="ressources-humaines" element={<StructureRHPage />} />
               <Route path="immobilier" element={<StructureImmobilierPage />} />
               <Route path="etudiants" element={<StructureEtudiantsPage />} />
               <Route path="offre-de-formation" element={<StructureOffreDeFormationPage />} />
+              <Route path="insertion-professionnelle" element={<StructureInsertionProfessionnellePage />} />
             </Route>
             <Route path="projets" element={<StructureProjetsPage />} />
             <Route path="prix-et-recompenses" element={<StructurePrixEtRecompensesPage />} />
