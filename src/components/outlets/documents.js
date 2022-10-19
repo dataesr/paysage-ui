@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Badge, BadgeGroup, Col, Highlight, Modal, ModalContent, ModalTitle, Row, Tag, TagGroup, Text } from '@dataesr/react-dsfr';
+import { Badge, BadgeGroup, Col, Modal, ModalContent, ModalTitle, Row, Tag, TagGroup, Text } from '@dataesr/react-dsfr';
 import useEditMode from '../../hooks/useEditMode';
 import useFetch from '../../hooks/useFetch';
 import useHashScroll from '../../hooks/useHashScroll';
@@ -15,9 +15,11 @@ import {
 import Button from '../button';
 import { Download } from '../download';
 import DocumentForm from '../forms/documents';
+import useAuth from '../../hooks/useAuth';
 
 export default function DocumentsOutlet() {
   const { editMode } = useEditMode();
+  const { viewer } = useAuth();
   const { id: resourceId } = useParams();
   const navigate = useNavigate();
   const url = `/documents?filters[relatesTo]=${resourceId}&sort=-startDate&limit=500`;
@@ -57,6 +59,16 @@ export default function DocumentsOutlet() {
     setIsOpen(true);
   };
 
+  const renderGroupBadge = (canAccess = []) => {
+    if (!canAccess?.length > 0) return <Badge type="success" iconPosition="right" icon="ri-lock-unlock-line" text="Tous" />;
+    const { groups } = viewer;
+    const accessGroups = groups.filter((elem) => (canAccess.includes(elem.id)));
+    if (accessGroups.length > 0) {
+      return accessGroups.map((group) => <Badge key={group.id} type="success" iconPosition="right" icon="ri-lock-unlock-line" text={group.acronym || group.name} />);
+    }
+    return <Badge type="success" iconPosition="right" icon="ri-lock-unlock-line" text="Tous" />;
+  };
+
   const renderContent = () => {
     if (!data || !data.data.length) return null;
     return (
@@ -69,13 +81,18 @@ export default function DocumentsOutlet() {
                   <div className="fr-card__start">
                     <Row className="flex--space-between">
                       <BadgeGroup>
-                        <Badge text={event.documentType.usualName} />
-                        <Badge type="info" text={event.startDate.slice(0, 4)} />
+                        {renderGroupBadge(event.canAccess)}
                       </BadgeGroup>
                       {editMode && <Button onClick={() => onOpenModalHandler(event)} size="sm" icon="ri-edit-line" title="Editer le document" tertiary borderless rounded />}
                     </Row>
                   </div>
                   <p className="fr-card__title">{event.title}</p>
+                  <Row className="fr-card__desc">
+                    <BadgeGroup>
+                      <Badge text={event.documentType.usualName} />
+                      <Badge type="info" text={event.startDate.slice(0, 4)} />
+                    </BadgeGroup>
+                  </Row>
                   {event.description && <div className="fr-card__desc">{event.description}</div>}
                   <div className="fr-card__end">
                     {(event.relatedObjects.length > 1) && <Text spacing="mb-1w" bold>Autres objets associés :</Text>}

@@ -232,28 +232,36 @@ function StructureByIdPage() {
                     label="En un coup d’œil"
                   />
                   <Checkbox
-                    onChange={(e) => updateForm({ categories: e.target.checked })}
+                    onChange={(e) => updateForm({ gouvernance: e.target.checked })}
                     label="Gouvernance et référents"
                   />
                   <Checkbox
-                    onChange={(e) => updateForm({ rh: e.target.checked })}
-                    label="Resources humaines"
+                    onChange={(e) => updateForm({ event: e.target.checked })}
+                    label="Evènements"
                   />
                   <Checkbox
-                    onChange={(e) => updateForm({ budget: e.target.checked })}
-                    label="Budget"
+                    onChange={(e) => updateForm({ resources: e.target.checked })}
+                    label="Ressources"
                   />
                   <Checkbox
-                    onChange={(e) => updateForm({ of: e.target.checked })}
-                    label="Offre de formation"
+                    onChange={(e) => updateForm({ categories: e.target.checked })}
+                    label="Categories et termes"
                   />
                   <Checkbox
-                    onChange={(e) => updateForm({ immobilier: e.target.checked })}
-                    label="Immobilier"
+                    onChange={(e) => updateForm({ chiffres: e.target.checked })}
+                    label="Chiffres clés"
                   />
                   <Checkbox
-                    onChange={(e) => updateForm({ etudiants: e.target.checked })}
-                    label="Etudiants"
+                    onChange={(e) => updateForm({ prix: e.target.checked })}
+                    label="Prix et récompenses"
+                  />
+                  <Checkbox
+                    onChange={(e) => updateForm({ prix: e.target.checked })}
+                    label="Projets"
+                  />
+                  <Checkbox
+                    onChange={(e) => updateForm({ elements: e.target.checked })}
+                    label="Eléments liés"
                   />
                 </CheckboxGroup>
               </ModalContent>

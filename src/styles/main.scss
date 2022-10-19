@@ -158,3 +158,14 @@ HR {
   }
 }
 
+@media print {
+  HTML {
+    font-size: 70% !important;
+  }
+  SECTION {
+    page-break-inside: avoid;
+  }
+}
+ @page {
+   margin: 1cm .5cm 1cm .5cm;
+  }
