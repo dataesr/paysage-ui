@@ -19,182 +19,269 @@ export default function StructureBudgetPage() {
   const { id, url } = useUrl('keynumbers');
   const { data, isLoading, error } = useFetch(`${url}/finance?sort=-exercice&limit=2`);
 
-  const lastData = data?.data?.[1] || [];
+  const lastData = data?.data?.[1] || {};
+  const currentData = data?.data?.[0] || {};
   const year = lastData?.exercice;
 
   const financialBalance = [{
+    field: 'resultat_net_comptable',
     info: 'Le résultat net comptable mesure les ressources nettes restant à l\'établissement à l\'issue de l\'exercice',
     suffix: '€',
     text: 'Résultat net comptable',
-    value: lastData?.resultat_net_comptable,
+    thresholdRed: 0,
+    thresholdSort: 'asc',
   }, {
+    field: 'resultat_net_comptable_hors_sie',
     info: 'Résultat de l\'établissement hors SIE (périmètre agrégé)',
     suffix: '€',
     text: 'Résultat net comptable hors SIE',
-    value: lastData?.resultat_net_comptable_hors_sie,
+    thresholdRed: 0,
+    thresholdSort: 'asc',
   }, {
+    field: 'capacite_d_autofinancement',
     info: 'Excédent dégagé pendant l\'exercice qui permettra d\'assurer tout ou partie de l\'investissement de l\'année et d\'augmenter le fonds de roulement.',
     suffix: '€',
     text: 'Capacité d\'autofinancement',
-    value: lastData?.capacite_d_autofinancement,
+    thresholdRed: 0,
+    thresholdSort: 'asc',
   }, {
+    field: 'produits_de_fonctionnement_encaissables',
     info: 'Produits de l\'exercice qui se traduit par un encaissement',
     suffix: '€',
     text: 'Produits de fonctionnement encaissables',
-    value: lastData?.produits_de_fonctionnement_encaissables,
+    thresholdGreen: 1,
+    thresholdRed: 0.5,
+    thresholdSort: 'asc',
   }, {
+    field: 'caf_produits_encaissables',
     info: 'Part de la CAF dans les produits encaissables',
     suffix: ' %',
     text: 'CAF / Produits encaissables',
-    value: lastData?.caf_produits_encaissables,
+    thresholdGreen: 1,
+    thresholdRed: 0.5,
+    thresholdSort: 'asc',
   }];
 
   const operatingCycle = [{
+    field: 'besoin_en_fonds_de_roulement',
     info: 'Le besoin en fonds de roulement mesure le décalage entre les encaissements et les décaissements du cycle d\'activité',
     suffix: '€',
     text: 'Besoin en fonds de roulement',
-    value: lastData?.besoin_en_fonds_de_roulement,
   }, {
+    field: 'fonds_de_roulement_en_jours_de_charges_decaissables',
     info: 'Fonds de roulement exprimé en jours de dépenses de fonctionnement décaissables',
     suffix: ' jours',
     text: 'Fonds de roulement en jours de charges décaissables',
-    value: lastData?.fonds_de_roulement_en_jours_de_charges_decaissables,
+    thresholdGreen: 30,
+    thresholdRed: 25,
+    thresholdSort: 'asc',
   }, {
+    field: 'fonds_de_roulement_net_global',
     info: 'Ressource mise à disposition de l\'établissement pour financer des emplois (investissements). Il constitue une marge de sécurité financière destinée à financer une partie de l\'actif circulant',
     suffix: '€',
     text: 'Fonds de roulement net global',
-    value: lastData?.fonds_de_roulement_net_global,
+    thresholdRed: 0,
+    thresholdSort: 'asc',
   }, {
+    field: 'tresorerie',
     info: 'Liquidités immédiatement disponibles (caisse, banque, Valeurs Mobilières de Placement)',
     suffix: '€',
     text: 'Trésorerie',
-    value: lastData?.tresorerie,
+    thresholdRed: 0,
+    thresholdSort: 'asc',
   }, {
+    field: 'tresorerie_en_jours_de_charges_decaissables',
     info: 'Expression de la trésorerie en nombre de jours de dépenses de fonctionnement décaissables',
     suffix: ' jours',
     text: 'Trésorerie en jours de charges décaissables',
-    value: lastData?.tresorerie_en_jours_de_charges_decaissables,
+    thresholdGreen: 30,
+    thresholdRed: 25,
+    thresholdSort: 'asc',
   }];
 
   const activityFinancing = [{
+    field: 'charges_de_fonctionnement_decaissables',
     info: 'Charges de l\'exercice qui donnent lieu à un décaissement',
     suffix: '€',
     text: 'Charges de fonctionnement décaissables',
-    value: lastData?.charges_de_fonctionnement_decaissables,
+    thresholdGreen: 98,
+    thresholdRed: 100,
+    thresholdSort: 'desc',
   }, {
+    field: 'charges_decaissables_produits_encaissables',
     info: 'Part des charges décaissables dans les produits encaissables',
     suffix: ' %',
     text: 'Charges décaissables / Produits encaissables',
-    value: lastData?.charges_decaissables_produits_encaissables,
+    thresholdGreen: 98,
+    thresholdRed: 100,
+    thresholdSort: 'desc',
   }, {
+    field: 'depenses_de_personnel_produits_encaissables',
     info: 'Poids des dépenses de personnel au regard des produits encaissables',
     suffix: ' %',
     text: 'Dépenses de personnel / Produits encaissables',
-    value: lastData?.depenses_de_personnel_produits_encaissables,
+    thresholdGreen: 82,
+    thresholdRed: 83,
+    thresholdSort: 'desc',
   }, {
+    field: 'recettes_propres',
     info: 'Produits de fonctionnement encaissables hors subvention pour charges de service public',
     suffix: '€',
     text: 'Recettes propres',
-    value: lastData?.recettes_propres,
+    thresholdGreen: 15,
+    thresholdRed: 13,
+    thresholdSort: 'asc',
   }, {
+    field: 'ressources_propres_produits_encaissables',
     info: 'Poids des ressources propres au sein des recettes encaissables',
     suffix: ' %',
     text: 'Ressources propres / Produits encaissables',
-    value: lastData?.ressources_propres_produits_encaissables,
+    thresholdGreen: 15,
+    thresholdRed: 13,
+    thresholdSort: 'asc',
   }, {
+    field: 'ressources_propres_encaissables',
     suffix: '€',
     text: 'Ressources propres encaissables',
-    value: lastData?.ressources_propres_encaissables,
   }, {
+    field: 'taux_de_remuneration_des_permanents',
     info: 'Rémunération des personnels permanents / total des dépenses de personnel',
     suffix: ' %',
     text: 'Taux de rémunération des permanents',
-    value: lastData?.taux_de_remuneration_des_permanents,
+    thresholdGreen: 83,
+    thresholdRed: 85,
+    thresholdSort: 'desc',
   }];
 
   const investmentsSelfFinancing = [{
+    field: 'acquisitions_d_immobilisations',
     info: 'Ensemble des investissements réalisés au cours de l\'exercice',
     suffix: '€',
     text: 'Acquisitions d\'immobilisations',
-    value: lastData?.acquisitions_d_immobilisations,
+    thresholdGreen: 30,
+    thresholdRed: 20,
+    thresholdSort: 'asc',
   }, {
+    field: 'caf_acquisitions_d_immobilisations',
     info: 'Part de la capacité d\'autofinancement permettant de financer les investissements de l\'exercice',
     suffix: ' %',
     text: 'CAF / Acquisitions d\'immobilisations',
-    value: lastData?.caf_acquisitions_d_immobilisations,
+    thresholdGreen: 30,
+    thresholdRed: 20,
+    thresholdSort: 'asc',
   }, {
+    field: 'capacite_d_autofinancement',
     info: 'Excédent dégagé pendant l\'exercice qui permettra d\'assurer tout ou partie de l\'investissement de l\'année et d\'augmenter le fonds de roulement.',
     suffix: '€',
     text: 'Capacité d\'autofinancement',
-    value: lastData?.capacite_d_autofinancement,
+    thresholdRed: 0,
+    thresholdSort: 'asc',
   }];
 
   const gbcpIndicators = [{
+    field: 'solde_budgetaire',
     info: 'Solde des encaissements et des décaissements sur opérations budgétaires',
     suffix: '€',
     text: 'Solde budgétaire',
-    value: lastData?.solde_budgetaire,
   }];
 
   const trainingRevenues = [{
+    field: 'droits_d_inscription',
     suffix: '€',
     text: 'Droits d\'inscription',
-    value: lastData?.droits_d_inscription,
   }, {
+    field: 'formation_continue_diplomes_propres_et_vae',
     suffix: '€',
     text: 'Formation continue, diplômes propres et VAE',
-    value: lastData?.formation_continue_diplomes_propres_et_vae,
   }, {
+    field: 'taxe_d_apprentissage',
     suffix: '€',
     text: 'Taxe d\'apprentissage',
-    value: lastData?.taxe_d_apprentissage,
   }];
 
   const researchRevenues = [{
+    field: 'valorisation',
     suffix: '€',
     text: 'Valorisation',
-    value: lastData?.valorisation,
   }, {
+    field: 'anr_hors_investissements_d_avenir',
     suffix: '€',
     text: 'ANR hors investissements d\'avenir',
-    value: lastData?.anr_hors_investissements_d_avenir,
   }, {
+    field: 'anr_investissements_d_avenir',
     suffix: '€',
     text: 'ANR investissements d\'avenir',
-    value: lastData?.anr_investissements_d_avenir,
   }, {
+    field: 'contrats_et_prestations_de_recherche_hors_anr',
     suffix: '€',
     text: 'Contrats et prestations de recherche hors ANR',
-    value: lastData?.contrats_et_prestations_de_recherche_hors_anr,
   }];
 
   const otherRevenues = [{
+    field: 'subventions_de_la_region',
     suffix: '€',
     text: 'Subventions de la région',
-    value: lastData?.subventions_de_la_region,
   }, {
+    field: 'subventions_union_europeenne',
     suffix: '€',
     text: 'Subventions Union Européenne',
-    value: lastData?.subventions_union_europeenne,
   }, {
+    field: 'autres_ressources_propres',
     suffix: '€',
     text: 'Autres ressources propres',
-    value: lastData?.autres_ressources_propres,
   }, {
+    field: 'autres_subventions',
     suffix: '€',
     text: 'Autres subventions',
-    value: lastData?.autres_subventions,
   }];
+
+  const getIconColor = (item) => {
+    const difference = currentData?.[item?.field];
+    if (difference) {
+      if (item.thresholdSort === 'asc') {
+        if (difference < item.thresholdRed) {
+          return 'pink-tuile';
+        }
+        if (difference > item.thresholdRed && difference < item.thresholdGreen) {
+          return 'yellow-tournesol';
+        }
+      }
+      if (item.thresholdSort === 'desc') {
+        if (difference > item.thresholdRed) {
+          return 'pink-tuile';
+        }
+        if (difference < item.thresholdRed && difference > item.thresholdGreen) {
+          return 'yellow-tournesol';
+        }
+      }
+    }
+    return null;
+  };
 
   const renderCards = (all) => {
     const list = all
-      .filter((item) => item?.value)
+      .filter((item) => lastData?.[item?.field])
       .map((item) => {
-        let { value } = item;
+        let difference = currentData?.[item?.field];
+        if (difference) {
+          difference = cleanNumber(difference);
+          difference = difference[0] === '-' ? difference : `+${difference}`;
+          difference = item?.suffix ? `${difference} ${item.suffix}` : difference;
+        }
+        let value = lastData?.[item?.field];
         value = cleanNumber(value);
         value = item?.suffix ? `${value} ${item.suffix}` : value;
+        const color = getIconColor(item);
         return (
           <Card
+            subtitle={difference && (
+              <div title="Budget 2022">
+                (
+                {difference}
+                {color && (<Icon name={`ri-stop-fill fr-badge--${color}`} className="fr-ml-1w fr-mr-0 fr-icon--sm" />)}
+                )
+              </div>
+            )}
             title={value}
             descriptionElement={(
               <Row alignItems="middle">
