@@ -5,11 +5,12 @@ import Button from '../button';
 import './styles.module.scss';
 
 export default function WeblinkCard({
-  title,
-  iconElement,
+  canEdit,
   descriptionElement,
-  onClick,
   downloadUrl,
+  iconElement,
+  onClick,
+  title,
 }) {
   const { editMode } = useEditMode();
   return (
@@ -30,7 +31,7 @@ export default function WeblinkCard({
                 </h4>
               ) : null}
               <div className="fr-card__desc">{descriptionElement}</div>
-              {editMode && (
+              {editMode && canEdit && (
                 <div className="card-button">
                   <Button
                     className="bt-visible-on-over"
@@ -53,6 +54,7 @@ export default function WeblinkCard({
 }
 
 WeblinkCard.propTypes = {
+  canEdit: PropTypes.bool,
   descriptionElement: PropTypes.element,
   downloadUrl: PropTypes.string.isRequired,
   iconElement: PropTypes.element,
@@ -61,6 +63,7 @@ WeblinkCard.propTypes = {
 };
 
 WeblinkCard.defaultProps = {
+  canEdit: true,
   descriptionElement: null,
   iconElement: null,
   title: '',

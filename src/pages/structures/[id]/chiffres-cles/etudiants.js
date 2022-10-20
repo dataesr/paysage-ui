@@ -517,6 +517,7 @@ export default function StructureEtudiantsPage() {
                   </>
                 )}
                 downloadUrl="https://dataesr.fr/FR/T525/P883/tableau_de_bord_de_l_enseignement_superieur_les_etudiants_par_etablissements_avec_doubles_inscriptions_cpge_-_resultats_pour_sise"
+                canEdit={false}
               />
             </Col>
             <Col n="12 md-6">
@@ -528,6 +529,7 @@ export default function StructureEtudiantsPage() {
                   </>
                 )}
                 downloadUrl={`https://data.enseignementsup-recherche.gouv.fr/explore/dataset/fr-esr-statistiques-sur-les-effectifs-d-etudiants-inscrits-par-etablissement/table/?refine.etablissement_id_paysage=${id}&sort=-annee_universitaire`}
+                canEdit={false}
               />
             </Col>
             <Col n="12 md-6">
@@ -539,6 +541,7 @@ export default function StructureEtudiantsPage() {
                   </>
                 )}
                 downloadUrl={`https://data.enseignementsup-recherche.gouv.fr/explore/dataset/fr-esr-sise-effectifs-d-etudiants-inscrits-esr-public/table/?refine.etablissement_id_paysage=${id}&sort=-rentree`}
+                canEdit={false}
               />
             </Col>
             <Col n="12 md-6">
@@ -550,6 +553,7 @@ export default function StructureEtudiantsPage() {
                   </>
                 )}
                 downloadUrl={`https://data.enseignementsup-recherche.gouv.fr/explore/dataset/fr-esr-principaux-diplomes-et-formations-prepares-etablissements-publics/table/?refine.etablissement_id_paysage=${id}`}
+                canEdit={false}
               />
             </Col>
           </Row>

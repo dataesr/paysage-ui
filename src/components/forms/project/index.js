@@ -46,7 +46,7 @@ export default function ProjectForm({ id, data, onSave, onDelete }) {
         <Row gutters>
           <Col n="12 md-6">
             <TextInput
-              label="Nom du projet en français"
+              label="Nom en français"
               required
               value={form.nameFr || ''}
               onChange={(e) => updateForm({ nameFr: e.target.value })}
@@ -56,7 +56,7 @@ export default function ProjectForm({ id, data, onSave, onDelete }) {
           </Col>
           <Col n="12 md-6">
             <TextInput
-              label="Nom du projet en anglais"
+              label="Nom en anglais"
               value={form.nameEn || ''}
               onChange={(e) => updateForm({ nameEn: e.target.value })}
               message={(showErrors && errors.nameEn) ? errors.nameEn : null}
@@ -65,7 +65,7 @@ export default function ProjectForm({ id, data, onSave, onDelete }) {
           </Col>
           <Col n="12 md-6">
             <TextInput
-              label="Nom long du projet en français"
+              label="Nom long en français"
               value={form.longNameFr || ''}
               onChange={(e) => updateForm({ longNameFr: e.target.value })}
               message={(showErrors && errors.longNameFr) ? errors.longNameFr : null}
@@ -74,7 +74,7 @@ export default function ProjectForm({ id, data, onSave, onDelete }) {
           </Col>
           <Col n="12 md-6">
             <TextInput
-              label="Nom long du projet en anglais"
+              label="Nom long en anglais"
               value={form.longNameEn || ''}
               onChange={(e) => updateForm({ longNameEn: e.target.value })}
               message={(showErrors && errors.longNameEn) ? errors.longNameEn : null}
@@ -83,7 +83,7 @@ export default function ProjectForm({ id, data, onSave, onDelete }) {
           </Col>
           <Col n="12 md-6">
             <TextInput
-              label="Acronyme du projet en français"
+              label="Acronyme en français"
               value={form.acronymFr || ''}
               onChange={(e) => updateForm({ acronymFr: e.target.value })}
               message={(showErrors && errors.acronymFr) ? errors.acronymFr : null}
@@ -92,7 +92,7 @@ export default function ProjectForm({ id, data, onSave, onDelete }) {
           </Col>
           <Col n="12 md-6">
             <TextInput
-              label="Acronyme du projet en anglais"
+              label="Acronyme en anglais"
               value={form.acronymEn || ''}
               onChange={(e) => updateForm({ acronymEn: e.target.value })}
               message={(showErrors && errors.acronymEn) ? errors.acronymEn : null}
@@ -102,7 +102,7 @@ export default function ProjectForm({ id, data, onSave, onDelete }) {
           <Col n="12 md-6">
             <TextInput
               textarea
-              label="Description du projet"
+              label="Description"
               value={form.description || ''}
               onChange={(e) => updateForm({ description: e.target.value })}
               message={(showErrors && errors.description) ? errors.description : null}
@@ -111,7 +111,7 @@ export default function ProjectForm({ id, data, onSave, onDelete }) {
           </Col>
           <Col n="12 md-6">
             <TextInput
-              label="grantPart whatever this is"
+              label="Financement"
               value={form.grantPart || ''}
               onChange={(e) => updateForm({ grantPart: e.target.value })}
               message={(showErrors && errors.grantPart) ? errors.grantPart : null}

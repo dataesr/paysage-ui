@@ -19,7 +19,7 @@ export default function StructureBudgetPage() {
   const { id, url } = useUrl('keynumbers');
   const { data, isLoading, error } = useFetch(`${url}/finance?sort=-exercice&limit=2`);
 
-  const lastData = (Number(data?.data?.[0]?.exercice) === new Date().getFullYear()) ? data?.data?.[1] : data?.data?.[0];
+  const lastData = data?.data?.[1] || [];
   const year = lastData?.exercice;
 
   const financialBalance = [{
@@ -299,6 +299,7 @@ export default function StructureBudgetPage() {
                   </>
                 )}
                 downloadUrl="https://dataesr.fr/FR/T445/P844/tableau_de_bord_financier_-_finance"
+                canEdit={false}
               />
             </Col>
             <Col n="12 md-6">
@@ -310,6 +311,7 @@ export default function StructureBudgetPage() {
                   </>
                 )}
                 downloadUrl={`https://data.enseignementsup-recherche.gouv.fr/explore/dataset/fr-esr-operateurs-indicateurs-financiers/table/?sort=exercice&refine.etablissement_id_paysage=${id}`}
+                canEdit={false}
               />
             </Col>
           </Row>

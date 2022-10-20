@@ -121,7 +121,6 @@ function StructureByIdPage() {
               Ressources
             </SideMenuLink>
             <SideMenuItem
-              // expandedDefault
               title={(
                 <>
                   <Icon name="ri-bar-chart-grouped-line" size="1x" />

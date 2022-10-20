@@ -15,7 +15,7 @@ export default function FormFooter({ id, onDeleteHandler, onSaveHandler }) {
       {confirm && (
         <Row>
           <Col n="12 md-6">
-            <Text bold>Etes-vous sur de vouloir supprimer cet élément ?</Text>
+            <Text bold>Etes-vous sûr de vouloir supprimer cet élément ?</Text>
           </Col>
           <Col n="12 md-6">
             <ButtonGroup align="right" isInlineFrom="md">

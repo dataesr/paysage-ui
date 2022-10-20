@@ -33,12 +33,12 @@ export default function ContributePage() {
   }, [query]);
 
   const data = [
-    { type: 'structures', icon: 'ri-building-line', name: 'Ajouter une structure', url: '/structures/ajouter' },
-    { type: 'persons', icon: 'ri-user-3-line', name: 'Ajouter une personne', url: '/personnes/ajouter' },
     { type: 'categories', icon: 'ri-price-tag-3-line', name: 'Ajouter une catégorie', url: '/categories/ajouter' },
-    { type: 'terms', icon: 'ri-hashtag', name: 'Ajouter un terme', url: '/termes/ajouter' },
-    { type: 'projects', icon: 'ri-booklet-line', name: 'Ajouter un projet', url: '/projets/ajouter' },
+    { type: 'persons', icon: 'ri-user-3-line', name: 'Ajouter une personne', url: '/personnes/ajouter' },
     { type: 'prices', icon: 'ri-award-line', name: 'Ajouter un prix', url: '/prix/ajouter' },
+    { type: 'projects', icon: 'ri-booklet-line', name: 'Ajouter un projet', url: '/projets/ajouter' },
+    { type: 'structures', icon: 'ri-building-line', name: 'Ajouter une structure', url: '/structures/ajouter' },
+    { type: 'terms', icon: 'ri-hashtag', name: 'Ajouter un terme', url: '/termes/ajouter' },
   ];
   return (
     <Container className="fr-mb-6w">
@@ -56,7 +56,7 @@ export default function ContributePage() {
         <div className="fr-container">
           <div className="fr-notice__body">
             <p className="fr-notice__title">
-              Etes-vous sur que l'objet n'existe pas ? Utilisez la recherche pour vous en assurer.
+              Etes-vous sûr que l'objet n'existe pas ? Utilisez la recherche pour vous en assurer.
             </p>
             <Col n="12">
               <SearchBar
