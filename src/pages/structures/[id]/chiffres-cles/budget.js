@@ -17,7 +17,7 @@ import cleanNumber from '../../../../utils/cleanNumbers';
 export default function StructureBudgetPage() {
   useHashScroll();
   const { id, url } = useUrl('keynumbers');
-  const { data, isLoading, error } = useFetch(`${url}/finance?sort=-exercice&limit=2`);
+  const { data, error, isLoading } = useFetch(`${url}/finance?sort=-exercice&limit=2`);
 
   const lastData = data?.data?.[1] || {};
   const currentData = data?.data?.[0] || {};
@@ -242,7 +242,7 @@ export default function StructureBudgetPage() {
         if (difference < item.thresholdRed) {
           return 'pink-tuile';
         }
-        if (difference > item.thresholdRed && difference < item.thresholdGreen) {
+        if (difference >= item.thresholdRed && difference <= item.thresholdGreen) {
           return 'yellow-tournesol';
         }
       }
@@ -250,7 +250,7 @@ export default function StructureBudgetPage() {
         if (difference > item.thresholdRed) {
           return 'pink-tuile';
         }
-        if (difference < item.thresholdRed && difference > item.thresholdGreen) {
+        if (difference <= item.thresholdRed && difference >= item.thresholdGreen) {
           return 'yellow-tournesol';
         }
       }

@@ -19,7 +19,7 @@ import cleanNumber from '../../../../utils/cleanNumbers';
 export default function StructureEtudiantsPage() {
   useHashScroll();
   const { id, url } = useUrl('keynumbers');
-  const { data, isLoading, error } = useFetch(`${url}/population`);
+  const { data, error, isLoading } = useFetch(`${url}/population`);
 
   const sortedData = data?.data.sort((a, b) => a.annee - b.annee) || [];
   const lastData = sortedData?.[sortedData.length - 1];

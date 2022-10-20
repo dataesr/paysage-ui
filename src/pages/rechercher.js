@@ -32,7 +32,7 @@ function SearchResults({ data }) {
                     {element.name}
                   </RouterLink>
                 </p>
-                <p className="fr-tile__desc">Un attribut eventuel de l'objet paysage qui sera remonté par l'api</p>
+                <p className="fr-tile__desc">Un attribut éventuel de l'objet paysage qui sera remonté par l'api</p>
               </div>
             </Tile>
           </Col>

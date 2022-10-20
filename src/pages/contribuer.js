@@ -82,7 +82,6 @@ export default function ContributePage() {
                 titleAs="h5"
                 title={element.name}
                 asLink={<RouterLink to={element.url} />}
-                // description="Un attribut eventuel de l'objet paysage qui sera remonté par l'api"
               />
               <div className="fr-tile__img">
                 <Icon size="3x" name={element.icon} color={`var(--${element.type}-color)`} />

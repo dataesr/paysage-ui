@@ -6,16 +6,18 @@ import {
   BlocTitle,
 } from '../../../../components/bloc';
 import WeblinkCard from '../../../../components/card/weblink-card';
+import Spinner from '../../../../components/spinner';
 import useFetch from '../../../../hooks/useFetch';
 import useUrl from '../../../../hooks/useUrl';
 
 export default function StructureInsertionProfessionnellePage() {
   const { id } = useUrl('keynumbers');
   const { url } = useUrl('identifiers');
-  const { data, isLoading, error, reload } = useFetch(url);
+  const { data, error, isLoading } = useFetch(url);
   const uai = data?.data.filter((item) => item.type === 'UAI')?.[0];
-  console.log(uai);
 
+  if (isLoading) return <Spinner size={48} />;
+  if (error) return <>Erreur...</>;
   return (
     <>
       <Title as="h3">
