@@ -1,12 +1,10 @@
 import { useEffect, useState } from 'react';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router-dom';
 import {
   Badge,
-  BadgeGroup, Breadcrumb, BreadcrumbItem, ButtonGroup, Checkbox,
-  CheckboxGroup, Col, Container, Icon, Modal, ModalContent, ModalFooter,
-  ModalTitle, Row, Title,
+  BadgeGroup, Breadcrumb, BreadcrumbItem, ButtonGroup,
+  Col, Container, Icon, Modal, ModalContent, ModalTitle, Row, Title,
 } from '@dataesr/react-dsfr';
-import useForm from '../../hooks/useForm';
 import useEditMode from '../../hooks/useEditMode';
 import Button from '../../components/button';
 import CopyBadgeButton from '../../components/copy/copy-badge-button';
@@ -22,14 +20,10 @@ import RelatedObjectCard from '../../components/card/related-object-card';
 import { Bloc, BlocContent, BlocTitle } from '../../components/bloc';
 
 export default function OfficialTextByIdPage() {
-  const { url, id } = useUrl();
+  const { url } = useUrl();
   const { data, isLoading, error, reload } = useFetch(url);
-  const navigate = useNavigate();
   const { notice } = useNotice();
   const { editMode, reset, toggle } = useEditMode();
-  const [isExportOpen, setIsExportOpen] = useState(false);
-  const [isFavorite, setIsFavorite] = useState(false);
-  const { form, updateForm } = useForm({}, () => { });
   const [isFormModalOpen, setIsFormModalOpen] = useState(false);
 
   useEffect(() => { reset(); }, [reset]);
@@ -100,51 +94,11 @@ export default function OfficialTextByIdPage() {
                 tertiary
                 borderless
                 rounded
-                title="Exporter la fiche"
-                onClick={() => setIsExportOpen(true)}
-                icon="ri-download-2-fill"
-              />
-              <Button
-                tertiary
-                borderless
-                rounded
-                title="Ajouter aux favoris"
-                onClick={() => setIsFavorite(!isFavorite)}
-                icon={`ri-star-${isFavorite ? 'fill' : 'line'}`}
-              />
-              <Button
-                tertiary
-                borderless
-                rounded
                 title="Activer le mode édition"
                 onClick={() => toggle()}
                 icon={`ri-edit-${editMode ? 'fill' : 'line'}`}
               />
             </ButtonGroup>
-            <Modal size="sm" isOpen={isExportOpen} hide={() => setIsExportOpen(false)}>
-              <ModalTitle>
-                Que souhaitez-vous exporter ?
-              </ModalTitle>
-              <ModalContent>
-                <CheckboxGroup>
-                  <Checkbox
-                    onChange={(e) => updateForm({ oeil: e.target.checked })}
-                    label="En un coup d’œil"
-                  />
-                </CheckboxGroup>
-              </ModalContent>
-              <ModalFooter>
-                <ButtonGroup>
-                  <Button onClick={() => {
-                    if (editMode) { toggle(); }
-                    navigate(`/textes-officiels/${id}/exporter?${new URLSearchParams(form)}`);
-                  }}
-                  >
-                    Exporter
-                  </Button>
-                </ButtonGroup>
-              </ModalFooter>
-            </Modal>
           </Row>
           <Bloc data={{ totalCount: data?.relatedObjects?.length }} error={error} isLoading={isLoading}>
             <BlocTitle as="h3" look="h6">Objets liés au texte officiel</BlocTitle>

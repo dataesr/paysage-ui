@@ -42,7 +42,7 @@ import {
 } from './pages/personnes/[id]';
 
 import TermsAddPage from './pages/termes/ajouter';
-import { TermByIdPage, TermPresentationPage, TermCategories } from './pages/termes/[id]';
+import { TermByIdPage, TermPresentationPage, TermCategories, TermExportPage } from './pages/termes/[id]';
 
 import {
   ProjectByIdPage,
@@ -50,10 +50,11 @@ import {
   ProjectCategories,
   ProjectPrices,
   ProjectRelatedElements,
+  ProjectExportPage,
 } from './pages/projets/[id]';
 
 import CategoriesAddPage from './pages/categories/ajouter';
-import { CategoryByIdPage, CategoryPresentationPage, CategoryCategories } from './pages/categories/[id]';
+import { CategoryByIdPage, CategoryPresentationPage, CategoryCategories, CategoriesExportPage } from './pages/categories/[id]';
 
 import { AccountPage, ProfilePage, PreferencesPage, SecurityPage, GroupsPage } from './pages/mon-compte';
 import {
@@ -69,7 +70,7 @@ import ActualitesOutlet from './components/outlets/actualites';
 import OfficialTextsOutlet from './components/outlets/textes-officiels';
 import ParticipationsOutlet from './components/outlets/participations';
 import PriceAddPage from './pages/prix/ajouter';
-import { PriceByIdPage, PriceCategories, PricePresentationPage } from './pages/prix/[id]';
+import { PriceByIdPage, PriceCategories, PriceExportPage, PricePresentationPage } from './pages/prix/[id]';
 
 function App() {
   return (
@@ -135,6 +136,7 @@ function App() {
           </Route>
 
           <Route path="/categories/ajouter" element={<CategoriesAddPage />} />
+          <Route path="/categories/:id/exporter" element={<CategoriesExportPage />} />
           <Route path="/categories/:id" element={<CategoryByIdPage />}>
             <Route path="" element={<Navigate to="presentation" replace />} />
             <Route path="presentation" element={<CategoryPresentationPage />} />
@@ -164,6 +166,7 @@ function App() {
           </Route>
 
           <Route path="/termes/ajouter" element={<TermsAddPage />} />
+          <Route path="/termes/:id/exporter" element={<TermExportPage />} />
           <Route path="/terms/:id" element={<Redirect />} />
           <Route path="/termes/:id" element={<TermByIdPage />}>
             <Route path="" element={<Navigate to="presentation" replace />} />
@@ -176,6 +179,7 @@ function App() {
           </Route>
 
           <Route path="/prix/ajouter" element={<PriceAddPage />} />
+          <Route path="/prix/:id/exporter" element={<PriceExportPage />} />
           <Route path="/prices/:id" element={<Redirect />} />
           <Route path="/prix/:id" element={<PriceByIdPage />}>
             <Route path="" element={<Navigate to="presentation" replace />} />
@@ -188,6 +192,7 @@ function App() {
           </Route>
 
           <Route path="/projets/ajouter" element={<ProjectAddPage />} />
+          <Route path="/projets/:id/exporter" element={<ProjectExportPage />} />
           <Route path="/projects/:id" element={<Redirect />} />
           <Route path="/projets/:id" element={<ProjectByIdPage />}>
             <Route path="" element={<Navigate to="presentation" replace />} />

@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { useReactToPrint } from 'react-to-print';
 
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
@@ -6,51 +6,65 @@ import { Badge, BadgeGroup, Col, Container, Row, Title } from '@dataesr/react-ds
 import useFetch from '../../../hooks/useFetch';
 import CopyBadgeButton from '../../../components/copy/copy-badge-button';
 
-import StructurePresentationPage from './presentation';
+import ProjectPresentationPage from './presentation';
+import ProjectPrices from './prix-et-recompenses';
+import AgendaOutlet from '../../../components/outlets/evenements';
+import DocumentsOutlet from '../../../components/outlets/documents';
+import ProjectCategories from './categories';
+import ActualitesOutlet from '../../../components/outlets/actualites';
+import OfficialTextOutlet from '../../../components/outlets/textes-officiels';
+import OverlaySpinner from '../../../components/spinner/overlay-spinner';
 
-export default function StructureExportPage() {
+export default function ProjectExportPage() {
   const { id } = useParams();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(true);
 
-  const { data, isLoading, error } = useFetch(`/structures/${id}`);
+  const { data, isLoading, error } = useFetch(`/projects/${id}`);
   const componentRef = useRef();
-
-  // const [loading, setLoading] = useState(false);
 
   const handlePrint = useReactToPrint({
     content: () => componentRef.current,
-    documentTitle: 'AwesomeFileName',
-    onAfterPrint: () => navigate(`/structures/${id}`),
+    documentTitle: `paysage_projet_${data?.nameFr}_${id}.pdf`,
+    onAfterPrint: () => navigate(`/projets/${id}`),
     removeAfterPrint: true,
   });
 
-  setTimeout(() => handlePrint(), 1000);
+  setTimeout(() => {
+    setLoading(false);
+    handlePrint();
+  }, 5000);
 
   if (isLoading) return <>Chargement...</>;
   if (error) return <>Erreur...</>;
+  if (!data) return null;
   return (
     <div className="print" ref={componentRef}>
       <Container spacing="pb-6w">
         <Row>
           <Col n="12">
             <Title as="h2">
-              {data.currentName.usualName}
-              <BadgeGroup>
+              {data.nameFr}
+              <BadgeGroup className="fr-pt-1w">
+                <Badge text="Projet" type="info" />
                 <CopyBadgeButton
                   colorFamily="yellow-tournesol"
                   text={data.id}
                   lowercase
                 />
-                <Badge
-                  colorFamily="green-emeraude"
-                  text={data.active || 'active'}
-                />
               </BadgeGroup>
             </Title>
-            {searchParams.get('oeil') && <StructurePresentationPage />}
+            {searchParams.get('oeil') && <ProjectPresentationPage />}
+            {searchParams.get('actualites') && <ActualitesOutlet />}
+            {searchParams.get('evenements') && <AgendaOutlet />}
+            {searchParams.get('ressources') && <DocumentsOutlet />}
+            {searchParams.get('categories') && <ProjectCategories />}
+            {searchParams.get('prix') && <ProjectPrices />}
+            {searchParams.get('textes') && <OfficialTextOutlet />}
           </Col>
         </Row>
+        {loading && (<OverlaySpinner text="Préparation de l'exportation" />)}
       </Container>
     </div>
   );

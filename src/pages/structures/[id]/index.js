@@ -51,7 +51,7 @@ function StructureByIdPage() {
     prix: true,
     projets: true,
     elements: true,
-  }, () => {});
+  });
 
   const [isStatusModalOpen, setIsStatusModalOpen] = useState(false);
   const [status, setSatus] = useState('inactive');

@@ -19,6 +19,7 @@ import api from '../../../utils/api';
 import useNotice from '../../../hooks/useNotice';
 
 import ProjectPresentationPage from './presentation';
+import ProjectExportPage from './exporter';
 import ProjectCategories from './categories';
 import ProjectPrices from './prix-et-recompenses';
 import ProjectRelatedElements from './elements-lies';
@@ -32,7 +33,15 @@ function ProjectByIdPage() {
   const { editMode, reset, toggle } = useEditMode();
   const [isExportOpen, setIsExportOpen] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
-  const { form, updateForm } = useForm({}, () => {});
+  const { form, updateForm } = useForm({
+    oeil: true,
+    actualites: true,
+    evenements: true,
+    ressources: true,
+    categories: true,
+    prix: true,
+    textes: true,
+  });
   const [isFormModalOpen, setIsFormModalOpen] = useState(false);
 
   useEffect(() => { reset(); }, [reset]);
@@ -158,8 +167,39 @@ function ProjectByIdPage() {
               <ModalContent>
                 <CheckboxGroup>
                   <Checkbox
+                    checked={form.oeil}
                     onChange={(e) => updateForm({ oeil: e.target.checked })}
                     label="En un coup d’œil"
+                  />
+                  <Checkbox
+                    checked={form.actualites}
+                    onChange={(e) => updateForm({ actualites: e.target.checked })}
+                    label="Actualités"
+                  />
+                  <Checkbox
+                    checked={form.evenements}
+                    onChange={(e) => updateForm({ evenements: e.target.checked })}
+                    label="Evènements"
+                  />
+                  <Checkbox
+                    checked={form.ressources}
+                    onChange={(e) => updateForm({ ressources: e.target.checked })}
+                    label="Ressources"
+                  />
+                  <Checkbox
+                    checked={form.categories}
+                    onChange={(e) => updateForm({ categories: e.target.checked })}
+                    label="Catégories et termes"
+                  />
+                  <Checkbox
+                    checked={form.prix}
+                    onChange={(e) => updateForm({ prix: e.target.checked })}
+                    label="Prix et récompenses"
+                  />
+                  <Checkbox
+                    checked={form.textes}
+                    onChange={(e) => updateForm({ textes: e.target.checked })}
+                    label="Textes officiels"
                   />
                 </CheckboxGroup>
               </ModalContent>
@@ -185,6 +225,7 @@ function ProjectByIdPage() {
 
 export {
   ProjectByIdPage,
+  ProjectExportPage,
   ProjectPresentationPage,
   ProjectCategories,
   ProjectPrices,

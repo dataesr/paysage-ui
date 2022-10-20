@@ -20,6 +20,7 @@ import useNotice from '../../../hooks/useNotice';
 import CategoryPresentationPage from './presentation';
 import CategoryCategories from './categories';
 import CategoryForm from '../../../components/forms/category';
+import CategoriesExportPage from './exporter';
 import { saveError, saveSuccess } from '../../../utils/notice-contents';
 
 function CategoryByIdPage() {
@@ -30,7 +31,14 @@ function CategoryByIdPage() {
   const { editMode, reset, toggle } = useEditMode();
   const [isExportOpen, setIsExportOpen] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
-  const { form, updateForm } = useForm({}, () => {});
+  const { form, updateForm } = useForm({
+    oeil: true,
+    actualites: true,
+    evenements: true,
+    ressources: true,
+    categories: true,
+    textes: true,
+  });
   const [isFormModalOpen, setIsFormModalOpen] = useState(false);
 
   useEffect(() => { reset(); }, [reset]);
@@ -148,8 +156,34 @@ function CategoryByIdPage() {
               <ModalContent>
                 <CheckboxGroup>
                   <Checkbox
+                    checked={form.oeil}
                     onChange={(e) => updateForm({ oeil: e.target.checked })}
                     label="En un coup d’œil"
+                  />
+                  <Checkbox
+                    checked={form.actualites}
+                    onChange={(e) => updateForm({ actualites: e.target.checked })}
+                    label="Actualités"
+                  />
+                  <Checkbox
+                    checked={form.evenements}
+                    onChange={(e) => updateForm({ evenements: e.target.checked })}
+                    label="Evènements"
+                  />
+                  <Checkbox
+                    checked={form.ressources}
+                    onChange={(e) => updateForm({ ressources: e.target.checked })}
+                    label="Ressources"
+                  />
+                  <Checkbox
+                    checked={form.categories}
+                    onChange={(e) => updateForm({ categories: e.target.checked })}
+                    label="Catégories et termes"
+                  />
+                  <Checkbox
+                    checked={form.textes}
+                    onChange={(e) => updateForm({ textes: e.target.checked })}
+                    label="Textes officiels"
                   />
                 </CheckboxGroup>
               </ModalContent>
@@ -177,4 +211,5 @@ export {
   CategoryByIdPage,
   CategoryPresentationPage,
   CategoryCategories,
+  CategoriesExportPage,
 };

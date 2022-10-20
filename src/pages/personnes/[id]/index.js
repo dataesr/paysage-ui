@@ -45,7 +45,7 @@ function PersonByIdPage() {
     textes: true,
     prix: true,
     elements: true,
-  }, () => {});
+  });
   const [isFormModalOpen, setIsFormModalOpen] = useState(false);
 
   useEffect(() => { reset(); }, [reset]);

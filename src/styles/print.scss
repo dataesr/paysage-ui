@@ -1,5 +1,4 @@
 .print {
-  //margin: 4rem;
   font-size: 1rem;
 }
 .print .leaflet-container {
@@ -40,6 +39,14 @@
   .pagebreak {
     page-break-before: always;
   }
+  // .fr-card--shadow {
+  //   --idle: #0000;
+  //   --hover: var(--background-raised-grey-hover);
+  //   --active: var(--background-raised-grey-active);
+  //   background-color: var(--background-raised-grey);
+  //   filter: none;
+  //   z-index: inherit;
+  // }
 }
 
 @page {
