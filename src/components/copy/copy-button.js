@@ -7,7 +7,7 @@ export default function CopyButton({ colorFamily, copyText, title }) {
   const [copyStatus, copy] = useCopyToClipboard();
   if (!copyStatus) {
     return (
-      <button className={styles['copy-button']} title={title} onClick={() => copy(copyText)} type="button">
+      <button className={`${styles['copy-button']} no-print`} title={title} onClick={() => copy(copyText)} type="button">
         <Icon className="ri-file-copy-line fr-m-0" size="sm" />
       </button>
     );

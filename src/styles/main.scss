@@ -143,11 +143,6 @@ HR {
   visibility: hidden;
 }
 
-.print {
-  margin: 4rem;
-  font-size: 0.5rem;
-}
-
 .highlight-border {
   border-color: var(--border-color);
 }
@@ -156,26 +151,6 @@ HR {
   A {
     background-image: none !important;
   }
-}
-
-@media print {
-  HTML {
-    font-size: 70% !important;
-  }
-  SECTION {
-    page-break-inside: avoid !important;
-  }
-  .fr-col-md-6 {
-    flex: 0 0 50% !important;
-    max-width: 50% !important;
-    width: 50% !important;
-  }
-  .pagebreak {
-    page-break-before: always;
-  }
-}
-@page {
-  margin: 1cm .5cm 1cm .5cm;
 }
 
 .overlay {

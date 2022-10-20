@@ -35,7 +35,7 @@ function CopyBadgeButton({
         verticalAlign="sub"
         name={copyStatus ? iconsType[copyStatus] : 'ri-file-copy-line'}
         size="1x"
-        className="ds-fr-badge-icon"
+        className="ds-fr-badge-icon no-print"
       >
         {copyStatus === 'Copié' ? 'COPIÉ' : text}
       </Icon>

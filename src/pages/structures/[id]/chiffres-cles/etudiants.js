@@ -429,13 +429,13 @@ export default function StructureEtudiantsPage() {
         <BlocContent>
           {renderCards(tiles)}
           <Row gutters>
-            <Col n="12 md-6">
+            <Col className="print-12" n="12 md-6">
               <HighchartsReact
                 highcharts={Highcharts}
                 options={LMDOptions}
               />
             </Col>
-            <Col n="12 md-6">
+            <Col className="print-12" n="12 md-6">
               <HighchartsReact
                 highcharts={Highcharts}
                 options={disciplinesOptions}
@@ -451,49 +451,49 @@ export default function StructureEtudiantsPage() {
         </BlocTitle>
         <BlocContent>
           <Row gutters>
-            <Col n="12 md-6">
+            <Col className="print-12" n="12 md-6">
               <HighchartsReact
                 highcharts={Highcharts}
                 options={populationOptions}
               />
             </Col>
-            <Col n="12 md-6">
+            <Col className="print-12" n="12 md-6">
               <HighchartsReact
                 highcharts={Highcharts}
                 options={populationCycleOptions}
               />
             </Col>
-            <Col n="12 md-6">
+            <Col className="print-12" n="12 md-6">
               <HighchartsReact
                 highcharts={Highcharts}
                 options={populationDisciplineOptions}
               />
             </Col>
-            <Col n="12 md-6">
+            <Col className="print-12" n="12 md-6">
               <HighchartsReact
                 highcharts={Highcharts}
                 options={populationDiplomaOptions}
               />
             </Col>
-            <Col n="12 md-6">
+            <Col className="print-12" n="12 md-6">
               <HighchartsReact
                 highcharts={Highcharts}
                 options={populationOtherDiplomaOptions}
               />
             </Col>
-            <Col n="12 md-6">
+            <Col className="print-12" n="12 md-6">
               <HighchartsReact
                 highcharts={Highcharts}
                 options={rateMobilityOptions}
               />
             </Col>
-            <Col n="12 md-6">
+            <Col className="print-12" n="12 md-6">
               <HighchartsReact
                 highcharts={Highcharts}
                 options={rateNewBachelorsOptions}
               />
             </Col>
-            <Col n="12 md-6">
+            <Col className="print-12" n="12 md-6">
               <HighchartsReact
                 highcharts={Highcharts}
                 options={ageNewBachelorsOptions}

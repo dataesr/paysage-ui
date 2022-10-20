@@ -61,17 +61,11 @@ export default function StructureExportPage() {
               </BadgeGroup>
             </Title>
             {searchParams.get('oeil') && <StructurePresentationPage />}
-            <div className="pagebreak" />
             {searchParams.get('actualites') && <ActualitesOutlet />}
-            <div className="pagebreak" />
             {searchParams.get('gouvernance') && <StructureGouvernancePage />}
-            <div className="pagebreak" />
             {searchParams.get('event') && <AgendaOutlet />}
-            <div className="pagebreak" />
             {searchParams.get('resources') && <DocumentsOutlet />}
-            <div className="pagebreak" />
             {searchParams.get('categories') && <StructureCategoriesPage />}
-            <div className="pagebreak" />
             {searchParams.get('chiffres') && (
               <>
                 <StructureBudgetPage />
@@ -81,13 +75,9 @@ export default function StructureExportPage() {
                 <StructureInsertionProfessionnellePage />
               </>
             )}
-            <div className="pagebreak" />
             {searchParams.get('textes') && <OfficialTextOutlet />}
-            <div className="pagebreak" />
             {searchParams.get('prix') && <StructurePrixEtRecompensesPage />}
-            <div className="pagebreak" />
             {searchParams.get('projets') && <StructureProjectsPage />}
-            <div className="pagebreak" />
             {searchParams.get('elements') && <StructureElementLiesPage />}
           </Col>
         </Row>

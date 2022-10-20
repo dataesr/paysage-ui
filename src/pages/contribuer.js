@@ -26,7 +26,7 @@ export default function ContributePage() {
 
   useEffect(() => {
     const getAutocompleteResult = async () => {
-      const response = await api.get(`/autocomplete?query=${query}`);
+      const response = await api.get(`/autocomplete?query=${query}&limit=15`);
       setOptions(response.data?.data);
     };
     if (query) { getAutocompleteResult(); } else { setOptions([]); }
@@ -58,7 +58,7 @@ export default function ContributePage() {
             <p className="fr-notice__title">
               Etes-vous sur que l'objet n'existe pas ? Utilisez la recherche pour vous en assurer.
             </p>
-            <Col n="12 md-8 lg-6">
+            <Col n="12">
               <SearchBar
                 value={query}
                 placeholder="Rechercher"

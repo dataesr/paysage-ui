@@ -140,7 +140,7 @@ export default function LocalisationsComponent() {
               {currentLocalisation?.address ? renderAdress(currentLocalisation) : null}
             </Tab>
             {(data.totalCount > 1) ? (
-              <Tab label="Historique des adresses" className="fr-p-2w">
+              <Tab label="Historique des adresses" className="fr-p-2w no-print">
                 <ul>
                   {
                     data.data.map((item) => (
