@@ -21,11 +21,6 @@
     page-break-inside: avoid !important;
   }
   
-  .fr-col-md-6 .print-12{
-    flex: 0 0 100% !important;
-    max-width: 100% !important;
-    width: 100% !important;
-  }
   .fr-col-md-6 {
     flex: 0 0 50% !important;
     max-width: 50% !important;
@@ -35,6 +30,11 @@
     flex: 0 0 33.33333% !important;
     max-width: 33.33333% !important;
     width: 33.33333% !important;
+  }
+  .print-12 {
+    flex: 0 0 100% !important;
+    max-width: 100% !important;
+    width: 100% !important;
   }
   
   .pagebreak {
