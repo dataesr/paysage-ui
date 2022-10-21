@@ -19,42 +19,25 @@ export default function StructureImmobilierPage() {
     // xAxis: { categories },
   };
 
-  const energyClasses = {};
-  data?.data?.forEach((item) => {
-    if (!energyClasses?.[item?.energie_class]) {
-      energyClasses[item?.energie_class] = 0;
-    }
-    energyClasses[item?.energie_class] += 1;
-  });
+  const getOptionsFromFacet = ({ facet, text }) => {
+    const energyClasses = {};
+    data?.data?.forEach((item) => {
+      if (!energyClasses?.[item?.[facet]]) {
+        energyClasses[item?.[facet]] = 0;
+      }
+      energyClasses[item?.[facet]] += 1;
+    });
 
-  // Graph 1: Pie about the energy class
-  const sobrietyData = [{
-    name: 'A',
-    y: energyClasses?.A || 0,
-  }, {
-    name: 'B',
-    y: energyClasses?.B || 0,
-  }, {
-    name: 'C',
-    y: energyClasses?.C || 0,
-  }, {
-    name: 'D',
-    y: energyClasses?.D || 0,
-  }, {
-    name: 'E',
-    y: energyClasses?.E || 0,
-  }, {
-    name: 'F',
-    y: energyClasses?.F || 0,
-  }, {
-    name: 'Non défini',
-    y: energyClasses?.undefined || 0,
-  }];
-  const sobrietyOptions = {
-    ...commonOptions,
-    chart: { type: 'pie' },
-    series: [{ data: sobrietyData }],
-    title: { text: 'Répartition des classes d\'énergie des batiments' },
+    const sobrietyData = [];
+    Object.keys(energyClasses).forEach((item) => sobrietyData.push({ name: `${item}`, y: energyClasses[item] }));
+    // KO
+    sobrietyData.sort((a, b) => (b?.name?.toLowerCase() || '') - (a?.name?.toLowerCase() || ''));
+    return {
+      ...commonOptions,
+      chart: { type: 'pie' },
+      series: [{ data: sobrietyData }],
+      title: { text },
+    };
   };
 
   if (isLoading) return <Spinner size={48} />;
@@ -74,7 +57,13 @@ export default function StructureImmobilierPage() {
             <Col className="print-12" n="12 md-6">
               <HighchartsReact
                 highcharts={Highcharts}
-                options={sobrietyOptions}
+                options={getOptionsFromFacet({ facet: 'energie_class', text: 'Répartition des classes d\'énergie des bâtiments' })}
+              />
+            </Col>
+            <Col className="print-12" n="12 md-6">
+              <HighchartsReact
+                highcharts={Highcharts}
+                options={getOptionsFromFacet({ facet: 'ges', text: 'Répartition des GES des bâtiments' })}
               />
             </Col>
           </Row>
