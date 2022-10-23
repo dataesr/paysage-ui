@@ -1,4 +1,4 @@
-import { Col, Icon, Row, Title } from '@dataesr/react-dsfr';
+import { Col, Icon, Row, Text, Title } from '@dataesr/react-dsfr';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 
@@ -7,19 +7,42 @@ import {
   BlocContent,
   BlocTitle,
 } from '../../../../components/bloc';
+import Card from '../../../../components/card';
+import Map from '../../../../components/map';
 import Spinner from '../../../../components/spinner';
 import useFetch from '../../../../hooks/useFetch';
 import useUrl from '../../../../hooks/useUrl';
 
 export default function StructureImmobilierPage() {
+  const year = new Date().getFullYear();
+  const { url: urlLocalisations } = useUrl('localisations');
+  const { data: dataLocalisations } = useFetch(urlLocalisations);
+  const currentLocalisation = dataLocalisations?.data?.[0];
   const { url } = useUrl('keynumbers');
-  const { data, error, isLoading } = useFetch(`${url}/real-estate?filters[annee]=2022&limit=9999`);
+  const { data, error, isLoading } = useFetch(`${url}/real-estate?filters[annee]=${year}&limit=9999`);
   const commonOptions = {
     credits: { enabled: false },
-    // xAxis: { categories },
   };
 
-  const getOptionsFromFacet = ({ facet, text }) => {
+  const markers = [
+    {
+      address: `${currentLocalisation?.address} ${currentLocalisation?.postalCode} ${currentLocalisation?.locality}`,
+      latLng: [
+        currentLocalisation?.coordinates?.lat,
+        currentLocalisation?.coordinates?.lng,
+      ],
+      color: 'red',
+    },
+  ];
+  data?.data?.filter((item) => item?.latlong)?.forEach((item) => {
+    markers.push({
+      address: `${item?.adresse} ${item?.cp} ${item?.com_nom}`,
+      latLng: item?.latlong,
+      color: 'blue',
+    });
+  });
+
+  const getOptionsFromFacet = ({ facet, name, text }) => {
     const energyClasses = {};
     data?.data?.forEach((item) => {
       if (!energyClasses?.[item?.[facet]]) {
@@ -35,10 +58,46 @@ export default function StructureImmobilierPage() {
     return {
       ...commonOptions,
       chart: { type: 'pie' },
-      series: [{ data: sobrietyData }],
+      series: [{ data: sobrietyData, name: 'Nombre de bâtiments' }],
       title: { text },
     };
   };
+
+  const renderBuildings = () => data?.data.map((item) => (
+    <Bloc isLoading={isLoading} error={error} data={data} noBadge>
+      <BlocTitle as="h4">
+        { item?.libelle_bat_ter || 'Nom non renseigné' }
+      </BlocTitle>
+      <BlocContent>
+        <Row gutters>
+          <Col n="12 md-4">
+            <Card
+              title={item?.access_adap || 'Non renseigné'}
+              descriptionElement={(
+                <Row alignItems="middle">
+                  <Text spacing="mr-1v mb-0">
+                    Accessibilité
+                  </Text>
+                </Row>
+              )}
+            />
+          </Col>
+          <Col n="12 md-4">
+            <Card
+              title={item?.energie_valeur || 'Non renseigné'}
+              descriptionElement={(
+                <Row alignItems="middle">
+                  <Text spacing="mr-1v mb-0">
+                    Sécurité consommations énergétiques
+                  </Text>
+                </Row>
+              )}
+            />
+          </Col>
+        </Row>
+      </BlocContent>
+    </Bloc>
+  ));
 
   if (isLoading) return <Spinner size={48} />;
   if (error) return <>Erreur...</>;
@@ -46,7 +105,7 @@ export default function StructureImmobilierPage() {
     <>
       <Title as="h3">
         <Icon name="ri-community-fill" className="fr-pl-1w" />
-        Immobilier en 2022
+        {`Immobilier en ${year}`}
       </Title>
       <Bloc isLoading={isLoading} error={error} data={data} noBadge>
         <BlocTitle as="h4">
@@ -57,18 +116,40 @@ export default function StructureImmobilierPage() {
             <Col className="print-12" n="12 md-6">
               <HighchartsReact
                 highcharts={Highcharts}
-                options={getOptionsFromFacet({ facet: 'energie_class', text: 'Répartition des classes d\'énergie des bâtiments' })}
+                options={getOptionsFromFacet({
+                  facet: 'energie_class',
+                  text: 'Répartition des classes d\'énergie des bâtiments',
+                })}
               />
             </Col>
             <Col className="print-12" n="12 md-6">
               <HighchartsReact
                 highcharts={Highcharts}
-                options={getOptionsFromFacet({ facet: 'ges', text: 'Répartition des GES des bâtiments' })}
+                options={getOptionsFromFacet({
+                  facet: 'ges',
+                  text: 'Répartition des GES des bâtiments',
+                })}
               />
             </Col>
           </Row>
         </BlocContent>
       </Bloc>
+      {/* catégorie d'ERP */}
+      {/* type d'ERP */}
+      {/* Bilan carbone (O/N et date) */}
+      <Bloc isLoading={isLoading} error={error} data={data} noBadge>
+        <BlocTitle as="h4">
+          Sobriété
+        </BlocTitle>
+        <BlocContent>
+          <Map
+            lat={currentLocalisation?.coordinates?.lat}
+            lng={currentLocalisation?.coordinates?.lng}
+            markers={markers}
+          />
+        </BlocContent>
+      </Bloc>
+      {renderBuildings()}
     </>
   );
 }
