@@ -104,9 +104,6 @@ export default function StructureBudgetPage() {
     info: 'Charges de l\'exercice qui donnent lieu à un décaissement',
     suffix: '€',
     text: 'Charges de fonctionnement décaissables',
-    thresholdGreen: 98,
-    thresholdRed: 100,
-    thresholdSort: 'desc',
   }, {
     field: 'charges_decaissables_produits_encaissables',
     info: 'Part des charges décaissables dans les produits encaissables',
