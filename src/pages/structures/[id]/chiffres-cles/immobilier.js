@@ -72,11 +72,11 @@ export default function StructureImmobilierPage() {
         <Row gutters>
           <Col n="12 md-4">
             <Card
-              title={item?.access_adap || 'Non renseigné'}
+              title="Accessibilité"
               descriptionElement={(
                 <Row alignItems="middle">
                   <Text spacing="mr-1v mb-0">
-                    Accessibilité
+                    {item?.access_adap || 'Non renseigné'}
                   </Text>
                 </Row>
               )}
@@ -84,11 +84,83 @@ export default function StructureImmobilierPage() {
           </Col>
           <Col n="12 md-4">
             <Card
-              title={item?.energie_valeur || 'Non renseigné'}
+              title="Sécurité consommations énergétiques"
               descriptionElement={(
                 <Row alignItems="middle">
                   <Text spacing="mr-1v mb-0">
-                    Sécurité consommations énergétiques
+                    {item?.energie_valeur || 'Non renseigné'}
+                  </Text>
+                </Row>
+              )}
+            />
+          </Col>
+          <Col n="12 md-4">
+            <Card
+              title="Classe d'énergie"
+              descriptionElement={(
+                <Row alignItems="middle">
+                  <Text spacing="mr-1v mb-0">
+                    {item?.energie_class || 'Non renseigné'}
+                  </Text>
+                </Row>
+              )}
+            />
+          </Col>
+          <Col n="12 md-4">
+            <Card
+              title="GES"
+              descriptionElement={(
+                <Row alignItems="middle">
+                  <Text spacing="mr-1v mb-0">
+                    {item?.ges || 'Non renseigné'}
+                  </Text>
+                </Row>
+              )}
+            />
+          </Col>
+          <Col n="12 md-4">
+            <Card
+              title="Catégorie d'ERP"
+              descriptionElement={(
+                <Row alignItems="middle">
+                  <Text spacing="mr-1v mb-0">
+                    {item?.categorie_erp || 'Non renseigné'}
+                  </Text>
+                </Row>
+              )}
+            />
+          </Col>
+          <Col n="12 md-4">
+            <Card
+              title="Type d'ERP"
+              descriptionElement={(
+                <Row alignItems="middle">
+                  <Text spacing="mr-1v mb-0">
+                    {item?.type_erp || 'Non renseigné'}
+                  </Text>
+                </Row>
+              )}
+            />
+          </Col>
+          <Col n="12 md-4">
+            <Card
+              title="Existance d'un bilan carbone"
+              descriptionElement={(
+                <Row alignItems="middle">
+                  <Text spacing="mr-1v mb-0">
+                    {item?.bilan_carbone || 'Non renseigné'}
+                  </Text>
+                </Row>
+              )}
+            />
+          </Col>
+          <Col n="12 md-4">
+            <Card
+              title="Date du bilan carbone"
+              descriptionElement={(
+                <Row alignItems="middle">
+                  <Text spacing="mr-1v mb-0">
+                    {item?.bilan_carbone_date || 'Non renseigné'}
                   </Text>
                 </Row>
               )}
@@ -131,15 +203,39 @@ export default function StructureImmobilierPage() {
                 })}
               />
             </Col>
+            <Col className="print-12" n="12 md-6">
+              <HighchartsReact
+                highcharts={Highcharts}
+                options={getOptionsFromFacet({
+                  facet: 'categorie_erp',
+                  text: 'Répartition des catégories d\'ERP des bâtiments',
+                })}
+              />
+            </Col>
+            <Col className="print-12" n="12 md-6">
+              <HighchartsReact
+                highcharts={Highcharts}
+                options={getOptionsFromFacet({
+                  facet: 'type_erp',
+                  text: 'Répartition des type d\'ERP des bâtiments',
+                })}
+              />
+            </Col>
+            <Col className="print-12" n="12 md-6">
+              <HighchartsReact
+                highcharts={Highcharts}
+                options={getOptionsFromFacet({
+                  facet: 'bilan_carbone',
+                  text: 'Existence d\'un bilan carbone des bâtiments',
+                })}
+              />
+            </Col>
           </Row>
         </BlocContent>
       </Bloc>
-      {/* catégorie d'ERP */}
-      {/* type d'ERP */}
-      {/* Bilan carbone (O/N et date) */}
       <Bloc isLoading={isLoading} error={error} data={data} noBadge>
         <BlocTitle as="h4">
-          Sobriété
+          Géographie
         </BlocTitle>
         <BlocContent>
           <Map
