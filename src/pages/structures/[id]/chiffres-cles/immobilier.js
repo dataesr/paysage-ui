@@ -42,7 +42,7 @@ export default function StructureImmobilierPage() {
     });
   });
 
-  const getOptionsFromFacet = ({ facet, name, text }) => {
+  const getOptionsFromFacet = ({ facet, text }) => {
     const energyClasses = {};
     data?.data?.forEach((item) => {
       if (!energyClasses?.[item?.[facet]]) {
@@ -66,7 +66,7 @@ export default function StructureImmobilierPage() {
   const renderBuildings = () => data?.data.map((item) => (
     <Bloc isLoading={isLoading} error={error} data={data} noBadge>
       <BlocTitle as="h4">
-        { item?.libelle_bat_ter || 'Nom non renseigné' }
+        {item?.libelle_bat_ter || 'Nom non renseigné'}
       </BlocTitle>
       <BlocContent>
         <Row gutters>
