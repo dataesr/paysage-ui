@@ -7,10 +7,10 @@ import Identifiers from '../../../components/blocs/identifiers';
 import Localisations from '../../../components/blocs/localisations';
 import Names from '../../../components/blocs/names';
 import Weblinks from '../../../components/blocs/weblinks';
+import { INTERNAL_PAGES_TYPES, WEBLINKS_TYPES, PALMARES_TYPES } from '../../../components/blocs/weblinks/constants';
 import SocialMedias from '../../../components/blocs/social-medias';
 import Wikipedia from '../../../components/blocs/wikipedia';
 import useHashScroll from '../../../hooks/useHashScroll';
-import { INTERNAL_PAGES_TYPES, WEBLINKS_TYPES, PALMARES_TYPES } from '../../../components/blocs/weblinks/constants';
 
 export default function StructurePresentationPage() {
   useHashScroll();

@@ -16,10 +16,14 @@ import cleanNumber from '../../../../utils/cleanNumbers';
 
 export default function StructureBudgetPage() {
   useHashScroll();
+  const { url: urlStructure } = useUrl();
+  const { data: dataStructure } = useFetch(urlStructure);
   const { id, url } = useUrl('keynumbers');
   const { data, error, isLoading } = useFetch(`${url}/finance?sort=-exercice&limit=2`);
 
-  const lastData = data?.data?.[1] || {};
+  const hasBudget = dataStructure?.structureStatus === 'active';
+
+  const lastData = data?.data?.[hasBudget ? 1 : 0] || {};
   const currentData = data?.data?.[0] || {};
   const year = lastData?.exercice;
 
@@ -232,27 +236,33 @@ export default function StructureBudgetPage() {
     text: 'Autres subventions',
   }];
 
-  const getIconColor = (item) => {
+  const getIconColorAndTooltip = (item) => {
     const difference = currentData?.[item?.field];
+    let color;
+    let tooltip = '';
     if (difference) {
       if (item.thresholdSort === 'asc') {
         if (difference < item.thresholdRed) {
-          return 'pink-tuile';
+          color = 'pink-tuile';
+          tooltip += `Seuil d'alerte : Valeur < ${item.thresholdRed}`;
         }
-        if (difference >= item.thresholdRed && difference <= item.thresholdGreen) {
-          return 'yellow-tournesol';
+        if (item.thresholdRed <= difference && difference <= item.thresholdGreen) {
+          color = 'yellow-tournesol';
+          tooltip += `Seuil de vigilance : ${item.thresholdRed} ≤ Valeur ≤ ${item.thresholdGreen}`;
         }
       }
       if (item.thresholdSort === 'desc') {
         if (difference > item.thresholdRed) {
-          return 'pink-tuile';
+          color = 'pink-tuile';
+          tooltip += `Seuil d'alerte : Valeur > ${item.thresholdRed}`;
         }
-        if (difference <= item.thresholdRed && difference >= item.thresholdGreen) {
-          return 'yellow-tournesol';
+        if (item.thresholdGreen <= difference && difference <= item.thresholdRed) {
+          color = 'yellow-tournesol';
+          tooltip += `Seuil de vigilance : ${item.thresholdGreen} ≤ Valeur ≤ ${item.thresholdRed}`;
         }
       }
     }
-    return null;
+    return { color, tooltip };
   };
 
   const renderCards = (all) => {
@@ -262,20 +272,19 @@ export default function StructureBudgetPage() {
         let difference = currentData?.[item?.field];
         if (difference) {
           difference = cleanNumber(difference);
-          difference = difference[0] === '-' ? difference : `+${difference}`;
           difference = item?.suffix ? `${difference} ${item.suffix}` : difference;
         }
         let value = lastData?.[item?.field];
         value = cleanNumber(value);
         value = item?.suffix ? `${value} ${item.suffix}` : value;
-        const color = getIconColor(item);
+        const { color, tooltip } = getIconColorAndTooltip(item);
         return (
           <Card
-            subtitle={difference && (
+            subtitle={hasBudget && difference && (
               <div title="Budget 2022">
                 (
                 {difference}
-                {color && (<Icon name={`ri-stop-fill fr-badge--${color}`} className="fr-ml-1w fr-mr-0 fr-icon--sm" />)}
+                {color && (<Icon name={`ri-stop-fill fr-badge--${color}`} className="fr-ml-1w fr-mr-0 fr-icon--sm" title={tooltip} />)}
                 )
               </div>
             )}

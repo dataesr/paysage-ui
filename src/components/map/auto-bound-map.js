@@ -33,9 +33,7 @@ export default function Map({ markers, height, width, onMarkerDragEnd }) {
     <MapContainer
       center={[48.866667, 2.333333]}
       zoom={6}
-      // maxZoom={18}
       style={{ width, height }}
-      scrollWheelZoom={false}
       attributionControl
     >
       <TileLayer

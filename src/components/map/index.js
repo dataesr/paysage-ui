@@ -37,7 +37,6 @@ export default function Map({ height, lat, lng, markers, width, zoom }) {
     <MapContainer
       attributionControl
       center={defaultCenter}
-      scrollWheelZoom={false}
       style={{ height, width }}
       zoom={zoom}
     >
@@ -47,7 +46,7 @@ export default function Map({ height, lat, lng, markers, width, zoom }) {
         url="https://tile.jawg.io/jawg-sunny/{z}/{x}/{y}.png?access-token=5V4ER9yrsLxoHQrAGQuYNu4yWqXNqKAM6iaX5D1LGpRNTBxvQL3enWXpxMQqTrY8"
       />
       {markers.map((marker) => (
-        <Marker position={marker.latLng} key={marker.latLng} icon={getIcon(marker?.color)}>
+        <Marker position={marker.latLng} key={marker.latLng} icon={getIcon(marker?.color)} zIndexOffset={marker?.zIndexOffset || 0}>
           <Popup>
             {marker.address}
           </Popup>
@@ -61,7 +60,7 @@ Map.defaultProps = {
   height: '300px',
   lat: 0,
   lng: 0,
-  markers: [{ address: 'Paris centre', color: 'blue', latLng: [48.866667, 2.333333] }],
+  markers: [{ address: 'Paris centre', color: 'blue', latLng: [48.866667, 2.333333], zIndexOffset: 0 }],
   width: '100%',
   zoom: 12,
 };

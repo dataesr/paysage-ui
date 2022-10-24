@@ -10,6 +10,7 @@ import {
 import Card from '../../../../components/card';
 import Map from '../../../../components/map';
 import Spinner from '../../../../components/spinner';
+import getOptionsFromFacet from '../../../../hooks/useChart';
 import useFetch from '../../../../hooks/useFetch';
 import useUrl from '../../../../hooks/useUrl';
 
@@ -20,20 +21,16 @@ export default function StructureImmobilierPage() {
   const currentLocalisation = dataLocalisations?.data?.[0];
   const { url } = useUrl('keynumbers');
   const { data, error, isLoading } = useFetch(`${url}/real-estate?filters[annee]=${year}&limit=9999`);
-  const commonOptions = {
-    credits: { enabled: false },
-  };
 
-  const markers = [
-    {
-      address: `${currentLocalisation?.address} ${currentLocalisation?.postalCode} ${currentLocalisation?.locality}`,
-      latLng: [
-        currentLocalisation?.coordinates?.lat,
-        currentLocalisation?.coordinates?.lng,
-      ],
-      color: 'red',
-    },
-  ];
+  const markers = [{
+    address: `${currentLocalisation?.address} ${currentLocalisation?.postalCode} ${currentLocalisation?.locality}`,
+    latLng: [
+      currentLocalisation?.coordinates?.lat,
+      currentLocalisation?.coordinates?.lng,
+    ],
+    color: 'red',
+    zIndexOffset: 99,
+  }];
   data?.data?.filter((item) => item?.latlong)?.forEach((item) => {
     markers.push({
       address: `${item?.adresse} ${item?.cp} ${item?.com_nom}`,
@@ -42,25 +39,14 @@ export default function StructureImmobilierPage() {
     });
   });
 
-  const getOptionsFromFacet = ({ facet, text }) => {
-    const energyClasses = {};
-    data?.data?.forEach((item) => {
-      if (!energyClasses?.[item?.[facet]]) {
-        energyClasses[item?.[facet]] = 0;
-      }
-      energyClasses[item?.[facet]] += 1;
-    });
-
-    const sobrietyData = [];
-    Object.keys(energyClasses).forEach((item) => sobrietyData.push({ name: `${item}`, y: energyClasses[item] }));
-    // KO
-    sobrietyData.sort((a, b) => (b?.name?.toLowerCase() || '') - (a?.name?.toLowerCase() || ''));
-    return {
-      ...commonOptions,
-      chart: { type: 'pie' },
-      series: [{ data: sobrietyData, name: 'Nombre de bâtiments' }],
-      title: { text },
-    };
+  const energyColors = {
+    A: '#34B659',
+    B: '#51BF4C',
+    C: '#A7D934',
+    D: '#EDEE25',
+    E: '#F9AE1D',
+    F: '#F36326',
+    G: '#EE2332',
   };
 
   const renderBuildings = () => data?.data.map((item) => (
@@ -217,8 +203,11 @@ export default function StructureImmobilierPage() {
               <HighchartsReact
                 highcharts={Highcharts}
                 options={getOptionsFromFacet({
+                  colors: energyColors,
+                  data: data?.data || [],
                   facet: 'energie_class',
-                  text: 'Répartition des classes d\'énergie des bâtiments',
+                  serieName: 'Nombre de bâtiments',
+                  title: 'Répartition des classes d\'énergie des bâtiments',
                 })}
               />
             </Col>
@@ -226,8 +215,11 @@ export default function StructureImmobilierPage() {
               <HighchartsReact
                 highcharts={Highcharts}
                 options={getOptionsFromFacet({
+                  colors: energyColors,
+                  data: data?.data || [],
                   facet: 'ges',
-                  text: 'Répartition des GES des bâtiments',
+                  serieName: 'Nombre de bâtiments',
+                  title: 'Répartition des gaz à effet de serre des bâtiments',
                 })}
               />
             </Col>
@@ -235,8 +227,10 @@ export default function StructureImmobilierPage() {
               <HighchartsReact
                 highcharts={Highcharts}
                 options={getOptionsFromFacet({
+                  data: data?.data || [],
                   facet: 'categorie_erp',
-                  text: 'Répartition des catégories d\'ERP des bâtiments',
+                  serieName: 'Nombre de bâtiments',
+                  title: 'Répartition des catégories d\'établissement recevant du public',
                 })}
               />
             </Col>
@@ -244,8 +238,10 @@ export default function StructureImmobilierPage() {
               <HighchartsReact
                 highcharts={Highcharts}
                 options={getOptionsFromFacet({
+                  data: data?.data || [],
                   facet: 'type_erp',
-                  text: 'Répartition des type d\'ERP des bâtiments',
+                  serieName: 'Nombre de bâtiments',
+                  title: 'Répartition des types d\'établissement recevant du public',
                 })}
               />
             </Col>
@@ -253,8 +249,10 @@ export default function StructureImmobilierPage() {
               <HighchartsReact
                 highcharts={Highcharts}
                 options={getOptionsFromFacet({
+                  data: data?.data || [],
                   facet: 'bilan_carbone',
-                  text: 'Existence d\'un bilan carbone des bâtiments',
+                  serieName: 'Nombre de bâtiments',
+                  title: 'Existence d\'un bilan carbone des bâtiments',
                 })}
               />
             </Col>
