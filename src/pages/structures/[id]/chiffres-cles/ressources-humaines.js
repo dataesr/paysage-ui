@@ -21,23 +21,23 @@ export default function StructureRHPage() {
     credits: { enabled: false },
   };
 
-  const getOptionsFromFacet = ({ facet, text }) => {
-    const energyClasses = {};
+  const getOptionsFromFacet = ({ facet, text, label = false }) => {
+    const dataObject = {};
     data?.data?.forEach((item) => {
-      if (!energyClasses?.[item?.[facet]]) {
-        energyClasses[item?.[facet]] = 0;
+      if (!dataObject?.[item?.[facet]]) {
+        dataObject[item?.[facet]] = { count: 0, label: label ? item?.[label] : item?.[facet] };
       }
-      energyClasses[item?.[facet]] += 1;
+      dataObject[item?.[facet]].count += 1;
     });
 
-    const sobrietyData = [];
-    Object.keys(energyClasses).forEach((item) => sobrietyData.push({ name: `${item}`, y: energyClasses[item] }));
+    const dataArray = [];
+    Object.keys(dataObject).forEach((item) => dataArray.push({ name: dataObject[item].label, y: dataObject[item].count }));
     // KO
-    sobrietyData.sort((a, b) => (b?.name?.toLowerCase() || '') - (a?.name?.toLowerCase() || ''));
+    // dataArray.sort((a, b) => (b?.name?.toLowerCase() || '') - (a?.name?.toLowerCase() || ''));
     return {
       ...commonOptions,
       chart: { type: 'pie' },
-      series: [{ data: sobrietyData, name: 'Nombre de bâtiments' }],
+      series: [{ data: dataArray, name: 'Effectif' }],
       title: { text },
     };
   };
@@ -68,6 +68,7 @@ export default function StructureRHPage() {
                 <Row alignItems="middle">
                   <Text spacing="mr-1v mb-0">
                     {item?.corps_lib || 'Non renseigné'}
+                    {item?.code_corps ? ` (${item.code_corps})` : ''}
                   </Text>
                 </Row>
               )}
@@ -115,7 +116,8 @@ export default function StructureRHPage() {
               descriptionElement={(
                 <Row alignItems="middle">
                   <Text spacing="mr-1v mb-0">
-                    {item?.code_filiere || 'Non renseigné'}
+                    {item?.filiere_lib || 'Non renseigné'}
+                    {item?.code_filiere ? ` (${item.code_filiere})` : ''}
                   </Text>
                 </Row>
               )}
@@ -140,7 +142,7 @@ export default function StructureRHPage() {
         </BlocTitle>
         <BlocContent>
           <Row gutters>
-            <Col n="12 md-4">
+            <Col className="print-12" n="12 md-4">
               <Card
                 title="Effectif"
                 descriptionElement={(
@@ -152,12 +154,13 @@ export default function StructureRHPage() {
                 )}
               />
             </Col>
-            <Col className="print-12" n="12 md-6">
+            <Col className="print-12" n="12 md-8">
               <HighchartsReact
                 highcharts={Highcharts}
                 options={getOptionsFromFacet({
                   facet: 'code_corps',
                   text: 'Corps',
+                  label: 'corps_lib',
                 })}
               />
             </Col>
