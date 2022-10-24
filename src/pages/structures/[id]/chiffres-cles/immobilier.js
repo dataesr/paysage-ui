@@ -72,6 +72,22 @@ export default function StructureImmobilierPage() {
         <Row gutters>
           <Col n="12 md-4">
             <Card
+              title="Adresse"
+              descriptionElement={(
+                <Row alignItems="middle">
+                  <Text spacing="mr-1v mb-0">
+                    {item?.adresse}
+                    {' '}
+                    {item?.cp}
+                    {' '}
+                    {item?.com_nom}
+                  </Text>
+                </Row>
+              )}
+            />
+          </Col>
+          <Col n="12 md-4">
+            <Card
               title="Accessibilité"
               descriptionElement={(
                 <Row alignItems="middle">
@@ -84,7 +100,7 @@ export default function StructureImmobilierPage() {
           </Col>
           <Col n="12 md-4">
             <Card
-              title="Sécurité consommations énergétiques"
+              title="Consommation d'énergie"
               descriptionElement={(
                 <Row alignItems="middle">
                   <Text spacing="mr-1v mb-0">
@@ -161,6 +177,18 @@ export default function StructureImmobilierPage() {
                 <Row alignItems="middle">
                   <Text spacing="mr-1v mb-0">
                     {item?.bilan_carbone_date || 'Non renseigné'}
+                  </Text>
+                </Row>
+              )}
+            />
+          </Col>
+          <Col n="12 md-4">
+            <Card
+              title="Etat santé"
+              descriptionElement={(
+                <Row alignItems="middle">
+                  <Text spacing="mr-1v mb-0">
+                    {item?.etat_sante || 'Non renseigné'}
                   </Text>
                 </Row>
               )}
