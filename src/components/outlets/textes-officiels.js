@@ -66,7 +66,7 @@ export default function OfficialTextOutlet() {
           <TimelineItem date={event.publicationDate} key={event.id}>
             {editMode && <Button onClick={() => onOpenModalHandler(event)} icon="ri-edit-line" title="Editer l'évènement" tertiary borderless rounded className="edit-button" />}
             <Row className="flex--last-baseline">
-              <BadgeGroup isInline size="sm">
+              <BadgeGroup isInlineFrom="xs" size="sm">
                 <Badge text={event.nature} colorFamily="purple-glycine" />
                 <Badge text={event.type} />
               </BadgeGroup>
@@ -74,7 +74,8 @@ export default function OfficialTextOutlet() {
             <Text spacing="mb-1w">
               <Text as="span" spacing="mr-1w" size="lead" bold>
                 {event.title}
-                <Button className="fr-ml-1v" onClick={() => { window.open(event.pageUrl, '_blank'); }} rounded borderless icon="ri-external-link-line" />
+                <Button title="Voir la page Paysage du texte officiel" onClick={() => navigate(`/textes-officiels/${event.id}`)} rounded borderless icon="ri-arrow-right-line" />
+                <Button title="Accéder à la page du texte officiel" onClick={() => { window.open(event.pageUrl, '_blank'); }} rounded borderless icon="ri-external-link-line" />
               </Text>
             </Text>
             {event.description && <Text spacing="mb-1w">{event.description}</Text>}
