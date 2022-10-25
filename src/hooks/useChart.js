@@ -1,8 +1,3 @@
-const commonOptions = {
-  credits: { enabled: false },
-  legend: { enabled: false },
-};
-
 export default function getOptionsFromFacet({ colors, data, facet, serieName, title, label = false }) {
   const dataObject = {};
   data?.forEach((item) => {
@@ -23,14 +18,16 @@ export default function getOptionsFromFacet({ colors, data, facet, serieName, ti
   const categories = dataArray.map((item) => item?.label || undefined);
 
   const options = {
-    ...commonOptions,
     chart: { type: 'column' },
+    credits: { enabled: false },
+    legend: { enabled: false },
     series: [{
       name: serieName,
       data: dataArray,
     }],
     title: { text: title },
     xAxis: { categories },
+    yAxis: { title: { text: serieName } },
   };
 
   if (colors) {
