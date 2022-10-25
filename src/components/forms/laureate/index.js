@@ -59,7 +59,7 @@ export default function LaureateForm({ id, resourceType, relatedObjectTypes, dat
   // const [startDateOfficialTextOptions, setStartDateOfficialTextOptions] = useState([]);
   // const [endDateOfficialTextOptions, setEndDateOfficialTextOptions] = useState([]);
 
-  const { form, updateForm, errors } = useForm(parseRelatedElement(data), validator);
+  const { form, updateForm } = useForm(parseRelatedElement(data), validator);
 
   useEffect(() => {
     const getAutocompleteResult = async () => {

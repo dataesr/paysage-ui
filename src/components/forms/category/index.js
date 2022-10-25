@@ -45,6 +45,7 @@ export default function CategoryAddForm() {
     const { ok, returnedErrors } = validator(body);
     if (ok) {
       const response = await api.post('/categories', body).catch((e) => {
+        // eslint-disable-next-line no-console
         console.log(e);
       });
       if (response.status === 201) {

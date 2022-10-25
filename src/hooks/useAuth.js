@@ -10,6 +10,7 @@ import PropTypes from 'prop-types';
 import api from '../utils/api';
 
 const AuthContext = createContext();
+const unexpectedError = 'Erreur inattendue';
 
 async function refreshToken() {
   const refresh = localStorage.getItem('__paysage_refresh__');
@@ -54,7 +55,7 @@ export function AuthContextProvider({ children }) {
     return fetch(url, { method: 'POST', body, headers })
       .then((response) => response.json())
       .then((data) => data)
-      .catch(() => ({ error: 'Erreur innatendue' }));
+      .catch(() => ({ error: unexpectedError }));
   }, []);
 
   const requestPasswordChangeEmail = useCallback(async ({ email }) => {
@@ -64,7 +65,7 @@ export function AuthContextProvider({ children }) {
     return fetch(url, { method: 'POST', body, headers })
       .then((response) => response.json())
       .then((data) => data)
-      .catch(() => ({ error: 'Erreur innatendue' }));
+      .catch(() => ({ error: unexpectedError }));
   }, []);
 
   const changePassword = useCallback(async ({ email, password, otp }) => {
@@ -74,7 +75,7 @@ export function AuthContextProvider({ children }) {
     return fetch(url, { method: 'POST', body, headers })
       .then((response) => response.json())
       .then((data) => data)
-      .catch(() => ({ error: 'Erreur innatendue' }));
+      .catch(() => ({ error: unexpectedError }));
   }, []);
 
   const signin = useCallback(async ({ email, password, otp }) => {
@@ -82,10 +83,10 @@ export function AuthContextProvider({ children }) {
     const body = JSON.stringify({ email, password });
     const headers = { 'X-Paysage-OTP': otp, 'Content-Type': 'application/json' };
     const response = await fetch(url, { method: 'POST', body, headers })
-      .catch(() => { console.log('Erreur inattendue'); });
+      .catch(() => ({ error: unexpectedError }));
     if (response.ok) {
       const data = await response.json()
-        .catch(() => { console.log('Erreur inattendue'); });
+        .catch(() => ({ error: unexpectedError }));
       localStorage.setItem('__paysage_access__', data.accessToken);
       localStorage.setItem('__paysage_refresh__', data.refreshToken);
       const { data: user } = await api.get('/me');
@@ -102,8 +103,8 @@ export function AuthContextProvider({ children }) {
       email, password, firstName, lastName,
     });
     const response = await fetch(url, { method: 'POST', body, headers: { 'Content-Type': 'application/json' } })
-      .catch(() => { console.log('Erreur inattendue'); });
-    const data = await response.json().catch(() => { console.log('Erreur inattendue'); });
+      .catch(() => ({ error: unexpectedError }));
+    const data = await response.json().catch(() => ({ error: unexpectedError }));
     response.data = data;
     return response;
   }, []);

@@ -45,6 +45,7 @@ export default function TermAddForm() {
     const { ok, returnedErrors } = validator(body);
     if (ok) {
       const response = await api.post('/terms', body).catch((e) => {
+        // eslint-disable-next-line no-console
         console.log(e);
       });
       if (response.status === 201) {

@@ -1,4 +1,4 @@
-export default function validation(body) {
+export default function validation() {
   const ret = {};
   // if (!body?.type) {
   //   ret.type = 'Le type est obligatoire';

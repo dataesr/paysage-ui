@@ -31,6 +31,7 @@ export default function useSearch(scopes, query = '', limit = 10, start = 0) {
     fetchData().catch((e) => {
       setIsLoading(false);
       setError(true);
+      // eslint-disable-next-line no-console
       console.log(e);
     });
   }, [limit, query, scopes, start]);
