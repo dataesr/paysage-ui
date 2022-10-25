@@ -15,6 +15,7 @@ import useFetch from '../../../hooks/useFetch';
 import useForm from '../../../hooks/useForm';
 import useShortcuts from '../../../hooks/useShortcuts';
 import useToast from '../../../hooks/useToast';
+import useUrl from '../../../hooks/useUrl';
 import StructureCategoriesPage from './categories';
 import StructureBudgetPage from './chiffres-cles/budget';
 import StructureEtudiantsPage from './chiffres-cles/etudiants';
@@ -33,24 +34,24 @@ import api from '../../../utils/api';
 function StructureByIdPage() {
   const { toast } = useToast();
   const { id } = useParams();
-  const url = `/structures/${id}`;
+  const { url } = useUrl();
   const { data, isLoading, error, reload } = useFetch(url);
   const navigate = useNavigate();
   const { editMode, reset, toggle } = useEditMode();
   const [isExportOpen, setIsExportOpen] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
   const { form, updateForm } = useForm({
-    oeil: true,
     actualites: true,
-    gouvernance: true,
-    evenements: true,
-    resources: true,
     categories: true,
     chiffres: true,
-    textes: true,
+    elements: true,
+    evenements: true,
+    gouvernance: true,
+    oeil: true,
     prix: true,
     projets: true,
-    elements: true,
+    resources: true,
+    textes: true,
   });
 
   const [isStatusModalOpen, setIsStatusModalOpen] = useState(false);

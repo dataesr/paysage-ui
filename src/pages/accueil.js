@@ -144,7 +144,7 @@ export default function HomePage() {
           >
             Toast
           </Button>
-          <Button onClick={() => toast({ toastType: 'error', title: 'test', description: 'test un peu plus long eventuellement sur deux lignes' })}>Toast</Button>
+          <Button onClick={() => toast({ toastType: 'error', title: 'test', description: 'test un peu plus long éventuellement sur deux lignes' })}>Toast</Button>
           <Button onClick={() => toast({ toastType: 'warning', description: 'Impossible' })}>Toast</Button>
         </ButtonGroup>
       </Row>

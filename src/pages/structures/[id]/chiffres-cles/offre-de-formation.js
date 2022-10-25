@@ -18,7 +18,6 @@ export default function StructureOffreDeFormationPage() {
         <Icon name="ri-file-list-fill" className="fr-pl-1w" />
         Offre de formation
       </Title>
-      {/* <Bloc isLoading={isLoading} error={error} data={data} noBadge> */}
       <Bloc data={{ totalCount: 42 }} noBadge>
         <BlocContent>
           <Row gutters>
