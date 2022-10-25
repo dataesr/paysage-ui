@@ -22,17 +22,21 @@ function SearchResults({ data }) {
   if (data && data.length) {
     return (
       <Row as="ul" gutters>
-        {data.map((element) => (
-          <Col n="12 lg-6" as="li" key={element.id}>
-            <Tile horizontal color={`var(--${element.type}-color)`}>
+        {data.map((item) => (
+          <Col n="12 lg-6" as="li" key={item.id}>
+            <Tile horizontal color={`var(--${item.type}-color)`}>
               <div className="fr-tile__body">
                 <p className="fr-tile__title">
-                  <RouterLink className="fr-tile__link fr-link--md" to={`/${getUrlFromType(element.type)}/${element.id}`}>
-                    <Icon name={icons[element.type]} size="1x" color={`var(--${element.type}-color)`} />
-                    {element.name}
+                  <RouterLink className="fr-tile__link fr-link--md" to={`/${getUrlFromType(item.type)}/${item.id}`}>
+                    <Icon name={icons[item.type]} size="1x" color={`var(--${item.type}-color)`} />
+                    {item.name}
                   </RouterLink>
                 </p>
-                <p className="fr-tile__desc">Un attribut éventuel de l'objet paysage qui sera remonté par l'api</p>
+                {item?.description && (
+                  <p className="fr-tile__desc">
+                    {item?.description}
+                  </p>
+                )}
               </div>
             </Tile>
           </Col>
