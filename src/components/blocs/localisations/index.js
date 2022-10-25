@@ -5,7 +5,7 @@ import useFetch from '../../../hooks/useFetch';
 import useUrl from '../../../hooks/useUrl';
 import api from '../../../utils/api';
 import { formatDescriptionDates } from '../../../utils/dates';
-import Map from '../../map';
+import Map from '../../map/auto-bound-map';
 import LocalisationForm from '../../forms/localisation';
 import Button from '../../button';
 import { Bloc, BlocActionButton, BlocContent, BlocModal, BlocTitle } from '../../bloc';
