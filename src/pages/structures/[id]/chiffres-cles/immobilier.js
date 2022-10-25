@@ -24,6 +24,7 @@ export default function StructureImmobilierPage() {
 
   const markers = [{
     address: `${currentLocalisation?.address} ${currentLocalisation?.postalCode} ${currentLocalisation?.locality}`,
+    label: data?.data?.[0]?.etablissement,
     latLng: [
       currentLocalisation?.coordinates?.lat,
       currentLocalisation?.coordinates?.lng,
@@ -34,6 +35,7 @@ export default function StructureImmobilierPage() {
   data?.data?.filter((item) => item?.latlong)?.forEach((item) => {
     markers.push({
       address: `${item?.adresse} ${item?.cp} ${item?.com_nom}`,
+      label: item?.libelle_bat_ter,
       latLng: item?.latlong,
       color: 'blue',
     });

@@ -1,7 +1,7 @@
 import { Icon, latLngBounds } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import PropTypes from 'prop-types';
-import { MapContainer, Marker, Popup, TileLayer, useMap } from 'react-leaflet';
+import { MapContainer, Marker, TileLayer, Tooltip, useMap } from 'react-leaflet';
 
 export default function Map({ height, lat, lng, markers, width, zoom }) {
   const defaultCenter = [lat, lng];
@@ -46,10 +46,16 @@ export default function Map({ height, lat, lng, markers, width, zoom }) {
         url="https://tile.jawg.io/jawg-sunny/{z}/{x}/{y}.png?access-token=5V4ER9yrsLxoHQrAGQuYNu4yWqXNqKAM6iaX5D1LGpRNTBxvQL3enWXpxMQqTrY8"
       />
       {markers.map((marker) => (
-        <Marker position={marker.latLng} key={marker.latLng} icon={getIcon(marker?.color)} zIndexOffset={marker?.zIndexOffset || 0}>
-          <Popup>
+        <Marker icon={getIcon(marker?.color)} key={marker.latLng} position={marker.latLng} zIndexOffset={marker?.zIndexOffset || 0}>
+          <Tooltip>
+            {marker?.label && (
+              <>
+                {marker.label}
+                <br />
+              </>
+            )}
             {marker.address}
-          </Popup>
+          </Tooltip>
         </Marker>
       ))}
     </MapContainer>
