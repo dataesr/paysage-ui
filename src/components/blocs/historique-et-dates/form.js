@@ -7,6 +7,7 @@ import {
   Title,
 } from '@dataesr/react-dsfr';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 import api from '../../../utils/api';
 import validator from './validator';
 import FormFooter from '../../forms/form-footer';
@@ -80,6 +81,17 @@ export default function WeblinkForm({ data, onDeleteHandler, onSaveHandler }) {
   return (
     <form>
       <Container>
+        <div className="fr-notice fr-notice--info fr-mb-2w">
+          <div className="fr-container">
+            <div className="fr-notice__body">
+              <p className="fr-notice__title">
+                Pour mettre à jour les prédécesseurs et successeurs, rendez-vous dans la section
+                {' '}
+                <Link to="#">élément liés</Link>
+              </p>
+            </div>
+          </div>
+        </div>
         <Row>
           <Col>
             <Title as="h3" look="h6">

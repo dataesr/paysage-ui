@@ -1,4 +1,4 @@
-import { Row, Title, Icon } from '@dataesr/react-dsfr';
+import { Row, Title, Col } from '@dataesr/react-dsfr';
 
 import ChiffresCles from '../../../components/blocs/chiffres-cles';
 import Emails from '../../../components/blocs/emails';
@@ -11,29 +11,41 @@ import SocialMedias from '../../../components/blocs/social-medias';
 import Wikipedia from '../../../components/blocs/wikipedia';
 import useHashScroll from '../../../hooks/useHashScroll';
 import { INTERNAL_PAGES_TYPES, WEBLINKS_TYPES, PALMARES_TYPES } from '../../../components/blocs/weblinks/constants';
+import useEditMode from '../../../hooks/useEditMode';
 
 export default function StructurePresentationPage() {
+  const { editMode } = useEditMode();
   useHashScroll();
   return (
     <>
-      <Row>
-        <Title as="h2" look="h3">
-          En un coup d’œil
-          <Icon className="ri-eye-2-line fr-ml-1w" />
-        </Title>
+      <Row gutters className="flex--wrap-reverse">
+        <Col n="12 xl-6">
+          <HistoriqueEtDates />
+        </Col>
+        <Col n="12 xl-6">
+          <Localisations />
+        </Col>
       </Row>
-      <Localisations />
-      <HistoriqueEtDates />
-      <Names />
-      <ChiffresCles />
+      {!editMode && <ChiffresCles />}
+      {editMode && <Names />}
       <Title as="h3" look="h4">Présence sur le web</Title>
-      <Weblinks types={WEBLINKS_TYPES} />
-      <Weblinks types={INTERNAL_PAGES_TYPES} title="Pages internes" />
-      <SocialMedias />
-      <Weblinks types={PALMARES_TYPES} title="Palmarès et classements" />
-      <Wikipedia />
-      <Identifiers />
+      <Row gutters>
+        <Col n="12 md-6">
+          <Weblinks types={INTERNAL_PAGES_TYPES} title="Site internet" />
+        </Col>
+        <Col n="12 md-6">
+          <SocialMedias />
+        </Col>
+        <Col n="12 md-6">
+          <Weblinks types={WEBLINKS_TYPES} title="Ailleurs sur le web" />
+        </Col>
+        <Col n="12 md-6">
+          <Weblinks types={PALMARES_TYPES} title="Palmarès et classements" />
+        </Col>
+        {!editMode && <Col n="12 md-6"><Wikipedia /></Col>}
+      </Row>
       <Emails />
+      <Identifiers />
     </>
   );
 }

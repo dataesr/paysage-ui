@@ -54,6 +54,19 @@ export default function StructureElementLiesPage() {
         relatedObjectTypes={['structures']}
         inverse
       />
+      <RelationsByTag
+        tag="predecesseurs"
+        blocName="Prédécesseurs"
+        resourceType="structures"
+        relatedObjectTypes={['structures']}
+      />
+      <RelationsByTag
+        tag="predecesseurs"
+        blocName="Successeurs"
+        resourceType="structures"
+        relatedObjectTypes={['structures']}
+        inverse
+      />
       <hr />
       <Bloc isLoading={isLoading} error={error} data={data}>
         <BlocTitle as="h2" look="h4">Autres listes</BlocTitle>

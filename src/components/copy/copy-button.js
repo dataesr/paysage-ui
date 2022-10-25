@@ -1,27 +1,31 @@
 import PropTypes from 'prop-types';
-import { Badge, Icon } from '@dataesr/react-dsfr';
 import useCopyToClipboard from '../../hooks/useCopyToClipboard';
-import styles from './styles.module.scss';
+import Button from '../button';
 
-export default function CopyButton({ colorFamily, copyText, title }) {
+export default function CopyButton({ copyText, title, size }) {
   const [copyStatus, copy] = useCopyToClipboard();
-  if (!copyStatus) {
-    return (
-      <button className={`${styles['copy-button']} no-print`} title={title} onClick={() => copy(copyText)} type="button">
-        <Icon className="ri-file-copy-line fr-m-0" size="sm" />
-      </button>
-    );
-  }
-  return <Badge colorFamily={colorFamily} text={copyStatus} />;
+  return (
+    <Button
+      tertiary
+      borderless
+      icon={copyStatus ? 'ri-check-double-line' : 'ri-file-copy-line'}
+      rounded
+      color="text"
+      title={title}
+      onClick={() => copy(copyText)}
+      size={size}
+      className="no-print"
+    />
+  );
 }
 
 CopyButton.propTypes = {
   title: PropTypes.string,
-  colorFamily: PropTypes.string,
   copyText: PropTypes.string.isRequired,
+  size: PropTypes.oneOf(['sm', 'md', 'lg']),
 };
 
 CopyButton.defaultProps = {
   title: 'Copier',
-  colorFamily: 'green-menthe',
+  size: 'sm',
 };

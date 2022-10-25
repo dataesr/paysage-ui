@@ -168,3 +168,29 @@ HR {
   background-color: rgba(#161616, 0.85);
   color: var(--text-inverted-grey);
 }
+
+.edit-button {
+  position: absolute;
+  top: .25rem;
+  right: .25rem;
+}
+
+.card-structures {
+  border-left: .25rem solid var(--structures-color) !important;
+  &:hover {
+    background-color: var(--yellow-tournesol-975);
+  }
+  .fr-card__start {
+    .fr-card__detail {
+      color: var(--structures-color) !important;
+    }
+  }
+}
+.card-persons {
+  border-left: .25rem solid var(--persons-color) !important;
+  .fr-card__start {
+    .fr-card__detail {
+      color: var(--persons-color) !important;
+    }
+  }
+}

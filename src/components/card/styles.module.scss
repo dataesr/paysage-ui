@@ -74,3 +74,11 @@
   top: .25rem;
   right: .25rem;
 }
+
+.blue-border {
+  box-shadow: 0 0 0 1px var(--text-action-high-blue-france) !important;
+}
+.button-full {
+  width: 100% !important;
+  height: 100% !important;
+}

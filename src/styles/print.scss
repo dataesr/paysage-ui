@@ -10,6 +10,12 @@
     display: none;
   }
 }
+.only-print {
+  display: none;
+  @media print {
+    display: block;
+  }
+}
 
 @media print {
   HTML {
@@ -38,6 +44,15 @@
   
   .pagebreak {
     page-break-before: always;
+  }
+  .fr-card--shadow {
+    --idle: #0000;
+    --hover: inherit;
+    --active: inherit;
+    background-color: inherit;
+    filter: none;
+    box-shadow: 0 0 0 1px var(--border-default-grey);
+    z-index: calc(var(--ground) - 500);
   }
 }
 

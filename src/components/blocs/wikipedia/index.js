@@ -57,7 +57,7 @@ export default function Wikipedia() {
   };
 
   return (
-    <Bloc isLoading={isLoading} error={error} data={data} noBadge hideOnEmptyView>
+    <Bloc isLoading={isLoading} error={error} data={data} noBadge>
       <BlocTitle as="h4" look="h6">Wikipédia</BlocTitle>
       <BlocContent>{renderCards()}</BlocContent>
     </Bloc>

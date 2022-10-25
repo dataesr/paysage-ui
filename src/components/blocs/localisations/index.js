@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Col, Container, Icon, ModalContent, ModalTitle, Row, Tab, Tabs, Tile } from '@dataesr/react-dsfr';
+import { Col, Icon, ModalContent, ModalTitle, Row, Tab, Tabs } from '@dataesr/react-dsfr';
 import Modal from '../../modal';
 import useFetch from '../../../hooks/useFetch';
 import useUrl from '../../../hooks/useUrl';
@@ -10,12 +10,14 @@ import LocalisationForm from '../../forms/localisation';
 import Button from '../../button';
 import { Bloc, BlocActionButton, BlocContent, BlocModal, BlocTitle } from '../../bloc';
 import { deleteError, saveError, saveSuccess, deleteSuccess } from '../../../utils/notice-contents';
-import styles from './styles.module.scss';
 import useNotice from '../../../hooks/useNotice';
+import CopyButton from '../../copy/copy-button';
+import useEditMode from '../../../hooks/useEditMode';
 
 export default function LocalisationsComponent() {
+  const { editMode } = useEditMode();
   const { notice } = useNotice();
-  const { url } = useUrl('localisations');
+  const { url, apiObject } = useUrl('localisations');
   const { data, isLoading, error, reload } = useFetch(url);
   const [showModal, setShowModal] = useState(false);
   const [modalTitle, setModalTitle] = useState('');
@@ -52,34 +54,35 @@ export default function LocalisationsComponent() {
   };
 
   const renderAdress = (localisation) => (
-    <Tile className={`${styles.Tile} show-bt-on-over`}>
-      <Container fluid>
-        <Row>
-          <Col className="fr-p-2w">
-            <p>
-              <b><i>{formatDescriptionDates(localisation.startDate || null, localisation.endDate || null)}</i></b>
-              <div>
-                <Icon className="ri-map-pin-fill fr-pr-1w" />
-                {`${localisation.address || ''}  ${localisation.locality || ''}  ${localisation.postalCode || ''}  ${localisation.country}`}
-              </div>
-            </p>
-          </Col>
-          <Col className="text-right fr-pt-2w fr-pr-2w">
-            <Button
-              className="bt-visible-on-over"
+    <div className={`fr-card fr-card--xs fr-card--horizontal fr-card--grey fr-card--no-border card-${apiObject}`}>
+      <div className="fr-card__body">
+        <div className="fr-card__content">
+          <p className="fr-card__title">
+            <span className="fr-pr-1w">
+              {`${localisation.address || ''}  ${localisation.locality || ''},  ${localisation.postalCode || ''},  ${localisation.country}`}
+            </span>
+            <CopyButton
+              copyText={`${localisation.address || ''}  ${localisation.locality || ''}  ${localisation.postalCode || ''}  ${localisation.country}`}
               size="sm"
-              onClick={() => handleModalToggle(localisation)}
-              color="text"
-              tertiary
-              borderless
-              rounded
-              icon="ri-edit-line"
             />
-          </Col>
-        </Row>
-      </Container>
-    </Tile>
-
+          </p>
+          <div className="fr-card__start">
+            <p className="fr-card__detail fr-text--sm fr-mb-0">
+              <Icon name="ri-map-pin-fill" size="1x" />
+              Addresse
+              {' '}
+              {localisation.current ? 'actuelle' : 'historique'}
+            </p>
+          </div>
+          <div className="fr-card__end fr-mt-0 fr-pt-0">
+            <p className="fr-card__detail">
+              {formatDescriptionDates(localisation.startDate || null, localisation.endDate || null)}
+            </p>
+          </div>
+          {editMode && <Button color="text" size="md" onClick={() => handleModalToggle(localisation)} tertiary borderless rounded icon="ri-edit-line" className="edit-button" />}
+        </div>
+      </div>
+    </div>
   );
 
   if (error) return <div>Erreur</div>;
@@ -95,7 +98,7 @@ export default function LocalisationsComponent() {
         {
           data.totalCount === 1 && currentLocalisation?.coordinates && (
             <Row>
-              <Col>
+              <Col n="12" spacing="mb-1w">
                 <Map
                   lat={currentLocalisation?.coordinates.lat}
                   lng={currentLocalisation?.coordinates.lng}
@@ -110,17 +113,19 @@ export default function LocalisationsComponent() {
                   ]}
                 />
               </Col>
+              <Col n="12">
+                {data.totalCount === 1 && currentLocalisation?.country && renderAdress(currentLocalisation)}
+              </Col>
             </Row>
           )
         }
-        {data.totalCount === 1 && currentLocalisation?.country && renderAdress(currentLocalisation)}
 
         {data.totalCount > 1 && (
           <Tabs>
-            <Tab label="Adresse actuelle" className="fr-p-2w">
+            <Tab label="Adresse actuelle" className="fr-p-0 fr-pt-1v">
               {currentLocalisation?.coordinates ? (
                 <Row>
-                  <Col>
+                  <Col n="12" spacing="mb-1w">
                     <Map
                       lat={currentLocalisation?.coordinates.lat}
                       lng={currentLocalisation?.coordinates.lng}
@@ -135,21 +140,23 @@ export default function LocalisationsComponent() {
                       ]}
                     />
                   </Col>
+                  <Col n="12">
+                    {currentLocalisation?.address ? renderAdress(currentLocalisation) : null}
+                  </Col>
                 </Row>
               ) : null}
-              {currentLocalisation?.address ? renderAdress(currentLocalisation) : null}
             </Tab>
             {(data.totalCount > 1) ? (
-              <Tab label="Historique des adresses" className="fr-p-2w no-print">
-                <ul>
+              <Tab label="Historique des adresses" className="fr-p-0 fr-pt-1v">
+                <Row gutters as="ul">
                   {
                     data.data.map((item) => (
-                      <li key={`HistoriqueLocalisation${item.id}`}>
+                      <Col n="12" as="li" key={`HistoriqueLocalisation${item.id}`}>
                         {renderAdress(item)}
-                      </li>
+                      </Col>
                     ))
                   }
-                </ul>
+                </Row>
               </Tab>
             ) : null}
           </Tabs>

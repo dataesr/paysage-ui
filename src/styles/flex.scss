@@ -1,6 +1,14 @@
 .flex {
   display: flex !important;
 }
+.flex-col {
+  display: flex !important;
+  flex-direction: column;
+}
+.flex-row {
+  display: flex !important;
+  flex-direction: row !important;
+}
 
 .flex--space-between {
   justify-content: space-between !important;

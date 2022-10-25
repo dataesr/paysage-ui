@@ -11,7 +11,7 @@ export default function RelationCard({ relation, inverse, onEdit }) {
   const { editMode } = useEditMode();
   const color = inverse ? relation.resource.collection : relation.relatedObject.collection;
   return (
-    <div className="fr-card fr-card--sm fr-card--shadow">
+    <div className="fr-card fr-card--xs fr-card--shadow">
       <div className={`fr-card__body ${styles['card-body']} ${styles[`${color}-border`]}`}>
         <div className="fr-card__content">
           <div className="fr-card__desc">

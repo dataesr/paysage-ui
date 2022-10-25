@@ -1,13 +1,14 @@
 import { useState } from 'react';
+import PropTypes from 'prop-types';
 import {
-  Col,
-  Container,
-  Icon,
+  Highlight,
   ModalContent,
   ModalTitle,
-  Row,
+  Tag,
+  TagGroup,
   Text,
 } from '@dataesr/react-dsfr';
+import { useNavigate } from 'react-router-dom';
 import HistoDatesForm from './form';
 import api from '../../../utils/api';
 import Modal from '../../modal';
@@ -15,16 +16,115 @@ import { Bloc, BlocActionButton, BlocContent, BlocModal, BlocTitle } from '../..
 import useToast from '../../../hooks/useToast';
 import useFetch from '../../../hooks/useFetch';
 import useUrl from '../../../hooks/useUrl';
-import ModifyCard from '../../card/modify-card';
-import { formatDescriptionDates } from '../../../utils/dates';
+import { formatDescriptionDates, toString } from '../../../utils/dates';
+
+function HistoryCard({ creationDate, creationReason, closureDate, closureReason, creationOfficialText, closureOfficialText, predecessors, successors }) {
+  const createReason = (creationReason && !['autre', 'Création'].includes(creationReason)) && ` par ${creationReason.toLowerCase() }`;
+  const closeReason = (closureReason && !['autre', 'Création'].includes(closureReason)) && ` par ${closureReason.toLowerCase() }`;
+  const navigate = useNavigate();
+  if (!closureDate && !creationDate) return <Highlight>Aucune donnée historique</Highlight>;
+  return (
+    <div className="fr-card fr-card--xs fr-card--grey fr-card--no-border card-structures">
+      <div className="fr-card__body">
+        <div className="fr-card__content">
+          <div className="fr-card__title">
+            {creationDate && (
+              <p className="fr-mb-1w">
+                Établissement crée le
+                {' '}
+                {toString(creationDate)}
+                {createReason}
+                <br />
+                {creationOfficialText?.id && (
+                  <a className="fr-text--xs fr-text--regular fr-link--sm" href={creationOfficialText?.pageUrl} target="_blank" rel="noreferrer">
+                    {creationOfficialText?.nature}
+                    {' '}
+                    {creationOfficialText?.publicationDate && `du ${toString(creationOfficialText.publicationDate)}`}
+                  </a>
+                )}
+              </p>
+            )}
+            <div>
+              {(predecessors?.totalCount > 0) && (
+                <div className="fr-card__desc">
+                  <Text as="span" size="sm" bold>Prédécesseurs:</Text>
+                  <TagGroup>
+                    {predecessors.data.map(
+                      ({ relatedObject: related }) => <Tag key={related.id} iconPosition="right" icon="ri-arrow-right-line" onClick={() => navigate(related.href)}>{related.displayName}</Tag>,
+                    )}
+                  </TagGroup>
+                </div>
+              )}
+            </div>
+            {(closureDate || (successors?.totalCount > 0)) && <hr />}
+          </div>
+          <div className="fr-card__title">
+            {closureDate && (
+              <p className="fr-text fr-mb-1v">
+                Établissement fermé
+                {' '}
+                {formatDescriptionDates(closureDate)}
+                {closeReason}
+                <br />
+                {closureOfficialText?.id && (
+                  <a className="fr-text--xs fr-text--regular fr-link--sm" href={closureOfficialText?.pageUrl} target="_blank" rel="noreferrer">
+                    {closureOfficialText?.nature}
+                    {' '}
+                    {closureOfficialText?.publicationDate && `du ${toString(closureOfficialText.publicationDate)}`}
+                  </a>
+                )}
+              </p>
+            )}
+            <div>
+              {(successors?.totalCount > 0) && (
+                <div className="fr-card__desc">
+                  <Text as="span" size="sm" bold>Successeurs:</Text>
+                  <TagGroup>
+                    {successors.data.map(
+                      ({ resource: related }) => <Tag iconPosition="right" icon="ri-arrow-right-line" onClick={() => navigate(related.href)} key={related.id}>{related.displayName}</Tag>,
+                    )}
+                  </TagGroup>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+HistoryCard.propTypes = {
+  creationDate: PropTypes.string,
+  creationReason: PropTypes.string,
+  closureDate: PropTypes.string,
+  closureReason: PropTypes.string,
+  creationOfficialText: PropTypes.object,
+  closureOfficialText: PropTypes.object,
+  predecessors: PropTypes.object,
+  successors: PropTypes.object,
+};
+
+HistoryCard.defaultProps = {
+  creationDate: null,
+  creationReason: null,
+  closureDate: null,
+  closureReason: null,
+  creationOfficialText: {},
+  closureOfficialText: {},
+  predecessors: {},
+  successors: {},
+};
 
 export default function HistoriqueEtDates() {
   const { toast } = useToast();
-  const { url } = useUrl('');
+  const { url, id } = useUrl('');
   const { data, isLoading, error, reload } = useFetch(url);
   const [showModal, setShowModal] = useState(false);
   const [modalTitle, setModalTitle] = useState('');
   const [modalContent, setModalContent] = useState(null);
+  const { data: predecessors } = useFetch(`/relations?filters[relationTag]=predecesseurs&filters[resourceId]=${id}&limit=500`);
+  const { data: successors } = useFetch(`/relations?filters[relationTag]=predecesseurs&filters[relatedObjectId]=${id}&limit=500`);
 
   const onSaveHandler = async (body) => {
     const response = await api.patch(url, body).catch(() => {
@@ -43,14 +143,8 @@ export default function HistoriqueEtDates() {
     }
   };
 
-  const onClickAddHandler = () => {
-    setModalTitle("Ajout d'une donnée historique");
-    setModalContent(<HistoDatesForm onSaveHandler={onSaveHandler} />);
-    setShowModal(true);
-  };
-
-  const onClickModifyHandler = () => {
-    setModalTitle("Modification d'une donnée historique");
+  const onClickHandler = () => {
+    setModalTitle("Ajouter/Modifier l'historique");
     const body = {
       creationDate: data.creationDate || null,
       creationReason: data.creationReason || null,
@@ -74,71 +168,12 @@ export default function HistoriqueEtDates() {
     data.totalCount = 1; // Pour la gestion de l'affichage dans "Bloc"
   }
 
-  const renderCreationCard = () => {
-    if (data?.creationDate) {
-      return (
-        <Col n="6">
-          <ModifyCard
-            title="Date de création"
-            description={(
-              <Row>
-                <Col n="8">
-                  <Text>
-                    {formatDescriptionDates(data.creationDate)}
-                    {(data.creationOfficialTextId) ? <Icon className="ri-medal-line fr-pl-2w" /> : null}
-                  </Text>
-                </Col>
-                <Col>
-                  <Text>{data.creationReason}</Text>
-                </Col>
-              </Row>
-            )}
-            onClick={() => onClickModifyHandler()}
-          />
-        </Col>
-      );
-    }
-    return null;
-  };
-
-  const renderClosureCard = () => {
-    if (data?.closureDate) {
-      return (
-        <Col n="6">
-          <ModifyCard
-            title="Date de fermeture"
-            description={(
-              <Row alignItems="middle">
-                <Col n="8">
-                  <Text>
-                    {formatDescriptionDates(data.closureDate)}
-                    {(data.closureOfficialTextId) ? <Icon className="ri-medal-line fr-pl-2w" /> : null}
-                  </Text>
-                </Col>
-                <Col>
-                  <Text>{data.closureReason}</Text>
-                </Col>
-              </Row>
-            )}
-            onClick={() => onClickModifyHandler()}
-          />
-        </Col>
-      );
-    }
-    return null;
-  };
-
   return (
     <Bloc isLoading={isLoading} error={error} data={data} noBadge>
       <BlocTitle as="h3" look="h6">Historique & dates</BlocTitle>
-      <BlocActionButton onClick={onClickAddHandler}>Ajouter une donnée historique</BlocActionButton>
+      <BlocActionButton onClick={onClickHandler}>Modifier l'historique</BlocActionButton>
       <BlocContent>
-        <Container fluid>
-          <Row gutters>
-            {renderCreationCard()}
-            {renderClosureCard()}
-          </Row>
-        </Container>
+        <HistoryCard {...data} predecessors={predecessors} successors={successors} />
       </BlocContent>
       <BlocModal>
         <Modal isOpen={showModal} size="lg" hide={() => setShowModal(false)}>

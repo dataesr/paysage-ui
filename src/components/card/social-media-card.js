@@ -1,4 +1,4 @@
-import { Col, Icon, Link, Row } from '@dataesr/react-dsfr';
+import { Icon } from '@dataesr/react-dsfr';
 import PropTypes from 'prop-types';
 import './styles.module.scss';
 import useEditMode from '../../hooks/useEditMode';
@@ -45,39 +45,22 @@ export default function SocialMediaCard({
     }
 
     return (
-      <Icon name={rxIcon} size="3x" color={iconColor} />
+      <Icon className="fr-mb-1w fr-pt-1w" name={rxIcon} size="3x" color={iconColor} />
     );
   };
 
   return (
-    <div className="fr-card fr-enlarge-link fr-card--grey fr-card--horizontal show-bt-on-over">
-      <div className="fr-card__body">
-        <div className="fr-card__content fr-py-1w">
-          <Row>
-            <Col n="4" className="fr-pt-2w fr-pb-2w">
-              {renderIcon(mediaName)}
-            </Col>
-            <Col className="fr-pt-2w">
-              <h4 className="fr-card__title">
-                {mediaName}
-                <Link href={account} target="_blank" />
-              </h4>
-              {editMode && (
-                <div className="card-button">
-                  <Button
-                    className="bt-visible-on-over"
-                    size="sm"
-                    onClick={onClick}
-                    color="text"
-                    tertiary
-                    borderless
-                    rounded
-                    icon="ri-edit-line"
-                  />
-                </div>
-              )}
-            </Col>
-          </Row>
+    <div className="fr-card fr-card--sm fr-card--grey fr-card--no-border">
+      <div className={`fr-card__body ${!editMode && 'fr-enlarge-link'}`}>
+        <div className="fr-card__content">
+          <div className="flex-col flex--center">
+            {renderIcon(mediaName)}
+            <span className="fr-text fr-text--sm fr-text--bold fr-m-0 flex-col">
+              <a className="fr-mb-0 fr-text fr-text--sm" href={account} target="_blank" rel="noreferrer">{mediaName}</a>
+              <span className="only-print">{account}</span>
+            </span>
+          </div>
+          {editMode && <Button color="text" size="md" onClick={onClick} tertiary borderless rounded icon="ri-edit-line" className="edit-button" />}
         </div>
       </div>
     </div>

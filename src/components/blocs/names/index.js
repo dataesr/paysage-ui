@@ -58,6 +58,8 @@ export default function NamesComponent() {
     if (!data) return null;
     const list = data.data.map((item) => (
       <Card
+        isGrey
+        hasBorder={false}
         hasArrow={false}
         onClick={() => onOpenModalHandler(item)}
         href="#"
@@ -73,7 +75,7 @@ export default function NamesComponent() {
 
   return (
     <Bloc isLoading={isLoading} error={error} data={data}>
-      <BlocTitle as="h3" look="h6">Noms</BlocTitle>
+      <BlocTitle as="h3" look="h6">Dénominations</BlocTitle>
       <BlocActionButton onClick={() => onOpenModalHandler()}>Ajouter un nom</BlocActionButton>
       <BlocContent>{renderCards()}</BlocContent>
       <BlocModal>

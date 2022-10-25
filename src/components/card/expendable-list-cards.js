@@ -1,9 +1,29 @@
-import { Col, Row } from '@dataesr/react-dsfr';
+import { Col, Icon, Row } from '@dataesr/react-dsfr';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
-import Button from '../button';
-import Card from '.';
+import styles from './styles.module.scss';
+
+function ExpandCard({ isExpanded, toggle }) {
+  return (
+    <div className={`fr-card fr-enlarge-link fr-card--xs ${styles['blue-border']}`}>
+      <div className="fr-card__body">
+        <div className="fr-card__content flex-row flex--center flex--space-around">
+
+          <button onClick={toggle} type="button" className={`fr-link fr-text--lg  ${styles['button-full']}`}>
+            {isExpanded ? <Icon name="ri-eye-off-line" size="2x" color="inherit" /> : <Icon name="ri-eye-line" size="2x" color="inherit" />}
+            {isExpanded ? 'Réduire la liste' : 'Afficher tout'}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+ExpandCard.propTypes = {
+  isExpanded: PropTypes.bool.isRequired,
+  toggle: PropTypes.func.isRequired,
+};
 
 export default function ExpendableListCards({ list, max, nCol, order, sortOn }) {
   const [showAll, setShowAll] = useState(false);
@@ -30,50 +50,22 @@ export default function ExpendableListCards({ list, max, nCol, order, sortOn }) 
   if (cards.length <= max) {
     return <Row gutters>{cards.map((el) => (<Col n={nCol} key={uuidv4()}>{el}</Col>))}</Row>;
   }
-  if (!showAll) {
-    return (
-      <Row gutters>
-        {cards.slice(0, max - 1).map((el) => (
-          <Col n={nCol} key={uuidv4()}>
-            {el}
-          </Col>
-        ))}
-        <Col n={nCol}>
-          <Card
-            descriptionElement={(
-              <Button
-                tertiary
-                borderless
-                onClick={() => setShowAll(!showAll)}
-                icon="ri-eye-line"
-              >
-                Afficher tout
-              </Button>
-            )}
-          />
-        </Col>
-      </Row>
-    );
-  }
   return (
     <Row gutters>
-      {cards.map((el) => (
+      {!showAll && cards.slice(0, max - 1).map((el) => (
+        <Col n={nCol} key={uuidv4()}>
+          {el}
+        </Col>
+      ))}
+      {showAll && cards.map((el) => (
         <Col n={nCol} key={uuidv4()}>
           {el}
         </Col>
       ))}
       <Col n={nCol}>
-        <Card
-          descriptionElement={(
-            <Button
-              tertiary
-              borderless
-              onClick={() => setShowAll(!showAll)}
-              icon="ri-eye-off-line"
-            >
-              Réduire la liste
-            </Button>
-          )}
+        <ExpandCard
+          isExpanded={showAll}
+          toggle={() => setShowAll(!showAll)}
         />
       </Col>
     </Row>

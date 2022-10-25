@@ -55,13 +55,13 @@ export default function SocialMediasComponent() {
         onClick={() => onOpenModalHandler(item)}
       />
     ));
-    return <ExpendableListCards list={list} />;
+    return <ExpendableListCards list={list} nCol="12 lg-6 md-12 sm-6" />;
   };
 
   return (
     <Bloc isLoading={isLoading} error={error} data={data}>
       <BlocTitle as="h4" look="h6">Réseaux sociaux</BlocTitle>
-      <BlocActionButton onClick={() => onOpenModalHandler()}>Ajouter un réseau social</BlocActionButton>
+      <BlocActionButton onClick={() => onOpenModalHandler()} isSmall>Ajouter un réseau social</BlocActionButton>
       <BlocContent>{renderCards()}</BlocContent>
       <BlocModal>
         <Modal isOpen={showModal} size="lg" hide={() => setShowModal(false)}>

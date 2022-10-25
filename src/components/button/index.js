@@ -6,7 +6,7 @@ import { Icon } from '@dataesr/react-dsfr';
 import './button.scss';
 
 const iconSize = {
-  sm: 'lg',
+  sm: '1x',
   md: 'lg',
   lg: 'xl',
 };

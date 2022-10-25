@@ -1,5 +1,5 @@
 export const ENUMS_LABELS_MAPPER = {
-  website: 'Lien web',
+  website: 'Site internet',
   websiteRss: 'Flux RSS',
   websiteOrganizationChart: 'Page sur l\'organisation/organigramme',
   websiteGovernance: 'Page gouvernance',

@@ -25,14 +25,14 @@ function sanitize(form) {
   return body;
 }
 
-export default function WeblinkForm({ data, onDeleteHandler, onSaveHandler, options }) {
+export default function WeblinkForm({ id, data, onDelete, onSave, options }) {
   const [showErrors, setShowErrors] = useState(false);
   const { form, updateForm, errors } = useForm(data, validate);
 
-  const onSave = () => {
+  const onSubmit = () => {
     if (Object.keys(errors).length > 0) return setShowErrors(true);
     const body = sanitize(form);
-    return onSaveHandler(body);
+    return onSave(body);
   };
 
   return (
@@ -68,9 +68,9 @@ export default function WeblinkForm({ data, onDeleteHandler, onSaveHandler, opti
           </Col>
         </Row>
         <FormFooter
-          id={data?.id}
-          onSaveHandler={onSave}
-          onDeleteHandler={onDeleteHandler}
+          id={id}
+          onSaveHandler={onSubmit}
+          onDeleteHandler={onDelete}
         />
       </Container>
     </form>
@@ -78,14 +78,16 @@ export default function WeblinkForm({ data, onDeleteHandler, onSaveHandler, opti
 }
 
 WeblinkForm.propTypes = {
+  id: PropTypes.string,
   data: PropTypes.object,
-  onDeleteHandler: PropTypes.func,
-  onSaveHandler: PropTypes.func.isRequired,
+  onDelete: PropTypes.func,
+  onSave: PropTypes.func.isRequired,
   options: PropTypes.arrayOf(PropTypes.shape),
 };
 
 WeblinkForm.defaultProps = {
+  id: null,
   data: {},
-  onDeleteHandler: null,
+  onDelete: null,
   options: [],
 };
