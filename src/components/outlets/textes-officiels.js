@@ -16,6 +16,8 @@ import Button from '../button';
 import OfficialTextForm from '../forms/official-text';
 import { Timeline, TimelineItem } from '../timeline';
 
+const RELATED_OBJECT_TAG_NUMBER = 3;
+
 export default function OfficialTextOutlet() {
   const { editMode } = useEditMode();
   const { id: resourceId } = useParams();
@@ -84,17 +86,19 @@ export default function OfficialTextOutlet() {
                 {showAll[event.id] && event.relatedObjects.map(
                   (related) => (<Tag iconPosition="right" icon="ri-arrow-right-line" onClick={() => navigate(related.href)} key={related.id}>{related.displayName}</Tag>),
                 )}
-                {!showAll[event.id] && event.relatedObjects.slice(0, 6).map(
+                {!showAll[event.id] && event.relatedObjects.slice(0, RELATED_OBJECT_TAG_NUMBER).map(
                   (related) => (<Tag iconPosition="right" icon="ri-arrow-right-line" onClick={() => navigate(related.href)} key={related.id}>{related.displayName}</Tag>),
                 )}
               </TagGroup>
             )}
-            {(!showAll[event.id] && event.relatedObjects?.length > 6) && (
+            {(!showAll[event.id] && event.relatedObjects?.length > RELATED_OBJECT_TAG_NUMBER) && (
               <Button icon="ri-add-line" iconPosition="left" terciary borderless type="button" size="sm" onClick={() => setShowAll({ ...showAll, [event.id]: true })}>
-                Voir tout
+                Voir tout (
+                {event.relatedObjects.length}
+                )
               </Button>
             )}
-            {(showAll[event.id] && event.relatedObjects?.length > 6) && (
+            {(showAll[event.id] && event.relatedObjects?.length > RELATED_OBJECT_TAG_NUMBER) && (
               <Button icon="ri-subtract-line" iconPosition="left" terciary borderless type="button" size="sm" onClick={() => setShowAll({ ...showAll, [event.id]: false })}>
                 Réduire la liste
               </Button>

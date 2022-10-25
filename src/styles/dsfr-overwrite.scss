@@ -34,7 +34,7 @@
   position: sticky;
   top: 0;
   background: var(--background-default-grey);
-  z-index: 501;
+  z-index: 100;
   margin: 0;
   margin-top: 0px;
   margin-left: 0px;
@@ -46,4 +46,8 @@
 
 .fr-card--grey {
   background-color: var(--grey-card) !important;
+}
+
+.fr-card--shadow {
+  z-index: 50;
 }

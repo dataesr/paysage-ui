@@ -148,9 +148,19 @@ HR {
 }
 
 .leaflet-control-zoom {
+  position: static;
+  z-index: 1 !important;
   A {
     background-image: none !important;
   }
+}
+.leaflet-pane {
+  position: static;
+  z-index: 40 !important;
+}
+.leaflet-container {
+  position: relative;
+  z-index: 1 !important;
 }
 
 .overlay {
