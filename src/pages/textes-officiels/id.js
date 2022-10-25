@@ -3,7 +3,7 @@ import { Link as RouterLink } from 'react-router-dom';
 import {
   Badge,
   BadgeGroup, Breadcrumb, BreadcrumbItem, ButtonGroup,
-  Col, Container, Icon, Modal, ModalContent, ModalTitle, Row, Title,
+  Col, Container, Icon, Link, Modal, ModalContent, ModalTitle, Row, Title,
 } from '@dataesr/react-dsfr';
 import useEditMode from '../../hooks/useEditMode';
 import Button from '../../components/button';
@@ -100,6 +100,7 @@ export default function OfficialTextByIdPage() {
               />
             </ButtonGroup>
           </Row>
+          {data.pageUrl && <Link href={data.pageUrl}>Accéder au texte</Link>}
           <Bloc data={{ totalCount: data?.relatedObjects?.length }} error={error} isLoading={isLoading}>
             <BlocTitle as="h3" look="h6">Objets liés au texte officiel</BlocTitle>
             <BlocContent>

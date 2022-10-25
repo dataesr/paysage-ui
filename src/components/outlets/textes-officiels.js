@@ -27,6 +27,7 @@ export default function OfficialTextOutlet() {
   const [isOpen, setIsOpen] = useState(false);
   const [modalTitle, setModalTitle] = useState(null);
   const [modalContent, setModalContent] = useState(null);
+  const [showAll, setShowAll] = useState({});
 
   const saveOfficialText = async (body, id) => {
     const method = id ? 'patch' : 'post';
@@ -63,16 +64,39 @@ export default function OfficialTextOutlet() {
       <Timeline>
         {data.data.map((event) => (
           <TimelineItem date={event.publicationDate} key={event.id}>
-            <Row className="flex--space-between">
-              <BadgeGroup><Badge text={event.type} /></BadgeGroup>
-              {editMode && <Button onClick={() => onOpenModalHandler(event)} size="sm" icon="ri-edit-line" title="Editer l'évènement" tertiary borderless rounded />}
+            {editMode && <Button onClick={() => onOpenModalHandler(event)} icon="ri-edit-line" title="Editer l'évènement" tertiary borderless rounded className="edit-button" />}
+            <Row className="flex--last-baseline">
+              <BadgeGroup isInline size="sm">
+                <Badge text={event.nature} colorFamily="purple-glycine" />
+                <Badge text={event.type} />
+              </BadgeGroup>
             </Row>
-            <Text spacing="mb-1w" size="lead" bold>{event.title}</Text>
+            <Text spacing="mb-1w">
+              <Text as="span" spacing="mr-1w" size="lead" bold>
+                {event.title}
+                <Button className="fr-ml-1v" onClick={() => { window.open(event.pageUrl, '_blank'); }} rounded borderless icon="ri-external-link-line" />
+              </Text>
+            </Text>
             {event.description && <Text spacing="mb-1w">{event.description}</Text>}
             {event.relatedObjects && (
-              <TagGroup>
-                {event.relatedObjects.map((related) => <Tag iconPosition="right" icon="ri-arrow-right-line" onClick={() => navigate(related.href)} key={related.id}>{related.displayName}</Tag>)}
+              <TagGroup className="fr-mt-3w">
+                {showAll[event.id] && event.relatedObjects.map(
+                  (related) => (<Tag iconPosition="right" icon="ri-arrow-right-line" onClick={() => navigate(related.href)} key={related.id}>{related.displayName}</Tag>),
+                )}
+                {!showAll[event.id] && event.relatedObjects.slice(0, 6).map(
+                  (related) => (<Tag iconPosition="right" icon="ri-arrow-right-line" onClick={() => navigate(related.href)} key={related.id}>{related.displayName}</Tag>),
+                )}
               </TagGroup>
+            )}
+            {(!showAll[event.id] && event.relatedObjects?.length > 6) && (
+              <Button icon="ri-add-line" iconPosition="left" terciary borderless type="button" size="sm" onClick={() => setShowAll({ ...showAll, [event.id]: true })}>
+                Voir tout
+              </Button>
+            )}
+            {(showAll[event.id] && event.relatedObjects?.length > 6) && (
+              <Button icon="ri-subtract-line" iconPosition="left" terciary borderless type="button" size="sm" onClick={() => setShowAll({ ...showAll, [event.id]: false })}>
+                Réduire la liste
+              </Button>
             )}
           </TimelineItem>
         ))}

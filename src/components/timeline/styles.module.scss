@@ -21,6 +21,7 @@
 }
 
 .timeline-item {
+  position: relative;
   display: flex;
   flex-direction: row;
   min-height: 7rem;
