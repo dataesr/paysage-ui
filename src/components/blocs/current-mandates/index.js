@@ -28,7 +28,7 @@ export default function PersonCurrentMandates() {
   };
 
   return (
-    <Bloc noBadge isLoading={isLoading} error={error} data={{ totalCount: data?.data?.filter((mandate) => !mandate.endDate)?.length || 0 }}>
+    <Bloc isLoading={isLoading} error={error} data={{ totalCount: data?.data?.filter((mandate) => !mandate.endDate)?.length || 0 }}>
       <BlocTitle as="h3" look="h4">Mandats actuels</BlocTitle>
       <BlocContent>
         {renderCurrentMandates()}

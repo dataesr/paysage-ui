@@ -69,7 +69,7 @@ export default function PersonPresentationPage() {
                 {(wikis?.length > 0) && (
                   <div className="fr-card__end fr-mt-0">
                     <p className="fr-card__detail fr-mb-1w">
-                      Pages wikipédia:
+                      Articles wikipédia:
                     </p>
                     <TagGroup size="sm">
                       {wikis.map((wiki) => <Tag iconPosition="right" icon="ri-external-link-line" onClick={() => window.open(wiki.link, '_blank')} key={wiki.lang}>{wiki.lang}</Tag>)}
