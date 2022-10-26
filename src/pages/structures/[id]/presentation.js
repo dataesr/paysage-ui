@@ -1,5 +1,4 @@
-import { Row, Title, Col } from '@dataesr/react-dsfr';
-
+import { Row, Title, Col, Container } from '@dataesr/react-dsfr';
 import ChiffresCles from '../../../components/blocs/chiffres-cles';
 import Emails from '../../../components/blocs/emails';
 import HistoriqueEtDates from '../../../components/blocs/historique-et-dates';
@@ -9,15 +8,20 @@ import Names from '../../../components/blocs/names';
 import Weblinks from '../../../components/blocs/weblinks';
 import { INTERNAL_PAGES_TYPES, WEBLINKS_TYPES, PALMARES_TYPES } from '../../../components/blocs/weblinks/constants';
 import SocialMedias from '../../../components/blocs/social-medias';
-import Wikipedia from '../../../components/blocs/wikipedia';
 import useHashScroll from '../../../hooks/useHashScroll';
 import useEditMode from '../../../hooks/useEditMode';
+import Wiki from '../../../components/blocs/wiki';
 
 export default function StructurePresentationPage() {
-  const { editMode } = useEditMode();
   useHashScroll();
+  const { editMode } = useEditMode();
   return (
     <>
+      <Row>
+        <Col n="12">
+          <Title as="h3" look="h4">En un coup d'oeil</Title>
+        </Col>
+      </Row>
       <Row gutters className="flex--wrap-reverse">
         <Col n="12 xl-6">
           <HistoriqueEtDates />
@@ -26,9 +30,14 @@ export default function StructurePresentationPage() {
           <Localisations />
         </Col>
       </Row>
-      {!editMode && <ChiffresCles />}
+      <ChiffresCles />
       {editMode && <Names />}
       <Title as="h3" look="h4">Présence sur le web</Title>
+      <Container fluid spacing="mb-5w">
+        <Row gutters>
+          <Wiki />
+        </Row>
+      </Container>
       <Row gutters>
         <Col n="12 md-6">
           <Weblinks types={INTERNAL_PAGES_TYPES} title="Site internet" />
@@ -42,7 +51,6 @@ export default function StructurePresentationPage() {
         <Col n="12 md-6">
           <Weblinks types={PALMARES_TYPES} title="Palmarès et classements" />
         </Col>
-        {!editMode && <Col n="12 md-6"><Wikipedia /></Col>}
       </Row>
       <Emails />
       <Identifiers />
