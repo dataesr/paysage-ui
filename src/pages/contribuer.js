@@ -23,7 +23,7 @@ import api from '../utils/api';
 export default function ContributePage() {
   const [query, setQuery] = useState('');
   const [options, setOptions] = useState([]);
-  const [isSearching, setIsSearching] = useState([]);
+  const [isSearching, setIsSearching] = useState(false);
 
   useEffect(() => {
     const getAutocompleteResult = async () => {

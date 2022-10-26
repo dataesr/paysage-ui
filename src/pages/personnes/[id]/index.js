@@ -4,7 +4,7 @@ import {
   Badge,
   BadgeGroup, Breadcrumb, BreadcrumbItem, ButtonGroup, Checkbox,
   CheckboxGroup, Col, Container, Icon, Modal, ModalContent, ModalFooter,
-  ModalTitle, Row, SideMenu, SideMenuLink, Title,
+  ModalTitle, Row, SideMenu, SideMenuLink, Text, Title,
 } from '@dataesr/react-dsfr';
 import useFetch from '../../../hooks/useFetch';
 import useForm from '../../../hooks/useForm';
@@ -30,11 +30,13 @@ import { saveError, saveSuccess } from '../../../utils/notice-contents';
 function PersonByIdPage() {
   const { url, id } = useUrl();
   const { data, isLoading, error, reload } = useFetch(url);
+  const { data: wikidata } = useFetch(`${url}/identifiers?filters[type]=Wikidata`);
   const navigate = useNavigate();
   const { notice } = useNotice();
   const { editMode, reset, toggle } = useEditMode();
   const [isExportOpen, setIsExportOpen] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
+  const [activity, setActivity] = useState(null);
   const { form, updateForm } = useForm({
     oeil: true,
     actualites: true,
@@ -49,6 +51,16 @@ function PersonByIdPage() {
   const [isFormModalOpen, setIsFormModalOpen] = useState(false);
 
   useEffect(() => { reset(); }, [reset]);
+  useEffect(() => {
+    const getActivity = async (wikiId) => fetch(`https://www.wikidata.org/w/api.php?format=json&origin=*&action=wbgetentities&ids=${wikiId}&languages=fr`)
+      .then((response) => response.json())
+      .then((json) => setActivity(json?.entities?.[wikiId]?.descriptions?.fr?.value))
+      .catch(() => null);
+
+    if (wikidata?.data?.length) {
+      getActivity(wikidata.data[0]?.value);
+    }
+  }, [wikidata]);
 
   const onSave = async (body) => {
     await api.patch(url, body)
@@ -128,6 +140,7 @@ function PersonByIdPage() {
           <Row className="flex--space-between flex--wrap-reverse">
             <Title as="h2">
               {personName}
+              {activity && <Text className="fr-mb-1v">{activity}</Text>}
               <BadgeGroup className="fr-pt-1w">
                 <Badge text="personne" type="info" />
                 <CopyBadgeButton

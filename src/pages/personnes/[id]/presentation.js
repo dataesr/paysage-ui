@@ -1,4 +1,4 @@
-import { Row, Title, Text, Icon } from '@dataesr/react-dsfr';
+import { Row, Title, Col, TagGroup, Tag } from '@dataesr/react-dsfr';
 import Identifiers from '../../../components/blocs/identifiers';
 import SocialMedias from '../../../components/blocs/social-medias';
 import Weblinks from '../../../components/blocs/weblinks';
@@ -6,6 +6,7 @@ import Spinner from '../../../components/spinner';
 import useFetch from '../../../hooks/useFetch';
 import useHashScroll from '../../../hooks/useHashScroll';
 import useUrl from '../../../hooks/useUrl';
+import PersonCurrentMandates from '../../../components/blocs/current-mandates';
 
 export default function PersonPresentationPage() {
   useHashScroll();
@@ -15,41 +16,28 @@ export default function PersonPresentationPage() {
   if (error) return <Row className="fr-my-2w flex--space-around">Erreur...</Row>;
   return (
     <>
-      <Row>
-        <Title as="h2" look="h3">
-          En un coup d’œil
-          <Icon className="ri-eye-2-line fr-ml-1w" />
-        </Title>
-      </Row>
-      <Row className="flex--col-reverse">
-        <Text>
-          Né le:
-          {' '}
-          {data.birthDate}
-          {' '}
-        </Text>
-        <Text>
-          Mort le:
-          {' '}
-          {data.deathDate}
-          {' '}
-        </Text>
-        <Text>
-          Activité:
-          {' '}
-          {data.activity}
-          {' '}
-        </Text>
-        <Text>
-          Commentaire:
-          {' '}
-          {data.comment}
-          {' '}
-        </Text>
-      </Row>
+      {(data?.otherNames?.length > 0) && (
+        <Row spacing="mb-5w">
+          <Col n="12">
+            <Title as="h3" look="h4">Autres formes du nom connues</Title>
+          </Col>
+          <Col n="12">
+            <TagGroup>
+              { data.otherNames.map((item) => <Tag key={item}>{item}</Tag>)}
+            </TagGroup>
+          </Col>
+        </Row>
+      )}
+      <PersonCurrentMandates />
       <Title as="h3" look="h4">Présence sur le web</Title>
-      <Weblinks />
-      <SocialMedias />
+      <Row gutters>
+        <Col n="12 md-6">
+          <Weblinks />
+        </Col>
+        <Col n="12 md-6">
+          <SocialMedias />
+        </Col>
+      </Row>
       <Identifiers />
     </>
   );
