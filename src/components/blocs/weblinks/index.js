@@ -94,7 +94,7 @@ export default function Weblinks({ types, title }) {
             <div className="flex-col flex--center">
               {renderIcon(el.type)}
               <span className="fr-text fr-text--sm fr-text--bold fr-m-0 flex-col">
-                <a className="fr-mb-0 fr-text fr-text--sm" href={el.url} target="_blank" rel="noreferrer">
+                <a className="fr-mb-0 fr-text fr-text--sm text-center" href={el.url} target="_blank" rel="noreferrer">
                   {options.find((type) => (el.type === type.value))?.label}
                   {el.language && ` (${el.language})`}
                 </a>
