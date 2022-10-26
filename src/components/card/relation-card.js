@@ -11,7 +11,7 @@ export default function RelationCard({ relation, inverse, onEdit }) {
   const { editMode } = useEditMode();
   const color = inverse ? relation.resource.collection : relation.relatedObject.collection;
   return (
-    <div className="fr-card fr-card--xs fr-card--shadow">
+    <div className="fr-card fr-card--xs fr-card--grey fr-card--no-border">
       <div className={`fr-card__body ${styles['card-body']} ${styles[`${color}-border`]}`}>
         <div className="fr-card__content">
           <div className="fr-card__desc">
@@ -31,8 +31,8 @@ export default function RelationCard({ relation, inverse, onEdit }) {
           )}
           <p className={`fr-card__title ${styles[`${color}-title`]}`}>
             {inverse
-              ? <RouterLink to={relation.resource.href}>{relation.resource?.displayName}</RouterLink>
-              : <RouterLink to={relation.relatedObject.href}>{relation.relatedObject?.displayName}</RouterLink>}
+              ? <RouterLink className="fr-text--lg" to={relation.resource.href}>{relation.resource?.displayName}</RouterLink>
+              : <RouterLink className="fr-text--lg" to={relation.relatedObject.href}>{relation.relatedObject?.displayName}</RouterLink>}
           </p>
           {(relation.startDateOfficialText?.id || relation.endDateOfficialText?.id) && (
             <div className={`fr-card__end ${styles['card-end']}`}>
