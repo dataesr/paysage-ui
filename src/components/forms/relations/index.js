@@ -50,38 +50,50 @@ export default function RelationForm({ id, resourceType, relatedObjectTypes, dat
   const [relatedObjectOptions, setRelatedObjectOptions] = useState([]);
   const [startDateOfficialTextOptions, setStartDateOfficialTextOptions] = useState([]);
   const [endDateOfficialTextOptions, setEndDateOfficialTextOptions] = useState([]);
+  const [isSearchingResource, setIsSearchingResource] = useState(false);
+  const [isSearchingRelatedObject, setIsSearchingRelatedObject] = useState(false);
+  const [isSearchingStartDateOfficialText, setIsSearchingStartDateOfficialText] = useState(false);
+  const [isSearchingEndDateOfficialText, setIsSearchingEndDateOfficialText] = useState(false);
 
   const { form, updateForm, errors } = useForm(parseRelatedElement(data), validator);
 
   useEffect(() => {
     const getAutocompleteResult = async () => {
+      setIsSearchingRelatedObject(true);
       const types = encodeURIComponent(relatedObjectTypes.join(','));
       const response = await api.get(`/autocomplete?query=${relatedObjectQuery}&types=${types}`);
       setRelatedObjectOptions(response.data?.data);
+      setIsSearchingRelatedObject(false);
     };
     if (relatedObjectQuery) { getAutocompleteResult(); } else { setRelatedObjectOptions([]); }
   }, [relatedObjectQuery, relatedObjectTypes]);
 
   useEffect(() => {
     const getAutocompleteResult = async () => {
+      setIsSearchingResource(true);
       const response = await api.get(`/autocomplete?query=${resourceQuery}&types=${resourceType}`);
       setResourceOptions(response.data?.data);
+      setIsSearchingResource(false);
     };
     if (resourceQuery) { getAutocompleteResult(); } else { setResourceOptions([]); }
   }, [resourceQuery, resourceType]);
 
   useEffect(() => {
     const getAutocompleteResult = async () => {
+      setIsSearchingStartDateOfficialText(true);
       const response = await api.get(`/autocomplete?query=${startDateOfficialTextQuery}&types=official-texts`);
       setStartDateOfficialTextOptions(response.data?.data);
+      setIsSearchingStartDateOfficialText(false);
     };
     if (startDateOfficialTextQuery) { getAutocompleteResult(); } else { setStartDateOfficialTextOptions([]); }
   }, [startDateOfficialTextQuery]);
 
   useEffect(() => {
     const getAutocompleteResult = async () => {
+      setIsSearchingEndDateOfficialText(true);
       const response = await api.get(`/autocomplete?query=${endDateOfficialTextQuery}&types=official-texts`);
       setEndDateOfficialTextOptions(response.data?.data);
+      setIsSearchingEndDateOfficialText(false);
     };
     if (endDateOfficialTextQuery) { getAutocompleteResult(); } else { setEndDateOfficialTextOptions([]); }
   }, [endDateOfficialTextQuery]);
@@ -158,8 +170,8 @@ export default function RelationForm({ id, resourceType, relatedObjectTypes, dat
                 <SearchBar
                   buttonLabel="Rechercher"
                   value={resourceQuery || ''}
-                  label="Objet paysage à lier"
-                  hint="Rechercher dans les objects paysage"
+                  label="Objet Paysage à lier"
+                  hint="Rechercher dans les objects Paysage"
                   required
                   scope={form.resourceName}
                   placeholder={form.resourceId ? '' : 'Rechercher...'}
@@ -167,6 +179,7 @@ export default function RelationForm({ id, resourceType, relatedObjectTypes, dat
                   options={resourceOptions}
                   onSelect={handleResourceSelect}
                   onDeleteScope={handleResourceUnselect}
+                  isSearching={isSearchingResource}
                 />
               </Col>
             )
@@ -175,8 +188,8 @@ export default function RelationForm({ id, resourceType, relatedObjectTypes, dat
                 <SearchBar
                   buttonLabel="Rechercher"
                   value={relatedObjectQuery || ''}
-                  label="Objet paysage à lier"
-                  hint="Rechercher dans les objects paysage"
+                  label="Objet Paysage à lier"
+                  hint="Rechercher dans les objects Paysage"
                   required
                   scope={form.relatedObjectName}
                   placeholder={form.relatedObjectId ? '' : 'Rechercher...'}
@@ -184,6 +197,7 @@ export default function RelationForm({ id, resourceType, relatedObjectTypes, dat
                   options={relatedObjectOptions}
                   onSelect={handleRelatedObjectSelect}
                   onDeleteScope={handleRelatedObjectUnselect}
+                  isSearching={isSearchingRelatedObject}
                 />
               </Col>
             )}
@@ -220,6 +234,7 @@ export default function RelationForm({ id, resourceType, relatedObjectTypes, dat
               options={startDateOfficialTextOptions}
               onSelect={handleStartDateOfficialTextSelect}
               onDeleteScope={handleStartDateOfficialTextOptionsUnselect}
+              isSearching={isSearchingStartDateOfficialText}
             />
           </Col>
           <Col n="12" className="fr-pb-2w">
@@ -241,6 +256,7 @@ export default function RelationForm({ id, resourceType, relatedObjectTypes, dat
               options={endDateOfficialTextOptions}
               onSelect={handleEndDateOfficialTextSelect}
               onDeleteScope={handleEndDateOfficialTextOptionsUnselect}
+              isSearching={isSearchingEndDateOfficialText}
             />
           </Col>
         </Row>

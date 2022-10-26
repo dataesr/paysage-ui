@@ -23,11 +23,14 @@ import api from '../utils/api';
 export default function ContributePage() {
   const [query, setQuery] = useState('');
   const [options, setOptions] = useState([]);
+  const [isSearching, setIsSearching] = useState([]);
 
   useEffect(() => {
     const getAutocompleteResult = async () => {
+      setIsSearching(true);
       const response = await api.get(`/autocomplete?query=${query}&limit=15`);
       setOptions(response.data?.data);
+      setIsSearching(false);
     };
     if (query) { getAutocompleteResult(); } else { setOptions([]); }
   }, [query]);
@@ -64,6 +67,7 @@ export default function ContributePage() {
                 placeholder="Rechercher"
                 onChange={(e) => setQuery(e.target.value)}
                 options={options}
+                isSearching={isSearching}
               />
             </Col>
           </div>

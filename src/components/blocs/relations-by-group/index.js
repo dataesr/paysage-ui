@@ -89,7 +89,6 @@ export default function RelationsByGroup({ group, reloader }) {
          ${element.relatedObject.currentLocalisation?.locality}`,
       });
     });
-    // console.log(markers);
     const list = data.data.map((element) => (
       <RelationCard
         relation={element}

@@ -18,13 +18,15 @@ import SearchBar from '../../search-bar';
 
 export default function WeblinkForm({ data, onDeleteHandler, onSaveHandler }) {
   // const [showErrors, setShowErrors] = useState(false);
+  const [isSearchingCreation, setIsSearchingCreation] = useState(false);
+  const [optionsTOCreation, setOptionsCreation] = useState([]);
   const [queryTOCreation, setQueryTOCreation] = useState('');
   const [scopeTOCreation, setScopeTOCreation] = useState(null);
-  const [optionsTOCreation, setOptionsCreation] = useState([]);
 
+  const [isSearchingClosure, setIsSearchingClosure] = useState(false);
+  const [optionsTOClosure, setOptionsClosure] = useState([]);
   const [queryTOClosure, setQueryTOClosure] = useState('');
   const [scopeTOClosure, setScopeTOClosure] = useState(null);
-  const [optionsTOClosure, setOptionsClosure] = useState([]);
 
   const { form, updateForm } = useForm(data, validator);
 
@@ -38,16 +40,20 @@ export default function WeblinkForm({ data, onDeleteHandler, onSaveHandler }) {
 
   useEffect(() => {
     const getAutocompleteResultCreation = async () => {
-      const response = await api.get(`/autocomplete?query=${queryTOCreation}&types=officialTexts`);
+      setIsSearchingCreation(true);
+      const response = await api.get(`/autocomplete?query=${queryTOCreation}&types=official-texts`);
       setOptionsCreation(response.data?.data);
+      setIsSearchingCreation(false);
     };
     if (queryTOCreation) { getAutocompleteResultCreation(); } else { setOptionsCreation([]); }
   }, [queryTOCreation]);
 
   useEffect(() => {
     const getAutocompleteResultClosure = async () => {
-      const response = await api.get(`/autocomplete?query=${queryTOClosure}&types=officialTexts`);
+      setIsSearchingClosure(true);
+      const response = await api.get(`/autocomplete?query=${queryTOClosure}&types=official-texts`);
       setOptionsClosure(response.data?.data);
+      setIsSearchingClosure(false);
     };
     if (queryTOClosure) { getAutocompleteResultClosure(); } else { setOptionsClosure([]); }
   }, [queryTOClosure]);
@@ -125,17 +131,18 @@ export default function WeblinkForm({ data, onDeleteHandler, onSaveHandler }) {
         <Row className="fr-pt-2w">
           <Col>
             <SearchBar
-              size="lg"
               buttonLabel="Rechercher"
-              value={queryTOCreation}
-              label="Ajouter/remplacer le texte officiel de création"
               hint="Rechercher et sélectionner un texte officiel"
-              scope={scopeTOCreation}
-              placeholder={scopeTOCreation ? '' : 'Rechercher...'}
+              isSearching={isSearchingCreation}
+              label="Ajouter / remplacer le texte officiel de création"
               onChange={(e) => { updateForm({ creationOfficialTextId: null }); setQueryTOCreation(e.target.value); }}
-              options={optionsTOCreation}
-              onSelect={handleSelectCreation}
               onDeleteScope={handleUnselectCreation}
+              onSelect={handleSelectCreation}
+              options={optionsTOCreation}
+              placeholder={scopeTOCreation ? '' : 'Rechercher...'}
+              scope={scopeTOCreation}
+              size="lg"
+              value={queryTOCreation}
             />
           </Col>
         </Row>
@@ -191,17 +198,18 @@ export default function WeblinkForm({ data, onDeleteHandler, onSaveHandler }) {
         <Row className="fr-pt-2w">
           <Col>
             <SearchBar
-              size="lg"
               buttonLabel="Rechercher"
-              value={queryTOClosure}
-              label="Ajouter/remplacer le texte officiel de fermeture"
-              hint="Rechercher et sélectionner un texte officiel présent dans paysage"
-              scope={scopeTOClosure}
-              placeholder={scopeTOClosure ? '' : 'Rechercher...'}
+              hint="Rechercher et sélectionner un texte officiel présent dans Paysage"
+              isSearching={isSearchingClosure}
+              label="Ajouter / remplacer le texte officiel de fermeture"
               onChange={(e) => { updateForm({ closureOfficialTextId: null }); setQueryTOClosure(e.target.value); }}
-              options={optionsTOClosure}
-              onSelect={handleSelectClosure}
               onDeleteScope={handleUnselectClosure}
+              onSelect={handleSelectClosure}
+              options={optionsTOClosure}
+              placeholder={scopeTOClosure ? '' : 'Rechercher...'}
+              scope={scopeTOClosure}
+              size="lg"
+              value={queryTOClosure}
             />
           </Col>
         </Row>

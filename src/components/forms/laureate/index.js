@@ -54,8 +54,11 @@ export default function LaureateForm({ id, resourceType, relatedObjectTypes, dat
   // const [endDateOfficialTextQuery, setEndDateOfficialTextQuery] = useState('');
 
   const [associatedOptions, setAssociatedOptions] = useState([]);
-  const [resourceOptions, setResourceOptions] = useState([]);
   const [relatedObjectOptions, setRelatedObjectOptions] = useState([]);
+  const [resourceOptions, setResourceOptions] = useState([]);
+  const [isSearchingResource, setIsSearchingResource] = useState(false);
+  const [isSearchingRelatedObject, setIsSearchingRelatedObject] = useState(false);
+  const [isSearchingStructure, setIsSearchingStructure] = useState(false);
   // const [startDateOfficialTextOptions, setStartDateOfficialTextOptions] = useState([]);
   // const [endDateOfficialTextOptions, setEndDateOfficialTextOptions] = useState([]);
 
@@ -63,17 +66,21 @@ export default function LaureateForm({ id, resourceType, relatedObjectTypes, dat
 
   useEffect(() => {
     const getAutocompleteResult = async () => {
+      setIsSearchingRelatedObject(true);
       const types = encodeURIComponent(relatedObjectTypes.join(','));
       const response = await api.get(`/autocomplete?query=${relatedObjectQuery}&types=${types}`);
       setRelatedObjectOptions(response.data?.data);
+      setIsSearchingRelatedObject(false);
     };
     if (relatedObjectQuery) { getAutocompleteResult(); } else { setRelatedObjectOptions([]); }
   }, [relatedObjectQuery, relatedObjectTypes]);
 
   useEffect(() => {
     const getAutocompleteResult = async () => {
+      setIsSearchingResource(true);
       const response = await api.get(`/autocomplete?query=${resourceQuery}&types=${resourceType}`);
       setResourceOptions(response.data?.data);
+      setIsSearchingResource(false);
     };
     if (resourceQuery) { getAutocompleteResult(); } else { setResourceOptions([]); }
   }, [resourceQuery, resourceType]);
@@ -96,8 +103,10 @@ export default function LaureateForm({ id, resourceType, relatedObjectTypes, dat
 
   useEffect(() => {
     const getAutocompleteResult = async () => {
+      setIsSearchingStructure(true);
       const response = await api.get(`/autocomplete?query=${associatedQuery}&types=structures`);
       setAssociatedOptions(response.data?.data);
+      setIsSearchingStructure(false);
     };
     if (associatedQuery) { getAutocompleteResult(); } else { setAssociatedOptions([]); }
   }, [associatedQuery]);
@@ -187,8 +196,8 @@ export default function LaureateForm({ id, resourceType, relatedObjectTypes, dat
                 <SearchBar
                   buttonLabel="Rechercher"
                   value={resourceQuery || ''}
-                  label="Objet paysage à lier"
-                  hint="Rechercher dans les objects paysage"
+                  label="Objet Paysage à lier"
+                  hint="Rechercher dans les objects Paysage"
                   required
                   scope={form.resourceName}
                   placeholder={form.resourceId ? '' : 'Rechercher...'}
@@ -196,6 +205,7 @@ export default function LaureateForm({ id, resourceType, relatedObjectTypes, dat
                   options={resourceOptions}
                   onSelect={handleResourceSelect}
                   onDeleteScope={handleResourceUnselect}
+                  isSearching={isSearchingResource}
                 />
               </Col>
             )
@@ -204,8 +214,8 @@ export default function LaureateForm({ id, resourceType, relatedObjectTypes, dat
                 <SearchBar
                   buttonLabel="Rechercher"
                   value={relatedObjectQuery || ''}
-                  label="Objet paysage à lier"
-                  hint="Rechercher dans les objects paysage"
+                  label="Objet Paysage à lier"
+                  hint="Rechercher dans les objects Paysage"
                   required
                   scope={form.relatedObjectName}
                   placeholder={form.relatedObjectId ? '' : 'Rechercher...'}
@@ -213,6 +223,7 @@ export default function LaureateForm({ id, resourceType, relatedObjectTypes, dat
                   options={relatedObjectOptions}
                   onSelect={handleRelatedObjectSelect}
                   onDeleteScope={handleRelatedObjectUnselect}
+                  isSearching={isSearchingRelatedObject}
                 />
               </Col>
             )}
@@ -225,6 +236,7 @@ export default function LaureateForm({ id, resourceType, relatedObjectTypes, dat
               onChange={(e) => { setAssociatedQuery(e.target.value); }}
               options={associatedOptions}
               onSelect={handleObjectSelect}
+              isSearching={isSearchingStructure}
             />
             {(form.otherAssociatedObjects?.length > 0) && (
               <Row spacing="mt-2w">

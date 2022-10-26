@@ -76,11 +76,21 @@ export default function SearchPage() {
   return (
     <Container spacing="pb-6w">
       <Breadcrumb>
-        <BreadcrumbItem asLink={<RouterLink to="/" />}>Accueil</BreadcrumbItem>
-        <BreadcrumbItem>Rechercher</BreadcrumbItem>
+        <BreadcrumbItem asLink={<RouterLink to="/" />}>
+          Accueil
+        </BreadcrumbItem>
+        <BreadcrumbItem>
+          Rechercher
+        </BreadcrumbItem>
       </Breadcrumb>
       <Row>
-        <Title as="h2" look="h5">{`Résultats pour la recherche "${query}"`}</Title>
+        <Title as="h2" look="h5">
+          Résultats pour la recherche
+          {query?.length > 0 && (
+            ` "${query}"`
+
+          )}
+        </Title>
       </Row>
       <Row>
         <Col n="12 md-3">

@@ -32,12 +32,13 @@ export default function DocumentsForm({ id, data, onSave, onDelete }) {
   const { data: documentTypes } = useFetch('/document-types?limit=500');
 
   const { form, updateForm, errors } = useForm({ files: [], canAccess: [], documentTypeId: '', isPublic: true, ...data }, validate);
+  const { notice } = useNotice();
   const [showErrors, setShowErrors] = useState(false);
   const [filesErrors, setFilesErrors] = useState(false);
   const [files, setFiles] = useState([]);
   const [query, setQuery] = useState('');
   const [options, setOptions] = useState([]);
-  const { notice } = useNotice();
+  const [isSearching, setIsSearching] = useState(false);
 
   const handleSubmit = () => {
     const relatesTo = form.relatedObjects?.length ? form.relatedObjects.map((element) => element.id) : [];
@@ -74,8 +75,10 @@ export default function DocumentsForm({ id, data, onSave, onDelete }) {
 
   useEffect(() => {
     const getAutocompleteResult = async () => {
+      setIsSearching(true);
       const response = await api.get(`/autocomplete?query=${query}`);
       setOptions(response.data?.data);
+      setIsSearching(false);
     };
     if (query) { getAutocompleteResult(); } else { setOptions([]); }
   }, [query]);
@@ -188,19 +191,19 @@ export default function DocumentsForm({ id, data, onSave, onDelete }) {
           <Col n="12">
             <SearchBar
               buttonLabel="Rechercher"
-              value={query || ''}
-              label="Lier d'autres objets paysage à cet évènement"
-              placeholder="Rechercher..."
+              isSearching={isSearching}
+              label="Lier d'autres objets Paysage à cet évènement"
               onChange={(e) => { setQuery(e.target.value); }}
-              options={options}
               onSelect={handleObjectSelect}
+              options={options}
+              placeholder="Rechercher..."
+              value={query || ''}
             />
             {(form.relatedObjects?.length > 0) && (
               <Row spacing="mt-2w">
                 <TagGroup>
                   {form.relatedObjects.map((element) => (
                     <Tag key={element.id} onClick={() => handleObjectDelete(element.id)}>
-                      {/* {element.displayName} */}
                       {element.id}
                       <Icon iconPosition="right" name="ri-close-line" />
                     </Tag>
@@ -228,7 +231,9 @@ export default function DocumentsForm({ id, data, onSave, onDelete }) {
           </Col>
           {(!form.isPublic && viewer?.groups?.length > 0) && (
             <Col n="12">
-              <Text>Séléctionner les groupes qui pourront accéder à la resource</Text>
+              <Text>
+                Sélectionner les groupes qui pourront accéder à la resource
+              </Text>
               <TagGroup className="fr-mt-1w">
                 {viewer.groups.map((group) => (
                   <Tag
