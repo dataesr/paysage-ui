@@ -57,38 +57,50 @@ export default function MandateForm({ id, resourceType, relatedObjectTypes, data
   const [relatedObjectOptions, setRelatedObjectOptions] = useState([]);
   const [startDateOfficialTextOptions, setStartDateOfficialTextOptions] = useState([]);
   const [endDateOfficialTextOptions, setEndDateOfficialTextOptions] = useState([]);
+  const [isSearchingEndDateOfficialText, setIsSearchingEndDateOfficialText] = useState(false);
+  const [isSearchingStartDateOfficialText, setIsSearchingStartDateOfficialText] = useState(false);
+  const [isSearchingRelatedObject, setIsSearchingRelatedObject] = useState(false);
+  const [isSearchingResource, setIsSearchingResource] = useState(false);
 
   const { form, updateForm, errors } = useForm(parseRelatedElement(data), validate);
 
   useEffect(() => {
     const getAutocompleteResult = async () => {
+      setIsSearchingRelatedObject(true);
       const types = encodeURIComponent(relatedObjectTypes.join(','));
       const response = await api.get(`/autocomplete?query=${relatedObjectQuery}&types=${types}`);
       setRelatedObjectOptions(response.data?.data);
+      setIsSearchingRelatedObject(false);
     };
     if (relatedObjectQuery) { getAutocompleteResult(); } else { setRelatedObjectOptions([]); }
   }, [relatedObjectQuery, relatedObjectTypes]);
 
   useEffect(() => {
     const getAutocompleteResult = async () => {
+      setIsSearchingResource(true);
       const response = await api.get(`/autocomplete?query=${resourceQuery}&types=${resourceType}`);
       setResourceOptions(response.data?.data);
+      setIsSearchingResource(false);
     };
     if (resourceQuery) { getAutocompleteResult(); } else { setResourceOptions([]); }
   }, [resourceQuery, resourceType]);
 
   useEffect(() => {
     const getAutocompleteResult = async () => {
+      setIsSearchingStartDateOfficialText(true);
       const response = await api.get(`/autocomplete?query=${startDateOfficialTextQuery}&types=official-texts`);
       setStartDateOfficialTextOptions(response.data?.data);
+      setIsSearchingStartDateOfficialText(false);
     };
     if (startDateOfficialTextQuery) { getAutocompleteResult(); } else { setStartDateOfficialTextOptions([]); }
   }, [startDateOfficialTextQuery]);
 
   useEffect(() => {
     const getAutocompleteResult = async () => {
+      setIsSearchingEndDateOfficialText(true);
       const response = await api.get(`/autocomplete?query=${endDateOfficialTextQuery}&types=official-texts`);
       setEndDateOfficialTextOptions(response.data?.data);
+      setIsSearchingEndDateOfficialText(false);
     };
     if (endDateOfficialTextQuery) { getAutocompleteResult(); } else { setEndDateOfficialTextOptions([]); }
   }, [endDateOfficialTextQuery]);
@@ -165,8 +177,8 @@ export default function MandateForm({ id, resourceType, relatedObjectTypes, data
                 <SearchBar
                   buttonLabel="Rechercher"
                   value={resourceQuery || ''}
-                  label="Objet paysage à lier"
-                  hint="Rechercher dans les objects paysage"
+                  label="Objet Paysage à lier"
+                  hint="Rechercher dans les objects Paysage"
                   required
                   scope={form.resourceName}
                   placeholder={form.resourceId ? '' : 'Rechercher...'}
@@ -174,6 +186,7 @@ export default function MandateForm({ id, resourceType, relatedObjectTypes, data
                   options={resourceOptions}
                   onSelect={handleResourceSelect}
                   onDeleteScope={handleResourceUnselect}
+                  isSearching={isSearchingResource}
                 />
               </Col>
             )
@@ -182,8 +195,8 @@ export default function MandateForm({ id, resourceType, relatedObjectTypes, data
                 <SearchBar
                   buttonLabel="Rechercher"
                   value={relatedObjectQuery || ''}
-                  label="Objet paysage à lier"
-                  hint="Rechercher dans les objects paysage"
+                  label="Objet Paysage à lier"
+                  hint="Rechercher dans les objects Paysage"
                   required
                   scope={form.relatedObjectName}
                   placeholder={form.relatedObjectId ? '' : 'Rechercher...'}
@@ -191,6 +204,7 @@ export default function MandateForm({ id, resourceType, relatedObjectTypes, data
                   options={relatedObjectOptions}
                   onSelect={handleRelatedObjectSelect}
                   onDeleteScope={handleRelatedObjectUnselect}
+                  isSearching={isSearchingRelatedObject}
                 />
               </Col>
             )}
@@ -209,7 +223,7 @@ export default function MandateForm({ id, resourceType, relatedObjectTypes, data
           <Col n="12">
             <TextInput
               label="Intitulé exact de la fonction"
-              hint="Si vous avez des information plus précises sur la fonction exercée, précisez les ici."
+              hint="Si vous avez des informations plus précises sur la fonction exercée, précisez les ici."
               value={form.mandatePrecision}
               onChange={(e) => updateForm({ mandatePrecision: e.target.value })}
               message={(showErrors && errors.mandatePrecision) ? errors.mandatePrecision : null}
@@ -244,6 +258,7 @@ export default function MandateForm({ id, resourceType, relatedObjectTypes, data
               options={startDateOfficialTextOptions}
               onSelect={handleStartDateOfficialTextSelect}
               onDeleteScope={handleStartDateOfficialTextOptionsUnselect}
+              isSearching={isSearchingStartDateOfficialText}
             />
           </Col>
           <Col n="12">
@@ -251,16 +266,21 @@ export default function MandateForm({ id, resourceType, relatedObjectTypes, data
               buttonLabel="Rechercher"
               value={endDateOfficialTextQuery || ''}
               label="Texte officiel de fin de relation"
-              hint="Rechercher et sélectionner une personne"
+              hint="Rechercher et sélectionner un texte officiel"
               scope={form.endDateOfficialTextName}
               placeholder={form.endDateOfficialTextId ? '' : 'Rechercher...'}
               onChange={(e) => { updateForm({ endDateOfficialTextId: null }); setEndDateOfficialTextQuery(e.target.value); }}
               options={endDateOfficialTextOptions}
               onSelect={handleEndDateOfficialTextSelect}
               onDeleteScope={handleEndDateOfficialTextOptionsUnselect}
+              isSearching={isSearchingEndDateOfficialText}
             />
           </Col>
-          <Col n="12"><Title as="h3" look="h5" spacing="mb-0">Information du mandat</Title></Col>
+          <Col n="12">
+            <Title as="h3" look="h5" spacing="mb-0">
+              Information du mandat
+            </Title>
+          </Col>
           <Col n="12">
             <Checkbox
               label="Mandat par intérim"

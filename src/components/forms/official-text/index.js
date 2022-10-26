@@ -39,6 +39,7 @@ export default function OfficiaTextForm({ id, data, onSave, onDelete }) {
   const [showErrors, setShowErrors] = useState(false);
   const [query, setQuery] = useState('');
   const [options, setOptions] = useState('');
+  const [isSearching, setIsSearching] = useState(false);
   const { form, updateForm, errors } = useForm(data, validator);
 
   const handleSubmit = () => {
@@ -61,8 +62,10 @@ export default function OfficiaTextForm({ id, data, onSave, onDelete }) {
 
   useEffect(() => {
     const getAutocompleteResult = async () => {
+      setIsSearching(true);
       const response = await api.get(`/autocomplete?query=${query}`);
       setOptions(response.data?.data);
+      setIsSearching(false);
     };
     if (query) { getAutocompleteResult(); } else { setOptions([]); }
   }, [query]);
@@ -241,11 +244,12 @@ export default function OfficiaTextForm({ id, data, onSave, onDelete }) {
           <SearchBar
             buttonLabel="Rechercher"
             value={query || ''}
-            label="Lier d'autres objets paysage à ce texte officiel"
+            label="Lier d'autres objets Paysage à ce texte officiel"
             placeholder="Rechercher..."
             onChange={(e) => { setQuery(e.target.value); }}
             options={options}
             onSelect={handleObjectSelect}
+            isSearching={isSearching}
           />
           {(form.relatedObjects?.length > 0) && (
             <Row spacing="mt-2w">

@@ -28,12 +28,15 @@ export default function Header() {
   const [query, setQuery] = useState(initialQuery || '');
   const debouncedQuery = useDebounce(query, 500);
   const [options, setOptions] = useState([]);
+  const [isSearching, setIsSearching] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
     const getAutocompleteResult = async () => {
+      setIsSearching(true);
       const response = await api.get(`/autocomplete?query=${debouncedQuery}&limit=10`);
       setOptions(response.data?.data);
+      setIsSearching(false);
     };
     if (debouncedQuery) { getAutocompleteResult(); } else { setOptions([]); }
   }, [debouncedQuery]);
@@ -109,12 +112,13 @@ export default function Header() {
               buttonLabel="Rechercher"
               hideLabel
               value={query}
-              label="Rechercher dans paysage"
+              label="Rechercher dans Paysage"
               placeholder="Rechercher..."
               onChange={(e) => { setPage(1); setQuery(e.target.value); }}
               options={options}
               onSearch={handleSearch}
               onSelect={handleSearchRedirection}
+              isSearching={isSearching}
             />
           )}
         </Tool>

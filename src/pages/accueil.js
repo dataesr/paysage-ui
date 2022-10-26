@@ -21,12 +21,15 @@ export default function HomePage() {
   const [options, setOptions] = useState([]);
   const [isFav, setIsFav] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
+  const [isSearching, setIsSearching] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
     const getAutocompleteResult = async () => {
+      setIsSearching(true);
       const response = await api.get(`/autocomplete?query=${query}`);
       setOptions(response.data?.data);
+      setIsSearching(false);
     };
     if (query) { getAutocompleteResult(); } else { setOptions([]); }
   }, [query]);
@@ -52,13 +55,14 @@ export default function HomePage() {
           size="lg"
           buttonLabel="Rechercher"
           value={query}
-          label="Rechercher dans paysage"
+          label="Rechercher dans Paysage"
           placeholder="Rechercher..."
           onChange={(e) => setQuery(e.target.value)}
           options={options}
           optionsIcon="ri-arrow-right-line"
           onSearch={handleSearch}
           onSelect={handleSearchRedirection}
+          isSearching={isSearching}
         />
       </Row>
       <Row className="fr-pb-5w">

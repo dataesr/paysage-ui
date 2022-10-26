@@ -30,6 +30,7 @@ export default function EventForm({ id, data, onSave, onDelete }) {
   const [filesErrors, setFilesErrors] = useState(false);
   const [files, setFiles] = useState([]);
   const [query, setQuery] = useState('');
+  const [isSearching, setIsSearching] = useState(false);
   const [options, setOptions] = useState([]);
   const { notice } = useNotice();
 
@@ -63,8 +64,10 @@ export default function EventForm({ id, data, onSave, onDelete }) {
 
   useEffect(() => {
     const getAutocompleteResult = async () => {
+      setIsSearching(true);
       const response = await api.get(`/autocomplete?query=${query}`);
       setOptions(response.data?.data);
+      setIsSearching(false);
     };
     if (query) { getAutocompleteResult(); } else { setOptions([]); }
   }, [query]);
@@ -172,12 +175,13 @@ export default function EventForm({ id, data, onSave, onDelete }) {
           <Col n="12" spacing="pb-2w">
             <SearchBar
               buttonLabel="Rechercher"
-              value={query || ''}
-              label="Lier d'autres objets paysage à cet évènement"
-              placeholder="Rechercher..."
+              isSearching={isSearching}
+              label="Lier d'autres objets Paysage à cet évènement"
               onChange={(e) => { setQuery(e.target.value); }}
-              options={options}
               onSelect={handleObjectSelect}
+              options={options}
+              placeholder="Rechercher..."
+              value={query || ''}
             />
             {(form.relatedObjects?.length > 0) && (
               <Row spacing="mt-2w">

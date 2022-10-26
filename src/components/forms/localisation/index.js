@@ -42,6 +42,7 @@ export default function LocalisationForm({ id, data, onDelete, onSave }) {
   const debouncedQuery = useDebounce(query, 1500);
   const [scope, setScope] = useState(null);
   const [options, setOptions] = useState([]);
+  const [isSearching, setIsSearching] = useState(false);
 
   useEffect(() => {
     const getAutocompleteResult = async () => {
@@ -63,7 +64,9 @@ export default function LocalisationForm({ id, data, onDelete, onSave }) {
       setOptions(opt);
     };
     if (debouncedQuery.length > 3) {
+      setIsSearching(true);
       getAutocompleteResult();
+      setIsSearching(false);
     } else {
       setOptions([]);
     }
@@ -164,6 +167,7 @@ export default function LocalisationForm({ id, data, onDelete, onSave }) {
               options={options}
               onSelect={handleSelect}
               onDeleteScope={handleUnselect}
+              isSearching={isSearching}
             />
           </Col>
           <Col n="12"><Title as="h2" look="h3" spacing="mb-0">Coordonnées</Title></Col>

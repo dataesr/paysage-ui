@@ -1,38 +1,40 @@
-import { forwardRef, useLayoutEffect, useRef, useState } from 'react';
-
-import PropTypes from 'prop-types';
-import { v4 as uuidv4 } from 'uuid';
-import classNames from 'classnames';
 import { Badge, Icon, Text } from '@dataesr/react-dsfr';
+import classNames from 'classnames';
+import PropTypes from 'prop-types';
+import { forwardRef, useLayoutEffect, useRef, useState } from 'react';
+import { v4 as uuidv4 } from 'uuid';
+
 import styles from './styles.module.scss';
+import Spinner from '../spinner';
 
 const objectTypes = {
-  structures: 'ri-building-line',
+  categories: 'ri-price-tag-3-line',
   personnes: 'ri-user-3-line',
   prix: 'ri-award-line',
-  'textes-officiels': 'ri-git-repository-line',
   projets: 'ri-booklet-fill',
-  categories: 'ri-price-tag-3-line',
+  structures: 'ri-building-line',
   terms: 'ri-hashtag',
+  'textes-officiels': 'ri-git-repository-line',
 };
 
 const SearchBar = forwardRef((props, ref) => {
   const {
-    size,
-    label,
-    hideLabel,
     buttonLabel,
-    placeholder,
+    className,
+    hideLabel,
+    hint,
+    isSearching,
+    label,
+    onDeleteScope,
     onSearch,
-    scope,
+    onSelect,
     options,
     optionsIcon,
-    onSelect,
-    onDeleteScope,
-    value,
+    placeholder,
     required,
-    hint,
-    className,
+    scope,
+    size,
+    value,
     ...remainingProps
   } = props;
   const inputId = useRef(uuidv4());
@@ -150,7 +152,12 @@ const SearchBar = forwardRef((props, ref) => {
           )}
         </div>
         <div className={styles.autocomplete}>
-          {(options.length && showOptions) ? (
+          {isSearching && (
+            <div className={styles.list}>
+              <Spinner />
+            </div>
+          )}
+          {(!isSearching && options.length && showOptions) ? (
             <ul className={styles.list} onMouseLeave={() => setActiveSuggestionIndex(null)}>
               {options.map((option, i) => (
                 <li
@@ -182,41 +189,45 @@ const SearchBar = forwardRef((props, ref) => {
     </div>
   );
 });
+
 SearchBar.defaultProps = {
-  size: 'md',
-  placeholder: '',
-  value: '',
-  hint: '',
-  required: false,
-  hideLabel: false,
-  scope: null,
   className: '',
+  hideLabel: false,
+  hint: '',
+  isSearching: false,
   label: '',
-  options: [],
-  onSearch: null,
-  optionsIcon: null,
   onDeleteScope: null,
+  onSearch: null,
+  options: [],
+  optionsIcon: null,
+  placeholder: '',
+  required: false,
+  scope: null,
+  size: 'md',
+  value: '',
 };
+
 SearchBar.propTypes = {
-  label: PropTypes.string,
   buttonLabel: PropTypes.string.isRequired,
-  placeholder: PropTypes.string,
-  onSearch: PropTypes.func,
-  size: PropTypes.oneOf(['md', 'lg']),
-  value: PropTypes.string,
-  hint: PropTypes.string,
-  required: PropTypes.bool,
-  hideLabel: PropTypes.bool,
-  scope: PropTypes.string,
   className: PropTypes.oneOfType([
     PropTypes.string,
     PropTypes.object,
     PropTypes.array,
   ]),
-  options: PropTypes.arrayOf(PropTypes.shape),
-  onSelect: PropTypes.func.isRequired,
+  hideLabel: PropTypes.bool,
+  hint: PropTypes.string,
+  isSearching: PropTypes.bool,
+  label: PropTypes.string,
   onDeleteScope: PropTypes.func,
+  onSearch: PropTypes.func,
+  onSelect: PropTypes.func.isRequired,
+  options: PropTypes.arrayOf(PropTypes.shape),
   optionsIcon: PropTypes.string,
+  placeholder: PropTypes.string,
+  required: PropTypes.bool,
+  scope: PropTypes.string,
+  size: PropTypes.oneOf(['md', 'lg']),
+  value: PropTypes.string,
 };
 
 export default SearchBar;
