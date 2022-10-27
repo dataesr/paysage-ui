@@ -9,12 +9,12 @@ import Spinner from '../spinner';
 
 const objectTypes = {
   categories: 'ri-price-tag-3-line',
-  personnes: 'ri-user-3-line',
-  prix: 'ri-award-line',
-  projets: 'ri-booklet-fill',
+  persons: 'ri-user-3-line',
+  prices: 'ri-award-line',
+  projects: 'ri-booklet-fill',
   structures: 'ri-building-line',
   terms: 'ri-hashtag',
-  'textes-officiels': 'ri-git-repository-line',
+  'official-texts': 'ri-git-repository-line',
 };
 
 const SearchBar = forwardRef((props, ref) => {
@@ -191,6 +191,7 @@ const SearchBar = forwardRef((props, ref) => {
 });
 
 SearchBar.defaultProps = {
+  buttonLabel: 'Rechercher',
   className: '',
   hideLabel: false,
   hint: '',
@@ -205,10 +206,11 @@ SearchBar.defaultProps = {
   scope: null,
   size: 'md',
   value: '',
+  onSelect: null,
 };
 
 SearchBar.propTypes = {
-  buttonLabel: PropTypes.string.isRequired,
+  buttonLabel: PropTypes.string,
   className: PropTypes.oneOfType([
     PropTypes.string,
     PropTypes.object,
@@ -220,7 +222,7 @@ SearchBar.propTypes = {
   label: PropTypes.string,
   onDeleteScope: PropTypes.func,
   onSearch: PropTypes.func,
-  onSelect: PropTypes.func.isRequired,
+  onSelect: PropTypes.func,
   options: PropTypes.arrayOf(PropTypes.shape),
   optionsIcon: PropTypes.string,
   placeholder: PropTypes.string,

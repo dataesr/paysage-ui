@@ -22,7 +22,6 @@ import ProjectPresentationPage from './presentation';
 import ProjectExportPage from './exporter';
 import ProjectCategories from './categories';
 import ProjectPrices from './prix-et-recompenses';
-import ProjectRelatedElements from './elements-lies';
 import { saveError, saveSuccess } from '../../../utils/notice-contents';
 
 function ProjectByIdPage() {
@@ -85,10 +84,6 @@ function ProjectByIdPage() {
             <SideMenuLink asLink={<RouterLink to="prix-et-recompenses" />}>
               <Icon name="ri-award-line" size="1x" />
               Prix & récompenses
-            </SideMenuLink>
-            <SideMenuLink asLink={<RouterLink to="elements-lies" />}>
-              <Icon name="ri-links-line" size="1x" />
-              Eléments liés
             </SideMenuLink>
           </SideMenu>
         </Col>
@@ -229,5 +224,4 @@ export {
   ProjectPresentationPage,
   ProjectCategories,
   ProjectPrices,
-  ProjectRelatedElements,
 };

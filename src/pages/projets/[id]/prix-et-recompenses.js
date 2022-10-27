@@ -1,8 +1,8 @@
-import Relations from '../../../components/blocs/relations-by-tag';
+import RelationsByTag from '../../../components/blocs/relations-by-tag';
 
 export default function PersonPrices() {
   return (
-    <Relations
+    <RelationsByTag
       tag="prix"
       blocName="Prix et récompenses"
       resourceType="prices"

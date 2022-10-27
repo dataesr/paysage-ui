@@ -42,19 +42,18 @@ import {
 } from './pages/personnes/[id]';
 
 import TermsAddPage from './pages/termes/ajouter';
-import { TermByIdPage, TermPresentationPage, TermCategories, TermExportPage } from './pages/termes/[id]';
+import { TermByIdPage, TermPresentationPage, TermExportPage, TermRelatedElements } from './pages/termes/[id]';
 
 import {
   ProjectByIdPage,
   ProjectPresentationPage,
   ProjectCategories,
   ProjectPrices,
-  ProjectRelatedElements,
   ProjectExportPage,
 } from './pages/projets/[id]';
 
 import CategoriesAddPage from './pages/categories/ajouter';
-import { CategoryByIdPage, CategoryPresentationPage, CategoryCategories, CategoriesExportPage } from './pages/categories/[id]';
+import { CategoryByIdPage, CategoryPresentationPage, CategoriesExportPage, CategoryRelatedElements } from './pages/categories/[id]';
 
 import { AccountPage, ProfilePage, PreferencesPage, SecurityPage, GroupsPage } from './pages/mon-compte';
 import {
@@ -140,7 +139,7 @@ function App() {
           <Route path="/categories/:id" element={<CategoryByIdPage />}>
             <Route path="" element={<Navigate to="presentation" replace />} />
             <Route path="presentation" element={<CategoryPresentationPage />} />
-            <Route path="categories" element={<CategoryCategories />} />
+            <Route path="elements-lies" element={<CategoryRelatedElements />} />
             <Route path="actualites" element={<ActualitesOutlet />} />
             <Route path="evenements" element={<AgendaOutlet />} />
             <Route path="documents" element={<DocumentsOutlet />} />
@@ -171,7 +170,7 @@ function App() {
           <Route path="/termes/:id" element={<TermByIdPage />}>
             <Route path="" element={<Navigate to="presentation" replace />} />
             <Route path="presentation" element={<TermPresentationPage />} />
-            <Route path="categories" element={<TermCategories />} />
+            <Route path="elements-lies" element={<TermRelatedElements />} />
             <Route path="actualites" element={<ActualitesOutlet />} />
             <Route path="evenements" element={<AgendaOutlet />} />
             <Route path="documents" element={<DocumentsOutlet />} />
@@ -203,7 +202,6 @@ function App() {
             <Route path="prix-et-recompenses" element={<ProjectPrices />} />
             <Route path="documents" element={<DocumentsOutlet />} />
             <Route path="textes-officiels" element={<OfficialTextsOutlet />} />
-            <Route path="elements-lies" element={<ProjectRelatedElements />} />
           </Route>
 
           <Route path="/textes-officiels/ajouter" element={<OfficialTextAddPage />} />

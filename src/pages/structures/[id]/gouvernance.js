@@ -18,13 +18,6 @@ export default function StructureGouvernancePage() {
         relatedObjectTypes={['persons']}
         Form={MandateForm}
       />
-      <RelationsByTag
-        tag="referentAutre"
-        blocName="Référents DGQuelqueChose"
-        resourceType="structures"
-        relatedObjectTypes={['persons']}
-        Form={MandateForm}
-      />
     </>
   );
 }

@@ -30,6 +30,10 @@ function sanitize(form) {
   ];
   const body = {};
   Object.keys(form).forEach((key) => { if (fields.includes(key)) { body[key] = form[key]; } });
+  body.coordinates = {
+    lat: parseFloat(body.coordinates.lat),
+    lng: parseFloat(body.coordinates.lng),
+  };
   return body;
 }
 
@@ -118,12 +122,11 @@ export default function LocalisationForm({ id, data, onDelete, onSave }) {
         locality: element.data?.address.city,
         country: element.data?.address.country,
         coordinates: {
-          lat: element.data?.lat,
-          lng: element.data?.lon,
+          lat: parseFloat(element.data?.lat),
+          lng: parseFloat(element.data?.lon),
         },
       });
     }
-    // setScope(name);
     setQuery('');
     setOptions([]);
   };
@@ -176,8 +179,7 @@ export default function LocalisationForm({ id, data, onDelete, onSave }) {
               label="Adresse"
               value={form.address}
               onChange={(e) => updateForm({ address: e.target.value })}
-            // message={(showErrors && errors.address) ? errors.address : null}
-            // messageType={(showErrors && errors.address) ? 'error' : ''}
+
             />
           </Col>
           <Col n="12 md-4">

@@ -62,7 +62,7 @@ export default function Weblinks({ types, title }) {
 
   const getElementsCount = () => {
     if (!data) return null;
-    return data.data.filter((el) => types.includes(el.type))?.length;
+    return types?.length ? data.data.filter((el) => types.includes(el.type))?.length : data.data.length;
   };
 
   const renderIcon = (iconType) => {
@@ -95,7 +95,7 @@ export default function Weblinks({ types, title }) {
               {renderIcon(el.type)}
               <span className="fr-text fr-text--sm fr-text--bold fr-m-0 flex-col">
                 <a className="fr-mb-0 fr-text fr-text--sm text-center" href={el.url} target="_blank" rel="noreferrer">
-                  {options.find((type) => (el.type === type.value))?.label}
+                  {options?.find((type) => (el.type === type.value))?.label}
                   {el.language && ` (${el.language})`}
                 </a>
                 <span className="only-print">{el.url}</span>

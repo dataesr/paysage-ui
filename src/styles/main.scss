@@ -187,9 +187,6 @@ HR {
 
 .card-structures {
   border-left: .25rem solid var(--structures-color) !important;
-  &:hover {
-    background-color: var(--yellow-tournesol-975);
-  }
   .fr-card__start {
     .fr-card__detail {
       color: var(--structures-color) !important;
@@ -201,6 +198,22 @@ HR {
   .fr-card__start {
     .fr-card__detail {
       color: var(--persons-color) !important;
+    }
+  }
+}
+.card-prices {
+  border-left: .25rem solid var(--prices-color) !important;
+  .fr-card__start {
+    .fr-card__detail {
+      color: var(--prices-color) !important;
+    }
+  }
+}
+.card-terms {
+  border-left: .25rem solid var(--terms-color) !important;
+  .fr-card__start {
+    .fr-card__detail {
+      color: var(--terms-color) !important;
     }
   }
 }

@@ -81,7 +81,8 @@ export default function StructureBudgetPage() {
     thresholdSort: 'asc',
   }, {
     field: 'fonds_de_roulement_net_global',
-    info: 'Ressource mise à disposition de l\'établissement pour financer des emplois (investissements). Il constitue une marge de sécurité financière destinée à financer une partie de l\'actif circulant',
+    info: `Ressource mise à disposition de l'établissement pour financer des emplois (investissements). 
+Il constitue une marge de sécurité financière destinée à financer une partie de l'actif circulant`,
     suffix: '€',
     text: 'Fonds de roulement net global',
     thresholdRed: 0,

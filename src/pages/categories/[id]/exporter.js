@@ -9,7 +9,7 @@ import CopyBadgeButton from '../../../components/copy/copy-badge-button';
 import CategoriesPresentationPage from './presentation';
 import AgendaOutlet from '../../../components/outlets/evenements';
 import DocumentsOutlet from '../../../components/outlets/documents';
-import CategoriesCategories from './categories';
+import CategoriesRelatedElements from './elements-lies';
 import ActualitesOutlet from '../../../components/outlets/actualites';
 import OfficialTextOutlet from '../../../components/outlets/textes-officiels';
 import OverlaySpinner from '../../../components/spinner/overlay-spinner';
@@ -55,10 +55,10 @@ export default function CategoriesExportPage() {
               </BadgeGroup>
             </Title>
             {searchParams.get('oeil') && <CategoriesPresentationPage />}
+            {searchParams.get('related') && <CategoriesRelatedElements />}
             {searchParams.get('actualites') && <ActualitesOutlet />}
             {searchParams.get('evenements') && <AgendaOutlet />}
             {searchParams.get('ressources') && <DocumentsOutlet />}
-            {searchParams.get('categories') && <CategoriesCategories />}
             {searchParams.get('textes') && <OfficialTextOutlet />}
           </Col>
         </Row>

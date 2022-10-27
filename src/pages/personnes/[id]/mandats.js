@@ -17,13 +17,6 @@ export default function PersonMandats() {
         relatedObjectTypes={['persons']}
         inverse
       />
-      <RelationsByTag
-        tag="referentAutre"
-        blocName="Référent DGQuelqueChose"
-        resourceType="structures"
-        relatedObjectTypes={['persons']}
-        inverse
-      />
     </>
   );
 }

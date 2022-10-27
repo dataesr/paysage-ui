@@ -1,34 +1,40 @@
-import { Row, Title, Icon } from '@dataesr/react-dsfr';
+import { Col, Row, Title } from '@dataesr/react-dsfr';
 import Identifiers from '../../../components/blocs/identifiers';
 import SocialMedias from '../../../components/blocs/social-medias';
 import Weblinks from '../../../components/blocs/weblinks';
-import Spinner from '../../../components/spinner';
-import useFetch from '../../../hooks/useFetch';
 import useHashScroll from '../../../hooks/useHashScroll';
-import useUrl from '../../../hooks/useUrl';
+import Wiki from '../../../components/blocs/wiki';
+import RelationsByTag from '../../../components/blocs/relations-by-tag';
 
-export default function PersonPresentationPage() {
+export default function TermPresentationPage() {
   useHashScroll();
-  const { url } = useUrl();
-  const { data, isLoading, error } = useFetch(url);
-  if (isLoading) return <Row className="fr-my-2w flex--space-around"><Spinner /></Row>;
-  if (error) return <Row className="fr-my-2w flex--space-around">Erreur...</Row>;
   return (
     <>
-      <Row>
-        <Title as="h2" look="h3">
-          En un coup d’œil
-          <Icon className="ri-eye-2-line fr-ml-1w" />
-        </Title>
-      </Row>
-      <Row className="flex--col-reverse">
-        <pre>
-          {JSON.stringify(data, null, 2)}
-        </pre>
-      </Row>
+      <RelationsByTag
+        tag="terms-parents"
+        blocName="Parents"
+        resourceType="terms"
+        relatedObjectTypes={['terms']}
+        noRelationType
+      />
+      <RelationsByTag
+        tag="terms-parents"
+        blocName="Enfants"
+        resourceType="terms"
+        relatedObjectTypes={['terms']}
+        noRelationType
+        inverse
+      />
       <Title as="h3" look="h4">Présence sur le web</Title>
-      <Weblinks />
-      <SocialMedias />
+      <Row spacing="mb-5w"><Wiki /></Row>
+      <Row gutters>
+        <Col n="12 md-6">
+          <Weblinks />
+        </Col>
+        <Col n="12 md-6">
+          <SocialMedias />
+        </Col>
+      </Row>
       <Identifiers />
     </>
   );

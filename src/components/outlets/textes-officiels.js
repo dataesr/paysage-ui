@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Badge, BadgeGroup, Modal, ModalContent, ModalTitle, Row, Tag, TagGroup, Text } from '@dataesr/react-dsfr';
+import { Badge, BadgeGroup, Modal, ModalContent, ModalTitle, Row, Tag, Text } from '@dataesr/react-dsfr';
 import useEditMode from '../../hooks/useEditMode';
 import useFetch from '../../hooks/useFetch';
 import useHashScroll from '../../hooks/useHashScroll';
@@ -15,8 +15,7 @@ import {
 import Button from '../button';
 import OfficialTextForm from '../forms/official-text';
 import { Timeline, TimelineItem } from '../timeline';
-
-const RELATED_OBJECT_TAG_NUMBER = 3;
+import TagList from '../tag-list';
 
 export default function OfficialTextOutlet() {
   const { editMode } = useEditMode();
@@ -29,7 +28,6 @@ export default function OfficialTextOutlet() {
   const [isOpen, setIsOpen] = useState(false);
   const [modalTitle, setModalTitle] = useState(null);
   const [modalContent, setModalContent] = useState(null);
-  const [showAll, setShowAll] = useState({});
 
   const saveOfficialText = async (body, id) => {
     const method = id ? 'patch' : 'post';
@@ -81,28 +79,11 @@ export default function OfficialTextOutlet() {
               </Text>
             </Text>
             {event.description && <Text spacing="mb-1w">{event.description}</Text>}
-            {event.relatedObjects && (
-              <TagGroup className="fr-mt-3w">
-                {showAll[event.id] && event.relatedObjects.map(
-                  (related) => (<Tag iconPosition="right" icon="ri-arrow-right-line" onClick={() => navigate(related.href)} key={related.id}>{related.displayName}</Tag>),
-                )}
-                {!showAll[event.id] && event.relatedObjects.slice(0, RELATED_OBJECT_TAG_NUMBER).map(
-                  (related) => (<Tag iconPosition="right" icon="ri-arrow-right-line" onClick={() => navigate(related.href)} key={related.id}>{related.displayName}</Tag>),
-                )}
-              </TagGroup>
-            )}
-            {(!showAll[event.id] && event.relatedObjects?.length > RELATED_OBJECT_TAG_NUMBER) && (
-              <Button icon="ri-add-line" iconPosition="left" terciary borderless type="button" size="sm" onClick={() => setShowAll({ ...showAll, [event.id]: true })}>
-                Voir tout (
-                {event.relatedObjects.length}
-                )
-              </Button>
-            )}
-            {(showAll[event.id] && event.relatedObjects?.length > RELATED_OBJECT_TAG_NUMBER) && (
-              <Button icon="ri-subtract-line" iconPosition="left" terciary borderless type="button" size="sm" onClick={() => setShowAll({ ...showAll, [event.id]: false })}>
-                Réduire la liste
-              </Button>
-            )}
+            <TagList maxTags={3}>
+              {event.relatedObjects.map(
+                (related) => (<Tag iconPosition="right" icon="ri-arrow-right-line" onClick={() => navigate(related.href)} key={related.id}>{related.displayName}</Tag>),
+              )}
+            </TagList>
           </TimelineItem>
         ))}
       </Timeline>

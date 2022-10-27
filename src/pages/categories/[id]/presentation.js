@@ -1,31 +1,40 @@
-import { Row, Title, Icon } from '@dataesr/react-dsfr';
+import { Row, Title, Col } from '@dataesr/react-dsfr';
 import Identifiers from '../../../components/blocs/identifiers';
 import SocialMedias from '../../../components/blocs/social-medias';
 import Weblinks from '../../../components/blocs/weblinks';
 import RelationsByTag from '../../../components/blocs/relations-by-tag';
 import useHashScroll from '../../../hooks/useHashScroll';
+import Wiki from '../../../components/blocs/wiki';
 
 export default function CategoryPresentationPage() {
   useHashScroll();
   return (
     <>
-      <Row>
-        <Title as="h2" look="h3">
-          En un coup d’œil
-          <Icon className="ri-eye-2-line fr-ml-1w" />
-        </Title>
-      </Row>
       <RelationsByTag
-        tag="structures-categories"
-        blocName="Structures de la catégorie"
-        resourceType="structures"
+        tag="categories-parents"
+        blocName="Parents"
+        resourceType="categories"
+        relatedObjectTypes={['categories']}
+        noRelationType
+      />
+      <RelationsByTag
+        tag="categories-parents"
+        blocName="Enfants"
+        resourceType="categories"
         relatedObjectTypes={['categories']}
         noRelationType
         inverse
       />
       <Title as="h3" look="h4">Présence sur le web</Title>
-      <Weblinks />
-      <SocialMedias />
+      <Row spacing="mb-5w"><Wiki /></Row>
+      <Row gutters>
+        <Col n="12 md-6">
+          <Weblinks />
+        </Col>
+        <Col n="12 md-6">
+          <SocialMedias />
+        </Col>
+      </Row>
       <Identifiers />
     </>
   );

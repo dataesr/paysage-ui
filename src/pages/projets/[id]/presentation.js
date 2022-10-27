@@ -1,8 +1,8 @@
-import { Row, Title, Icon } from '@dataesr/react-dsfr';
+import { Row, Title, Icon, Col } from '@dataesr/react-dsfr';
 import Identifiers from '../../../components/blocs/identifiers';
 import RelationsByTag from '../../../components/blocs/relations-by-tag';
-import SocialMedias from '../../../components/blocs/social-medias';
 import Weblinks from '../../../components/blocs/weblinks';
+import Wiki from '../../../components/blocs/wiki';
 import useHashScroll from '../../../hooks/useHashScroll';
 
 export default function ProjectPresentationPage() {
@@ -21,9 +21,22 @@ export default function ProjectPresentationPage() {
         resourceType="projects"
         relatedObjectTypes={['structures', 'persons']}
       />
+      <RelationsByTag
+        tag="project-contact"
+        blocName="Contact"
+        resourceType="projects"
+        relatedObjectTypes={['persons']}
+        noRelationType
+      />
       <Title as="h3" look="h4">Présence sur le web</Title>
-      <Weblinks />
-      <SocialMedias />
+      <Row gutters spacing="mb-5w">
+        <Col n="12 md-6">
+          <Weblinks />
+        </Col>
+        <Col n="12 md-6">
+          <Wiki />
+        </Col>
+      </Row>
       <Identifiers />
     </>
   );

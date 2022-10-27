@@ -38,7 +38,8 @@ export default function StructureInsertionProfessionnellePage() {
                     Insertion professionnelle des diplômés de Licence professionnelle LMD
                   </>
                 )}
-                downloadUrl={`https://data.enseignementsup-recherche.gouv.fr/pages/insertion_professionnelle_etablissements/?disjunctive.discipline2&refine.diplome=LICENCE_PRO&refine.id_paysage=${id}&sort=code_de_la_discipline`}
+                downloadUrl={`https://data.enseignementsup-recherche.gouv.fr/pages/insertion_professionnelle_etablissements/\
+?disjunctive.discipline2&refine.diplome=LICENCE_PRO&refine.id_paysage=${id}&sort=code_de_la_discipline`}
                 canEdit={false}
               />
             </Col>
@@ -50,7 +51,8 @@ export default function StructureInsertionProfessionnellePage() {
                     Données sur l'insertion professionnelle des diplômés de Licence professionnelle en open data
                   </>
                 )}
-                downloadUrl={`https://data.enseignementsup-recherche.gouv.fr/explore/dataset/fr-esr-insertion_professionnelle-lp/table/?disjunctive.numero_de_l_etablissement&disjunctive.academie&refine.id_paysage=${id}&sort=-annee`}
+                downloadUrl={`https://data.enseignementsup-recherche.gouv.fr/explore/dataset/fr-esr-insertion_professionnelle-lp/\
+table/?disjunctive.numero_de_l_etablissement&disjunctive.academie&refine.id_paysage=${id}&sort=-annee`}
                 canEdit={false}
               />
             </Col>
@@ -62,7 +64,8 @@ export default function StructureInsertionProfessionnellePage() {
                     Insertion professionnelle des diplômés de Master LMD
                   </>
                 )}
-                downloadUrl={`https://data.enseignementsup-recherche.gouv.fr/pages/insertion_professionnelle_etablissements/?disjunctive.discipline2&refine.diplome=MASTER_LMD&refine.annee=2019&refine.id_paysage=${id}&sort=code_de_la_discipline`}
+                downloadUrl={`https://data.enseignementsup-recherche.gouv.fr/pages/insertion_professionnelle_etablissements/\
+?disjunctive.discipline2&refine.diplome=MASTER_LMD&refine.annee=2019&refine.id_paysage=${id}&sort=code_de_la_discipline`}
                 canEdit={false}
               />
             </Col>
@@ -74,7 +77,8 @@ export default function StructureInsertionProfessionnellePage() {
                     Données sur l'insertion professionnelle des diplômés de Master LMD en open data
                   </>
                 )}
-                downloadUrl={`https://data.enseignementsup-recherche.gouv.fr/explore/dataset/fr-esr-insertion_professionnelle-master/table/?disjunctive.numero_de_l_etablissement&disjunctive.academie&refine.id_paysage=${id}&sort=-annee`}
+                downloadUrl={`https://data.enseignementsup-recherche.gouv.fr/explore/dataset/fr-esr-insertion_professionnelle-master/\
+table/?disjunctive.numero_de_l_etablissement&disjunctive.academie&refine.id_paysage=${id}&sort=-annee`}
                 canEdit={false}
               />
             </Col>
@@ -87,7 +91,8 @@ export default function StructureInsertionProfessionnellePage() {
                       Données sur l'insertion professionnelle des diplômés de doctorat en open data
                     </>
                   )}
-                  downloadUrl={`https://data.enseignementsup-recherche.gouv.fr/explore/dataset/fr-esr-insertion-professionnelle-des-diplomes-doctorat-par-etablissement/table/?sort=-annee&refine.numero_uai_ori=${uai.value}`}
+                  downloadUrl={`https://data.enseignementsup-recherche.gouv.fr/explore/dataset\
+/fr-esr-insertion-professionnelle-des-diplomes-doctorat-par-etablissement/table/?sort=-annee&refine.numero_uai_ori=${uai.value}`}
                   canEdit={false}
                 />
               </Col>

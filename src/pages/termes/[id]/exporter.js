@@ -9,7 +9,7 @@ import CopyBadgeButton from '../../../components/copy/copy-badge-button';
 import TermsPresentationPage from './presentation';
 import AgendaOutlet from '../../../components/outlets/evenements';
 import DocumentsOutlet from '../../../components/outlets/documents';
-import TermsCategories from './categories';
+import TermsRelatedElements from './elements-lies';
 import ActualitesOutlet from '../../../components/outlets/actualites';
 import OfficialTextOutlet from '../../../components/outlets/textes-officiels';
 import OverlaySpinner from '../../../components/spinner/overlay-spinner';
@@ -55,10 +55,10 @@ export default function TermExportPage() {
               </BadgeGroup>
             </Title>
             {searchParams.get('oeil') && <TermsPresentationPage />}
+            {searchParams.get('related') && <TermsRelatedElements />}
             {searchParams.get('actualites') && <ActualitesOutlet />}
             {searchParams.get('evenements') && <AgendaOutlet />}
             {searchParams.get('ressources') && <DocumentsOutlet />}
-            {searchParams.get('categories') && <TermsCategories />}
             {searchParams.get('textes') && <OfficialTextOutlet />}
           </Col>
         </Row>

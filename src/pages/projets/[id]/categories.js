@@ -4,14 +4,14 @@ export default function ProjectCategories() {
   return (
     <>
       <RelationsByTag
-        tag="categories"
+        tag="projects-categories"
         blocName="Catégories"
         resourceType="projects"
         relatedObjectTypes={['categories']}
         noRelationType
       />
       <RelationsByTag
-        tag="terms"
+        tag="projects-terms"
         blocName="Termes"
         resourceType="projects"
         relatedObjectTypes={['terms']}

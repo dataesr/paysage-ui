@@ -18,8 +18,8 @@ import api from '../../../utils/api';
 import useNotice from '../../../hooks/useNotice';
 
 import TermPresentationPage from './presentation';
-import TermCategories from './categories';
 import TermExportPage from './exporter';
+import TermRelatedElements from './elements-lies';
 import { saveError, saveSuccess } from '../../../utils/notice-contents';
 import TermForm from '../../../components/forms/term';
 
@@ -33,10 +33,10 @@ function TermByIdPage() {
   const [isFavorite, setIsFavorite] = useState(false);
   const { form, updateForm } = useForm({
     oeil: true,
+    related: true,
     actualites: true,
     evenements: true,
     ressources: true,
-    categories: true,
     textes: true,
   });
   const [isFormModalOpen, setIsFormModalOpen] = useState(false);
@@ -59,6 +59,10 @@ function TermByIdPage() {
               <Icon name="ri-eye-2-line" size="1x" />
               En un coup d’œil
             </SideMenuLink>
+            <SideMenuLink asLink={<RouterLink to="elements-lies" />}>
+              <Icon name="ri-links-line" size="1x" />
+              Eléments liés
+            </SideMenuLink>
             <SideMenuLink asLink={<RouterLink to="actualites" />}>
               <Icon name="ri-newspaper-line" size="1x" />
               Actualités
@@ -70,10 +74,6 @@ function TermByIdPage() {
             <SideMenuLink asLink={<RouterLink to="documents" />}>
               <Icon name="ri-folders-line" size="1x" />
               Ressources
-            </SideMenuLink>
-            <SideMenuLink asLink={<RouterLink to="categories" />}>
-              <Icon name="ri-price-tag-3-line" size="1x" />
-              Catégories et termes
             </SideMenuLink>
             <SideMenuLink asLink={<RouterLink to="textes-officiels" />}>
               <Icon name="ri-git-repository-line" size="1x" />
@@ -161,6 +161,11 @@ function TermByIdPage() {
                     label="En un coup d’œil"
                   />
                   <Checkbox
+                    checked={form.related}
+                    onChange={(e) => updateForm({ related: e.target.checked })}
+                    label="Eléments liés"
+                  />
+                  <Checkbox
                     checked={form.actualites}
                     onChange={(e) => updateForm({ actualites: e.target.checked })}
                     label="Actualités"
@@ -174,11 +179,6 @@ function TermByIdPage() {
                     checked={form.ressources}
                     onChange={(e) => updateForm({ ressources: e.target.checked })}
                     label="Ressources"
-                  />
-                  <Checkbox
-                    checked={form.categories}
-                    onChange={(e) => updateForm({ categories: e.target.checked })}
-                    label="Catégories et termes"
                   />
                   <Checkbox
                     checked={form.textes}
@@ -210,6 +210,6 @@ function TermByIdPage() {
 export {
   TermByIdPage,
   TermExportPage,
+  TermRelatedElements,
   TermPresentationPage,
-  TermCategories,
 };

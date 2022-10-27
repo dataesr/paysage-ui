@@ -29,7 +29,8 @@ export default function StructureOffreDeFormationPage() {
                     Les formations dans Parcoursup (open data)
                   </>
                 )}
-                downloadUrl={`https://data.enseignementsup-recherche.gouv.fr/explore/dataset/fr-esr-cartographie_formations_parcoursup/table/?disjunctive.tf&disjunctive.nm&disjunctive.fl&disjunctive.amg&refine.etablissement_id_paysage=${id}&disjunctive.nmc&sort=-annee`}
+                downloadUrl={`https://data.enseignementsup-recherche.gouv.fr/explore/dataset/fr-esr-cartographie_formations_parcoursup/\
+table/?disjunctive.tf&disjunctive.nm&disjunctive.fl&disjunctive.amg&refine.etablissement_id_paysage=${id}&disjunctive.nmc&sort=-annee`}
                 canEdit={false}
               />
             </Col>
@@ -41,7 +42,9 @@ export default function StructureOffreDeFormationPage() {
                     Les mentions dans Trouver Mon Master (TMM) (open data)
                   </>
                 )}
-                downloadUrl={`https://data.enseignementsup-recherche.gouv.fr/explore/dataset/fr-esr-tmm-donnees-du-portail-dinformation-trouver-mon-master-mentions-de-master/table/?disjunctive.for_modalite&disjunctive.for_lic_cons&refine.etablissement_id_paysage=${id}`}
+                downloadUrl={`https://data.enseignementsup-recherche.gouv.fr/explore/dataset\
+/fr-esr-tmm-donnees-du-portail-dinformation-trouver-mon-master-mentions-de-master/table\
+/?disjunctive.for_modalite&disjunctive.for_lic_cons&refine.etablissement_id_paysage=${id}`}
                 canEdit={false}
               />
             </Col>
@@ -53,7 +56,9 @@ export default function StructureOffreDeFormationPage() {
                     Les parcours dans Trouver Mon Master (TMM) (open data)
                   </>
                 )}
-                downloadUrl={`https://data.enseignementsup-recherche.gouv.fr/explore/dataset/fr-esr-tmm-donnees-du-portail-dinformation-trouver-mon-master-parcours-de-format/table/?refine.etablissement_id_paysage=${id}`}
+                downloadUrl={`https://data.enseignementsup-recherche.gouv.fr/explore/dataset\
+/fr-esr-tmm-donnees-du-portail-dinformation-trouver-mon-master-parcours-de-format\
+/table/?refine.etablissement_id_paysage=${id}`}
                 canEdit={false}
               />
             </Col>

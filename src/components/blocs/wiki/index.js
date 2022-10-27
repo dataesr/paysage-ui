@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
-import { Icon, TagGroup, Tag, Col } from '@dataesr/react-dsfr';
+import { Icon, Tag, Col } from '@dataesr/react-dsfr';
+import TagList from '../../tag-list';
 import useFetch from '../../../hooks/useFetch';
 import useUrl from '../../../hooks/useUrl';
 
@@ -15,6 +16,7 @@ export default function Wiki() {
   const { data: wikidata } = useFetch(`${url}/identifiers?filters[type]=Wikidata`);
   const [activity, setActivity] = useState(null);
   const [wikis, setWikis] = useState(null);
+
   useEffect(() => {
     const getActivity = async (wikiId) => fetch(`https://www.wikidata.org/w/api.php?format=json&origin=*&action=wbgetentities&ids=${wikiId}`)
       .then((response) => response.json())
@@ -48,13 +50,13 @@ export default function Wiki() {
               </div>
             </div>
             {(wikis?.length > 0) && (
-              <div className="fr-card__end fr-mt-0">
+              <div className="fr-card__end fr-mt-0 fr-mb-2w">
                 <p className="fr-card__detail fr-mb-1w">
                   Articles wikipédia:
                 </p>
-                <TagGroup size="sm">
+                <TagList>
                   {wikis.map((wiki) => <Tag iconPosition="right" icon="ri-external-link-line" onClick={() => window.open(wiki.link, '_blank')} key={wiki.lang}>{wiki.lang}</Tag>)}
-                </TagGroup>
+                </TagList>
               </div>
             )}
           </div>

@@ -18,7 +18,7 @@ import api from '../../../utils/api';
 import useNotice from '../../../hooks/useNotice';
 
 import CategoryPresentationPage from './presentation';
-import CategoryCategories from './categories';
+import CategoryRelatedElements from './elements-lies';
 import CategoryForm from '../../../components/forms/category';
 import CategoriesExportPage from './exporter';
 import { saveError, saveSuccess } from '../../../utils/notice-contents';
@@ -36,7 +36,7 @@ function CategoryByIdPage() {
     actualites: true,
     evenements: true,
     ressources: true,
-    categories: true,
+    related: true,
     textes: true,
   });
   const [isFormModalOpen, setIsFormModalOpen] = useState(false);
@@ -59,6 +59,10 @@ function CategoryByIdPage() {
               <Icon name="ri-eye-2-line" size="1x" />
               En un coup d’œil
             </SideMenuLink>
+            <SideMenuLink asLink={<RouterLink to="elements-lies" />}>
+              <Icon name="ri-links-line" size="1x" />
+              Eléments liés
+            </SideMenuLink>
             <SideMenuLink asLink={<RouterLink to="actualites" />}>
               <Icon name="ri-newspaper-line" size="1x" />
               Actualités
@@ -70,10 +74,6 @@ function CategoryByIdPage() {
             <SideMenuLink asLink={<RouterLink to="documents" />}>
               <Icon name="ri-folders-line" size="1x" />
               Ressources
-            </SideMenuLink>
-            <SideMenuLink asLink={<RouterLink to="categories" />}>
-              <Icon name="ri-price-tag-3-line" size="1x" />
-              Catégories et termes
             </SideMenuLink>
             <SideMenuLink asLink={<RouterLink to="textes-officiels" />}>
               <Icon name="ri-git-repository-line" size="1x" />
@@ -161,6 +161,11 @@ function CategoryByIdPage() {
                     label="En un coup d’œil"
                   />
                   <Checkbox
+                    checked={form.related}
+                    onChange={(e) => updateForm({ related: e.target.checked })}
+                    label="Elements liés"
+                  />
+                  <Checkbox
                     checked={form.actualites}
                     onChange={(e) => updateForm({ actualites: e.target.checked })}
                     label="Actualités"
@@ -174,11 +179,6 @@ function CategoryByIdPage() {
                     checked={form.ressources}
                     onChange={(e) => updateForm({ ressources: e.target.checked })}
                     label="Ressources"
-                  />
-                  <Checkbox
-                    checked={form.categories}
-                    onChange={(e) => updateForm({ categories: e.target.checked })}
-                    label="Catégories et termes"
                   />
                   <Checkbox
                     checked={form.textes}
@@ -210,6 +210,6 @@ function CategoryByIdPage() {
 export {
   CategoryByIdPage,
   CategoryPresentationPage,
-  CategoryCategories,
+  CategoryRelatedElements,
   CategoriesExportPage,
 };

@@ -63,7 +63,7 @@ export default function EmailsComponent() {
             <div className="fr-card__start">
               <p className="fr-card__detail fr-text--sm fr-mb-0">
                 <Icon name="ri-mail-line" size="1x" />
-                {el.emailType.usualName}
+                {el.emailType?.usualName}
               </p>
             </div>
             {editMode && <Button color="text" size="md" onClick={() => onOpenModalHandler(el)} tertiary borderless rounded icon="ri-edit-line" className="edit-button" />}
