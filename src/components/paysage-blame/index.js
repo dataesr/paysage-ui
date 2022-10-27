@@ -10,7 +10,7 @@ export default function PaysageBlame({ createdBy, createdAt, updatedBy, updatedA
     return (
       <div className="flex flex--center">
         <Text spacing="mr-1v mb-0" size="xs">
-          Crée le
+          Créé le
           {' '}
           {toString(createdAt)}
           {' par '}

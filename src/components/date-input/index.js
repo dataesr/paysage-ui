@@ -41,8 +41,8 @@ const DateInput = forwardRef((props, ref) => {
 });
 
 DateInput.propTypes = {
-  value: PropTypes.string,
   onDateChange: PropTypes.func.isRequired,
+  value: PropTypes.string,
 };
 DateInput.defaultProps = {
   value: null,
