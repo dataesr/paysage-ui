@@ -87,7 +87,7 @@ function CategoryByIdPage() {
               Accueil
             </BreadcrumbItem>
             <BreadcrumbItem
-              asLink={<RouterLink to="/rechercher/personnes?query=" />}
+              asLink={<RouterLink to="/rechercher/categories?query=&page=1" />}
             >
               Catégories
             </BreadcrumbItem>

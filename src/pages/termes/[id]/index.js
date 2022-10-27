@@ -87,7 +87,7 @@ function TermByIdPage() {
               Accueil
             </BreadcrumbItem>
             <BreadcrumbItem
-              asLink={<RouterLink to="/rechercher/personnes?query=" />}
+              asLink={<RouterLink to="/rechercher/termes?query=&page=1" />}
             >
               Termes
             </BreadcrumbItem>

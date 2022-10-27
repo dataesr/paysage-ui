@@ -93,9 +93,9 @@ function ProjectByIdPage() {
               Accueil
             </BreadcrumbItem>
             <BreadcrumbItem
-              asLink={<RouterLink to="/rechercher/personnes?query=" />}
+              asLink={<RouterLink to="/rechercher/projets?query=&page=1" />}
             >
-              Catégories
+              Projets
             </BreadcrumbItem>
             <BreadcrumbItem>{data.nameFr}</BreadcrumbItem>
           </Breadcrumb>

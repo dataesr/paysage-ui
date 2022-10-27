@@ -55,7 +55,7 @@ export default function OfficialTextByIdPage() {
               Accueil
             </BreadcrumbItem>
             <BreadcrumbItem
-              asLink={<RouterLink to="/rechercher/personnes?query=" />}
+              asLink={<RouterLink to="/rechercher/textes-officiels?query=&page=1" />}
             >
               Textes officiels
             </BreadcrumbItem>

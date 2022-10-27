@@ -1,10 +1,10 @@
-import { forwardRef, useState } from 'react';
 import {
   Tag,
   TagGroup,
   TextInput,
 } from '@dataesr/react-dsfr';
 import PropTypes from 'prop-types';
+import { forwardRef, useState } from 'react';
 
 function fromApproximativeDate(d) {
   if (d?.length === 4) return `${d.toString()}-01-01`;
@@ -24,11 +24,11 @@ const DateInput = forwardRef((props, ref) => {
   return (
     <>
       <TextInput
-        ref={ref}
         className="fr-m-0"
+        onChange={(e) => onDateChange(e.target.value.substring(0, approx))}
+        ref={ref}
         type="date"
         value={fromApproximativeDate(value)}
-        onChange={(e) => onDateChange(e.target.value.substring(0, approx))}
         {...rest}
       />
       <TagGroup className="fr-mt-1w">
