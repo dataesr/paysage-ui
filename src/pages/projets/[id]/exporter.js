@@ -1,11 +1,10 @@
+import { Badge, BadgeGroup, Col, Container, Row, Title } from '@dataesr/react-dsfr';
 import { useRef, useState } from 'react';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { useReactToPrint } from 'react-to-print';
 
-import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
-import { Badge, BadgeGroup, Col, Container, Row, Title } from '@dataesr/react-dsfr';
 import useFetch from '../../../hooks/useFetch';
 import CopyBadgeButton from '../../../components/copy/copy-badge-button';
-
 import ProjectPresentationPage from './presentation';
 import ProjectPrices from './prix-et-recompenses';
 import AgendaOutlet from '../../../components/outlets/evenements';

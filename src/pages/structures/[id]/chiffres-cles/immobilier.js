@@ -22,16 +22,19 @@ export default function StructureImmobilierPage() {
   const { url } = useUrl('keynumbers');
   const { data, error, isLoading } = useFetch(`${url}/real-estate?filters[annee]=${year}&limit=9999`);
 
-  const markers = [{
-    address: `${currentLocalisation?.address} ${currentLocalisation?.postalCode} ${currentLocalisation?.locality}`,
-    label: data?.data?.[0]?.etablissement,
-    latLng: [
-      currentLocalisation?.coordinates?.lat,
-      currentLocalisation?.coordinates?.lng,
-    ],
-    color: 'red',
-    zIndexOffset: 99,
-  }];
+  const markers = [];
+  if (currentLocalisation?.coordinates?.lat && currentLocalisation?.coordinates?.lng) {
+    markers.push({
+      address: `${currentLocalisation?.address} ${currentLocalisation?.postalCode} ${currentLocalisation?.locality}`,
+      label: data?.data?.[0]?.etablissement,
+      latLng: [
+        currentLocalisation?.coordinates?.lat,
+        currentLocalisation?.coordinates?.lng,
+      ],
+      color: 'red',
+      zIndexOffset: 99,
+    });
+  }
   data?.data?.filter((item) => item?.latlong)?.forEach((item) => {
     markers.push({
       address: `${item?.adresse} ${item?.cp} ${item?.com_nom}`,

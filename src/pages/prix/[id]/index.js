@@ -87,7 +87,7 @@ function PriceByIdPage() {
               Accueil
             </BreadcrumbItem>
             <BreadcrumbItem
-              asLink={<RouterLink to="/rechercher/personnes?query=" />}
+              asLink={<RouterLink to="/rechercher/prix?query=&page=1" />}
             >
               Prix
             </BreadcrumbItem>

@@ -91,7 +91,7 @@ function User({
             </TagGroup>
           )}
           <Text spacing="mt-2w mb-0" size="xs">
-            Crée le
+            Créé le
             {' '}
             {toString(createdAt)}
           </Text>

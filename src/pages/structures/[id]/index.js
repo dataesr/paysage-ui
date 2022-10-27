@@ -184,7 +184,7 @@ function StructureByIdPage() {
               Accueil
             </BreadcrumbItem>
             <BreadcrumbItem
-              asLink={<RouterLink to="/rechercher/structures?query=" />}
+              asLink={<RouterLink to="/rechercher/structures?query=&page=1" />}
             >
               Structures
             </BreadcrumbItem>

@@ -5,6 +5,7 @@ import { Link as RouterLink, useLocation, useSearchParams } from 'react-router-d
 import Spinner from '../components/spinner';
 import useHashScroll from '../hooks/useHashScroll';
 import useSearch from '../hooks/useSearch';
+import { capitalize } from '../utils/strings';
 import { getTypeFromUrl, getUrlFromType } from '../utils/types-url-mapper';
 
 const icons = {
@@ -18,6 +19,33 @@ const icons = {
   projects: 'ri-booklet-line',
 };
 
+const getDescription = (item) => {
+  let description = '';
+  switch (item?.type) {
+  case 'structures':
+    // Structures : Nom usuel + sigle ou nom court > Catégorie principale > Localisation > Date de création
+    description += item?.locality ? ` à ${item.locality}` : '';
+    description += item?.creationDate ? ` depuis ${item.creationDate.slice(0, 4)}` : '';
+    break;
+  case 'persons':
+    // Personnes : Prénom, nom > dernier mandat renseigné ou activité récupérée de wikidata > structure associée au mandat
+    break;
+  case 'categories':
+  case 'terms':
+    // Catégories & termes : Nom usuel
+    break;
+  case 'official-texts':
+    // Textes officiels : Libellé du texte officiel > structures associées
+    break;
+  case 'projects':
+    // Projet : Nom usuel + sigle ou nom court du projet > Catégorie principale > Localisation > Date de début
+    description += item?.startDate ? ` depuis ${item.startDate}` : '';
+    break;
+  default:
+  }
+  return capitalize(description.trim());
+};
+
 function SearchResults({ data }) {
   if (data && data.length) {
     return (
@@ -29,14 +57,15 @@ function SearchResults({ data }) {
                 <p className="fr-tile__title">
                   <RouterLink className="fr-tile__link fr-link--md" to={`/${getUrlFromType(item.type)}/${item.id}`}>
                     <Icon name={icons[item.type]} size="1x" color={`var(--${item.type}-color)`} />
-                    {item.name}
+                    {capitalize(item.name)}
+                    {item?.acronym && (
+                      ` (${item.acronym})`
+                    )}
                   </RouterLink>
                 </p>
-                {item?.description && (
-                  <p className="fr-tile__desc">
-                    {item?.description}
-                  </p>
-                )}
+                <p className="fr-tile__desc">
+                  {getDescription(item)}
+                </p>
               </div>
             </Tile>
           </Col>

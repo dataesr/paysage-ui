@@ -123,7 +123,7 @@ function PersonByIdPage() {
               Accueil
             </BreadcrumbItem>
             <BreadcrumbItem
-              asLink={<RouterLink to="/rechercher/personnes?query=" />}
+              asLink={<RouterLink to="/rechercher/personnes?query=&page=1" />}
             >
               Personnes
             </BreadcrumbItem>

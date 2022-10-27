@@ -1,8 +1,9 @@
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { Breadcrumb, BreadcrumbItem, Col, Container, Row, Title } from '@dataesr/react-dsfr';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
+
 import ProjectForm from '../../components/forms/project';
-import api from '../../utils/api';
 import useNotice from '../../hooks/useNotice';
+import api from '../../utils/api';
 import { saveError, saveSuccess } from '../../utils/notice-contents';
 
 export default function ProjectAddPage() {
@@ -23,13 +24,17 @@ export default function ProjectAddPage() {
             <BreadcrumbItem asLink={<RouterLink to="/contribuer" />}>
               Ajouter un nouvel objet
             </BreadcrumbItem>
-            <BreadcrumbItem>Ajouter un projet</BreadcrumbItem>
+            <BreadcrumbItem>
+              Ajouter un projet
+            </BreadcrumbItem>
           </Breadcrumb>
         </Col>
       </Row>
       <Row>
         <Col>
-          <Title as="h2">Ajouter un projet</Title>
+          <Title as="h2">
+            Ajouter un projet
+          </Title>
         </Col>
       </Row>
 

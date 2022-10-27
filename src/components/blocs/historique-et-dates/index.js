@@ -30,7 +30,7 @@ function HistoryCard({ creationDate, creationReason, closureDate, closureReason,
           <div className="fr-card__title">
             {creationDate && (
               <p className="fr-mb-1w">
-                Établissement crée le
+                Créé le
                 {' '}
                 {toString(creationDate)}
                 {createReason}

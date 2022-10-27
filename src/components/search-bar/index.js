@@ -6,6 +6,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 import styles from './styles.module.scss';
 import Spinner from '../spinner';
+import { capitalize } from '../../utils/strings';
 
 const objectTypes = {
   categories: 'ri-price-tag-3-line',
@@ -175,7 +176,7 @@ const SearchBar = forwardRef((props, ref) => {
                     <Text className={styles.content}>
                       {option.name}
                       {option.acronym ? ` (${option.acronym})` : null}
-                      {option.locality ? ` à ${ option.locality.charAt(0).toUpperCase() + option.locality.slice(1) }` : null}
+                      {option.locality ? ` à ${capitalize(option)}` : null}
                       {option.creationDate ? ` depuis ${option.creationDate.slice(0, 4)}` : null}
                     </Text>
                     {optionsIcon && <Badge type="info" isSmall hasIcon icon={optionsIcon} text="voir la page" />}

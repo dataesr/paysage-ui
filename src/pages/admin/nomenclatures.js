@@ -149,7 +149,7 @@ export default function NomenclaturesPage({ route, title }) {
               <Text as="span" bold>Autres noms: </Text>
               {item.otherNames.length ? item.otherNames.map((name) => <Tag as="span">{name}</Tag>) : <Text as="span">Aucun alias pour le moment</Text>}
               <Text spacing="mt-2w mb-0" size="xs">
-                Crée le
+                Créé le
                 {' '}
                 {toString(item.createdAt)}
                 {' par '}
