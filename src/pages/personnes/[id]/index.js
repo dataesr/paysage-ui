@@ -111,6 +111,10 @@ function PersonByIdPage() {
               <Icon name="ri-links-line" size="1x" />
               Participations
             </SideMenuLink>
+            <SideMenuLink asLink={<RouterLink to="journal" />}>
+              <Icon name="ri-refresh-line" size="1x" />
+              Journal de modifications
+            </SideMenuLink>
           </SideMenu>
         </Col>
         <Col n="12 md-9">

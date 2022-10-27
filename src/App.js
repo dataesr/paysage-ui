@@ -68,6 +68,7 @@ import DocumentsOutlet from './components/outlets/documents';
 import ActualitesOutlet from './components/outlets/actualites';
 import OfficialTextsOutlet from './components/outlets/textes-officiels';
 import ParticipationsOutlet from './components/outlets/participations';
+import JournalOutlet from './components/outlets/journal';
 import PriceAddPage from './pages/prix/ajouter';
 import { PriceByIdPage, PriceCategories, PriceExportPage, PricePresentationPage } from './pages/prix/[id]';
 
@@ -132,6 +133,7 @@ function App() {
             <Route path="prix-et-recompenses" element={<StructurePrixEtRecompensesPage />} />
             <Route path="elements-lies" element={<StructureElementsLiesPage />} />
             <Route path="participations" element={<ParticipationsOutlet />} />
+            <Route path="journal" element={<JournalOutlet />} />
           </Route>
 
           <Route path="/categories/ajouter" element={<CategoriesAddPage />} />
@@ -162,6 +164,7 @@ function App() {
             <Route path="textes-officiels" element={<OfficialTextsOutlet />} />
             <Route path="elements-lies" element={<PersonsRelatedElements />} />
             <Route path="participations" element={<ParticipationsOutlet />} />
+            <Route path="journal" element={<JournalOutlet />} />
           </Route>
 
           <Route path="/termes/ajouter" element={<TermsAddPage />} />

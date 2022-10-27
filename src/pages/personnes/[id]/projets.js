@@ -5,7 +5,7 @@ export default function PersonProjets() {
     <>
       <RelationsByTag
         tag="project-contact"
-        blocName="Contact"
+        blocName="Référent pour les projets"
         resourceType="projects"
         relatedObjectTypes={['persons']}
         noRelationType
