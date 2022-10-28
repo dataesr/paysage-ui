@@ -1,5 +1,6 @@
 import { Breadcrumb, BreadcrumbItem, Col, Container, Row, Title } from '@dataesr/react-dsfr';
 import { Link as RouterLink } from 'react-router-dom';
+import JournalOutlet from '../../components/outlets/journal';
 
 export default function AdminDashboardPage() {
   return (
@@ -18,6 +19,7 @@ export default function AdminDashboardPage() {
           <Title as="h2" look="h3">Tableau de bord</Title>
         </Col>
       </Row>
+      <JournalOutlet />
     </Container>
   );
 }

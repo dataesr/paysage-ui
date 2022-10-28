@@ -2,13 +2,13 @@ import { Link, useParams } from 'react-router-dom';
 import { Col, Row, Text } from '@dataesr/react-dsfr';
 import useFetch from '../../hooks/useFetch';
 import useHashScroll from '../../hooks/useHashScroll';
-
+import { toString } from '../../utils/dates';
 import { Bloc, BlocContent, BlocTitle } from '../bloc';
 import Avatar from '../avatar';
 
 export default function JournalOutlet() {
   const { id: resourceId } = useParams();
-  const url = `/journal?filters[resourceId]=${resourceId}&sort=-createdAt`;
+  const url = resourceId ? `/journal?filters[resourceId]=${resourceId}&sort=-createdAt` : '/journal?sort=-createdAt';
   const { data, isLoading, error } = useFetch(url);
   useHashScroll();
 
@@ -23,7 +23,7 @@ export default function JournalOutlet() {
               <Text spacing="ml-1v mb-0">
                 {`${event.user.firstName} ${event.user.lastName}`}
                 {' le '}
-                {new Date(event.createdAt).toLocaleDateString()}
+                {toString(event.createdAt, true)}
                 {' a '}
                 {['PUT', 'POST'].includes(event.method.toUpperCase()) && 'créé' }
                 {['DELETE'].includes(event.method.toUpperCase()) && 'supprimé' }
