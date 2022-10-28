@@ -21,7 +21,10 @@ export const timeOptions = {
 };
 export function toString(date, time = false) {
   if (time) return new Date(date).toLocaleString('fr-FR', { ...dateOptions, timeOptions });
-  return new Date(date).toLocaleDateString('fr-FR', dateOptions);
+  if (date?.length === 10) return new Date(date).toLocaleDateString('fr-FR', dateOptions);
+  if (date?.length === 7) return new Date(date).toLocaleDateString('fr-FR', { year: dateOptions.year, month: dateOptions.month });
+  if (date?.length === 4) return new Date(date).toLocaleDateString('fr-FR', { year: dateOptions.year });
+  return null;
 }
 
 export function reverseDate(d) {

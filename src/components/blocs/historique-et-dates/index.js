@@ -19,8 +19,8 @@ import useUrl from '../../../hooks/useUrl';
 import { formatDescriptionDates, toString } from '../../../utils/dates';
 
 function HistoryCard({ creationDate, creationReason, closureDate, closureReason, creationOfficialText, closureOfficialText, predecessors, successors }) {
-  const createReason = (creationReason && !['autre', 'Création'].includes(creationReason)) && ` par ${creationReason.toLowerCase() }`;
-  const closeReason = (closureReason && !['autre', 'Création'].includes(closureReason)) && ` par ${closureReason.toLowerCase() }`;
+  const createReason = (creationReason && !['Non renseigné', 'autre', 'Création'].includes(creationReason)) && ` par ${creationReason.toLowerCase() }`;
+  const closeReason = (closureReason && !['Non renseigné', 'autre', 'Création'].includes(closureReason)) && ` par ${closureReason.toLowerCase() }`;
   const navigate = useNavigate();
   if (!closureDate && !creationDate) return <Highlight>Aucune donnée historique</Highlight>;
   return (
@@ -30,16 +30,15 @@ function HistoryCard({ creationDate, creationReason, closureDate, closureReason,
           <div className="fr-card__title">
             {creationDate && (
               <p className="fr-mb-1w">
-                Créé le
-                {' '}
-                {toString(creationDate)}
+                Créé
+                {(creationDate.split('-').length === 1) ? ` en ${toString(creationDate)}` : ` le ${toString(creationDate)}`}
                 {createReason}
                 <br />
                 {creationOfficialText?.id && (
                   <a className="fr-text--xs fr-text--regular fr-link--sm" href={creationOfficialText?.pageUrl} target="_blank" rel="noreferrer">
                     {creationOfficialText?.nature}
                     {' '}
-                    {creationOfficialText?.publicationDate && `du ${toString(creationOfficialText.publicationDate)}`}
+                    {creationOfficialText?.publicationDate && formatDescriptionDates(creationOfficialText.publicationDate)}
                   </a>
                 )}
               </p>

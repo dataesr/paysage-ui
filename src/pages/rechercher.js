@@ -26,7 +26,7 @@ const getDescription = (item) => {
   case 'structures':
     // Structures : Nom usuel + sigle ou nom court > Catégorie principale > Localisation > Date de création
     description += item?.locality ? ` à ${item.locality}` : '';
-    description += item?.creationDate ? formatDescriptionDates(item?.creationDate) : '';
+    description += item?.creationDate ? ` ${formatDescriptionDates(item?.creationDate)}` : '';
     break;
   case 'persons':
     // Personnes : Prénom, nom > dernier mandat renseigné ou activité récupérée de wikidata > structure associée au mandat
@@ -58,7 +58,7 @@ function SearchResults({ data }) {
                 <p className="fr-tile__title">
                   <RouterLink className="fr-tile__link fr-link--md" to={`/${getUrlFromType(item.type)}/${item.id}`}>
                     <Icon name={icons[item.type]} size="1x" color={`var(--${item.type}-color)`} />
-                    {capitalize(item.name)}
+                    {item.name}
                     {item?.acronym && (
                       ` (${item.acronym})`
                     )}
