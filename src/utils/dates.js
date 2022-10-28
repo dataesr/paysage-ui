@@ -9,19 +9,19 @@ export function fromApproximativeDate(d) {
   return d;
 }
 
+export const dateOptions = {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+};
+export const timeOptions = {
+  hour: 'numeric',
+  minute: 'numeric',
+  second: 'numeric',
+};
 export function toString(date, time = false) {
-  const options = {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  };
-  const timeOptions = {
-    hour: 'numeric',
-    minute: 'numeric',
-    second: 'numeric',
-  };
-  if (time) return new Date(date).toLocaleString('fr-FR', { ...options, timeOptions });
-  return new Date(date).toLocaleDateString('fr-FR', options);
+  if (time) return new Date(date).toLocaleString('fr-FR', { ...dateOptions, timeOptions });
+  return new Date(date).toLocaleDateString('fr-FR', dateOptions);
 }
 
 export function reverseDate(d) {
