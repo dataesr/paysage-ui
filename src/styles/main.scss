@@ -225,3 +225,11 @@ HR {
     }
   }
 }
+.card-categories {
+  border-left: .25rem solid var(--categories-color) !important;
+  .fr-card__start {
+    .fr-card__detail {
+      color: var(--categories-color) !important;
+    }
+  }
+}

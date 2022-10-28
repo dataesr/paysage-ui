@@ -36,7 +36,6 @@ export default function ProjectPresentationPage() {
                 cardKey="Date de début"
                 cardValue={data?.startDate ? new Date(data.startDate).toLocaleDateString('fr-FR', dateOptions) : 'Non renseigné'}
                 icon="ri-calendar-line"
-                tooltip="Date de début du projet"
               />
             </Col>
             <Col n="12">
@@ -45,7 +44,6 @@ export default function ProjectPresentationPage() {
                 cardKey="Date de fin"
                 cardValue={data?.endDate ? new Date(data.endDate).toLocaleDateString('fr-FR', dateOptions) : 'Non renseigné'}
                 icon="ri-calendar-line"
-                tooltip="Date de fin du projet"
               />
             </Col>
           </Row>
