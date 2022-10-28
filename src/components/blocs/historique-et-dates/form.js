@@ -199,7 +199,7 @@ export default function StructureHistoryForm({ data, onDeleteHandler, onSaveHand
           <Col>
             <SearchBar
               buttonLabel="Rechercher"
-              hint="Rechercher et sélectionner un texte officiel présent dans Paysage"
+              hint="Rechercher et sélectionner un texte officiel"
               isSearching={isSearchingClosure}
               label="Ajouter / remplacer le texte officiel de fermeture"
               onChange={(e) => { updateForm({ closureOfficialTextId: null }); setQueryTOClosure(e.target.value); }}
