@@ -9,13 +9,18 @@ import styles from './styles.module.scss';
 export default function RelationCard({ relation, inverse, onEdit }) {
   const navigate = useNavigate();
   const { editMode } = useEditMode();
-  const color = inverse ? relation.resource.collection : relation.relatedObject.collection;
+  const toPrintRelation = inverse ? relation.resource : relation.relatedObject;
+  const isFeminine = (toPrintRelation.collection === 'persons' && toPrintRelation.genre === 'Femme');
   return (
     <div className="fr-card fr-card--xs fr-card--grey fr-card--no-border">
-      <div className={`fr-card__body ${styles['card-body']} ${styles[`${color}-border`]}`}>
+      <div className={`fr-card__body ${styles['card-body']} ${styles[`${toPrintRelation.collection}-border`]}`}>
         <div className="fr-card__content">
           <div className="fr-card__desc">
-            <Text as="span" bold>{relation.relationType?.name || 'Appartient à la liste'}</Text>
+            {relation.relationType && (
+              <Text as="span" bold>
+                {((isFeminine) ? (relation.relationType?.feminineName || relation.relationType?.name) : relation.relationType?.name)}
+              </Text>
+            )}
             {' '}
             {formatDescriptionDates(relation.startDate || null, relation.endDate || null)}
           </div>
@@ -29,10 +34,8 @@ export default function RelationCard({ relation, inverse, onEdit }) {
               </TagGroup>
             </div>
           )}
-          <p className={`fr-card__title ${styles[`${color}-title`]}`}>
-            {inverse
-              ? <RouterLink className="fr-text--lg" to={relation.resource.href}>{relation.resource?.displayName}</RouterLink>
-              : <RouterLink className="fr-text--lg" to={relation.relatedObject.href}>{relation.relatedObject?.displayName}</RouterLink>}
+          <p className={`fr-card__title ${styles[`${toPrintRelation.collection}-title`]}`}>
+            <RouterLink className="fr-text--lg" to={toPrintRelation?.href}>{toPrintRelation?.displayName}</RouterLink>
           </p>
           {(relation.startDateOfficialText?.id || relation.endDateOfficialText?.id) && (
             <div className={`fr-card__end ${styles['card-end']}`}>
