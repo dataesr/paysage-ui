@@ -331,7 +331,7 @@ function HistoryStep({ globalForm, handleSave, updateGlobalForm, setStep }) {
         <Row>
           <Col>
             <Select
-              label="Raison de création"
+              label="Raison de fermeture"
               options={closureReasonsOptions}
               selected={form?.closureReason}
               onChange={(e) => updateForm({ closureReason: e.target.value })}
@@ -351,7 +351,7 @@ function HistoryStep({ globalForm, handleSave, updateGlobalForm, setStep }) {
           <Col>
             <SearchBar
               buttonLabel="Rechercher"
-              hint="Rechercher et sélectionner un texte officiel présent dans Paysage"
+              hint="Rechercher et sélectionner un texte officiel"
               isSearching={isSearchingClosure}
               label="Ajouter / remplacer le texte officiel de fermeture"
               onChange={(e) => { updateForm({ closureOfficialTextId: null }); setQueryTOClosure(e.target.value); }}
