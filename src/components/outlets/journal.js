@@ -25,7 +25,7 @@ export default function JournalOutlet() {
                 {' le '}
                 {new Date(event.createdAt).toLocaleDateString()}
                 {' a '}
-                {['PUT', 'POST'].includes(event.method.toUpperCase()) && 'crée' }
+                {['PUT', 'POST'].includes(event.method.toUpperCase()) && 'créé' }
                 {['DELETE'].includes(event.method.toUpperCase()) && 'supprimé' }
                 {['PATCH'].includes(event.method.toUpperCase()) && 'modifié' }
                 {' un objet '}
