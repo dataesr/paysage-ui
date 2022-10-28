@@ -2,12 +2,15 @@ import { Col, Icon, Row, Title } from '@dataesr/react-dsfr';
 import { useParams } from 'react-router-dom';
 
 import Identifiers from '../../../components/blocs/identifiers';
+import Localisations from '../../../components/blocs/localisations';
 import RelationsByTag from '../../../components/blocs/relations-by-tag';
 import Weblinks from '../../../components/blocs/weblinks';
 import Wiki from '../../../components/blocs/wiki';
+import KeyValueCard from '../../../components/card/key-value-card';
 import Spinner from '../../../components/spinner';
 import useFetch from '../../../hooks/useFetch';
 import useHashScroll from '../../../hooks/useHashScroll';
+import { dateOptions } from '../../../utils/dates';
 
 export default function ProjectPresentationPage() {
   useHashScroll();
@@ -23,6 +26,33 @@ export default function ProjectPresentationPage() {
           En un coup d’œil
           <Icon className="ri-eye-2-line fr-ml-1w" />
         </Title>
+      </Row>
+      <Row gutters spacing="mb-5w">
+        <Col n="12 md-6">
+          <Row gutters>
+            <Col n="12">
+              <KeyValueCard
+                className="card-projects"
+                cardKey="Date de début"
+                cardValue={data?.startDate ? new Date(data.startDate).toLocaleDateString('fr-FR', dateOptions) : 'Non renseigné'}
+                icon="ri-calendar-line"
+                tooltip="Date de début du projet"
+              />
+            </Col>
+            <Col n="12">
+              <KeyValueCard
+                className="card-projects"
+                cardKey="Date de fin"
+                cardValue={data?.endDate ? new Date(data.endDate).toLocaleDateString('fr-FR', dateOptions) : 'Non renseigné'}
+                icon="ri-calendar-line"
+                tooltip="Date de fin du projet"
+              />
+            </Col>
+          </Row>
+        </Col>
+        <Col n="12 md-6">
+          <Localisations />
+        </Col>
       </Row>
       <RelationsByTag
         tag="participations"
@@ -49,24 +79,6 @@ export default function ProjectPresentationPage() {
         </Col>
       </Row>
       <Identifiers />
-      <Row gutters spacing="mb-5w">
-        <Col n="12 md-6">
-          <div>
-            Date de début
-          </div>
-          <div>
-            {data?.startDate || 'Non renseigné'}
-          </div>
-        </Col>
-        <Col n="12 md-6">
-          <div>
-            Date de fin
-          </div>
-          <div>
-            {data?.endDate || 'Non renseigné'}
-          </div>
-        </Col>
-      </Row>
     </>
   );
 }

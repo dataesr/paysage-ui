@@ -1,21 +1,17 @@
-import { Icon, Modal, ModalContent, ModalTitle } from '@dataesr/react-dsfr';
+import { Modal, ModalContent, ModalTitle } from '@dataesr/react-dsfr';
 import { useState } from 'react';
 
-import classNames from 'classnames';
 import IdentifierForm from '../../forms/identifier';
 import ExpendableListCards from '../../card/expendable-list-cards';
-import CopyButton from '../../copy/copy-button';
 import { Bloc, BlocActionButton, BlocContent, BlocModal, BlocTitle } from '../../bloc';
 import api from '../../../utils/api';
 import useFetch from '../../../hooks/useFetch';
 import useUrl from '../../../hooks/useUrl';
 import useNotice from '../../../hooks/useNotice';
 import { deleteError, saveError, saveSuccess, deleteSuccess } from '../../../utils/notice-contents';
-import useEditMode from '../../../hooks/useEditMode';
-import Button from '../../button';
+import KeyValueCard from '../../card/key-value-card';
 
 export default function IdentifiersComponent() {
-  const { editMode } = useEditMode();
   const { notice } = useNotice();
   const { url, apiObject } = useUrl('identifiers');
   const { data, isLoading, error, reload } = useFetch(url);
@@ -54,25 +50,16 @@ export default function IdentifiersComponent() {
 
   const renderCards = () => {
     if (!data) return null;
-    const _className = classNames('fr-card fr-card--xs fr-card--horizontal fr-card--grey fr-card--no-border', `card-${apiObject}`);
     const list = data.data.map((el) => (
-      <div key={el.id} className={_className}>
-        <div className="fr-card__body">
-          <div className="fr-card__content">
-            <p className="fr-card__title">
-              <span className="fr-pr-1w">{el.value}</span>
-              <CopyButton copyText={el.value} size="sm" />
-            </p>
-            <div className="fr-card__start">
-              <p className="fr-card__detail fr-text--sm fr-mb-0">
-                <Icon name="ri-fingerprint-2-line" size="1x" />
-                {el.type}
-              </p>
-            </div>
-            {editMode && <Button color="text" size="md" onClick={() => onOpenModalHandler(el)} tertiary borderless rounded icon="ri-edit-line" className="edit-button" />}
-          </div>
-        </div>
-      </div>
+      <KeyValueCard
+        copy
+        key={el.id}
+        cardKey={el.type}
+        cardValue={el.value}
+        icon="ri-fingerprint-2-line"
+        className={`card-${apiObject}`}
+        onEdit={() => onOpenModalHandler(el)}
+      />
     ));
     return <ExpendableListCards list={list} />;
   };

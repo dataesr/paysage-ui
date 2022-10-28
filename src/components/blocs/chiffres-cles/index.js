@@ -1,10 +1,11 @@
-import { Col, Container, Icon, Row } from '@dataesr/react-dsfr';
+import { Col, Container, Row } from '@dataesr/react-dsfr';
 
 import { BlocContent, BlocTitle } from '../../bloc';
 import Spinner from '../../spinner';
 import useFetch from '../../../hooks/useFetch';
 import useUrl from '../../../hooks/useUrl';
 import cleanNumber from '../../../utils/cleanNumbers';
+import KeyValueCard from '../../card/key-value-card';
 
 export default function ChiffresCles() {
   const { url } = useUrl();
@@ -23,21 +24,12 @@ export default function ChiffresCles() {
 
   const renderCards = () => all.map((el) => (
     <Col n="12 md-6">
-      <div key={el.id} className="fr-card fr-card--xs fr-card--horizontal fr-card--grey fr-card--no-border">
-        <div className="fr-card__body">
-          <div className="fr-card__content">
-            <p className="fr-card__title">
-              <span className="fr-pr-1w">{el.value}</span>
-            </p>
-            <div className="fr-card__start">
-              <p className="fr-card__detail fr-text--sm fr-mb-0">
-                <Icon name={el.icon} size="1x" />
-                {el.key}
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
+      <KeyValueCard
+        key={el.id}
+        cardKey={el.key}
+        cardValue={el.value}
+        icon={el.icon}
+      />
     </Col>
   ));
 
