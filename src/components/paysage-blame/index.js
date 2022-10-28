@@ -44,15 +44,25 @@ export default function PaysageBlame({ createdBy, createdAt, updatedBy, updatedA
 }
 
 PaysageBlame.propTypes = {
-  createdBy: PropTypes.shape,
-  updatedBy: PropTypes.shape,
+  createdBy: PropTypes.shape({
+    firstName: PropTypes.string,
+    lastName: PropTypes.string,
+    avatar: PropTypes.string,
+    id: PropTypes.string,
+  }),
+  updatedBy: PropTypes.shape({
+    firstName: PropTypes.string,
+    lastName: PropTypes.string,
+    avatar: PropTypes.string,
+    id: PropTypes.string,
+  }),
   createdAt: PropTypes.string,
   updatedAt: PropTypes.string,
 };
 
 PaysageBlame.defaultProps = {
-  createdBy: null,
-  updatedBy: null,
+  createdBy: {},
+  updatedBy: {},
   createdAt: null,
   updatedAt: null,
 };
