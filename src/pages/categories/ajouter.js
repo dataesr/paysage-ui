@@ -1,8 +1,17 @@
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { Breadcrumb, BreadcrumbItem, Col, Container, Row, Title } from '@dataesr/react-dsfr';
-import CategoryAddForm from '../../components/forms/category';
+import CategoryTermsForm from '../../components/forms/category';
+import api from '../../utils/api';
+import useNotice from '../../hooks/useNotice';
+import { saveError, saveSuccess } from '../../utils/notice-contents';
 
 export default function CategoriesAddPage() {
+  const navigate = useNavigate();
+  const { notice } = useNotice();
+  const onSave = async (body) => api.post('/categories', body)
+    .then((response) => { notice(saveSuccess); navigate(`/categories/${response.data.id}`); })
+    .catch(() => { notice(saveError); });
+
   return (
     <Container spacing="mb-6w">
       <Row>
@@ -24,7 +33,7 @@ export default function CategoriesAddPage() {
         </Col>
       </Row>
 
-      <CategoryAddForm />
+      <CategoryTermsForm onSave={onSave} />
     </Container>
   );
 }

@@ -156,7 +156,7 @@ export default function RelationForm({ id, resourceType, relatedObjectTypes, dat
     : [{ label: 'Appartient à la liste', value: null }];
   return (
     <form>
-      <Container>
+      <Container fluid>
         <PaysageBlame
           createdBy={data.createdBy}
           updatedBy={data.updatedBy}
@@ -249,7 +249,7 @@ export default function RelationForm({ id, resourceType, relatedObjectTypes, dat
               buttonLabel="Rechercher"
               value={endDateOfficialTextQuery || ''}
               label="Texte officiel de fin de relation"
-              hint="Rechercher et sélectionner une personne"
+              hint="Rechercher et sélectionner un texte officiel"
               scope={form.endDateOfficialTextName}
               placeholder={form.endDateOfficialTextId ? '' : 'Rechercher...'}
               onChange={(e) => { updateForm({ endDateOfficialTextId: null }); setEndDateOfficialTextQuery(e.target.value); }}
