@@ -16,7 +16,7 @@ import { STRUCTURES_CREATION_REASONS, STRUCTURES_CLOSURE_REASONS } from '../../.
 import DateInput from '../../date-input';
 import SearchBar from '../../search-bar';
 
-export default function WeblinkForm({ data, onDeleteHandler, onSaveHandler }) {
+export default function StructureHistoryForm({ data, onDeleteHandler, onSaveHandler }) {
   // const [showErrors, setShowErrors] = useState(false);
   const [isSearchingCreation, setIsSearchingCreation] = useState(false);
   const [optionsTOCreation, setOptionsCreation] = useState([]);
@@ -247,13 +247,13 @@ export default function WeblinkForm({ data, onDeleteHandler, onSaveHandler }) {
   );
 }
 
-WeblinkForm.propTypes = {
+StructureHistoryForm.propTypes = {
   data: PropTypes.object,
   onDeleteHandler: PropTypes.func,
   onSaveHandler: PropTypes.func.isRequired,
 };
 
-WeblinkForm.defaultProps = {
+StructureHistoryForm.defaultProps = {
   data: {},
   onDeleteHandler: null,
 };

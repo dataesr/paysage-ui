@@ -6,8 +6,6 @@ import {
   BreadcrumbItem,
   Col,
   Container,
-  RadioGroup,
-  Radio,
   Row,
   Stepper,
   Tag,
@@ -15,17 +13,18 @@ import {
   TextInput,
   Title,
   TagGroup,
-  Highlight,
+  Select,
 } from '@dataesr/react-dsfr';
 import TagInput from '../../components/tag-input';
 import Button from '../../components/button';
 import DateInput from '../../components/date-input';
-import Map from '../../components/map';
 import useForm from '../../hooks/useForm';
 import useNotice from '../../hooks/useNotice';
 import api from '../../utils/api';
+import { STRUCTURES_CLOSURE_REASONS, STRUCTURES_CREATION_REASONS } from '../../utils/constants';
+import SearchBar from '../../components/search-bar';
 
-const steps = ['Identifiants', 'Dénominations', 'Adresse', 'Création et fermeture'];
+const steps = ['Identifiants', 'Dénominations', 'Création et fermeture'];
 
 const stepProps = {
   globalForm: PropTypes.shape.isRequired,
@@ -37,7 +36,7 @@ function IdentifiersStep({ globalForm, updateGlobalForm, setStep }) {
   const validateForm = (body) => {
     const validationErrors = {};
     if (body.rnsr && !/^[0-9]{9}[A-Z]{1}$/.test(body.rnsr)) { validationErrors.rnsr = "Le numero RNSR doit être composé de 9 chiffres suivi d'une lettre majuscule"; }
-    if (body.siret && !/^[0-9]{14}[A-Z]{1}$/.test(body.siret)) { validationErrors.siret = 'Le numero Siret doit être composé de 14 chiffres'; }
+    if (body.siret && !/^[0-9]{14}$/.test(body.siret)) { validationErrors.siret = 'Le numero Siret doit être composé de 14 chiffres'; }
     return validationErrors;
   };
   const { form, updateForm, errors } = useForm(globalForm, validateForm);
@@ -194,7 +193,7 @@ function DenominationStep({ prefiller, globalForm, updateGlobalForm, setStep }) 
         </Col>
       </Row>
       <hr />
-      <Row className="fullwidth fr-row--space-between">
+      <Row className="fullwidth flex--space-between">
         <Button secondary onClick={() => setStep({ step: 1 })}>Précédent</Button>
         <Button onClick={handleNextStep}>Étape suivante</Button>
       </Row>
@@ -204,200 +203,175 @@ function DenominationStep({ prefiller, globalForm, updateGlobalForm, setStep }) 
 
 DenominationStep.propTypes = { ...stepProps, prefiller: PropTypes.shape.isRequired };
 
-function LocalisationStep({ globalForm, updateGlobalForm, setStep }) {
-  const validateForm = (body) => {
-    const validationErrors = {};
-    if (!body.country) { validationErrors.country = 'Le pays est obligatoire'; }
-    return validationErrors;
-  };
-  const { form, updateForm, errors } = useForm(globalForm, validateForm);
-  const [showErrors, setShowErrors] = useState(false);
-  const handleNextStep = (e) => {
-    e.preventDefault();
-    if (Object.keys(errors).length !== 0) return setShowErrors(true);
-    updateGlobalForm({ ...form });
-    return setStep({ step: 4 });
-  };
-  return (
-    <>
-      <Row gutters alignItems="top">
-        <Col n="12 md-6" spacing="pb-3w">
-          <TextInput
-            required
-            label="Pays"
-            value={form.country}
-            onChange={(e) => updateForm({ country: e.target.value })}
-            message={(showErrors && errors.country) ? errors.country : null}
-            messageType={(showErrors && errors.country) ? 'error' : ''}
-          />
-        </Col>
-        <Col n="12 md-6" spacing="pb-3w">
-          <TextInput
-            label="Commune"
-            value={form.locality}
-            onChange={(e) => updateForm({ locality: e.target.value })}
-            message={(showErrors && errors.locality) ? errors.locality : null}
-            messageType={(showErrors && errors.locality) ? 'error' : ''}
-          />
-        </Col>
-        <Col n="12 md-6" spacing="pb-3w">
-          <TextInput
-            label="Mention de distribution"
-            value={form.distributionStatement}
-            onChange={(e) => updateForm({ distributionStatement: e.target.value })}
-            message={(showErrors && errors.distributionStatement) ? errors.distributionStatement : null}
-            messageType={(showErrors && errors.distributionStatement) ? 'error' : ''}
-          />
-        </Col>
-        <Col n="12 md-6" spacing="pb-3w">
-          <TextInput
-            label="Adresse"
-            value={form.address}
-            onChange={(e) => updateForm({ address: e.target.value })}
-            message={(showErrors && errors.address) ? errors.address : null}
-            messageType={(showErrors && errors.address) ? 'error' : ''}
-          />
-        </Col>
-        <Col n="12 md-6" spacing="pb-3w">
-          <TextInput
-            label="Code postal"
-            value={form.postalCode}
-            onChange={(e) => updateForm({ postalCode: e.target.value })}
-            message={(showErrors && errors.postalCode) ? errors.postalCode : null}
-            messageType={(showErrors && errors.postalCode) ? 'error' : ''}
-          />
-        </Col>
-        <Col n="12 md-6" spacing="pb-3w">
-          <TextInput
-            label="Boite postale"
-            value={form.postOfficeBoxNumber}
-            onChange={(e) => updateForm({ postOfficeBoxNumber: e.target.value })}
-            message={(showErrors && errors.postOfficeBoxNumber) ? errors.postOfficeBoxNumber : null}
-            messageType={(showErrors && errors.postOfficeBoxNumber) ? 'error' : ''}
-          />
-        </Col>
-        <Col n="12 md-6" spacing="pb-3w">
-          <TextInput
-            label="Localité d'acheminement"
-            value={form.locality}
-            onChange={(e) => updateForm({ locality: e.target.value })}
-            message={(showErrors && errors.locality) ? errors.locality : null}
-            messageType={(showErrors && errors.locality) ? 'error' : ''}
-          />
-        </Col>
-        <Col n="12 md-6" />
-        <Col n="12 md-6" spacing="pb-3w">
-          <Map />
-        </Col>
-        <Col n="12 md-6" spacing="pb-3w">
-          <Highlight>Ajuster les coordonnées en selectionnant un point sur la carte ou en entrant manuellement latitude et longitude</Highlight>
-          <TextInput
-            label="Latitude"
-            value={form.lat}
-            onChange={(e) => updateForm({ lat: e.target.value })}
-            message={(showErrors && errors.lat) ? errors.lat : null}
-            messageType={(showErrors && errors.lat) ? 'error' : ''}
-          />
-          <TextInput
-            label="Longitude"
-            value={form.lng}
-            onChange={(e) => updateForm({ lng: e.target.value })}
-            message={(showErrors && errors.lng) ? errors.lng : null}
-            messageType={(showErrors && errors.lng) ? 'error' : ''}
-          />
-        </Col>
-      </Row>
-      <hr />
-      <Row className="fullwidth fr-row--space-between">
-        <Button secondary onClick={() => setStep({ step: 2 })}>Précédent</Button>
-        <Button onClick={handleNextStep}>Étape suivante</Button>
-      </Row>
-    </>
-  );
-}
-
-LocalisationStep.propTypes = stepProps;
-
 function HistoryStep({ globalForm, handleSave, updateGlobalForm, setStep }) {
-  const validateForm = (body) => {
-    const validationErrors = {};
-    if (!body.country) { validationErrors.country = 'Le pays est obligatoire'; }
-    return validationErrors;
-  };
-  const { form, updateForm, errors } = useForm(globalForm, validateForm);
-  const [showErrors, setShowErrors] = useState(false);
+  // const [showErrors, setShowErrors] = useState(false);
+  const [isSearchingCreation, setIsSearchingCreation] = useState(false);
+  const [optionsTOCreation, setOptionsCreation] = useState([]);
+  const [queryTOCreation, setQueryTOCreation] = useState('');
+  const [scopeTOCreation, setScopeTOCreation] = useState(null);
+
+  const [isSearchingClosure, setIsSearchingClosure] = useState(false);
+  const [optionsTOClosure, setOptionsClosure] = useState([]);
+  const [queryTOClosure, setQueryTOClosure] = useState('');
+  const [scopeTOClosure, setScopeTOClosure] = useState(null);
+
+  const { form, updateForm } = useForm(globalForm);
+
+  const creationReasonsOptions = [{ label: 'Sélectionner', value: '' }, ...STRUCTURES_CREATION_REASONS.map((el) => ({ label: el, value: el }))];
+  const closureReasonsOptions = [{ label: 'Sélectionner', value: '' }, ...STRUCTURES_CLOSURE_REASONS.map((el) => ({ label: el, value: el }))];
 
   const handleNextStep = (e) => {
     e.preventDefault();
-    if (Object.keys(errors).length !== 0) return setShowErrors(true);
-    // handle approximateDate
+    // if (Object.keys(errors).length !== 0) return setShowErrors(true);
     updateGlobalForm({ ...form });
-    return handleSave();
+    return handleSave(form);
   };
+  useEffect(() => {
+    const getAutocompleteResultCreation = async () => {
+      setIsSearchingCreation(true);
+      const response = await api.get(`/autocomplete?query=${queryTOCreation}&types=official-texts`);
+      setOptionsCreation(response.data?.data);
+      setIsSearchingCreation(false);
+    };
+    if (queryTOCreation) { getAutocompleteResultCreation(); } else { setOptionsCreation([]); }
+  }, [queryTOCreation]);
+
+  useEffect(() => {
+    const getAutocompleteResultClosure = async () => {
+      setIsSearchingClosure(true);
+      const response = await api.get(`/autocomplete?query=${queryTOClosure}&types=official-texts`);
+      setOptionsClosure(response.data?.data);
+      setIsSearchingClosure(false);
+    };
+    if (queryTOClosure) { getAutocompleteResultClosure(); } else { setOptionsClosure([]); }
+  }, [queryTOClosure]);
+
+  const handleSelectCreation = ({ id, name }) => {
+    updateForm({ creationOfficialTextId: id });
+    setScopeTOCreation(name);
+    setQueryTOCreation('');
+    setOptionsCreation([]);
+  };
+  const handleUnselectCreation = () => {
+    updateForm({ creationOfficialTextId: null });
+    setScopeTOCreation(null);
+    setQueryTOCreation('');
+    setOptionsCreation([]);
+  };
+
+  const handleSelectClosure = ({ id, name }) => {
+    updateForm({ closureOfficialTextId: id });
+    setScopeTOClosure(name);
+    setQueryTOClosure('');
+    setOptionsClosure([]);
+  };
+  const handleUnselectClosure = () => {
+    updateForm({ closureOfficialTextId: null });
+    setScopeTOClosure(null);
+    setQueryTOClosure('');
+    setOptionsClosure([]);
+  };
+
   return (
-    <>
-      <Row gutters className="fullwidth" alignItems="top">
-        <Col n="12">
-          <RadioGroup required isInline legend="Status de la structure">
-            <Radio
-              label="Active"
-              value
-              checked={form.structureStatus === 'active'}
-              onChange={() => updateForm({ structureStatus: 'active' })}
+    <form>
+      <Container>
+        <Row>
+          <Col>
+            <Title as="h3" look="h6">
+              Création
+            </Title>
+          </Col>
+        </Row>
+        <Row>
+          <Col>
+            <Select
+              label="Raison de création"
+              options={creationReasonsOptions}
+              selected={form?.creationReason}
+              onChange={(e) => updateForm({ creationReason: e.target.value })}
+              tabIndex={0}
             />
-            <Radio
-              label="Inactive"
-              value={false}
-              checked={form.structureStatus === 'inactive'}
-              onChange={() => updateForm({ structureStatus: 'inactive' })}
+          </Col>
+        </Row>
+        <Row className="fr-pt-2w">
+          <Col>
+            <DateInput
+              value={form?.creationDate}
+              label="Date de début"
+              onDateChange={(value) => updateForm({ creationDate: value })}
+              isRequired
             />
-            <Radio
-              label="Potentielle"
-              value={false}
-              checked={form.structureStatus === 'forthcomming'}
-              onChange={() => updateForm({ structureStatus: 'forthcomming' })}
+          </Col>
+        </Row>
+        <Row className="fr-pt-2w">
+          <Col>
+            <SearchBar
+              buttonLabel="Rechercher"
+              hint="Rechercher et sélectionner un texte officiel"
+              isSearching={isSearchingCreation}
+              label="Ajouter / remplacer le texte officiel de création"
+              onChange={(e) => { updateForm({ creationOfficialTextId: null }); setQueryTOCreation(e.target.value); }}
+              onDeleteScope={handleUnselectCreation}
+              onSelect={handleSelectCreation}
+              options={optionsTOCreation}
+              placeholder={scopeTOCreation ? '' : 'Rechercher...'}
+              scope={scopeTOCreation}
+              size="lg"
+              value={queryTOCreation}
             />
-          </RadioGroup>
-        </Col>
-        <Col n="12 md-6" spacing="pb-3w">
-          <DateInput
-            value={form.creationDate}
-            label="Date de création"
-            onDateChange={(value) => updateForm({ creationDate: value })}
-          />
-        </Col>
-        <Col n="12 md-6" spacing="pb-3w">
-          <TextInput
-            label="Texte officiel de création"
-            value={form.creationOfficialTextId}
-            onChange={(e) => updateForm({ creationOfficialTextId: e.target.value })}
-            message={(showErrors && errors.creationOfficialTextId) ? errors.creationOfficialTextId : null}
-            messageType={(showErrors && errors.creationOfficialTextId) ? 'error' : ''}
-          />
-        </Col>
-        <Col n="12 md-6" spacing="pb-3w">
-          <DateInput
-            value={form.closureDate}
-            label="Date de Fermeture"
-            onDateChange={(value) => updateForm({ closureDate: value })}
-          />
-        </Col>
-        <Col n="12 md-6" spacing="pb-3w">
-          <TextInput
-            label="Texte officiel de fermeture"
-            value={form.closureOfficialTextId}
-            onChange={(e) => updateForm({ closureOfficialTextId: e.target.value })}
-            message={(showErrors && errors.closureOfficialTextId) ? errors.closureOfficialTextId : null}
-            messageType={(showErrors && errors.closureOfficialTextId) ? 'error' : ''}
-          />
-        </Col>
-      </Row>
-      <hr />
-      <Row className="fullwidth fr-row--space-between">
-        <Button secondary onClick={() => setStep({ step: 3 })}>Précédent</Button>
-        <Button onClick={handleNextStep}>Étape suivante</Button>
-      </Row>
-    </>
+          </Col>
+        </Row>
+        <Row className="fr-pt-5w">
+          <Col>
+            <Title as="h3" look="h6">
+              Fermeture
+            </Title>
+          </Col>
+        </Row>
+        <Row>
+          <Col>
+            <Select
+              label="Raison de création"
+              options={closureReasonsOptions}
+              selected={form?.closureReason}
+              onChange={(e) => updateForm({ closureReason: e.target.value })}
+            />
+          </Col>
+        </Row>
+        <Row className="fr-pt-2w">
+          <Col>
+            <DateInput
+              value={form?.closureDate}
+              label="Date de fermeture"
+              onDateChange={(value) => updateForm({ closureDate: value })}
+            />
+          </Col>
+        </Row>
+        <Row className="fr-pt-2w">
+          <Col>
+            <SearchBar
+              buttonLabel="Rechercher"
+              hint="Rechercher et sélectionner un texte officiel présent dans Paysage"
+              isSearching={isSearchingClosure}
+              label="Ajouter / remplacer le texte officiel de fermeture"
+              onChange={(e) => { updateForm({ closureOfficialTextId: null }); setQueryTOClosure(e.target.value); }}
+              onDeleteScope={handleUnselectClosure}
+              onSelect={handleSelectClosure}
+              options={optionsTOClosure}
+              placeholder={scopeTOClosure ? '' : 'Rechercher...'}
+              scope={scopeTOClosure}
+              size="lg"
+              value={queryTOClosure}
+            />
+          </Col>
+        </Row>
+        <hr />
+        <Row className="fullwidth flex--space-between">
+          <Button secondary onClick={() => setStep({ step: 1 })}>Précédent</Button>
+          <Button onClick={handleNextStep}>Créer la structure</Button>
+        </Row>
+      </Container>
+    </form>
   );
 }
 
@@ -412,12 +386,12 @@ export default function StructureAddPage() {
     return validationErrors;
   };
   const { form, updateForm } = useForm({}, validateForm);
-  const [prefiller, setPrefiller] = useState(null);
+  const [prefiller] = useState(null);
   const [step, setStep] = useSearchParams();
   const currentStep = parseInt(step.get('step'), 10) || 1;
 
-  const handleSave = async () => {
-    const response = await api.post('/structures', form).catch(() => {
+  const handleSave = async (body) => {
+    const response = await api.post('/structures', body).catch(() => {
       notice({ content: "Une erreur s'est produite lors de l'envoi", autoDismissAfter: 0, type: 'error' });
       setStep({ step: 1 });
     });
@@ -428,17 +402,18 @@ export default function StructureAddPage() {
     }
   };
 
-  useEffect(() => {
-    // const fetchRNSR = async (rnsr) => {
-    //   const response = await fetch(`http://${rnsr}`);
-    //   const data = await response.json();
-    //   return data.data;
-    // };
-    if (/^[0-9]{9}[A-Z]{1}$/.test(form.rnsr)) {
-      // const rnsrData = fetchRNSR(form.rnsr);
-      setPrefiller({ ...prefiller, rnsr: { id: '200918525B', name: { label: 'Testlabel' } } });
-    }
-  }, [form, prefiller, setPrefiller]);
+  // TODO: Add prefiller like example below.Don't forget to reset setPrefiller
+  // useEffect(() => {
+  //   // const fetchRNSR = async (rnsr) => {
+  //   //   const response = await fetch(`http://${rnsr}`);
+  //   //   const data = await response.json();
+  //   //   return data.data;
+  //   // };
+  //   if (/^[0-9]{9}[A-Z]{1}$/.test(form.rnsr)) {
+  //     // const rnsrData = fetchRNSR(form.rnsr);
+  //     setPrefiller({ ...prefiller, rnsr: { id: '200918525B', name: { label: 'Testlabel' } } });
+  //   }
+  // }, [form, prefiller, setPrefiller]);
 
   return (
     <Container spacing="mb-6w">
@@ -465,7 +440,7 @@ export default function StructureAddPage() {
           <Col>
             <Stepper
               currentStep={currentStep}
-              steps={4}
+              steps={3}
               currentTitle={steps[currentStep - 1]}
               nextStepTitle={steps[currentStep]}
             />
@@ -474,8 +449,7 @@ export default function StructureAddPage() {
         <hr />
         {(currentStep === 1) && <IdentifiersStep globalForm={form} setStep={setStep} updateGlobalForm={updateForm} />}
         {(currentStep === 2) && <DenominationStep globalForm={form} prefiller={prefiller} setStep={setStep} updateGlobalForm={updateForm} />}
-        {(currentStep === 3) && <LocalisationStep globalForm={form} setStep={setStep} updateGlobalForm={updateForm} />}
-        {(currentStep === 4) && <HistoryStep globalForm={form} handleSave={handleSave} setStep={setStep} updateGlobalForm={updateForm} />}
+        {(currentStep === 3) && <HistoryStep globalForm={form} handleSave={handleSave} setStep={setStep} updateGlobalForm={updateForm} />}
       </Container>
     </Container>
   );
