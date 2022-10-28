@@ -217,3 +217,11 @@ HR {
     }
   }
 }
+.card-projects {
+  border-left: .25rem solid var(--projects-color) !important;
+  .fr-card__start {
+    .fr-card__detail {
+      color: var(--projects-color) !important;
+    }
+  }
+}
