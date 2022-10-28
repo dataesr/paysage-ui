@@ -146,6 +146,7 @@ function App() {
             <Route path="evenements" element={<AgendaOutlet />} />
             <Route path="documents" element={<DocumentsOutlet />} />
             <Route path="textes-officiels" element={<OfficialTextsOutlet />} />
+            <Route path="journal" element={<JournalOutlet />} />
           </Route>
 
           <Route path="/personnes/ajouter" element={<PersonAddPage />} />
@@ -178,6 +179,7 @@ function App() {
             <Route path="evenements" element={<AgendaOutlet />} />
             <Route path="documents" element={<DocumentsOutlet />} />
             <Route path="textes-officiels" element={<OfficialTextsOutlet />} />
+            <Route path="journal" element={<JournalOutlet />} />
           </Route>
 
           <Route path="/prix/ajouter" element={<PriceAddPage />} />
@@ -191,6 +193,7 @@ function App() {
             <Route path="evenements" element={<AgendaOutlet />} />
             <Route path="documents" element={<DocumentsOutlet />} />
             <Route path="textes-officiels" element={<OfficialTextsOutlet />} />
+            <Route path="journal" element={<JournalOutlet />} />
           </Route>
 
           <Route path="/projets/ajouter" element={<ProjectAddPage />} />
@@ -205,6 +208,7 @@ function App() {
             <Route path="prix-et-recompenses" element={<ProjectPrices />} />
             <Route path="documents" element={<DocumentsOutlet />} />
             <Route path="textes-officiels" element={<OfficialTextsOutlet />} />
+            <Route path="journal" element={<JournalOutlet />} />
           </Route>
 
           <Route path="/textes-officiels/ajouter" element={<OfficialTextAddPage />} />

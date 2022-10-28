@@ -26,8 +26,10 @@ import PersonPrices from './prix-et-recompenses';
 import PersonsRelatedElements from './elements-lies';
 import PersonExportPage from './exporter';
 import { saveError, saveSuccess } from '../../../utils/notice-contents';
+import useAuth from '../../../hooks/useAuth';
 
 function PersonByIdPage() {
+  const { viewer } = useAuth();
   const { url, id } = useUrl();
   const { data, isLoading, error, reload } = useFetch(url);
   const navigate = useNavigate();
@@ -111,10 +113,12 @@ function PersonByIdPage() {
               <Icon name="ri-links-line" size="1x" />
               Participations
             </SideMenuLink>
-            <SideMenuLink asLink={<RouterLink to="journal" />}>
-              <Icon name="ri-refresh-line" size="1x" />
-              Journal de modifications
-            </SideMenuLink>
+            {(viewer.role === 'admin') && (
+              <SideMenuLink asLink={<RouterLink to="journal" />}>
+                <Icon name="ri-refresh-line" size="1x" />
+                Journal de modifications
+              </SideMenuLink>
+            )}
           </SideMenu>
         </Col>
         <Col n="12 md-9">

@@ -30,8 +30,10 @@ import StructurePresentationPage from './presentation';
 import StructurePrixEtRecompensesPage from './prix-et-recompenses';
 import StructureProjetsPage from './projets';
 import api from '../../../utils/api';
+import useAuth from '../../../hooks/useAuth';
 
 function StructureByIdPage() {
+  const { viewer } = useAuth();
   const { toast } = useToast();
   const { id } = useParams();
   const { url } = useUrl();
@@ -172,10 +174,12 @@ function StructureByIdPage() {
               <Icon name="ri-links-line" size="1x" />
               Participations
             </SideMenuLink>
-            <SideMenuLink asLink={<RouterLink to="journal" />}>
-              <Icon name="ri-refresh-line" size="1x" />
-              Journal de modifications
-            </SideMenuLink>
+            {(viewer.role === 'admin') && (
+              <SideMenuLink asLink={<RouterLink to="journal" />}>
+                <Icon name="ri-refresh-line" size="1x" />
+                Journal de modifications
+              </SideMenuLink>
+            )}
           </SideMenu>
         </Col>
         <Col n="12 md-9">
