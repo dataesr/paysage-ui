@@ -5,6 +5,7 @@ import { Link as RouterLink, useLocation, useSearchParams } from 'react-router-d
 import Spinner from '../components/spinner';
 import useHashScroll from '../hooks/useHashScroll';
 import useSearch from '../hooks/useSearch';
+import { formatDescriptionDates } from '../utils/dates';
 import { capitalize } from '../utils/strings';
 import { getTypeFromUrl, getUrlFromType } from '../utils/types-url-mapper';
 
@@ -25,7 +26,7 @@ const getDescription = (item) => {
   case 'structures':
     // Structures : Nom usuel + sigle ou nom court > Catégorie principale > Localisation > Date de création
     description += item?.locality ? ` à ${item.locality}` : '';
-    description += item?.creationDate ? ` depuis ${item.creationDate.slice(0, 4)}` : '';
+    description += item?.creationDate ? formatDescriptionDates(item?.creationDate) : '';
     break;
   case 'persons':
     // Personnes : Prénom, nom > dernier mandat renseigné ou activité récupérée de wikidata > structure associée au mandat
@@ -39,7 +40,7 @@ const getDescription = (item) => {
     break;
   case 'projects':
     // Projet : Nom usuel + sigle ou nom court du projet > Catégorie principale > Localisation > Date de début
-    description += item?.startDate ? ` depuis ${item.startDate}` : '';
+    description += item?.startDate ? formatDescriptionDates(item?.startDate) : '';
     break;
   default:
   }
