@@ -30,7 +30,7 @@ function RelationTypesForm({ id, data, onSave, onDelete }) {
     if (priority > 99 || priority < 1) { validationErrors.for = 'Doit être compris en 1 (priorité forte) et 99 (priorité faible)'; }
     return validationErrors;
   };
-  const { form, updateForm, errors } = useForm(data, validateForm);
+  const { form, updateForm, errors } = useForm({ priority: 99, ...data }, validateForm);
   const [showErrors, setShowErrors] = useState(false);
 
   const handleSubmit = (e) => {
