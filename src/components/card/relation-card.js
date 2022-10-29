@@ -1,4 +1,4 @@
-import { Text, Link, TagGroup, Tag } from '@dataesr/react-dsfr';
+import { Text, Link, TagGroup, Tag, Icon } from '@dataesr/react-dsfr';
 import PropTypes from 'prop-types';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import useEditMode from '../../hooks/useEditMode';
@@ -53,6 +53,14 @@ export default function RelationCard({ relation, inverse, onEdit }) {
                   {relation.endDateOfficialText?.publicationDate && `du ${toString(relation.endDateOfficialText.publicationDate)}` }
                 </Link>
               )}
+            </div>
+          )}
+          {relation.mandateEmail && (
+            <div className={`fr-card__end ${styles['card-end']}`}>
+              <p className="fr-card__detail">
+                <Icon name="ri-mail-line" size="1x" />
+                {relation.mandateEmail}
+              </p>
             </div>
           )}
           {(editMode && onEdit) && <Button size="md" onClick={onEdit} tertiary borderless rounded icon="ri-edit-line" className={styles['edit-button']} />}
