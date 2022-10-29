@@ -78,7 +78,13 @@ export default function RelationsByTag({ blocName, tag, resourceType, relatedObj
          ${element[relatedKey].currentLocalisation?.locality}`,
       });
     });
-    const list = data.data.map((element) => (
+    const currentRelations = data?.data
+      .filter((relation) => (!relation.endDate || (new Date(relation.endDate) >= new Date())))
+      .sort((a, b) => ((a?.relationType?.priority || 99) < (b?.relationType?.priority || 99)));
+    const pastRelations = data?.data
+      .filter((relation) => (relation.endDate && (new Date(relation.endDate) < new Date())))
+      .sort((a, b) => ((a?.relationType?.priority || 99) < (b?.relationType?.priority || 99)));
+    const list = [...currentRelations, ...pastRelations].map((element) => (
       <RelationCard
         inverse={inverse}
         relation={element}
