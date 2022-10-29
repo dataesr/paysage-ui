@@ -50,30 +50,19 @@ export default function OfficialTextByIdPage() {
     <Container spacing="pb-6w">
       <Row>
         <Col n="12">
-          <Breadcrumb>
-            <BreadcrumbItem asLink={<RouterLink to="/" />}>
-              Accueil
-            </BreadcrumbItem>
-            <BreadcrumbItem
-              asLink={<RouterLink to="/rechercher/textes-officiels?query=&page=1" />}
-            >
-              Textes officiels
-            </BreadcrumbItem>
-            <BreadcrumbItem>{data.title}</BreadcrumbItem>
-          </Breadcrumb>
-          <Row className="flex--space-between flex--wrap-reverse">
-            <Title as="h2">
-              {data.title}
-              <BadgeGroup className="fr-pt-1w">
-                <Badge text="texte officiel" type="info" />
-                <CopyBadgeButton
-                  colorFamily="yellow-tournesol"
-                  text={data.id}
-                  lowercase
-                />
-              </BadgeGroup>
-            </Title>
-            <ButtonGroup align="right" isInlineFrom="xs">
+          <Row className="flex--space-between flex--wrap stick">
+            <Breadcrumb>
+              <BreadcrumbItem asLink={<RouterLink to="/" />}>
+                Accueil
+              </BreadcrumbItem>
+              <BreadcrumbItem
+                asLink={<RouterLink to="/rechercher/textes-officiels?query=&page=1" />}
+              >
+                Textes officiels
+              </BreadcrumbItem>
+              <BreadcrumbItem>{data.title}</BreadcrumbItem>
+            </Breadcrumb>
+            <ButtonGroup align="right" isInlineFrom="xs" className="fr-mt-1w flex--grow">
               {editMode && (
                 <DropdownButton align="right" title="options">
                   <DropdownButtonItem onClick={() => setIsFormModalOpen(true)}>
@@ -99,6 +88,20 @@ export default function OfficialTextByIdPage() {
                 icon={`ri-edit-${editMode ? 'fill' : 'line'}`}
               />
             </ButtonGroup>
+
+          </Row>
+          <Row>
+            <Title as="h2">
+              {data.title}
+              <BadgeGroup className="fr-pt-1w">
+                <Badge text="texte officiel" type="info" />
+                <CopyBadgeButton
+                  colorFamily="yellow-tournesol"
+                  text={data.id}
+                  lowercase
+                />
+              </BadgeGroup>
+            </Title>
           </Row>
           {data.pageUrl && <Link href={data.pageUrl}>Accéder au texte</Link>}
           <Bloc data={{ totalCount: data?.relatedObjects?.length }} error={error} isLoading={isLoading}>

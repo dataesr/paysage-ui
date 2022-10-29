@@ -88,18 +88,65 @@ function ProjectByIdPage() {
           </SideMenu>
         </Col>
         <Col n="12 md-9">
-          <Breadcrumb>
-            <BreadcrumbItem asLink={<RouterLink to="/" />}>
-              Accueil
-            </BreadcrumbItem>
-            <BreadcrumbItem
-              asLink={<RouterLink to="/rechercher/projets?query=&page=1" />}
-            >
-              Projets
-            </BreadcrumbItem>
-            <BreadcrumbItem>{data.nameFr}</BreadcrumbItem>
-          </Breadcrumb>
-          <Row className="flex--space-between flex--wrap-reverse">
+          <Row className="flex--space-between flex--wrap stick">
+            <Breadcrumb>
+              <BreadcrumbItem asLink={<RouterLink to="/" />}>
+                Accueil
+              </BreadcrumbItem>
+              <BreadcrumbItem
+                asLink={<RouterLink to="/rechercher/projets?query=&page=1" />}
+              >
+                Projets
+              </BreadcrumbItem>
+              <BreadcrumbItem>{data.nameFr}</BreadcrumbItem>
+            </Breadcrumb>
+
+          </Row>
+          <ButtonGroup align="right" isInlineFrom="xs" className="fr-mt-1w flex--grow">
+            {editMode && (
+              <DropdownButton align="right" title="options">
+                <DropdownButtonItem onClick={() => setIsFormModalOpen(true)}>
+                  Modifier les informations
+                  <Icon iconPosition="right" size="xl" name="ri-edit-line" color="var(--border-action-high-blue-france)" />
+                  <Modal size="lg" isOpen={isFormModalOpen} hide={() => setIsFormModalOpen(false)}>
+                    <ModalTitle>
+                      Modifier les informations de
+                      {' '}
+                      {data.nameFr}
+                    </ModalTitle>
+                    <ModalContent>
+                      <ProjectForm id={data.id} data={data} onSave={onSave} />
+                    </ModalContent>
+                  </Modal>
+                </DropdownButtonItem>
+              </DropdownButton>
+            )}
+            <Button
+              tertiary
+              borderless
+              rounded
+              title="Exporter la fiche"
+              onClick={() => setIsExportOpen(true)}
+              icon="ri-download-2-fill"
+            />
+            <Button
+              tertiary
+              borderless
+              rounded
+              title="Ajouter aux favoris"
+              onClick={() => setIsFavorite(!isFavorite)}
+              icon={`ri-star-${isFavorite ? 'fill' : 'line'}`}
+            />
+            <Button
+              tertiary
+              borderless
+              rounded
+              title="Activer le mode édition"
+              onClick={() => toggle()}
+              icon={`ri-edit-${editMode ? 'fill' : 'line'}`}
+            />
+          </ButtonGroup>
+          <Row>
             <Title as="h2">
               {data.nameFr}
               <BadgeGroup className="fr-pt-1w">
@@ -111,50 +158,6 @@ function ProjectByIdPage() {
                 />
               </BadgeGroup>
             </Title>
-            <ButtonGroup align="right" isInlineFrom="xs">
-              {editMode && (
-                <DropdownButton align="right" title="options">
-                  <DropdownButtonItem onClick={() => setIsFormModalOpen(true)}>
-                    Modifier les informations
-                    <Icon iconPosition="right" size="xl" name="ri-edit-line" color="var(--border-action-high-blue-france)" />
-                    <Modal size="lg" isOpen={isFormModalOpen} hide={() => setIsFormModalOpen(false)}>
-                      <ModalTitle>
-                        Modifier les informations de
-                        {' '}
-                        {data.nameFr}
-                      </ModalTitle>
-                      <ModalContent>
-                        <ProjectForm id={data.id} data={data} onSave={onSave} />
-                      </ModalContent>
-                    </Modal>
-                  </DropdownButtonItem>
-                </DropdownButton>
-              )}
-              <Button
-                tertiary
-                borderless
-                rounded
-                title="Exporter la fiche"
-                onClick={() => setIsExportOpen(true)}
-                icon="ri-download-2-fill"
-              />
-              <Button
-                tertiary
-                borderless
-                rounded
-                title="Ajouter aux favoris"
-                onClick={() => setIsFavorite(!isFavorite)}
-                icon={`ri-star-${isFavorite ? 'fill' : 'line'}`}
-              />
-              <Button
-                tertiary
-                borderless
-                rounded
-                title="Activer le mode édition"
-                onClick={() => toggle()}
-                icon={`ri-edit-${editMode ? 'fill' : 'line'}`}
-              />
-            </ButtonGroup>
             <Modal size="sm" isOpen={isExportOpen} hide={() => setIsExportOpen(false)}>
               <ModalTitle>
                 Que souhaitez-vous exporter ?

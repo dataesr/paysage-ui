@@ -82,30 +82,19 @@ function PriceByIdPage() {
           </SideMenu>
         </Col>
         <Col n="12 md-9">
-          <Breadcrumb>
-            <BreadcrumbItem asLink={<RouterLink to="/" />}>
-              Accueil
-            </BreadcrumbItem>
-            <BreadcrumbItem
-              asLink={<RouterLink to="/rechercher/prix?query=&page=1" />}
-            >
-              Prix
-            </BreadcrumbItem>
-            <BreadcrumbItem>{data.nameFr}</BreadcrumbItem>
-          </Breadcrumb>
-          <Row className="flex--space-between flex--wrap-reverse">
-            <Title as="h2">
-              {data.nameFr}
-              <BadgeGroup className="fr-pt-1w">
-                <Badge type="info" text="prix" />
-                <CopyBadgeButton
-                  colorFamily="yellow-tournesol"
-                  text={data.id}
-                  lowercase
-                />
-              </BadgeGroup>
-            </Title>
-            <ButtonGroup align="right" isInlineFrom="xs">
+          <Row className="flex--space-between flex--wrap stick">
+            <Breadcrumb>
+              <BreadcrumbItem asLink={<RouterLink to="/" />}>
+                Accueil
+              </BreadcrumbItem>
+              <BreadcrumbItem
+                asLink={<RouterLink to="/rechercher/prix?query=&page=1" />}
+              >
+                Prix
+              </BreadcrumbItem>
+              <BreadcrumbItem>{data.nameFr}</BreadcrumbItem>
+            </Breadcrumb>
+            <ButtonGroup align="right" isInlineFrom="xs" className="fr-mt-1w flex--grow">
               {editMode && (
                 <DropdownButton align="right" title="options">
                   <DropdownButtonItem onClick={() => setIsFormModalOpen(true)}>
@@ -149,6 +138,19 @@ function PriceByIdPage() {
                 icon={`ri-edit-${editMode ? 'fill' : 'line'}`}
               />
             </ButtonGroup>
+          </Row>
+          <Row>
+            <Title as="h2">
+              {data.nameFr}
+              <BadgeGroup className="fr-pt-1w">
+                <Badge type="info" text="prix" />
+                <CopyBadgeButton
+                  colorFamily="yellow-tournesol"
+                  text={data.id}
+                  lowercase
+                />
+              </BadgeGroup>
+            </Title>
             <Modal size="sm" isOpen={isExportOpen} hide={() => setIsExportOpen(false)}>
               <ModalTitle>
                 Que souhaitez-vous exporter ?

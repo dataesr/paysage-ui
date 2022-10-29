@@ -82,30 +82,19 @@ function TermByIdPage() {
           </SideMenu>
         </Col>
         <Col n="12 md-9">
-          <Breadcrumb>
-            <BreadcrumbItem asLink={<RouterLink to="/" />}>
-              Accueil
-            </BreadcrumbItem>
-            <BreadcrumbItem
-              asLink={<RouterLink to="/rechercher/termes?query=&page=1" />}
-            >
-              Termes
-            </BreadcrumbItem>
-            <BreadcrumbItem>{data.usualNameFr}</BreadcrumbItem>
-          </Breadcrumb>
-          <Row className="flex--space-between flex--wrap-reverse">
-            <Title as="h2">
-              {data.usualNameFr}
-              <BadgeGroup className="fr-pt-1w">
-                <Badge text="terme" type="info" />
-                <CopyBadgeButton
-                  colorFamily="yellow-tournesol"
-                  text={data.id}
-                  lowercase
-                />
-              </BadgeGroup>
-            </Title>
-            <ButtonGroup align="right" isInlineFrom="xs">
+          <Row className="flex--space-between flex--wrap stick">
+            <Breadcrumb>
+              <BreadcrumbItem asLink={<RouterLink to="/" />}>
+                Accueil
+              </BreadcrumbItem>
+              <BreadcrumbItem
+                asLink={<RouterLink to="/rechercher/termes?query=&page=1" />}
+              >
+                Termes
+              </BreadcrumbItem>
+              <BreadcrumbItem>{data.usualNameFr}</BreadcrumbItem>
+            </Breadcrumb>
+            <ButtonGroup align="right" isInlineFrom="xs" className="fr-mt-1w flex--grow">
               {editMode && (
                 <DropdownButton align="right" title="options">
                   <DropdownButtonItem onClick={() => setIsFormModalOpen(true)}>
@@ -149,6 +138,19 @@ function TermByIdPage() {
                 icon={`ri-edit-${editMode ? 'fill' : 'line'}`}
               />
             </ButtonGroup>
+          </Row>
+          <Row>
+            <Title as="h2">
+              {data.usualNameFr}
+              <BadgeGroup className="fr-pt-1w">
+                <Badge text="terme" type="info" />
+                <CopyBadgeButton
+                  colorFamily="yellow-tournesol"
+                  text={data.id}
+                  lowercase
+                />
+              </BadgeGroup>
+            </Title>
             <Modal size="sm" isOpen={isExportOpen} hide={() => setIsExportOpen(false)}>
               <ModalTitle>
                 Que souhaitez-vous exporter ?

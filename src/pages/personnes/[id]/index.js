@@ -122,31 +122,20 @@ function PersonByIdPage() {
           </SideMenu>
         </Col>
         <Col n="12 md-9">
-          <Breadcrumb>
-            <BreadcrumbItem asLink={<RouterLink to="/" />}>
-              Accueil
-            </BreadcrumbItem>
-            <BreadcrumbItem
-              asLink={<RouterLink to="/rechercher/personnes?query=&page=1" />}
-            >
-              Personnes
-            </BreadcrumbItem>
-            <BreadcrumbItem>{personName}</BreadcrumbItem>
-          </Breadcrumb>
-          <Row className="flex--space-between flex--wrap-reverse">
-            <Title as="h2">
-              {personName}
-              <BadgeGroup className="fr-pt-1w">
-                <Badge text="personne" type="info" />
-                <CopyBadgeButton
-                  colorFamily="yellow-tournesol"
-                  text={data.id}
-                  lowercase
-                />
-                {data.gender && <Badge type="success" text={data.gender} icon={(data.gender === 'Autre') ? '' : genreIcon} />}
-              </BadgeGroup>
-            </Title>
-            <ButtonGroup align="right" isInlineFrom="xs">
+          <Row className="flex--space-between flex--wrap stick">
+
+            <Breadcrumb>
+              <BreadcrumbItem asLink={<RouterLink to="/" />}>
+                Accueil
+              </BreadcrumbItem>
+              <BreadcrumbItem
+                asLink={<RouterLink to="/rechercher/personnes?query=&page=1" />}
+              >
+                Personnes
+              </BreadcrumbItem>
+              <BreadcrumbItem>{personName}</BreadcrumbItem>
+            </Breadcrumb>
+            <ButtonGroup align="right" isInlineFrom="xs" className="fr-mt-1w flex--grow">
               {editMode && (
                 <DropdownButton align="right" title="options">
                   <DropdownButtonItem onClick={() => setIsFormModalOpen(true)}>
@@ -190,6 +179,20 @@ function PersonByIdPage() {
                 icon={`ri-edit-${editMode ? 'fill' : 'line'}`}
               />
             </ButtonGroup>
+          </Row>
+          <Row className="flex--space-between flex--wrap-reverse">
+            <Title as="h2">
+              {personName}
+              <BadgeGroup className="fr-pt-1w">
+                <Badge text="personne" type="info" />
+                <CopyBadgeButton
+                  colorFamily="yellow-tournesol"
+                  text={data.id}
+                  lowercase
+                />
+                {data.gender && <Badge type="success" text={data.gender} icon={(data.gender === 'Autre') ? '' : genreIcon} />}
+              </BadgeGroup>
+            </Title>
             <Modal size="sm" isOpen={isExportOpen} hide={() => setIsExportOpen(false)}>
               <ModalTitle>
                 Que souhaitez-vous exporter ?
