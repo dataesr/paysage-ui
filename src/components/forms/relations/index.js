@@ -3,7 +3,7 @@ import {
   Container,
   Col,
   Row,
-  Select,
+  SearchableSelect,
 } from '@dataesr/react-dsfr';
 import PropTypes from 'prop-types';
 import useForm from '../../../hooks/useForm';
@@ -151,7 +151,9 @@ export default function RelationForm({ id, resourceType, relatedObjectTypes, dat
   const relationTypesOptions = (relationTypes?.data)
     ? [
       { label: 'Appartient à la liste', value: null },
-      ...relationTypes.data.map((element) => ({ label: element.name, value: element.id })),
+      ...relationTypes.data
+        .map((element) => ({ label: element.name, value: element.id }))
+        .sort((a, b) => a.label > b.label),
     ]
     : [{ label: 'Appartient à la liste', value: null }];
   return (
@@ -203,12 +205,11 @@ export default function RelationForm({ id, resourceType, relatedObjectTypes, dat
             )}
           {!noRelationType && (
             <Col n="12" className="fr-pb-2w">
-              <Select
+              <SearchableSelect
                 label="Type de relation"
                 options={relationTypesOptions}
                 selected={form.relationTypeId}
-                onChange={(e) => updateForm({ relationTypeId: e.target.value })}
-                tabIndex={0}
+                onChange={(relationTypeId) => updateForm({ relationTypeId })}
                 required
                 message={(showErrors && errors.relationTypeId) ? errors.relationTypeId : null}
                 messageType={(showErrors && errors.relationTypeId) ? 'error' : ''}

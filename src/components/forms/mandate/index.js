@@ -3,12 +3,12 @@ import {
   Container,
   Col,
   Row,
-  Select,
   TextInput,
   Checkbox,
   RadioGroup,
   Radio,
   Title,
+  SearchableSelect,
 } from '@dataesr/react-dsfr';
 import PropTypes from 'prop-types';
 import useForm from '../../../hooks/useForm';
@@ -158,7 +158,9 @@ export default function MandateForm({ id, resourceType, relatedObjectTypes, data
   const relationTypesOptions = (relationTypes?.data)
     ? [
       { label: 'Appartient à la liste', value: null },
-      ...relationTypes.data.map((element) => ({ label: element.name, value: element.id })),
+      ...relationTypes.data
+        .map((element) => ({ label: element.name, value: element.id }))
+        .sort((a, b) => a.label > b.label),
     ]
     : [{ label: 'Appartient à la liste', value: null }];
   return (
@@ -209,11 +211,11 @@ export default function MandateForm({ id, resourceType, relatedObjectTypes, data
               </Col>
             )}
           <Col n="12">
-            <Select
+            <SearchableSelect
               label="Type de relation"
               options={relationTypesOptions}
               selected={form.relationTypeId}
-              onChange={(e) => updateForm({ relationTypeId: e.target.value })}
+              onChange={(relationTypeId) => updateForm({ relationTypeId })}
               tabIndex={0}
               required
               message={(showErrors && errors.relationTypeId) ? errors.relationTypeId : null}
