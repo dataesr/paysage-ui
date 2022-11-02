@@ -62,7 +62,7 @@ export default function Footer({ switchTheme }) {
       </FooterBody>
       <FooterBottom>
         <FooterLink href="#">
-          Pan du Site
+          Plan du Site
         </FooterLink>
         <FooterLink href="#">
           Accessibilité

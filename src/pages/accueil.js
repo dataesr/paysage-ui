@@ -35,7 +35,7 @@ export default function HomePage() {
   return (
     <Container spacing="mt-5w" as="main">
       <Row className="fr-pb-5w">
-        <Title as="h2">Payasge de l'ESR</Title>
+        <Title as="h2">Paysage de l'ESR</Title>
       </Row>
       <Row className="fr-pb-5w">
         <SearchBar
