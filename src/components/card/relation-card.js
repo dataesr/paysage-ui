@@ -13,7 +13,7 @@ export default function RelationCard({ relation, inverse, onEdit }) {
   const isFeminine = (toPrintRelation.collection === 'persons' && toPrintRelation.genre === 'Femme');
   return (
     <div className="fr-card fr-card--xs fr-card--grey fr-card--no-border">
-      <div className={`fr-card__body ${styles['card-body']} ${styles[`${toPrintRelation.collection}-border`]} ${!relation.current && 'turngrey'}`}>
+      <div className={`fr-card__body ${styles['card-body']} ${styles[`${toPrintRelation.collection}-border`]} ${((relation.current !== undefined) && !relation.current) && 'turngrey'}`}>
         <div className="fr-card__content">
           <div className="fr-card__desc">
             {relation.relationType && (
