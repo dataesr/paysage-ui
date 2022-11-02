@@ -80,11 +80,11 @@ export default function RelationsByTag({ blocName, tag, resourceType, relatedObj
     });
     const currentRelations = data?.data
       .filter((relation) => (!relation.endDate || (new Date(relation.endDate) >= new Date())))
-      .sort((a, b) => ((a?.relationType?.priority || 99) < (b?.relationType?.priority || 99)))
+      .sort((a, b) => ((a?.relationType?.priority || 99) > (b?.relationType?.priority || 99)))
       .map((relation) => ({ ...relation, current: true }));
     const pastRelations = data?.data
       .filter((relation) => (relation.endDate && (new Date(relation.endDate) < new Date())))
-      .sort((a, b) => ((a?.relationType?.priority || 99) < (b?.relationType?.priority || 99)))
+      .sort((a, b) => ((a?.relationType?.priority || 99) > (b?.relationType?.priority || 99)))
       .map((relation) => ({ ...relation, current: false }));
     const list = [...currentRelations, ...pastRelations].map((element) => (
       <RelationCard
