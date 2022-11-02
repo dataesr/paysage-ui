@@ -1,4 +1,4 @@
-import { Text, Link, TagGroup, Tag, Icon } from '@dataesr/react-dsfr';
+import { Text, Link, TagGroup, Tag, Icon, Badge } from '@dataesr/react-dsfr';
 import PropTypes from 'prop-types';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import useEditMode from '../../hooks/useEditMode';
@@ -37,6 +37,11 @@ export default function RelationCard({ relation, inverse, onEdit }) {
           <p className={`fr-card__title ${styles[`${toPrintRelation.collection}-title`]}`}>
             <RouterLink className="fr-text--lg" to={toPrintRelation?.href}>{toPrintRelation?.displayName}</RouterLink>
           </p>
+          {((relation.current !== undefined) && !relation.current) && (
+            <div className={`fr-card__start ${styles['card-end']}`}>
+              <Badge text="terminé" />
+            </div>
+          )}
           {(relation.startDateOfficialText?.id || relation.endDateOfficialText?.id) && (
             <div className={`fr-card__end ${styles['card-end']}`}>
               {relation.startDateOfficialText?.id && (

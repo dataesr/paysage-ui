@@ -24,7 +24,14 @@ export default function StructureCurrentGovernance() {
             />
           </Col>
         ))}
-        {(currentMandates.length < data.data.length) && <Col n="12 md-6"><GoToCard to={`/structures/${id}/gouvernance-et-referents`} title="Aller à la page gouvernance" /></Col>}
+        {(currentMandates.length < data.data.length) && (
+          <Col n="12 md-6">
+            <GoToCard
+              to={`/structures/${id}/gouvernance-et-referents`}
+              title="Aller à la page gouvernance"
+            />
+          </Col>
+        )}
       </Row>
     );
   };
