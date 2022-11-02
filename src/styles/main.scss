@@ -234,6 +234,10 @@ HR {
   }
 }
 
+.turngrey {
+  filter: brightness(70%);
+}
+
 .stick {
   position: sticky;
   top: 0;
