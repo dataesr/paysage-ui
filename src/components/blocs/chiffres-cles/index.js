@@ -16,7 +16,7 @@ export default function ChiffresCles() {
 
   const all = [];
   if (data && data.year && data.population) {
-    all.push({ key: `Nombre d'étudiants inscrits en ${data.year}`, value: data.population.toLocaleString('fr-FR'), icon: 'ri-user-line', link: '/' });
+    all.push({ key: `Nombre d'étudiants inscrits en ${data.year} - Inscriptions principales`, value: data.population.toLocaleString('fr-FR'), icon: 'ri-user-line', link: '/' });
   }
   if (data && data.exercice && data.netAccountingResult) {
     all.push({ key: `Résultat net comptable en ${data.exercice}`, value: `${cleanNumber(data.netAccountingResult)}€`, icon: 'ri-scales-3-line', link: '/' });
