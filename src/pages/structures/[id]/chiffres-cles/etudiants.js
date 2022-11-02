@@ -28,6 +28,7 @@ export default function StructureEtudiantsPage() {
   const commonOptions = {
     credits: { enabled: false },
     xAxis: { categories },
+    yAxis: { title: { text: 'Nombre d\'étudiants' } },
   };
 
   const tiles = [{
@@ -350,6 +351,7 @@ export default function StructureEtudiantsPage() {
       // eslint-disable-next-line react/no-this-in-sfc
       formatter() { return `Part de mobilité internationale : <b>${this.point.y.toFixed(1)} %</b>`; },
     },
+    yAxis: { title: { text: 'Pourcentage d\'étudiants' } },
   };
 
   const rateNewBachelorsOptions = {
@@ -364,11 +366,12 @@ export default function StructureEtudiantsPage() {
       name: 'Nouveaux bacheliers issus d\'un bac professionnel',
       data: sortedData.map((item) => ((item?.nbac6 || 0) / item.nouv_bachelier) * 100),
     }],
-    title: { text: 'Répartitions des nouveaux bacheliers' },
+    title: { text: 'Répartitions des nouveaux bacheliers (en %)' },
     tooltip: {
       // eslint-disable-next-line react/no-this-in-sfc
       formatter() { return `Part des ${this.series.name.toLowerCase()} en ${categories[this.point.x]} : <b>${this.point.y.toFixed(1)} %</b>`; },
     },
+    yAxis: { title: { text: 'Pourcentage d\'étudiants' } },
   };
 
   const ageNewBachelorsOptions = {
@@ -383,11 +386,12 @@ export default function StructureEtudiantsPage() {
       name: 'Nouveaux bacheliers en retard au bac d\'un an ou plus',
       data: sortedData.map((item) => ((item?.nbac_ageretard || 0) / item.nouv_bachelier) * 100),
     }],
-    title: { text: 'Âge au bac des nouveaux bacheliers' },
+    title: { text: 'Âge au bac des nouveaux bacheliers (en %)' },
     tooltip: {
       // eslint-disable-next-line react/no-this-in-sfc
       formatter() { return `Part des ${this.series.name.toLowerCase()} en ${categories[this.point.x]} : <b>${this.point.y.toFixed(1)} %</b>`; },
     },
+    yAxis: { title: { text: 'Pourcentage d\'étudiants' } },
   };
 
   const renderCards = (all) => {
@@ -513,7 +517,7 @@ export default function StructureEtudiantsPage() {
                 title={(
                   <>
                     <Icon className="ri-table-line" />
-                    Tableau de bord de l'enseignement supérieur : les étudiants par établissements
+                    Tableau de bord de l'enseignement supérieur : les étudiants par établissement
                   </>
                 )}
                 downloadUrl={'https://dataesr.fr/FR/T525/P883/tableau_de_bord_de_l_enseignement_\
