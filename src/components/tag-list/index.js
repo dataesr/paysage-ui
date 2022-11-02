@@ -14,7 +14,7 @@ export default function TagList({ children, maxTags, className }) {
       </TagGroup>
       {(children?.length > maxTags) && (
         <Button icon={`ri-${showAll ? 'subtract' : 'add'}-line`} iconPosition="left" tertiary borderless type="button" size="sm" onClick={() => setShowAll(!showAll)}>
-          {showAll ? 'Réduire la liste' : 'Voir tout'}
+          {showAll ? 'Réduire la liste' : 'Afficher tout'}
         </Button>
       )}
     </>
