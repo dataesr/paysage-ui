@@ -52,7 +52,7 @@ export default function Wiki() {
             {(wikis?.length > 0) && (
               <div className="fr-card__end fr-mt-0 fr-mb-2w">
                 <p className="fr-card__detail fr-mb-1w">
-                  Articles wikipédia:
+                  Articles wikipedia:
                 </p>
                 <TagList>
                   {wikis.map((wiki) => <Tag iconPosition="right" icon="ri-external-link-line" onClick={() => window.open(wiki.link, '_blank')} key={wiki.lang}>{wiki.lang}</Tag>)}
