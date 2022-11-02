@@ -1,4 +1,4 @@
-import { Row, Title, Col, Container } from '@dataesr/react-dsfr';
+import { Row, Title, Col } from '@dataesr/react-dsfr';
 import ChiffresCles from '../../../components/blocs/chiffres-cles';
 import Emails from '../../../components/blocs/emails';
 import HistoriqueEtDates from '../../../components/blocs/historique-et-dates';
@@ -33,11 +33,6 @@ export default function StructurePresentationPage() {
       <ChiffresCles />
       {editMode && <Names />}
       <Title as="h3" look="h4">Présence sur le web</Title>
-      <Container fluid spacing="mb-5w">
-        <Row gutters>
-          <Wiki />
-        </Row>
-      </Container>
       <Row gutters>
         <Col n="12 md-6">
           <Weblinks types={INTERNAL_PAGES_TYPES} title="Site internet" />
@@ -45,6 +40,7 @@ export default function StructurePresentationPage() {
         <Col n="12 md-6">
           <SocialMedias />
         </Col>
+        <Col n="12"><Wiki /></Col>
         <Col n="12 md-6">
           <Weblinks types={WEBLINKS_TYPES} title="Ailleurs sur le web" />
         </Col>
