@@ -11,7 +11,10 @@ export default function StructureCurrentGovernance() {
 
   const renderCurrentMandates = () => {
     if (!data?.data?.length > 0) return null;
-    const currentMandates = data?.data.filter((mandate) => !mandate.endDate).filter((mandate) => (mandate?.relationType?.priority < 10));
+    const currentMandates = data?.data
+      .filter((mandate) => !mandate.endDate)
+      .filter((mandate) => (mandate?.relationType?.priority < 10))
+      .sort((a, b) => ((a?.relationType?.priority || 99) > (b?.relationType?.priority || 99)));
     return (
       <Row gutters>
         {currentMandates.map((mandate) => (
