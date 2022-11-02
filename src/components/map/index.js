@@ -37,6 +37,7 @@ export default function Map({ height, lat, lng, markers, width, zoom }) {
     <MapContainer
       attributionControl
       center={defaultCenter}
+      scrollWheelZoom={false}
       style={{ height, width }}
       zoom={zoom}
     >

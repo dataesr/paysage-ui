@@ -31,10 +31,11 @@ export default function Map({ height, markers, onMarkerDragEnd, width }) {
   const eventHandlers = useMemo(() => ({ dragend(e) { return onMarkerDragEnd(e); } }), [onMarkerDragEnd]);
   return (
     <MapContainer
-      center={[48.866667, 2.333333]}
-      zoom={6}
-      style={{ height, width }}
       attributionControl
+      center={[48.866667, 2.333333]}
+      scrollWheelZoom={false}
+      style={{ height, width }}
+      zoom={6}
     >
       <TileLayer
         attribution="<a href='https://www.jawg.io' target='_blank'>&copy; Jawg</a>"
