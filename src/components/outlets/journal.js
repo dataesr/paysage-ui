@@ -8,7 +8,7 @@ import Avatar from '../avatar';
 
 export default function JournalOutlet() {
   const { id: resourceId } = useParams();
-  const url = resourceId ? `/journal?filters[resourceId]=${resourceId}&sort=-createdAt` : '/journal?sort=-createdAt';
+  const url = resourceId ? `/journal?filters[resourceId]=${resourceId}&sort=-createdAt&limit=100` : '/journal?sort=-createdAt&limit=100';
   const { data, isLoading, error } = useFetch(url);
   useHashScroll();
 
