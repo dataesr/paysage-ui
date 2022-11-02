@@ -1,5 +1,10 @@
 import { useEffect, useState } from 'react';
-import { Link as RouterLink, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
+import {
+  Link as RouterLink,
+  useLocation,
+  useNavigate,
+  useSearchParams,
+} from 'react-router-dom';
 import {
   Header as HeaderWrapper,
   HeaderBody,
@@ -34,11 +39,17 @@ export default function Header() {
   useEffect(() => {
     const getAutocompleteResult = async () => {
       setIsSearching(true);
-      const response = await api.get(`/autocomplete?query=${debouncedQuery}&limit=10`);
+      const response = await api.get(
+        `/autocomplete?query=${debouncedQuery}&limit=10`,
+      );
       setOptions(response.data?.data);
       setIsSearching(false);
     };
-    if (debouncedQuery) { getAutocompleteResult(); } else { setOptions([]); }
+    if (debouncedQuery) {
+      getAutocompleteResult();
+    } else {
+      setOptions([]);
+    }
   }, [debouncedQuery]);
 
   useEffect(() => {
@@ -73,7 +84,9 @@ export default function Header() {
           title={(
             <>
               Paysage
-              <span className="fr-badge fr-badge--sm fr-badge--green-emeraude">STAGING</span>
+              <span className="fr-badge fr-badge--sm fr-badge--green-emeraude">
+                STAGING
+              </span>
             </>
           )}
           description="Plateforme d'échanges et d'informations de la DGESIP et de la DGRI"
@@ -100,7 +113,10 @@ export default function Header() {
             {viewer.id && (
               <ToolItem
                 icon="ri-logout-circle-r-line"
-                onClick={() => { signout(); navigate('/'); }}
+                onClick={() => {
+                  signout();
+                  navigate('/');
+                }}
               >
                 Déconnexion
               </ToolItem>
@@ -114,7 +130,10 @@ export default function Header() {
               value={query}
               label="Rechercher dans Paysage"
               placeholder="Rechercher..."
-              onChange={(e) => { setPage(1); setQuery(e.target.value); }}
+              onChange={(e) => {
+                setPage(1);
+                setQuery(e.target.value);
+              }}
               options={options}
               onSearch={handleSearch}
               onSelect={handleSearchRedirection}
@@ -143,14 +162,17 @@ export default function Header() {
             />
           </>
         )}
-        <NavItem title="Ressources" current={pathname.startsWith('/ressources')}>
+        <NavItem
+          title="Ressources"
+          current={pathname.startsWith('/ressources')}
+        >
           <NavSubItem
             current={pathname.startsWith('/ressources-externes')}
             title="Les ressources externes"
             asLink={<RouterLink to="/ressources-externes" />}
           />
         </NavItem>
-        {(viewer?.id && (['admin'].includes(viewer?.role))) && (
+        {viewer?.id && ['admin'].includes(viewer?.role) && (
           <NavItem
             title="Administration"
             current={pathname.startsWith('/admin')}

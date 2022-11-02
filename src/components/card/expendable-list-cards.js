@@ -6,12 +6,21 @@ import styles from './styles.module.scss';
 
 function ExpandCard({ isExpanded, toggle }) {
   return (
-    <div className={`fr-card fr-enlarge-link fr-card--xs ${styles['blue-border']}`}>
+    <div
+      className={`fr-card fr-enlarge-link fr-card--xs ${styles['blue-border']}`}
+    >
       <div className="fr-card__body">
         <div className="fr-card__content flex-row flex--center flex--space-around">
-
-          <button onClick={toggle} type="button" className={`fr-link fr-text--lg  ${styles['button-full']}`}>
-            {isExpanded ? <Icon name="ri-eye-off-line" size="2x" color="inherit" /> : <Icon name="ri-eye-line" size="2x" color="inherit" />}
+          <button
+            onClick={toggle}
+            type="button"
+            className={`fr-link fr-text--lg  ${styles['button-full']}`}
+          >
+            {isExpanded ? (
+              <Icon name="ri-eye-off-line" size="2x" color="inherit" />
+            ) : (
+              <Icon name="ri-eye-line" size="2x" color="inherit" />
+            )}
             {isExpanded ? 'Réduire la liste' : 'Afficher tout'}
           </button>
         </div>
@@ -25,7 +34,13 @@ ExpandCard.propTypes = {
   toggle: PropTypes.func.isRequired,
 };
 
-export default function ExpendableListCards({ list, max, nCol, order, sortOn }) {
+export default function ExpendableListCards({
+  list,
+  max,
+  nCol,
+  order,
+  sortOn,
+}) {
   const [showAll, setShowAll] = useState(false);
 
   function getPath(path, obj) {
@@ -44,11 +59,21 @@ export default function ExpendableListCards({ list, max, nCol, order, sortOn }) 
       hiddenCards.push(card);
     }
   });
-  displayedCards.sort((a, b) => order.indexOf(getPath(sortOn, a)) - order.indexOf(getPath(sortOn, b)));
+  displayedCards.sort(
+    (a, b) => order.indexOf(getPath(sortOn, a)) - order.indexOf(getPath(sortOn, b)),
+  );
   const cards = [...displayedCards, ...hiddenCards];
 
   if (cards.length <= max) {
-    return <Row gutters>{cards.map((el) => (<Col n={nCol} key={uuidv4()}>{el}</Col>))}</Row>;
+    return (
+      <Row gutters>
+        {cards.map((el) => (
+          <Col n={nCol} key={uuidv4()}>
+            {el}
+          </Col>
+        ))}
+      </Row>
+    );
   }
   return (
     <Row gutters>
@@ -63,10 +88,7 @@ export default function ExpendableListCards({ list, max, nCol, order, sortOn }) 
         </Col>
       ))}
       <Col n={nCol}>
-        <ExpandCard
-          isExpanded={showAll}
-          toggle={() => setShowAll(!showAll)}
-        />
+        <ExpandCard isExpanded={showAll} toggle={() => setShowAll(!showAll)} />
       </Col>
     </Row>
   );

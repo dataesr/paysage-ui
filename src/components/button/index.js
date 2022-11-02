@@ -27,21 +27,17 @@ const Button = forwardRef((props, ref) => {
     color,
     ...remainingProps
   } = props;
-  const _className = classNames(
-    `fr-btn--${size} fr-btn`,
-    className,
-    {
-      'btn-text': (color === 'text'),
-      'btn-error': (color === 'error'),
-      'btn-success': (color === 'success'),
-      'btn-icon': !children && icon,
-      'btn-primary': !secondary && !tertiary,
-      'fr-btn--secondary': secondary,
-      'fr-btn--tertiary': tertiary && !borderless,
-      'fr-btn--tertiary-no-outline': borderless,
-      'btn-icon--rounded': !children && icon && rounded,
-    },
-  );
+  const _className = classNames(`fr-btn--${size} fr-btn`, className, {
+    'btn-text': color === 'text',
+    'btn-error': color === 'error',
+    'btn-success': color === 'success',
+    'btn-icon': !children && icon,
+    'btn-primary': !secondary && !tertiary,
+    'fr-btn--secondary': secondary,
+    'fr-btn--tertiary': tertiary && !borderless,
+    'fr-btn--tertiary-no-outline': borderless,
+    'btn-icon--rounded': !children && icon && rounded,
+  });
 
   const _button = (
     <button
@@ -63,7 +59,9 @@ const Button = forwardRef((props, ref) => {
     >
       {_button}
     </Icon>
-  ) : _button;
+  ) : (
+    _button
+  );
 });
 
 Button.defaultProps = {
