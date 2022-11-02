@@ -4,14 +4,18 @@ import useEditMode from '../../hooks/useEditMode';
 import Button from '../button';
 import CopyButton from '../copy/copy-button';
 
-export default function KeyValueCard({ cardKey, cardValue, icon, tooltip, onEdit, copy, className }) {
+export default function KeyValueCard({ cardKey, cardValue, icon, tooltip, onEdit, copy, className, titleAsText }) {
   const { editMode } = useEditMode();
   return (
     <div className={`fr-card fr-card--xs fr-card--horizontal fr-card--grey fr-card--no-border ${className}`}>
       <div className="fr-card__body">
         <div className="fr-card__content">
           <p className="fr-card__title">
-            <span className="fr-pr-1w">{cardValue}</span>
+            <span
+              className={`fr-pr-1w ${(titleAsText) && 'fr-text--md fr-text--regular'} ${!cardValue && 'fr-text--sm fr-text--regular italic'}`}
+            >
+              {cardValue || 'Non renseigné'}
+            </span>
             {copy && <CopyButton copyText={cardValue} size="sm" />}
           </p>
           <div className="fr-card__start">
@@ -35,6 +39,7 @@ KeyValueCard.propTypes = {
   tooltip: PropTypes.string,
   onEdit: PropTypes.func,
   className: PropTypes.string,
+  titleAsText: PropTypes.string,
 };
 KeyValueCard.defaultProps = {
   copy: false,
@@ -42,4 +47,5 @@ KeyValueCard.defaultProps = {
   tooltip: null,
   onEdit: null,
   className: '',
+  titleAsText: false,
 };
