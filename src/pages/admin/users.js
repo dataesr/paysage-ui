@@ -271,7 +271,7 @@ User.propTypes = {
 
 export default function AdminUsersPage() {
   const { toast } = useToast();
-  const { data, isLoading, error, reload } = useFetch('/admin/users?sort=-createdAt');
+  const { data, isLoading, error, reload } = useFetch('/admin/users?sort=-createdAt&limit=500');
   const { data: groups } = useFetch('/groups?limit=500');
 
   const toastError = () => toast({

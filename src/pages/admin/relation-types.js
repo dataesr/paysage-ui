@@ -125,7 +125,7 @@ RelationTypesForm.defaultProps = {
 
 export default function RelationTypesPage() {
   const route = '/relation-types';
-  const { data, isLoading, error, reload } = useFetch(route);
+  const { data, isLoading, error, reload } = useFetch(`${route}?limit=500&sort=name`);
   const [isOpen, setIsOpen] = useState();
   const [modalTitle, setModalTitle] = useState('');
   const [modalContent, setModalContent] = useState(null);

@@ -83,7 +83,7 @@ NomenclatureForm.defaultProps = {
 };
 
 export default function NomenclaturesPage({ route, title }) {
-  const { data, isLoading, error, reload } = useFetch(route);
+  const { data, isLoading, error, reload } = useFetch(`${route}?limit=500`);
   const [isOpen, setIsOpen] = useState();
   const [modalTitle, setModalTitle] = useState('');
   const [modalContent, setModalContent] = useState(null);

@@ -12,7 +12,7 @@ import useEditMode from '../../hooks/useEditMode';
 
 export default function GroupsPage() {
   const url = '/groups';
-  const { data, isLoading, error, reload } = useFetch(url);
+  const { data, isLoading, error, reload } = useFetch(`${url}?limit=500`);
   const [isOpen, setIsOpen] = useState();
   const [modalTitle, setModalTitle] = useState('');
   const [modalContent, setModalContent] = useState(null);
