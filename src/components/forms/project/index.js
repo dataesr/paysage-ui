@@ -18,9 +18,13 @@ function validate(body) {
 }
 
 function sanitize(form) {
-  const fields = ['nameFr', 'nameEn', 'fullNameFr', 'fullNameEn', 'acronymFr', 'acronymEn', 'description', 'startDate', 'endDate', 'grantPart'];
+  const fields = [
+    'nameFr', 'nameEn', 'fullNameFr', 'fullNameEn', 'acronymFr', 'acronymEn',
+    'descriptionFr', 'descriptionEn', 'startDate', 'endDate', 'grantPart', 'funding',
+  ];
   const body = {};
   Object.keys(form).forEach((key) => { if (fields.includes(key)) { body[key] = form[key]; } });
+  if (body.funding) body.funding = parseFloat(body.funding);
   return body;
 }
 
@@ -43,7 +47,7 @@ export default function ProjectForm({ id, data, onSave, onDelete }) {
         createdAt={data.createdAt}
       />
       <Container fluid>
-        <Row gutters>
+        <Row gutters className="flex--last-baseline">
           <Col n="12 md-6">
             <TextInput
               label="Nom en français"
@@ -102,20 +106,41 @@ export default function ProjectForm({ id, data, onSave, onDelete }) {
           <Col n="12 md-6">
             <TextInput
               textarea
-              label="Description"
-              value={form.description || ''}
-              onChange={(e) => updateForm({ description: e.target.value })}
-              message={(showErrors && errors.description) ? errors.description : null}
-              messageType={(showErrors && errors.description) ? 'error' : ''}
+              label="Description en français"
+              value={form.descriptionFr || ''}
+              onChange={(e) => updateForm({ descriptionFr: e.target.value })}
+              message={(showErrors && errors.descriptionFr) ? errors.descriptionFr : null}
+              messageType={(showErrors && errors.descriptionFr) ? 'error' : ''}
+            />
+          </Col>
+          <Col n="12 md-6">
+            <TextInput
+              textarea
+              label="Description en anglais"
+              value={form.descriptionEn || ''}
+              onChange={(e) => updateForm({ descriptionEn: e.target.value })}
+              message={(showErrors && errors.descriptionEn) ? errors.descriptionEn : null}
+              messageType={(showErrors && errors.descriptionEn) ? 'error' : ''}
+            />
+          </Col>
+          <Col n="12 md-6">
+            <TextInput
+              label="Type de financement"
+              value={form.grantPart || ''}
+              onChange={(e) => updateForm({ grantPart: e.target.value })}
+              message={(showErrors && errors.grantPart) ? errors.grantPart : null}
+              messageType={(showErrors && errors.grantPart) ? 'error' : ''}
             />
           </Col>
           <Col n="12 md-6">
             <TextInput
               label="Financement"
-              value={form.grantPart || ''}
-              onChange={(e) => updateForm({ grantPart: e.target.value })}
-              message={(showErrors && errors.grantPart) ? errors.grantPart : null}
-              messageType={(showErrors && errors.grantPart) ? 'error' : ''}
+              hint="Montant du financement en €"
+              type="number"
+              value={form.funding || ''}
+              onChange={(e) => updateForm({ funding: e.target.value })}
+              message={(showErrors && errors.funding) ? errors.funding : null}
+              messageType={(showErrors && errors.funding) ? 'error' : ''}
             />
           </Col>
           <Col n="12 md-6">

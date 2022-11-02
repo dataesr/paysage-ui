@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom';
 import Identifiers from '../../../components/blocs/identifiers';
 import Localisations from '../../../components/blocs/localisations';
 import RelationsByTag from '../../../components/blocs/relations-by-tag';
+import SocialMedias from '../../../components/blocs/social-medias';
 import Weblinks from '../../../components/blocs/weblinks';
 import Wiki from '../../../components/blocs/wiki';
 import KeyValueCard from '../../../components/card/key-value-card';
@@ -34,7 +35,7 @@ export default function ProjectPresentationPage() {
               <KeyValueCard
                 className="card-projects"
                 cardKey="Date de début"
-                cardValue={data?.startDate ? new Date(data.startDate).toLocaleDateString('fr-FR', dateOptions) : 'Non renseigné'}
+                cardValue={data?.startDate && new Date(data.startDate).toLocaleDateString('fr-FR', dateOptions)}
                 icon="ri-calendar-line"
               />
             </Col>
@@ -42,8 +43,25 @@ export default function ProjectPresentationPage() {
               <KeyValueCard
                 className="card-projects"
                 cardKey="Date de fin"
-                cardValue={data?.endDate ? new Date(data.endDate).toLocaleDateString('fr-FR', dateOptions) : 'Non renseigné'}
+                cardValue={data?.endDate && new Date(data.endDate).toLocaleDateString('fr-FR', dateOptions)}
                 icon="ri-calendar-line"
+              />
+            </Col>
+            <Col n="12">
+              <KeyValueCard
+                titleAsText
+                className="card-projects"
+                cardKey="Description"
+                cardValue={data?.descriptionFr || data?.descriptionEn}
+                icon="ri-align-left"
+              />
+            </Col>
+            <Col n="12">
+              <KeyValueCard
+                className="card-projects"
+                cardKey="Montant du financement"
+                cardValue={data?.funding && `${data.funding.toLocaleString('fr-FR') } €`}
+                icon="ri-bank-line"
               />
             </Col>
           </Row>
@@ -73,6 +91,9 @@ export default function ProjectPresentationPage() {
           <Weblinks />
         </Col>
         <Col n="12 md-6">
+          <SocialMedias />
+        </Col>
+        <Col n="12">
           <Wiki />
         </Col>
       </Row>
