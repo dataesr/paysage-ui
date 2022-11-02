@@ -11,6 +11,7 @@ import SocialMedias from '../../../components/blocs/social-medias';
 import useHashScroll from '../../../hooks/useHashScroll';
 import useEditMode from '../../../hooks/useEditMode';
 import Wiki from '../../../components/blocs/wiki';
+import StructureCurrentGovernance from '../../../components/blocs/current-governance';
 
 export default function StructurePresentationPage() {
   useHashScroll();
@@ -32,6 +33,7 @@ export default function StructurePresentationPage() {
       </Row>
       <ChiffresCles />
       {editMode && <Names />}
+      <StructureCurrentGovernance />
       <Title as="h3" look="h4">Présence sur le web</Title>
       <Row gutters>
         <Col n="12 md-6">
