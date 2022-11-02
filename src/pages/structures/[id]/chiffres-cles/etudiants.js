@@ -1,6 +1,8 @@
 import { Col, Icon, Row, Text, Title } from '@dataesr/react-dsfr';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
+import HCExportingData from 'highcharts/modules/export-data';
+import HCExporting from 'highcharts/modules/exporting';
 
 import {
   Bloc,
@@ -15,6 +17,9 @@ import useFetch from '../../../../hooks/useFetch';
 import useHashScroll from '../../../../hooks/useHashScroll';
 import useUrl from '../../../../hooks/useUrl';
 import cleanNumber from '../../../../utils/cleanNumbers';
+
+HCExporting(Highcharts);
+HCExportingData(Highcharts);
 
 export default function StructureEtudiantsPage() {
   useHashScroll();

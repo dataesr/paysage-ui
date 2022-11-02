@@ -1,6 +1,8 @@
 import { Col, Icon, Row, Text, Title } from '@dataesr/react-dsfr';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
+import HCExportingData from 'highcharts/modules/export-data';
+import HCExporting from 'highcharts/modules/exporting';
 
 import {
   Bloc,
@@ -13,6 +15,9 @@ import Spinner from '../../../../components/spinner';
 import getOptionsFromFacet from '../../../../hooks/useChart';
 import useFetch from '../../../../hooks/useFetch';
 import useUrl from '../../../../hooks/useUrl';
+
+HCExporting(Highcharts);
+HCExportingData(Highcharts);
 
 export default function StructureImmobilierPage() {
   const year = new Date().getFullYear();
