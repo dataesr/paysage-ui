@@ -74,7 +74,7 @@ export default function OfficialTextOutlet() {
             <Text spacing="mb-1w">
               <Text as="span" spacing="mr-1w" size="lead" bold>
                 {event.title}
-                <Button title="Voir la page Paysage du texte officiel" onClick={() => navigate(`/textes-officiels/${event.id}`)} rounded borderless icon="ri-arrow-right-line" />
+                <Button title="Afficher la page Paysage du texte officiel" onClick={() => navigate(`/textes-officiels/${event.id}`)} rounded borderless icon="ri-arrow-right-line" />
                 <Button title="Accéder à la page du texte officiel" onClick={() => { window.open(event.pageUrl, '_blank'); }} rounded borderless icon="ri-external-link-line" />
               </Text>
             </Text>
