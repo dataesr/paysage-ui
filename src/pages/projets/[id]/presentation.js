@@ -60,7 +60,7 @@ export default function ProjectPresentationPage() {
               <KeyValueCard
                 className="card-projects"
                 cardKey="Montant du financement"
-                cardValue={data?.funding && `${data.funding.toLocaleString('fr-FR') } €`}
+                cardValue={data?.funding && `${data.funding.toLocaleString('fr-FR') }€`}
                 icon="ri-bank-line"
               />
             </Col>

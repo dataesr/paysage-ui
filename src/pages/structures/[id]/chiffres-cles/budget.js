@@ -273,11 +273,11 @@ Il constitue une marge de sécurité financière destinée à financer une parti
         let difference = currentData?.[item?.field];
         if (difference) {
           difference = cleanNumber(difference);
-          difference = item?.suffix ? `${difference} ${item.suffix}` : difference;
+          difference = item?.suffix ? `${difference}${item.suffix}` : difference;
         }
         let value = lastData?.[item?.field];
         value = cleanNumber(value);
-        value = item?.suffix ? `${value} ${item.suffix}` : value;
+        value = item?.suffix ? `${value}${item.suffix}` : value;
         const { color, tooltip } = getIconColorAndTooltip(item);
         return (
           <Card
