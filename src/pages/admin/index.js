@@ -33,8 +33,8 @@ function AdminPage() {
               <SideMenuLink asLink={<RouterLink to="/admin/nomenclatures/types-de-mail" />}>
                 Types de mail
               </SideMenuLink>
-              <SideMenuLink asLink={<RouterLink to="/admin/nomenclatures/ministeres-de-tutelle" />}>
-                Ministères de tutelle
+              <SideMenuLink asLink={<RouterLink to="/admin/nomenclatures/ministres-de-tutelle" />}>
+                Ministres de tutelle
               </SideMenuLink>
               <SideMenuLink asLink={<RouterLink to="/admin/types-de-relation" />}>
                 Types de relation

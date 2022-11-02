@@ -93,7 +93,7 @@ function App() {
             <Route path="types-de-relation" element={<AdminRelationTypesPage />} />
             <Route path="nomenclatures" element={<Navigate to="nomenclatures/types-de-document" replace />} />
             <Route path="nomenclatures/types-de-document" element={<AdminNomenclaturesPage route="/document-types" title="Types de documents" />} />
-            <Route path="nomenclatures/ministeres-de-tutelle" element={<AdminNomenclaturesPage route="/supervising-ministers" title="Ministères de tutelle" />} />
+            <Route path="nomenclatures/ministres-de-tutelle" element={<AdminNomenclaturesPage route="/supervising-ministers" title="Ministres de tutelle" />} />
             <Route path="nomenclatures/types-de-mail" element={<AdminNomenclaturesPage route="/email-types" title="Types d'email" />} />
           </Route>
         </Route>
