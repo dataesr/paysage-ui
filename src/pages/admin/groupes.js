@@ -58,7 +58,9 @@ export default function GroupsPage() {
         <Row className="fr-row--space-between">
           <div className="flex--grow fr-pl-2w">
             <Text spacing="my-1v" bold size="lg">{`${group.name} ${group.acronym ? `(${group.acronym})` : ''}`.trim()}</Text>
-            <Text as="span" bold>Autres noms: </Text>
+            <Text as="span" bold>
+              Autres noms :
+            </Text>
             {group.otherNames.length ? group.otherNames.map((name) => <Tag key="name" as="span">{name}</Tag>) : <Text as="span">Aucun alias pour le moment</Text>}
           </div>
           <div>

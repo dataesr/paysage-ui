@@ -194,21 +194,21 @@ export default function RelationTypesPage() {
               <Row><Text spacing="my-1v" bold size="lg">{item.name}</Text></Row>
               <Row>
                 <Text as="span" bold className="fr-mb-2v">
-                  Priorité:
+                  Priorité :
                   {' '}
                   <Badge text={item.priority} />
                 </Text>
               </Row>
               <Row>
                 <Text as="span" bold className="fr-mb-2v">
-                  Autres noms:
+                  Autres noms :
                   {' '}
                   {item.otherNames.length ? item.otherNames.map((name) => <Tag key={name} as="span">{name}</Tag>) : <Text as="span">Aucun alias pour le moment</Text>}
                 </Text>
               </Row>
               <Row>
                 <Text as="span" bold className="fr-mb-2v">
-                  Appliquable aux:
+                  Appliquable aux :
                   {' '}
                   {item.for.map((object) => <Tag key={object} as="span">{object}</Tag>)}
                 </Text>

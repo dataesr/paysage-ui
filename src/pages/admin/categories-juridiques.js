@@ -218,7 +218,9 @@ export default function LegalCategoriesPage() {
           <Row className="fr-row--space-between">
             <div className="flex--grow fr-pl-2w">
               <Text spacing="my-1v" bold size="lg">{item.longNameFr}</Text>
-              <Text as="span" bold>Autres noms: </Text>
+              <Text as="span" bold>
+                Autres noms :
+              </Text>
               {item.otherNames.length ? item.otherNames.map((name) => <Tag as="span">{name}</Tag>) : <Text as="span">Aucun alias pour le moment</Text>}
               <Text spacing="mt-2w mb-0" size="xs">
                 Créé le
