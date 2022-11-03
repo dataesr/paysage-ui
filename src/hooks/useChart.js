@@ -21,7 +21,16 @@ export default function getOptionsFromFacet({ colors, data, facet, serieName, ti
     chart: { type: 'column' },
     credits: { enabled: false },
     legend: { enabled: false },
-    lang: { downloadJPEG: 'Téléchagez en JPEG', downloadPNG: 'Téléchargez en PNG', downloadPDF: 'Téléchargez en PDF', downloadSVG: 'Téléchargez en SVG', downloadCSV: 'Téléchargez en CSV', downloadXLS: 'Téléchargez en XLS', viewFullscreen: 'Plein écran', printChart: 'Imprimer le graphique' },
+    lang: {
+      downloadCSV: 'Télécharger en CSV',
+      downloadJPEG: 'Téléchager en JPEG',
+      downloadPDF: 'Télécharger en PDF',
+      downloadPNG: 'Télécharger en PNG',
+      downloadSVG: 'Télécharger en SVG',
+      downloadXLS: 'Télécharger en XLS',
+      printChart: 'Imprimer le graphique',
+      viewFullscreen: 'Plein écran',
+    },
     series: [{
       name: serieName,
       data: dataArray,
