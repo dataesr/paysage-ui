@@ -32,9 +32,10 @@ export default function StructureEtudiantsPage() {
   const categories = sortedData.map((item) => item.annee);
   const commonOptions = {
     credits: { enabled: false },
+    lang: { downloadJPEG: 'Téléchagez en JPEG', downloadPNG: 'Téléchargez en PNG', downloadPDF: 'Téléchargez en PDF', downloadSVG: 'Téléchargez en SVG', downloadCSV: 'Téléchargez en CSV', downloadXLS: 'Téléchargez en XLS', viewFullscreen: 'Plein écran', printChart: 'Imprimer le graphique' },
     xAxis: { categories },
     yAxis: { title: { text: 'Nombre d\'étudiants' } },
-  };
+    exporting: { buttons: { contextButton: { menuItems: ['viewFullscreen', 'printChart', 'separator', 'downloadPNG', 'downloadJPEG', 'downloadPDF', 'downloadSVG', 'separator', 'downloadCSV', 'downloadXLS', 'openInCloud'] } } } };
 
   const tiles = [{
     text: 'inscriptions totales (inscriptions principales et secondes)',

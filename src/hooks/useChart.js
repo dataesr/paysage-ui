@@ -21,6 +21,7 @@ export default function getOptionsFromFacet({ colors, data, facet, serieName, ti
     chart: { type: 'column' },
     credits: { enabled: false },
     legend: { enabled: false },
+    lang: { downloadJPEG: 'Téléchagez en JPEG', downloadPNG: 'Téléchargez en PNG', downloadPDF: 'Téléchargez en PDF', downloadSVG: 'Téléchargez en SVG', downloadCSV: 'Téléchargez en CSV', downloadXLS: 'Téléchargez en XLS', viewFullscreen: 'Plein écran', printChart: 'Imprimer le graphique' },
     series: [{
       name: serieName,
       data: dataArray,
@@ -28,6 +29,7 @@ export default function getOptionsFromFacet({ colors, data, facet, serieName, ti
     title: { text: title },
     xAxis: { categories },
     yAxis: { title: { text: serieName } },
+    exporting: { buttons: { contextButton: { menuItems: ['viewFullscreen', 'printChart', 'separator', 'downloadPNG', 'downloadJPEG', 'downloadPDF', 'downloadSVG', 'separator', 'downloadCSV', 'downloadXLS', 'openInCloud'] } } },
   };
 
   if (colors) {

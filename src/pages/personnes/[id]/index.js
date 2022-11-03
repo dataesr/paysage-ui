@@ -36,7 +36,7 @@ function PersonByIdPage() {
   const { notice } = useNotice();
   const { editMode, reset, toggle } = useEditMode();
   const [isExportOpen, setIsExportOpen] = useState(false);
-  const [isFavorite, setIsFavorite] = useState(false);
+  // const [isFavorite, setIsFavorite] = useState(false);
   const { form, updateForm } = useForm({
     oeil: true,
     actualites: true,
@@ -162,14 +162,14 @@ function PersonByIdPage() {
                 onClick={() => setIsExportOpen(true)}
                 icon="ri-download-2-fill"
               />
-              <Button
+              {/* <Button
                 tertiary
                 borderless
                 rounded
                 title="Ajouter aux favoris"
                 onClick={() => setIsFavorite(!isFavorite)}
                 icon={`ri-star-${isFavorite ? 'fill' : 'line'}`}
-              />
+              /> */}
               <Button
                 tertiary
                 borderless
