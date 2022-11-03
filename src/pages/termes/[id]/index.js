@@ -21,7 +21,7 @@ import TermPresentationPage from './presentation';
 import TermExportPage from './exporter';
 import TermRelatedElements from './elements-lies';
 import { saveError, saveSuccess } from '../../../utils/notice-contents';
-import TermForm from '../../../components/forms/term';
+import TermForm from '../../../components/forms/category-term';
 
 function TermByIdPage() {
   const { url, id } = useUrl();
