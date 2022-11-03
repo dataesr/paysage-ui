@@ -19,7 +19,7 @@ import useNotice from '../../../hooks/useNotice';
 
 import CategoryPresentationPage from './presentation';
 import CategoryRelatedElements from './elements-lies';
-import CategoryForm from '../../../components/forms/category';
+import CategoryForm from '../../../components/forms/category-term';
 import CategoriesExportPage from './exporter';
 import { saveError, saveSuccess } from '../../../utils/notice-contents';
 

@@ -16,6 +16,7 @@ import SearchBar from '../../search-bar';
 import useForm from '../../../hooks/useForm';
 import useAuth from '../../../hooks/useAuth';
 import useDebounce from '../../../hooks/useDebounce';
+import PaysageBlame from '../../paysage-blame';
 
 function validate(body) {
   const errors = {};
@@ -150,6 +151,12 @@ export default function LocalisationForm({ id, data, onDelete, onSave }) {
   return (
     <form>
       <Container fluid>
+        <PaysageBlame
+          createdBy={data.createdBy}
+          updatedBy={data.updatedBy}
+          updatedAt={data.updatedAt}
+          createdAt={data.createdAt}
+        />
         <Row gutters>
           <Col n="12">
             <RadioGroup isInline>
