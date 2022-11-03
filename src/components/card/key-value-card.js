@@ -12,7 +12,7 @@ export default function KeyValueCard({ cardKey, cardValue, icon, tooltip, onEdit
         <div className="fr-card__content">
           <p className="fr-card__title">
             <span
-              className={`fr-pr-1w ${(titleAsText) && 'fr-text--md fr-text--regular'} ${!cardValue && 'fr-text--sm fr-text--regular italic'}`}
+              className={`fr-pr-1w ${(cardValue && titleAsText) && 'fr-text--md fr-text--regular'} ${!cardValue && 'fr-text--sm fr-text--regular italic'}`}
             >
               {cardValue || 'Non renseigné'}
             </span>
