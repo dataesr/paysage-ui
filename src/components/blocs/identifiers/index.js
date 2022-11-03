@@ -48,17 +48,38 @@ export default function IdentifiersComponent() {
     setShowModal(true);
   };
 
+  const getLink = (el) => {
+    let linkTo = '';
+    switch (el.type) {
+    case 'Wikidata':
+      linkTo = `https://wikidata.org/wiki/${el.value}`;
+      break;
+    case 'idRef':
+      linkTo = `https://www.idref.fr/${el.value}`;
+      break;
+    case 'ORCID':
+      linkTo = `https://orcid.org/${el.value}`;
+      break;
+    case 'ROR':
+      linkTo = `https://ror.org/${el.value}`;
+      break;
+    default:
+    }
+    return linkTo;
+  };
+
   const renderCards = () => {
     if (!data) return null;
     const list = data.data.map((el) => (
       <KeyValueCard
-        copy
-        key={el.id}
         cardKey={el.type}
         cardValue={el.value}
-        icon="ri-fingerprint-2-line"
         className={`card-${apiObject}`}
+        copy
+        icon="ri-fingerprint-2-line"
+        key={el.id}
         onEdit={() => onOpenModalHandler(el)}
+        linkTo={getLink(el)}
       />
     ));
     return <ExpendableListCards list={list} />;

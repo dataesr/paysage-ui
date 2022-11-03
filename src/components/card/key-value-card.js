@@ -13,28 +13,9 @@ export default function KeyValueCard({
   tooltip,
   icon,
   titleAsText,
+  linkTo,
 }) {
   const { editMode } = useEditMode();
-
-  // TODO: KeyValueCard is meant to be generic. This should be outside KeyValueCard (inside blocs/identifiers),
-  // using a prop linkTo to display a link or not.
-
-  let linkTo = '';
-  switch (cardKey) {
-  case 'Wikidata':
-    linkTo = `https://wikidata.org/wiki/${cardValue}`;
-    break;
-  case 'idRef':
-    linkTo = `https://www.idref.fr/${cardValue}`;
-    break;
-  case 'ORCID':
-    linkTo = `https://orcid.org/${cardValue}`;
-    break;
-  case 'ROR':
-    linkTo = `https://ror.org/${cardValue}`;
-    break;
-  default:
-  }
 
   return (
     <div className={`fr-card fr-card--xs fr-card--horizontal fr-card--grey fr-card--no-border ${className}`}>
@@ -82,18 +63,20 @@ export default function KeyValueCard({
 KeyValueCard.propTypes = {
   cardKey: PropTypes.string.isRequired,
   cardValue: PropTypes.string.isRequired,
+  className: PropTypes.string,
   copy: PropTypes.bool,
   icon: PropTypes.string,
-  tooltip: PropTypes.string,
+  linkTo: PropTypes.string,
   onEdit: PropTypes.func,
-  className: PropTypes.string,
   titleAsText: PropTypes.string,
+  tooltip: PropTypes.string,
 };
 KeyValueCard.defaultProps = {
+  className: '',
   copy: false,
   icon: null,
-  tooltip: null,
+  linkTo: null,
   onEdit: null,
-  className: '',
   titleAsText: false,
+  tooltip: null,
 };
