@@ -4,6 +4,7 @@ import { useState } from 'react';
 import TagInput from '../../tag-input';
 import useForm from '../../../hooks/useForm';
 import FormFooter from '../form-footer';
+import PaysageBlame from '../../paysage-blame';
 
 function validate(body) {
   const validationErrors = {};
@@ -50,6 +51,12 @@ export default function LegalCategoriesForm({ id, data, onSave, onDelete }) {
   return (
     <form>
       <Container fluid>
+        <PaysageBlame
+          createdBy={data.createdBy}
+          updatedBy={data.updatedBy}
+          updatedAt={data.updatedAt}
+          createdAt={data.createdAt}
+        />
         <Row>
           <Col n="12" spacing="pb-3w">
             <TextInput

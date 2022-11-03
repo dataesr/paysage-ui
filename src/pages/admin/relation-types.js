@@ -1,127 +1,16 @@
-import PropTypes from 'prop-types';
 import { Link as RouterLink } from 'react-router-dom';
 import {
-  Breadcrumb, BreadcrumbItem, Checkbox, CheckboxGroup, Col, Container, Row, Text,
-  Title, Modal, ModalTitle, ModalContent, TextInput, Badge, Tag, ButtonGroup,
+  Breadcrumb, BreadcrumbItem, Col, Container, Row, Text,
+  Title, Modal, ModalTitle, ModalContent, Badge, Tag,
 } from '@dataesr/react-dsfr';
 import { useState } from 'react';
 import useFetch from '../../hooks/useFetch';
 import api from '../../utils/api';
-import TagInput from '../../components/tag-input';
 import { toString } from '../../utils/dates';
-import useForm from '../../hooks/useForm';
 import Button from '../../components/button';
-
-const objectNameMapper = [
-  { name: 'Personnes', object: 'persons' },
-  { name: 'Structures', object: 'structures' },
-  { name: 'Prix', object: 'prices' },
-  { name: 'Projets', object: 'projects' },
-  { name: 'Termes', object: 'terms' },
-  { name: 'Catégories', object: 'categories' },
-];
-
-function RelationTypesForm({ id, data, onSave, onDelete }) {
-  const validateForm = (body) => {
-    const validationErrors = {};
-    if (!body.name) { validationErrors.name = 'Le nom est obligatoire'; }
-    if (!body.for?.length) { validationErrors.for = 'Ce champs est obligatoire'; }
-    const priority = parseInt(body.priority, 10);
-    if (priority > 99 || priority < 1) { validationErrors.for = 'Doit être compris en 1 (priorité forte) et 99 (priorité faible)'; }
-    return validationErrors;
-  };
-  const { form, updateForm, errors } = useForm({ priority: 99, ...data }, validateForm);
-  const [showErrors, setShowErrors] = useState(false);
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (Object.keys(errors).length !== 0) return setShowErrors(true);
-    form.priority = parseInt(form.priority, 10);
-    return onSave(id, form);
-  };
-
-  const handleDelete = () => onDelete(id);
-
-  return (
-    <form onSubmit={handleSubmit}>
-      <Container fluid>
-        <Row>
-          <Col n="12" spacing="pb-3w">
-            <TextInput
-              required
-              label="Nom"
-              value={form.name}
-              onChange={(e) => updateForm({ name: e.target.value })}
-              message={(showErrors && errors.name) ? errors.name : null}
-              messageType={(showErrors && errors.name) ? 'error' : ''}
-            />
-          </Col>
-          <Col n="12" spacing="pb-3w">
-            <TextInput label="Nom pluriel" value={form.pluralName} onChange={(e) => updateForm({ pluralName: e.target.value })} />
-          </Col>
-          <Col n="12" spacing="pb-3w">
-            <TextInput label="Nom au féminin" value={form.feminineName} onChange={(e) => updateForm({ feminineName: e.target.value })} />
-          </Col>
-          <Col n="12" spacing="pb-3w">
-            <TextInput type="number" step="1" min="1" max="99" label="Priorité" value={form.priority} onChange={(e) => updateForm({ priority: e.target.value })} />
-          </Col>
-          <Col n="12" spacing="pb-3w">
-            <TagInput
-              label="Autres noms"
-              hint='Validez votre ajout avec la touche "Entrée" afin de valider votre ajout'
-              tags={form.otherNames || []}
-              onTagsChange={(tags) => updateForm({ otherNames: tags })}
-            />
-          </Col>
-          <Col n="12" spacing="pb-3w">
-            <CheckboxGroup
-              isInline
-              legend="Pour: "
-              message={(showErrors && errors.for) ? errors.for : null}
-              messageType={(showErrors && errors.for) ? 'error' : ''}
-            >
-              {objectNameMapper.map((element) => (
-                <Checkbox
-                  checked={form.for.filter((f) => (f === element.object)).length}
-                  size="sm"
-                  onChange={(e) => updateForm({ for: ((e.target.checked) ? [...form.for, element.object] : form.for.filter((f) => (f !== element.object))) })}
-                  label={element.name}
-                />
-              ))}
-            </CheckboxGroup>
-          </Col>
-          <Col n="12">
-            <ButtonGroup isInlineFrom="md" align="right">
-              <Button submit icon="ri-save-line">Enregistrer</Button>
-            </ButtonGroup>
-          </Col>
-        </Row>
-        <hr />
-        {id && (
-          <>
-            <Title as="h2" look="h6">Supprimer ce type de relation</Title>
-            <Text>Attention ! Cette suppression sera définitive.</Text>
-            <ButtonGroup isInlineFrom="md">
-              <Button secondary onClick={handleDelete} color="error" icon="ri-delete-bin-2-line">
-                Supprimer
-              </Button>
-            </ButtonGroup>
-          </>
-        )}
-      </Container>
-    </form>
-  );
-}
-RelationTypesForm.propTypes = {
-  id: PropTypes.string,
-  data: PropTypes.oneOfType([PropTypes.shape, null]),
-  onSave: PropTypes.func.isRequired,
-  onDelete: PropTypes.func.isRequired,
-};
-RelationTypesForm.defaultProps = {
-  id: null,
-  data: { for: [], priority: '99' },
-};
+import RelationTypesForm from '../../components/forms/relation-types';
+import useNotice from '../../hooks/useNotice';
+import { deleteError, saveError, saveSuccess, deleteSuccess } from '../../utils/notice-contents';
 
 export default function RelationTypesPage() {
   const route = '/relation-types';
@@ -129,39 +18,40 @@ export default function RelationTypesPage() {
   const [isOpen, setIsOpen] = useState();
   const [modalTitle, setModalTitle] = useState('');
   const [modalContent, setModalContent] = useState(null);
+  const { notice } = useNotice();
 
-  const handleDelete = async (id) => {
-    if (!id) return;
-    const response = await api.delete(`${route}/${id}`);
-    if (response.ok) {
-      reload();
-      setIsOpen(false);
-    }
+  const handleSave = async (body, itemId) => {
+    const method = itemId ? 'patch' : 'post';
+    const saveUrl = itemId ? `${route}/${itemId}` : route;
+    await api[method](saveUrl, body)
+      .then(() => {
+        notice(saveSuccess);
+        reload();
+      })
+      .catch(() => notice(saveError));
+    return setIsOpen(false);
   };
-  const handleSave = async (id, body) => {
-    const method = id ? 'patch' : 'post';
-    const url = id ? `${route}/${id}` : route;
-    const response = await api[method](url, body);
-    if (response.ok) {
-      reload();
-      setIsOpen(false);
-    }
+
+  const handleDelete = async (itemId) => {
+    await api.delete(`${route}/${itemId}`)
+      .then(() => {
+        notice(deleteSuccess);
+        reload();
+      })
+      .catch(() => notice(deleteError));
+    return setIsOpen(false);
   };
 
   const handleModalToggle = (item = {}) => {
     const { id, ...rest } = item;
-    if (!id) {
-      setModalContent(<RelationTypesForm onDelete={handleDelete} onSave={handleSave} />);
-    } else {
-      setModalContent(
-        <RelationTypesForm
-          id={id}
-          data={rest}
-          onDelete={handleDelete}
-          onSave={handleSave}
-        />,
-      );
-    }
+    setModalContent(
+      <RelationTypesForm
+        id={id}
+        data={rest}
+        onDelete={handleDelete}
+        onSave={handleSave}
+      />,
+    );
     setModalTitle(id ? 'Modifier' : 'Ajouter');
     setIsOpen(true);
   };
