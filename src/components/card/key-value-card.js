@@ -16,6 +16,9 @@ export default function KeyValueCard({
 }) {
   const { editMode } = useEditMode();
 
+  // TODO: KeyValueCard is meant to be generic. This should be outside KeyValueCard (inside blocs/identifiers),
+  // using a prop linkTo to display a link or not.
+
   let linkTo = '';
   switch (cardKey) {
   case 'Wikidata':
@@ -39,9 +42,7 @@ export default function KeyValueCard({
         <div className="fr-card__content">
           <p className="fr-card__title">
             <span
-              className={`fr-pr-1w ${
-                titleAsText && 'fr-text--md fr-text--regular'
-              } ${!cardValue && 'fr-text--sm fr-text--regular italic'}`}
+              className={`fr-pr-1w ${(cardValue && titleAsText) && 'fr-text--md fr-text--regular'} ${!cardValue && 'fr-text--sm fr-text--regular italic'}`}
             >
               {cardValue || 'Non renseigné'}
             </span>
@@ -50,7 +51,7 @@ export default function KeyValueCard({
           <div className="fr-card__start">
             <p className="fr-card__detail fr-text--sm fr-mb-0">
               {icon && <Icon name={icon} size="1x" />}
-              <a href={linkTo} target="_blank" rel="noopener noreferrer">{cardKey}</a>
+              {linkTo ? <a href={linkTo} target="_blank" rel="noopener noreferrer">{cardKey}</a> : cardKey}
               {tooltip && (
                 <Icon
                   name="ri-information-fill"
