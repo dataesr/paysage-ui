@@ -3,6 +3,7 @@ import { Icon, Tag, Col } from '@dataesr/react-dsfr';
 import TagList from '../../tag-list';
 import useFetch from '../../../hooks/useFetch';
 import useUrl from '../../../hooks/useUrl';
+import { capitalize } from '../../../utils/strings';
 
 const WIKI_LANG_ORDER = ['frwiki', 'enwiki', 'dewiki', 'itwiki', 'eswiki'];
 const getWikipediaUrl = (lang, title) => `https://${lang.slice(0, lang.length - 4)}.wikipedia.org/wiki/${title.replace(' ', '_')}`;
@@ -39,20 +40,22 @@ export default function Wiki() {
             <div className="fr-card__content">
               {activity && (
                 <p className="fr-card__title">
-                  <span className="fr-text fr-text--regular fr-text--md fr-pr-1w">{activity}</span>
+                  <span className="fr-text fr-text--regular fr-text--md fr-pr-1w">
+                    {capitalize(activity)}
+                  </span>
                 </p>
               )}
               <div className="fr-card__start">
                 <p className="fr-card__detail fr-text--sm fr-mb-0">
                   <Icon name="ri-global-line" size="1x" />
-                  Dans wikipedia
+                  Dans Wikipédia
                 </p>
               </div>
             </div>
             {(wikis?.length > 0) && (
               <div className="fr-card__end fr-mt-0 fr-mb-2w">
                 <p className="fr-card__detail fr-mb-1w">
-                  {`Articles wikipedia : ${(wikis?.length) && `${wikis?.length}`}`}
+                  {`Articles Wikipédia : ${(wikis?.length) && `${wikis?.length}`}`}
                 </p>
                 <TagList>
                   {wikis.map((wiki) => (
