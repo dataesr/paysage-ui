@@ -171,7 +171,7 @@ function StructureByIdPage() {
               Eléments liés
             </SideMenuLink>
             <SideMenuLink asLink={<RouterLink to="participations" />}>
-              <Icon name="ri-links-line" size="1x" />
+              <Icon name="ri-stackshare-line" size="1x" />
               Participations
             </SideMenuLink>
             {(viewer.role === 'admin') && (
