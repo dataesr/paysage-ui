@@ -12,10 +12,18 @@ import useHashScroll from '../../../hooks/useHashScroll';
 import useEditMode from '../../../hooks/useEditMode';
 import Wiki from '../../../components/blocs/wiki';
 import StructureCurrentGovernance from '../../../components/blocs/current-governance';
+import KeyValueCard from '../../../components/card/key-value-card';
+import useFetch from '../../../hooks/useFetch';
+import Spinner from '../../../components/spinner';
+import useUrl from '../../../hooks/useUrl';
 
 export default function StructurePresentationPage() {
   useHashScroll();
+  const { url } = useUrl();
+  const { data, isLoading, error } = useFetch(url);
   const { editMode } = useEditMode();
+  if (isLoading) return <Row className="fr-my-2w flex--space-around"><Spinner /></Row>;
+  if (error) return <>Erreur...</>;
   return (
     <>
       <Row>
@@ -29,6 +37,22 @@ export default function StructurePresentationPage() {
         </Col>
         <Col n="12 xl-6">
           <Localisations />
+        </Col>
+      </Row>
+      <Row>
+        <Col n="12">
+          <Title as="h3" look="h5">Informations</Title>
+        </Col>
+      </Row>
+      <Row gutters spacing="mb-5w">
+        <Col n="12 md-6">
+          <KeyValueCard
+            titleAsText
+            className="card-structures"
+            cardKey="Description"
+            cardValue={data?.descriptionFr || data?.descriptionEn}
+            icon="ri-align-left"
+          />
         </Col>
       </Row>
       <ChiffresCles />
