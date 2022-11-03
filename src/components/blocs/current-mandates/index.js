@@ -22,7 +22,7 @@ export default function PersonCurrentMandates() {
             />
           </Col>
         ))}
-        {(currentMandates.length < data.data.length) && <Col n="12 md-6"><GoToCard to={`/personnes/${id}/mandats`} title="Voir tous les mandats" /></Col>}
+        {(currentMandates.length < data.data.length) && <Col n="12 md-6"><GoToCard to={`/personnes/${id}/mandats`} title="Afficher tous les mandats" /></Col>}
       </Row>
     );
   };

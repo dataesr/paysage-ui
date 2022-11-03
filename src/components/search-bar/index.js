@@ -179,7 +179,7 @@ const SearchBar = forwardRef((props, ref) => {
                       {option.locality ? ` à ${capitalize(option.locality)}` : null}
                       {option.creationDate ? ` depuis ${option.creationDate.slice(0, 4)}` : null}
                     </Text>
-                    {optionsIcon && <Badge type="info" isSmall hasIcon icon={optionsIcon} text="voir la page" />}
+                    {optionsIcon && <Badge type="info" isSmall hasIcon icon={optionsIcon} text="afficher la page" />}
                   </button>
                 </li>
               ))}
