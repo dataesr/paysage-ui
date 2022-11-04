@@ -157,7 +157,7 @@ export default function IdentifiersComponent() {
         if (el.type === 'Id unité CNRS') {
           list.push(
             <KeyValueCard
-              cardKey="CNRS - graflabo"
+              cardKey="Voir dans GraFiLabo"
               cardValue={el.value}
               className={`card-${apiObject}`}
               copy
@@ -171,7 +171,7 @@ export default function IdentifiersComponent() {
         if (el.type === 'Wikidata') {
           list.push(
             <KeyValueCard
-              cardKey="Wikidata JSON"
+              cardKey="Wikidata Fichier JSON"
               cardValue={el.value}
               className={`card-${apiObject}`}
               copy
