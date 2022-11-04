@@ -65,6 +65,10 @@ function ProjectByIdPage() {
               <Icon name="ri-newspaper-line" size="1x" />
               Actualités
             </SideMenuLink>
+            <SideMenuLink asLink={<RouterLink to="categories" />}>
+              <Icon name="ri-price-tag-3-line" size="1x" />
+              Catégories et termes
+            </SideMenuLink>
             <SideMenuLink asLink={<RouterLink to="evenements" />}>
               <Icon name="ri-calendar-line" size="1x" />
               Evènements
@@ -72,10 +76,6 @@ function ProjectByIdPage() {
             <SideMenuLink asLink={<RouterLink to="documents" />}>
               <Icon name="ri-folders-line" size="1x" />
               Ressources
-            </SideMenuLink>
-            <SideMenuLink asLink={<RouterLink to="categories" />}>
-              <Icon name="ri-price-tag-3-line" size="1x" />
-              Catégories et termes
             </SideMenuLink>
             <SideMenuLink asLink={<RouterLink to="textes-officiels" />}>
               <Icon name="ri-git-repository-line" size="1x" />
