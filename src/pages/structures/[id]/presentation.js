@@ -37,6 +37,11 @@ export default function StructurePresentationPage() {
           <Title as="h3" look="h4">En un coup d'oeil</Title>
         </Col>
       </Row>
+      <Row gutters spacing="mb-5w">
+        <CurrentLegals />
+        <CurrentSupervisors />
+        <CurrentLogos />
+      </Row>
       <Row gutters className="flex--wrap-reverse">
         <Col n="12 xl-6">
           <HistoriqueEtDates />
@@ -46,7 +51,7 @@ export default function StructurePresentationPage() {
         </Col>
       </Row>
       <Row gutters spacing="mb-5w">
-        <Col n={(data?.descriptionFr || data?.descriptionEn) ? '12' : '12 lg-4'}>
+        <Col n="12">
           <KeyValueCard
             titleAsText
             className="card-structures"
@@ -55,9 +60,6 @@ export default function StructurePresentationPage() {
             icon="ri-align-left"
           />
         </Col>
-        <CurrentLegals />
-        <CurrentSupervisors />
-        <CurrentLogos />
       </Row>
       <ChiffresCles />
       <StructureCurrentGovernance />
