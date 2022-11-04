@@ -48,7 +48,7 @@ export default function Map({ height, lat, lng, markers, width, zoom }) {
       />
       {markers.map((marker) => (
         <Marker icon={getIcon(marker?.color)} key={marker.latLng} position={marker.latLng} zIndexOffset={marker?.zIndexOffset || 0}>
-          <Tooltip>
+          <Tooltip style={{ position: 'relative' }}>
             {marker?.label && (
               <>
                 {marker.label}
