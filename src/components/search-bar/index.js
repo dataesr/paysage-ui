@@ -7,15 +7,16 @@ import { v4 as uuidv4 } from 'uuid';
 import styles from './styles.module.scss';
 import Spinner from '../spinner';
 import { capitalize } from '../../utils/strings';
+import { getName } from '../../utils/structures';
 
 const objectTypes = {
   categories: 'ri-price-tag-3-line',
+  'official-texts': 'ri-git-repository-line',
   persons: 'ri-user-3-line',
   prices: 'ri-award-line',
   projects: 'ri-booklet-fill',
   structures: 'ri-building-line',
   terms: 'ri-hashtag',
-  'official-texts': 'ri-git-repository-line',
 };
 
 const SearchBar = forwardRef((props, ref) => {
@@ -174,8 +175,7 @@ const SearchBar = forwardRef((props, ref) => {
                   >
                     {option.type && <Icon size="xl" color={`var(--${option.type}-color)`} name={objectTypes[option.type]} />}
                     <Text className={styles.content}>
-                      {option.name}
-                      {option.acronym ? ` (${option.acronym})` : null}
+                      {getName(option)}
                       {option.locality ? ` à ${capitalize(option.locality)}` : null}
                       {option.creationDate ? ` depuis ${option.creationDate.slice(0, 4)}` : null}
                     </Text>

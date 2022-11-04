@@ -29,8 +29,9 @@ import StructureGouvernancePage from './gouvernance';
 import StructurePresentationPage from './presentation';
 import StructurePrixEtRecompensesPage from './prix-et-recompenses';
 import StructureProjetsPage from './projets';
-import api from '../../../utils/api';
 import useAuth from '../../../hooks/useAuth';
+import api from '../../../utils/api';
+import { getName } from '../../../utils/structures';
 
 function StructureByIdPage() {
   const { viewer } = useAuth();
@@ -193,7 +194,9 @@ function StructureByIdPage() {
               >
                 Structures
               </BreadcrumbItem>
-              <BreadcrumbItem>{data?.currentName?.usualName}</BreadcrumbItem>
+              <BreadcrumbItem>
+                {getName(data?.currentName)}
+              </BreadcrumbItem>
             </Breadcrumb>
 
             <ButtonGroup align="right" isInlineFrom="xs" className="fr-mt-1w flex--grow">
@@ -237,7 +240,7 @@ function StructureByIdPage() {
           </Row>
           <Row>
             <Title as="h2">
-              {data.currentName.usualName}
+              {getName(data?.currentName)}
               <BadgeGroup className="fr-pt-1w">
                 <Badge type="info" text="structure" />
                 <Badge colorFamily="green-emeraude" text={data.structureStatus || 'active'} />
