@@ -1,3 +1,4 @@
+import { Col } from '@dataesr/react-dsfr';
 import { useEffect, useState } from 'react';
 import useUrl from '../../../hooks/useUrl';
 import api from '../../../utils/api';
@@ -38,12 +39,14 @@ export default function CurrentLogos() {
 
   if (!logos) return null;
   return (
-    <div className="fr-card fr-card--xs fr-card--horizontal fr-card--grey fr-card--no-border">
-      <div className="fr-card__body">
-        <div className="fr-card__content flex flex--center flex--space-around">
-          <img alt="logo" src={logos} height="100px" />
+    <Col n="12 lg-4">
+      <div className="fr-card fr-card--xs fr-card--horizontal fr-card--grey fr-card--no-border">
+        <div className="fr-card__body">
+          <div className="fr-card__content flex flex--center flex--space-around">
+            <img alt="logo" src={logos} height="100px" />
+          </div>
         </div>
       </div>
-    </div>
+    </Col>
   );
 }

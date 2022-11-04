@@ -52,15 +52,9 @@ export default function StructurePresentationPage() {
             icon="ri-align-left"
           />
         </Col>
-        <Col n="12 lg-4">
-          <CurrentLegals />
-        </Col>
-        <Col n="12 lg-4">
-          <CurrentSupervisors />
-        </Col>
-        <Col n="12 lg-4">
-          <CurrentLogos />
-        </Col>
+        <CurrentLegals />
+        <CurrentSupervisors />
+        <CurrentLogos />
       </Row>
       <ChiffresCles />
       <StructureCurrentGovernance />

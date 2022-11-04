@@ -38,7 +38,16 @@ export default function getOptionsFromFacet({ colors, data, facet, serieName, ti
     title: { text: title },
     xAxis: { categories },
     yAxis: { title: { text: serieName } },
-    exporting: { buttons: { contextButton: { menuItems: ['viewFullscreen', 'printChart', 'separator', 'downloadPNG', 'downloadJPEG', 'downloadPDF', 'downloadSVG', 'separator', 'downloadCSV', 'downloadXLS', 'openInCloud'] } } },
+    exporting: {
+      buttons: {
+        contextButton: {
+          menuItems: [
+            'viewFullscreen', 'printChart', 'separator', 'downloadPNG', 'downloadJPEG', 'downloadPDF',
+            'downloadSVG', 'separator', 'downloadCSV', 'downloadXLS', 'openInCloud',
+          ],
+        },
+      },
+    },
   };
 
   if (colors) {

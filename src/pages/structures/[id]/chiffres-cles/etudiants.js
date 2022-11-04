@@ -44,7 +44,17 @@ export default function StructureEtudiantsPage() {
     },
     xAxis: { categories },
     yAxis: { title: { text: 'Nombre d\'étudiants' } },
-    exporting: { buttons: { contextButton: { menuItems: ['viewFullscreen', 'printChart', 'separator', 'downloadPNG', 'downloadJPEG', 'downloadPDF', 'downloadSVG', 'separator', 'downloadCSV', 'downloadXLS', 'openInCloud'] } } } };
+    exporting: {
+      buttons: {
+        contextButton: {
+          menuItems: [
+            'viewFullscreen', 'printChart', 'separator', 'downloadPNG', 'downloadJPEG', 'downloadPDF',
+            'downloadSVG', 'separator', 'downloadCSV', 'downloadXLS', 'openInCloud',
+          ],
+        },
+      },
+    },
+  };
 
   const tiles = [{
     text: 'inscriptions totales (inscriptions principales et secondes)',
