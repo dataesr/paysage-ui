@@ -41,6 +41,17 @@ export default function StructurePresentationPage() {
         <CurrentLegals />
         <CurrentSupervisors />
         <CurrentLogos />
+        {data?.motto && (
+          <Col n="12 lg-4">
+            <KeyValueCard
+              titleAsText
+              className="card-structures"
+              cardKey="Devise"
+              cardValue={data?.motto}
+              icon="ri-mic-2-line"
+            />
+          </Col>
+        )}
       </Row>
       <Row gutters className="flex--wrap-reverse">
         <Col n="12 xl-6">

@@ -9,34 +9,38 @@ import {
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import api from '../../../utils/api';
-import validator from './validator';
-import FormFooter from '../../forms/form-footer';
+import FormFooter from '../form-footer';
 import useForm from '../../../hooks/useForm';
 import { STRUCTURES_CREATION_REASONS, STRUCTURES_CLOSURE_REASONS } from '../../../utils/constants';
 import DateInput from '../../date-input';
 import SearchBar from '../../search-bar';
+import PaysageBlame from '../../paysage-blame';
 
-export default function StructureHistoryForm({ data, onDeleteHandler, onSaveHandler }) {
-  // const [showErrors, setShowErrors] = useState(false);
+function sanitize(form) {
+  const fields = [
+    'creationReason', 'creationDate', 'creationOfficialTextId',
+    'closureReason', 'closureDate', 'closureOfficialTextId',
+  ];
+  const body = {};
+  Object.keys(form).forEach((key) => { if (fields.includes(key)) { body[key] = form[key]; } });
+  return body;
+}
+
+export default function StructureHistoryForm({ data, onSave }) {
   const [isSearchingCreation, setIsSearchingCreation] = useState(false);
   const [optionsTOCreation, setOptionsCreation] = useState([]);
   const [queryTOCreation, setQueryTOCreation] = useState('');
-  const [scopeTOCreation, setScopeTOCreation] = useState(null);
+  const [scopeTOCreation, setScopeTOCreation] = useState(data?.creationOfficialText?.title);
 
   const [isSearchingClosure, setIsSearchingClosure] = useState(false);
   const [optionsTOClosure, setOptionsClosure] = useState([]);
   const [queryTOClosure, setQueryTOClosure] = useState('');
-  const [scopeTOClosure, setScopeTOClosure] = useState(null);
+  const [scopeTOClosure, setScopeTOClosure] = useState(data?.closureOfficialText?.title);
 
-  const { form, updateForm } = useForm(data, validator);
+  const { form, updateForm } = useForm(data);
 
   const creationReasonsOptions = STRUCTURES_CREATION_REASONS.map((el) => ({ label: el, value: el }));
   const closureReasonsOptions = STRUCTURES_CLOSURE_REASONS.map((el) => ({ label: el, value: el }));
-
-  // const onSave = () => {
-  //   if (Object.keys(errors).length > 0) return setShowErrors(true);
-  //   return onSaveHandler(form);
-  // };
 
   useEffect(() => {
     const getAutocompleteResultCreation = async () => {
@@ -86,7 +90,13 @@ export default function StructureHistoryForm({ data, onDeleteHandler, onSaveHand
 
   return (
     <form>
-      <Container>
+      <Container fluid>
+        <PaysageBlame
+          createdBy={data.createdBy}
+          updatedBy={data.updatedBy}
+          updatedAt={data.updatedAt}
+          createdAt={data.createdAt}
+        />
         <div className="fr-notice fr-notice--info fr-mb-2w">
           <div className="fr-container">
             <div className="fr-notice__body">
@@ -113,8 +123,6 @@ export default function StructureHistoryForm({ data, onDeleteHandler, onSaveHand
               selected={form?.creationReason}
               onChange={(e) => updateForm({ creationReason: e.target.value })}
               tabIndex={0}
-              // message={(showErrors && errors.creationReason) ? errors.creationReason : null}
-              // messageType={(showErrors && errors.creationReason) ? 'error' : ''}
             />
           </Col>
         </Row>
@@ -146,29 +154,6 @@ export default function StructureHistoryForm({ data, onDeleteHandler, onSaveHand
             />
           </Col>
         </Row>
-        {
-          (data?.creationOfficialText && form.creationOfficialTextId === data?.creationOfficialText.id) ? (
-            <Row>
-              <Col className="fr-p-1w">
-                <div className="fr-tile fr-enlarge-link fr-tile--horizontal">
-                  <div className="fr-tile__body">
-                    <h4 className="fr-tile__title">
-                      <a
-                        className="fr-tile__link"
-                        href={`/textes-officiels/${data?.creationOfficialText.id}`}
-                      >
-                        {data?.creationOfficialText.title}
-                      </a>
-                    </h4>
-                    <p className="fr-tile__desc">
-                      {`${data?.creationOfficialText.type} publié le ${data?.creationOfficialText.publicationDate}`}
-                    </p>
-                  </div>
-                </div>
-              </Col>
-            </Row>
-          ) : null
-        }
         <Row className="fr-pt-5w">
           <Col>
             <Title as="h3" look="h6">
@@ -213,34 +198,8 @@ export default function StructureHistoryForm({ data, onDeleteHandler, onSaveHand
             />
           </Col>
         </Row>
-        {
-          (data?.closureOfficialText && form.closureOfficialTextId === data?.closureOfficialText.id) ? (
-            <Row>
-              <Col className="fr-p-1w">
-                <div className="fr-tile fr-enlarge-link fr-tile--horizontal">
-                  <div className="fr-tile__body">
-                    <h4 className="fr-tile__title">
-                      <a
-                        className="fr-tile__link"
-                        href={`/textes-officiels/${data?.closureOfficialText.id}`}
-                      >
-                        {data?.closureOfficialText.title}
-                      </a>
-                    </h4>
-                    <p className="fr-tile__desc">
-                      {`${data?.closureOfficialText.type} publié le ${data?.closureOfficialText.publicationDate}`}
-                    </p>
-                  </div>
-                </div>
-              </Col>
-            </Row>
-          ) : null
-        }
-
         <FormFooter
-          id={data?.id}
-          onSaveHandler={() => onSaveHandler(form)}
-          onDeleteHandler={onDeleteHandler}
+          onSaveHandler={() => onSave(sanitize(form))}
         />
       </Container>
     </form>
@@ -249,11 +208,9 @@ export default function StructureHistoryForm({ data, onDeleteHandler, onSaveHand
 
 StructureHistoryForm.propTypes = {
   data: PropTypes.object,
-  onDeleteHandler: PropTypes.func,
-  onSaveHandler: PropTypes.func.isRequired,
+  onSave: PropTypes.func.isRequired,
 };
 
 StructureHistoryForm.defaultProps = {
   data: {},
-  onDeleteHandler: null,
 };

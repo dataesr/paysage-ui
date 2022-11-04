@@ -1,7 +1,7 @@
 import {
   Badge, BadgeGroup, Breadcrumb, BreadcrumbItem, ButtonGroup, Checkbox,
   CheckboxGroup, Col, Container, Icon, Modal, ModalContent, ModalFooter,
-  ModalTitle, Radio, RadioGroup, Row, SideMenu, SideMenuItem, SideMenuLink, TextInput, Title,
+  ModalTitle, Row, SideMenu, SideMenuItem, SideMenuLink, Title,
 } from '@dataesr/react-dsfr';
 import { useEffect, useState, useCallback } from 'react';
 import { Link as RouterLink, useNavigate, Outlet, useParams } from 'react-router-dom';
@@ -14,7 +14,7 @@ import useEditMode from '../../../hooks/useEditMode';
 import useFetch from '../../../hooks/useFetch';
 import useForm from '../../../hooks/useForm';
 import useShortcuts from '../../../hooks/useShortcuts';
-import useToast from '../../../hooks/useToast';
+import useNotice from '../../../hooks/useNotice';
 import useUrl from '../../../hooks/useUrl';
 import StructureCategoriesPage from './categories';
 import StructureBudgetPage from './chiffres-cles/budget';
@@ -30,12 +30,17 @@ import StructurePresentationPage from './presentation';
 import StructurePrixEtRecompensesPage from './prix-et-recompenses';
 import StructureProjetsPage from './projets';
 import useAuth from '../../../hooks/useAuth';
+import { saveError, saveSuccess } from '../../../utils/notice-contents';
+import StructureDescriptionForm from '../../../components/forms/structures/descriptions';
+import StructureStatusForm from '../../../components/forms/structures/status';
+import StructureMottoForm from '../../../components/forms/structures/motto';
+import StructureHistoryForm from '../../../components/forms/structures/historique';
 import api from '../../../utils/api';
 import { getName } from '../../../utils/structures';
 
 function StructureByIdPage() {
   const { viewer } = useAuth();
-  const { toast } = useToast();
+  const { notice } = useNotice();
   const { id } = useParams();
   const { url } = useUrl();
   const { data, isLoading, error, reload } = useFetch(url);
@@ -58,43 +63,24 @@ function StructureByIdPage() {
   });
 
   const [isStatusModalOpen, setIsStatusModalOpen] = useState(false);
-  const [status, setSatus] = useState('inactive');
-
   const [isDescriptionModalOpen, setIsDescriptionModalOpen] = useState(false);
-  const [descriptionFr, setDescriptionFr] = useState('');
-  const [descriptionEn, setDescriptionEn] = useState('');
+  const [isMottoModalOpen, setIsMottoModalOpen] = useState(false);
+  const [isHistoryModalOpen, setIsHistoryModalOpen] = useState(false);
 
   useEffect(() => { reset(); }, [reset]);
-  useEffect(() => { setSatus(data?.structureStatus); }, [data?.structureStatus]);
-  useEffect(() => { setDescriptionFr(data?.descriptionFr); }, [data?.descriptionFr]);
-  useEffect(() => { setDescriptionEn(data?.descriptionEn); }, [data?.descriptionEn]);
   useShortcuts(['Control', 'e'], useCallback(() => toggle(), [toggle]));
 
-  const onSaveHandler = async (target) => {
-    const body = {};
-    if (target === 'status') {
-      body.structureStatus = status;
-    }
-    if (target === 'description') {
-      body.descriptionFr = descriptionFr;
-      body.descriptionEn = descriptionEn;
-    }
-    const response = await api.patch(url, body)
-      .catch(() => {
-        toast({
-          toastType: 'error',
-          description: "Une erreur s'est produite",
-        });
-      });
-    if (response.ok) {
-      toast({
-        toastType: 'success',
-        description: 'Sauvegade ok',
-      });
-      reload();
-      setIsStatusModalOpen(false);
-      setIsDescriptionModalOpen(false);
-    }
+  const onSaveHandler = async (body) => {
+    await api.patch(url, body)
+      .then(() => {
+        notice(saveSuccess);
+        reload();
+      })
+      .catch(() => notice(saveError));
+    setIsStatusModalOpen(false);
+    setIsDescriptionModalOpen(false);
+    setIsMottoModalOpen(false);
+    setIsHistoryModalOpen(false);
   };
 
   if (isLoading) return <Row className="fr-my-2w flex--space-around"><Spinner /></Row>;
@@ -210,6 +196,14 @@ function StructureByIdPage() {
                     Ajouter/Modifier la description
                     <Icon iconPosition="right" size="xl" name="ri-edit-line" color="var(--border-action-high-blue-france)" />
                   </DropdownButtonItem>
+                  <DropdownButtonItem onClick={() => setIsMottoModalOpen(true)}>
+                    Ajouter/Modifier la devise
+                    <Icon iconPosition="right" size="xl" name="ri-edit-line" color="var(--border-action-high-blue-france)" />
+                  </DropdownButtonItem>
+                  <DropdownButtonItem onClick={() => setIsHistoryModalOpen(true)}>
+                    Ajouter/Modifier l'historique
+                    <Icon iconPosition="right" size="xl" name="ri-edit-line" color="var(--border-action-high-blue-france)" />
+                  </DropdownButtonItem>
                 </DropdownButton>
               )}
               <Button
@@ -323,39 +317,31 @@ function StructureByIdPage() {
               </ModalFooter>
             </Modal>
 
+            <Modal canClose={false} size="lg" isOpen={isHistoryModalOpen} hide={() => setIsHistoryModalOpen(false)}>
+              <ModalTitle>
+                Modification de l'historique
+              </ModalTitle>
+              <ModalContent>
+                <StructureHistoryForm data={data} onSave={onSaveHandler} />
+              </ModalContent>
+            </Modal>
+
             <Modal canClose={false} size="md" isOpen={isStatusModalOpen} hide={() => setIsStatusModalOpen(false)}>
               <ModalTitle>
                 Modification du statut
               </ModalTitle>
               <ModalContent>
-                <RadioGroup isInline>
-                  <Radio
-                    label="Actif"
-                    value="active"
-                    checked={status === 'active'}
-                    onChange={(e) => setSatus(e.target.value)}
-                  />
-                  <Radio
-                    label="Inactif"
-                    value="inactive"
-                    checked={status === 'inactive'}
-                    onChange={(e) => setSatus(e.target.value)}
-                  />
-                  <Radio
-                    label="A venir"
-                    value="forthcoming"
-                    checked={status === 'forthcoming'}
-                    onChange={(e) => setSatus(e.target.value)}
-                  />
-                </RadioGroup>
+                <StructureStatusForm data={data} onSave={onSaveHandler} />
               </ModalContent>
-              <ModalFooter>
-                <ButtonGroup>
-                  <Button onClick={() => onSaveHandler('status')}>
-                    Sauvegarder
-                  </Button>
-                </ButtonGroup>
-              </ModalFooter>
+            </Modal>
+
+            <Modal canClose={false} size="md" isOpen={isMottoModalOpen} hide={() => setIsMottoModalOpen(false)}>
+              <ModalTitle>
+                Modification de la devise
+              </ModalTitle>
+              <ModalContent>
+                <StructureMottoForm data={data} onSave={onSaveHandler} />
+              </ModalContent>
             </Modal>
 
             <Modal canClose={false} size="md" isOpen={isDescriptionModalOpen} hide={() => setIsDescriptionModalOpen(false)}>
@@ -363,16 +349,8 @@ function StructureByIdPage() {
                 Modification de la description
               </ModalTitle>
               <ModalContent>
-                <TextInput textarea label="Description française" onChange={(e) => setDescriptionFr(e.target.value)} value={descriptionFr} />
-                <TextInput textarea label="Description anglaise" onChange={(e) => setDescriptionEn(e.target.value)} value={descriptionEn} />
+                <StructureDescriptionForm data={data} onSave={onSaveHandler} />
               </ModalContent>
-              <ModalFooter>
-                <ButtonGroup>
-                  <Button onClick={() => onSaveHandler('description')}>
-                    Sauvegarder
-                  </Button>
-                </ButtonGroup>
-              </ModalFooter>
             </Modal>
           </Row>
           <Outlet />

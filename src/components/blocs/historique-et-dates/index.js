@@ -1,19 +1,6 @@
-import { useState } from 'react';
 import PropTypes from 'prop-types';
-import {
-  Highlight,
-  ModalContent,
-  ModalTitle,
-  Tag,
-  TagGroup,
-  Text,
-} from '@dataesr/react-dsfr';
+import { Col, Highlight, Row, Tag, TagGroup, Text } from '@dataesr/react-dsfr';
 import { useNavigate } from 'react-router-dom';
-import HistoDatesForm from './form';
-import api from '../../../utils/api';
-import Modal from '../../modal';
-import { Bloc, BlocActionButton, BlocContent, BlocModal, BlocTitle } from '../../bloc';
-import useToast from '../../../hooks/useToast';
 import useFetch from '../../../hooks/useFetch';
 import useUrl from '../../../hooks/useUrl';
 import { formatDescriptionDates, toString } from '../../../utils/dates';
@@ -116,70 +103,11 @@ HistoryCard.defaultProps = {
 };
 
 export default function HistoriqueEtDates() {
-  const { toast } = useToast();
   const { url, id } = useUrl('');
-  const { data, isLoading, error, reload } = useFetch(url);
-  const [showModal, setShowModal] = useState(false);
-  const [modalTitle, setModalTitle] = useState('');
-  const [modalContent, setModalContent] = useState(null);
+  const { data } = useFetch(url);
+
   const { data: predecessors } = useFetch(`/relations?filters[relationTag]=predecesseurs&filters[resourceId]=${id}&limit=500`);
   const { data: successors } = useFetch(`/relations?filters[relationTag]=predecesseurs&filters[relatedObjectId]=${id}&limit=500`);
-
-  const onSaveHandler = async (body) => {
-    const response = await api.patch(url, body).catch(() => {
-      toast({
-        toastType: 'error',
-        description: "Une erreur s'est produite",
-      });
-    });
-    if (response.ok) {
-      toast({
-        toastType: 'success',
-        description: 'Donnée mise à jour',
-      });
-      reload();
-      setShowModal(false);
-    }
-  };
-
-  const onClickHandler = () => {
-    setModalTitle("Ajouter/Modifier l'historique");
-    const body = {
-      creationDate: data.creationDate || null,
-      creationReason: data.creationReason || null,
-      creationOfficialTextId: data.creationOfficialTextId || null,
-      creationOfficialText: data.creationOfficialText || null,
-      closureDate: data.closureDate || null,
-      closureReason: data.closureReason || null,
-      closureOfficialTextId: data.closureOfficialTextId || null,
-      closureOfficialText: data.closureOfficialText || null,
-    };
-    setModalContent(
-      <HistoDatesForm
-        data={body}
-        onSaveHandler={onSaveHandler}
-      />,
-    );
-    setShowModal(true);
-  };
-
-  if (data?.creationDate || data?.closureDate) {
-    data.totalCount = 1; // Pour la gestion de l'affichage dans "Bloc"
-  }
-
-  return (
-    <Bloc isLoading={isLoading} error={error} data={data} noBadge>
-      <BlocTitle as="h3" look="h6">Historique & dates</BlocTitle>
-      <BlocActionButton onClick={onClickHandler}>Modifier l'historique</BlocActionButton>
-      <BlocContent>
-        <HistoryCard {...data} predecessors={predecessors} successors={successors} />
-      </BlocContent>
-      <BlocModal>
-        <Modal canClose={false} isOpen={showModal} size="lg" hide={() => setShowModal(false)}>
-          <ModalTitle>{modalTitle}</ModalTitle>
-          <ModalContent>{modalContent}</ModalContent>
-        </Modal>
-      </BlocModal>
-    </Bloc>
-  );
+  if (!data?.id) return null;
+  return <Row><Col n="12"><HistoryCard {...data} predecessors={predecessors} successors={successors} /></Col></Row>;
 }
