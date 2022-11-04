@@ -108,7 +108,7 @@ export default function ProfilePage() {
               <form>
                 <File
                   label="Ajouter un avatar"
-                  hint="Formats supportés : jpg, png, jpeg, svg. Préférez un format carré de 128px de coté minimum."
+                  hint="Formats supportés : jpg, png, jpeg, svg. Préférer un format carré de 128px de coté minimum."
                   spacing="my-3w"
                   onChange={(e) => setAvatar(e.target.files[0])}
                   multiple={false}
