@@ -283,7 +283,7 @@ Il constitue une marge de sécurité financière destinée à financer une parti
           <Card
             subtitle={hasBudget && difference && (
               <div title="Budget 2022">
-                (
+                (Budget 2022 :&ensp;
                 {difference}
                 {color && (<Icon name={`ri-stop-fill fr-badge--${color}`} className="fr-ml-1w fr-mr-0 fr-icon--sm" title={tooltip} />)}
                 )
