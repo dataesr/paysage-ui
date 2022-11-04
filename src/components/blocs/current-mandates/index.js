@@ -4,6 +4,7 @@ import useFetch from '../../../hooks/useFetch';
 import useUrl from '../../../hooks/useUrl';
 import RelationCard from '../../card/relation-card';
 import GoToCard from '../../card/go-to-card';
+import { getComparableNow } from '../../../utils/dates';
 
 export default function PersonCurrentMandates() {
   const { id } = useUrl();
@@ -11,7 +12,7 @@ export default function PersonCurrentMandates() {
 
   const renderCurrentMandates = () => {
     if (!data?.data?.length > 0) return null;
-    const currentMandates = data?.data.filter((mandate) => !mandate.endDate);
+    const currentMandates = data?.data.filter((mandate) => (!mandate.endDate || (mandate.endDate >= getComparableNow())));
     return (
       <Row gutters>
         {currentMandates.map((mandate) => (

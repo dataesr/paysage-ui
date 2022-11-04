@@ -76,7 +76,7 @@ export default function NomenclaturesPage({ route, title }) {
       <hr />
       {data.data?.map((item) => (
         <>
-          <Row className="fr-row--space-between">
+          <Row className="flex--space-between">
             <div className="flex--grow fr-pl-2w">
               <Text spacing="my-1v" bold size="lg">{item.usualName}</Text>
               <Text as="span" bold>

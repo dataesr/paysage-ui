@@ -16,6 +16,9 @@ import KeyValueCard from '../../../components/card/key-value-card';
 import useFetch from '../../../hooks/useFetch';
 import Spinner from '../../../components/spinner';
 import useUrl from '../../../hooks/useUrl';
+import CurrentLegals from '../../../components/blocs/current-legal';
+import CurrentLogos from '../../../components/blocs/current-logo';
+import CurrentSupervisors from '../../../components/blocs/current-supervisors';
 
 export default function StructurePresentationPage() {
   useHashScroll();
@@ -39,25 +42,33 @@ export default function StructurePresentationPage() {
           <Localisations />
         </Col>
       </Row>
-      <Row>
-        <Col n="12">
-          <Title as="h3" look="h5">Informations</Title>
-        </Col>
-      </Row>
-      <Row gutters spacing="mb-5w">
-        <Col n="12 md-6">
-          <KeyValueCard
-            titleAsText
-            className="card-structures"
-            cardKey="Description"
-            cardValue={data?.descriptionFr || data?.descriptionEn}
-            icon="ri-align-left"
-          />
-        </Col>
-      </Row>
-      <ChiffresCles />
+      {(!editMode) && (
+        <>
+          <Row gutters spacing="mb-5w">
+            <Col n={(data?.descriptionFr || data?.descriptionEn) ? '12' : '12 lg-4'}>
+              <KeyValueCard
+                titleAsText
+                className="card-structures"
+                cardKey="Description"
+                cardValue={data?.descriptionFr || data?.descriptionEn}
+                icon="ri-align-left"
+              />
+            </Col>
+            <Col n="12 lg-4">
+              <CurrentLegals />
+            </Col>
+            <Col n="12 lg-4">
+              <CurrentSupervisors />
+            </Col>
+            <Col n="12 lg-4">
+              <CurrentLogos />
+            </Col>
+          </Row>
+          <ChiffresCles />
+          <StructureCurrentGovernance />
+        </>
+      )}
       {editMode && <Names />}
-      <StructureCurrentGovernance />
       <Title as="h3" look="h4">Présence sur le web</Title>
       <Row gutters>
         <Col n="12 md-6">
@@ -66,7 +77,7 @@ export default function StructurePresentationPage() {
         <Col n="12 md-6">
           <SocialMedias />
         </Col>
-        <Col n="12"><Wiki /></Col>
+        {!editMode && <Col n="12"><Wiki /></Col>}
         <Col n="12 md-6">
           <Weblinks types={WEBLINKS_TYPES} title="Ailleurs sur le web" />
         </Col>

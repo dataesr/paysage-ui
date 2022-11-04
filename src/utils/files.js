@@ -10,7 +10,7 @@ export function formatBytes(bytes, decimals = 2) {
 }
 
 export async function downloadFile(file) {
-  const fileUrl = file.url.replace(process.env.REACT_APP_API_URL, '');
+  const fileUrl = new URL(file.url).pathname;
   return api.get(fileUrl, { Accept: file.mimetype })
     .then((response) => response.blob())
     .then((blob) => {

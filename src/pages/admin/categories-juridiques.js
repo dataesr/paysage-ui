@@ -66,7 +66,7 @@ export default function LegalCategoriesPage() {
           </Breadcrumb>
         </Col>
       </Row>
-      <Row className="fr-row--space-between flex--baseline">
+      <Row className="flex--space-between flex--baseline">
         <Row alignItems="top">
           <Title className="fr-pr-1v" as="h2" look="h3">Catégories juridiques</Title>
           <Badge type="info" text={data?.totalCount} />
@@ -76,7 +76,7 @@ export default function LegalCategoriesPage() {
       <hr />
       {data.data?.map((item) => (
         <div key={item.id}>
-          <Row className="fr-row--space-between">
+          <Row className="flex--space-between">
             <div className="flex--grow fr-pl-2w">
               <Text spacing="my-1v" bold size="lg">{item.longNameFr}</Text>
               <Text as="span" bold>
