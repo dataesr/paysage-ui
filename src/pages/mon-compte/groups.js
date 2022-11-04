@@ -14,7 +14,7 @@ export default function GroupsPage() {
         <BreadcrumbItem>Mes groupes</BreadcrumbItem>
       </Breadcrumb>
       <Container>
-        <Row alignItems="middle" className="fr-pb-5w fr-row--space-between flex--baseline">
+        <Row alignItems="middle" className="fr-pb-5w flex--space-between flex--baseline">
           <Title as="h2" className="fr-m-0">Mes groupes</Title>
           <Button size="sm" secondary icon="ri-add-line">Créer un nouveau groupe</Button>
         </Row>

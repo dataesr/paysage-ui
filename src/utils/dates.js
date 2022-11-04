@@ -71,3 +71,8 @@ export function formatDescriptionDates(startDate = null, endDate = null) {
   }
   return null;
 }
+
+export function getComparableNow() {
+  const now = new Date();
+  return now.toISOString().split('T')[0];
+}

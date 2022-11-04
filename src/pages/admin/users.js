@@ -59,7 +59,7 @@ function User({
 
   return (
     <Col n="12">
-      <Row className="fr-row--space-between">
+      <Row className="flex--space-between">
         <div>
           <Avatar name={`${firstName} ${lastName}`} src={avatar} />
         </div>

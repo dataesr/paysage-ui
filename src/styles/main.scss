@@ -143,6 +143,10 @@ HR {
   visibility: hidden;
 }
 
+.hide {
+  display: none;
+}
+
 .highlight-border {
   border-color: var(--border-color);
 }
@@ -161,6 +165,9 @@ HR {
 .leaflet-container {
   position: relative;
   z-index: 1 !important;
+}
+.leaflet-tooltip-pane {
+  position: relative;
 }
 
 .overlay {
@@ -230,6 +237,22 @@ HR {
   .fr-card__start {
     .fr-card__detail {
       color: var(--categories-color) !important;
+    }
+  }
+}
+.card-legal-categories {
+  border-left: .25rem solid var(--legal-categories-color) !important;
+  .fr-card__start {
+    .fr-card__detail {
+      color: var(--legal-categories-color) !important;
+    }
+  }
+}
+.card-supervising-ministers {
+  border-left: .25rem solid var(--supervising-ministers-color) !important;
+  .fr-card__start {
+    .fr-card__detail {
+      color: var(--supervising-ministers-color) !important;
     }
   }
 }

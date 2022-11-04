@@ -75,7 +75,7 @@ export default function DocumentsOutlet() {
       <Row gutters>
         {data.data.map((event) => (
           <Col n="12 md-6" key={event.id}>
-            <div className="fr-card fr-card--sm fr-card--shadow">
+            <div className="fr-card fr-card--xs fr-card--shadow">
               <div className="fr-card__body">
                 <div className="fr-card__content">
                   <div className="fr-card__start">
@@ -83,12 +83,12 @@ export default function DocumentsOutlet() {
                       <BadgeGroup>
                         {renderGroupBadge(event.canAccess)}
                       </BadgeGroup>
-                      {editMode && <Button onClick={() => onOpenModalHandler(event)} size="sm" icon="ri-edit-line" title="Editer le document" tertiary borderless rounded />}
+                      {editMode && <Button onClick={() => onOpenModalHandler(event)} className="edit-button" icon="ri-edit-line" title="Editer le document" tertiary borderless rounded />}
                     </Row>
                   </div>
                   <p className="fr-card__title">{event.title}</p>
                   <Row className="fr-card__desc">
-                    <BadgeGroup>
+                    <BadgeGroup className="fr-mt-1v">
                       <Badge text={event.documentType.usualName} />
                       <Badge type="info" text={event.startDate.slice(0, 4)} />
                     </BadgeGroup>

@@ -10,6 +10,7 @@ import RelationGroupForm from '../../../components/forms/relations-group';
 import api from '../../../utils/api';
 import useNotice from '../../../hooks/useNotice';
 import RelationsByTag from '../../../components/blocs/relations-by-tag';
+import SupervisorsForm from '../../../components/forms/supervisors';
 
 const deleteError = { content: "Une erreur s'est produite. L'élément n'a pas pu être supprimé", autoDismissAfter: 6000, type: 'error' };
 const saveError = { content: "Une erreur s'est produite.", autoDismissAfter: 6000, type: 'error' };
@@ -66,6 +67,13 @@ export default function StructureElementLiesPage() {
         resourceType="structures"
         relatedObjectTypes={['structures']}
         inverse
+      />
+      <RelationsByTag
+        tag="structures-ministers"
+        blocName="Ministres de tutelle"
+        resourceType="structures"
+        relatedObjectTypes={['supervising-ministers']}
+        Form={SupervisorsForm}
       />
       <hr />
       <Bloc isLoading={isLoading} error={error} data={data}>

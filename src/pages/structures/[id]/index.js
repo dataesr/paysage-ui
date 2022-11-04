@@ -1,6 +1,6 @@
 import {
   Badge, BadgeGroup, Breadcrumb, BreadcrumbItem, ButtonGroup, Checkbox,
-  CheckboxGroup, Col, Container, Highlight, Icon, Modal, ModalContent, ModalFooter,
+  CheckboxGroup, Col, Container, Icon, Modal, ModalContent, ModalFooter,
   ModalTitle, Radio, RadioGroup, Row, SideMenu, SideMenuItem, SideMenuLink, TextInput, Title,
 } from '@dataesr/react-dsfr';
 import { useEffect, useState, useCallback } from 'react';
@@ -372,8 +372,6 @@ function StructureByIdPage() {
               </ModalFooter>
             </Modal>
           </Row>
-          {descriptionFr && <Highlight>{descriptionFr}</Highlight>}
-          {descriptionEn && <Highlight>{descriptionEn}</Highlight>}
           <Outlet />
         </Col>
       </Row>

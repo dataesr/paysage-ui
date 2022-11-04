@@ -126,7 +126,7 @@ export default function SearchPage() {
         <Col n="12 md-3">
           <SideMenu buttonLabel="Filtrer par objet">
             <SideMenuLink className={(type === 'rechercher') ? 'sidemenu__item--active' : ''} asLink={<RouterLink to={`/rechercher?query=${query}&page=1`} />}>
-              <Row alignItems="top" className="fr-row--space-between fullwidth">
+              <Row alignItems="top">
                 <Text spacing="pr-2v" bold>
                   <Icon name="ri-search-eye-line" size="1x" />
                   Tous les objets
@@ -135,7 +135,7 @@ export default function SearchPage() {
               </Row>
             </SideMenuLink>
             <SideMenuLink className={(type === 'structures') ? 'sidemenu__item--active' : ''} asLink={<RouterLink to={`structures?query=${query}&page=1`} />}>
-              <Row alignItems="top" className="fr-row--space-between fullwidth">
+              <Row alignItems="top">
                 <Text spacing="pr-2v" bold>
                   <Icon name="ri-building-line" size="1x" />
                   Structures
@@ -144,7 +144,7 @@ export default function SearchPage() {
               </Row>
             </SideMenuLink>
             <SideMenuLink className={(type === 'personnes') ? 'sidemenu__item--active' : ''} asLink={<RouterLink to={`personnes?query=${query}&page=1`} />}>
-              <Row alignItems="top" className="fr-row--space-between fullwidth">
+              <Row alignItems="top">
                 <Text spacing="pr-2v" bold>
                   <Icon name="ri-user-3-line" size="1x" />
                   Personnes
@@ -153,7 +153,7 @@ export default function SearchPage() {
               </Row>
             </SideMenuLink>
             <SideMenuLink className={(type === 'categories') ? 'sidemenu__item--active' : ''} asLink={<RouterLink to={`categories?query=${query}&page=1`} />}>
-              <Row alignItems="top" className="fr-row--space-between fullwidth">
+              <Row alignItems="top">
                 <Text spacing="pr-2v" bold>
                   <Icon name="ri-price-tag-3-line" size="1x" />
                   Catégories
@@ -162,7 +162,7 @@ export default function SearchPage() {
               </Row>
             </SideMenuLink>
             <SideMenuLink className={(type === 'categories-juridiques') ? 'sidemenu__item--active' : ''} asLink={<RouterLink to={`categories-juridiques?query=${query}&page=1`} />}>
-              <Row alignItems="top" className="fr-row--space-between fullwidth">
+              <Row alignItems="top">
                 <Text spacing="pr-2v" bold>
                   <Icon name="ri-bookmark-line" size="1x" />
                   Cat. juridiques
@@ -171,7 +171,7 @@ export default function SearchPage() {
               </Row>
             </SideMenuLink>
             <SideMenuLink className={(type === 'termes') ? 'sidemenu__item--active' : ''} asLink={<RouterLink to={`termes?query=${query}&page=1`} />}>
-              <Row alignItems="top" className="fr-row--space-between fullwidth">
+              <Row alignItems="top">
                 <Text spacing="pr-2v" bold>
                   <Icon name="ri-hashtag" size="1x" />
                   Termes
@@ -181,7 +181,7 @@ export default function SearchPage() {
               </Row>
             </SideMenuLink>
             <SideMenuLink className={(type === 'prix') ? 'sidemenu__item--active' : ''} asLink={<RouterLink to={`prix?query=${query}&page=1`} />}>
-              <Row alignItems="top" className="fr-row--space-between fullwidth">
+              <Row alignItems="top">
                 <Text spacing="pr-2v" bold>
                   <Icon name="ri-award-line" size="1x" />
                   Prix scientifiques
@@ -191,7 +191,7 @@ export default function SearchPage() {
               </Row>
             </SideMenuLink>
             <SideMenuLink className={(type === 'textes-officiels') ? 'sidemenu__item--active' : ''} asLink={<RouterLink to={`textes-officiels?query=${query}&page=1`} />}>
-              <Row alignItems="top" className="fr-row--space-between fullwidth">
+              <Row alignItems="top">
                 <Text spacing="pr-2v" bold>
                   <Icon name="ri-git-repository-line" size="1x" />
                   Textes officiels
@@ -201,7 +201,7 @@ export default function SearchPage() {
               </Row>
             </SideMenuLink>
             <SideMenuLink className={(type === 'projets') ? 'sidemenu__item--active' : ''} asLink={<RouterLink to={`projets?query=${query}&page=1`} />}>
-              <Row alignItems="top" className="fr-row--space-between fullwidth">
+              <Row alignItems="top">
                 <Text spacing="pr-2v" bold>
                   <Icon name="ri-booklet-line" size="1x" />
                   Projets
@@ -211,7 +211,7 @@ export default function SearchPage() {
               </Row>
             </SideMenuLink>
             {/* <SideMenuLink className={(type === 'utilisateurs') ? 'sidemenu__item--active' : ''} asLink={<RouterLink to={`utilisateurs?query=${query}&page=1`} />}>
-              <Row alignItems="top" className="fr-row--space-between fullwidth">
+              <Row alignItems="top">
               <Text spacing="pr-2v" bold>
                 <Icon name="ri-eye-2-line" size="1x" />
                 Utilisateurs

@@ -63,7 +63,7 @@ export default function KeyValueCard({
 }
 KeyValueCard.propTypes = {
   cardKey: PropTypes.string.isRequired,
-  cardValue: PropTypes.string.isRequired,
+  cardValue: PropTypes.oneOfType([PropTypes.string, PropTypes.element]).isRequired,
   className: PropTypes.string,
   copy: PropTypes.bool,
   icon: PropTypes.string,

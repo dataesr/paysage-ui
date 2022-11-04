@@ -69,7 +69,7 @@ export default function RelationTypesPage() {
           </Breadcrumb>
         </Col>
       </Row>
-      <Row className="fr-row--space-between flex--baseline">
+      <Row className="flex--space-between flex--baseline">
         <Row alignItems="top">
           <Title className="fr-pr-1v" as="h2" look="h3">Types de relations</Title>
           <Badge type="info" text={data?.totalCount} />

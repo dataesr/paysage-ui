@@ -55,7 +55,7 @@ export default function GroupsPage() {
     if (!data || !data.data?.length) return null;
     return data.data.map((group) => (
       <Col n="12" key={group.id}>
-        <Row className="fr-row--space-between">
+        <Row className="flex--space-between">
           <div className="flex--grow fr-pl-2w">
             <Text spacing="my-1v" bold size="lg">{`${group.name} ${group.acronym ? `(${group.acronym})` : ''}`.trim()}</Text>
             <Text as="span" bold>
