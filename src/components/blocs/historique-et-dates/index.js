@@ -108,67 +108,6 @@ export default function HistoriqueEtDates() {
 
   const { data: predecessors } = useFetch(`/relations?filters[relationTag]=predecesseurs&filters[resourceId]=${id}&limit=500`);
   const { data: successors } = useFetch(`/relations?filters[relationTag]=predecesseurs&filters[relatedObjectId]=${id}&limit=500`);
-<<<<<<< HEAD
   if (!data?.id) return null;
   return <Row><Col n="12"><HistoryCard {...data} predecessors={predecessors} successors={successors} /></Col></Row>;
-=======
-
-  const onSaveHandler = async (body) => {
-    const response = await api.patch(url, body).catch(() => {
-      toast({
-        toastType: 'error',
-        description: "Une erreur s'est produite",
-      });
-    });
-    if (response.ok) {
-      toast({
-        toastType: 'success',
-        description: 'Donnée mise à jour',
-      });
-      reload();
-      setShowModal(false);
-    }
-  };
-
-  const onClickHandler = () => {
-    setModalTitle("Ajouter/Modifier l'historique");
-    const body = {
-      creationDate: data.creationDate || null,
-      creationReason: data.creationReason || null,
-      creationOfficialTextId: data.creationOfficialTextId || null,
-      creationOfficialText: data.creationOfficialText || null,
-      closureDate: data.closureDate || null,
-      closureReason: data.closureReason || null,
-      closureOfficialTextId: data.closureOfficialTextId || null,
-      closureOfficialText: data.closureOfficialText || null,
-    };
-    setModalContent(
-      <HistoDatesForm
-        data={body}
-        onSaveHandler={onSaveHandler}
-      />,
-    );
-    setShowModal(true);
-  };
-
-  if (data?.creationDate || data?.closureDate) {
-    data.totalCount = 1; // Pour la gestion de l'affichage dans "Bloc"
-  }
-
-  return (
-    <Bloc isLoading={isLoading} error={error} data={data} noBadge>
-      <BlocTitle as="h3" look="h6">Historique & dates</BlocTitle>
-      <BlocActionButton onClick={onClickHandler}>Modifier l'historique</BlocActionButton>
-      <BlocContent>
-        <HistoryCard {...data} predecessors={predecessors} successors={successors} />
-      </BlocContent>
-      <BlocModal>
-        <Modal isOpen={showModal} size="lg" hide={() => setShowModal(false)}>
-          <ModalTitle>{modalTitle}</ModalTitle>
-          <ModalContent>{modalContent}</ModalContent>
-        </Modal>
-      </BlocModal>
-    </Bloc>
-  );
->>>>>>> parent of d0d5f22... fix(modal) modal can no longer close on click around
 }
