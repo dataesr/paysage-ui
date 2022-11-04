@@ -1,19 +1,20 @@
-import PropTypes from 'prop-types';
 import { Icon } from '@dataesr/react-dsfr';
-import useEditMode from '../../hooks/useEditMode';
+import PropTypes from 'prop-types';
+
 import Button from '../button';
 import CopyButton from '../copy/copy-button';
+import useEditMode from '../../hooks/useEditMode';
 
 export default function KeyValueCard({
   cardKey,
   cardValue,
   className,
   copy,
-  onEdit,
-  tooltip,
   icon,
-  titleAsText,
   linkTo,
+  onEdit,
+  titleAsText,
+  tooltip,
 }) {
   const { editMode } = useEditMode();
 

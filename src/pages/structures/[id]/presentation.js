@@ -47,11 +47,11 @@ export default function StructurePresentationPage() {
       <Row gutters spacing="mb-5w">
         <Col n="12 md-6">
           <KeyValueCard
-            titleAsText
-            className="card-structures"
             cardKey="Description"
             cardValue={data?.descriptionFr || data?.descriptionEn}
+            className="card-structures"
             icon="ri-align-left"
+            titleAsText
           />
         </Col>
       </Row>

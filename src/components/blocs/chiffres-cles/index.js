@@ -16,19 +16,30 @@ export default function ChiffresCles() {
 
   const all = [];
   if (data && data.year && data.population) {
-    all.push({ key: `Nombre d'étudiants inscrits en ${data.year} - Inscriptions principales`, value: data.population.toLocaleString('fr-FR'), icon: 'ri-user-line', link: '/' });
+    all.push({
+      icon: 'ri-user-line',
+      key: `Nombre d'étudiants inscrits en ${data.year} - Inscriptions principales`,
+      linkTo: './chiffres-cles/etudiants',
+      value: data.population.toLocaleString('fr-FR'),
+    });
   }
   if (data && data.exercice && data.netAccountingResult) {
-    all.push({ key: `Résultat net comptable en ${data.exercice}`, value: `${cleanNumber(data.netAccountingResult)}€`, icon: 'ri-scales-3-line', link: '/' });
+    all.push({
+      icon: 'ri-scales-3-line',
+      key: `Résultat net comptable en ${data.exercice}`,
+      linkTo: './chiffres-cles/budget',
+      value: `${cleanNumber(data.netAccountingResult)}€`,
+    });
   }
 
   const renderCards = () => all.map((el) => (
     <Col n="12 md-6">
       <KeyValueCard
-        key={el.id}
         cardKey={el.key}
         cardValue={el.value}
         icon={el.icon}
+        key={el.id}
+        linkTo={el.linkTo}
       />
     </Col>
   ));
