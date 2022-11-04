@@ -95,7 +95,7 @@ export default function AgendaOutlet() {
       </BlocActionButton>
       <BlocContent>{renderContent()}</BlocContent>
       <BlocModal>
-        <Modal isOpen={isOpen} size="lg" hide={() => setIsOpen(false)}>
+        <Modal canClose={false} isOpen={isOpen} size="lg" hide={() => setIsOpen(false)}>
           <ModalTitle>{modalTitle}</ModalTitle>
           <ModalContent>{modalContent}</ModalContent>
         </Modal>

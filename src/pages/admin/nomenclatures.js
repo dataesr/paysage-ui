@@ -107,7 +107,7 @@ export default function NomenclaturesPage({ route, title }) {
           <hr />
         </>
       ))}
-      <Modal size="lg" isOpen={isOpen} hide={() => setIsOpen(false)}>
+      <Modal canClose={false} size="lg" isOpen={isOpen} hide={() => setIsOpen(false)}>
         <ModalTitle>
           {modalTitle}
         </ModalTitle>

@@ -64,7 +64,7 @@ export default function SocialMediasComponent() {
       <BlocActionButton onClick={() => onOpenModalHandler()} isSmall>Ajouter un réseau social</BlocActionButton>
       <BlocContent>{renderCards()}</BlocContent>
       <BlocModal>
-        <Modal isOpen={showModal} size="lg" hide={() => setShowModal(false)}>
+        <Modal canClose={false} isOpen={showModal} size="lg" hide={() => setShowModal(false)}>
           <ModalTitle>{modalTitle}</ModalTitle>
           <ModalContent>{modalContent}</ModalContent>
         </Modal>

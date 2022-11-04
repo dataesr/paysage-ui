@@ -129,7 +129,7 @@ export default function RelationTypesPage() {
           <hr />
         </Container>
       ))}
-      <Modal size="lg" isOpen={isOpen} hide={() => setIsOpen(false)}>
+      <Modal canClose={false} size="lg" isOpen={isOpen} hide={() => setIsOpen(false)}>
         <ModalTitle>
           {modalTitle}
         </ModalTitle>

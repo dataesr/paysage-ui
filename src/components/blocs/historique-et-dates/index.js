@@ -175,7 +175,7 @@ export default function HistoriqueEtDates() {
         <HistoryCard {...data} predecessors={predecessors} successors={successors} />
       </BlocContent>
       <BlocModal>
-        <Modal isOpen={showModal} size="lg" hide={() => setShowModal(false)}>
+        <Modal canClose={false} isOpen={showModal} size="lg" hide={() => setShowModal(false)}>
           <ModalTitle>{modalTitle}</ModalTitle>
           <ModalContent>{modalContent}</ModalContent>
         </Modal>

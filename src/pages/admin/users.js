@@ -130,7 +130,7 @@ function User({
           </ButtonGroup>
         </div>
       </Row>
-      <Modal isOpen={isEditModalOpen} size="lg" hide={() => setIsEditModalOpen(false)}>
+      <Modal canClose={false} isOpen={isEditModalOpen} size="lg" hide={() => setIsEditModalOpen(false)}>
         <ModalContent>
           <Container fluid>
             <Row>

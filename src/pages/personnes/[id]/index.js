@@ -141,7 +141,7 @@ function PersonByIdPage() {
                   <DropdownButtonItem onClick={() => setIsFormModalOpen(true)}>
                     Modifier les informations
                     <Icon iconPosition="right" size="xl" name="ri-edit-line" color="var(--border-action-high-blue-france)" />
-                    <Modal size="lg" isOpen={isFormModalOpen} hide={() => setIsFormModalOpen(false)}>
+                    <Modal canClose={false} size="lg" isOpen={isFormModalOpen} hide={() => setIsFormModalOpen(false)}>
                       <ModalTitle>
                         Modifier les informations de
                         {' '}
@@ -193,7 +193,7 @@ function PersonByIdPage() {
                 {data.gender && <Badge type="success" text={data.gender} icon={(data.gender === 'Autre') ? '' : genreIcon} />}
               </BadgeGroup>
             </Title>
-            <Modal size="sm" isOpen={isExportOpen} hide={() => setIsExportOpen(false)}>
+            <Modal canClose={false} size="sm" isOpen={isExportOpen} hide={() => setIsExportOpen(false)}>
               <ModalTitle>
                 Que souhaitez-vous exporter ?
               </ModalTitle>

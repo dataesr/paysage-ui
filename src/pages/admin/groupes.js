@@ -85,7 +85,7 @@ export default function GroupsPage() {
         <BlocActionButton onClick={() => handleModalToggle()}>Créer un groupe</BlocActionButton>
         <BlocContent>{renderGroups()}</BlocContent>
         <BlocModal>
-          <Modal isOpen={isOpen} size="lg" hide={() => setIsOpen(false)}>
+          <Modal canClose={false} isOpen={isOpen} size="lg" hide={() => setIsOpen(false)}>
             <ModalTitle>{modalTitle}</ModalTitle>
             <ModalContent>{modalContent}</ModalContent>
           </Modal>

@@ -247,7 +247,7 @@ function StructureByIdPage() {
                 <CopyBadgeButton colorFamily="yellow-tournesol" text={data.id} lowercase />
               </BadgeGroup>
             </Title>
-            <Modal size="sm" isOpen={isExportOpen} hide={() => setIsExportOpen(false)}>
+            <Modal canClose={false} size="sm" isOpen={isExportOpen} hide={() => setIsExportOpen(false)}>
               <ModalTitle>
                 Que souhaitez-vous exporter ?
               </ModalTitle>
@@ -323,7 +323,7 @@ function StructureByIdPage() {
               </ModalFooter>
             </Modal>
 
-            <Modal size="md" isOpen={isStatusModalOpen} hide={() => setIsStatusModalOpen(false)}>
+            <Modal canClose={false} size="md" isOpen={isStatusModalOpen} hide={() => setIsStatusModalOpen(false)}>
               <ModalTitle>
                 Modification du statut
               </ModalTitle>
@@ -358,7 +358,7 @@ function StructureByIdPage() {
               </ModalFooter>
             </Modal>
 
-            <Modal size="md" isOpen={isDescriptionModalOpen} hide={() => setIsDescriptionModalOpen(false)}>
+            <Modal canClose={false} size="md" isOpen={isDescriptionModalOpen} hide={() => setIsDescriptionModalOpen(false)}>
               <ModalTitle>
                 Modification de la description
               </ModalTitle>

@@ -119,13 +119,13 @@ export default function RelationsByGroup({ group, reloader }) {
       <BlocActionButton onClick={() => onOpenModalHandler()}>Ajouter un élément</BlocActionButton>
       <BlocContent>{renderCards()}</BlocContent>
       <BlocModal>
-        <Modal isOpen={showModal} size="lg" hide={() => setShowModal(false)}>
+        <Modal canClose={false} isOpen={showModal} size="lg" hide={() => setShowModal(false)}>
           <ModalTitle>{modalTitle}</ModalTitle>
           <ModalContent>{modalContent}</ModalContent>
         </Modal>
       </BlocModal>
       <BlocModal>
-        <Modal isOpen={showListModal} size="lg" hide={() => setShowListModal(false)}>
+        <Modal canClose={false} isOpen={showListModal} size="lg" hide={() => setShowListModal(false)}>
           <ModalTitle>{`Gérer la liste '${groupName}'`}</ModalTitle>
           <ModalContent>
             <RelationsGroupForm

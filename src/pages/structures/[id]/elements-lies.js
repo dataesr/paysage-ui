@@ -81,7 +81,7 @@ export default function StructureElementLiesPage() {
         <BlocActionButton onClick={() => setIsOpen(true)}>Ajouter une liste</BlocActionButton>
         <BlocContent>{(data.data?.length !== 0) && data.data?.map((group) => (<RelationsByGroup key={group.id} group={group} reloader={reload} />))}</BlocContent>
         <BlocModal>
-          <Modal isOpen={isOpen} size="lg" hide={() => setIsOpen(false)}>
+          <Modal canClose={false} isOpen={isOpen} size="lg" hide={() => setIsOpen(false)}>
             <ModalTitle>Ajouter un groupe d'éléments liés</ModalTitle>
             <ModalContent>
               <RelationGroupForm
