@@ -7,6 +7,7 @@ import useHashScroll from '../hooks/useHashScroll';
 import useSearch from '../hooks/useSearch';
 import { formatDescriptionDates } from '../utils/dates';
 import { capitalize } from '../utils/strings';
+import { getName } from '../utils/structures';
 import { getTypeFromUrl, getUrlFromType } from '../utils/types-url-mapper';
 
 const icons = {
@@ -58,10 +59,7 @@ function SearchResults({ data }) {
                 <p className="fr-tile__title">
                   <RouterLink className="fr-tile__link fr-link--md" to={`/${getUrlFromType(item.type)}/${item.id}`}>
                     <Icon name={icons[item.type]} size="1x" color={`var(--${item.type}-color)`} />
-                    {item.name}
-                    {item?.acronym && (
-                      ` (${item.acronym})`
-                    )}
+                    {getName(item)}
                   </RouterLink>
                 </p>
                 <p className="fr-tile__desc">

@@ -136,13 +136,13 @@ function DenominationStep({ prefiller, globalForm, updateGlobalForm, setStep }) 
       <Row gutters alignItems="top">
         <Col n="12 md-6" spacing="pb-3w">
           <TextInput
-            required
             className="fr-mb-0"
             label="Nom usuel"
-            value={form.usualName}
-            onChange={(e) => updateForm({ usualName: e.target.value })}
             message={(showErrors && errors.usualName) ? errors.usualName : null}
             messageType={(showErrors && errors.usualName) ? 'error' : ''}
+            onChange={(e) => updateForm({ usualName: e.target.value })}
+            required
+            value={form.usualName}
           />
           <TagGroup className="fr-mt-1w">
             {prefiller?.rnsr?.name?.label && (
@@ -168,9 +168,17 @@ function DenominationStep({ prefiller, globalForm, updateGlobalForm, setStep }) 
           />
         </Col>
         <Col n="12 md-6" spacing="pb-3w">
+          <TextInput
+            label="Nom court"
+            value={form.shortName}
+            onChange={(e) => updateForm({ shortName: e.target.value })}
+            message={(showErrors && errors.shortName) ? errors.shortName : null}
+            messageType={(showErrors && errors.shortName) ? 'error' : ''}
+          />
+        </Col>
+        <Col n="12 md-6" spacing="pb-3w">
           <TextInput label="Acronyme" value={form.acronymFr} onChange={(e) => updateForm({ acronymFr: e.target.value })} />
         </Col>
-        <Col n="12 md-6" />
         <Col n="12 md-6" spacing="pb-3w">
           <TextInput
             label="Nom en anglais"
@@ -181,12 +189,12 @@ function DenominationStep({ prefiller, globalForm, updateGlobalForm, setStep }) 
           />
         </Col>
         <Col n="12 md-6" spacing="pb-3w">
-          <TextInput label="Acronym en anglais" value={form.acronymEn} onChange={(e) => updateForm({ acronymEn: e.target.value })} />
+          <TextInput label="Acronyme en anglais" value={form.acronymEn} onChange={(e) => updateForm({ acronymEn: e.target.value })} />
         </Col>
         <Col n="12 md-6" spacing="pb-3w">
           <TagInput
             label="Alias"
-            hint='Ajoutez toutes les dénominations de la structure. Validez chaque nom avec la touche "Entrée"'
+            hint='Ajouter toutes les dénominations de la structure. Valider chaque nom avec la touche "Entrée"'
             tags={form.otherNames || []}
             onTagsChange={(tags) => updateForm({ otherNames: tags })}
           />
@@ -297,7 +305,7 @@ function HistoryStep({ globalForm, handleSave, updateGlobalForm, setStep }) {
           <Col>
             <DateInput
               value={form?.creationDate}
-              label="Date de début"
+              label="Date de création"
               onDateChange={(value) => updateForm({ creationDate: value })}
               isRequired
             />

@@ -15,7 +15,8 @@ export default function useFetch(url, headers) {
   const reload = () => setReloads(reloads + 1);
 
   useEffect(() => {
-    const fetchData = () => api.get(url, headers)
+    const fetchData = () => api
+      .get(url, headers)
       .then((response) => {
         setData(response.data);
         setIsLoading(false);
