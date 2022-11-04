@@ -11,8 +11,8 @@ import SocialMedias from '../../../components/blocs/social-medias';
 import useHashScroll from '../../../hooks/useHashScroll';
 import useEditMode from '../../../hooks/useEditMode';
 import Wiki from '../../../components/blocs/wiki';
-import StructureCurrentGovernance from '../../../components/blocs/current-governance';
 import KeyValueCard from '../../../components/card/key-value-card';
+import StructureCurrentGovernance from '../../../components/blocs/current-governance';
 import useFetch from '../../../hooks/useFetch';
 import Spinner from '../../../components/spinner';
 import useUrl from '../../../hooks/useUrl';
@@ -42,33 +42,29 @@ export default function StructurePresentationPage() {
           <Localisations />
         </Col>
       </Row>
-      {(!editMode) && (
-        <>
-          <Row gutters spacing="mb-5w">
-            <Col n={(data?.descriptionFr || data?.descriptionEn) ? '12' : '12 lg-4'}>
-              <KeyValueCard
-                titleAsText
-                className="card-structures"
-                cardKey="Description"
-                cardValue={data?.descriptionFr || data?.descriptionEn}
-                icon="ri-align-left"
-              />
-            </Col>
-            <Col n="12 lg-4">
-              <CurrentLegals />
-            </Col>
-            <Col n="12 lg-4">
-              <CurrentSupervisors />
-            </Col>
-            <Col n="12 lg-4">
-              <CurrentLogos />
-            </Col>
-          </Row>
-          <ChiffresCles />
-          <StructureCurrentGovernance />
-        </>
-      )}
-      {editMode && <Names />}
+      <Row gutters spacing="mb-5w">
+        <Col n={(data?.descriptionFr || data?.descriptionEn) ? '12' : '12 lg-4'}>
+          <KeyValueCard
+            titleAsText
+            className="card-structures"
+            cardKey="Description"
+            cardValue={data?.descriptionFr || data?.descriptionEn}
+            icon="ri-align-left"
+          />
+        </Col>
+        <Col n="12 lg-4">
+          <CurrentLegals />
+        </Col>
+        <Col n="12 lg-4">
+          <CurrentSupervisors />
+        </Col>
+        <Col n="12 lg-4">
+          <CurrentLogos />
+        </Col>
+      </Row>
+      <ChiffresCles />
+      <StructureCurrentGovernance />
+      {editMode ? <Names /> : <div className="hide"><Names /></div>}
       <Title as="h3" look="h4">Présence sur le web</Title>
       <Row gutters>
         <Col n="12 md-6">
@@ -77,7 +73,7 @@ export default function StructurePresentationPage() {
         <Col n="12 md-6">
           <SocialMedias />
         </Col>
-        {!editMode && <Col n="12"><Wiki /></Col>}
+        {!editMode ? <Col n="12"><Wiki /></Col> : <div className="hide"><Col n="12"><Wiki /></Col></div>}
         <Col n="12 md-6">
           <Weblinks types={WEBLINKS_TYPES} title="Ailleurs sur le web" />
         </Col>

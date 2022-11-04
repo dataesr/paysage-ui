@@ -29,7 +29,7 @@ export const ENUMS_LABELS_MAPPER = {
   OE1: 'Editeur chez openedition',
   OE2: 'Revues chez openedition',
   OE3: 'Carnets Hypotheses OpenEdition',
-  hceres: 'Page HCERES',
+  hceres: 'Evaluations HCERES',
   EducPros: 'EducPros',
   IUF: 'IUF',
   jorfsearch: 'jorfsearch',

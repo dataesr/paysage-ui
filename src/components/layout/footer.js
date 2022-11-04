@@ -38,7 +38,7 @@ export default function Footer({ switchTheme }) {
         </FooterTopCategory>
       </FooterTop>
       <FooterBody description="Paysage : Plateforme d'échanges et d'informations de la DGESIP et de la DGRI">
-        <Logo>
+        <Logo splitCharacter={9}>
           Ministère de l‘enseignement supérieur et de la recherche
         </Logo>
         <FooterBodyItem>
