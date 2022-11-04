@@ -241,7 +241,7 @@ function StructureByIdPage() {
                 <CopyBadgeButton colorFamily="yellow-tournesol" text={data.id} lowercase />
               </BadgeGroup>
             </Title>
-            <Modal canClose={false} size="sm" isOpen={isExportOpen} hide={() => setIsExportOpen(false)}>
+            <Modal size="sm" isOpen={isExportOpen} hide={() => setIsExportOpen(false)}>
               <ModalTitle>
                 Que souhaitez-vous exporter ?
               </ModalTitle>
@@ -317,7 +317,7 @@ function StructureByIdPage() {
               </ModalFooter>
             </Modal>
 
-            <Modal canClose={false} size="lg" isOpen={isHistoryModalOpen} hide={() => setIsHistoryModalOpen(false)}>
+            <Modal size="lg" isOpen={isHistoryModalOpen} hide={() => setIsHistoryModalOpen(false)}>
               <ModalTitle>
                 Modification de l'historique
               </ModalTitle>
@@ -326,7 +326,7 @@ function StructureByIdPage() {
               </ModalContent>
             </Modal>
 
-            <Modal canClose={false} size="md" isOpen={isStatusModalOpen} hide={() => setIsStatusModalOpen(false)}>
+            <Modal size="md" isOpen={isStatusModalOpen} hide={() => setIsStatusModalOpen(false)}>
               <ModalTitle>
                 Modification du statut
               </ModalTitle>
@@ -335,7 +335,7 @@ function StructureByIdPage() {
               </ModalContent>
             </Modal>
 
-            <Modal canClose={false} size="md" isOpen={isMottoModalOpen} hide={() => setIsMottoModalOpen(false)}>
+            <Modal size="md" isOpen={isMottoModalOpen} hide={() => setIsMottoModalOpen(false)}>
               <ModalTitle>
                 Modification de la devise
               </ModalTitle>
@@ -344,7 +344,7 @@ function StructureByIdPage() {
               </ModalContent>
             </Modal>
 
-            <Modal canClose={false} size="md" isOpen={isDescriptionModalOpen} hide={() => setIsDescriptionModalOpen(false)}>
+            <Modal size="md" isOpen={isDescriptionModalOpen} hide={() => setIsDescriptionModalOpen(false)}>
               <ModalTitle>
                 Modification de la description
               </ModalTitle>

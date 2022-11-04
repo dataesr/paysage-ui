@@ -163,7 +163,7 @@ export default function LocalisationsComponent() {
         )}
       </BlocContent>
       <BlocModal>
-        <Modal canClose={false} isOpen={showModal} size="lg" hide={() => setShowModal(false)}>
+        <Modal isOpen={showModal} size="lg" hide={() => setShowModal(false)}>
           <ModalTitle>{modalTitle}</ModalTitle>
           <ModalContent>{modalContent}</ModalContent>
         </Modal>

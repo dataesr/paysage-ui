@@ -69,7 +69,7 @@ export default function EmailsComponent() {
       <BlocActionButton onClick={() => onOpenModalHandler()}>Ajouter un email générique</BlocActionButton>
       <BlocContent>{renderCards()}</BlocContent>
       <BlocModal>
-        <Modal canClose={false} isOpen={showModal} size="lg" hide={() => setShowModal(false)}>
+        <Modal isOpen={showModal} size="lg" hide={() => setShowModal(false)}>
           <ModalTitle>{modalTitle}</ModalTitle>
           <ModalContent>{modalContent}</ModalContent>
         </Modal>

@@ -68,7 +68,7 @@ export default function OfficialTextByIdPage() {
                   <DropdownButtonItem onClick={() => setIsFormModalOpen(true)}>
                     Modifier les informations
                     <Icon iconPosition="right" size="xl" name="ri-edit-line" color="var(--border-action-high-blue-france)" />
-                    <Modal canClose={false} size="lg" isOpen={isFormModalOpen} hide={() => setIsFormModalOpen(false)}>
+                    <Modal size="lg" isOpen={isFormModalOpen} hide={() => setIsFormModalOpen(false)}>
                       <ModalTitle>
                         Modifier les informations
                       </ModalTitle>

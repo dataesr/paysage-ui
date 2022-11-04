@@ -100,7 +100,7 @@ function CategoryByIdPage() {
                   <DropdownButtonItem onClick={() => setIsFormModalOpen(true)}>
                     Modifier les informations
                     <Icon iconPosition="right" size="xl" name="ri-edit-line" color="var(--border-action-high-blue-france)" />
-                    <Modal canClose={false} size="lg" isOpen={isFormModalOpen} hide={() => setIsFormModalOpen(false)}>
+                    <Modal size="lg" isOpen={isFormModalOpen} hide={() => setIsFormModalOpen(false)}>
                       <ModalTitle>
                         Modifier les informations de
                         {' '}
@@ -152,7 +152,7 @@ function CategoryByIdPage() {
                 />
               </BadgeGroup>
             </Title>
-            <Modal canClose={false} size="sm" isOpen={isExportOpen} hide={() => setIsExportOpen(false)}>
+            <Modal size="sm" isOpen={isExportOpen} hide={() => setIsExportOpen(false)}>
               <ModalTitle>
                 Que souhaitez-vous exporter ?
               </ModalTitle>

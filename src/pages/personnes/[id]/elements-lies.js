@@ -44,7 +44,7 @@ export default function PersonsRelatedElements() {
       <BlocActionButton onClick={() => setIsOpen(true)}>Ajouter une liste</BlocActionButton>
       <BlocContent>{data.data?.map((group) => (<RelationsByGroup key={group.id} group={group} reloader={reload} />))}</BlocContent>
       <BlocModal>
-        <Modal canClose={false} isOpen={isOpen} size="lg" hide={() => setIsOpen(false)}>
+        <Modal isOpen={isOpen} size="lg" hide={() => setIsOpen(false)}>
           <ModalTitle>Ajouter un groupe d'éléments liés</ModalTitle>
           <ModalContent>
             <RelationGroupForm

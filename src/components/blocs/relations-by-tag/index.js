@@ -116,7 +116,7 @@ export default function RelationsByTag({ blocName, tag, resourceType, relatedObj
       <BlocActionButton onClick={() => onOpenModalHandler()}>Ajouter un élément</BlocActionButton>
       <BlocContent>{renderCards()}</BlocContent>
       <BlocModal>
-        <Modal canClose={false} isOpen={showModal} size="lg" hide={() => setShowModal(false)}>
+        <Modal isOpen={showModal} size="lg" hide={() => setShowModal(false)}>
           <ModalTitle>{modalTitle}</ModalTitle>
           <ModalContent>{modalContent}</ModalContent>
         </Modal>
