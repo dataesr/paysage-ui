@@ -166,6 +166,9 @@ HR {
   position: relative;
   z-index: 1 !important;
 }
+.leaflet-tooltip-pane {
+  position: relative;
+}
 
 .overlay {
   position: fixed;
