@@ -12,7 +12,9 @@ export default function PersonCurrentMandates() {
 
   const renderCurrentMandates = () => {
     if (!data?.data?.length > 0) return null;
-    const currentMandates = data?.data.filter((mandate) => (!mandate.endDate || (mandate.endDate >= getComparableNow())));
+    const currentMandates = data?.data
+      .filter((mandate) => (!mandate.endDate || (mandate.endDate >= getComparableNow())))
+      .sort((a, b) => ((a?.relationType?.priority || 99) - (b?.relationType?.priority || 99)));
     return (
       <Row gutters>
         {currentMandates.map((mandate) => (
@@ -27,7 +29,6 @@ export default function PersonCurrentMandates() {
       </Row>
     );
   };
-
   return (
     <Bloc isLoading={isLoading} error={error} data={{ totalCount: data?.data?.filter((mandate) => !mandate.endDate)?.length || 0 }}>
       <BlocTitle as="h3" look="h4">Mandats actuels</BlocTitle>
