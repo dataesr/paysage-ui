@@ -6,24 +6,34 @@ import { formatDescriptionDates, toString } from '../../utils/dates';
 import Button from '../button';
 import styles from './styles.module.scss';
 
+function getRelationTypeLabel(gender = null) {
+  switch (gender) {
+  case 'Femme':
+    return 'feminineName';
+  case 'Homme':
+    return 'maleName';
+  default:
+    return 'name';
+  }
+}
+
 export default function RelationCard({ relation, inverse, onEdit }) {
   const navigate = useNavigate();
   const { editMode } = useEditMode();
   const toPrintRelation = inverse ? relation.resource : relation.relatedObject;
-  const isFeminine = (relation?.relatedObject?.collection === 'persons' && relation?.relatedObject?.gender === 'Femme');
   return (
     <div className="fr-card fr-card--xs fr-card--grey fr-card--no-border">
       <div className={`fr-card__body ${styles['card-body']} ${styles[`${toPrintRelation.collection}-border`]} ${((relation.current !== undefined) && !relation.current) && 'turngrey'}`}>
         <div className="fr-card__content">
-          <div className="fr-card__desc">
+          <p className="fr-card__desc">
             {relation.relationType && (
               <Text as="span" bold>
-                {((isFeminine) ? (relation.relationType?.feminineName || relation.relationType?.name) : relation.relationType?.name)}
+                {relation.relationType?.[getRelationTypeLabel(relation?.relatedObject?.gender)] || relation.relationType?.name}
               </Text>
             )}
             {' '}
             {formatDescriptionDates(relation.startDate || null, relation.endDate || null)}
-          </div>
+          </p>
           {(relation.otherAssociatedObjects?.length > 0) && (
             <div className="fr-card__desc">
               <Text as="span" size="sm" bold>Structures associées:</Text>
