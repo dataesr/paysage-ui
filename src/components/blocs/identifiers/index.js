@@ -199,51 +199,6 @@ export default function IdentifiersComponent() {
     }
     return <ExpendableListCards list={list} />;
   };
-  // const renderCards = () => {
-  //   if (!data) return null;
-  //   const list = data.data.map((el) => {
-  //     if (el.type === 'Id unité CNRS') {
-  //       return (
-  //         <>
-  // <KeyValueCard
-  //   cardKey={el.type}
-  //   cardValue={el.value}
-  //   className={`card-${apiObject}`}
-  //   copy
-  //   icon="ri-fingerprint-2-line"
-  //   key={el.id}
-  //   onEdit={() => onOpenModalHandler(el)}
-  //   linkTo={getLink(el)}
-  // />
-  //           <KeyValueCard
-  //             cardKey="CNRS - graflabo"
-  //             cardValue={el.value}
-  //             className={`card-${apiObject}`}
-  //             copy
-  //             icon="ri-fingerprint-2-line"
-  //             key={el.id}
-  //             onEdit={() => onOpenModalHandler(el)}
-  //             linkTo={getLink(el)}
-  //           />
-  //         </>
-  //       );
-  //     }
-
-  //   return (
-  //     <KeyValueCard
-  //       cardKey={el.type}
-  //       cardValue={el.value}
-  //       className={`card-${apiObject}`}
-  //       copy
-  //       icon="ri-fingerprint-2-line"
-  //       key={el.id}
-  //       onEdit={() => onOpenModalHandler(el)}
-  //       linkTo={getLink(el)}
-  //     />
-  //   );
-  // });
-  // return <ExpendableListCards list={list} />;
-  // };
 
   return (
     <Bloc isLoading={isLoading} error={error} data={data}>
