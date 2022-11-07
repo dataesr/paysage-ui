@@ -16,7 +16,7 @@ import Spinner from '../../../../components/spinner';
 import useFetch from '../../../../hooks/useFetch';
 import useHashScroll from '../../../../hooks/useHashScroll';
 import useUrl from '../../../../hooks/useUrl';
-import cleanNumber from '../../../../utils/cleanNumbers';
+import cleanNumber from '../../../../utils/clean-numbers';
 
 HCExporting(Highcharts);
 HCExportingData(Highcharts);

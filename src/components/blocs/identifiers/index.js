@@ -21,6 +21,7 @@ import {
   deleteSuccess,
 } from '../../../utils/notice-contents';
 import KeyValueCard from '../../card/key-value-card';
+// import { getTvaIntraFromSiren } from '../../../utils/get-tva-intra';
 
 export default function IdentifiersComponent() {
   const { notice } = useNotice();
@@ -182,7 +183,20 @@ export default function IdentifiersComponent() {
             />,
           );
         }
-
+        if (el.type === 'Siret') {
+          list.push(
+            <KeyValueCard
+              cardKey="Siren"
+              cardValue={el.value.substring(0, 9)}
+              className={`card-${apiObject}`}
+              copy
+              icon="ri-fingerprint-2-line"
+              key={el.id}
+              onEdit={() => onOpenModalHandler(el)}
+              // linkTo={getLink({ ...el, type: 'Wikidata JSON' })}
+            />,
+          );
+        }
         list.push(
           <KeyValueCard
             cardKey={el.type}
@@ -195,6 +209,18 @@ export default function IdentifiersComponent() {
             linkTo={getLink(el)}
           />,
         );
+        // list.push(
+        //   <KeyValueCard
+        //     cardKey="TVA"
+        //     cardValue={getTvaIntraFromSiren(el.value.substring(0, 9))}
+        //     className={`card-${apiObject}`}
+        //     copy
+        //     icon="ri-fingerprint-2-line"
+        //     key={el.id}
+        //     onEdit={() => onOpenModalHandler(el)}
+        //     // linkTo={getLink(el)}
+        //   />,
+        // );
       });
     }
     return <ExpendableListCards list={list} />;

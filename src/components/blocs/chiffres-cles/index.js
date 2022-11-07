@@ -4,7 +4,7 @@ import { BlocContent, BlocTitle } from '../../bloc';
 import Spinner from '../../spinner';
 import useFetch from '../../../hooks/useFetch';
 import useUrl from '../../../hooks/useUrl';
-import cleanNumber from '../../../utils/cleanNumbers';
+import cleanNumber from '../../../utils/clean-numbers';
 import KeyValueCard from '../../card/key-value-card';
 
 export default function ChiffresCles() {
