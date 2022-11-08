@@ -125,7 +125,7 @@ function StructureByIdPage() {
                 Etudiants
               </SideMenuLink>
               <SideMenuLink asLink={<RouterLink to="chiffres-cles/offre-de-formation" />}>
-                Offres de formation
+                Offre de formation
               </SideMenuLink>
               <SideMenuLink asLink={<RouterLink to="chiffres-cles/ressources-humaines" />}>
                 Ressources humaines

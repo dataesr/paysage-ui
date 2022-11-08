@@ -21,6 +21,7 @@ import {
   deleteSuccess,
 } from '../../../utils/notice-contents';
 import KeyValueCard from '../../card/key-value-card';
+import { getTvaIntraFromSiren } from '../../../utils/get-tva-intra';
 
 export default function IdentifiersComponent() {
   const { notice } = useNotice();
@@ -89,11 +90,11 @@ export default function IdentifiersComponent() {
     case 'RNA':
       linkTo = `https://entreprise.data.gouv.fr/etablissement/${el.value}`;
       break;
-    case 'SIRET':
-      linkTo = `https://annuaire-entreprises.data.gouv.fr/etablissement/${el.value}`;
+    case 'Siret':
+      linkTo = `https://annuaire-entreprises.data.gouv.fr/etablissement/${el.value.split(' ').join('')}`;
       break;
-    case 'SIREN':
-      linkTo = `https://annuaire-entreprises.data.gouv.fr/entreprise/${el.value}`;
+    case 'Siren':
+      linkTo = `https://annuaire-entreprises.data.gouv.fr/entreprise/${el.value.split(' ').join('')}`;
       break;
     case 'OC':
       linkTo = `https://opencorporates.com/companies/${el.value}`;
@@ -104,15 +105,14 @@ export default function IdentifiersComponent() {
     case 'Id unité CNRS':
       linkTo = `https://web-ast.dsi.cnrs.fr/l3c/owa/structure.infos_admin?&p_lab=${el.value}&p_origine_appel=u`;
       break;
-    case 'CNRS - graflabo':
+    case 'CNRS - grafilabo':
       linkTo = `https://www2.cnrs.fr/graflabo/unite.php?cod_uni=${el.value}`;
       break;
     case 'RCR':
       linkTo = `http://www.sudoc.abes.fr//DB=2.2/SET=1/TTL=3/CMD?ACT=SRCHA&IKT=8888&SRT=RLV&TRM=${el.value}`;
       break;
     case 'isni':
-      linkTo = `http://www.isni.org/${el.value}`;
-      // check url because user sets id with spaces
+      linkTo = `http://www.isni.org/${el.value.split(' ').join('')}`;
       break;
     case 'fundref':
       linkTo = `https://search.crossref.org/funding?q=${el.value}`;
@@ -164,7 +164,7 @@ export default function IdentifiersComponent() {
               icon="ri-fingerprint-2-line"
               key={el.id}
               onEdit={() => onOpenModalHandler(el)}
-              linkTo={getLink({ ...el, type: 'CNRS - graflabo' })}
+              linkTo={getLink({ ...el, type: 'CNRS - grafilabo' })}
             />,
           );
         }
@@ -182,7 +182,85 @@ export default function IdentifiersComponent() {
             />,
           );
         }
-
+        if (el.type === 'EtId') {
+          list.push(
+            <KeyValueCard
+              cardKey="Identifiant établissement ESGBU"
+              cardValue={el.value}
+              className={`card-${apiObject}`}
+              copy
+              icon="ri-fingerprint-2-line"
+              key={el.id}
+              onEdit={() => onOpenModalHandler(el)}
+            />,
+          );
+        }
+        if (el.type === 'SdId') {
+          list.push(
+            <KeyValueCard
+              cardKey="Identifiant service documentaire ESGBU"
+              cardValue={el.value}
+              className={`card-${apiObject}`}
+              copy
+              icon="ri-fingerprint-2-line"
+              key={el.id}
+              onEdit={() => onOpenModalHandler(el)}
+            />,
+          );
+        }
+        if (el.type === 'BibId') {
+          list.push(
+            <KeyValueCard
+              cardKey="Identifiant bibliothèque ESGBU"
+              cardValue={el.value}
+              className={`card-${apiObject}`}
+              copy
+              icon="ri-fingerprint-2-line"
+              key={el.id}
+              onEdit={() => onOpenModalHandler(el)}
+            />,
+          );
+        }
+        if (el.type === 'isni') {
+          list.push(
+            <KeyValueCard
+              cardKey="Identifiant isni"
+              cardValue={el.value}
+              className={`card-${apiObject}`}
+              copy
+              icon="ri-fingerprint-2-line"
+              key={el.id}
+              onEdit={() => onOpenModalHandler(el)}
+              linkTo={getLink(el)}
+            />,
+          );
+        }
+        if (el.type === 'Siret') {
+          const siren = el.value.substring(0, 11);
+          list.push(
+            <KeyValueCard
+              cardKey="Siren"
+              cardValue={siren}
+              className={`card-${apiObject}`}
+              copy
+              icon="ri-fingerprint-2-line"
+              key={el.id}
+              // onEdit={() => onOpenModalHandler(el)}
+              linkTo={getLink({ ...el, type: 'Siren' })}
+            />,
+          );
+          list.push(
+            <KeyValueCard
+              cardKey="Numéro de TVA"
+              cardValue={getTvaIntraFromSiren(siren)}
+              className={`card-${apiObject}`}
+              copy
+              icon="ri-fingerprint-2-line"
+              key={el.id}
+              // onEdit={() => onOpenModalHandler(el)}
+            />,
+          );
+        }
         list.push(
           <KeyValueCard
             cardKey={el.type}
@@ -199,51 +277,6 @@ export default function IdentifiersComponent() {
     }
     return <ExpendableListCards list={list} />;
   };
-  // const renderCards = () => {
-  //   if (!data) return null;
-  //   const list = data.data.map((el) => {
-  //     if (el.type === 'Id unité CNRS') {
-  //       return (
-  //         <>
-  // <KeyValueCard
-  //   cardKey={el.type}
-  //   cardValue={el.value}
-  //   className={`card-${apiObject}`}
-  //   copy
-  //   icon="ri-fingerprint-2-line"
-  //   key={el.id}
-  //   onEdit={() => onOpenModalHandler(el)}
-  //   linkTo={getLink(el)}
-  // />
-  //           <KeyValueCard
-  //             cardKey="CNRS - graflabo"
-  //             cardValue={el.value}
-  //             className={`card-${apiObject}`}
-  //             copy
-  //             icon="ri-fingerprint-2-line"
-  //             key={el.id}
-  //             onEdit={() => onOpenModalHandler(el)}
-  //             linkTo={getLink(el)}
-  //           />
-  //         </>
-  //       );
-  //     }
-
-  //   return (
-  //     <KeyValueCard
-  //       cardKey={el.type}
-  //       cardValue={el.value}
-  //       className={`card-${apiObject}`}
-  //       copy
-  //       icon="ri-fingerprint-2-line"
-  //       key={el.id}
-  //       onEdit={() => onOpenModalHandler(el)}
-  //       linkTo={getLink(el)}
-  //     />
-  //   );
-  // });
-  // return <ExpendableListCards list={list} />;
-  // };
 
   return (
     <Bloc isLoading={isLoading} error={error} data={data}>

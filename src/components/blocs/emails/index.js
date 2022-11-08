@@ -9,6 +9,7 @@ import useUrl from '../../../hooks/useUrl';
 import useNotice from '../../../hooks/useNotice';
 import { deleteError, saveError, saveSuccess, deleteSuccess } from '../../../utils/notice-contents';
 import KeyValueCard from '../../card/key-value-card';
+import ScrollToTop from '../../scroll-to-top/scroll-to-top';
 
 export default function EmailsComponent() {
   const { url } = useUrl('emails');
@@ -73,6 +74,7 @@ export default function EmailsComponent() {
           <ModalTitle>{modalTitle}</ModalTitle>
           <ModalContent>{modalContent}</ModalContent>
         </Modal>
+        <ScrollToTop />
       </BlocModal>
     </Bloc>
   );

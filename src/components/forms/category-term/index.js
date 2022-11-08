@@ -122,7 +122,7 @@ export default function CategoryTermsForm({ id, data, onSave, onDelete }) {
           </Col>
           <Col n="12 md-6">
             <TextInput
-              label="Nom cours en français"
+              label="Nom court en français"
               value={form.shortNameFr || ''}
               onChange={(e) => updateForm({ shortNameFr: e.target.value })}
             />
