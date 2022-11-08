@@ -1,0 +1,35 @@
+.file-details {
+  color: var(--text-mention-grey);
+  font-size: .75rem;
+  font-weight: 400;
+  line-height: 1.25rem;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin: 0;
+}
+
+.file-wrapper {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: flex-start;
+}
+.file-text-wrapper {
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 1;
+  align-items: flex-start;
+}
+
+.file-download-button {
+  color: var(--text-action-high-blue-france);
+  display: inline !important;
+  font-size: 1rem !important;
+  line-height: 1.5rem !important;
+  &:hover {
+    background-color: transparent !important;
+    text-decoration: underline;
+  }
+}

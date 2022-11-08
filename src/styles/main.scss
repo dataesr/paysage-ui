@@ -1,0 +1,277 @@
+// HTML {
+//   @media only screen and (min-width: 992px) {
+//     font-size: 90%;
+//   }
+// }
+HR {
+  margin: 24px 0 16px 0;
+  padding-bottom: 8px;
+}
+
+.leaflet-control {
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+.text-right {
+  text-align: right;
+}
+.text-center {
+  text-align: center;
+}
+.italic {
+  font-style: italic;
+}
+
+
+
+.structures-tile {
+  box-shadow: inset 0 0 0 1px var(--border-default-grey),inset 0 -0.25rem 0 0 var(--structures-color) !important;
+}
+
+.bg-categories {
+  background-color: var(--categories-color) !important;
+}
+.bg-categories-light {
+  background-color: rgba(230,254,218, 0.7) !important;
+}
+
+.bg-documents {
+  background-color: var(--documents-color) !important;
+}
+
+.bg-legal-categories {
+  background-color: var(--legal-categories-color) !important;
+}
+
+.bg-official-texts {
+  background-color: var(--official-texts-color) !important;
+}
+
+.bg-persons {
+  background-color: var(--persons-color) !important;
+}
+
+.bg-prices {
+  background-color: var(--prices-color) !important;
+}
+
+.bg-projects {
+  background-color: var(--projects-color) !important;
+}
+
+.bg-structures {
+  background-color: var(--structures-color) !important;
+}
+
+.bg-terms {
+  background-color: var(--terms-color) !important;
+}
+
+.bg-users {
+  background-color: var(--users-color) !important;
+}
+
+.bullet {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  margin: 0 8px;
+  border-radius: 8px;
+}
+
+.fr-background-alt {
+  background-color: var(--background-alt-grey);
+}
+.fr-password-info {
+  color: var(--info-main-525);
+  margin: 0;
+}
+.fr-password-success {
+  color: var(--success-main-525);
+  margin: 0;
+}
+.fr-password-error {
+  color: var(--error-main-525);
+  margin: 0;
+}
+.fullwidth {
+  width: 100%;
+}
+
+.sidemenu__item--active {
+   A:before {
+    --idle: transparent;
+    --hover: var(--border-active-blue-france-hover);
+    --active: var(--border-active-blue-france-active);
+    background-color: var(--border-active-blue-france);
+    bottom: .75rem;
+    content: "";
+    left: 0;
+    position: absolute;
+    top: .75rem;
+    width: 2px;
+  }
+  .fr-text--md {color: var(--text-active-blue-france); }
+}
+
+.color-tester {
+  width: 100%;
+  height: 80px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.show-bt-on-over:hover {
+  .bt-visible-on-over {
+    visibility: visible;
+  }
+}
+
+.bt-visible-on-over {
+  visibility: hidden;
+}
+
+.no-span {
+  SPAN {
+    display: none;
+  }
+}
+
+.hidden {
+  visibility: hidden;
+}
+
+.hide {
+  display: none;
+}
+
+.highlight-border {
+  border-color: var(--border-color);
+}
+
+.leaflet-control-zoom {
+  position: static;
+  z-index: 1 !important;
+  A {
+    background-image: none !important;
+  }
+}
+.leaflet-pane {
+  position: static;
+  z-index: 40 !important;
+}
+.leaflet-container {
+  position: relative;
+  z-index: 1 !important;
+}
+.leaflet-tooltip-pane {
+  position: relative;
+}
+
+.overlay {
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: calc(var(--ground) + 1000);
+  cursor: pointer;
+  background-color: rgba(#161616, 0.85);
+  color: var(--text-inverted-grey);
+}
+
+.edit-button {
+  position: absolute;
+  top: .25rem;
+  right: .25rem;
+}
+
+.card-structures {
+  border-left: .25rem solid var(--structures-color) !important;
+  .fr-card__start {
+    .fr-card__detail {
+      color: var(--structures-color) !important;
+    }
+  }
+}
+.card-persons {
+  border-left: .25rem solid var(--persons-color) !important;
+  .fr-card__start {
+    .fr-card__detail {
+      color: var(--persons-color) !important;
+    }
+  }
+}
+.card-prices {
+  border-left: .25rem solid var(--prices-color) !important;
+  .fr-card__start {
+    .fr-card__detail {
+      color: var(--prices-color) !important;
+    }
+  }
+}
+.card-terms {
+  border-left: .25rem solid var(--terms-color) !important;
+  .fr-card__start {
+    .fr-card__detail {
+      color: var(--terms-color) !important;
+    }
+  }
+}
+.card-projects {
+  border-left: .25rem solid var(--projects-color) !important;
+  .fr-card__start {
+    .fr-card__detail {
+      color: var(--projects-color) !important;
+    }
+  }
+}
+.card-categories {
+  border-left: .25rem solid var(--categories-color) !important;
+  .fr-card__start {
+    .fr-card__detail {
+      color: var(--categories-color) !important;
+    }
+  }
+}
+.card-legal-categories {
+  border-left: .25rem solid var(--legal-categories-color) !important;
+  .fr-card__start {
+    .fr-card__detail {
+      color: var(--legal-categories-color) !important;
+    }
+  }
+}
+.card-supervising-ministers {
+  border-left: .25rem solid var(--supervising-ministers-color) !important;
+  .fr-card__start {
+    .fr-card__detail {
+      color: var(--supervising-ministers-color) !important;
+    }
+  }
+}
+
+.turngrey {
+  filter: brightness(70%);
+}
+
+.stick {
+  position: sticky;
+  top: 0;
+  background: var(--background-default-grey);
+  z-index: 100;
+  margin: 0;
+  margin-top: 0px;
+  margin-left: 0px;
+  margin-top: .25rem;
+}
+
+.stick + * {
+  margin-bottom: 1.5rem;
+}

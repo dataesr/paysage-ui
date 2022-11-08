@@ -1,0 +1,58 @@
+.fr-header__navbar .fr-btn--search::before {
+  font-size: 1.5rem;
+}
+
+.fr-header__navbar .fr-btn--menu::before {
+  font-size: 1.5rem;
+}
+
+.fr-radio-rich__img {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.fr-artwork-decorative {
+  fill: #ECECFF;
+}
+
+.fr-artwork-minor {
+  fill: #E1000F;
+}
+
+.fr-artwork-major {
+  fill: var(--background-action-high-blue-france);
+}
+
+.fr-card--xs {
+  .fr-card__content {
+    padding: 1rem 1.5rem !important;
+  }
+}
+
+.fr-breadcrumb {
+  margin-bottom: 1rem;
+  .fr-breadcrumb__item--current {
+    display: inline-block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    @media only screen and (min-width: 768px) {
+      max-width: 30rem;
+    }
+    max-width: 15rem;
+  }
+}
+
+
+.fr-card--grey {
+  background-color: var(--grey-card) !important;
+}
+
+.fr-card--shadow {
+  z-index: 50;
+}
+
+.select-search-input {
+  padding: .5rem 0;
+}

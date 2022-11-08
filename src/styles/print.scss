@@ -1,0 +1,61 @@
+.print {
+  font-size: 1rem;
+}
+.print .leaflet-container {
+  max-width: 17cm;
+}
+
+.no-print {
+  @media print {
+    display: none;
+  }
+}
+.only-print {
+  display: none;
+  @media print {
+    display: block;
+  }
+}
+
+@media print {
+  HTML {
+    font-size: 70% !important;
+  }
+
+  SECTION {
+    page-break-inside: avoid !important;
+  }
+  
+  .fr-col-md-6 {
+    flex: 0 0 50% !important;
+    max-width: 50% !important;
+    width: 50% !important;
+  }
+  .fr-col-md-4 {
+    flex: 0 0 33.33333% !important;
+    max-width: 33.33333% !important;
+    width: 33.33333% !important;
+  }
+  .print-12 {
+    flex: 0 0 100% !important;
+    max-width: 100% !important;
+    width: 100% !important;
+  }
+  
+  .pagebreak {
+    page-break-before: always;
+  }
+  .fr-card--shadow {
+    --idle: #0000;
+    --hover: inherit;
+    --active: inherit;
+    background-color: inherit;
+    filter: none;
+    box-shadow: 0 0 0 1px var(--border-default-grey);
+    z-index: calc(var(--ground) - 500);
+  }
+}
+
+@page {
+  margin: 1.5cm;
+}

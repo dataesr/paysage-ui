@@ -1,0 +1,14 @@
+.copy-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 99999px;
+  --hover: var(--active-tint);
+  line-height: 1.25rem;
+  height: 1.5rem;
+  width: 1.5rem;
+}
+
+.lowercase {
+  text-transform: none !important;
+}
