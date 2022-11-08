@@ -53,23 +53,23 @@ export default function LocalisationsComponent() {
     setShowModal(true);
   };
 
-  const renderAdress = (localisation) => (
+  const renderAddress = (localisation) => (
     <div className={`fr-card fr-card--xs fr-card--horizontal fr-card--grey fr-card--no-border card-${apiObject}`}>
       <div className="fr-card__body">
         <div className="fr-card__content">
           <p className="fr-card__title">
             <span className="fr-pr-1w">
-              {`${localisation.address || ''}  ${localisation.locality || ''},  ${localisation.postalCode || ''},  ${localisation.country}`}
+              {`${localisation?.address || ''} ${localisation?.locality || ''}, ${localisation?.postalCode || ''}, ${localisation?.country}`}
             </span>
             <CopyButton
-              copyText={`${localisation.address || ''}  ${localisation.locality || ''}  ${localisation.postalCode || ''}  ${localisation.country}`}
+              copyText={`${localisation?.address || ''} ${localisation?.locality || ''} ${localisation?.postalCode || ''} ${localisation?.country}`}
               size="sm"
             />
           </p>
           <div className="fr-card__start">
             <p className="fr-card__detail fr-text--sm fr-mb-0">
               <Icon name="ri-map-pin-fill" size="1x" />
-              Addresse
+              Adresse
               {' '}
               {localisation.current ? 'actuelle' : 'historique'}
             </p>
@@ -104,7 +104,7 @@ export default function LocalisationsComponent() {
                   lng={currentLocalisation?.coordinates.lng}
                   markers={[
                     {
-                      address: currentLocalisation.address,
+                      address: `${currentLocalisation?.address || ''} ${currentLocalisation?.locality || ''}, ${currentLocalisation?.postalCode || ''}, ${currentLocalisation?.country}`,
                       latLng: [
                         currentLocalisation?.coordinates.lat,
                         currentLocalisation?.coordinates.lng,
@@ -114,7 +114,7 @@ export default function LocalisationsComponent() {
                 />
               </Col>
               <Col n="12">
-                {data.totalCount === 1 && currentLocalisation?.country && renderAdress(currentLocalisation)}
+                {data.totalCount === 1 && currentLocalisation?.country && renderAddress(currentLocalisation)}
               </Col>
             </Row>
           )
@@ -141,7 +141,7 @@ export default function LocalisationsComponent() {
                     />
                   </Col>
                   <Col n="12">
-                    {currentLocalisation?.address ? renderAdress(currentLocalisation) : null}
+                    {currentLocalisation?.address ? renderAddress(currentLocalisation) : null}
                   </Col>
                 </Row>
               ) : null}
@@ -152,7 +152,7 @@ export default function LocalisationsComponent() {
                   {
                     data.data.map((item) => (
                       <Col n="12" as="li" key={`HistoriqueLocalisation${item.id}`}>
-                        {renderAdress(item)}
+                        {renderAddress(item)}
                       </Col>
                     ))
                   }
