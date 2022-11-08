@@ -12,8 +12,6 @@ import { useState } from 'react';
 import DateInput from '../../date-input';
 import FormFooter from '../form-footer';
 import useForm from '../../../hooks/useForm';
-import useUrl from '../../../hooks/useUrl';
-import useEnums from '../../../hooks/useEnums';
 import PaysageBlame from '../../paysage-blame';
 
 function validate(body) {
@@ -30,12 +28,9 @@ function sanitize(form) {
   return body;
 }
 
-export default function IdentifierForm({ id, data, onDelete, onSave }) {
+export default function IdentifierForm({ id, data, onDelete, onSave, options }) {
   const [showErrors, setShowErrors] = useState(false);
   const { form, updateForm, errors } = useForm({ active: true, ...data }, validate);
-  const { apiObject } = useUrl();
-  const { identifiers } = useEnums();
-  const options = identifiers?.[apiObject];
 
   const handleSubmit = () => {
     if (Object.keys(errors).length > 0) return setShowErrors(true);
@@ -116,6 +111,7 @@ export default function IdentifierForm({ id, data, onDelete, onSave }) {
 }
 
 IdentifierForm.propTypes = {
+  options: PropTypes.object.isRequired,
   id: PropTypes.string,
   data: PropTypes.object,
   onDelete: PropTypes.func,

@@ -14,6 +14,7 @@ import api from '../../../utils/api';
 import useFetch from '../../../hooks/useFetch';
 import useUrl from '../../../hooks/useUrl';
 import useNotice from '../../../hooks/useNotice';
+import useEnums from '../../../hooks/useEnums';
 import {
   deleteError,
   saveError,
@@ -30,6 +31,8 @@ export default function IdentifiersComponent() {
   const [showModal, setShowModal] = useState(false);
   const [modalTitle, setModalTitle] = useState('');
   const [modalContent, setModalContent] = useState(null);
+  const { identifiers } = useEnums();
+  const options = identifiers?.[apiObject];
 
   const onSaveHandler = async (body, itemId) => {
     const method = itemId ? 'patch' : 'post';
@@ -64,6 +67,7 @@ export default function IdentifiersComponent() {
         data={element || {}}
         onDelete={onDeleteHandler}
         onSave={onSaveHandler}
+        options={options}
       />,
     );
     setShowModal(true);
@@ -153,7 +157,7 @@ export default function IdentifiersComponent() {
     if (!data) return null;
     const list = [];
     if (data) {
-      data?.data?.forEach((el) => {
+      data.data?.forEach((el) => {
         if (el.type === 'Id unité CNRS') {
           list.push(
             <KeyValueCard
@@ -182,59 +186,6 @@ export default function IdentifiersComponent() {
             />,
           );
         }
-        if (el.type === 'EtId') {
-          list.push(
-            <KeyValueCard
-              cardKey="Identifiant établissement ESGBU"
-              cardValue={el.value}
-              className={`card-${apiObject}`}
-              copy
-              icon="ri-fingerprint-2-line"
-              key={el.id}
-              onEdit={() => onOpenModalHandler(el)}
-            />,
-          );
-        }
-        if (el.type === 'SdId') {
-          list.push(
-            <KeyValueCard
-              cardKey="Identifiant service documentaire ESGBU"
-              cardValue={el.value}
-              className={`card-${apiObject}`}
-              copy
-              icon="ri-fingerprint-2-line"
-              key={el.id}
-              onEdit={() => onOpenModalHandler(el)}
-            />,
-          );
-        }
-        if (el.type === 'BibId') {
-          list.push(
-            <KeyValueCard
-              cardKey="Identifiant bibliothèque ESGBU"
-              cardValue={el.value}
-              className={`card-${apiObject}`}
-              copy
-              icon="ri-fingerprint-2-line"
-              key={el.id}
-              onEdit={() => onOpenModalHandler(el)}
-            />,
-          );
-        }
-        if (el.type === 'isni') {
-          list.push(
-            <KeyValueCard
-              cardKey="Identifiant isni"
-              cardValue={el.value}
-              className={`card-${apiObject}`}
-              copy
-              icon="ri-fingerprint-2-line"
-              key={el.id}
-              onEdit={() => onOpenModalHandler(el)}
-              linkTo={getLink(el)}
-            />,
-          );
-        }
         if (el.type === 'Siret') {
           const siren = el.value.substring(0, 11);
           list.push(
@@ -245,25 +196,25 @@ export default function IdentifiersComponent() {
               copy
               icon="ri-fingerprint-2-line"
               key={el.id}
-              // onEdit={() => onOpenModalHandler(el)}
+              onEdit={() => onOpenModalHandler(el)}
               linkTo={getLink({ ...el, type: 'Siren' })}
             />,
           );
           list.push(
             <KeyValueCard
-              cardKey="Numéro de TVA"
+              cardKey="Numéro de TVA intracommunautaire"
               cardValue={getTvaIntraFromSiren(siren)}
               className={`card-${apiObject}`}
               copy
               icon="ri-fingerprint-2-line"
               key={el.id}
-              // onEdit={() => onOpenModalHandler(el)}
+              onEdit={() => onOpenModalHandler(el)}
             />,
           );
         }
         list.push(
           <KeyValueCard
-            cardKey={el.type}
+            cardKey={options?.find((type) => (el.type === type.value))?.label}
             cardValue={el.value}
             className={`card-${apiObject}`}
             copy
