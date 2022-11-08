@@ -11,6 +11,7 @@ import api from '../../../utils/api';
 import useNotice from '../../../hooks/useNotice';
 import RelationsByTag from '../../../components/blocs/relations-by-tag';
 import SupervisorsForm from '../../../components/forms/supervisors';
+import { STRUCTURE_INTERNE, STRUCTURE_PREDECESSEUR, STRUCTURE_TUTELLE } from '../../../utils/relations-tags';
 
 const deleteError = { content: "Une erreur s'est produite. L'élément n'a pas pu être supprimé", autoDismissAfter: 6000, type: 'error' };
 const saveError = { content: "Une erreur s'est produite.", autoDismissAfter: 6000, type: 'error' };
@@ -43,33 +44,33 @@ export default function StructureElementLiesPage() {
   return (
     <>
       <RelationsByTag
-        tag="structures-internes"
+        tag={STRUCTURE_INTERNE}
         blocName="Structures internes"
         resourceType="structures"
         relatedObjectTypes={['structures']}
       />
       <RelationsByTag
-        tag="structures-internes"
+        tag={STRUCTURE_INTERNE}
         blocName="Structures parentes"
         resourceType="structures"
         relatedObjectTypes={['structures']}
         inverse
       />
       <RelationsByTag
-        tag="predecesseurs"
+        tag={STRUCTURE_PREDECESSEUR}
         blocName="Prédécesseurs"
         resourceType="structures"
         relatedObjectTypes={['structures']}
       />
       <RelationsByTag
-        tag="predecesseurs"
+        tag={STRUCTURE_PREDECESSEUR}
         blocName="Successeurs"
         resourceType="structures"
         relatedObjectTypes={['structures']}
         inverse
       />
       <RelationsByTag
-        tag="structures-ministers"
+        tag={STRUCTURE_TUTELLE}
         blocName="Ministres de tutelle"
         resourceType="structures"
         relatedObjectTypes={['supervising-ministers']}

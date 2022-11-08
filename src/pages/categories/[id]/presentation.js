@@ -5,20 +5,21 @@ import Weblinks from '../../../components/blocs/weblinks';
 import RelationsByTag from '../../../components/blocs/relations-by-tag';
 import useHashScroll from '../../../hooks/useHashScroll';
 import Wiki from '../../../components/blocs/wiki';
+import { CATEGORIE_PARENT } from '../../../utils/relations-tags';
 
 export default function CategoryPresentationPage() {
   useHashScroll();
   return (
     <>
       <RelationsByTag
-        tag="categories-parents"
+        tag={CATEGORIE_PARENT}
         blocName="Parents"
         resourceType="categories"
         relatedObjectTypes={['categories']}
         noRelationType
       />
       <RelationsByTag
-        tag="categories-parents"
+        tag={CATEGORIE_PARENT}
         blocName="Enfants"
         resourceType="categories"
         relatedObjectTypes={['categories']}

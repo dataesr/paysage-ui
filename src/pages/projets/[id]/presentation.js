@@ -12,6 +12,7 @@ import Spinner from '../../../components/spinner';
 import useFetch from '../../../hooks/useFetch';
 import useHashScroll from '../../../hooks/useHashScroll';
 import { dateOptions } from '../../../utils/dates';
+import { PROJET_CONTACT, PROJET_PARTICIPATION } from '../../../utils/relations-tags';
 
 export default function ProjectPresentationPage() {
   useHashScroll();
@@ -71,13 +72,13 @@ export default function ProjectPresentationPage() {
         </Col>
       </Row>
       <RelationsByTag
-        tag="participations"
+        tag={PROJET_PARTICIPATION}
         blocName="Participations"
         resourceType="projects"
         relatedObjectTypes={['structures', 'persons']}
       />
       <RelationsByTag
-        tag="project-contact"
+        tag={PROJET_CONTACT}
         blocName="Contact"
         resourceType="projects"
         relatedObjectTypes={['persons']}

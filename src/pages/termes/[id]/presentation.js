@@ -5,20 +5,21 @@ import Weblinks from '../../../components/blocs/weblinks';
 import useHashScroll from '../../../hooks/useHashScroll';
 import Wiki from '../../../components/blocs/wiki';
 import RelationsByTag from '../../../components/blocs/relations-by-tag';
+import { TERME_PARENT } from '../../../utils/relations-tags';
 
 export default function TermPresentationPage() {
   useHashScroll();
   return (
     <>
       <RelationsByTag
-        tag="terms-parents"
+        tag={TERME_PARENT}
         blocName="Parents"
         resourceType="terms"
         relatedObjectTypes={['terms']}
         noRelationType
       />
       <RelationsByTag
-        tag="terms-parents"
+        tag={TERME_PARENT}
         blocName="Enfants"
         resourceType="terms"
         relatedObjectTypes={['terms']}

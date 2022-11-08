@@ -1,18 +1,19 @@
 import RelationsByTag from '../../../components/blocs/relations-by-tag';
 import MandateForm from '../../../components/forms/mandate';
+import { GOUVERNANCE, STRUCTURE_REFERENT_MESR } from '../../../utils/relations-tags';
 
 export default function StructureGouvernancePage() {
   return (
     <>
       <RelationsByTag
-        tag="gouvernance"
+        tag={GOUVERNANCE}
         blocName="Gouvernance"
         resourceType="structures"
         relatedObjectTypes={['persons']}
         Form={MandateForm}
       />
       <RelationsByTag
-        tag="referentMESR"
+        tag={STRUCTURE_REFERENT_MESR}
         blocName="Référents MESR"
         resourceType="structures"
         relatedObjectTypes={['persons']}
