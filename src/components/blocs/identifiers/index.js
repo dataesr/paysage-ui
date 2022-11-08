@@ -245,7 +245,7 @@ export default function IdentifiersComponent() {
               copy
               icon="ri-fingerprint-2-line"
               key={el.id}
-              onEdit={() => onOpenModalHandler(el)}
+              // onEdit={() => onOpenModalHandler(el)}
               linkTo={getLink({ ...el, type: 'Siren' })}
             />,
           );
@@ -257,7 +257,7 @@ export default function IdentifiersComponent() {
               copy
               icon="ri-fingerprint-2-line"
               key={el.id}
-              onEdit={() => onOpenModalHandler(el)}
+              // onEdit={() => onOpenModalHandler(el)}
             />,
           );
         }
