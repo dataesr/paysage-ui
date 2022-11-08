@@ -21,7 +21,7 @@ import {
   deleteSuccess,
 } from '../../../utils/notice-contents';
 import KeyValueCard from '../../card/key-value-card';
-// import { getTvaIntraFromSiren } from '../../../utils/get-tva-intra';
+import { getTvaIntraFromSiren } from '../../../utils/get-tva-intra';
 
 export default function IdentifiersComponent() {
   const { notice } = useNotice();
@@ -105,7 +105,7 @@ export default function IdentifiersComponent() {
     case 'Id unité CNRS':
       linkTo = `https://web-ast.dsi.cnrs.fr/l3c/owa/structure.infos_admin?&p_lab=${el.value}&p_origine_appel=u`;
       break;
-    case 'CNRS - graflabo':
+    case 'CNRS - grafilabo':
       linkTo = `https://www2.cnrs.fr/graflabo/unite.php?cod_uni=${el.value}`;
       break;
     case 'RCR':
@@ -184,16 +184,27 @@ export default function IdentifiersComponent() {
           );
         }
         if (el.type === 'Siret') {
+          const siren = el.value.substring(0, 11);
           list.push(
             <KeyValueCard
               cardKey="Siren"
-              cardValue={el.value.substring(0, 9)}
+              cardValue={siren}
               className={`card-${apiObject}`}
               copy
               icon="ri-fingerprint-2-line"
               key={el.id}
               onEdit={() => onOpenModalHandler(el)}
-              // linkTo={getLink({ ...el, type: 'Wikidata JSON' })}
+            />,
+          );
+          list.push(
+            <KeyValueCard
+              cardKey="Numéro de TVA"
+              cardValue={getTvaIntraFromSiren(siren)}
+              className={`card-${apiObject}`}
+              copy
+              icon="ri-fingerprint-2-line"
+              key={el.id}
+              onEdit={() => onOpenModalHandler(el)}
             />,
           );
         }
@@ -209,18 +220,6 @@ export default function IdentifiersComponent() {
             linkTo={getLink(el)}
           />,
         );
-        // list.push(
-        //   <KeyValueCard
-        //     cardKey="TVA"
-        //     cardValue={getTvaIntraFromSiren(el.value.substring(0, 9))}
-        //     className={`card-${apiObject}`}
-        //     copy
-        //     icon="ri-fingerprint-2-line"
-        //     key={el.id}
-        //     onEdit={() => onOpenModalHandler(el)}
-        //     // linkTo={getLink(el)}
-        //   />,
-        // );
       });
     }
     return <ExpendableListCards list={list} />;
