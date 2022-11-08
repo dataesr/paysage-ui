@@ -90,11 +90,11 @@ export default function IdentifiersComponent() {
     case 'RNA':
       linkTo = `https://entreprise.data.gouv.fr/etablissement/${el.value}`;
       break;
-    case 'SIRET':
-      linkTo = `https://annuaire-entreprises.data.gouv.fr/etablissement/${el.value}`;
+    case 'Siret':
+      linkTo = `https://annuaire-entreprises.data.gouv.fr/etablissement/${el.value.split(' ').join('')}`;
       break;
-    case 'SIREN':
-      linkTo = `https://annuaire-entreprises.data.gouv.fr/entreprise/${el.value}`;
+    case 'Siren':
+      linkTo = `https://annuaire-entreprises.data.gouv.fr/entreprise/${el.value.split(' ').join('')}`;
       break;
     case 'OC':
       linkTo = `https://opencorporates.com/companies/${el.value}`;
@@ -112,8 +112,7 @@ export default function IdentifiersComponent() {
       linkTo = `http://www.sudoc.abes.fr//DB=2.2/SET=1/TTL=3/CMD?ACT=SRCHA&IKT=8888&SRT=RLV&TRM=${el.value}`;
       break;
     case 'isni':
-      linkTo = `http://www.isni.org/${el.value}`;
-      // check url because user sets id with spaces
+      linkTo = `http://www.isni.org/${el.value.split(' ').join('')}`;
       break;
     case 'fundref':
       linkTo = `https://search.crossref.org/funding?q=${el.value}`;
@@ -165,7 +164,7 @@ export default function IdentifiersComponent() {
               icon="ri-fingerprint-2-line"
               key={el.id}
               onEdit={() => onOpenModalHandler(el)}
-              linkTo={getLink({ ...el, type: 'CNRS - graflabo' })}
+              linkTo={getLink({ ...el, type: 'CNRS - grafilabo' })}
             />,
           );
         }
@@ -183,6 +182,59 @@ export default function IdentifiersComponent() {
             />,
           );
         }
+        if (el.type === 'EtId') {
+          list.push(
+            <KeyValueCard
+              cardKey="Identifiant établissement ESGBU"
+              cardValue={el.value}
+              className={`card-${apiObject}`}
+              copy
+              icon="ri-fingerprint-2-line"
+              key={el.id}
+              onEdit={() => onOpenModalHandler(el)}
+            />,
+          );
+        }
+        if (el.type === 'SdId') {
+          list.push(
+            <KeyValueCard
+              cardKey="Identifiant service documentaire ESGBU"
+              cardValue={el.value}
+              className={`card-${apiObject}`}
+              copy
+              icon="ri-fingerprint-2-line"
+              key={el.id}
+              onEdit={() => onOpenModalHandler(el)}
+            />,
+          );
+        }
+        if (el.type === 'BibId') {
+          list.push(
+            <KeyValueCard
+              cardKey="Identifiant bibliothèque ESGBU"
+              cardValue={el.value}
+              className={`card-${apiObject}`}
+              copy
+              icon="ri-fingerprint-2-line"
+              key={el.id}
+              onEdit={() => onOpenModalHandler(el)}
+            />,
+          );
+        }
+        if (el.type === 'isni') {
+          list.push(
+            <KeyValueCard
+              cardKey="Identifiant isni"
+              cardValue={el.value}
+              className={`card-${apiObject}`}
+              copy
+              icon="ri-fingerprint-2-line"
+              key={el.id}
+              onEdit={() => onOpenModalHandler(el)}
+              linkTo={getLink(el)}
+            />,
+          );
+        }
         if (el.type === 'Siret') {
           const siren = el.value.substring(0, 11);
           list.push(
@@ -194,6 +246,7 @@ export default function IdentifiersComponent() {
               icon="ri-fingerprint-2-line"
               key={el.id}
               onEdit={() => onOpenModalHandler(el)}
+              linkTo={getLink({ ...el, type: 'Siren' })}
             />,
           );
           list.push(
