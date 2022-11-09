@@ -16,6 +16,8 @@ import getOptionsFromFacet from '../../../../hooks/useChart';
 import useFetch from '../../../../hooks/useFetch';
 import useUrl from '../../../../hooks/useUrl';
 
+import './immobilier.scss';
+
 HCExporting(Highcharts);
 HCExportingData(Highcharts);
 
@@ -57,6 +59,17 @@ export default function StructureImmobilierPage() {
     E: '#F9AE1D',
     F: '#F36326',
     G: '#EE2332',
+  };
+
+  const energyThreshold = {
+    undefined: '',
+    A: '< 50',
+    B: '51 à 90',
+    C: '91 à 150',
+    D: '151 à 230',
+    E: '231 à 330',
+    F: '331 à 450',
+    G: '> 450',
   };
 
   const renderBuildings = () => data?.data.map((item) => (
@@ -111,8 +124,20 @@ export default function StructureImmobilierPage() {
               title="Classe d'énergie"
               descriptionElement={(
                 <Row alignItems="middle">
-                  <Text spacing="mr-1v mb-0">
-                    {item?.energie_class || 'Non renseigné'}
+                  <Text spacing="mr-1v mb-0" className={`ges ges-${item?.energie_class?.toLowerCase()}`}>
+                    <div className="letter">
+                      <div className="line">
+                        <em>
+                          {energyThreshold?.[item?.energie_class]}
+                        </em>
+                        <strong>
+                          {item?.energie_class || 'Non renseigné'}
+                        </strong>
+                      </div>
+                      <div className="sticker">
+                        {item?.energie_class || 'Non renseigné'}
+                      </div>
+                    </div>
                   </Text>
                 </Row>
               )}
