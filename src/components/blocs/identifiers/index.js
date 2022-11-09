@@ -76,6 +76,9 @@ export default function IdentifiersComponent() {
   const getLink = (el) => {
     let linkTo = '';
     switch (el.type) {
+    case 'ALId':
+      linkTo = `https://dgesip-annelis.adc.education.fr/etablissement/${el.value}`;
+      break;
     case 'Wikidata':
       linkTo = `https://wikidata.org/wiki/${el.value}`;
       break;
@@ -144,9 +147,6 @@ export default function IdentifiersComponent() {
       break;
     case 'UNIVD':
       linkTo = `https://univ-droit.fr/universitaires/${el.value}`;
-      break;
-    case 'ALId':
-      linkTo = `https://dgesip-annelis.adc.education.fr/etablissement/${el.value}`;
       break;
     default:
     }

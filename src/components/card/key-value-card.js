@@ -12,6 +12,7 @@ export default function KeyValueCard({
   copy,
   icon,
   linkTo,
+  linkIn,
   onEdit,
   titleAsText,
   tooltip,
@@ -33,7 +34,9 @@ export default function KeyValueCard({
           <div className="fr-card__start">
             <p className="fr-card__detail fr-text--sm fr-mb-0">
               {icon && <Icon name={icon} size="1x" />}
-              {linkTo ? <a href={linkTo} target="_blank" rel="noopener noreferrer">{cardKey}</a> : cardKey}
+              {linkTo ? <a href={linkTo} target="_blank" rel="noopener noreferrer">{cardKey}</a> : null}
+              {linkIn ? <a href={linkIn}>{cardKey}</a> : null}
+              {!linkTo && !linkIn ? cardKey : null}
               {tooltip && (
                 <Icon
                   name="ri-information-fill"
@@ -68,6 +71,7 @@ KeyValueCard.propTypes = {
   copy: PropTypes.bool,
   icon: PropTypes.string,
   linkTo: PropTypes.string,
+  linkIn: PropTypes.string.isRequired,
   onEdit: PropTypes.func,
   titleAsText: PropTypes.string,
   tooltip: PropTypes.string,
