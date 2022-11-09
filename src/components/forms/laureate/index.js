@@ -231,7 +231,7 @@ export default function LaureateForm({ id, resourceType, relatedObjectTypes, dat
             <SearchBar
               buttonLabel="Rechercher"
               value={associatedQuery || ''}
-              label="Structures associées au lauréat"
+              label="Structure partageant le même prix"
               placeholder="Rechercher..."
               onChange={(e) => { setAssociatedQuery(e.target.value); }}
               options={associatedOptions}
