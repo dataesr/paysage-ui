@@ -114,7 +114,7 @@ function StructureByIdPage() {
               title={(
                 <>
                   <Icon name="ri-bar-chart-grouped-line" size="1x" />
-                  Chiffres clés
+                  Analyses et données
                 </>
               )}
             >
@@ -131,7 +131,7 @@ function StructureByIdPage() {
                 Ressources humaines
               </SideMenuLink>
               <SideMenuLink asLink={<RouterLink to="chiffres-cles/budget" />}>
-                Budget
+                Indicateurs financiers
               </SideMenuLink>
               <SideMenuLink asLink={<RouterLink to="chiffres-cles/insertion-professionnelle" />}>
                 Insertion professionnelle
