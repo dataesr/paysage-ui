@@ -1,18 +1,19 @@
 import { useState } from 'react';
 import { Col, Icon, ModalContent, ModalTitle, Row, Tab, Tabs } from '@dataesr/react-dsfr';
+
+import { Bloc, BlocActionButton, BlocContent, BlocModal, BlocTitle } from '../../bloc';
+import Button from '../../button';
+import CopyButton from '../../copy/copy-button';
+import LocalisationForm from '../../forms/localisation';
+import Map from '../../map/auto-bound-map';
 import Modal from '../../modal';
 import useFetch from '../../../hooks/useFetch';
+import useEditMode from '../../../hooks/useEditMode';
+import useNotice from '../../../hooks/useNotice';
 import useUrl from '../../../hooks/useUrl';
 import api from '../../../utils/api';
 import { formatDescriptionDates } from '../../../utils/dates';
-import Map from '../../map/auto-bound-map';
-import LocalisationForm from '../../forms/localisation';
-import Button from '../../button';
-import { Bloc, BlocActionButton, BlocContent, BlocModal, BlocTitle } from '../../bloc';
-import { deleteError, saveError, saveSuccess, deleteSuccess } from '../../../utils/notice-contents';
-import useNotice from '../../../hooks/useNotice';
-import CopyButton from '../../copy/copy-button';
-import useEditMode from '../../../hooks/useEditMode';
+import { deleteError, deleteSuccess, saveError, saveSuccess } from '../../../utils/notice-contents';
 
 export default function LocalisationsComponent() {
   const { editMode } = useEditMode();
@@ -59,10 +60,10 @@ export default function LocalisationsComponent() {
         <div className="fr-card__content">
           <p className="fr-card__title">
             <span className="fr-pr-1w">
-              {`${localisation.address || ''}  ${localisation.locality || ''},  ${localisation.postalCode || ''},  ${localisation.country}`}
+              {`${localisation?.address || ''}, ${localisation?.postalCode || ''} ${localisation?.locality || ''}, ${localisation?.country}`}
             </span>
             <CopyButton
-              copyText={`${localisation.address || ''}  ${localisation.locality || ''}  ${localisation.postalCode || ''}  ${localisation.country}`}
+              copyText={`${localisation?.address || ''}, ${localisation?.postalCode || ''} ${localisation?.locality || ''}, ${localisation?.country}`}
               size="sm"
             />
           </p>
@@ -93,7 +94,9 @@ export default function LocalisationsComponent() {
   return (
     <Bloc isLoading={isLoading} error={error} data={data}>
       <BlocTitle as="h3" look="h6">Localisations</BlocTitle>
-      <BlocActionButton onClick={() => handleModalToggle()}>Ajouter une adresse</BlocActionButton>
+      <BlocActionButton onClick={() => handleModalToggle()}>
+        Ajouter une adresse
+      </BlocActionButton>
       <BlocContent>
         {
           data.totalCount === 1 && currentLocalisation?.coordinates && (
@@ -104,7 +107,7 @@ export default function LocalisationsComponent() {
                   lng={currentLocalisation?.coordinates.lng}
                   markers={[
                     {
-                      address: currentLocalisation.address,
+                      address: `{${currentLocalisation?.address || ''}, ${currentLocalisation?.postalCode || ''} ${currentLocalisation?.locality || ''}, ${currentLocalisation?.country}}`,
                       latLng: [
                         currentLocalisation?.coordinates.lat,
                         currentLocalisation?.coordinates.lng,
@@ -131,7 +134,7 @@ export default function LocalisationsComponent() {
                       lng={currentLocalisation?.coordinates.lng}
                       markers={[
                         {
-                          address: currentLocalisation.address,
+                          address: `{${currentLocalisation?.address || ''}, ${currentLocalisation?.postalCode || ''} ${currentLocalisation?.locality || ''}, ${currentLocalisation?.country}}`,
                           latLng: [
                             currentLocalisation?.coordinates.lat,
                             currentLocalisation?.coordinates.lng,
