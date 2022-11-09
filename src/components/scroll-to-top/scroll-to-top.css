@@ -2,6 +2,8 @@
     position: fixed;
     bottom: 3em;
     right: 2em;
+    background-color: transparent;
+    cursor: pointer;
  }
   
   @media (max-width: 500px) {

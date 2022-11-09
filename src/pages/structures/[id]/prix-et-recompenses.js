@@ -8,13 +8,13 @@ export default function StructurePrixEtRecompensesPage() {
     <>
       <RelationsByTag
         tag={LAUREAT}
-        blocName="Lauréat de prix et récompenses"
+        blocName="Prix et récompenses obtenues par la structure"
         resourceType="prices"
         relatedObjectTypes={['structures']}
         inverse
         Form={LaureateForm}
       />
-      <RelationsAssociated tag="prix" blocName="Associée au lauréat d'un prix" />
+      <RelationsAssociated tag="prix" blocName="Prix attribués par la structure" />
     </>
   );
 }
