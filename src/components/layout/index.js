@@ -6,6 +6,7 @@ import Footer from './footer';
 import PageBorder from './page-border';
 import useAuth from '../../hooks/useAuth';
 import Spinner from '../spinner';
+import ScrollToTop from '../scroll-to-top/scroll-to-top';
 
 import './layout.scss';
 
@@ -20,6 +21,7 @@ export default function Layout() {
       <Container as="main" role="main" fluid>
         {isLoading ? <Spinner /> : <Outlet />}
       </Container>
+      <ScrollToTop />
       <Footer switchTheme={{ isOpen: isSwitchThemeOpen, setIsOpen: setIsSwitchThemeOpen }} />
       <PageBorder />
     </>

@@ -1,9 +1,8 @@
 .scroll-top {
     position: fixed;
-    bottom: 4em;
-    right: 3em;
-    /* background-color: transparent; */
-  }
+    bottom: 3em;
+    right: 2em;
+ }
   
   @media (max-width: 500px) {
     .scroll-top {
@@ -11,5 +10,7 @@
       bottom: 2em;
       right: 1em;
       background-color: transparent;
+      font-size: 1.5em;
+      z-index: 20;
     }
   }
