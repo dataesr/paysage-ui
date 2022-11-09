@@ -35,7 +35,7 @@ export default function KeyValueCard({
             <p className="fr-card__detail fr-text--sm fr-mb-0">
               {icon && <Icon name={icon} size="1x" />}
               {linkTo ? <a href={linkTo} target="_blank" rel="noopener noreferrer">{cardKey}</a> : null}
-              {linkIn ? <a href={linkIn}>{cardKey}</a> : null}
+              {linkIn && <a href={linkIn}>{cardKey}</a>}
               {!linkTo && !linkIn ? cardKey : null}
               {tooltip && (
                 <Icon
