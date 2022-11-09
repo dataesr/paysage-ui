@@ -1,27 +1,37 @@
 import React, { useEffect, useState } from 'react';
 import './scroll-to-top.css';
 
-function ScrollToTop() {
+export default function ScrollToTop() {
   const [isVisible, setIsVisible] = useState(false);
 
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth',
+    });
+  };
+
   useEffect(() => {
-    const toggleVisibility = window.pageYOffset > 500 ? setIsVisible(true) : setIsVisible(false);
+    const toggleVisibility = () => {
+      if (window.pageYOffset > 600) {
+        setIsVisible(true);
+      } else {
+        setIsVisible(false);
+      }
+    };
+
     window.addEventListener('scroll', toggleVisibility);
+
     return () => window.removeEventListener('scroll', toggleVisibility);
   }, []);
 
-  return isVisible ? (
+  return (
     <div className="scroll-top">
-      <button
-        type="button"
-        onClick={() => {
-          window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
-        }}
-      >
-        <i className="ri-arrow-up-circle-line" style={{ fontSize: 'x-large' }} />
-      </button>
+      {isVisible && (
+        <button type="button" onClick={scrollToTop}>
+          <i className="ri-arrow-up-circle-line" style={{ fontSize: 'x-large' }} />
+        </button>
+      )}
     </div>
-  ) : null;
+  );
 }
-
-export default ScrollToTop;
