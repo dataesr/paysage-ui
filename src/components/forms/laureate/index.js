@@ -196,8 +196,8 @@ export default function LaureateForm({ id, resourceType, relatedObjectTypes, dat
                 <SearchBar
                   buttonLabel="Rechercher"
                   value={resourceQuery || ''}
-                  label="Objet Paysage à lier"
-                  hint="Rechercher dans les objets Paysage"
+                  label="Prix"
+                  hint="Rechercher parmis les prix"
                   required
                   scope={form.resourceName}
                   placeholder={form.resourceId ? '' : 'Rechercher...'}
@@ -214,8 +214,8 @@ export default function LaureateForm({ id, resourceType, relatedObjectTypes, dat
                 <SearchBar
                   buttonLabel="Rechercher"
                   value={relatedObjectQuery || ''}
-                  label="Objet Paysage à lier"
-                  hint="Rechercher dans les objets Paysage"
+                  label="Lauréat"
+                  hint="Rechercher parmis les structures, les personnes et les projets"
                   required
                   scope={form.relatedObjectName}
                   placeholder={form.relatedObjectId ? '' : 'Rechercher...'}

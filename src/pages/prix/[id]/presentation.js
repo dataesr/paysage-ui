@@ -22,7 +22,7 @@ export default function PricePresentationPage() {
         tag={LAUREAT}
         blocName="Lauréats"
         resourceType="prices"
-        relatedObjectTypes={['persons', 'structures']}
+        relatedObjectTypes={['persons', 'structures', 'projects']}
         Form={LaureateForm}
       />
       <Row gutters>

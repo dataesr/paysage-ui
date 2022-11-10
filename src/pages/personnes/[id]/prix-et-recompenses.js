@@ -1,4 +1,5 @@
 import Relations from '../../../components/blocs/relations-by-tag';
+import LaureateForm from '../../../components/forms/laureate';
 import { LAUREAT } from '../../../utils/relations-tags';
 
 export default function PersonPrices() {
@@ -8,6 +9,7 @@ export default function PersonPrices() {
       blocName="Prix et récompenses"
       resourceType="prices"
       relatedObjectTypes={['persons']}
+      Form={LaureateForm}
       inverse
     />
   );
