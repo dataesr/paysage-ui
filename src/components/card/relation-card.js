@@ -29,10 +29,10 @@ export default function RelationCard({ relation, inverse, onEdit }) {
             {relation.relationType && (
               <Text as="span" bold>
                 {relation.relationType?.[getRelationTypeLabel(relation?.relatedObject?.gender)] || relation.relationType?.name}
-                {relation?.mandatePrecision}
-                {' '}
               </Text>
             )}
+            {relation?.mandatePrecision && ` ${relation?.mandatePrecision}`}
+            {' '}
             {formatDescriptionDates(relation.startDate || null, relation.endDate || null)}
           </p>
           {(relation.otherAssociatedObjects?.length > 0) && (
