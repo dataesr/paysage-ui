@@ -197,7 +197,7 @@ export default function LaureateForm({ id, resourceType, relatedObjectTypes, dat
                   buttonLabel="Rechercher"
                   value={resourceQuery || ''}
                   label="Objet Paysage à lier"
-                  hint="Rechercher dans les objects Paysage"
+                  hint="Rechercher dans les objets Paysage"
                   required
                   scope={form.resourceName}
                   placeholder={form.resourceId ? '' : 'Rechercher...'}
@@ -215,7 +215,7 @@ export default function LaureateForm({ id, resourceType, relatedObjectTypes, dat
                   buttonLabel="Rechercher"
                   value={relatedObjectQuery || ''}
                   label="Objet Paysage à lier"
-                  hint="Rechercher dans les objects Paysage"
+                  hint="Rechercher dans les objets Paysage"
                   required
                   scope={form.relatedObjectName}
                   placeholder={form.relatedObjectId ? '' : 'Rechercher...'}
@@ -231,7 +231,7 @@ export default function LaureateForm({ id, resourceType, relatedObjectTypes, dat
             <SearchBar
               buttonLabel="Rechercher"
               value={associatedQuery || ''}
-              label="Structures associées au lauréat"
+              label="Structure partageant le même prix"
               placeholder="Rechercher..."
               onChange={(e) => { setAssociatedQuery(e.target.value); }}
               options={associatedOptions}

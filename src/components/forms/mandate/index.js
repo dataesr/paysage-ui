@@ -180,7 +180,7 @@ export default function MandateForm({ id, resourceType, relatedObjectTypes, data
                   buttonLabel="Rechercher"
                   value={resourceQuery || ''}
                   label="Objet Paysage à lier"
-                  hint="Rechercher dans les objects Paysage"
+                  hint="Rechercher dans les objets Paysage"
                   required
                   scope={form.resourceName}
                   placeholder={form.resourceId ? '' : 'Rechercher...'}
@@ -197,8 +197,8 @@ export default function MandateForm({ id, resourceType, relatedObjectTypes, data
                 <SearchBar
                   buttonLabel="Rechercher"
                   value={relatedObjectQuery || ''}
-                  label="Objet Paysage à lier"
-                  hint="Rechercher dans les objects Paysage"
+                  label="Personne à lier"
+                  hint="Rechercher dans les objets Paysage"
                   required
                   scope={form.relatedObjectName}
                   placeholder={form.relatedObjectId ? '' : 'Rechercher...'}

@@ -1,10 +1,5 @@
 import { useEffect, useState } from 'react';
-import {
-  Container,
-  Col,
-  Row,
-  SearchableSelect,
-} from '@dataesr/react-dsfr';
+import { Container, Col, Row, SearchableSelect } from '@dataesr/react-dsfr';
 import PropTypes from 'prop-types';
 import useForm from '../../../hooks/useForm';
 import DateInput from '../../date-input';
@@ -16,13 +11,35 @@ import { parseRelatedElement } from '../../../utils/parse-related-element';
 import PaysageBlame from '../../paysage-blame';
 
 function sanitize(form) {
-  const fields = ['resourceId', 'relatedObjectId', 'relationTypeId', 'relationsGroupId', 'relationTag',
-    'startDateOfficialTextId', 'endDateOfficialTextId', 'startDate', 'endDate'];
+  const fields = [
+    'resourceId',
+    'relatedObjectId',
+    'relationTypeId',
+    'relationsGroupId',
+    'relationTag',
+    'startDateOfficialTextId',
+    'endDateOfficialTextId',
+    'startDate',
+    'endDate',
+  ];
   const body = {};
-  Object.keys(form).forEach((key) => { if (fields.includes(key)) { body[key] = form[key]; } });
+  Object.keys(form).forEach((key) => {
+    if (fields.includes(key)) {
+      body[key] = form[key];
+    }
+  });
   return body;
 }
-export default function RelationForm({ id, resourceType, relatedObjectTypes, data, onDelete, onSave, inverse, noRelationType }) {
+export default function RelationForm({
+  id,
+  resourceType,
+  relatedObjectTypes,
+  data,
+  onDelete,
+  onSave,
+  inverse,
+  noRelationType,
+}) {
   const validator = (body) => {
     const errors = {};
     if (!body?.relatedObjectId && !inverse) {
@@ -33,10 +50,7 @@ export default function RelationForm({ id, resourceType, relatedObjectTypes, dat
     }
     return errors;
   };
-  const relationTypeUrl = (relatedObjectTypes.length > 1)
-    ? `/relation-types?limit=500&filters[for][$in]=${relatedObjectTypes.join('&filters[for][$in]=')}`
-    : `/relation-types?limit=500&filters[for]=${relatedObjectTypes[0]}`;
-
+  const relationTypeUrl = relatedObjectTypes.length > 1 ? `/relation-types?limit=500&filters[for][$in]=${relatedObjectTypes.join('&filters[for][$in]=')}` : `/relation-types?limit=500&filters[for]=${relatedObjectTypes[0]}`;
   const { data: relationTypes } = useFetch(relationTypeUrl);
 
   const [showErrors, setShowErrors] = useState(false);
@@ -49,56 +63,91 @@ export default function RelationForm({ id, resourceType, relatedObjectTypes, dat
   const [resourceOptions, setResourceOptions] = useState([]);
   const [relatedObjectOptions, setRelatedObjectOptions] = useState([]);
   const [startDateOfficialTextOptions, setStartDateOfficialTextOptions] = useState([]);
-  const [endDateOfficialTextOptions, setEndDateOfficialTextOptions] = useState([]);
+  const [endDateOfficialTextOptions, setEndDateOfficialTextOptions] = useState(
+    [],
+  );
   const [isSearchingResource, setIsSearchingResource] = useState(false);
   const [isSearchingRelatedObject, setIsSearchingRelatedObject] = useState(false);
-  const [isSearchingStartDateOfficialText, setIsSearchingStartDateOfficialText] = useState(false);
+  const [
+    isSearchingStartDateOfficialText,
+    setIsSearchingStartDateOfficialText,
+  ] = useState(false);
   const [isSearchingEndDateOfficialText, setIsSearchingEndDateOfficialText] = useState(false);
 
-  const { form, updateForm, errors } = useForm(parseRelatedElement(data), validator);
+  const { form, updateForm, errors } = useForm(
+    parseRelatedElement(data),
+    validator,
+  );
 
   useEffect(() => {
     const getAutocompleteResult = async () => {
       setIsSearchingRelatedObject(true);
       const types = encodeURIComponent(relatedObjectTypes.join(','));
-      const response = await api.get(`/autocomplete?query=${relatedObjectQuery}&types=${types}`);
+      const response = await api.get(
+        `/autocomplete?query=${relatedObjectQuery}&types=${types}`,
+      );
       setRelatedObjectOptions(response.data?.data);
       setIsSearchingRelatedObject(false);
     };
-    if (relatedObjectQuery) { getAutocompleteResult(); } else { setRelatedObjectOptions([]); }
+    if (relatedObjectQuery) {
+      getAutocompleteResult();
+    } else {
+      setRelatedObjectOptions([]);
+    }
   }, [relatedObjectQuery, relatedObjectTypes]);
 
   useEffect(() => {
     const getAutocompleteResult = async () => {
       setIsSearchingResource(true);
-      const response = await api.get(`/autocomplete?query=${resourceQuery}&types=${resourceType}`);
+      const response = await api.get(
+        `/autocomplete?query=${resourceQuery}&types=${resourceType}`,
+      );
       setResourceOptions(response.data?.data);
       setIsSearchingResource(false);
     };
-    if (resourceQuery) { getAutocompleteResult(); } else { setResourceOptions([]); }
+    if (resourceQuery) {
+      getAutocompleteResult();
+    } else {
+      setResourceOptions([]);
+    }
   }, [resourceQuery, resourceType]);
 
   useEffect(() => {
     const getAutocompleteResult = async () => {
       setIsSearchingStartDateOfficialText(true);
-      const response = await api.get(`/autocomplete?query=${startDateOfficialTextQuery}&types=official-texts`);
+      const response = await api.get(
+        `/autocomplete?query=${startDateOfficialTextQuery}&types=official-texts`,
+      );
       setStartDateOfficialTextOptions(response.data?.data);
       setIsSearchingStartDateOfficialText(false);
     };
-    if (startDateOfficialTextQuery) { getAutocompleteResult(); } else { setStartDateOfficialTextOptions([]); }
+    if (startDateOfficialTextQuery) {
+      getAutocompleteResult();
+    } else {
+      setStartDateOfficialTextOptions([]);
+    }
   }, [startDateOfficialTextQuery]);
 
   useEffect(() => {
     const getAutocompleteResult = async () => {
       setIsSearchingEndDateOfficialText(true);
-      const response = await api.get(`/autocomplete?query=${endDateOfficialTextQuery}&types=official-texts`);
+      const response = await api.get(
+        `/autocomplete?query=${endDateOfficialTextQuery}&types=official-texts`,
+      );
       setEndDateOfficialTextOptions(response.data?.data);
       setIsSearchingEndDateOfficialText(false);
     };
-    if (endDateOfficialTextQuery) { getAutocompleteResult(); } else { setEndDateOfficialTextOptions([]); }
+    if (endDateOfficialTextQuery) {
+      getAutocompleteResult();
+    } else {
+      setEndDateOfficialTextOptions([]);
+    }
   }, [endDateOfficialTextQuery]);
 
-  const handleEndDateOfficialTextSelect = ({ id: endDateOfficialTextId, name }) => {
+  const handleEndDateOfficialTextSelect = ({
+    id: endDateOfficialTextId,
+    name,
+  }) => {
     updateForm({ endDateOfficialTextName: name, endDateOfficialTextId });
     setEndDateOfficialTextQuery('');
     setEndDateOfficialTextOptions([]);
@@ -109,13 +158,19 @@ export default function RelationForm({ id, resourceType, relatedObjectTypes, dat
     setEndDateOfficialTextOptions([]);
   };
 
-  const handleStartDateOfficialTextSelect = ({ id: startDateOfficialTextId, name }) => {
+  const handleStartDateOfficialTextSelect = ({
+    id: startDateOfficialTextId,
+    name,
+  }) => {
     updateForm({ startDateOfficialTextName: name, startDateOfficialTextId });
     setStartDateOfficialTextQuery('');
     setStartDateOfficialTextOptions([]);
   };
   const handleStartDateOfficialTextOptionsUnselect = () => {
-    updateForm({ startDateOfficialTextName: null, startDateOfficialTextId: null });
+    updateForm({
+      startDateOfficialTextName: null,
+      startDateOfficialTextId: null,
+    });
     setStartDateOfficialTextQuery('');
     setStartDateOfficialTextOptions([]);
   };
@@ -148,7 +203,7 @@ export default function RelationForm({ id, resourceType, relatedObjectTypes, dat
     return onSave(body, id);
   };
 
-  const relationTypesOptions = (relationTypes?.data)
+  const relationTypesOptions = relationTypes?.data
     ? [
       { label: 'Appartient à la liste', value: null },
       ...relationTypes.data
@@ -166,43 +221,47 @@ export default function RelationForm({ id, resourceType, relatedObjectTypes, dat
           createdAt={data.createdAt}
         />
         <Row>
-          {inverse
-            ? (
-              <Col n="12" className="fr-pb-2w">
-                <SearchBar
-                  buttonLabel="Rechercher"
-                  value={resourceQuery || ''}
-                  label="Objet Paysage à lier"
-                  hint="Rechercher dans les objects Paysage"
-                  required
-                  scope={form.resourceName}
-                  placeholder={form.resourceId ? '' : 'Rechercher...'}
-                  onChange={(e) => { updateForm({ resourceId: null }); setResourceQuery(e.target.value); }}
-                  options={resourceOptions}
-                  onSelect={handleResourceSelect}
-                  onDeleteScope={handleResourceUnselect}
-                  isSearching={isSearchingResource}
-                />
-              </Col>
-            )
-            : (
-              <Col n="12" className="fr-pb-2w">
-                <SearchBar
-                  buttonLabel="Rechercher"
-                  value={relatedObjectQuery || ''}
-                  label="Objet Paysage à lier"
-                  hint="Rechercher dans les objects Paysage"
-                  required
-                  scope={form.relatedObjectName}
-                  placeholder={form.relatedObjectId ? '' : 'Rechercher...'}
-                  onChange={(e) => { updateForm({ relatedObjectId: null }); setRelatedObjectQuery(e.target.value); }}
-                  options={relatedObjectOptions}
-                  onSelect={handleRelatedObjectSelect}
-                  onDeleteScope={handleRelatedObjectUnselect}
-                  isSearching={isSearchingRelatedObject}
-                />
-              </Col>
-            )}
+          {inverse ? (
+            <Col n="12" className="fr-pb-2w">
+              <SearchBar
+                buttonLabel="Rechercher"
+                value={resourceQuery || ''}
+                label="Structure à lier"
+                hint="Rechercher dans les objets Paysage"
+                required
+                scope={form.resourceName}
+                placeholder={form.resourceId ? '' : 'Rechercher...'}
+                onChange={(e) => {
+                  updateForm({ resourceId: null });
+                  setResourceQuery(e.target.value);
+                }}
+                options={resourceOptions}
+                onSelect={handleResourceSelect}
+                onDeleteScope={handleResourceUnselect}
+                isSearching={isSearchingResource}
+              />
+            </Col>
+          ) : (
+            <Col n="12" className="fr-pb-2w">
+              <SearchBar
+                buttonLabel="Rechercher"
+                value={relatedObjectQuery || ''}
+                label="Objet Paysage à lier"
+                hint="Rechercher dans les objets Paysage"
+                required
+                scope={form.relatedObjectName}
+                placeholder={form.relatedObjectId ? '' : 'Rechercher...'}
+                onChange={(e) => {
+                  updateForm({ relatedObjectId: null });
+                  setRelatedObjectQuery(e.target.value);
+                }}
+                options={relatedObjectOptions}
+                onSelect={handleRelatedObjectSelect}
+                onDeleteScope={handleRelatedObjectUnselect}
+                isSearching={isSearchingRelatedObject}
+              />
+            </Col>
+          )}
           {!noRelationType && (
             <Col n="12" className="fr-pb-2w">
               <SearchableSelect
@@ -211,8 +270,12 @@ export default function RelationForm({ id, resourceType, relatedObjectTypes, dat
                 selected={form.relationTypeId}
                 onChange={(relationTypeId) => updateForm({ relationTypeId })}
                 required
-                message={(showErrors && errors.relationTypeId) ? errors.relationTypeId : null}
-                messageType={(showErrors && errors.relationTypeId) ? 'error' : ''}
+                message={
+                  showErrors && errors.relationTypeId
+                    ? errors.relationTypeId
+                    : null
+                }
+                messageType={showErrors && errors.relationTypeId ? 'error' : ''}
               />
             </Col>
           )}
@@ -220,7 +283,7 @@ export default function RelationForm({ id, resourceType, relatedObjectTypes, dat
             <DateInput
               value={form.startDate || ''}
               label="Date de début"
-              onDateChange={((v) => updateForm({ startDate: v }))}
+              onDateChange={(v) => updateForm({ startDate: v })}
             />
           </Col>
           <Col n="12" className="fr-pb-2w">
@@ -231,7 +294,10 @@ export default function RelationForm({ id, resourceType, relatedObjectTypes, dat
               hint="Rechercher et sélectionner un texte officiel"
               scope={form.startDateOfficialTextName}
               placeholder={form.startDateOfficialTextId ? '' : 'Rechercher...'}
-              onChange={(e) => { updateForm({ startDateOfficialTextId: null }); setStartDateOfficialTextQuery(e.target.value); }}
+              onChange={(e) => {
+                updateForm({ startDateOfficialTextId: null });
+                setStartDateOfficialTextQuery(e.target.value);
+              }}
               options={startDateOfficialTextOptions}
               onSelect={handleStartDateOfficialTextSelect}
               onDeleteScope={handleStartDateOfficialTextOptionsUnselect}
@@ -242,7 +308,7 @@ export default function RelationForm({ id, resourceType, relatedObjectTypes, dat
             <DateInput
               value={form.endDate || ''}
               label="Date de fin"
-              onDateChange={((v) => updateForm({ endDate: v }))}
+              onDateChange={(v) => updateForm({ endDate: v })}
             />
           </Col>
           <Col n="12" className="fr-pb-2w">
@@ -253,7 +319,10 @@ export default function RelationForm({ id, resourceType, relatedObjectTypes, dat
               hint="Rechercher et sélectionner un texte officiel"
               scope={form.endDateOfficialTextName}
               placeholder={form.endDateOfficialTextId ? '' : 'Rechercher...'}
-              onChange={(e) => { updateForm({ endDateOfficialTextId: null }); setEndDateOfficialTextQuery(e.target.value); }}
+              onChange={(e) => {
+                updateForm({ endDateOfficialTextId: null });
+                setEndDateOfficialTextQuery(e.target.value);
+              }}
               options={endDateOfficialTextOptions}
               onSelect={handleEndDateOfficialTextSelect}
               onDeleteScope={handleEndDateOfficialTextOptionsUnselect}

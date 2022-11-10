@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import './scroll-to-top.css';
+import Button from '../button';
+import './scroll-to-top.scss';
 
 export default function ScrollToTop() {
   const [isVisible, setIsVisible] = useState(false);
@@ -28,9 +29,7 @@ export default function ScrollToTop() {
   return (
     <div className="scroll-top">
       {isVisible && (
-        <button type="button" onClick={scrollToTop}>
-          <i className="ri-arrow-up-circle-line" style={{ fontSize: 'x-large' }} />
-        </button>
+        <Button color="text" size="lg" tertiary rounded borderless icon="ri-arrow-up-circle-line" onClick={scrollToTop} />
       )}
     </div>
   );

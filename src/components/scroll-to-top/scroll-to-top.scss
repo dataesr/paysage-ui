@@ -1,16 +1,18 @@
 .scroll-top {
-    position: fixed;
+    background-color: transparent;
     bottom: 3em;
+    cursor: pointer;
+    position: fixed;
     right: 2em;
  }
   
   @media (max-width: 500px) {
     .scroll-top {
-      position: fixed;
-      bottom: 2em;
-      right: 1em;
       background-color: transparent;
+      bottom: 2em;
       font-size: 1.5em;
+      position: fixed;
+      right: 1em;
       z-index: 20;
     }
   }

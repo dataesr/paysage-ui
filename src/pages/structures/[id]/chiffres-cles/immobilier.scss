@@ -1,0 +1,189 @@
+.ges {
+  color: black;
+  font-size: 12px;
+  line-height: 1.15;
+  margin-top: 5px;
+  width: 300px;
+
+  .letter {
+    height: 25px;
+    margin-bottom: 0.4em;
+    overflow: hidden;
+    width: 100%;
+
+    .line {
+      float: left;
+      height: 25px;
+      line-height: 25px;
+      padding-left: 0.4em;
+      position: relative;
+
+      em {
+        font-size: 0.6em;
+        line-height: 25px;
+      }
+
+      strong {
+        bottom: 0;
+        display: block;
+        font-size: 1em;
+        font-weight: bolder;
+        position: absolute;
+        right: 0;
+        z-index: 1;
+      }
+
+      &:after {
+        content: " ";
+        display: block;
+        height: 19.2307692308px;
+        position: absolute;
+        right: -1.10em;
+        top: 0em;
+        transform: rotate(-45deg);
+        transform-origin: bottom;
+        width: 19.2307692308px;
+        z-index: 0;
+      }
+    }
+
+    .sticker {
+      display: none;
+      float: right;
+      font-size: 1.3em;
+      font-weight: bold;
+      height: 25px;
+      line-height: 25px;
+      position: relative;
+      text-align: center;
+      width: 2.5em;
+    }
+  }
+}
+
+.ges-undefined {
+  color: var(--text-default-grey);
+  width: 100%;
+
+  .letter .line {
+    width: 100%;
+
+    em {
+      display: none;
+    }
+
+    strong {
+      font-weight: normal;
+      left: 0;
+    }
+
+    &::after {
+      display: none;
+    }
+  }
+}
+
+.ges-a {
+  .letter .line {
+    background-color: #34B659;
+    width: 15%;
+
+    &:after {
+      background-color: #34B659;
+    }
+  }
+
+  .sticker {
+    background-color: #34B659;
+  }
+}
+
+.ges-b {
+  .letter .line {
+    background-color: #51BF4C;
+    width: 20%;
+
+    &:after {
+      background-color: #51BF4C;
+    }
+  }
+
+  .sticker {
+    background-color: #51BF4C;
+  }
+}
+
+.ges-c {
+  .letter .line {
+    background-color: #A7D934;
+    width: 25%;
+
+    &:after {
+      background-color: #A7D934;
+    }
+  }
+
+  .sticker {
+    background-color: #A7D934;
+  }
+}
+
+.ges-d {
+  .letter .line {
+    background-color: #EDEE25;
+    width: 30%;
+
+    &:after {
+      background-color: #EDEE25;
+    }
+  }
+
+  .sticker {
+    background-color: #EDEE25;
+  }
+}
+
+.ges-e {
+  .letter .line {
+    background-color: #F9AE1D;
+    width: 35%;
+
+    &:after {
+      background-color: #F9AE1D;
+    }
+  }
+
+  .sticker {
+    background-color: #F9AE1D;
+  }
+}
+
+.ges-f {
+  .letter .line {
+    background-color: #F36326;
+    width: 40%;
+
+    &:after {
+      background-color: #F36326;
+    }
+  }
+
+  .sticker {
+    background-color: #F36326;
+  }
+}
+
+.ges-g {
+  .letter .line {
+    background-color: #EE2332;
+    width: 45%;
+
+    &:after {
+      background-color: #EE2332;
+    }
+  }
+
+  .sticker {
+    background-color: #EE2332;
+  }
+}

@@ -10,19 +10,19 @@ import {
   BlocModal,
   BlocTitle,
 } from '../../bloc';
-import api from '../../../utils/api';
-import useFetch from '../../../hooks/useFetch';
-import useUrl from '../../../hooks/useUrl';
-import useNotice from '../../../hooks/useNotice';
+import KeyValueCard from '../../card/key-value-card';
 import useEnums from '../../../hooks/useEnums';
+import useFetch from '../../../hooks/useFetch';
+import useNotice from '../../../hooks/useNotice';
+import useUrl from '../../../hooks/useUrl';
+import api from '../../../utils/api';
+import { getTvaIntraFromSiren } from '../../../utils/get-tva-intra';
 import {
   deleteError,
+  deleteSuccess,
   saveError,
   saveSuccess,
-  deleteSuccess,
 } from '../../../utils/notice-contents';
-import KeyValueCard from '../../card/key-value-card';
-import { getTvaIntraFromSiren } from '../../../utils/get-tva-intra';
 
 export default function IdentifiersComponent() {
   const { notice } = useNotice();
@@ -76,11 +76,8 @@ export default function IdentifiersComponent() {
   const getLink = (el) => {
     let linkTo = '';
     switch (el.type) {
-    case 'Wikidata':
-      linkTo = `https://wikidata.org/wiki/${el.value}`;
-      break;
-    case 'Wikidata JSON':
-      linkTo = `https://www.wikidata.org/wiki/Special:EntityData/${el.value}.json`;
+    case 'ALId':
+      linkTo = `https://dgesip-annelis.adc.education.fr/etablissement/${el.value}`;
       break;
     case 'idRef':
       linkTo = `https://www.idref.fr/${el.value}`;
@@ -145,8 +142,11 @@ export default function IdentifiersComponent() {
     case 'UNIVD':
       linkTo = `https://univ-droit.fr/universitaires/${el.value}`;
       break;
-    case 'ALId':
-      linkTo = `https://dgesip-annelis.adc.education.fr/etablissement/${el.value}`;
+    case 'Wikidata':
+      linkTo = `https://wikidata.org/wiki/${el.value}`;
+      break;
+    case 'Wikidata JSON':
+      linkTo = `https://www.wikidata.org/wiki/Special:EntityData/${el.value}.json`;
       break;
     default:
     }

@@ -19,7 +19,7 @@ export default function GroupsPage() {
           <Button size="sm" secondary icon="ri-add-line">Créer un nouveau groupe</Button>
         </Row>
         <Row className="fr-pb-5w">
-          <Col><Text>blah blah blah</Text></Col>
+          <Col><Text> </Text></Col>
         </Row>
       </Container>
     </>
