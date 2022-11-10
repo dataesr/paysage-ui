@@ -21,9 +21,9 @@ import { parseRelatedElement } from '../../../utils/parse-related-element';
 import PaysageBlame from '../../paysage-blame';
 
 function sanitize(form) {
-  const fields = ['resourceId', 'relatedObjectId', 'relationTypeId', 'relationsGroupId', 'relationTag',
+  const fields = ['resourceId', 'relatedObjectId', 'relationTypeId', 'relationTag',
     'startDateOfficialTextId', 'endDateOfficialTextId', 'startDate', 'endDate', 'mandateTemporary', 'mandateReason',
-    'mandateEmail', 'mandatePosition', 'mandateSpecifications'];
+    'mandateEmail', 'mandatePosition', 'mandatePrecision'];
   const body = {};
   Object.keys(form).forEach((key) => { if (fields.includes(key)) { body[key] = form[key]; } });
   return body;
