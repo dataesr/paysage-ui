@@ -135,13 +135,13 @@ function User({
           <Container fluid>
             <Row>
               <Col n="12">
-                <Title as="h2" look="h6">{`Modifier le role de ${firstName} ${lastName}`}</Title>
+                <Title as="h2" look="h6">{`Modifier le rôle de ${firstName} ${lastName}`}</Title>
               </Col>
             </Row>
             <Row gutters alignItems="bottom">
               <Col n="12 md-6">
                 <Select
-                  label="Séléctionnez un role"
+                  label="Sélectionner un rôle"
                   selected={newRole}
                   onChange={(e) => { setNewRole(e.target.value); }}
                   options={roleOptions}
@@ -153,7 +153,7 @@ function User({
                     className="fr-mb-0"
                     onClick={() => handleEditUser(id, newRole)}
                   >
-                    Changer le role
+                    Changer le rôle
                   </Button>
                 </ButtonGroup>
               </Col>
@@ -190,7 +190,7 @@ function User({
             <Row gutters alignItems="bottom">
               <Col n="12 md-6">
                 <Select
-                  label="Séléctionnez un groupe"
+                  label="Sélectionner un groupe"
                   selected={newGroup || ''}
                   onChange={(e) => { setNewGroup(e.target.value); }}
                   options={groupOptions}
@@ -209,7 +209,7 @@ function User({
             </Row>
             <hr />
             <Title as="h2" look="h6">{`Désactiver le compte de ${firstName} ${lastName}`}</Title>
-            <Text>En désactivant un utilisateur, il sera marqué comme supprimé et ne pourra plus se connecter à paysage.</Text>
+            <Text>En désactivant un utilisateur, il sera marqué comme supprimé et ne pourra plus se connecter à Paysage.</Text>
             <ButtonGroup isInlineFrom="md">
               <Button
                 secondary
@@ -311,7 +311,7 @@ export default function AdminUsersPage() {
     .catch(() => toastError());
 
   const groupes = groups?.data?.map((group) => ({ value: group.id, label: group.acronym || group.name })) || [];
-  const groupOptions = [{ value: null, label: 'Séléctionnez un groupe' }, ...groupes];
+  const groupOptions = [{ value: null, label: 'Sélectionner un groupe' }, ...groupes];
 
   return (
     <Container>
