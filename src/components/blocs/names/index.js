@@ -1,8 +1,5 @@
 import { useState } from 'react';
 import {
-  Card,
-  CardDescription,
-  CardTitle,
   ModalContent,
   ModalTitle,
 } from '@dataesr/react-dsfr';
