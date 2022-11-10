@@ -14,11 +14,10 @@ const icons = {
   structures: 'ri-building-line',
   persons: 'ri-user-3-line',
   categories: 'ri-price-tag-3-line',
-  'legal-categories': 'ri-bookmark-line',
   terms: 'ri-hashtag',
   prices: 'ri-award-line',
-  'official-texts': 'ri-git-repository-line',
   projects: 'ri-booklet-line',
+  'official-texts': 'ri-git-repository-line',
 };
 
 const getDescription = (item) => {
@@ -83,7 +82,7 @@ SearchResults.defaultProps = {
   data: null,
 };
 
-const countTypes = 'categories%2Clegal%2Dcategories%2Cofficial%2Dtexts%2Cpersons%2Cprices%2Cprojects%2Cstructures%2Cterms%2Cusers';
+const countTypes = 'categories%2Cofficial%2Dtexts%2Cpersons%2Cprices%2Cprojects%2Cstructures%2Cterms';
 
 export default function SearchPage() {
   useHashScroll();
@@ -96,7 +95,7 @@ export default function SearchPage() {
   const pathnameSplitted = pathname.split('/');
   const type = pathnameSplitted[pathnameSplitted.length - 1];
   const { counts } = useSearch(countTypes, query, 0);
-  const { data, error, isLoading } = useSearch(getTypeFromUrl(type), query, itemsPerPage, start);
+  const { data, error, isLoading } = useSearch(getTypeFromUrl(type) || countTypes, query, itemsPerPage, start);
   const countAll = Object.values(counts).reduce((accumulator, value) => accumulator + value, 0);
   const resultsCount = type === 'rechercher' ? countAll : (counts?.[getTypeFromUrl(type)] || 0);
   const pageCount = Math.ceil(resultsCount / itemsPerPage);
@@ -159,21 +158,11 @@ export default function SearchPage() {
                 <Badge type={(type === 'categories') ? 'info' : 'new'} text={counts.categories || '0'} />
               </Row>
             </SideMenuLink>
-            <SideMenuLink className={(type === 'categories-juridiques') ? 'sidemenu__item--active' : ''} asLink={<RouterLink to={`categories-juridiques?query=${query}&page=1`} />}>
-              <Row alignItems="top">
-                <Text spacing="pr-2v" bold>
-                  <Icon name="ri-bookmark-line" size="1x" />
-                  Cat. juridiques
-                </Text>
-                <Badge type={(type === 'categories-juridiques') ? 'info' : 'new'} text={counts['legal-categories'] || '0'} />
-              </Row>
-            </SideMenuLink>
             <SideMenuLink className={(type === 'termes') ? 'sidemenu__item--active' : ''} asLink={<RouterLink to={`termes?query=${query}&page=1`} />}>
               <Row alignItems="top">
                 <Text spacing="pr-2v" bold>
                   <Icon name="ri-hashtag" size="1x" />
                   Termes
-
                 </Text>
                 <Badge type={(type === 'termes') ? 'info' : 'new'} text={counts.terms || '0'} />
               </Row>
@@ -183,19 +172,8 @@ export default function SearchPage() {
                 <Text spacing="pr-2v" bold>
                   <Icon name="ri-award-line" size="1x" />
                   Prix scientifiques
-
                 </Text>
                 <Badge type={(type === 'prix') ? 'info' : 'new'} text={counts.prices || '0'} />
-              </Row>
-            </SideMenuLink>
-            <SideMenuLink className={(type === 'textes-officiels') ? 'sidemenu__item--active' : ''} asLink={<RouterLink to={`textes-officiels?query=${query}&page=1`} />}>
-              <Row alignItems="top">
-                <Text spacing="pr-2v" bold>
-                  <Icon name="ri-git-repository-line" size="1x" />
-                  Textes officiels
-
-                </Text>
-                <Badge type={(type === 'textes-officiels') ? 'info' : 'new'} text={counts['official-texts'] || '0'} />
               </Row>
             </SideMenuLink>
             <SideMenuLink className={(type === 'projets') ? 'sidemenu__item--active' : ''} asLink={<RouterLink to={`projets?query=${query}&page=1`} />}>
@@ -203,20 +181,19 @@ export default function SearchPage() {
                 <Text spacing="pr-2v" bold>
                   <Icon name="ri-booklet-line" size="1x" />
                   Projets
-
                 </Text>
                 <Badge type={(type === 'projets') ? 'info' : 'new'} text={counts.projects || '0'} />
               </Row>
             </SideMenuLink>
-            {/* <SideMenuLink className={(type === 'utilisateurs') ? 'sidemenu__item--active' : ''} asLink={<RouterLink to={`utilisateurs?query=${query}&page=1`} />}>
+            <SideMenuLink className={(type === 'textes-officiels') ? 'sidemenu__item--active' : ''} asLink={<RouterLink to={`textes-officiels?query=${query}&page=1`} />}>
               <Row alignItems="top">
-              <Text spacing="pr-2v" bold>
-                <Icon name="ri-eye-2-line" size="1x" />
-                Utilisateurs
-              </Text>
-                <Badge type={(type === 'utilisateurs') ? 'info' : 'new'} text={counts.users || '0'} />
+                <Text spacing="pr-2v" bold>
+                  <Icon name="ri-git-repository-line" size="1x" />
+                  Textes officiels
+                </Text>
+                <Badge type={(type === 'textes-officiels') ? 'info' : 'new'} text={counts['official-texts'] || '0'} />
               </Row>
-            </SideMenuLink> */}
+            </SideMenuLink>
           </SideMenu>
         </Col>
         <Col n="12 md-9">
