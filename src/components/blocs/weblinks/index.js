@@ -84,12 +84,12 @@ export default function Weblinks({ types, title }) {
     let rxIcon = '';
 
     switch (iconType) {
-      case 'Facebook':
-        rxIcon = 'ri-facebook-fill';
-        break;
-      default:
-        rxIcon = 'ri-global-line';
-        break;
+    case 'Facebook':
+      rxIcon = 'ri-facebook-fill';
+      break;
+    default:
+      rxIcon = 'ri-global-line';
+      break;
     }
 
     return (
