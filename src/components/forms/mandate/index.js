@@ -179,7 +179,7 @@ export default function MandateForm({ id, resourceType, relatedObjectTypes, data
                 <SearchBar
                   buttonLabel="Rechercher"
                   value={resourceQuery || ''}
-                  label="Objet Paysage à lier"
+                  label="Structure à lier"
                   hint="Rechercher dans les objets Paysage"
                   required
                   scope={form.resourceName}
