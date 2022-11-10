@@ -6,7 +6,7 @@ import Footer from './footer';
 import PageBorder from './page-border';
 import useAuth from '../../hooks/useAuth';
 import Spinner from '../spinner';
-import ScrollToTop from '../scroll-to-top/scroll-to-top';
+import ScrollToTop from '../scroll-to-top';
 
 import './layout.scss';
 

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Button from '../button';
-import './scroll-to-top.scss';
+import styles from './styles.module.scss';
 
 export default function ScrollToTop() {
   const [isVisible, setIsVisible] = useState(false);
@@ -26,11 +26,15 @@ export default function ScrollToTop() {
     return () => window.removeEventListener('scroll', toggleVisibility);
   }, []);
 
+  if (!isVisible) return null;
   return (
-    <div className="scroll-top">
-      {isVisible && (
-        <Button color="text" size="lg" tertiary rounded borderless icon="ri-arrow-up-circle-line" onClick={scrollToTop} />
-      )}
-    </div>
+    <Button
+      className={styles['scroll-top']}
+      title="Revenir en haut de la page"
+      size="lg"
+      rounded
+      icon="ri-arrow-up-line"
+      onClick={scrollToTop}
+    />
   );
 }
