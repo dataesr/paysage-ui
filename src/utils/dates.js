@@ -1,3 +1,14 @@
+const dateOptions = {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+};
+const timeOptions = {
+  hour: 'numeric',
+  minute: 'numeric',
+  second: 'numeric',
+};
+
 export function validDate(d) {
   return /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$/g.test(d);
 }
@@ -9,22 +20,17 @@ export function fromApproximativeDate(d) {
   return d;
 }
 
-export const dateOptions = {
-  year: 'numeric',
-  month: 'long',
-  day: 'numeric',
-};
-export const timeOptions = {
-  hour: 'numeric',
-  minute: 'numeric',
-  second: 'numeric',
-};
-export function toString(date, time = false) {
-  if (time) return new Date(date).toLocaleString('fr-FR', { ...dateOptions, timeOptions });
-  if (date?.length >= 10) return new Date(date).toLocaleDateString('fr-FR', dateOptions);
-  if (date?.length === 7) return new Date(date).toLocaleDateString('fr-FR', { year: dateOptions.year, month: dateOptions.month });
-  if (date?.length === 4) return new Date(date).toLocaleDateString('fr-FR', { year: dateOptions.year });
-  return null;
+export function toString(date, time = false, isCompact = false) {
+  let options = dateOptions;
+  if (time) options = { ...options, ...timeOptions };
+  if (isCompact) options.month = 'numeric';
+  if (date?.length === 4) {
+    delete options.month;
+    delete options.day;
+  } else if (date?.length === 7) {
+    delete options.day;
+  }
+  return new Date(date).toLocaleDateString('fr-FR', options);
 }
 
 export function reverseDate(d) {

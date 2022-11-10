@@ -11,13 +11,13 @@ import KeyValueCard from '../../../components/card/key-value-card';
 import Spinner from '../../../components/spinner';
 import useFetch from '../../../hooks/useFetch';
 import useHashScroll from '../../../hooks/useHashScroll';
-import { dateOptions } from '../../../utils/dates';
+import { toString } from '../../../utils/dates';
 import { PROJET_CONTACT, PROJET_PARTICIPATION } from '../../../utils/relations-tags';
 
 export default function ProjectPresentationPage() {
   useHashScroll();
   const { id } = useParams();
-  const { data, isLoading, error } = useFetch(`/projects/${id}`);
+  const { data, error, isLoading } = useFetch(`/projects/${id}`);
 
   if (isLoading) return <Row className="fr-my-2w flex--space-around"><Spinner /></Row>;
   if (error) return <>Erreur...</>;
@@ -36,7 +36,7 @@ export default function ProjectPresentationPage() {
               <KeyValueCard
                 className="card-projects"
                 cardKey="Date de début"
-                cardValue={data?.startDate && new Date(data.startDate).toLocaleDateString('fr-FR', dateOptions)}
+                cardValue={data?.startDate && toString(data.startDate)}
                 icon="ri-calendar-line"
               />
             </Col>
@@ -44,7 +44,7 @@ export default function ProjectPresentationPage() {
               <KeyValueCard
                 className="card-projects"
                 cardKey="Date de fin"
-                cardValue={data?.endDate && new Date(data.endDate).toLocaleDateString('fr-FR', dateOptions)}
+                cardValue={data?.endDate && toString(data.endDate)}
                 icon="ri-calendar-line"
               />
             </Col>

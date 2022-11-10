@@ -226,8 +226,13 @@ export default function RelationForm({
               <SearchBar
                 buttonLabel="Rechercher"
                 value={resourceQuery || ''}
+<<<<<<< HEAD
                 label="Structure à lier"
                 hint="Rechercher dans les objects Paysage"
+=======
+                label="Objet Paysage à lier"
+                hint="Rechercher dans les objets Paysage"
+>>>>>>> fe2ef2438a6a2f3b763fc2f8fb86c488cd0fd904
                 required
                 scope={form.resourceName}
                 placeholder={form.resourceId ? '' : 'Rechercher...'}
@@ -247,7 +252,7 @@ export default function RelationForm({
                 buttonLabel="Rechercher"
                 value={relatedObjectQuery || ''}
                 label="Objet Paysage à lier"
-                hint="Rechercher dans les objects Paysage"
+                hint="Rechercher dans les objets Paysage"
                 required
                 scope={form.relatedObjectName}
                 placeholder={form.relatedObjectId ? '' : 'Rechercher...'}
