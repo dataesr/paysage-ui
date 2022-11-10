@@ -50,7 +50,9 @@ export default function RelationForm({
     }
     return errors;
   };
-  const relationTypeUrl = relatedObjectTypes.length > 1 ? `/relation-types?limit=500&filters[for][$in]=${relatedObjectTypes.join('&filters[for][$in]=')}` : `/relation-types?limit=500&filters[for]=${relatedObjectTypes[0]}`;
+  const relationTypeUrl = relatedObjectTypes.length > 1
+    ? `/relation-types?limit=500&filters[for][$in]=${relatedObjectTypes.join('&filters[for][$in]=')}`
+    : `/relation-types?limit=500&filters[for]=${relatedObjectTypes[0]}`;
   const { data: relationTypes } = useFetch(relationTypeUrl);
 
   const [showErrors, setShowErrors] = useState(false);
