@@ -226,7 +226,7 @@ export default function RelationForm({
               <SearchBar
                 buttonLabel="Rechercher"
                 value={resourceQuery || ''}
-                label="Objet Paysage à lier"
+                label="Structure à lier"
                 hint="Rechercher dans les objects Paysage"
                 required
                 scope={form.resourceName}
