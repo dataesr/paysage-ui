@@ -4,6 +4,7 @@ import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import useEditMode from '../../hooks/useEditMode';
 import { formatDescriptionDates, toString } from '../../utils/dates';
 import Button from '../button';
+import CopyButton from '../copy/copy-button';
 import styles from './styles.module.scss';
 
 function getRelationTypeLabel(gender = null) {
@@ -73,9 +74,10 @@ export default function RelationCard({ relation, inverse, onEdit }) {
           )}
           {relation.mandateEmail && (
             <div className={`fr-card__end ${styles['card-end']}`}>
-              <p className="fr-card__detail">
+              <p className="fr-card__detail flex flex--center">
                 <Icon name="ri-mail-line" size="1x" />
                 {relation.mandateEmail}
+                <CopyButton copyText={relation.mandateEmail} size="sm" />
               </p>
             </div>
           )}
