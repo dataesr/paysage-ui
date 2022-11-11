@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import useFetch from '../../../hooks/useFetch';
 import useUrl from '../../../hooks/useUrl';
 import { formatDescriptionDates, toString } from '../../../utils/dates';
+import { STRUCTURE_PREDECESSEUR } from '../../../utils/relations-tags';
 
 function HistoryCard({ creationDate, creationReason, closureDate, closureReason, creationOfficialText, closureOfficialText, predecessors, successors }) {
   const createReason = (creationReason && !['Non renseigné', 'autre', 'Création'].includes(creationReason)) && ` par ${creationReason.toLowerCase() }`;
@@ -106,8 +107,8 @@ export default function HistoriqueEtDates() {
   const { url, id } = useUrl('');
   const { data } = useFetch(url);
 
-  const { data: predecessors } = useFetch(`/relations?filters[relationTag]=predecesseurs&filters[resourceId]=${id}&limit=500`);
-  const { data: successors } = useFetch(`/relations?filters[relationTag]=predecesseurs&filters[relatedObjectId]=${id}&limit=500`);
+  const { data: predecessors } = useFetch(`/relations?filters[relationTag]=${STRUCTURE_PREDECESSEUR}&filters[resourceId]=${id}&limit=500`);
+  const { data: successors } = useFetch(`/relations?filters[relationTag]=${STRUCTURE_PREDECESSEUR}&filters[relatedObjectId]=${id}&limit=500`);
   if (!data?.id) return null;
   return <Row><Col n="12"><HistoryCard {...data} predecessors={predecessors} successors={successors} /></Col></Row>;
 }
