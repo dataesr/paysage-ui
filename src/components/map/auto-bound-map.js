@@ -29,6 +29,9 @@ SetMap.propTypes = {
 
 export default function Map({ height, markers, onMarkerDragEnd, width }) {
   const eventHandlers = useMemo(() => ({ dragend(e) { return onMarkerDragEnd(e); } }), [onMarkerDragEnd]);
+  const theme = (window.localStorage.getItem('prefers-color-scheme') === 'dark')
+    ? 'dark'
+    : 'sunny';
   return (
     <MapContainer
       attributionControl
@@ -39,7 +42,7 @@ export default function Map({ height, markers, onMarkerDragEnd, width }) {
     >
       <TileLayer
         attribution="<a href='https://www.jawg.io' target='_blank'>&copy; Jawg</a>"
-        url="https://tile.jawg.io/jawg-sunny/{z}/{x}/{y}.png?access-token=5V4ER9yrsLxoHQrAGQuYNu4yWqXNqKAM6iaX5D1LGpRNTBxvQL3enWXpxMQqTrY8"
+        url={`https://tile.jawg.io/jawg-${theme}/{z}/{x}/{y}.png?access-token=5V4ER9yrsLxoHQrAGQuYNu4yWqXNqKAM6iaX5D1LGpRNTBxvQL3enWXpxMQqTrY8`}
       />
       {markers.map((marker) => (
         <Marker draggable={!!onMarkerDragEnd} eventHandlers={eventHandlers} key={marker.latLng} position={marker.latLng}>
