@@ -212,7 +212,7 @@ export default function LocalisationForm({ id, data, onDelete, onSave }) {
           </Col>
           <Col n="12 md-3">
             <TextInput
-              label="Commune"
+              label="Localité"
               value={form.locality}
               onChange={(e) => updateForm({ locality: e.target.value })}
             />
