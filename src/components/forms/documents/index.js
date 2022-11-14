@@ -14,7 +14,7 @@ import useAuth from '../../../hooks/useAuth';
 function validate(body) {
   const validationErrors = {};
   if (!body.title) { validationErrors.title = "Le titre de l'évènement est obligatoire."; }
-  if (!body.startDate) { validationErrors.eventDate = 'Une date est obligatoire.'; }
+  if (!body.startDate) { validationErrors.startDate = 'Une date est obligatoire.'; }
   if (!body.documentTypeId) { validationErrors.type = 'Le type est obligatoire.'; }
   if (!body.files?.length) { validationErrors.files = 'Un fichier est obligatoire'; }
   return validationErrors;
@@ -158,7 +158,6 @@ export default function DocumentsForm({ id, data, onSave, onDelete }) {
           </Col>
           <Col n="12">
             <DateInput
-              required
               value={form.endDate || ''}
               label="Date de fin de validité"
               onDateChange={((v) => updateForm({ endDate: v }))}
