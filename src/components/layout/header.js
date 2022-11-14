@@ -21,6 +21,7 @@ import useAuth from '../../hooks/useAuth';
 import useDebounce from '../../hooks/useDebounce';
 import SearchBar from '../search-bar';
 import api from '../../utils/api';
+import { SEARCH_TYPES } from '../../utils/constants';
 
 export default function Header() {
   const { pathname } = useLocation();
@@ -40,7 +41,7 @@ export default function Header() {
     const getAutocompleteResult = async () => {
       setIsSearching(true);
       const response = await api.get(
-        `/autocomplete?query=${debouncedQuery}&limit=10`,
+        `/autocomplete?query=${debouncedQuery}&limit=10&types=${SEARCH_TYPES}`,
       );
       setOptions(response.data?.data);
       setIsSearching(false);

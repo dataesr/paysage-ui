@@ -9,6 +9,7 @@ import { formatDescriptionDates } from '../utils/dates';
 import { capitalize } from '../utils/strings';
 import { getName } from '../utils/structures';
 import { getTypeFromUrl, getUrlFromType } from '../utils/types-url-mapper';
+import { SEARCH_TYPES } from '../utils/constants';
 
 const icons = {
   structures: 'ri-building-line',
@@ -82,8 +83,6 @@ SearchResults.defaultProps = {
   data: null,
 };
 
-const countTypes = 'categories%2Cofficial%2Dtexts%2Cpersons%2Cprices%2Cprojects%2Cstructures%2Cterms';
-
 export default function SearchPage() {
   useHashScroll();
   const { pathname } = useLocation();
@@ -94,8 +93,8 @@ export default function SearchPage() {
   const start = itemsPerPage * (currentPage - 1);
   const pathnameSplitted = pathname.split('/');
   const type = pathnameSplitted[pathnameSplitted.length - 1];
-  const { counts } = useSearch(countTypes, query, 0);
-  const { data, error, isLoading } = useSearch(getTypeFromUrl(type) || countTypes, query, itemsPerPage, start);
+  const { counts } = useSearch(SEARCH_TYPES, query, 0);
+  const { data, error, isLoading } = useSearch(getTypeFromUrl(type) || SEARCH_TYPES, query, itemsPerPage, start);
   const countAll = Object.values(counts).reduce((accumulator, value) => accumulator + value, 0);
   const resultsCount = type === 'rechercher' ? countAll : (counts?.[getTypeFromUrl(type)] || 0);
   const pageCount = Math.ceil(resultsCount / itemsPerPage);

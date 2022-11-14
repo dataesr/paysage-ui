@@ -106,3 +106,5 @@ export const STRUCTURES_CLOSURE_REASONS = [
   'Succession',
   'autre',
 ];
+
+export const SEARCH_TYPES = 'categories%2Cofficial%2Dtexts%2Cpersons%2Cprices%2Cprojects%2Cstructures%2Cterms';
