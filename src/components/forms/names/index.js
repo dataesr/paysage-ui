@@ -109,7 +109,7 @@ export default function NameForm({ id, data, onDelete, onSave }) {
           <Col n="12">
             <TagInput
               label="Autres noms"
-              hint='Validez votre ajout avec la touche "Entrée"'
+              hint='Valider votre ajout avec la touche "Entrée"'
               tags={form.otherNames || []}
               onTagsChange={(tags) => updateForm({ otherNames: tags })}
             />

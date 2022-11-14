@@ -67,6 +67,6 @@ TagInput.propTypes = {
 };
 
 TagInput.defaultProps = {
-  hint: 'Validez votre ajout avec la touche "Entrée"',
+  hint: 'Valider votre ajout avec la touche "Entrée"',
   tags: [],
 };
