@@ -136,7 +136,7 @@ export default function IdentifiersComponent() {
     case 'WOS':
       linkTo = `https://publons.com/researcher/${el.value}/`;
       break;
-    case 'These':
+    case 'Numéro national de Thèse':
       linkTo = `http://www.theses.fr/${el.value}`;
       break;
     case 'UNIVD':
