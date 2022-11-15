@@ -47,7 +47,10 @@ export default function RelationCard({ relation, inverse, onEdit }) {
             </div>
           )}
           <p className={`fr-card__title ${styles[`${toPrintRelation.collection}-title`]}`}>
-            <RouterLink className="fr-text--lg" to={toPrintRelation?.href}>{toPrintRelation?.displayName}</RouterLink>
+            <RouterLink className="fr-text--lg" to={toPrintRelation?.href}>
+              {toPrintRelation?.displayName}
+              <Icon iconPosition="right" name="ri-arrow-right-line" />
+            </RouterLink>
           </p>
           {((relation.current !== undefined) && !relation.current) && (
             <div className={`fr-card__start ${styles['card-end']}`}>

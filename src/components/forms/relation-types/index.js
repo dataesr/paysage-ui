@@ -31,7 +31,7 @@ const objectNameMapper = [
 ];
 
 export default function RelationTypesForm({ id, data, onSave, onDelete }) {
-  const { form, updateForm, errors } = useForm({ priority: 99, ...data }, validate);
+  const { form, updateForm, errors } = useForm({ priority: 99, for: [], ...data }, validate);
   const [showErrors, setShowErrors] = useState(false);
 
   const handleSubmit = (e) => {
