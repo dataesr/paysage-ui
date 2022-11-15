@@ -5,7 +5,7 @@ import Weblinks from '../../../components/blocs/weblinks';
 import useHashScroll from '../../../hooks/useHashScroll';
 import LaureateForm from '../../../components/forms/laureate';
 import Wiki from '../../../components/blocs/wiki';
-import { LAUREAT } from '../../../utils/relations-tags';
+import { LAUREAT, PRIX_PORTEUR } from '../../../utils/relations-tags';
 
 export default function PricePresentationPage() {
   useHashScroll();
@@ -18,6 +18,14 @@ export default function PricePresentationPage() {
           <Icon className="ri-eye-2-line fr-ml-1w" />
         </Title>
       </Row>
+      <RelationsByTag
+        tag={PRIX_PORTEUR}
+        blocName="Structures décernant le prix"
+        resourceType="prices"
+        relatedObjectTypes={['structures']}
+        inverse
+        Form={LaureateForm}
+      />
       <RelationsByTag
         tag={LAUREAT}
         blocName="Lauréats"

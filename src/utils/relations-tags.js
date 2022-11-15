@@ -5,6 +5,7 @@ export const PERSONNE_CATEGORIE = 'personne-categorie';
 export const PERSONNE_TERME = 'personne-terme';
 export const PRIX_CATEGORIE = 'prix-categories';
 export const PRIX_TERME = 'prix-terme';
+export const PRIX_PORTEUR = 'prix-porteur';
 export const PROJET_CONTACT = 'projet-contact';
 export const PROJET_CATEGORIE = 'projet-categorie';
 export const PROJET_PARTICIPATION = 'projet-participation';
