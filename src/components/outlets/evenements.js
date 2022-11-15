@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Badge, BadgeGroup, Modal, ModalContent, ModalTitle, Row, Tag, TagGroup, Text } from '@dataesr/react-dsfr';
+import { Badge, BadgeGroup, Modal, ModalContent, ModalTitle, Row, Tag, Text } from '@dataesr/react-dsfr';
+import TagList from '../tag-list';
 import useEditMode from '../../hooks/useEditMode';
 import useFetch from '../../hooks/useFetch';
 import useHashScroll from '../../hooks/useHashScroll';
@@ -71,9 +72,9 @@ export default function AgendaOutlet() {
             <Text spacing="mb-1w" size="lead" bold>{event.title}</Text>
             {event.description && <Text spacing="mb-1w">{event.description}</Text>}
             {event.relatedObjects && (
-              <TagGroup>
+              <TagList>
                 {event.relatedObjects.map((related) => <Tag iconPosition="right" icon="ri-arrow-right-line" onClick={() => navigate(related.href)} key={related.id}>{related.displayName}</Tag>)}
-              </TagGroup>
+              </TagList>
             )}
             {(event?.files?.length > 0) && (
               <>

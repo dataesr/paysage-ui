@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Badge, BadgeGroup, Col, Modal, ModalContent, ModalTitle, Row, Tag, TagGroup, Text } from '@dataesr/react-dsfr';
+import { Badge, BadgeGroup, Col, Modal, ModalContent, ModalTitle, Row, Tag, Text } from '@dataesr/react-dsfr';
 import useEditMode from '../../hooks/useEditMode';
 import useFetch from '../../hooks/useFetch';
 import useHashScroll from '../../hooks/useHashScroll';
@@ -16,6 +16,7 @@ import Button from '../button';
 import { Download } from '../download';
 import DocumentForm from '../forms/documents';
 import useAuth from '../../hooks/useAuth';
+import TagList from '../tag-list';
 
 export default function DocumentsOutlet() {
   const { editMode } = useEditMode();
@@ -97,11 +98,11 @@ export default function DocumentsOutlet() {
                   <div className="fr-card__end">
                     {(event.relatedObjects.length > 1) && <Text spacing="mb-1w" bold>Autres objets associés :</Text>}
                     {event.relatedObjects && (
-                      <TagGroup>
+                      <TagList>
                         {event.relatedObjects
                           .filter((related) => (related.id !== resourceId))
                           .map((related) => <Tag iconPosition="right" icon="ri-arrow-right-line" onClick={() => navigate(related.href)} key={related.id}>{related.displayName}</Tag>)}
-                      </TagGroup>
+                      </TagList>
                     )}
                     {(event?.files?.length > 0) && (
                       <>
