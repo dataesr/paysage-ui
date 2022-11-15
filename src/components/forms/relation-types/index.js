@@ -31,7 +31,7 @@ const objectNameMapper = [
 ];
 
 export default function RelationTypesForm({ id, data, onSave, onDelete }) {
-  const { form, updateForm, errors } = useForm({ priority: 99, ...data }, validate);
+  const { form, updateForm, errors } = useForm({ priority: 99, for: [], ...data }, validate);
   const [showErrors, setShowErrors] = useState(false);
 
   const handleSubmit = (e) => {
@@ -73,7 +73,7 @@ export default function RelationTypesForm({ id, data, onSave, onDelete }) {
           <Col n="12" spacing="pb-3w">
             <TagInput
               label="Autres noms"
-              hint='Validez votre ajout avec la touche "Entrée"'
+              hint='Valider votre ajout avec la touche "Entrée"'
               tags={form.otherNames || []}
               onTagsChange={(tags) => updateForm({ otherNames: tags })}
             />

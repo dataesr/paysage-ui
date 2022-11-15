@@ -144,7 +144,7 @@ export default function CategoryTermsForm({ id, data, onSave, onDelete }) {
           <Col n="12 md-6">
             <TagInput
               label="Autres noms français"
-              hint='Validez votre ajout avec la touche "Entrée"'
+              hint='Valider votre ajout avec la touche "Entrée"'
               tags={form.otherNamesFr || []}
               onTagsChange={(tags) => updateForm({ otherNamesFr: tags })}
             />
@@ -167,7 +167,7 @@ export default function CategoryTermsForm({ id, data, onSave, onDelete }) {
           <Col n="12 md-6">
             <TagInput
               label="Autres noms anglais"
-              hint='Validez votre ajout avec la touche "Entrée"'
+              hint='Valider votre ajout avec la touche "Entrée"'
               tags={form.otherNamesEn || []}
               onTagsChange={(tags) => updateForm({ otherNamesEn: tags })}
             />
