@@ -284,6 +284,13 @@ export default function MandateForm({ id, resourceType, relatedObjectTypes, data
             </Title>
           </Col>
           <Col n="12">
+            <DateInput
+              value={form.endDatePrevisional || ''}
+              label="Date de fin prévisionelle"
+              onDateChange={((v) => updateForm({ endDatePrevisional: v }))}
+            />
+          </Col>
+          <Col n="12">
             <Checkbox
               label="Mandat par intérim"
               checked={form.mandateTemporary}
