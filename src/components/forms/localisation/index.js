@@ -212,21 +212,21 @@ export default function LocalisationForm({ id, data, onDelete, onSave }) {
               onChange={(e) => updateForm({ postOfficeBoxNumber: e.target.value })}
             />
           </Col>
-          <Col n="12 md-3">
+          <Col n="12 md-6">
             <TextInput
               label="Localité"
               value={form.locality}
               onChange={(e) => updateForm({ locality: e.target.value })}
             />
           </Col>
-          <Col n="12 md-3">
+          <Col n="12 md-6">
             <TextInput
               label="Code postal"
               value={form.postalCode}
               onChange={(e) => updateForm({ postalCode: e.target.value })}
             />
           </Col>
-          <Col n="12 md-3">
+          <Col n="12 md-6">
             <TextInput
               disabled={viewer.role !== 'admin'}
               label="Code ville"
@@ -234,9 +234,9 @@ export default function LocalisationForm({ id, data, onDelete, onSave }) {
               onChange={(e) => updateForm({ cityId: e.target.value })}
             />
           </Col>
-          <Col n="12 md-3">
+          <Col n="12 md-6">
             <TextInput
-              label="Ville"
+              label="Commune"
               value={form.city}
               onChange={(e) => updateForm({ city: e.target.value })}
             />
