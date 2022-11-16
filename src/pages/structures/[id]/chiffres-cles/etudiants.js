@@ -538,6 +538,7 @@ export default function StructureEtudiantsPage() {
         <BlocContent>
           <Row gutters>
             <Col n="12 md-6">
+              {console.log(id)}
               <WeblinkCard
                 title={(
                   <>
@@ -545,8 +546,7 @@ export default function StructureEtudiantsPage() {
                     Tableau de bord de l'enseignement supérieur : les étudiants par établissement
                   </>
                 )}
-                downloadUrl={'https://dataesr.fr/FR/T525/P883/tableau_de_bord_de_l_enseignement_\
-                  superieur_les_etudiants_par_etablissements_avec_doubles_inscriptions_cpge_-_resultats_pour_sise'}
+                downloadUrl="https://dataesr.fr/FR/T525/P883/tableau_de_bord_de_l_enseignement_superieur_les_etudiants_par_etablissements_avec_doubles_inscriptions_cpge_-_resultats_pour_sise"
                 canEdit={false}
               />
             </Col>
@@ -558,9 +558,7 @@ export default function StructureEtudiantsPage() {
                     Données agrégées en open data
                   </>
                 )}
-                downloadUrl={`https://data.enseignementsup-recherche.gouv.fr/explore/dataset/\
-                  fr-esr-statistiques-sur-les-effectifs-d-etudiants-inscrits-par-etablissement/\
-                  table/?refine.etablissement_id_paysage=${id}&sort=-annee_universitaire`}
+                downloadUrl={`https://data.enseignementsup-recherche.gouv.fr/explore/dataset/fr-esr-statistiques-sur-les-effectifs-d-etudiants-inscrits-par-etablissement/table/?refine.etablissement_id_paysage=${id}sort=-annee_universitaire`}
                 canEdit={false}
               />
             </Col>
@@ -572,8 +570,7 @@ export default function StructureEtudiantsPage() {
                     Données croisées en open data
                   </>
                 )}
-                downloadUrl={`https://data.enseignementsup-recherche.gouv.fr/explore/dataset/\
-                  fr-esr-sise-effectifs-d-etudiants-inscrits-esr-public/table/?refine.etablissement_id_paysage=${id}&sort=-rentree`}
+                downloadUrl={`https://data.enseignementsup-recherche.gouv.fr/explore/dataset/fr-esr-sise-effectifs-d-etudiants-inscrits-esr-public/table/?refine.etablissement_id_paysage=${id}&sort=-rentree`}
                 canEdit={false}
               />
             </Col>
@@ -585,8 +582,7 @@ export default function StructureEtudiantsPage() {
                     Liste des principaux diplômes et formations préparés en open data
                   </>
                 )}
-                downloadUrl={`https://data.enseignementsup-recherche.gouv.fr/explore/dataset/\
-                  fr-esr-principaux-diplomes-et-formations-prepares-etablissements-publics/table/?refine.etablissement_id_paysage=${id}`}
+                downloadUrl={`https://data.enseignementsup-recherche.gouv.fr/explore/dataset/fr-esr-principaux-diplomes-et-formations-prepares-etablissements-publics/table/?refine.etablissement_id_paysage=${id}`}
                 canEdit={false}
               />
             </Col>
