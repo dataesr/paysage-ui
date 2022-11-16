@@ -538,7 +538,6 @@ export default function StructureEtudiantsPage() {
         <BlocContent>
           <Row gutters>
             <Col n="12 md-6">
-              {console.log(id)}
               <WeblinkCard
                 title={(
                   <>
@@ -558,7 +557,8 @@ export default function StructureEtudiantsPage() {
                     Données agrégées en open data
                   </>
                 )}
-                downloadUrl={`https://data.enseignementsup-recherche.gouv.fr/explore/dataset/fr-esr-statistiques-sur-les-effectifs-d-etudiants-inscrits-par-etablissement/table/?refine.etablissement_id_paysage=${id}sort=-annee_universitaire`}
+                downloadUrl={`https://data.enseignementsup-recherche.gouv.fr/explore/dataset/fr-esr-statistiques-sur-les-effectifs-d-etudiants-inscrits-par-\
+etablissement/table/?refine.etablissement_id_paysage=${id}&sort=-annee_universitaire`}
                 canEdit={false}
               />
             </Col>
@@ -570,7 +570,8 @@ export default function StructureEtudiantsPage() {
                     Données croisées en open data
                   </>
                 )}
-                downloadUrl={`https://data.enseignementsup-recherche.gouv.fr/explore/dataset/fr-esr-sise-effectifs-d-etudiants-inscrits-esr-public/table/?refine.etablissement_id_paysage=${id}&sort=-rentree`}
+                downloadUrl={`https://data.enseignementsup-recherche.gouv.fr/explore/dataset/fr-esr-sise-effectifs-d-etudiants-inscrits-esr-\
+public/table/?refine.etablissement_id_paysage=${id}&sort=-rentree`}
                 canEdit={false}
               />
             </Col>
@@ -582,7 +583,8 @@ export default function StructureEtudiantsPage() {
                     Liste des principaux diplômes et formations préparés en open data
                   </>
                 )}
-                downloadUrl={`https://data.enseignementsup-recherche.gouv.fr/explore/dataset/fr-esr-principaux-diplomes-et-formations-prepares-etablissements-publics/table/?refine.etablissement_id_paysage=${id}`}
+                downloadUrl={`https://data.enseignementsup-recherche.gouv.fr/explore/dataset/fr-esr-principaux-diplomes-et-formations-prepares-etablissements-\
+publics/table/?refine.etablissement_id_paysage=${id}`}
                 canEdit={false}
               />
             </Col>
