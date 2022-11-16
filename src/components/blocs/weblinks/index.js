@@ -37,9 +37,9 @@ export default function Weblinks({ types, title }) {
     ? weblinks[apiObject]?.filter((type) => types.includes(type.value))
     : weblinks[apiObject];
 
-  const onSaveHandler = async (body) => {
-    const method = body.id ? 'patch' : 'post';
-    const saveUrl = body.id ? `${url}/${body.id}` : url;
+  const onSaveHandler = async (body, itemId) => {
+    const method = itemId ? 'patch' : 'post';
+    const saveUrl = itemId ? `${url}/${itemId}` : url;
     await api[method](saveUrl, body)
       .then(() => {
         notice(saveSuccess);

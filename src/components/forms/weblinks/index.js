@@ -11,6 +11,18 @@ import FormFooter from '../form-footer';
 import useForm from '../../../hooks/useForm';
 import PaysageBlame from '../../paysage-blame';
 
+const langOptions = [
+  { label: 'Français', value: 'fr' },
+  { label: 'Anglais', value: 'en' },
+  { label: 'Allemand', value: 'de' },
+  { label: 'Espagnol', value: 'es' },
+  { label: 'Italien', value: 'it' },
+  { label: 'Potuguais', value: 'pt' },
+  { label: 'Chinois', value: 'cn' },
+  { label: 'Arabe', value: 'ar' },
+  { label: 'Autre langue', value: 'na' },
+];
+
 function validate(body) {
   const ret = {};
   if (!body?.type) ret.type = 'Le type est obligatoire';
@@ -22,17 +34,20 @@ function sanitize(form) {
   const fields = ['type', 'url', 'language'];
   const body = {};
   Object.keys(form).forEach((key) => { if (fields.includes(key)) { body[key] = form[key]; } });
+  if (body.type !== 'website') {
+    body.language = null;
+  }
   return body;
 }
 
 export default function WeblinkForm({ id, data, onDelete, onSave, options }) {
   const [showErrors, setShowErrors] = useState(false);
-  const { form, updateForm, errors } = useForm(data, validate);
+  const { form, updateForm, errors } = useForm({ language: 'fr', ...data }, validate);
 
   const onSubmit = () => {
     if (Object.keys(errors).length > 0) return setShowErrors(true);
     const body = sanitize(form);
-    return onSave(body);
+    return onSave(body, id);
   };
 
   return (
@@ -66,6 +81,16 @@ export default function WeblinkForm({ id, data, onDelete, onSave, options }) {
               messageType={(showErrors && errors.url) ? 'error' : null}
             />
           </Col>
+          {(form.type === 'website') && (
+            <Col n="12">
+              <Select
+                label="Langue du site"
+                options={langOptions}
+                selected={form.language}
+                onChange={(e) => updateForm({ language: e.target.value })}
+              />
+            </Col>
+          )}
         </Row>
         <FormFooter
           id={id}
