@@ -16,7 +16,7 @@ const saveError = { content: "Une erreur s'est produite.", autoDismissAfter: 600
 const saveSuccess = { content: 'La relation a été ajoutée avec succès.', autoDismissAfter: 6000, type: 'success' };
 const deleteSuccess = { content: 'La relation a été supprimée avec succès.', autoDismissAfter: 6000, type: 'success' };
 
-export default function RelationsByTag({ blocName, tag, resourceType, relatedObjectTypes, inverse, noRelationType, Form }) {
+export default function RelationsByTag({ blocName, tag, resourceType, relatedObjectTypes, inverse, noRelationType, Form, sortByStartDate, sortByEndDate }) {
   const queryObject = inverse ? 'relatedObjectId' : 'resourceId';
   const { notice } = useNotice();
   const { id: resourceId } = useUrl();
@@ -82,10 +82,14 @@ export default function RelationsByTag({ blocName, tag, resourceType, relatedObj
       .filter((relation) => (!relation.endDate || (new Date(relation.endDate) >= new Date())))
       .sort((a, b) => ((a?.relationType?.priority || 99) - (b?.relationType?.priority || 99)))
       .map((relation) => ({ ...relation, current: true }));
+    if (sortByStartDate) currentRelations.sort((a, b) => (new Date(b?.startDate) - new Date(a?.startDate)));
+
     const pastRelations = data?.data
       .filter((relation) => (relation.endDate && (new Date(relation.endDate) < new Date())))
       .sort((a, b) => ((a?.relationType?.priority || 99) - (b?.relationType?.priority || 99)))
       .map((relation) => ({ ...relation, current: false }));
+    if (sortByEndDate) pastRelations.sort((a, b) => (new Date(b?.endDate) - new Date(a?.endDate)));
+
     const list = [...currentRelations, ...pastRelations].map((element) => (
       <RelationCard
         inverse={inverse}
@@ -127,19 +131,23 @@ export default function RelationsByTag({ blocName, tag, resourceType, relatedObj
 
 RelationsByTag.propTypes = {
   blocName: PropTypes.string,
-  tag: PropTypes.string.isRequired,
-  resourceType: PropTypes.string,
-  relatedObjectTypes: PropTypes.arrayOf(PropTypes.string),
+  Form: PropTypes.func,
   inverse: PropTypes.bool,
   noRelationType: PropTypes.bool,
-  Form: PropTypes.func,
+  relatedObjectTypes: PropTypes.arrayOf(PropTypes.string),
+  resourceType: PropTypes.string,
+  sortByStartDate: PropTypes.bool,
+  sortByEndDate: PropTypes.bool,
+  tag: PropTypes.string.isRequired,
 };
 
 RelationsByTag.defaultProps = {
-  resourceType: 'structures',
-  relatedObjectTypes: ['persons', 'structures', 'prices', 'terms', 'projects', 'categories'],
-  inverse: false,
-  noRelationType: false,
   blocName: '',
   Form: RelationsForm,
+  inverse: false,
+  noRelationType: false,
+  relatedObjectTypes: ['persons', 'structures', 'prices', 'terms', 'projects', 'categories'],
+  resourceType: 'structures',
+  sortByStartDate: false,
+  sortByEndDate: false,
 };
