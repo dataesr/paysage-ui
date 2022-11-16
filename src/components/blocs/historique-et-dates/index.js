@@ -19,7 +19,7 @@ function HistoryCard({ creationDate, creationReason, closureDate, closureReason,
             {creationDate && (
               <p className="fr-mb-1w">
                 Créé
-                {(creationDate.split('-').length === 1) ? ` en ${toString(creationDate)}` : ` le ${toString(creationDate)}`}
+                {(creationDate.split('-').length !== 3) ? ` en ${toString(creationDate)}` : ` le ${toString(creationDate)}`}
                 {createReason}
                 <br />
                 {creationOfficialText?.id && (
