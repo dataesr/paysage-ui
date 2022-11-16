@@ -10,17 +10,13 @@ import useFetch from '../../../hooks/useFetch';
 import useUrl from '../../../hooks/useUrl';
 import useNotice from '../../../hooks/useNotice';
 import Map from '../../map/auto-bound-map';
-
-const deleteError = { content: "Une erreur s'est produite. L'élément n'a pas pu être supprimé", autoDismissAfter: 6000, type: 'error' };
-const saveError = { content: "Une erreur s'est produite.", autoDismissAfter: 6000, type: 'error' };
-const saveSuccess = { content: 'La relation a été ajoutée avec succès.', autoDismissAfter: 6000, type: 'success' };
-const deleteSuccess = { content: 'La relation a été supprimée avec succès.', autoDismissAfter: 6000, type: 'success' };
+import { deleteError, saveError, saveSuccess, deleteSuccess } from '../../../utils/notice-contents';
 
 export default function RelationsByTag({ blocName, tag, resourceType, relatedObjectTypes, inverse, noRelationType, Form }) {
   const queryObject = inverse ? 'relatedObjectId' : 'resourceId';
   const { notice } = useNotice();
   const { id: resourceId } = useUrl();
-  const url = `/relations?filters[relationTag]=${tag}&filters[${queryObject}]=${resourceId}&limit=200`;
+  const url = `/relations?filters[relationTag]=${tag}&filters[${queryObject}]=${resourceId}&limit=200&sort=-startDate`;
   const { data, isLoading, error, reload } = useFetch(url);
   const [showModal, setShowModal] = useState(false);
   const [modalTitle, setModalTitle] = useState('');
@@ -80,13 +76,16 @@ export default function RelationsByTag({ blocName, tag, resourceType, relatedObj
     });
     const currentRelations = data?.data
       .filter((relation) => (!relation.endDate || (new Date(relation.endDate) >= new Date())))
-      .sort((a, b) => ((a?.relationType?.priority || 99) - (b?.relationType?.priority || 99)))
       .map((relation) => ({ ...relation, current: true }));
     const pastRelations = data?.data
       .filter((relation) => (relation.endDate && (new Date(relation.endDate) < new Date())))
-      .sort((a, b) => ((a?.relationType?.priority || 99) - (b?.relationType?.priority || 99)))
       .map((relation) => ({ ...relation, current: false }));
-    const list = [...currentRelations, ...pastRelations].map((element) => (
+    const fullList = (tag === 'gouvernance')
+      ? [
+        ...currentRelations.sort((a, b) => ((a?.relationType?.priority || 99) - (b?.relationType?.priority || 99))),
+        ...pastRelations.sort((a, b) => ((a?.relationType?.priority || 99) - (b?.relationType?.priority || 99))),
+      ] : [...currentRelations, ...pastRelations];
+    const list = fullList.map((element) => (
       <RelationCard
         inverse={inverse}
         relation={element}
