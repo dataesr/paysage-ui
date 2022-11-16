@@ -77,6 +77,7 @@ export default function RelationsByTag({ blocName, tag, resourceType, relatedObj
     const currentRelations = data?.data
       .filter((relation) => (!relation.endDate || (new Date(relation.endDate) >= new Date())))
       .map((relation) => ({ ...relation, current: true }));
+
     const pastRelations = data?.data
       .filter((relation) => (relation.endDate && (new Date(relation.endDate) < new Date())))
       .map((relation) => ({ ...relation, current: false }));
@@ -126,19 +127,19 @@ export default function RelationsByTag({ blocName, tag, resourceType, relatedObj
 
 RelationsByTag.propTypes = {
   blocName: PropTypes.string,
-  tag: PropTypes.string.isRequired,
-  resourceType: PropTypes.string,
-  relatedObjectTypes: PropTypes.arrayOf(PropTypes.string),
+  Form: PropTypes.func,
   inverse: PropTypes.bool,
   noRelationType: PropTypes.bool,
-  Form: PropTypes.func,
+  relatedObjectTypes: PropTypes.arrayOf(PropTypes.string),
+  resourceType: PropTypes.string,
+  tag: PropTypes.string.isRequired,
 };
 
 RelationsByTag.defaultProps = {
-  resourceType: 'structures',
-  relatedObjectTypes: ['persons', 'structures', 'prices', 'terms', 'projects', 'categories'],
-  inverse: false,
-  noRelationType: false,
   blocName: '',
   Form: RelationsForm,
+  inverse: false,
+  noRelationType: false,
+  relatedObjectTypes: ['persons', 'structures', 'prices', 'terms', 'projects', 'categories'],
+  resourceType: 'structures',
 };
