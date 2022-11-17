@@ -64,3 +64,19 @@
     animation: external 1s linear infinite;
   }
 }
+
+.overlay {
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: calc(var(--ground) + 1000);
+  cursor: pointer;
+  background-color: rgba(#161616, 0.85);
+  color: var(--text-inverted-grey);
+}
