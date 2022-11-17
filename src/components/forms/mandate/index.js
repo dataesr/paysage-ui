@@ -35,6 +35,9 @@ export default function MandateForm({ id, resourceType, relatedObjectTypes, data
     if (!body?.relatedObjectId && !inverse) {
       errors.relatedObjectId = 'Vous devez sélectionner un objet à lier';
     }
+    // if (!body?.relationTypeId) {
+    //   errors.relatedObjectId = 'Le type est obligatoire';
+    // }
     if (!body?.resourceId && inverse) {
       errors.relatedObjectId = 'Vous devez sélectionner un objet à lier';
     }
