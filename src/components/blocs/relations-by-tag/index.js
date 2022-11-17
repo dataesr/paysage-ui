@@ -12,11 +12,11 @@ import useNotice from '../../../hooks/useNotice';
 import Map from '../../map/auto-bound-map';
 import { deleteError, saveError, saveSuccess, deleteSuccess } from '../../../utils/notice-contents';
 
-export default function RelationsByTag({ blocName, tag, resourceType, relatedObjectTypes, inverse, noRelationType, Form }) {
+export default function RelationsByTag({ blocName, tag, resourceType, relatedObjectTypes, inverse, noRelationType, Form, sort }) {
   const queryObject = inverse ? 'relatedObjectId' : 'resourceId';
   const { notice } = useNotice();
   const { id: resourceId } = useUrl();
-  const url = `/relations?filters[relationTag]=${tag}&filters[${queryObject}]=${resourceId}&limit=200&sort=-startDate`;
+  const url = `/relations?filters[relationTag]=${tag}&filters[${queryObject}]=${resourceId}&limit=200&sort=${sort}`;
   const { data, isLoading, error, reload } = useFetch(url);
   const [showModal, setShowModal] = useState(false);
   const [modalTitle, setModalTitle] = useState('');
@@ -81,13 +81,10 @@ export default function RelationsByTag({ blocName, tag, resourceType, relatedObj
     const pastRelations = data?.data
       .filter((relation) => (relation.endDate && (new Date(relation.endDate) < new Date())))
       .map((relation) => ({ ...relation, current: false }));
-    const fullList = (tag === 'gouvernance')
-      ? [
-        ...currentRelations.sort((a, b) => ((a?.relationType?.priority || 99) - (b?.relationType?.priority || 99))),
-        ...pastRelations.sort((a, b) => ((a?.relationType?.priority || 99) - (b?.relationType?.priority || 99))),
-      ] : [...currentRelations, ...pastRelations];
-    const list = fullList.map((element) => (
+
+    const list = [...currentRelations, ...pastRelations].map((element) => (
       <RelationCard
+        key={element.id}
         inverse={inverse}
         relation={element}
         onEdit={() => onOpenModalHandler(element)}
@@ -132,6 +129,7 @@ RelationsByTag.propTypes = {
   noRelationType: PropTypes.bool,
   relatedObjectTypes: PropTypes.arrayOf(PropTypes.string),
   resourceType: PropTypes.string,
+  sort: PropTypes.string,
   tag: PropTypes.string.isRequired,
 };
 
@@ -142,4 +140,5 @@ RelationsByTag.defaultProps = {
   noRelationType: false,
   relatedObjectTypes: ['persons', 'structures', 'prices', 'terms', 'projects', 'categories'],
   resourceType: 'structures',
+  sort: '-startDate',
 };

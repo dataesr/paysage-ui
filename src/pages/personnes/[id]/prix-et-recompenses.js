@@ -11,7 +11,6 @@ export default function PersonPrices() {
       relatedObjectTypes={['persons']}
       Form={LaureateForm}
       inverse
-      sortByStartDate
     />
   );
 }

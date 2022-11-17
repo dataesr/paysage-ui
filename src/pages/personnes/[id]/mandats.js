@@ -12,7 +12,7 @@ export default function PersonMandats() {
         relatedObjectTypes={['persons']}
         Form={MandateForm}
         inverse
-        sortByEndDate
+        sort="relationType.priority"
       />
       <RelationsByTag
         tag={STRUCTURE_REFERENT_MESR}
@@ -21,7 +21,6 @@ export default function PersonMandats() {
         relatedObjectTypes={['persons']}
         Form={MandateForm}
         inverse
-        sortByEndDate
       />
     </>
   );

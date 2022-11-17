@@ -11,6 +11,7 @@ export default function StructureGouvernancePage() {
         resourceType="structures"
         relatedObjectTypes={['persons']}
         Form={MandateForm}
+        sort="relationType.priority"
       />
       <RelationsByTag
         tag={STRUCTURE_REFERENT_MESR}

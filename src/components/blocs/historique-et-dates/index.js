@@ -5,6 +5,7 @@ import useFetch from '../../../hooks/useFetch';
 import useUrl from '../../../hooks/useUrl';
 import { formatDescriptionDates, toString } from '../../../utils/dates';
 import { STRUCTURE_PREDECESSEUR } from '../../../utils/relations-tags';
+import styles from './styles.module.scss';
 
 function HistoryCard({ creationDate, creationReason, closureDate, closureReason, creationOfficialText, closureOfficialText, predecessors, successors }) {
   const createReason = (creationReason && !['Non renseigné', 'autre', 'Création'].includes(creationReason)) && ` par ${creationReason.toLowerCase() }`;
@@ -23,11 +24,13 @@ function HistoryCard({ creationDate, creationReason, closureDate, closureReason,
                 {createReason}
                 <br />
                 {creationOfficialText?.id && (
-                  <a className="fr-text--xs fr-text--regular fr-link--sm" href={creationOfficialText?.pageUrl} target="_blank" rel="noreferrer">
-                    {creationOfficialText?.nature}
-                    {' '}
-                    {creationOfficialText?.publicationDate && formatDescriptionDates(creationOfficialText.publicationDate)}
-                  </a>
+                  <span className="fr-card__detail">
+                    <a className={`fr-mb-0 fr-text--xs fr-text--regular ${styles['align-after']}`} href={creationOfficialText?.pageUrl} target="_blank" rel="noreferrer">
+                      {creationOfficialText?.nature}
+                      {' '}
+                      {creationOfficialText?.publicationDate && `du ${toString(creationOfficialText.publicationDate)}`}
+                    </a>
+                  </span>
                 )}
               </p>
             )}
@@ -54,11 +57,13 @@ function HistoryCard({ creationDate, creationReason, closureDate, closureReason,
                 {closeReason}
                 <br />
                 {closureOfficialText?.id && (
-                  <a className="fr-text--xs fr-text--regular fr-link--sm" href={closureOfficialText?.pageUrl} target="_blank" rel="noreferrer">
-                    {closureOfficialText?.nature}
-                    {' '}
-                    {closureOfficialText?.publicationDate && `du ${toString(closureOfficialText.publicationDate)}`}
-                  </a>
+                  <span className="fr-card__detail">
+                    <a className={`fr-mb-0 fr-text--xs fr-text--regular ${styles['align-after']}`} href={closureOfficialText?.pageUrl} target="_blank" rel="noreferrer">
+                      {closureOfficialText?.nature}
+                      {' '}
+                      {closureOfficialText?.publicationDate && `du ${toString(closureOfficialText.publicationDate)}`}
+                    </a>
+                  </span>
                 )}
               </p>
             )}
