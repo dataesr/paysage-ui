@@ -8,17 +8,18 @@ import { ReactComponent as View } from '../../assets/eye-line.svg';
 
 import useAuth from '../../hooks/useAuth';
 
-const themes = [
-  { label: 'Thème clair', value: 'light', svg: <Light /> },
-  { label: 'Thème sombre', value: 'dark', svg: <Dark /> },
-  { label: 'Thème du système', value: null, svg: <System /> },
-];
-const views = [
-  { label: 'Mode normal', hint: 'Afficher les pages en mode vue par défaut.', value: false, svg: <View /> },
-  { label: 'Mode édition', hint: 'Afficher les pages en mode édition par défaut.', value: true, svg: <Edit /> },
-];
-
 export default function PreferencesPage() {
+  const system = window.matchMedia('(prefers-color-scheme: dark)');
+  const defaultPreference = system.matches ? 'dark' : 'light';
+  const themes = [
+    { label: 'Thème clair', value: 'light', svg: <Light /> },
+    { label: 'Thème sombre', value: 'dark', svg: <Dark /> },
+    { label: 'Thème du système', value: defaultPreference, svg: <System /> },
+  ];
+  const views = [
+    { label: 'Mode normal', hint: 'Afficher les pages en mode vue par défaut.', value: false, svg: <View /> },
+    { label: 'Mode édition', hint: 'Afficher les pages en mode édition par défaut.', value: true, svg: <Edit /> },
+  ];
   const { viewer } = useAuth();
 
   return (
