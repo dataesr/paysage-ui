@@ -5,10 +5,11 @@ import useUrl from '../../../hooks/useUrl';
 import RelationCard from '../../card/relation-card';
 import GoToCard from '../../card/go-to-card';
 import { getComparableNow } from '../../../utils/dates';
+import { GOUVERNANCE as tag } from '../../../utils/relations-tags';
 
 export default function PersonCurrentMandates() {
   const { id } = useUrl();
-  const { data, isLoading, error } = useFetch(`/relations?filters[relatedObjectId]=${id}&filters[relationTag]=gouvernance&limit=500`);
+  const { data, isLoading, error } = useFetch(`/relations?filters[relatedObjectId]=${id}&filters[relationTag]=${tag}&limit=500`);
 
   const renderCurrentMandates = () => {
     if (!data?.data?.length > 0) return null;

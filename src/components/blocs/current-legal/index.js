@@ -3,10 +3,11 @@ import useFetch from '../../../hooks/useFetch';
 import useUrl from '../../../hooks/useUrl';
 import { getComparableNow } from '../../../utils/dates';
 import KeyValueCard from '../../card/key-value-card';
+import { STRUCTURE_CATEGORIE_JURIDIQUE as tag } from '../../../utils/relations-tags';
 
 export default function CurrentLegals() {
   const { id } = useUrl();
-  const { data } = useFetch(`/relations?filters[resourceId]=${id}&filters[relationTag]=structures-legal-categories&limit=500`);
+  const { data } = useFetch(`/relations?filters[resourceId]=${id}&filters[relationTag]=${tag}&limit=500`);
 
   if (!data?.data) return null;
   const currentLegals = data?.data
@@ -16,6 +17,7 @@ export default function CurrentLegals() {
   return (
     <Col n="12 lg-4">
       <KeyValueCard
+        titleAsText
         className="card-legal-categories"
         icon="ri-bookmark-line"
         cardKey="Catégorie juridique"

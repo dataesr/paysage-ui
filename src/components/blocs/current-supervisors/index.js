@@ -3,11 +3,12 @@ import { useNavigate } from 'react-router-dom';
 import useFetch from '../../../hooks/useFetch';
 import useUrl from '../../../hooks/useUrl';
 import { getComparableNow } from '../../../utils/dates';
+import { STRUCTURE_TUTELLE as tag } from '../../../utils/relations-tags';
 
 export default function CurrentSupervisors() {
   const navigate = useNavigate();
   const { id } = useUrl();
-  const { data } = useFetch(`/relations?filters[resourceId]=${id}&filters[relationTag]=structures-ministers&limit=500`);
+  const { data } = useFetch(`/relations?filters[resourceId]=${id}&filters[relationTag]=${tag}&limit=500`);
 
   if (!data?.data) return null;
   const currents = data?.data
