@@ -17,6 +17,7 @@ export default function CategoryPresentationPage() {
         resourceType="categories"
         relatedObjectTypes={['categories']}
         noRelationType
+        sort="relatedObject.priority"
       />
       <RelationsByTag
         tag={CATEGORIE_PARENT}
@@ -25,6 +26,7 @@ export default function CategoryPresentationPage() {
         relatedObjectTypes={['categories']}
         noRelationType
         inverse
+        sort="resource.priority"
       />
       <Title as="h3" look="h4">Présence sur le web</Title>
       <Row spacing="mb-5w"><Wiki /></Row>

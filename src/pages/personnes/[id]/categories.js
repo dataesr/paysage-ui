@@ -10,6 +10,7 @@ export default function PersonCategories() {
         resourceType="persons"
         relatedObjectTypes={['categories']}
         noRelationType
+        sort="relatedObject.priority"
       />
       <RelationsByTag
         tag={PERSONNE_TERME}

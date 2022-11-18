@@ -10,6 +10,7 @@ export default function PriceCategories() {
         resourceType="prices"
         relatedObjectTypes={['categories']}
         noRelationType
+        sort="relatedObject.priority"
       />
       <RelationsByTag
         tag={PRIX_TERME}

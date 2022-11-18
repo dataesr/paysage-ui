@@ -10,6 +10,7 @@ export default function ProjectCategories() {
         resourceType="projects"
         relatedObjectTypes={['categories']}
         noRelationType
+        sort="relatedObject.priority"
       />
       <RelationsByTag
         tag={PROJET_TERME}

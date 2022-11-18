@@ -17,6 +17,7 @@ export default function StructureCategoriesPage() {
         resourceType="structures"
         relatedObjectTypes={['categories']}
         noRelationType
+        sort="relatedObject.priority"
       />
       <RelationsByTag
         tag={STRUCTURE_TERME}
