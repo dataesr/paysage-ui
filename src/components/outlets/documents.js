@@ -5,7 +5,6 @@ import useEditMode from '../../hooks/useEditMode';
 import useFetch from '../../hooks/useFetch';
 import useHashScroll from '../../hooks/useHashScroll';
 import useNotice from '../../hooks/useNotice';
-import './style.scss';
 
 import api from '../../utils/api';
 import { saveError, saveSuccess, deleteError, deleteSuccess } from '../../utils/notice-contents';
