@@ -6,6 +6,7 @@ import {
   useSearchParams,
 } from 'react-router-dom';
 import {
+  Badge,
   Header as HeaderWrapper,
   HeaderBody,
   HeaderNav,
@@ -22,6 +23,11 @@ import useDebounce from '../../hooks/useDebounce';
 import SearchBar from '../search-bar';
 import api from '../../utils/api';
 import { SEARCH_TYPES } from '../../utils/constants';
+
+const {
+  REACT_APP_HEADER_TAG: headerTag,
+  REACT_APP_HEADER_TAG: headerTagColor,
+} = process.env;
 
 export default function Header() {
   const { pathname } = useLocation();
@@ -85,9 +91,7 @@ export default function Header() {
           title={(
             <>
               Paysage
-              <span className="fr-badge fr-badge--sm fr-badge--green-emeraude">
-                STAGING
-              </span>
+              {headerTag && <Badge text={headerTag} type={(!headerTagColor) ? 'info' : undefined} isSmall colorFamily={headerTagColor} />}
             </>
           )}
           description="Plateforme d'échanges et d'informations de la DGESIP et de la DGRI"
