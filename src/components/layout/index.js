@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Outlet } from 'react-router-dom';
-import { Container, SwitchTheme } from '@dataesr/react-dsfr';
+import { Container, Row, SwitchTheme } from '@dataesr/react-dsfr';
 import Header from './header';
 import Footer from './footer';
 import PageBorder from './page-border';
@@ -19,7 +19,11 @@ export default function Layout() {
       <SwitchTheme isOpen={isSwitchThemeOpen} setIsOpen={setIsSwitchThemeOpen} />
       <div role="alert" id="notice-container" />
       <Container as="main" role="main" fluid>
-        {isLoading ? <Spinner /> : <Outlet />}
+        {
+          isLoading
+            ? <Row className="fr-my-2w flex--space-around"><Spinner /></Row>
+            : <Outlet />
+        }
       </Container>
       <ScrollToTop />
       <Footer switchTheme={{ isOpen: isSwitchThemeOpen, setIsOpen: setIsSwitchThemeOpen }} />

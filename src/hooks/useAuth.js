@@ -5,6 +5,7 @@ import {
   useMemo,
   useEffect,
   useCallback,
+  useTransition,
 } from 'react';
 import PropTypes from 'prop-types';
 import api from '../utils/api';
@@ -30,11 +31,14 @@ async function refreshToken() {
 export function AuthContextProvider({ children }) {
   const [viewer, setViewer] = useState({});
   const [isLoading, setIsLoading] = useState(true);
+  const [isPending, startTransition] = useTransition();
 
   const fetchViewer = useCallback(async () => {
     await api.get('/me')
       .then((response) => { if (response.ok) setViewer(response.data); });
-    setIsLoading(false);
+    startTransition(() => {
+      setIsLoading(false);
+    });
   }, []);
 
   useEffect(() => {
