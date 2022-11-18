@@ -15,21 +15,23 @@ export default function useFetch(url, headers) {
   const reload = () => setReloads(reloads + 1);
 
   useEffect(() => {
+    const abortController = new AbortController();
+
     const fetchData = () => api
-      .get(url, headers)
-      .then((response) => {
-        setData(response.data);
-        setIsLoading(false);
-        setError(false);
-      })
-      .catch(() => {
-        setIsLoading(false);
-        setError(true);
+      .get(url, headers, { signal: abortController.signal })
+      .then((response) => { setData(response.data); setIsLoading(false); })
+      .catch((e) => {
+        if (e.name !== 'AbortError') {
+          setError(true);
+          setIsLoading(false);
+        }
       });
+
     setIsLoading(true);
     setError(false);
     setData(null);
     fetchData();
+    return () => abortController.abort();
   }, [url, headers, reloads]);
 
   return { data, error, isLoading, reload };

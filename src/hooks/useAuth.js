@@ -120,7 +120,7 @@ export function AuthContextProvider({ children }) {
   }, []);
 
   const value = useMemo(() => ({
-    isLoading,
+    isLoading: isLoading || isPending,
     viewer,
     setViewer,
     signup,
@@ -129,7 +129,7 @@ export function AuthContextProvider({ children }) {
     changePassword,
     requestSignInEmail,
     requestPasswordChangeEmail,
-  }), [viewer, isLoading, signout, signin, signup, changePassword, requestPasswordChangeEmail, requestSignInEmail]);
+  }), [viewer, isLoading, isPending, signout, signin, signup, changePassword, requestPasswordChangeEmail, requestSignInEmail]);
   return (
     <AuthContext.Provider value={value}>
       {children}
