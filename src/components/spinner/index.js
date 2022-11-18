@@ -1,8 +1,7 @@
 import React, { useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { v4 as uuidv4 } from 'uuid';
-
-import styles from './spinner.module.scss';
+import './spinner.scss';
 
 function Spinner({ size }) {
   const id = useMemo(() => uuidv4(), []);
@@ -12,7 +11,7 @@ function Spinner({ size }) {
   }, [size, id]);
 
   return (
-    <svg id={id} className={styles.spinner} viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+    <svg id={id} className="spinner" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
       <circle className="internal-circle" cx="60" cy="60" r="30" />
       <circle className="external-circle" cx="60" cy="60" r="50" />
     </svg>

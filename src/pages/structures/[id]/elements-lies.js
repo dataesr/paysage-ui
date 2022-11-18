@@ -72,9 +72,10 @@ export default function StructureElementLiesPage() {
       <RelationsByTag
         tag={STRUCTURE_TUTELLE}
         blocName="Ministres de tutelle"
-        resourceType="structures"
-        relatedObjectTypes={['supervising-ministers']}
+        resourceType="supervising-ministers"
+        relatedObjectTypes={['structures']}
         Form={SupervisorsForm}
+        inverse
       />
       <hr />
       <Bloc isLoading={isLoading} error={error} data={data}>

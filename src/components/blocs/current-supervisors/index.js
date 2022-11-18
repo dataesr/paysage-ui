@@ -8,7 +8,7 @@ import { STRUCTURE_TUTELLE as tag } from '../../../utils/relations-tags';
 export default function CurrentSupervisors() {
   const navigate = useNavigate();
   const { id } = useUrl();
-  const { data } = useFetch(`/relations?filters[resourceId]=${id}&filters[relationTag]=${tag}&limit=500`);
+  const { data } = useFetch(`/relations?filters[relatedObjectId]=${id}&filters[relationTag]=${tag}&limit=500`);
 
   if (!data?.data) return null;
   const currents = data?.data
@@ -23,7 +23,7 @@ export default function CurrentSupervisors() {
             <div className="fr-card__end fr-mt-0">
               <TagGroup>
                 {currents.map(
-                  ({ relatedObject: related }) => <Tag size="md" iconPosition="right" icon="ri-arrow-right-line" onClick={() => navigate(related.href)} key={related.id}>{related.displayName}</Tag>,
+                  ({ resource: related }) => <Tag size="md" iconPosition="right" icon="ri-arrow-right-line" onClick={() => navigate(related.href)} key={related.id}>{related.displayName}</Tag>,
                 )}
               </TagGroup>
             </div>
@@ -37,6 +37,5 @@ export default function CurrentSupervisors() {
         </div>
       </div>
     </Col>
-
   );
 }

@@ -4,38 +4,38 @@
  * credits to jdacosta from https://codepen.io/jdacosta/pen/dobzpM
  */
 
-@keyframes internal {
-  0% {
-    stroke-dashoffset: 187;
-  }
-
-  25% {
-    stroke-dashoffset: 80;
-  }
-
-  100% {
-    stroke-dashoffset: 187;
-    transform: rotate(360deg);
-  }
-}
-
-@keyframes external {
-  0% {
-    stroke-dashoffset: 312;
-    transform: rotate(70deg);
-  }
-
-  60% {
-    stroke-dashoffset: -312;
-  }
-
-  100% {
-    stroke-dashoffset: -312;
-    transform: rotate(450deg);
-  }
-}
-
+ 
 .spinner {
+  @keyframes internal {
+    0% {
+      stroke-dashoffset: 187;
+    }
+  
+    25% {
+      stroke-dashoffset: 80;
+    }
+  
+    100% {
+      stroke-dashoffset: 187;
+      transform: rotate(360deg);
+    }
+  }
+  
+  @keyframes external {
+    0% {
+      stroke-dashoffset: 312;
+      transform: rotate(70deg);
+    }
+  
+    60% {
+      stroke-dashoffset: -312;
+    }
+  
+    100% {
+      stroke-dashoffset: -312;
+      transform: rotate(450deg);
+    }
+  }
   width: 64px;
   height: 64px;
   transform: rotate(-90deg);
@@ -65,7 +65,7 @@
   }
 }
 
-.overlay {
+.spinner-overlay {
   position: fixed;
   display: flex;
   flex-direction: column;
