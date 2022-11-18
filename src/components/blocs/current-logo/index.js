@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import useUrl from '../../../hooks/useUrl';
 import api from '../../../utils/api';
 import { getComparableNow } from '../../../utils/dates';
+import styles from './styles.module.scss';
 
 export default function CurrentLogos() {
   const { id } = useUrl();
@@ -43,7 +44,7 @@ export default function CurrentLogos() {
       <div className="fr-card fr-card--xs fr-card--horizontal fr-card--grey fr-card--no-border">
         <div className="fr-card__body">
           <div className="fr-card__content flex flex--center flex--space-around">
-            <img alt="logo" src={logos} height="100px" />
+            <img alt="logo" src={logos} className={styles.logo} />
           </div>
         </div>
       </div>
