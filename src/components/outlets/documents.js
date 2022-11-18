@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Badge, BadgeGroup, Col, Modal, ModalContent, ModalTitle, Row, Tag, Text } from '@dataesr/react-dsfr';
+import { Badge, BadgeGroup, Col, Modal, ModalContent, ModalTitle, Row, Tag, Text, Icon } from '@dataesr/react-dsfr';
 import useEditMode from '../../hooks/useEditMode';
 import useFetch from '../../hooks/useFetch';
 import useHashScroll from '../../hooks/useHashScroll';
 import useNotice from '../../hooks/useNotice';
+import './style.css';
 
 import api from '../../utils/api';
 import { saveError, saveSuccess, deleteError, deleteSuccess } from '../../utils/notice-contents';
@@ -104,12 +105,15 @@ export default function DocumentsOutlet() {
                           .map((related) => <Tag iconPosition="right" icon="ri-arrow-right-line" onClick={() => navigate(related.href)} key={related.id}>{related.displayName}</Tag>)}
                       </TagList>
                     )}
-                    {(event?.files?.length > 0) && (
-                      <>
-                        <Text spacing="mb-1w" bold>{(event.files?.length > 1) ? 'Fichiers :' : 'Fichier :'}</Text>
-                        <Row>{event.files.map((file) => (<Download key={file.url} file={file} />))}</Row>
-                      </>
-                    )}
+                    <Row>
+                      {event.files.map((file) => (file.originalName.length <= 30 ? <Download key={file.url} file={file} /> : (
+                        <Row>
+                          <Download key={file.url} file={file} />
+                          <Icon name="ri-download-line" size="l" className="ds-fr-card-icon" />
+                        </Row>
+                      )
+                      ))}
+                    </Row>
                   </div>
                 </div>
               </div>
