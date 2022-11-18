@@ -59,7 +59,7 @@ export default function Passwordless() {
     }
     return setChangePasswordError("Une erreur s'est produite");
   };
-
+  useEffect(() => { document.title = 'Paysage · Mot de passe oublié'; }, []);
   useEffect(() => {
     if (MAIL_REGEXP.test(email)) return setEmailError('');
     return setEmailError('Veuillez entrer une adresse email valide.');

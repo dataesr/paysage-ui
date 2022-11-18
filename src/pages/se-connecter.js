@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import {
   Container, Row, Col, TextInput, Text, Link, Title, Breadcrumb, BreadcrumbItem, ButtonGroup, Stepper, Alert,
@@ -35,6 +35,8 @@ export default function SignIn() {
     const response = await signin({ email, password, otp });
     if (response.ok) { navigate('/'); } else { notice({ content: response.data.message }); }
   };
+
+  useEffect(() => { document.title = 'Paysage · Se connecter'; }, []);
 
   return (
     <Container spacing="mb-6w">

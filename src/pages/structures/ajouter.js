@@ -388,6 +388,7 @@ HistoryStep.propTypes = { ...stepProps, handleSave: PropTypes.func.isRequired };
 export default function StructureAddPage() {
   const { notice } = useNotice();
   const navigate = useNavigate();
+  useEffect(() => { document.title = 'Contribution · Ajouter une structure'; }, []);
   const validateForm = (body) => {
     const validationErrors = {};
     if (!body.usualNameFr) { validationErrors.usualNameFr = 'Le nom usuel en français est obligatoire'; }

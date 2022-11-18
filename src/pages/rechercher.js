@@ -2,6 +2,7 @@ import { Badge, Breadcrumb, BreadcrumbItem, Col, Container, Icon, Pagination, Ro
 import PropTypes from 'prop-types';
 import { Link as RouterLink, useLocation, useSearchParams } from 'react-router-dom';
 
+import { useEffect } from 'react';
 import Spinner from '../components/spinner';
 import useHashScroll from '../hooks/useHashScroll';
 import useSearch from '../hooks/useSearch';
@@ -99,6 +100,8 @@ export default function SearchPage() {
   const resultsCount = type === 'rechercher' ? countAll : (counts?.[getTypeFromUrl(type)] || 0);
   const pageCount = Math.ceil(resultsCount / itemsPerPage);
 
+  useEffect(() => { document.title = 'Paysage · Rechercher'; }, []);
+
   return (
     <Container spacing="pb-6w">
       <Breadcrumb>
@@ -121,7 +124,7 @@ export default function SearchPage() {
       <Row>
         <Col n="12 md-3">
           <SideMenu buttonLabel="Filtrer par objet">
-            <SideMenuLink className={(type === 'rechercher') ? 'sidemenu__item--active' : ''} asLink={<RouterLink to={`/rechercher?query=${query}&page=1`} />}>
+            <SideMenuLink className={(type === 'rechercher') ? 'sidemenu__item--active' : ''} asLink={<RouterLink to={`/rechercher?query=${query}&page=1`} replace />}>
               <Row alignItems="top">
                 <Text spacing="pr-2v" bold>
                   <Icon name="ri-search-eye-line" size="1x" />
@@ -130,7 +133,7 @@ export default function SearchPage() {
                 <Badge type={(type === 'rechercher') ? 'info' : 'new'} text={countAll} />
               </Row>
             </SideMenuLink>
-            <SideMenuLink className={(type === 'structures') ? 'sidemenu__item--active' : ''} asLink={<RouterLink to={`structures?query=${query}&page=1`} />}>
+            <SideMenuLink className={(type === 'structures') ? 'sidemenu__item--active' : ''} asLink={<RouterLink to={`structures?query=${query}&page=1`} replace />}>
               <Row alignItems="top">
                 <Text spacing="pr-2v" bold>
                   <Icon name="ri-building-line" size="1x" />
@@ -139,7 +142,7 @@ export default function SearchPage() {
                 <Badge type={(type === 'structures') ? 'info' : 'new'} text={counts.structures || '0'} />
               </Row>
             </SideMenuLink>
-            <SideMenuLink className={(type === 'personnes') ? 'sidemenu__item--active' : ''} asLink={<RouterLink to={`personnes?query=${query}&page=1`} />}>
+            <SideMenuLink className={(type === 'personnes') ? 'sidemenu__item--active' : ''} asLink={<RouterLink to={`personnes?query=${query}&page=1`} replace />}>
               <Row alignItems="top">
                 <Text spacing="pr-2v" bold>
                   <Icon name="ri-user-3-line" size="1x" />
@@ -148,7 +151,7 @@ export default function SearchPage() {
                 <Badge type={(type === 'personnes') ? 'info' : 'new'} text={counts.persons || '0'} />
               </Row>
             </SideMenuLink>
-            <SideMenuLink className={(type === 'categories') ? 'sidemenu__item--active' : ''} asLink={<RouterLink to={`categories?query=${query}&page=1`} />}>
+            <SideMenuLink className={(type === 'categories') ? 'sidemenu__item--active' : ''} asLink={<RouterLink to={`categories?query=${query}&page=1`} replace />}>
               <Row alignItems="top">
                 <Text spacing="pr-2v" bold>
                   <Icon name="ri-price-tag-3-line" size="1x" />
@@ -157,7 +160,7 @@ export default function SearchPage() {
                 <Badge type={(type === 'categories') ? 'info' : 'new'} text={counts.categories || '0'} />
               </Row>
             </SideMenuLink>
-            <SideMenuLink className={(type === 'termes') ? 'sidemenu__item--active' : ''} asLink={<RouterLink to={`termes?query=${query}&page=1`} />}>
+            <SideMenuLink className={(type === 'termes') ? 'sidemenu__item--active' : ''} asLink={<RouterLink to={`termes?query=${query}&page=1`} replace />}>
               <Row alignItems="top">
                 <Text spacing="pr-2v" bold>
                   <Icon name="ri-hashtag" size="1x" />
@@ -166,7 +169,7 @@ export default function SearchPage() {
                 <Badge type={(type === 'termes') ? 'info' : 'new'} text={counts.terms || '0'} />
               </Row>
             </SideMenuLink>
-            <SideMenuLink className={(type === 'prix') ? 'sidemenu__item--active' : ''} asLink={<RouterLink to={`prix?query=${query}&page=1`} />}>
+            <SideMenuLink className={(type === 'prix') ? 'sidemenu__item--active' : ''} asLink={<RouterLink to={`prix?query=${query}&page=1`} replace />}>
               <Row alignItems="top">
                 <Text spacing="pr-2v" bold>
                   <Icon name="ri-award-line" size="1x" />
@@ -175,7 +178,7 @@ export default function SearchPage() {
                 <Badge type={(type === 'prix') ? 'info' : 'new'} text={counts.prices || '0'} />
               </Row>
             </SideMenuLink>
-            <SideMenuLink className={(type === 'projets') ? 'sidemenu__item--active' : ''} asLink={<RouterLink to={`projets?query=${query}&page=1`} />}>
+            <SideMenuLink className={(type === 'projets') ? 'sidemenu__item--active' : ''} asLink={<RouterLink to={`projets?query=${query}&page=1`} replace />}>
               <Row alignItems="top">
                 <Text spacing="pr-2v" bold>
                   <Icon name="ri-booklet-line" size="1x" />
@@ -184,7 +187,7 @@ export default function SearchPage() {
                 <Badge type={(type === 'projets') ? 'info' : 'new'} text={counts.projects || '0'} />
               </Row>
             </SideMenuLink>
-            <SideMenuLink className={(type === 'textes-officiels') ? 'sidemenu__item--active' : ''} asLink={<RouterLink to={`textes-officiels?query=${query}&page=1`} />}>
+            <SideMenuLink className={(type === 'textes-officiels') ? 'sidemenu__item--active' : ''} asLink={<RouterLink to={`textes-officiels?query=${query}&page=1`} replace />}>
               <Row alignItems="top">
                 <Text spacing="pr-2v" bold>
                   <Icon name="ri-git-repository-line" size="1x" />

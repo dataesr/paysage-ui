@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import {
   Badge,
   BadgeGroup,
@@ -14,6 +15,7 @@ import {
 } from '@dataesr/react-dsfr';
 
 export default function RessourcesPage() {
+  useEffect(() => { document.title = 'Paysage · Ressources'; }, []);
   return (
     <Container spacing="mt-5w">
       <Title as="h2">Les ressources externes</Title>

@@ -44,6 +44,7 @@ function ProjectByIdPage() {
   const [isFormModalOpen, setIsFormModalOpen] = useState(false);
 
   useEffect(() => { reset(); }, [reset]);
+  useEffect(() => { document.title = `Projets · ${data?.nameFr}`; }, [data]);
 
   const onSave = async (body) => api.patch(url, body)
     .then(() => { reload(); setIsFormModalOpen(false); notice(saveSuccess); })
@@ -57,31 +58,31 @@ function ProjectByIdPage() {
       <Row>
         <Col n="12 md-3">
           <SideMenu buttonLabel="Navigation">
-            <SideMenuLink asLink={<RouterLink to="presentation#" />}>
+            <SideMenuLink asLink={<RouterLink to="presentation#" replace />}>
               <Icon name="ri-eye-2-line" size="1x" />
               En un coup d’œil
             </SideMenuLink>
-            <SideMenuLink asLink={<RouterLink to="actualites" />}>
+            <SideMenuLink asLink={<RouterLink to="actualites" replace />}>
               <Icon name="ri-newspaper-line" size="1x" />
               Actualités
             </SideMenuLink>
-            <SideMenuLink asLink={<RouterLink to="categories" />}>
+            <SideMenuLink asLink={<RouterLink to="categories" replace />}>
               <Icon name="ri-price-tag-3-line" size="1x" />
               Catégories et termes
             </SideMenuLink>
-            <SideMenuLink asLink={<RouterLink to="evenements" />}>
+            <SideMenuLink asLink={<RouterLink to="evenements" replace />}>
               <Icon name="ri-calendar-line" size="1x" />
               Evènements
             </SideMenuLink>
-            <SideMenuLink asLink={<RouterLink to="documents" />}>
+            <SideMenuLink asLink={<RouterLink to="documents" replace />}>
               <Icon name="ri-folders-line" size="1x" />
               Ressources
             </SideMenuLink>
-            <SideMenuLink asLink={<RouterLink to="textes-officiels" />}>
+            <SideMenuLink asLink={<RouterLink to="textes-officiels" replace />}>
               <Icon name="ri-git-repository-line" size="1x" />
               Textes officiels
             </SideMenuLink>
-            <SideMenuLink asLink={<RouterLink to="prix-et-recompenses" />}>
+            <SideMenuLink asLink={<RouterLink to="prix-et-recompenses" replace />}>
               <Icon name="ri-award-line" size="1x" />
               Prix & récompenses
             </SideMenuLink>

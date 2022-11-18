@@ -42,6 +42,7 @@ function TermByIdPage() {
   const [isFormModalOpen, setIsFormModalOpen] = useState(false);
 
   useEffect(() => { reset(); }, [reset]);
+  useEffect(() => { document.title = `Termes · ${data?.usualNameFr}`; }, [data]);
 
   const onSave = async (body) => api.patch(url, body)
     .then(() => { reload(); setIsFormModalOpen(false); notice(saveSuccess); })
@@ -55,27 +56,27 @@ function TermByIdPage() {
       <Row>
         <Col n="12 md-3">
           <SideMenu buttonLabel="Navigation">
-            <SideMenuLink asLink={<RouterLink to="presentation#" />}>
+            <SideMenuLink asLink={<RouterLink to="presentation" replace />}>
               <Icon name="ri-eye-2-line" size="1x" />
               En un coup d’œil
             </SideMenuLink>
-            <SideMenuLink asLink={<RouterLink to="elements-lies" />}>
+            <SideMenuLink asLink={<RouterLink to="elements-lies" replace />}>
               <Icon name="ri-links-line" size="1x" />
               Eléments liés
             </SideMenuLink>
-            <SideMenuLink asLink={<RouterLink to="actualites" />}>
+            <SideMenuLink asLink={<RouterLink to="actualites" replace />}>
               <Icon name="ri-newspaper-line" size="1x" />
               Actualités
             </SideMenuLink>
-            <SideMenuLink asLink={<RouterLink to="evenements" />}>
+            <SideMenuLink asLink={<RouterLink to="evenements" replace />}>
               <Icon name="ri-calendar-line" size="1x" />
               Evènements
             </SideMenuLink>
-            <SideMenuLink asLink={<RouterLink to="documents" />}>
+            <SideMenuLink asLink={<RouterLink to="documents" replace />}>
               <Icon name="ri-folders-line" size="1x" />
               Ressources
             </SideMenuLink>
-            <SideMenuLink asLink={<RouterLink to="textes-officiels" />}>
+            <SideMenuLink asLink={<RouterLink to="textes-officiels" replace />}>
               <Icon name="ri-git-repository-line" size="1x" />
               Textes officiels
             </SideMenuLink>

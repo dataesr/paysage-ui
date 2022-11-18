@@ -24,7 +24,7 @@ export default function ContributePage() {
   const [query, setQuery] = useState('');
   const [options, setOptions] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
-
+  useEffect(() => { document.title = 'Paysage · Contribuer'; }, []);
   useEffect(() => {
     const getAutocompleteResult = async () => {
       setIsSearching(true);
