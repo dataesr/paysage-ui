@@ -91,7 +91,6 @@ export default function LegalCategoriesForm({ id, data, onSave, onDelete }) {
           </Col>
           <Col n="12" spacing="pb-3w">
             <TextInput
-              textarea
               label="Description en français"
               value={form.descriptionFr}
               onChange={(e) => updateForm({ descriptionFr: e.target.value })}
