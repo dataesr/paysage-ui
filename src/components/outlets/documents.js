@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Badge, BadgeGroup, Col, Modal, ModalContent, ModalTitle, Row, Tag, Text, Icon } from '@dataesr/react-dsfr';
+import { Badge, BadgeGroup, Col, Modal, ModalContent, ModalTitle, Row, Tag, Text } from '@dataesr/react-dsfr';
 import useEditMode from '../../hooks/useEditMode';
 import useFetch from '../../hooks/useFetch';
 import useHashScroll from '../../hooks/useHashScroll';
