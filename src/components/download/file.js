@@ -50,13 +50,28 @@ export default function File({ file, onClick }) {
         {onClick
           ? (
             <div>
-              <button onClick={onClick} type="button" className={styles['file-download-button']}>
-                {file.originalName}
-                <Icon name="ri-download-line" iconPosition="right" />
-              </button>
-              <p className={styles['file-details']}>
-                {`${formatBytes(file.size)} -- ${getFileType(file.mimetype)}`}
-              </p>
+              {file.originalName.length < 30 ? (
+                <>
+                  <button onClick={onClick} type="button" className={styles['file-download-button']}>
+                    {file.originalName}
+                    <Icon name="ri-download-line" iconPosition="right" />
+                  </button>
+                  <p className={styles['file-details']}>
+                    {`${formatBytes(file.size)} -- ${getFileType(file.mimetype)}`}
+                  </p>
+                </>
+              ) : (
+                <>
+                  <button onClick={onClick} type="button" className={styles['file-download-button']}>
+                    {file.originalName.substring(0, 25)}
+                    <Icon name="ri-download-line" iconPosition="right" />
+                  </button>
+                  <p className={styles['file-details']}>
+                    {`${formatBytes(file.size)} -- ${getFileType(file.mimetype)}`}
+                  </p>
+                </>
+              )}
+
             </div>
           )
           : (

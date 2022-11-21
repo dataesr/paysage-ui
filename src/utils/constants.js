@@ -83,6 +83,7 @@ export const ENUMS_LABELS_MAPPER = {
   SIRET: 'SIRET',
   TVA: 'Numéro de TVA intracommunautaire',
   These: 'Numéro national de thèse',
+
 };
 
 export const STRUCTURES_CREATION_REASONS = [

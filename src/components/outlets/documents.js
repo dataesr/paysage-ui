@@ -105,12 +105,7 @@ export default function DocumentsOutlet() {
                       </TagList>
                     )}
                     <Row>
-                      {event.files.map((file) => (file.originalName.length <= 30 ? <Download key={file.url} file={file} /> : (
-                        <Row>
-                          <Download key={file.url} file={file} />
-                          <Icon name="ri-download-line" size="l" className="ds-fr-card-icon" />
-                        </Row>
-                      )
+                      {event.files.map((file) => (<Download key={file.url} file={file} />
                       ))}
                     </Row>
                   </div>
