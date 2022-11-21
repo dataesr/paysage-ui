@@ -16,7 +16,7 @@ function validate(body) {
   const ret = {};
   if (!body?.account) ret.account = 'Le compte/url du media social est obligatoire';
   if (!body?.type) ret.type = 'Le type du media social est obligatoire';
-  if (body?.type.includes(body.account)) ret.account = `URL non valide - Exemple : compte ${body.type} [https://${body.type}.com/XXX] `;
+  if (body?.type?.includes(body?.account)) ret.account = `URL non valide - Exemple : compte ${body.type} [https://${body.type}.com/XXX] `;
   return ret;
 }
 
