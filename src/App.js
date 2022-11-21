@@ -71,6 +71,8 @@ import ParticipationsOutlet from './components/outlets/participations';
 import JournalOutlet from './components/outlets/journal';
 import PriceAddPage from './pages/prix/ajouter';
 import { PriceByIdPage, PriceCategories, PriceExportPage, PricePresentationPage } from './pages/prix/[id]';
+import SupervisingMinistersByIdPage from './pages/supervising-ministers/id';
+import LegalCategoriesByIdPage from './pages/legal-categories/id';
 
 function App() {
   return (
@@ -214,6 +216,12 @@ function App() {
           <Route path="/textes-officiels/ajouter" element={<OfficialTextAddPage />} />
           <Route path="/official-texts/:id" element={<Redirect />} />
           <Route path="/textes-officiels/:id" element={<OfficialTextsByIdPage />} />
+
+          <Route path="/supervising-ministers/:id" element={<Redirect />} />
+          <Route path="/ministres-de-tutelle/:id" element={<SupervisingMinistersByIdPage />} />
+
+          <Route path="/legal-categories/:id" element={<Redirect />} />
+          <Route path="/categories-juridiques/:id" element={<LegalCategoriesByIdPage />} />
 
           <Route path="/contribuer" element={<ContributePage />} />
         </Route>

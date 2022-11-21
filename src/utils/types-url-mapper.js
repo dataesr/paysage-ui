@@ -7,6 +7,7 @@ const URLTypesMapper = [
   ['structures', 'structures'],
   ['termes', 'terms'],
   ['textes-officiels', 'official-texts'],
+  ['ministres-de-tutelle', 'supervising-ministers'],
   ['utilisateurs', 'users'],
 ];
 
