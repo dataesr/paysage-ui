@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Badge, BadgeGroup, Col, Modal, ModalContent, ModalTitle, Row, Tag, Text, Icon } from '@dataesr/react-dsfr';
+import { Badge, BadgeGroup, Col, Modal, ModalContent, ModalTitle, Row, Tag, Text } from '@dataesr/react-dsfr';
 import useEditMode from '../../hooks/useEditMode';
 import useFetch from '../../hooks/useFetch';
 import useHashScroll from '../../hooks/useHashScroll';
@@ -105,12 +105,7 @@ export default function DocumentsOutlet() {
                       </TagList>
                     )}
                     <Row>
-                      {event.files.map((file) => (file.originalName.length <= 30 ? <Download key={file.url} file={file} /> : (
-                        <Row>
-                          <Download key={file.url} file={file} />
-                          <Icon name="ri-download-line" size="l" className="ds-fr-card-icon" />
-                        </Row>
-                      )
+                      {event.files.map((file) => (<Download key={file.url} file={file} />
                       ))}
                     </Row>
                   </div>
