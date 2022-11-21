@@ -9,33 +9,29 @@ import {
 } from '@dataesr/react-dsfr';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
+
 import DateInput from '../../date-input';
 import FormFooter from '../form-footer';
 import useForm from '../../../hooks/useForm';
-import useUrl from '../../../hooks/useUrl';
-import useEnums from '../../../hooks/useEnums';
 import PaysageBlame from '../../paysage-blame';
 
 function validate(body) {
   const ret = {};
-  if (!body?.value) ret.value = "La valeur de l'identifiant est obligatoire";
   if (!body?.type) ret.type = "Le type de l'identifiant est obligatoire";
+  if (!body?.value) ret.value = "La valeur de l'identifiant est obligatoire";
   return ret;
 }
 
 function sanitize(form) {
-  const fields = ['type', 'value', 'startDate', 'endDate', 'active'];
+  const fields = ['active', 'endDate', 'startDate', 'type', 'value'];
   const body = {};
   Object.keys(form).forEach((key) => { if (fields.includes(key)) { body[key] = form[key]; } });
   return body;
 }
 
-export default function IdentifierForm({ id, data, onDelete, onSave }) {
+export default function IdentifierForm({ id, data, onDelete, onSave, options }) {
   const [showErrors, setShowErrors] = useState(false);
   const { form, updateForm, errors } = useForm({ active: true, ...data }, validate);
-  const { apiObject } = useUrl();
-  const { identifiers } = useEnums();
-  const options = identifiers?.[apiObject];
 
   const handleSubmit = () => {
     if (Object.keys(errors).length > 0) return setShowErrors(true);
@@ -72,22 +68,23 @@ export default function IdentifierForm({ id, data, onDelete, onSave }) {
           <Col n="12">
             <Select
               label="Type"
-              options={options}
-              selected={form?.type}
-              onChange={(e) => updateForm({ type: e.target.value })}
-              tabIndex={0}
               message={(showErrors && errors.type) ? errors.type : null}
               messageType={(showErrors && errors.type) ? 'error' : ''}
+              onChange={(e) => updateForm({ type: e.target.value })}
+              options={options}
+              required
+              selected={form?.type}
+              tabIndex={0}
             />
           </Col>
           <Col n="12">
             <TextInput
               label="Valeur"
-              value={form?.value}
-              onChange={(e) => updateForm({ value: e.target.value })}
-              required
               message={(showErrors && errors.value) ? errors.value : null}
               messageType={(showErrors && errors.value) ? 'error' : ''}
+              onChange={(e) => updateForm({ value: e.target.value })}
+              required
+              value={form?.value}
             />
           </Col>
           <Col n="12">
@@ -116,6 +113,7 @@ export default function IdentifierForm({ id, data, onDelete, onSave }) {
 }
 
 IdentifierForm.propTypes = {
+  options: PropTypes.object.isRequired,
   id: PropTypes.string,
   data: PropTypes.object,
   onDelete: PropTypes.func,

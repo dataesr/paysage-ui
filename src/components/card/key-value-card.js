@@ -1,5 +1,6 @@
 import { Icon } from '@dataesr/react-dsfr';
 import PropTypes from 'prop-types';
+import { Link as RouterLink } from 'react-router-dom';
 
 import Button from '../button';
 import CopyButton from '../copy/copy-button';
@@ -12,6 +13,7 @@ export default function KeyValueCard({
   copy,
   icon,
   linkTo,
+  linkIn,
   onEdit,
   titleAsText,
   tooltip,
@@ -33,7 +35,14 @@ export default function KeyValueCard({
           <div className="fr-card__start">
             <p className="fr-card__detail fr-text--sm fr-mb-0">
               {icon && <Icon name={icon} size="1x" />}
-              {linkTo ? <a href={linkTo} target="_blank" rel="noopener noreferrer">{cardKey}</a> : cardKey}
+              {linkTo && <a href={linkTo} target="_blank" rel="noopener noreferrer">{cardKey}</a>}
+              {linkIn && (
+                <RouterLink to={linkIn}>
+                  {cardKey}
+                  <Icon name="ri-arrow-right-line" iconPosition="right" />
+                </RouterLink>
+              )}
+              {!linkTo && !linkIn && cardKey}
               {tooltip && (
                 <Icon
                   name="ri-information-fill"
@@ -67,6 +76,7 @@ KeyValueCard.propTypes = {
   className: PropTypes.string,
   copy: PropTypes.bool,
   icon: PropTypes.string,
+  linkIn: PropTypes.string,
   linkTo: PropTypes.string,
   onEdit: PropTypes.func,
   titleAsText: PropTypes.string,
@@ -76,6 +86,7 @@ KeyValueCard.defaultProps = {
   className: '',
   copy: false,
   icon: null,
+  linkIn: null,
   linkTo: null,
   onEdit: null,
   titleAsText: false,

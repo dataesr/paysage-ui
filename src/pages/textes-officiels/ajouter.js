@@ -1,10 +1,11 @@
+import { useEffect } from 'react';
 import { Link as RouterLink, useSearchParams } from 'react-router-dom';
 import { Breadcrumb, BreadcrumbItem, Col, Container, Row, Title } from '@dataesr/react-dsfr';
 import OfficiaTextAddForm from '../../components/forms/official-text';
 
 export default function OfficialTextAddPage() {
   const [search] = useSearchParams();
-
+  useEffect(() => { document.title = 'Contribution · Ajouter un texte officiel'; }, []);
   return (
     <Container spacing="mb-6w">
       <Row>

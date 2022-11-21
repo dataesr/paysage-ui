@@ -4,6 +4,7 @@ import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import useEditMode from '../../hooks/useEditMode';
 import { formatDescriptionDates, toString } from '../../utils/dates';
 import Button from '../button';
+import CopyButton from '../copy/copy-button';
 import styles from './styles.module.scss';
 
 function getRelationTypeLabel(gender = null) {
@@ -31,8 +32,11 @@ export default function RelationCard({ relation, inverse, onEdit }) {
                 {relation.relationType?.[getRelationTypeLabel(relation?.relatedObject?.gender)] || relation.relationType?.name}
               </Text>
             )}
+            {relation?.mandatePrecision && ` ${relation?.mandatePrecision}`}
             {' '}
-            {formatDescriptionDates(relation.startDate || null, relation.endDate || null)}
+            {(relation?.resource.collection === 'prices' && (relation.startDate || relation.endDate))
+              ? formatDescriptionDates(relation.startDate || null, relation.endDate || null).replace('depuis', '').replace('le', '')
+              : formatDescriptionDates(relation.startDate || null, relation.endDate || null)}
           </p>
           {(relation.otherAssociatedObjects?.length > 0) && (
             <div className="fr-card__desc">
@@ -45,7 +49,10 @@ export default function RelationCard({ relation, inverse, onEdit }) {
             </div>
           )}
           <p className={`fr-card__title ${styles[`${toPrintRelation.collection}-title`]}`}>
-            <RouterLink className="fr-text--lg" to={toPrintRelation?.href}>{toPrintRelation?.displayName}</RouterLink>
+            <RouterLink className="fr-text--lg" to={toPrintRelation?.href}>
+              {toPrintRelation?.displayName}
+              <Icon iconPosition="right" name="ri-arrow-right-line" />
+            </RouterLink>
           </p>
           {((relation.current !== undefined) && !relation.current) && (
             <div className={`fr-card__start ${styles['card-end']}`}>
@@ -72,9 +79,10 @@ export default function RelationCard({ relation, inverse, onEdit }) {
           )}
           {relation.mandateEmail && (
             <div className={`fr-card__end ${styles['card-end']}`}>
-              <p className="fr-card__detail">
+              <p className="fr-card__detail flex flex--center">
                 <Icon name="ri-mail-line" size="1x" />
                 {relation.mandateEmail}
+                <CopyButton copyText={relation.mandateEmail} size="sm" />
               </p>
             </div>
           )}

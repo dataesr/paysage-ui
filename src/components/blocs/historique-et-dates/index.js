@@ -3,9 +3,14 @@ import { Col, Highlight, Row, Tag, TagGroup, Text } from '@dataesr/react-dsfr';
 import { useNavigate } from 'react-router-dom';
 import useFetch from '../../../hooks/useFetch';
 import useUrl from '../../../hooks/useUrl';
-import { formatDescriptionDates, toString } from '../../../utils/dates';
+import { formatDescriptionDates, toString, getComparableNow } from '../../../utils/dates';
+import { STRUCTURE_PREDECESSEUR } from '../../../utils/relations-tags';
+import styles from './styles.module.scss';
 
 function HistoryCard({ creationDate, creationReason, closureDate, closureReason, creationOfficialText, closureOfficialText, predecessors, successors }) {
+  const displayStatus = ((closureDate && (closureDate > getComparableNow(closureDate)))
+    ? `L'établissement fermera le ${formatDescriptionDates(closureDate)?.replace('depuis le', '')}`
+    : `L'établissement est fermé depuis le ${formatDescriptionDates(closureDate)?.replace('depuis le', '')}`);
   const createReason = (creationReason && !['Non renseigné', 'autre', 'Création'].includes(creationReason)) && ` par ${creationReason.toLowerCase() }`;
   const closeReason = (closureReason && !['Non renseigné', 'autre', 'Création'].includes(closureReason)) && ` par ${closureReason.toLowerCase() }`;
   const navigate = useNavigate();
@@ -18,15 +23,17 @@ function HistoryCard({ creationDate, creationReason, closureDate, closureReason,
             {creationDate && (
               <p className="fr-mb-1w">
                 Créé
-                {(creationDate.split('-').length === 1) ? ` en ${toString(creationDate)}` : ` le ${toString(creationDate)}`}
+                {(creationDate.split('-').length !== 3) ? ` en ${toString(creationDate)}` : ` le ${toString(creationDate)}`}
                 {createReason}
                 <br />
                 {creationOfficialText?.id && (
-                  <a className="fr-text--xs fr-text--regular fr-link--sm" href={creationOfficialText?.pageUrl} target="_blank" rel="noreferrer">
-                    {creationOfficialText?.nature}
-                    {' '}
-                    {creationOfficialText?.publicationDate && formatDescriptionDates(creationOfficialText.publicationDate)}
-                  </a>
+                  <span className="fr-card__detail">
+                    <a className={`fr-mb-0 fr-text--xs fr-text--regular ${styles['align-after']}`} href={creationOfficialText?.pageUrl} target="_blank" rel="noreferrer">
+                      {creationOfficialText?.nature}
+                      {' '}
+                      {creationOfficialText?.publicationDate && `du ${toString(creationOfficialText.publicationDate)}`}
+                    </a>
+                  </span>
                 )}
               </p>
             )}
@@ -45,22 +52,20 @@ function HistoryCard({ creationDate, creationReason, closureDate, closureReason,
             {(closureDate || (successors?.totalCount > 0)) && <hr />}
           </div>
           <div className="fr-card__title">
-            {closureDate && (
-              <p className="fr-text fr-mb-1v">
-                Établissement fermé
-                {' '}
-                {formatDescriptionDates(closureDate)}
-                {closeReason}
-                <br />
-                {closureOfficialText?.id && (
-                  <a className="fr-text--xs fr-text--regular fr-link--sm" href={closureOfficialText?.pageUrl} target="_blank" rel="noreferrer">
+            <p className="fr-text fr-mb-1v">
+              {displayStatus}
+              {closeReason}
+              <br />
+              {closureOfficialText?.id && (
+                <span className="fr-card__detail">
+                  <a className={`fr-mb-0 fr-text--xs fr-text--regular ${styles['align-after']}`} href={closureOfficialText?.pageUrl} target="_blank" rel="noreferrer">
                     {closureOfficialText?.nature}
                     {' '}
                     {closureOfficialText?.publicationDate && `du ${toString(closureOfficialText.publicationDate)}`}
                   </a>
-                )}
-              </p>
-            )}
+                </span>
+              )}
+            </p>
             <div>
               {(successors?.totalCount > 0) && (
                 <div className="fr-card__desc">
@@ -106,8 +111,8 @@ export default function HistoriqueEtDates() {
   const { url, id } = useUrl('');
   const { data } = useFetch(url);
 
-  const { data: predecessors } = useFetch(`/relations?filters[relationTag]=predecesseurs&filters[resourceId]=${id}&limit=500`);
-  const { data: successors } = useFetch(`/relations?filters[relationTag]=predecesseurs&filters[relatedObjectId]=${id}&limit=500`);
+  const { data: predecessors } = useFetch(`/relations?filters[relationTag]=${STRUCTURE_PREDECESSEUR}&filters[resourceId]=${id}&limit=500`);
+  const { data: successors } = useFetch(`/relations?filters[relationTag]=${STRUCTURE_PREDECESSEUR}&filters[relatedObjectId]=${id}&limit=500`);
   if (!data?.id) return null;
   return <Row><Col n="12"><HistoryCard {...data} predecessors={predecessors} successors={successors} /></Col></Row>;
 }

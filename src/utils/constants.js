@@ -45,6 +45,45 @@ export const ENUMS_LABELS_MAPPER = {
   rankingUmultirank: 'Classement Umultirank',
   rankingLeiden: 'Classement de Leiden',
   rankingWebometrics: 'Classement Webometrics',
+  // type of Identifiers
+  ALId: 'Identifiant Annelis',
+  BibId: 'Identifiant bibliothèque ESGBU',
+  BNF: 'Identifiant BnF',
+  CJ3: 'Catégorie juridique INSEE (niveau III)',
+  cvHal: 'Identifiant cvHal',
+  CTI: 'Identifiant CTI',
+  dataESR: 'Identifiant dataESR',
+  ED: "Numéro de l'ED",
+  ETER: 'Identifiant ETER',
+  EtId: 'Identifiant établissement ESGBU',
+  fundr: 'Identifiant fundref',
+  GRID: 'Identifiant GRID',
+  isni: 'Identifiant Isni',
+  ISIL: 'Identifiant ISIL',
+  IdREF: 'Identifiant IdRef',
+  idHal: 'Identifiant idHal',
+  IS03: 'Code ISO 3',
+  ISO2: 'Code ISO 2',
+  OAD: 'Identifiant GA OAD',
+  ORCID: 'ORCID iD',
+  orgre: 'Identifiant orgref',
+  UAI: 'Code UAI',
+  UNIVD: 'Identifiant Univ-droit',
+  PIC: 'PIC',
+  PIA: 'Identifiant Référence projet PIA',
+  PSUP: 'Lib formation Parcoursup',
+  PSUP2: 'Lib formation en apprentissage Parcoursup',
+  PSUPT: 'Lib types de formation Parcoursup',
+  PSUPC: 'Lib informations complémentaires Parcoursup',
+  RCR: 'Identifiant RCR',
+  RNA: 'Répertoire national des associations',
+  RNSR: 'Identifiant RNSR',
+  SsId: 'Identifiant service documentaire ESGB',
+  SIREN: 'SIREN',
+  SIRET: 'SIRET',
+  TVA: 'Numéro de TVA intracommunautaire',
+  These: 'Numéro national de thèse',
+
 };
 
 export const STRUCTURES_CREATION_REASONS = [
@@ -68,3 +107,5 @@ export const STRUCTURES_CLOSURE_REASONS = [
   'Succession',
   'autre',
 ];
+
+export const SEARCH_TYPES = 'categories%2Cofficial%2Dtexts%2Cpersons%2Cprices%2Cprojects%2Cstructures%2Cterms';

@@ -11,13 +11,7 @@ import useUrl from '../../../hooks/useUrl';
 import useNotice from '../../../hooks/useNotice';
 import Map from '../../map/auto-bound-map';
 import RelationCard from '../../card/relation-card';
-
-const deleteError = { content: "Une erreur s'est produite. L'élément n'a pas pu être supprimé", autoDismissAfter: 6000, type: 'error' };
-const saveError = { content: "Une erreur s'est produite.", autoDismissAfter: 6000, type: 'error' };
-const saveSuccess = { content: 'La relation a été ajoutée avec succès.', autoDismissAfter: 6000, type: 'success' };
-const deleteSuccess = { content: 'La relation a été supprimée avec succès.', autoDismissAfter: 6000, type: 'success' };
-const saveGroupeSuccess = { content: 'Le groupe a été modifié avec succès.', autoDismissAfter: 6000, type: 'success' };
-const deleteGroupeSuccess = { content: 'Le groupe a été supprimée avec succès.', autoDismissAfter: 6000, type: 'success' };
+import { deleteError, saveError, saveSuccess, deleteSuccess } from '../../../utils/notice-contents';
 
 export default function RelationsByGroup({ group, reloader }) {
   const { id: groupId, name: groupName, accepts: groupAccepts } = group;
@@ -46,13 +40,13 @@ export default function RelationsByGroup({ group, reloader }) {
 
   const onSaveListHandler = async (body, id = null) => {
     const saveUrl = `${listUrl}/${id}`;
-    await api.patch(saveUrl, body).then(() => { notice(saveGroupeSuccess); reloader(); }).catch(() => notice(saveError));
+    await api.patch(saveUrl, body).then(() => { notice(saveSuccess); reloader(); }).catch(() => notice(saveError));
     return setShowListModal(false);
   };
 
   const onDeleteListHandler = async (id) => {
     await api.delete(`${listUrl}/${id}`)
-      .then(() => { notice(deleteGroupeSuccess); reloader(); })
+      .then(() => { notice(deleteSuccess); reloader(); })
       .catch(() => notice(deleteError));
     return setShowListModal(false);
   };

@@ -13,6 +13,10 @@ function getRoute(apiObject) {
     return 'termes';
   case 'official-texts':
     return 'textes-officiels';
+  case 'legal-categories':
+    return 'categories-juridiques';
+  case 'supervising-ministers':
+    return 'ministres-de-tutelle';
 
   default:
     return apiObject;

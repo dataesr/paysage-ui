@@ -9,7 +9,7 @@ import Avatar from '../avatar';
 export default function JournalOutlet() {
   const { id: resourceId } = useParams();
   const url = resourceId ? `/journal?filters[resourceId]=${resourceId}&sort=-createdAt&limit=100` : '/journal?sort=-createdAt&limit=100';
-  const { data, isLoading, error } = useFetch(url);
+  const { data, error, isLoading } = useFetch(url);
   useHashScroll();
 
   const renderContent = () => {
@@ -23,7 +23,7 @@ export default function JournalOutlet() {
               <Text spacing="ml-1v mb-0">
                 {`${event.user.firstName} ${event.user.lastName}`}
                 {' le '}
-                {toString(event.createdAt, true)}
+                {toString(event.createdAt, true, true)}
                 {' a '}
                 {['PUT', 'POST'].includes(event.method.toUpperCase()) && 'créé' }
                 {['DELETE'].includes(event.method.toUpperCase()) && 'supprimé' }

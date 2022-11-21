@@ -1,10 +1,11 @@
 import RelationsByTag from '../../../components/blocs/relations-by-tag';
+import { PROJET_CONTACT, PROJET_PARTICIPATION } from '../../../utils/relations-tags';
 
 export default function PersonProjets() {
   return (
     <>
       <RelationsByTag
-        tag="project-contact"
+        tag={PROJET_CONTACT}
         blocName="Référent pour les projets"
         resourceType="projects"
         relatedObjectTypes={['persons']}
@@ -12,7 +13,7 @@ export default function PersonProjets() {
         inverse
       />
       <RelationsByTag
-        tag="participations"
+        tag={PROJET_PARTICIPATION}
         blocName="Participations à des projets"
         resourceType="projects"
         relatedObjectTypes={['persons']}

@@ -11,6 +11,7 @@ export default function HomePage() {
   const [isSearching, setIsSearching] = useState(false);
   const navigate = useNavigate();
 
+  useEffect(() => { document.title = 'Paysage · Accueil'; }, []);
   useEffect(() => {
     const getAutocompleteResult = async () => {
       setIsSearching(true);

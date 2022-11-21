@@ -21,9 +21,9 @@ import { parseRelatedElement } from '../../../utils/parse-related-element';
 import PaysageBlame from '../../paysage-blame';
 
 function sanitize(form) {
-  const fields = ['resourceId', 'relatedObjectId', 'relationTypeId', 'relationsGroupId', 'relationTag',
+  const fields = ['resourceId', 'relatedObjectId', 'relationTypeId', 'relationTag',
     'startDateOfficialTextId', 'endDateOfficialTextId', 'startDate', 'endDate', 'mandateTemporary', 'mandateReason',
-    'mandateEmail', 'mandatePosition', 'mandateSpecifications'];
+    'mandateEmail', 'mandatePosition', 'mandatePrecision'];
   const body = {};
   Object.keys(form).forEach((key) => { if (fields.includes(key)) { body[key] = form[key]; } });
   return body;
@@ -35,6 +35,9 @@ export default function MandateForm({ id, resourceType, relatedObjectTypes, data
     if (!body?.relatedObjectId && !inverse) {
       errors.relatedObjectId = 'Vous devez sélectionner un objet à lier';
     }
+    // if (!body?.relationTypeId) {
+    //   errors.relatedObjectId = 'Le type est obligatoire';
+    // }
     if (!body?.resourceId && inverse) {
       errors.relatedObjectId = 'Vous devez sélectionner un objet à lier';
     }
@@ -179,8 +182,8 @@ export default function MandateForm({ id, resourceType, relatedObjectTypes, data
                 <SearchBar
                   buttonLabel="Rechercher"
                   value={resourceQuery || ''}
-                  label="Objet Paysage à lier"
-                  hint="Rechercher dans les objects Paysage"
+                  label="Structure à lier"
+                  hint="Rechercher dans les objets Paysage"
                   required
                   scope={form.resourceName}
                   placeholder={form.resourceId ? '' : 'Rechercher...'}
@@ -197,8 +200,8 @@ export default function MandateForm({ id, resourceType, relatedObjectTypes, data
                 <SearchBar
                   buttonLabel="Rechercher"
                   value={relatedObjectQuery || ''}
-                  label="Objet Paysage à lier"
-                  hint="Rechercher dans les objects Paysage"
+                  label="Personne à lier"
+                  hint="Rechercher dans les objets Paysage"
                   required
                   scope={form.relatedObjectName}
                   placeholder={form.relatedObjectId ? '' : 'Rechercher...'}
@@ -282,6 +285,13 @@ export default function MandateForm({ id, resourceType, relatedObjectTypes, data
             <Title as="h3" look="h5" spacing="mb-0">
               Information du mandat
             </Title>
+          </Col>
+          <Col n="12">
+            <DateInput
+              value={form.endDatePrevisional || ''}
+              label="Date de fin prévisionelle"
+              onDateChange={((v) => updateForm({ endDatePrevisional: v }))}
+            />
           </Col>
           <Col n="12">
             <Checkbox

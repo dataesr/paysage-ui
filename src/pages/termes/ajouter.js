@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { Breadcrumb, BreadcrumbItem, Col, Container, Row, Title } from '@dataesr/react-dsfr';
 import CategoryTermsForm from '../../components/forms/category-term';
@@ -8,6 +9,7 @@ import { saveError, saveSuccess } from '../../utils/notice-contents';
 export default function TermsAddPage() {
   const navigate = useNavigate();
   const { notice } = useNotice();
+  useEffect(() => { document.title = 'Contribution · Ajouter un terme'; }, []);
   const onSave = async (body) => api.post('/terms', body)
     .then((response) => { notice(saveSuccess); navigate(`/termes/${response.data.id}`); })
     .catch(() => { notice(saveError); });

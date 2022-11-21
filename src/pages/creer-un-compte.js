@@ -55,7 +55,7 @@ export default function SignUp() {
     }
     setStep(step + 1);
   };
-
+  useEffect(() => { document.title = 'Paysage · Créer un compte'; }, []);
   useEffect(() => {
     if (firstName.length >= 2) return setFirstNameError('');
     return setFirstNameError('Le prénom doit avoir au moins deux caractères');

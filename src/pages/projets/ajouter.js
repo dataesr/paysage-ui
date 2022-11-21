@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { Breadcrumb, BreadcrumbItem, Col, Container, Row, Title } from '@dataesr/react-dsfr';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 
@@ -12,7 +13,7 @@ export default function ProjectAddPage() {
   const onSave = async (body) => api.post('/projects', body)
     .then((response) => { notice(saveSuccess); navigate(`/projets/${response.data.id}`); })
     .catch(() => { notice(saveError); });
-
+  useEffect(() => { document.title = 'Contribution · Ajouter un projet'; }, []);
   return (
     <Container spacing="mb-6w">
       <Row>

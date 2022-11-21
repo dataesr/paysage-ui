@@ -1,0 +1,5 @@
+.align-after {
+  &::after {
+    --icon-size: 1rem !important;
+  }
+}

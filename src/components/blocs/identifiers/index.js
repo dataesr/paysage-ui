@@ -10,18 +10,19 @@ import {
   BlocModal,
   BlocTitle,
 } from '../../bloc';
-import api from '../../../utils/api';
+import KeyValueCard from '../../card/key-value-card';
+import useEnums from '../../../hooks/useEnums';
 import useFetch from '../../../hooks/useFetch';
-import useUrl from '../../../hooks/useUrl';
 import useNotice from '../../../hooks/useNotice';
+import useUrl from '../../../hooks/useUrl';
+import api from '../../../utils/api';
+import { getTvaIntraFromSiren } from '../../../utils/get-tva-intra';
 import {
   deleteError,
+  deleteSuccess,
   saveError,
   saveSuccess,
-  deleteSuccess,
 } from '../../../utils/notice-contents';
-import KeyValueCard from '../../card/key-value-card';
-import { getTvaIntraFromSiren } from '../../../utils/get-tva-intra';
 
 export default function IdentifiersComponent() {
   const { notice } = useNotice();
@@ -30,6 +31,8 @@ export default function IdentifiersComponent() {
   const [showModal, setShowModal] = useState(false);
   const [modalTitle, setModalTitle] = useState('');
   const [modalContent, setModalContent] = useState(null);
+  const { identifiers } = useEnums();
+  const options = identifiers?.[apiObject];
 
   const onSaveHandler = async (body, itemId) => {
     const method = itemId ? 'patch' : 'post';
@@ -64,6 +67,7 @@ export default function IdentifiersComponent() {
         data={element || {}}
         onDelete={onDeleteHandler}
         onSave={onSaveHandler}
+        options={options}
       />,
     );
     setShowModal(true);
@@ -72,11 +76,8 @@ export default function IdentifiersComponent() {
   const getLink = (el) => {
     let linkTo = '';
     switch (el.type) {
-    case 'Wikidata':
-      linkTo = `https://wikidata.org/wiki/${el.value}`;
-      break;
-    case 'Wikidata JSON':
-      linkTo = `https://www.wikidata.org/wiki/Special:EntityData/${el.value}.json`;
+    case 'ALId':
+      linkTo = `https://dgesip-annelis.adc.education.fr/etablissement/${el.value}`;
       break;
     case 'idRef':
       linkTo = `https://www.idref.fr/${el.value}`;
@@ -135,14 +136,17 @@ export default function IdentifiersComponent() {
     case 'WOS':
       linkTo = `https://publons.com/researcher/${el.value}/`;
       break;
-    case 'These':
+    case 'Numéro national de Thèse':
       linkTo = `http://www.theses.fr/${el.value}`;
       break;
     case 'UNIVD':
       linkTo = `https://univ-droit.fr/universitaires/${el.value}`;
       break;
-    case 'ALId':
-      linkTo = `https://dgesip-annelis.adc.education.fr/etablissement/${el.value}`;
+    case 'Wikidata':
+      linkTo = `https://wikidata.org/wiki/${el.value}`;
+      break;
+    case 'Wikidata JSON':
+      linkTo = `https://www.wikidata.org/wiki/Special:EntityData/${el.value}.json`;
       break;
     default:
     }
@@ -153,7 +157,7 @@ export default function IdentifiersComponent() {
     if (!data) return null;
     const list = [];
     if (data) {
-      data?.data?.forEach((el) => {
+      data.data?.forEach((el) => {
         if (el.type === 'Id unité CNRS') {
           list.push(
             <KeyValueCard
@@ -182,59 +186,6 @@ export default function IdentifiersComponent() {
             />,
           );
         }
-        if (el.type === 'EtId') {
-          list.push(
-            <KeyValueCard
-              cardKey="Identifiant établissement ESGBU"
-              cardValue={el.value}
-              className={`card-${apiObject}`}
-              copy
-              icon="ri-fingerprint-2-line"
-              key={el.id}
-              onEdit={() => onOpenModalHandler(el)}
-            />,
-          );
-        }
-        if (el.type === 'SdId') {
-          list.push(
-            <KeyValueCard
-              cardKey="Identifiant service documentaire ESGBU"
-              cardValue={el.value}
-              className={`card-${apiObject}`}
-              copy
-              icon="ri-fingerprint-2-line"
-              key={el.id}
-              onEdit={() => onOpenModalHandler(el)}
-            />,
-          );
-        }
-        if (el.type === 'BibId') {
-          list.push(
-            <KeyValueCard
-              cardKey="Identifiant bibliothèque ESGBU"
-              cardValue={el.value}
-              className={`card-${apiObject}`}
-              copy
-              icon="ri-fingerprint-2-line"
-              key={el.id}
-              onEdit={() => onOpenModalHandler(el)}
-            />,
-          );
-        }
-        if (el.type === 'isni') {
-          list.push(
-            <KeyValueCard
-              cardKey="Identifiant isni"
-              cardValue={el.value}
-              className={`card-${apiObject}`}
-              copy
-              icon="ri-fingerprint-2-line"
-              key={el.id}
-              onEdit={() => onOpenModalHandler(el)}
-              linkTo={getLink(el)}
-            />,
-          );
-        }
         if (el.type === 'Siret') {
           const siren = el.value.substring(0, 11);
           list.push(
@@ -245,25 +196,25 @@ export default function IdentifiersComponent() {
               copy
               icon="ri-fingerprint-2-line"
               key={el.id}
-              // onEdit={() => onOpenModalHandler(el)}
+              onEdit={() => onOpenModalHandler(el)}
               linkTo={getLink({ ...el, type: 'Siren' })}
             />,
           );
           list.push(
             <KeyValueCard
-              cardKey="Numéro de TVA"
+              cardKey="Numéro de TVA intracommunautaire"
               cardValue={getTvaIntraFromSiren(siren)}
               className={`card-${apiObject}`}
               copy
               icon="ri-fingerprint-2-line"
               key={el.id}
-              // onEdit={() => onOpenModalHandler(el)}
+              onEdit={() => onOpenModalHandler(el)}
             />,
           );
         }
         list.push(
           <KeyValueCard
-            cardKey={el.type}
+            cardKey={options?.find((type) => (el.type === type.value))?.label}
             cardValue={el.value}
             className={`card-${apiObject}`}
             copy

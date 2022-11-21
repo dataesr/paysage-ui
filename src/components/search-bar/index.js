@@ -154,9 +154,9 @@ const SearchBar = forwardRef((props, ref) => {
           )}
         </div>
         <div className={styles.autocomplete}>
-          {isSearching && (
-            <div className={styles.list}>
-              <Spinner />
+          {(isSearching && showOptions) && (
+            <div className={`${styles.list} ${styles.loader}`}>
+              <Spinner size={40} />
             </div>
           )}
           {(!isSearching && options.length && showOptions) ? (

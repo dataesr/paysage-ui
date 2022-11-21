@@ -1,10 +1,11 @@
 import RelationsByTag from '../../../components/blocs/relations-by-tag';
+import { PERSONNE_TERME, PRIX_TERME, PROJET_TERME, STRUCTURE_TERME, TERME_CATEGORIE } from '../../../utils/relations-tags';
 
 export default function TermRelatedElements() {
   return (
     <>
       <RelationsByTag
-        tag="structures-terms"
+        tag={STRUCTURE_TERME}
         blocName="Structures associées"
         resourceType="structures"
         relatedObjectTypes={['terms']}
@@ -12,7 +13,7 @@ export default function TermRelatedElements() {
         inverse
       />
       <RelationsByTag
-        tag="personnes-terms"
+        tag={PERSONNE_TERME}
         blocName="Personnes associées"
         resourceType="persons"
         relatedObjectTypes={['terms']}
@@ -20,7 +21,7 @@ export default function TermRelatedElements() {
         inverse
       />
       <RelationsByTag
-        tag="prices-terms"
+        tag={PRIX_TERME}
         blocName="Prix associés"
         resourceType="prices"
         relatedObjectTypes={['terms']}
@@ -28,7 +29,7 @@ export default function TermRelatedElements() {
         inverse
       />
       <RelationsByTag
-        tag="projects-terms"
+        tag={PROJET_TERME}
         blocName="Projets associés"
         resourceType="projects"
         relatedObjectTypes={['terms']}
@@ -36,7 +37,7 @@ export default function TermRelatedElements() {
         inverse
       />
       <RelationsByTag
-        tag="terms-categories"
+        tag={TERME_CATEGORIE}
         blocName="Catégorie associées"
         resourceType="terms"
         relatedObjectTypes={['categories']}

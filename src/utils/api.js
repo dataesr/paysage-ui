@@ -9,12 +9,13 @@ const setDefaultHeaders = (requestHeaders = {}) => {
   return { ...defaultHeaders, ...rest };
 };
 
-async function customFetch({ method, url, body, headers }) {
+async function customFetch({ method, url, body, headers, options: reqOptions }) {
   const requestUrl = `${process.env.REACT_APP_API_URL}${url}`;
   const options = {
     method: method.toUpperCase(),
     headers: setDefaultHeaders(headers),
     body,
+    ...reqOptions,
   };
   if (body && options.headers['Content-Type'] === 'application/json') {
     options.body = JSON.stringify(body);
@@ -33,9 +34,9 @@ async function customFetch({ method, url, body, headers }) {
 }
 
 export default {
-  get: (url, headers) => customFetch({ method: 'GET', url, headers }),
-  post: (url, body, headers) => customFetch({ method: 'POST', url, body, headers }),
-  put: (url, body, headers) => customFetch({ method: 'PUT', url, body, headers }),
-  patch: (url, body, headers) => customFetch({ method: 'PATCH', url, body, headers }),
-  delete: (url, headers) => customFetch({ method: 'DELETE', url, headers }),
+  get: (url, headers, options) => customFetch({ method: 'GET', url, headers, options }),
+  post: (url, body, headers, options) => customFetch({ method: 'POST', url, body, headers, options }),
+  put: (url, body, headers, options) => customFetch({ method: 'PUT', url, body, headers, options }),
+  patch: (url, body, headers, options) => customFetch({ method: 'PATCH', url, body, headers, options }),
+  delete: (url, headers, options) => customFetch({ method: 'DELETE', url, headers, options }),
 };

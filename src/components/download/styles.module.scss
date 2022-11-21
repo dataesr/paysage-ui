@@ -4,6 +4,7 @@
   font-weight: 400;
   line-height: 1.25rem;
   max-width: 100%;
+  display: flex;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -28,6 +29,10 @@
   display: inline !important;
   font-size: 1rem !important;
   line-height: 1.5rem !important;
+  white-space: nowrap; 
+  width: 250;
+  overflow: hidden;
+  text-overflow: ellipsis;
   &:hover {
     background-color: transparent !important;
     text-decoration: underline;

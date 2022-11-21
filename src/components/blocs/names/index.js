@@ -1,8 +1,5 @@
 import { useState } from 'react';
 import {
-  Card,
-  CardDescription,
-  CardTitle,
   ModalContent,
   ModalTitle,
 } from '@dataesr/react-dsfr';
@@ -16,6 +13,7 @@ import useUrl from '../../../hooks/useUrl';
 import ExpendableListCards from '../../card/expendable-list-cards';
 import useNotice from '../../../hooks/useNotice';
 import { deleteError, saveError, saveSuccess, deleteSuccess } from '../../../utils/notice-contents';
+import Button from '../../button';
 
 export default function NamesComponent() {
   const { notice } = useNotice();
@@ -57,18 +55,35 @@ export default function NamesComponent() {
   const renderCards = () => {
     if (!data) return null;
     const list = data.data.map((item) => (
-      <Card
-        isGrey
-        hasBorder={false}
-        hasArrow={false}
-        onClick={() => onOpenModalHandler(item)}
-        href="#"
-      >
-        <CardTitle>{item.usualName}</CardTitle>
-        <CardDescription>
-          {formatDescriptionDates(item.startDate, item.endDate)}
-        </CardDescription>
-      </Card>
+      <div className="fr-card fr-card--xs fr-card--horizontal fr-card--grey fr-card--no-border">
+        <div className="fr-card__body">
+          <div className="fr-card__content">
+            <p className="fr-card__title">
+              <span className="fr-pr-1w">
+                {item.usualName}
+              </span>
+            </p>
+            <p className="fr-card__desc">
+              {formatDescriptionDates(item.startDate, item.endDate)}
+            </p>
+            <div className="fr-card__start">
+              <p className="fr-card__detail fr-text--sm fr-mb-0">
+                Dénomination
+              </p>
+            </div>
+            <Button
+              color="text"
+              size="md"
+              onClick={() => onOpenModalHandler(item)}
+              tertiary
+              borderless
+              rounded
+              icon="ri-edit-line"
+              className="edit-button"
+            />
+          </div>
+        </div>
+      </div>
     ));
     return <ExpendableListCards list={list} />;
   };

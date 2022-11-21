@@ -27,6 +27,7 @@ export default function OfficialTextByIdPage() {
   const [isFormModalOpen, setIsFormModalOpen] = useState(false);
 
   useEffect(() => { reset(); }, [reset]);
+  useEffect(() => { document.title = `Texte officiels · ${data?.title}`; }, [data]);
 
   const onSave = async (body) => api.patch(url, body)
     .then(() => { reload(); setIsFormModalOpen(false); notice(saveSuccess); })

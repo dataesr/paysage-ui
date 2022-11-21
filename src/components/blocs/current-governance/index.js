@@ -5,19 +5,19 @@ import useUrl from '../../../hooks/useUrl';
 import RelationCard from '../../card/relation-card';
 import GoToCard from '../../card/go-to-card';
 import { getComparableNow } from '../../../utils/dates';
+import { GOUVERNANCE as tag } from '../../../utils/relations-tags';
 
 const MANDATE_PRIORITY_THRESHOLD = 10;
 
 export default function StructureCurrentGovernance() {
   const { id } = useUrl();
-  const { data, isLoading, error } = useFetch(`/relations?filters[resourceId]=${id}&filters[relationTag]=gouvernance&limit=500`);
+  const { data, isLoading, error } = useFetch(`/relations?filters[resourceId]=${id}&filters[relationTag]=${tag}&limit=500&sort=relationType.priority`);
 
   const renderCurrentMandates = () => {
     if (!data?.data?.length > 0) return null;
     const currentMandates = data?.data
       .filter((mandate) => (!mandate.endDate || (mandate.endDate >= getComparableNow())))
-      .filter((mandate) => (mandate?.relationType?.priority < MANDATE_PRIORITY_THRESHOLD))
-      .sort((a, b) => ((a?.relationType?.priority || 99) - (b?.relationType?.priority || 99)));
+      .filter((mandate) => (mandate?.relationType?.priority < MANDATE_PRIORITY_THRESHOLD));
     return (
       <Row gutters>
         {currentMandates.map((mandate) => (

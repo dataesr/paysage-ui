@@ -91,7 +91,6 @@ export default function LegalCategoriesForm({ id, data, onSave, onDelete }) {
           </Col>
           <Col n="12" spacing="pb-3w">
             <TextInput
-              textarea
               label="Description en français"
               value={form.descriptionFr}
               onChange={(e) => updateForm({ descriptionFr: e.target.value })}
@@ -166,7 +165,7 @@ export default function LegalCategoriesForm({ id, data, onSave, onDelete }) {
           <Col n="12" spacing="pb-3w">
             <TagInput
               label="Autres noms"
-              hint='Validez votre ajout avec la touche "Entrée" afin de valider votre ajout'
+              hint='Valider votre ajout avec la touche "Entrée"'
               tags={form.otherNames || []}
               onTagsChange={(tags) => updateForm({ otherNames: tags })}
             />

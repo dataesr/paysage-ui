@@ -144,7 +144,7 @@ export default function CategoryTermsForm({ id, data, onSave, onDelete }) {
           <Col n="12 md-6">
             <TagInput
               label="Autres noms français"
-              hint='Validez votre ajout avec la touche "Entrée" afin de valider votre ajout'
+              hint='Valider votre ajout avec la touche "Entrée"'
               tags={form.otherNamesFr || []}
               onTagsChange={(tags) => updateForm({ otherNamesFr: tags })}
             />
@@ -167,7 +167,7 @@ export default function CategoryTermsForm({ id, data, onSave, onDelete }) {
           <Col n="12 md-6">
             <TagInput
               label="Autres noms anglais"
-              hint='Validez votre ajout avec la touche "Entrée" afin de valider votre ajout'
+              hint='Valider votre ajout avec la touche "Entrée"'
               tags={form.otherNamesEn || []}
               onTagsChange={(tags) => updateForm({ otherNamesEn: tags })}
             />
@@ -175,7 +175,6 @@ export default function CategoryTermsForm({ id, data, onSave, onDelete }) {
           <Col n="12"><Title as="h2" look="h5" spacing="mb-0">Descriptions</Title></Col>
           <Col n="12 md-6">
             <TextInput
-              textarea
               label="Description en français"
               value={form.descriptionFr || ''}
               onChange={(e) => updateForm({ descriptionFr: e.target.value })}
@@ -183,7 +182,6 @@ export default function CategoryTermsForm({ id, data, onSave, onDelete }) {
           </Col>
           <Col n="12 md-6">
             <TextInput
-              textarea
               label="Description en anglais"
               value={form.descriptionEn || ''}
               onChange={(e) => updateForm({ descriptionEn: e.target.value })}

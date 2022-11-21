@@ -5,6 +5,7 @@ import Weblinks from '../../../components/blocs/weblinks';
 import useHashScroll from '../../../hooks/useHashScroll';
 import LaureateForm from '../../../components/forms/laureate';
 import Wiki from '../../../components/blocs/wiki';
+import { LAUREAT, PRIX_PORTEUR } from '../../../utils/relations-tags';
 
 export default function PricePresentationPage() {
   useHashScroll();
@@ -18,10 +19,18 @@ export default function PricePresentationPage() {
         </Title>
       </Row>
       <RelationsByTag
-        tag="prix"
+        tag={PRIX_PORTEUR}
+        blocName="Structures décernant le prix"
+        resourceType="prices"
+        relatedObjectTypes={['structures']}
+        inverse
+        Form={LaureateForm}
+      />
+      <RelationsByTag
+        tag={LAUREAT}
         blocName="Lauréats"
         resourceType="prices"
-        relatedObjectTypes={['persons', 'structures']}
+        relatedObjectTypes={['persons', 'structures', 'projects']}
         Form={LaureateForm}
       />
       <Row gutters>

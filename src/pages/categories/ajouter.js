@@ -1,5 +1,6 @@
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { Breadcrumb, BreadcrumbItem, Col, Container, Row, Title } from '@dataesr/react-dsfr';
+import { useEffect } from 'react';
 import CategoryTermsForm from '../../components/forms/category-term';
 import api from '../../utils/api';
 import useNotice from '../../hooks/useNotice';
@@ -11,6 +12,8 @@ export default function CategoriesAddPage() {
   const onSave = async (body) => api.post('/categories', body)
     .then((response) => { notice(saveSuccess); navigate(`/categories/${response.data.id}`); })
     .catch(() => { notice(saveError); });
+
+  useEffect(() => { document.title = 'Contribution · Ajouter une catégorie'; }, []);
 
   return (
     <Container spacing="mb-6w">

@@ -1,6 +1,8 @@
+import { useEffect } from 'react';
 import { Container, Icon, Text } from '@dataesr/react-dsfr';
 
 export default function Aide() {
+  useEffect(() => { document.title = 'Paysage · Aide'; }, []);
   return (
     <Container>
       <Text size="lg" bold className="fr-mt-5w">

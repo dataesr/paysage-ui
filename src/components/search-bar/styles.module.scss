@@ -26,6 +26,12 @@
   --underline-img: none;
   --text-spacing: 0;
   --title-spacing: 0;
+  .loader {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    padding: .5rem 0;
+  }
   .list {
     // margin-top: 0.25rem;
     border-radius: 0 0 .5rem .5rem;

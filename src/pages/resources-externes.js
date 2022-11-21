@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import {
   Badge,
   BadgeGroup,
@@ -14,13 +15,14 @@ import {
 } from '@dataesr/react-dsfr';
 
 export default function RessourcesPage() {
+  useEffect(() => { document.title = 'Paysage · Ressources'; }, []);
   return (
     <Container spacing="mt-5w">
       <Title as="h2">Les ressources externes</Title>
       <Row>
         <Col n="12 sm-6 md-4" spacing="p-3w">
           <Card
-            href="https://curiexplore.enseignementsup-recherche.gouv.fr"
+            asLink={<a className="flex flex--baseline" href="https://curiexplore.enseignementsup-recherche.gouv.fr" target="_blank" rel="noreferrer">CurieXplore</a>}
             hasBorder={false}
           >
             <CardHeader>
@@ -42,7 +44,7 @@ export default function RessourcesPage() {
         </Col>
         <Col n="12 sm-6 md-4" spacing="p-3w">
           <Card
-            href="https://scanr.enseignementsup-recherche.gouv.fr/"
+            asLink={<a className="flex flex--baseline" href="https://scanr.enseignementsup-recherche.gouv.fr/" target="_blank" rel="noreferrer">ScanR</a>}
             hasBorder={false}
           >
             <CardHeader>
@@ -65,7 +67,7 @@ export default function RessourcesPage() {
         </Col>
         <Col n="12 sm-6 md-4" spacing="p-3w">
           <Card
-            href="https://www.enseignementsup-recherche.gouv.fr/fr/eesr"
+            asLink={<a className="flex flex--baseline" href="https://www.enseignementsup-recherche.gouv.fr/fr/eesr" target="_blank" rel="noreferrer">L'état de l'enseignement supérieur</a>}
             hasBorder={false}
           >
             <CardHeader>
@@ -85,7 +87,10 @@ export default function RessourcesPage() {
           </Card>
         </Col>
         <Col n="12 sm-6 md-4" spacing="p-3w">
-          <Card href="https://data.esr.gouv.fr/FR/" hasBorder={false}>
+          <Card
+            asLink={<a className="flex flex--baseline" href="https://data.esr.gouv.fr/FR/" target="_blank" rel="noreferrer">#dataesr</a>}
+            hasBorder={false}
+          >
             <CardHeader>
               <CardImage
                 src="https://dataesr.enseignementsup-recherche.pro/images/dataESR.svg"
@@ -104,7 +109,7 @@ export default function RessourcesPage() {
         </Col>
         <Col n="12 sm-6 md-4" spacing="p-3w">
           <Card
-            href="https://data.enseignementsup-recherche.gouv.fr/pages/home/"
+            asLink={<a className="flex flex--baseline" href="https://data.esr.gouv.fr/FR/" target="_blank" rel="noreferrer">OpenData</a>}
             hasBorder={false}
           >
             <CardHeader>

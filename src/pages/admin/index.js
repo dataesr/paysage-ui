@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { Col, Container, Row, SideMenu, SideMenuItem, SideMenuLink } from '@dataesr/react-dsfr';
 import { Link as RouterLink, Outlet } from 'react-router-dom';
 
@@ -9,34 +10,35 @@ import AdminRelationTypesPage from './relation-types';
 import AdminGroupsPage from './groupes';
 
 function AdminPage() {
+  useEffect(() => { document.title = 'Paysage · Administration du site'; }, []);
   return (
     <Container spacing="mb-6w">
       <Row>
         <Col n="12 md-3">
           <SideMenu buttonLabel="Navigation">
-            <SideMenuLink asLink={<RouterLink to="/admin" />}>
+            <SideMenuLink asLink={<RouterLink to="/admin" replace />}>
               Tableau de bord
             </SideMenuLink>
-            <SideMenuLink asLink={<RouterLink to="/admin/utilisateurs" />}>
+            <SideMenuLink asLink={<RouterLink to="/admin/utilisateurs" replace />}>
               Utilisateurs
             </SideMenuLink>
-            <SideMenuLink asLink={<RouterLink to="/admin/groupes" />}>
+            <SideMenuLink asLink={<RouterLink to="/admin/groupes" replace />}>
               Groupes d'utilisateurs
             </SideMenuLink>
             <SideMenuItem expandedDefault title="Nomenclatures">
-              <SideMenuLink asLink={<RouterLink to="/admin/categories-juridiques" />}>
+              <SideMenuLink asLink={<RouterLink to="/admin/categories-juridiques" replace />}>
                 Catégories juridiques
               </SideMenuLink>
-              <SideMenuLink asLink={<RouterLink to="/admin/nomenclatures/types-de-document" />}>
+              <SideMenuLink asLink={<RouterLink to="/admin/nomenclatures/types-de-document" replace />}>
                 Types de document
               </SideMenuLink>
-              <SideMenuLink asLink={<RouterLink to="/admin/nomenclatures/types-de-mail" />}>
+              <SideMenuLink asLink={<RouterLink to="/admin/nomenclatures/types-de-mail" replace />}>
                 Types de mail
               </SideMenuLink>
-              <SideMenuLink asLink={<RouterLink to="/admin/nomenclatures/ministres-de-tutelle" />}>
+              <SideMenuLink asLink={<RouterLink to="/admin/nomenclatures/ministres-de-tutelle" replace />}>
                 Ministres de tutelle
               </SideMenuLink>
-              <SideMenuLink asLink={<RouterLink to="/admin/types-de-relation" />}>
+              <SideMenuLink asLink={<RouterLink to="/admin/types-de-relation" replace />}>
                 Types de relation
               </SideMenuLink>
             </SideMenuItem>

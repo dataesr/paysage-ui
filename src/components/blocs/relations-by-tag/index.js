@@ -10,17 +10,13 @@ import useFetch from '../../../hooks/useFetch';
 import useUrl from '../../../hooks/useUrl';
 import useNotice from '../../../hooks/useNotice';
 import Map from '../../map/auto-bound-map';
+import { deleteError, saveError, saveSuccess, deleteSuccess } from '../../../utils/notice-contents';
 
-const deleteError = { content: "Une erreur s'est produite. L'élément n'a pas pu être supprimé", autoDismissAfter: 6000, type: 'error' };
-const saveError = { content: "Une erreur s'est produite.", autoDismissAfter: 6000, type: 'error' };
-const saveSuccess = { content: 'La relation a été ajoutée avec succès.', autoDismissAfter: 6000, type: 'success' };
-const deleteSuccess = { content: 'La relation a été supprimée avec succès.', autoDismissAfter: 6000, type: 'success' };
-
-export default function RelationsByTag({ blocName, tag, resourceType, relatedObjectTypes, inverse, noRelationType, Form }) {
+export default function RelationsByTag({ blocName, tag, resourceType, relatedObjectTypes, inverse, noRelationType, Form, sort }) {
   const queryObject = inverse ? 'relatedObjectId' : 'resourceId';
   const { notice } = useNotice();
   const { id: resourceId } = useUrl();
-  const url = `/relations?filters[relationTag]=${tag}&filters[${queryObject}]=${resourceId}&limit=200`;
+  const url = `/relations?filters[relationTag]=${tag}&filters[${queryObject}]=${resourceId}&limit=200&sort=${sort}`;
   const { data, isLoading, error, reload } = useFetch(url);
   const [showModal, setShowModal] = useState(false);
   const [modalTitle, setModalTitle] = useState('');
@@ -80,15 +76,15 @@ export default function RelationsByTag({ blocName, tag, resourceType, relatedObj
     });
     const currentRelations = data?.data
       .filter((relation) => (!relation.endDate || (new Date(relation.endDate) >= new Date())))
-      .sort((a, b) => ((a?.relationType?.priority || 99) - (b?.relationType?.priority || 99)))
-      .sort((a, b) => (new Date(b.startDate) - new Date(a.startDate)))
       .map((relation) => ({ ...relation, current: true }));
+
     const pastRelations = data?.data
       .filter((relation) => (relation.endDate && (new Date(relation.endDate) < new Date())))
-      .sort((a, b) => ((a?.relationType?.priority || 99) - (b?.relationType?.priority || 99)))
       .map((relation) => ({ ...relation, current: false }));
+
     const list = [...currentRelations, ...pastRelations].map((element) => (
       <RelationCard
+        key={element.id}
         inverse={inverse}
         relation={element}
         onEdit={() => onOpenModalHandler(element)}
@@ -128,19 +124,21 @@ export default function RelationsByTag({ blocName, tag, resourceType, relatedObj
 
 RelationsByTag.propTypes = {
   blocName: PropTypes.string,
-  tag: PropTypes.string.isRequired,
-  resourceType: PropTypes.string,
-  relatedObjectTypes: PropTypes.arrayOf(PropTypes.string),
+  Form: PropTypes.func,
   inverse: PropTypes.bool,
   noRelationType: PropTypes.bool,
-  Form: PropTypes.func,
+  relatedObjectTypes: PropTypes.arrayOf(PropTypes.string),
+  resourceType: PropTypes.string,
+  sort: PropTypes.string,
+  tag: PropTypes.string.isRequired,
 };
 
 RelationsByTag.defaultProps = {
-  resourceType: 'structures',
-  relatedObjectTypes: ['persons', 'structures', 'prices', 'terms', 'projects', 'categories'],
-  inverse: false,
-  noRelationType: false,
   blocName: '',
   Form: RelationsForm,
+  inverse: false,
+  noRelationType: false,
+  relatedObjectTypes: ['persons', 'structures', 'prices', 'terms', 'projects', 'categories'],
+  resourceType: 'structures',
+  sort: '-startDate',
 };

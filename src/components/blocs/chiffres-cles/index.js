@@ -19,7 +19,7 @@ export default function ChiffresCles() {
     all.push({
       icon: 'ri-user-line',
       key: `Nombre d'étudiants inscrits en ${data.year} - Inscriptions principales`,
-      linkTo: './chiffres-cles/etudiants',
+      linkIn: '../chiffres-cles/etudiants',
       value: data.population.toLocaleString('fr-FR'),
     });
   }
@@ -27,7 +27,7 @@ export default function ChiffresCles() {
     all.push({
       icon: 'ri-scales-3-line',
       key: `Résultat net comptable en ${data.exercice}`,
-      linkTo: './chiffres-cles/budget',
+      linkIn: '../chiffres-cles/budget',
       value: `${cleanNumber(data.netAccountingResult)}€`,
     });
   }
@@ -39,7 +39,7 @@ export default function ChiffresCles() {
         cardValue={el.value}
         icon={el.icon}
         key={el.id}
-        linkTo={el.linkTo}
+        linkIn={el.linkIn}
       />
     </Col>
   ));

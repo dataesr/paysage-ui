@@ -110,6 +110,7 @@ export default function LocalisationForm({ id, data, onDelete, onSave }) {
         postalCode: element.data.properties.postcode,
         country: 'France',
         locality: element.data.properties.city,
+        city: element.data.properties.city,
         coordinates: {
           lat: element.data.geometry.coordinates[1],
           lng: element.data.geometry.coordinates[0],
@@ -121,6 +122,7 @@ export default function LocalisationForm({ id, data, onDelete, onSave }) {
         cityId: null,
         postalCode: element.data?.address.postcode,
         locality: element.data?.address.city,
+        city: element.data?.address.city,
         country: element.data?.address.country,
         coordinates: {
           lat: parseFloat(element.data?.lat),
@@ -210,26 +212,33 @@ export default function LocalisationForm({ id, data, onDelete, onSave }) {
               onChange={(e) => updateForm({ postOfficeBoxNumber: e.target.value })}
             />
           </Col>
-          <Col n="12 md-3">
+          <Col n="12 md-6">
             <TextInput
-              label="Commune"
+              label="Localité"
               value={form.locality}
               onChange={(e) => updateForm({ locality: e.target.value })}
             />
           </Col>
-          <Col n="12 md-3">
+          <Col n="12 md-6">
             <TextInput
               label="Code postal"
               value={form.postalCode}
               onChange={(e) => updateForm({ postalCode: e.target.value })}
             />
           </Col>
-          <Col n="12 md-3">
+          <Col n="12 md-6">
             <TextInput
               disabled={viewer.role !== 'admin'}
               label="Code ville"
               value={form.cityId}
-              onChange={(e) => updateForm({ postalCode: e.target.value })}
+              onChange={(e) => updateForm({ cityId: e.target.value })}
+            />
+          </Col>
+          <Col n="12 md-6">
+            <TextInput
+              label="Commune"
+              value={form.city}
+              onChange={(e) => updateForm({ city: e.target.value })}
             />
           </Col>
           <Col n="md-6">

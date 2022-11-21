@@ -68,6 +68,7 @@ function StructureByIdPage() {
   const [isHistoryModalOpen, setIsHistoryModalOpen] = useState(false);
 
   useEffect(() => { reset(); }, [reset]);
+  useEffect(() => { document.title = `Structures · ${data?.currentName.usualName}`; }, [data]);
   useShortcuts(['Control', 'e'], useCallback(() => toggle(), [toggle]));
 
   const onSaveHandler = async (body) => {
@@ -90,23 +91,23 @@ function StructureByIdPage() {
       <Row>
         <Col n="12 md-3">
           <SideMenu buttonLabel="Navigation">
-            <SideMenuLink asLink={<RouterLink to="presentation#" />}>
+            <SideMenuLink asLink={<RouterLink to="presentation#" replace />}>
               <Icon name="ri-eye-2-line" size="1x" />
               En un coup d’œil
             </SideMenuLink>
-            <SideMenuLink asLink={<RouterLink to="actualites" />}>
+            <SideMenuLink asLink={<RouterLink to="actualites" replace />}>
               <Icon name="ri-newspaper-line" size="1x" />
               Actualités
             </SideMenuLink>
-            <SideMenuLink asLink={<RouterLink to="gouvernance-et-referents" />}>
+            <SideMenuLink asLink={<RouterLink to="gouvernance-et-referents" replace />}>
               <Icon name="ri-team-line" size="1x" />
               Gouvernance et référents
             </SideMenuLink>
-            <SideMenuLink asLink={<RouterLink to="evenements" />}>
+            <SideMenuLink asLink={<RouterLink to="evenements" replace />}>
               <Icon name="ri-calendar-line" size="1x" />
               Evènements
             </SideMenuLink>
-            <SideMenuLink asLink={<RouterLink to="documents" />}>
+            <SideMenuLink asLink={<RouterLink to="documents" replace />}>
               <Icon name="ri-folders-line" size="1x" />
               Ressources
             </SideMenuLink>
@@ -114,55 +115,55 @@ function StructureByIdPage() {
               title={(
                 <>
                   <Icon name="ri-bar-chart-grouped-line" size="1x" />
-                  Chiffres clés
+                  Analyses et données
                 </>
               )}
             >
-              <SideMenuLink asLink={<RouterLink to="chiffres-cles/immobilier" />}>
+              <SideMenuLink asLink={<RouterLink to="chiffres-cles/immobilier" replace />}>
                 Immobilier
               </SideMenuLink>
-              <SideMenuLink asLink={<RouterLink to="chiffres-cles/etudiants" />}>
+              <SideMenuLink asLink={<RouterLink to="chiffres-cles/etudiants" replace />}>
                 Etudiants
               </SideMenuLink>
-              <SideMenuLink asLink={<RouterLink to="chiffres-cles/offre-de-formation" />}>
+              <SideMenuLink asLink={<RouterLink to="chiffres-cles/offre-de-formation" replace />}>
                 Offre de formation
               </SideMenuLink>
-              <SideMenuLink asLink={<RouterLink to="chiffres-cles/ressources-humaines" />}>
+              <SideMenuLink asLink={<RouterLink to="chiffres-cles/ressources-humaines" replace />}>
                 Ressources humaines
               </SideMenuLink>
-              <SideMenuLink asLink={<RouterLink to="chiffres-cles/budget" />}>
-                Budget
+              <SideMenuLink asLink={<RouterLink to="chiffres-cles/budget" replace />}>
+                Indicateurs financiers
               </SideMenuLink>
-              <SideMenuLink asLink={<RouterLink to="chiffres-cles/insertion-professionnelle" />}>
+              <SideMenuLink asLink={<RouterLink to="chiffres-cles/insertion-professionnelle" replace />}>
                 Insertion professionnelle
               </SideMenuLink>
             </SideMenuItem>
-            <SideMenuLink asLink={<RouterLink to="categories" />}>
+            <SideMenuLink asLink={<RouterLink to="categories" replace />}>
               <Icon name="ri-price-tag-3-line" size="1x" />
               Catégories et termes
             </SideMenuLink>
-            <SideMenuLink asLink={<RouterLink to="textes-officiels" />}>
+            <SideMenuLink asLink={<RouterLink to="textes-officiels" replace />}>
               <Icon name="ri-git-repository-line" size="1x" />
               Textes officiels
             </SideMenuLink>
-            <SideMenuLink asLink={<RouterLink to="projets" />}>
+            <SideMenuLink asLink={<RouterLink to="projets" replace />}>
               <Icon name="ri-booklet-line" size="1x" />
               Projets
             </SideMenuLink>
-            <SideMenuLink asLink={<RouterLink to="prix-et-recompenses" />}>
+            <SideMenuLink asLink={<RouterLink to="prix-et-recompenses" replace />}>
               <Icon name="ri-award-line" size="1x" />
               Prix & récompenses
             </SideMenuLink>
-            <SideMenuLink asLink={<RouterLink to="elements-lies" />}>
+            <SideMenuLink asLink={<RouterLink to="elements-lies" replace />}>
               <Icon name="ri-links-line" size="1x" />
               Eléments liés
             </SideMenuLink>
-            <SideMenuLink asLink={<RouterLink to="participations" />}>
+            <SideMenuLink asLink={<RouterLink to="participations" replace />}>
               <Icon name="ri-stackshare-line" size="1x" />
               Participations
             </SideMenuLink>
             {(viewer.role === 'admin') && (
-              <SideMenuLink asLink={<RouterLink to="journal" />}>
+              <SideMenuLink asLink={<RouterLink to="journal" replace />}>
                 <Icon name="ri-refresh-line" size="1x" />
                 Journal de modifications
               </SideMenuLink>

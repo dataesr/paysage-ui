@@ -43,6 +43,9 @@ const getFileIcon = (mimetype) => {
 };
 
 export default function File({ file, onClick }) {
+  const displayName = (file.originalName.length < 30)
+    ? file.originalName
+    : file.orginalName.substring(0, 25);
   return (
     <Col n="12" className={styles['file-wrapper']}>
       {getFileIcon(file.mimetype)}
@@ -51,7 +54,7 @@ export default function File({ file, onClick }) {
           ? (
             <div>
               <button onClick={onClick} type="button" className={styles['file-download-button']}>
-                {file.originalName}
+                {displayName}
                 <Icon name="ri-download-line" iconPosition="right" />
               </button>
               <p className={styles['file-details']}>

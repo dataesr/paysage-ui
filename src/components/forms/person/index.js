@@ -108,8 +108,8 @@ export default function PersonForm({ id, data, onSave, onDelete }) {
           </Col>
           <Col n="12 md-6">
             <TagInput
-              label="Autres noms -- alias"
-              hint='Validez votre ajout avec la touche "Entrée" afin de valider votre ajout'
+              label="Autres noms"
+              hint='Valider votre ajout avec la touche "Entrée"'
               tags={form.otherNames || []}
               onTagsChange={(tags) => updateForm({ otherNames: tags })}
             />

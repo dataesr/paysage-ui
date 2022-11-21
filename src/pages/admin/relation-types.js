@@ -100,7 +100,16 @@ export default function RelationTypesPage() {
                 <Text as="span" bold className="fr-mb-2v">
                   Appliquable aux :
                   {' '}
-                  {item.for.map((object) => <Tag key={object} as="span">{object}</Tag>)}
+                  {item.for.map((object) => (
+                    <Tag key={object} as="span">
+                      {object === 'persons' ? 'Personnes' : null}
+                      {object === 'structures' ? 'Structures' : null}
+                      {object === 'prices' ? 'Prix' : null}
+                      {object === 'projects' ? 'Projets' : null}
+                      {object === 'terms' ? 'Termes' : null}
+                      {object === 'categories' ? 'Categories' : null}
+                    </Tag>
+                  ))}
                 </Text>
               </Row>
               <Row>

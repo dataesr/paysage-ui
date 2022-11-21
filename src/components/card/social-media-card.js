@@ -41,6 +41,14 @@ export default function SocialMediaCard({
       iconColor = 'var(--youtube-icon-color)';
       rxIcon = 'ri-youtube-fill';
       break;
+    case 'Github':
+      iconColor = 'var(--github-icon-color)';
+      rxIcon = 'ri-github-fill';
+      break;
+    case 'Gitlab':
+      iconColor = 'var(--gitlab-icon-color)';
+      rxIcon = 'ri-gitlab-fill';
+      break;
     default:
       break;
     }
