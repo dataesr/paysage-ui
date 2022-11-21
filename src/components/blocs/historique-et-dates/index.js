@@ -3,7 +3,7 @@ import { Col, Highlight, Row, Tag, TagGroup, Text } from '@dataesr/react-dsfr';
 import { useNavigate } from 'react-router-dom';
 import useFetch from '../../../hooks/useFetch';
 import useUrl from '../../../hooks/useUrl';
-import { formatDescriptionDates, toString } from '../../../utils/dates';
+import { formatDescriptionDates, toString, getComparableNow } from '../../../utils/dates';
 import { STRUCTURE_PREDECESSEUR } from '../../../utils/relations-tags';
 import styles from './styles.module.scss';
 
@@ -49,11 +49,10 @@ function HistoryCard({ creationDate, creationReason, closureDate, closureReason,
             {(closureDate || (successors?.totalCount > 0)) && <hr />}
           </div>
           <div className="fr-card__title">
-            {closureDate && (
+            {closureDate < getComparableNow ? (
               <p className="fr-text fr-mb-1v">
-                Établissement fermé
-                {' '}
-                {formatDescriptionDates(closureDate)}
+                L'établissement fermera le
+                {formatDescriptionDates(closureDate).replace('depuis', '').replace('le', '')}
                 {closeReason}
                 <br />
                 {closureOfficialText?.id && (
@@ -66,7 +65,23 @@ function HistoryCard({ creationDate, creationReason, closureDate, closureReason,
                   </span>
                 )}
               </p>
-            )}
+            ) : (
+              <p className="fr-text fr-mb-1v">
+                L'établissement est fermé
+                <br />
+                {formatDescriptionDates(closureDate)}
+                {closeReason}
+                {closureOfficialText?.id && (
+                  <span className="fr-card__detail">
+                    <a className={`fr-mb-0 fr-text--xs fr-text--regular ${styles['align-after']}`} href={closureOfficialText?.pageUrl} target="_blank" rel="noreferrer">
+                      {closureOfficialText?.nature}
+                      {' '}
+                      {closureOfficialText?.publicationDate && `du ${toString(closureOfficialText.publicationDate)}`}
+                    </a>
+                  </span>
+                )}
+              </p>
+            ) }
             <div>
               {(successors?.totalCount > 0) && (
                 <div className="fr-card__desc">
