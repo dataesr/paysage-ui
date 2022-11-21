@@ -8,6 +8,9 @@ import { STRUCTURE_PREDECESSEUR } from '../../../utils/relations-tags';
 import styles from './styles.module.scss';
 
 function HistoryCard({ creationDate, creationReason, closureDate, closureReason, creationOfficialText, closureOfficialText, predecessors, successors }) {
+  const displayStatus = ((closureDate && (closureDate > getComparableNow(closureDate)))
+    ? `L'établissement fermera le ${formatDescriptionDates(closureDate)?.replace('depuis le', '')}`
+    : `L'établissement est fermé depuis le ${formatDescriptionDates(closureDate)?.replace('depuis le', '')}`);
   const createReason = (creationReason && !['Non renseigné', 'autre', 'Création'].includes(creationReason)) && ` par ${creationReason.toLowerCase() }`;
   const closeReason = (closureReason && !['Non renseigné', 'autre', 'Création'].includes(closureReason)) && ` par ${closureReason.toLowerCase() }`;
   const navigate = useNavigate();
@@ -49,39 +52,20 @@ function HistoryCard({ creationDate, creationReason, closureDate, closureReason,
             {(closureDate || (successors?.totalCount > 0)) && <hr />}
           </div>
           <div className="fr-card__title">
-            {closureDate < getComparableNow ? (
-              <p className="fr-text fr-mb-1v">
-                L'établissement fermera le
-                {formatDescriptionDates(closureDate).replace('depuis', '').replace('le', '')}
-                {closeReason}
-                <br />
-                {closureOfficialText?.id && (
-                  <span className="fr-card__detail">
-                    <a className={`fr-mb-0 fr-text--xs fr-text--regular ${styles['align-after']}`} href={closureOfficialText?.pageUrl} target="_blank" rel="noreferrer">
-                      {closureOfficialText?.nature}
-                      {' '}
-                      {closureOfficialText?.publicationDate && `du ${toString(closureOfficialText.publicationDate)}`}
-                    </a>
-                  </span>
-                )}
-              </p>
-            ) : (
-              <p className="fr-text fr-mb-1v">
-                L'établissement est fermé
-                <br />
-                {formatDescriptionDates(closureDate)}
-                {closeReason}
-                {closureOfficialText?.id && (
-                  <span className="fr-card__detail">
-                    <a className={`fr-mb-0 fr-text--xs fr-text--regular ${styles['align-after']}`} href={closureOfficialText?.pageUrl} target="_blank" rel="noreferrer">
-                      {closureOfficialText?.nature}
-                      {' '}
-                      {closureOfficialText?.publicationDate && `du ${toString(closureOfficialText.publicationDate)}`}
-                    </a>
-                  </span>
-                )}
-              </p>
-            ) }
+            <p className="fr-text fr-mb-1v">
+              {displayStatus}
+              {closeReason}
+              <br />
+              {closureOfficialText?.id && (
+                <span className="fr-card__detail">
+                  <a className={`fr-mb-0 fr-text--xs fr-text--regular ${styles['align-after']}`} href={closureOfficialText?.pageUrl} target="_blank" rel="noreferrer">
+                    {closureOfficialText?.nature}
+                    {' '}
+                    {closureOfficialText?.publicationDate && `du ${toString(closureOfficialText.publicationDate)}`}
+                  </a>
+                </span>
+              )}
+            </p>
             <div>
               {(successors?.totalCount > 0) && (
                 <div className="fr-card__desc">
