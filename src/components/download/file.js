@@ -43,6 +43,9 @@ const getFileIcon = (mimetype) => {
 };
 
 export default function File({ file, onClick }) {
+  const displayName = (file.originalName.length < 30)
+    ? file.originalName
+    : file.orginalName.substring(0, 25);
   return (
     <Col n="12" className={styles['file-wrapper']}>
       {getFileIcon(file.mimetype)}
@@ -50,28 +53,13 @@ export default function File({ file, onClick }) {
         {onClick
           ? (
             <div>
-              {file.originalName.length < 30 ? (
-                <>
-                  <button onClick={onClick} type="button" className={styles['file-download-button']}>
-                    {file.originalName}
-                    <Icon name="ri-download-line" iconPosition="right" />
-                  </button>
-                  <p className={styles['file-details']}>
-                    {`${formatBytes(file.size)} -- ${getFileType(file.mimetype)}`}
-                  </p>
-                </>
-              ) : (
-                <>
-                  <button onClick={onClick} type="button" className={styles['file-download-button']}>
-                    {file.originalName.substring(0, 25)}
-                    <Icon name="ri-download-line" iconPosition="right" />
-                  </button>
-                  <p className={styles['file-details']}>
-                    {`${formatBytes(file.size)} -- ${getFileType(file.mimetype)}`}
-                  </p>
-                </>
-              )}
-
+              <button onClick={onClick} type="button" className={styles['file-download-button']}>
+                {displayName}
+                <Icon name="ri-download-line" iconPosition="right" />
+              </button>
+              <p className={styles['file-details']}>
+                {`${formatBytes(file.size)} -- ${getFileType(file.mimetype)}`}
+              </p>
             </div>
           )
           : (
