@@ -53,7 +53,7 @@ function HistoryCard({ creationDate, creationReason, closureDate, closureReason,
           </div>
           <div className="fr-card__title">
             <p className="fr-text fr-mb-1v">
-              {displayStatus}
+              {closureDate ? displayStatus : null}
               {closeReason}
               <br />
               {closureOfficialText?.id && (
