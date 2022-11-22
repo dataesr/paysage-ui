@@ -12,18 +12,36 @@ import useForm from '../../../hooks/useForm';
 import useEnums from '../../../hooks/useEnums';
 import PaysageBlame from '../../paysage-blame';
 
+const regexpValidateSocialMedia = {
+  Dailymotion: /^(https:\/\/)?(www.)?dailymotion.com\/[A-Za-z0-9/:%_+.,#?!@&=-]+$/,
+  Facebook: /^(https:\/\/)?(www.)?facebook.com\/[A-Za-z0-9/:%_+.,#?!@&=-]+$/,
+  Github: /^(https:\/\/)?(www.)?github.com\/0-9A-Za-z?$/,
+  Instagram: /^(https:\/\/)?(www.)?instagram.com\/([0-9A-Za-z_]?)\/$/,
+  linkedin: /^(https:\/\/)?(www.)?linkedin.com\/.+\/.+\/$/,
+  Twitter: /^(https:\/\/)?(www.)?twitter.com\/[0-9A-Za-z_]{1,15}$/,
+  Youtube: /^(https:\/\/)?(www.)?youtube.com\/[A-Za-z0-9/:%_+.,#?!@&=-]+$/,
+  Linkedin: /^(https:\/\/)?(www.)?linkedin.com\/.+\/.+\/$/,
+
+};
+
 function validate(body) {
-  const ret = {};
-  if (!body?.account) ret.account = 'Le compte/url du media social est obligatoire';
-  if (!body?.type) ret.type = 'Le type du media social est obligatoire';
-  // if (!body?.account?.includes(body?.type)) ret.account = `URL non valide - Exemple : compte ${body.type} [https://${body.type}.com/XXX] `;
-  return ret;
+  const errorMessage = {};
+  if (!body?.account) errorMessage.account = 'Le compte/url du réseaux social est obligatoire';
+  if (!body?.type) errorMessage.type = 'Le type du réseaux social est obligatoire';
+  const validationRule = regexpValidateSocialMedia?.[body.type];
+  if (validationRule && !validationRule.test(body.account)) errorMessage.account = 'Veuillez bien renseigner votre compte';
+  return errorMessage;
 }
 
 function sanitize(form) {
   const fields = ['account', 'type'];
   const body = {};
-  Object.keys(form).forEach((key) => { if (fields.includes(key)) { body[key] = form[key]; } });
+  Object.keys(form).forEach((key) => {
+    if (fields.includes(key)) { body[key] = form[key]; }
+    // if (!fields.includes('https://')) { body[key] = `https://${key}`; }
+  });
+  // if (!form.account.includes('https://')) { body[form.account] = `https://${form.account}`; }
+
   return body;
 }
 
@@ -37,7 +55,6 @@ export default function SocialMediaForm({ id, data, onDelete, onSave }) {
     const body = sanitize(form);
     return onSave(body, id);
   };
-
   return (
     <form>
       <Container fluid>

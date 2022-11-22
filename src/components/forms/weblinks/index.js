@@ -23,11 +23,35 @@ const langOptions = [
   { label: 'Autre langue', value: 'na' },
 ];
 
+const regexpValidateWebSite = {
+  EducPros: /^https:\/\/www.letudiant.fr\/educpros\/personnalites\/.+.html$/,
+  Hal: /^(https?):\/\/[A-Za-z0-9/:%+.,#?!@&=-]+$/,
+  Onisep: /^(https?):\/\/www.onisep.fr\/http\/redirection\/etablissement\/identifiant\/\d+$/,
+  POpenData: /^(https?):\/\/[A-Za-z0-9/:%+.,#?!@&=-]+$/,
+  DataGouvFr: /^(https?):\/\/[A-Za-z0-9/:%+.,#?!@&=-]+$/,
+  mooc: /^https:\/\/www.fun-mooc.fr\/universities\/[A-Za-z0-9/:%+.,#?!@&=-]+\/$/,
+  CanalU: /^https:\/\/www.canal-u.tv\/producteurs\/[\w\-_]*$/,
+  ServicePublic: /^https:\/\/lannuaire.service-public.fr\/(gouvernement|institutions-juridictions|autorites-independantes)\/[^0-9][0-9]$/,
+  LeMonde: /^https:\/\/www.lemonde.fr\/[a-z]+(-[a-z]+)*\/$/,
+  TheConversation: /^https:\/\/theconversation.com\/profiles\/[a-z-]{1,}-[0-9]{1,}$/,
+  TalentCNRS: /^https?:\/\/www.cnrs\.fr\/fr\/personne\/[a-z-]+(-0)?$/,
+  IUF: /^https:\/\/www.iufrance\.fr\/les-membres-de-liuf\/membre\/[1-9]\d*([a-z-]*)?\.html$/,
+  jorfsearch: /^https:\/\/jorfsearch.steinertriples.ch\/name\/[A-Za-z0-9%-]+$/,
+  EdCF: /^https:\/\/doctorat.campusfrance.org\//,
+  OE1: /^https:\/\/books.openedition.org\//,
+  OE2: /^<W<<<<<>W<W>><Whttps:\/\/www.openedition.org\/catalogue-journals\?limit=30/,
+  OE3: /^https:\/\/www.openedition.org\/\d{1,8}$/,
+  hceres: /^https:\/\/www.hceres.fr\/fr\/[a-z0-9/-]+$/,
+
+};
+
 function validate(body) {
-  const ret = {};
-  if (!body?.type) ret.type = 'Le type est obligatoire';
-  if (!body?.url) ret.url = "L'URL est obligatoire";
-  return ret;
+  const errorMessage = {};
+  if (!body?.url) errorMessage.url = 'Le compte/url du réseaux social est obligatoire';
+  if (!body?.type) errorMessage.type = 'Le type du réseaux social est obligatoire';
+  const validationRule = regexpValidateWebSite?.[body.type];
+  if (validationRule && !validationRule.test(body.url)) errorMessage.url = 'Veuillez bien renseigner votre compte';
+  return errorMessage;
 }
 
 function sanitize(form) {
