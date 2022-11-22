@@ -17,7 +17,6 @@ const regexpValidateSocialMedia = {
   Facebook: /^(https:\/\/)?(www.)?facebook.com\/[A-Za-z0-9/:%_+.,#?!@&=-]+$/,
   Github: /^(https:\/\/)?(www.)?github.com\/0-9A-Za-z?$/,
   Instagram: /^(https:\/\/)?(www.)?instagram.com\/([0-9A-Za-z_]?)\/$/,
-  linkedin: /^(https:\/\/)?(www.)?linkedin.com\/.+\/.+\/$/,
   Twitter: /^(https:\/\/)?(www.)?twitter.com\/[0-9A-Za-z_]{1,15}$/,
   Youtube: /^(https:\/\/)?(www.)?youtube.com\/[A-Za-z0-9/:%_+.,#?!@&=-]+$/,
   Linkedin: /^(https:\/\/)?(www.)?linkedin.com\/.+\/.+\/$/,
@@ -29,6 +28,7 @@ const socialMediaExemple = {
   Instagram: 'https://www.instagram.com/votre-identifiant-instagram/?hl=fr',
   linkedin: 'https://www.linkedin.com/in/votre-prenom+votre-nom/ - Si URL personalisée https://www.linkedin.com/in/identifiant/ ',
   Twitter: 'https://twitter.com/nom-de-votre-compte-twitter',
+  Youtube: 'https://www.youtube.com/channel/numero-de-chaîne',
 
 };
 
