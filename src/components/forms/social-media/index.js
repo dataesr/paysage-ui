@@ -39,7 +39,8 @@ function sanitize(form) {
   Object.keys(form).forEach((key) => {
     if (fields.includes(key)) { body[key] = form[key]; }
   });
-
+  if (!form.account.includes('https://www.')) { body.account = `https://www.${body.account}`; }
+  if (!form.account.includes('.fr')) { body.account = `${body.account}.fr`; }
   return body;
 }
 

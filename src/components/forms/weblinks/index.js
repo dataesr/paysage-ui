@@ -57,10 +57,14 @@ function validate(body) {
 function sanitize(form) {
   const fields = ['type', 'url', 'language'];
   const body = {};
-  Object.keys(form).forEach((key) => { if (fields.includes(key)) { body[key] = form[key]; } });
+  Object.keys(form).forEach((key) => {
+    if (fields.includes(key)) { body[key] = form[key]; }
+  });
   if (body.type !== 'website') {
     body.language = null;
   }
+  if (!form.url.includes('https://www.')) { body.url = `https://www.${body.url}`; }
+  if (!form.url.includes('.fr')) { body.url = `${body.url}.fr`; }
   return body;
 }
 
