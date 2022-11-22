@@ -21,6 +21,14 @@ const regexpValidateSocialMedia = {
   Twitter: /^(https:\/\/)?(www.)?twitter.com\/[0-9A-Za-z_]{1,15}$/,
   Youtube: /^(https:\/\/)?(www.)?youtube.com\/[A-Za-z0-9/:%_+.,#?!@&=-]+$/,
   Linkedin: /^(https:\/\/)?(www.)?linkedin.com\/.+\/.+\/$/,
+};
+
+const socialMediaExemple = {
+  Facebook: 'https://www.facebook.com/votre-prenom+votre-nom',
+  Github: 'https://github.com/votre-pseudo-git-hub?tab=repositories',
+  Instagram: 'https://www.instagram.com/votre-identifiant-instagram/?hl=fr',
+  linkedin: 'https://www.linkedin.com/in/votre-prenom+votre-nom/ - Si URL personalisée https://www.linkedin.com/in/identifiant/ ',
+  Twitter: 'https://twitter.com/nom-de-votre-compte-twitter',
 
 };
 
@@ -29,7 +37,7 @@ function validate(body) {
   if (!body?.account) errorMessage.account = 'Le compte/url du réseaux social est obligatoire';
   if (!body?.type) errorMessage.type = 'Le type du réseaux social est obligatoire';
   const validationRule = regexpValidateSocialMedia?.[body.type];
-  if (validationRule && !validationRule.test(body.account)) errorMessage.account = 'Veuillez bien renseigner votre compte';
+  if (validationRule && !validationRule.test(body.account)) errorMessage.account = `Veuillez bien renseigner votre compte, exemple ${socialMediaExemple?.[body.type]}`;
   return errorMessage;
 }
 
