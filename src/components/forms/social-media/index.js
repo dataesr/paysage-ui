@@ -38,9 +38,7 @@ function sanitize(form) {
   const body = {};
   Object.keys(form).forEach((key) => {
     if (fields.includes(key)) { body[key] = form[key]; }
-    // if (!fields.includes('https://')) { body[key] = `https://${key}`; }
   });
-  // if (!form.account.includes('https://')) { body[form.account] = `https://${form.account}`; }
 
   return body;
 }
