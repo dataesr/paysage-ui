@@ -134,5 +134,5 @@ $objects: structures, persons, prices, terms, projects, categories, legal-catego
 }
 
 .fr-card__img img {
-    object-fit: inherit;
+    object-fit: inherit !important;
 }
