@@ -21,6 +21,10 @@ const regexpValidateSocialMedia = (type) => {
     Twitter: [/^(https:\/\/)?(www.)?twitter.com\/[0-9A-Za-z_]{1,15}$/, 'https://twitter.com/<compte>'],
     Youtube: [/^(https:\/\/)?(www.)?youtube.com\/[A-Za-z0-9/:%_+.,#?!@&=-]+$/, 'https://www.youtube.com/channel/<chaine>'],
     Linkedin: [/^(https:\/\/)?(www.)?linkedin.com\/.+\/.+\/$/, 'https://www.linkedin.com/<profil>'],
+    Twitch: [/^(https:\/\/)?(www.)?twitch\.tv\/([a-z0-9_]+)($|\?)/, 'https://twitch.tv/<chaine>'],
+    Tiktok: [/^(https:\/\/)?(www.)?tiktok\.com\/([A-Za-z0-9/:%_+.,#?!@&=-]+)($|\?)/, 'https://www.tiktok.com/@<compte>'],
+    Pinterest: [/^(https:\/\/)?(www.)?pinterest.fr\/[A-Za-z0-9/:%_+.,#?!@&=-]+$/, 'https://www.pinterest.fr/<compte>/'],
+    Vimeo: [/^(https:\/\/)?(www.)?vimeo.com\/[A-Za-z0-9/:%_+.,#?!@&=-]+$/, 'https://vimeo.com/<compte>'],
   };
   return validator[type] || [null, null];
 };
@@ -30,7 +34,8 @@ function validate(body) {
   if (!body?.account) errorMessage.account = 'Le compte du réseaux social est obligatoire';
   if (!body?.type) errorMessage.type = 'Le type du réseaux social est obligatoire';
   const [regexp, error] = regexpValidateSocialMedia(body.type);
-  if (regexp && !regexp.test(body.account)) errorMessage.account = `Veuillez bien renseigner votre compte, essayez ${error}`;
+  if (regexp && error && !regexp.test(body.account)) errorMessage.account = `Essayez ${error}`;
+
   return errorMessage;
 }
 

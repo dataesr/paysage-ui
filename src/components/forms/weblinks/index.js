@@ -49,7 +49,7 @@ function validate(body) {
   if (!body?.url) errorMessage.url = "L'url du lien est obligatoire";
   if (!body?.type) errorMessage.type = 'Le type de lien est obligatoire';
   const validationRule = regexpValidateWebSite?.[body.type];
-  if (validationRule && !validationRule.test(body.url)) errorMessage.url = 'Veuillez vérifier que le lien vers le site soit correcte';
+  if (validationRule && !validationRule.test(body.url)) errorMessage.url = 'Veuillez vérifier que le lien vers le site soit correct.';
   return errorMessage;
 }
 
