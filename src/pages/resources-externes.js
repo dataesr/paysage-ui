@@ -52,8 +52,9 @@ export default function RessourcesPage() {
           >
             <CardHeader>
               <CardImage
-                src="https://curiexplore.enseignementsup-recherche.gouv.fr/static/media/logo-curiexplore.94b2a1be.svg"
+                src="https://paysage.mesri.fr/images/logos/W3SuU.svg"
                 alt="logo"
+                className="test"
               />
             </CardHeader>
             <CardDetail>
