@@ -30,27 +30,26 @@ const regexpValidateWebSite = {
   POpenData: /^(https?):\/\/[A-Za-z0-9/:%+.,#?!@&=-]+$/,
   DataGouvFr: /^(https?):\/\/[A-Za-z0-9/:%+.,#?!@&=-]+$/,
   mooc: /^(https:\/\/)?(www.)?fun-mooc.fr\/universities\/[A-Za-z0-9/:%+.,#?!@&=-]+\/$/,
-  CanalU: /^(https:\/\/)?(www.)?canal-u.tv\/chaines\/[\w\-_]*$/,
+  CanalU: /^(https:\/\/)?(www.)?canal-u.tv\/chaines\/[\w\-_]*(.fr)?$/,
   ServicePublic: /^(https:\/\/)?(www.)?lannuaire.service-public.fr\/(gouvernement|institutions-juridictions|autorites-independantes)\/[^0-9][0-9]$/,
-  LeMonde: /^https:\/\/www.lemonde.fr\/[a-z]+(-[a-z]+)*\/$/,
-  TheConversation: /^https:\/\/theconversation.com\/profiles\/[a-z-]{1,}-[0-9]{1,}$/,
-  TalentCNRS: /^https?:\/\/www.cnrs\.fr\/fr\/personne\/[a-z-]+(-0)?$/,
-  IUF: /^https:\/\/www.iufrance\.fr\/les-membres-de-liuf\/membre\/[1-9]\d*([a-z-]*)?\.html$/,
-  jorfsearch: /^https:\/\/jorfsearch.steinertriples.ch\/name\/[A-Za-z0-9%-]+$/,
-  EdCF: /^https:\/\/doctorat.campusfrance.org\//,
-  OE1: /^https:\/\/books.openedition.org\//,
-  OE2: /^<W<<<<<>W<W>><Whttps:\/\/www.openedition.org\/catalogue-journals\?limit=30/,
-  OE3: /^https:\/\/www.openedition.org\/\d{1,8}$/,
-  hceres: /^https:\/\/www.hceres.fr\/fr\/[a-z0-9/-]+$/,
-
+  LeMonde: /(^https:\/\/)?(www.)?lemonde.fr\/[a-z]+(-[a-z]+)*\/$/,
+  TheConversation: /(^https:\/\/)?(www.)?theconversation.com\/profiles\/[a-z-]{1,}-[0-9]{1,}$/,
+  TalentCNRS: /(^https:\/\/)?(www.)?cnrs\.fr\/fr\/personne\/[a-z-]+(-0)?$/,
+  IUF: /(^https:\/\/)?(www.)?iufrance\.fr\/les-membres-de-liuf\/membre\/[1-9]\d*([a-z-]*)?\.html$/,
+  jorfsearch: /(^https:\/\/)?(www.)?jorfsearch.steinertriples.ch\/name\/[A-Za-z0-9%-]+$/,
+  EdCF: /(^https:\/\/)?(www.)?doctorat.campusfrance.org\//,
+  OE1: /(^https:\/\/)?(www.)?books.openedition.org\//,
+  OE2: /(^https:\/\/)?(www.)?openedition.org\/catalogue-journals\?limit=30/,
+  OE3: /(^https:\/\/)?(www.)?openedition.org\/\d{1,8}$/,
+  hceres: /(^https:\/\/)?(www.)?hceres.fr\/fr\/[a-z0-9/-]+$/,
 };
 
 function validate(body) {
   const errorMessage = {};
-  if (!body?.url) errorMessage.url = 'Le compte/url du réseaux social est obligatoire';
-  if (!body?.type) errorMessage.type = 'Le type du réseaux social est obligatoire';
+  if (!body?.url) errorMessage.url = "L'url du lien est obligatoire";
+  if (!body?.type) errorMessage.type = 'Le type de lien est obligatoire';
   const validationRule = regexpValidateWebSite?.[body.type];
-  if (validationRule && !validationRule.test(body.url)) errorMessage.url = 'Veuillez bien renseigner votre compte';
+  if (validationRule && !validationRule.test(body.url)) errorMessage.url = 'Veuillez vérifier que le lien vers le site soit correcte';
   return errorMessage;
 }
 
@@ -64,7 +63,6 @@ function sanitize(form) {
     body.language = null;
   }
   if (!form.url.includes('https://')) { body.url = `https://${body.url}`; }
-  if (!form.url.includes('.fr')) { body.url = `${body.url}.fr`; }
   return body;
 }
 

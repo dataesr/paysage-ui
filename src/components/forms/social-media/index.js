@@ -12,32 +12,25 @@ import useForm from '../../../hooks/useForm';
 import useEnums from '../../../hooks/useEnums';
 import PaysageBlame from '../../paysage-blame';
 
-const regexpValidateSocialMedia = {
-  Dailymotion: /^(https:\/\/)?(www.)?dailymotion.com\/[A-Za-z0-9/:%_+.,#?!@&=-]+$/,
-  Facebook: /^(https:\/\/)?(www.)?facebook.com\/[A-Za-z0-9/:%_+.,#?!@&=-]+$/,
-  Github: /^(https:\/\/)?(www.)?github.com\/0-9A-Za-z?$/,
-  Instagram: /^(https:\/\/)?(www.)?instagram.com\/([0-9A-Za-z_]?)\/$/,
-  Twitter: /^(https:\/\/)?(www.)?twitter.com\/[0-9A-Za-z_]{1,15}$/,
-  Youtube: /^(https:\/\/)?(www.)?youtube.com\/[A-Za-z0-9/:%_+.,#?!@&=-]+$/,
-  Linkedin: /^(https:\/\/)?(www.)?linkedin.com\/.+\/.+\/$/,
-};
-
-const socialMediaExemple = {
-  Facebook: 'https://www.facebook.com/votre-prenom+votre-nom',
-  Github: 'https://github.com/votre-pseudo-git-hub?tab=repositories',
-  Instagram: 'https://www.instagram.com/votre-identifiant-instagram/?hl=fr',
-  linkedin: 'https://www.linkedin.com/in/votre-prenom+votre-nom/ - Si URL personalisée https://www.linkedin.com/in/identifiant/ ',
-  Twitter: 'https://twitter.com/nom-de-votre-compte-twitter',
-  Youtube: 'https://www.youtube.com/channel/numero-de-chaîne',
-
+const regexpValidateSocialMedia = (type) => {
+  const validator = {
+    Dailymotion: [/^(https:\/\/)?(www.)?dailymotion.com\/[A-Za-z0-9/:%_+.,#?!@&=-]+$/, 'https://www.dailymotion.com/<compte>'],
+    Facebook: [/^(https:\/\/)?(www.)?facebook.com\/[A-Za-z0-9/:%_+.,#?!@&=-]+$/, 'https://www.facebook.com/<compte>'],
+    Github: [/^(https:\/\/)?(www.)?github.com\/0-9A-Za-z?$/, 'https://github.com/<compte>?tab=repositories'],
+    Instagram: [/^(https:\/\/)?(www.)?instagram.com\/([0-9A-Za-z_]?)\/$/, 'https://www.instagram.com/<compte>/?hl=fr'],
+    Twitter: [/^(https:\/\/)?(www.)?twitter.com\/[0-9A-Za-z_]{1,15}$/, 'https://twitter.com/<compte>'],
+    Youtube: [/^(https:\/\/)?(www.)?youtube.com\/[A-Za-z0-9/:%_+.,#?!@&=-]+$/, 'https://www.youtube.com/channel/<chaine>'],
+    Linkedin: [/^(https:\/\/)?(www.)?linkedin.com\/.+\/.+\/$/, 'https://www.linkedin.com/<profil>'],
+  };
+  return validator[type] || [null, null];
 };
 
 function validate(body) {
   const errorMessage = {};
-  if (!body?.account) errorMessage.account = 'Le compte/url du réseaux social est obligatoire';
+  if (!body?.account) errorMessage.account = 'Le compte du réseaux social est obligatoire';
   if (!body?.type) errorMessage.type = 'Le type du réseaux social est obligatoire';
-  const validationRule = regexpValidateSocialMedia?.[body.type];
-  if (validationRule && !validationRule.test(body.account)) errorMessage.account = `Veuillez bien renseigner votre compte, exemple ${socialMediaExemple?.[body.type]}`;
+  const [regexp, error] = regexpValidateSocialMedia(body.type);
+  if (regexp && !regexp.test(body.account)) errorMessage.account = `Veuillez bien renseigner votre compte, essayez ${error}`;
   return errorMessage;
 }
 
