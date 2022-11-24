@@ -10,6 +10,7 @@ import RelationGroupForm from '../../../components/forms/relations-group';
 import api from '../../../utils/api';
 import useNotice from '../../../hooks/useNotice';
 import RelationsByTag from '../../../components/blocs/relations-by-tag';
+import RelationsParticipations from '../../../components/blocs/relations-participations';
 import SupervisorsForm from '../../../components/forms/supervisors';
 import { STRUCTURE_INTERNE, STRUCTURE_PREDECESSEUR, STRUCTURE_TUTELLE } from '../../../utils/relations-tags';
 
@@ -94,6 +95,8 @@ export default function StructureElementLiesPage() {
           </Modal>
         </BlocModal>
       </Bloc>
+      <hr />
+      <RelationsParticipations />
     </>
   );
 }

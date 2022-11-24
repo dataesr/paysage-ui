@@ -156,11 +156,7 @@ function StructureByIdPage() {
             </SideMenuLink>
             <SideMenuLink asLink={<RouterLink to="elements-lies" replace />}>
               <Icon name="ri-links-line" size="1x" />
-              Eléments liés
-            </SideMenuLink>
-            <SideMenuLink asLink={<RouterLink to="participations" replace />}>
-              <Icon name="ri-stackshare-line" size="1x" />
-              Participations
+              Écosysteme & Réseaux
             </SideMenuLink>
             {(viewer.role === 'admin') && (
               <SideMenuLink asLink={<RouterLink to="journal" replace />}>
