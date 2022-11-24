@@ -40,8 +40,8 @@ export default function RessourcesPage() {
             <CardTitle>CurieXplore</CardTitle>
             <CardDescription as="div">
               La plateforme d'exploration des systèmes d'enseignement supérieur,
-              de recherche et d'innovation à l'international
-
+              de recherche et d'innovation à l'international.
+              Réalisé en collaboration avec le ministère de l'Europe et des affaires étrangères.
             </CardDescription>
           </Card>
         </Col>
