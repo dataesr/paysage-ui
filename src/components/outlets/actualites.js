@@ -5,6 +5,7 @@ import useHashScroll from '../../hooks/useHashScroll';
 import { Bloc, BlocContent, BlocTitle } from '../bloc';
 import TagList from '../tag-list';
 import Button from '../button';
+import { toString } from '../../utils/dates';
 
 export default function ActualitesOutlet() {
   const { id: resourceId } = useParams();
@@ -19,19 +20,19 @@ export default function ActualitesOutlet() {
       <Row gutters>
         {data.data.map((event) => (
           <Col n="12" key={event.id}>
-            <div className="fr-card fr-card--xs fr-card--shadow">
+            <div className="fr-card fr-card--xs fr-card--grey fr-card--no-border">
               <div className="fr-card__body">
                 <div className="fr-card__content">
                   <div className="fr-card__start">
                     <Row className="flex--space-between">
                       <BadgeGroup>
-                        <Badge type="new" text={event.publicationDate} />
+                        <Badge type="new" text={toString(event.publicationDate)} />
                       </BadgeGroup>
                     </Row>
                   </div>
                   <p className="fr-card__title">
                     {event.title}
-                    <Button title="Afficher la page Paysage du texte officiel" onClick={() => { window.open(event.sourceUrl, '_blank'); }} rounded borderless icon="ri-arrow-right-line" />
+                    <Button title="Voir la dépeche" onClick={() => { window.open(event.sourceUrl, '_blank'); }} rounded borderless icon="ri-external-link-line" />
                   </p>
                   <Row className="fr-card__desc">
                     {event?.sourceName && <BadgeGroup className="fr-mt-1v"><Badge text={event.sourceName} /></BadgeGroup>}
