@@ -59,6 +59,7 @@ export default function ExpendableListCards({
       hiddenCards.push(card);
     }
   });
+
   displayedCards.sort(
     (a, b) => order.indexOf(getPath(sortOn, a)) - order.indexOf(getPath(sortOn, b)),
   );

@@ -32,7 +32,11 @@ export default function ActualitesOutlet() {
                   </div>
                   <p className="fr-card__title">
                     {event.title}
+<<<<<<< HEAD
                     <Button title="Voir la dépeche" onClick={() => { window.open(event.sourceUrl, '_blank'); }} rounded borderless icon="ri-external-link-line" />
+=======
+                    <Button title="Voir la dépêche" onClick={() => { window.open(event.sourceUrl, '_blank'); }} rounded borderless icon="ri-arrow-right-line" />
+>>>>>>> 6555ec6 (fix(actualities): change alt message of an icon)
                   </p>
                   <Row className="fr-card__desc">
                     {event?.sourceName && <BadgeGroup className="fr-mt-1v"><Badge text={event.sourceName} /></BadgeGroup>}
