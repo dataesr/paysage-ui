@@ -54,7 +54,6 @@ export default function RessourcesPage() {
               <CardImage
                 src="https://paysage.mesri.fr/images/logos/W3SuU.svg"
                 alt="logo"
-                className="test"
               />
             </CardHeader>
             <CardDetail>

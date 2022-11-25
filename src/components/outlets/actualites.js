@@ -5,7 +5,6 @@ import useHashScroll from '../../hooks/useHashScroll';
 import { Bloc, BlocContent, BlocTitle } from '../bloc';
 import TagList from '../tag-list';
 import Button from '../button';
-import { toString } from '../../utils/dates';
 
 export default function ActualitesOutlet() {
   const { id: resourceId } = useParams();
@@ -20,13 +19,13 @@ export default function ActualitesOutlet() {
       <Row gutters>
         {data.data.map((event) => (
           <Col n="12" key={event.id}>
-            <div className="fr-card fr-card--xs fr-card--grey fr-card--no-border">
+            <div className="fr-card fr-card--xs fr-card--shadow">
               <div className="fr-card__body">
                 <div className="fr-card__content">
                   <div className="fr-card__start">
                     <Row className="flex--space-between">
                       <BadgeGroup>
-                        <Badge type="new" text={toString(event.publicationDate)} />
+                        <Badge type="new" text={event.publicationDate} />
                       </BadgeGroup>
                     </Row>
                   </div>

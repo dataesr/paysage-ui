@@ -158,6 +158,18 @@ export default function IdentifiersComponent() {
     const list = [];
     if (data) {
       data.data?.forEach((el) => {
+        list.push(
+          <KeyValueCard
+            cardKey={options?.find((type) => (el.type === type.value))?.label}
+            cardValue={el.value}
+            className={`card-${apiObject}`}
+            copy
+            icon="ri-fingerprint-2-line"
+            key={el.id}
+            onEdit={() => onOpenModalHandler(el)}
+            linkTo={getLink(el)}
+          />,
+        );
         if (el.type === 'Id unité CNRS') {
           list.push(
             <KeyValueCard
@@ -212,18 +224,6 @@ export default function IdentifiersComponent() {
             />,
           );
         }
-        list.push(
-          <KeyValueCard
-            cardKey={options?.find((type) => (el.type === type.value))?.label}
-            cardValue={el.value}
-            className={`card-${apiObject}`}
-            copy
-            icon="ri-fingerprint-2-line"
-            key={el.id}
-            onEdit={() => onOpenModalHandler(el)}
-            linkTo={getLink(el)}
-          />,
-        );
       });
     }
     return <ExpendableListCards list={list} />;
