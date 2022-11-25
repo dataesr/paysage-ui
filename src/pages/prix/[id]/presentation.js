@@ -23,7 +23,6 @@ export default function PricePresentationPage() {
         blocName="Structures décernant le prix"
         resourceType="prices"
         relatedObjectTypes={['structures']}
-        inverse
         Form={LaureateForm}
       />
       <RelationsByTag
