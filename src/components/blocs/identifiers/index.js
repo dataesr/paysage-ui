@@ -199,7 +199,7 @@ export default function IdentifiersComponent() {
           );
         }
         if (el.type === 'Siret') {
-          const siren = el.value.substring(0, 11);
+          const siren = el.value.substring(0, 9);
           list.push(
             <KeyValueCard
               cardKey="Siren"
