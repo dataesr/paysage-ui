@@ -78,7 +78,6 @@ function App() {
   return (
     <Routes>
       <Route element={<Layout />}>
-        <Route path="/" element={<HomePage />} />
         <Route path="/se-connecter" element={<SignIn />} />
         <Route path="/creer-un-compte" element={<SignUp />} />
         <Route path="/mot-de-passe-oublie" element={<Passwordless />} />
@@ -101,6 +100,8 @@ function App() {
         </Route>
 
         <Route element={<ProtectedRoute />}>
+          <Route path="/" element={<HomePage />} />
+
           <Route path="/mon-compte" element={<AccountPage />}>
             <Route path="" element={<Navigate to="/mon-compte/profile" replace />} />
             <Route path="profile" element={<ProfilePage />} />
