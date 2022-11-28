@@ -10,7 +10,7 @@ export default function GroupsPage() {
     <>
       <Breadcrumb>
         <BreadcrumbItem asLink={<RouterLink to="/" />}>Accueil</BreadcrumbItem>
-        <BreadcrumbItem asLink={<RouterLink to="/profile" />}>{`${viewer?.firstName} ${viewer?.lastName}`}</BreadcrumbItem>
+        <BreadcrumbItem asLink={<RouterLink to="/mon-compte" />}>{`${viewer?.firstName} ${viewer?.lastName}`}</BreadcrumbItem>
         <BreadcrumbItem>Mes groupes</BreadcrumbItem>
       </Breadcrumb>
       <Container>

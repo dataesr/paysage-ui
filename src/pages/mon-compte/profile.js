@@ -79,7 +79,6 @@ export default function ProfilePage() {
     <>
       <Breadcrumb>
         <BreadcrumbItem asLink={<RouterLink to="/" />}>Accueil</BreadcrumbItem>
-        <BreadcrumbItem asLink={<RouterLink to="#" />}>{`${viewer?.firstName} ${viewer?.lastName}`}</BreadcrumbItem>
         <BreadcrumbItem>Profil</BreadcrumbItem>
       </Breadcrumb>
       <Container fluid>

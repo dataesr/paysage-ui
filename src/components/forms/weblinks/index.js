@@ -36,7 +36,6 @@ const regexpValidateWebSite = {
   TheConversation: /(^https:\/\/)?(www.)?theconversation.com\/profiles\/[a-z-]{1,}-[0-9]{1,}$/,
   TalentCNRS: /(^https:\/\/)?(www.)?cnrs\.fr\/fr\/personne\/[a-z-]+(-0)?$/,
   IUF: /(^https:\/\/)?(www.)?iufrance\.fr\/les-membres-de-liuf\/membre\/[1-9]\d*([a-z-]*)?\.html$/,
-  jorfsearch: /(^https:\/\/)?(www.)?jorfsearch.steinertriples.ch\/name\/[A-Za-z0-9%-]+$/,
   EdCF: /(^https:\/\/)?(www.)?doctorat.campusfrance.org\//,
   OE1: /(^https:\/\/)?(www.)?books.openedition.org\//,
   OE2: /(^https:\/\/)?(www.)?openedition.org\/catalogue-journals\?limit=30/,
