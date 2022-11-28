@@ -26,7 +26,7 @@ export default function PreferencesPage() {
     <>
       <Breadcrumb>
         <BreadcrumbItem asLink={<RouterLink to="/" />}>Accueil</BreadcrumbItem>
-        <BreadcrumbItem asLink={<RouterLink to="/profile" />}>{`${viewer?.firstName} ${viewer?.lastName}`}</BreadcrumbItem>
+        <BreadcrumbItem asLink={<RouterLink to="/mon-compte/" />}>{`${viewer?.firstName} ${viewer?.lastName}`}</BreadcrumbItem>
         <BreadcrumbItem>Préférences</BreadcrumbItem>
       </Breadcrumb>
       <Container fluid>

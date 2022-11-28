@@ -39,7 +39,7 @@ export default function SecurityPage() {
     <>
       <Breadcrumb>
         <BreadcrumbItem asLink={<RouterLink to="/" />}>Accueil</BreadcrumbItem>
-        <BreadcrumbItem asLink={<RouterLink to="/profile" />}>{`${viewer?.firstName} ${viewer?.lastName}`}</BreadcrumbItem>
+        <BreadcrumbItem asLink={<RouterLink to="/mon-compte/profile" />}>{`${viewer?.firstName} ${viewer?.lastName}`}</BreadcrumbItem>
         <BreadcrumbItem>Sécurité</BreadcrumbItem>
       </Breadcrumb>
       <Container>
