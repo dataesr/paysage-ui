@@ -101,7 +101,6 @@ function App() {
 
         <Route element={<ProtectedRoute />}>
           <Route path="/" element={<HomePage />} />
-
           <Route path="/mon-compte" element={<AccountPage />}>
             <Route path="" element={<Navigate to="/mon-compte/profile" replace />} />
             <Route path="profile" element={<ProfilePage />} />
