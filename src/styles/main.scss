@@ -133,3 +133,6 @@ $objects: structures, persons, prices, terms, projects, categories, legal-catego
   margin-bottom: 1.5rem;
 }
 
+.fr-card__img img {
+    object-fit: inherit !important;
+}

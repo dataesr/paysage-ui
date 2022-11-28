@@ -134,7 +134,6 @@ function App() {
             <Route path="projets" element={<StructureProjetsPage />} />
             <Route path="prix-et-recompenses" element={<StructurePrixEtRecompensesPage />} />
             <Route path="elements-lies" element={<StructureElementsLiesPage />} />
-            <Route path="participations" element={<ParticipationsOutlet />} />
             <Route path="journal" element={<JournalOutlet />} />
           </Route>
 

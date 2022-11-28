@@ -74,38 +74,38 @@ export default function DocumentsOutlet() {
     if (!data || !data.data.length) return null;
     return (
       <Row gutters>
-        {data.data.map((event) => (
-          <Col n="12 md-6" key={event.id}>
+        {data.data.map((document) => (
+          <Col n="12 md-6" key={document.id}>
             <div className="fr-card fr-card--xs fr-card--shadow">
               <div className="fr-card__body">
                 <div className="fr-card__content">
                   <div className="fr-card__start">
                     <Row className="flex--space-between">
                       <BadgeGroup>
-                        {renderGroupBadge(event.canAccess)}
+                        {renderGroupBadge(document.canAccess)}
                       </BadgeGroup>
-                      {editMode && <Button onClick={() => onOpenModalHandler(event)} className="edit-button" icon="ri-edit-line" title="Editer le document" tertiary borderless rounded />}
+                      {editMode && <Button onClick={() => onOpenModalHandler(document)} className="edit-button" icon="ri-edit-line" title="Editer le document" tertiary borderless rounded />}
                     </Row>
                   </div>
-                  <p className="fr-card__title">{event.title}</p>
+                  <p className="fr-card__title">{document.title}</p>
                   <Row className="fr-card__desc">
                     <BadgeGroup className="fr-mt-1v">
-                      <Badge text={event.documentType.usualName} />
-                      <Badge type="info" text={event.startDate.slice(0, 4)} />
+                      <Badge text={document.documentType?.usualName} />
+                      <Badge type="info" text={document.startDate?.slice(0, 4)} />
                     </BadgeGroup>
                   </Row>
-                  {event.description && <div className="fr-card__desc">{event.description}</div>}
+                  {document.description && <div className="fr-card__desc">{document.description}</div>}
                   <div className="fr-card__end">
-                    {(event.relatedObjects.length > 1) && <Text spacing="mb-1w" bold>Autres objets associés :</Text>}
-                    {event.relatedObjects && (
-                      <TagList>
-                        {event.relatedObjects
+                    {(document.relatedObjects.length > 1) && <Text spacing="mb-1w" bold>Autres objets associés :</Text>}
+                    {document.relatedObjects && (
+                      <TagList maxTags={2}>
+                        {document.relatedObjects
                           .filter((related) => (related.id !== resourceId))
                           .map((related) => <Tag iconPosition="right" icon="ri-arrow-right-line" onClick={() => navigate(related.href)} key={related.id}>{related.displayName}</Tag>)}
                       </TagList>
                     )}
                     <Row>
-                      {event.files.map((file) => (<Download key={file.url} file={file} />
+                      {document.files.map((file) => (<Download key={file.url} file={file} />
                       ))}
                     </Row>
                   </div>

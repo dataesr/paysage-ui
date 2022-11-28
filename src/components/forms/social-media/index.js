@@ -12,18 +12,41 @@ import useForm from '../../../hooks/useForm';
 import useEnums from '../../../hooks/useEnums';
 import PaysageBlame from '../../paysage-blame';
 
+const regexpValidateSocialMedia = (type) => {
+  const validator = {
+    Dailymotion: [/^(https:\/\/)?(www.)?dailymotion.com\/[A-Za-z0-9/:%_+.,#?!@&=-]+$/, 'https://www.dailymotion.com/<compte>'],
+    Facebook: [/^(https:\/\/)?(www.)?facebook.com\/[A-Za-z0-9/:%_+.,#?!@&=-]+$/, 'https://www.facebook.com/<compte>'],
+    Github: [/^(https:\/\/)?(www.)?github.com\/0-9A-Za-z?$/, 'https://github.com/<compte>?tab=repositories'],
+    Instagram: [/^(https:\/\/)?(www.)?instagram.com\/([0-9A-Za-z_]?)\/$/, 'https://www.instagram.com/<compte>/?hl=fr'],
+    Twitter: [/^(https:\/\/)?(www.)?twitter.com\/[0-9A-Za-z_]{1,15}$/, 'https://twitter.com/<compte>'],
+    Youtube: [/^(https:\/\/)?(www.)?youtube.com\/[A-Za-z0-9/:%_+.,#?!@&=-]+$/, 'https://www.youtube.com/channel/<chaine>'],
+    Linkedin: [/^(https:\/\/)?(www.)?linkedin.com\/.+\/.+\/$/, 'https://www.linkedin.com/<profil>'],
+    Twitch: [/^(https:\/\/)?(www.)?twitch\.tv\/([a-z0-9_]+)($|\?)/, 'https://twitch.tv/<chaine>'],
+    Tiktok: [/^(https:\/\/)?(www.)?tiktok\.com\/([A-Za-z0-9/:%_+.,#?!@&=-]+)($|\?)/, 'https://www.tiktok.com/@<compte>'],
+    Pinterest: [/^(https:\/\/)?(www.)?pinterest.fr\/[A-Za-z0-9/:%_+.,#?!@&=-]+$/, 'https://www.pinterest.fr/<compte>/'],
+    Vimeo: [/^(https:\/\/)?(www.)?vimeo.com\/[A-Za-z0-9/:%_+.,#?!@&=-]+$/, 'https://vimeo.com/<compte>'],
+  };
+  return validator[type] || [null, null];
+};
+
 function validate(body) {
-  const ret = {};
-  if (!body?.account) ret.account = 'Le compte/url du media social est obligatoire';
-  if (!body?.type) ret.type = 'Le type du media social est obligatoire';
-  // if (!body?.account?.includes(body?.type)) ret.account = `URL non valide - Exemple : compte ${body.type} [https://${body.type}.com/XXX] `;
-  return ret;
+  const errorMessage = {};
+  if (!body?.account) errorMessage.account = 'Le compte du réseaux social est obligatoire';
+  if (!body?.type) errorMessage.type = 'Le type du réseaux social est obligatoire';
+  const [regexp, error] = regexpValidateSocialMedia(body.type);
+  if (regexp && error && !regexp.test(body.account)) errorMessage.account = `Essayez ${error}`;
+
+  return errorMessage;
 }
 
 function sanitize(form) {
   const fields = ['account', 'type'];
   const body = {};
-  Object.keys(form).forEach((key) => { if (fields.includes(key)) { body[key] = form[key]; } });
+  Object.keys(form).forEach((key) => {
+    if (fields.includes(key)) { body[key] = form[key]; }
+  });
+  if (!form.account.includes('https://')) { body.account = `https://${body.account}`; }
+  if (!form.account.includes('.fr')) { body.account = `${body.account}.fr`; }
   return body;
 }
 
@@ -37,7 +60,6 @@ export default function SocialMediaForm({ id, data, onDelete, onSave }) {
     const body = sanitize(form);
     return onSave(body, id);
   };
-
   return (
     <form>
       <Container fluid>

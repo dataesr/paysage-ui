@@ -10,6 +10,7 @@ import RelationGroupForm from '../../../components/forms/relations-group';
 import api from '../../../utils/api';
 import useNotice from '../../../hooks/useNotice';
 import RelationsByTag from '../../../components/blocs/relations-by-tag';
+import RelationsParticipations from '../../../components/blocs/relations-participations';
 import SupervisorsForm from '../../../components/forms/supervisors';
 import { STRUCTURE_INTERNE, STRUCTURE_PREDECESSEUR, STRUCTURE_TUTELLE } from '../../../utils/relations-tags';
 
@@ -20,20 +21,20 @@ const deleteSuccess = { content: 'Le groupe a été supprimée avec succès.', a
 
 export default function StructureElementLiesPage() {
   useHashScroll();
-  const { url } = useUrl('relations-groups');
-  const { data, isLoading, error, reload } = useFetch(`${url}?limit=500`);
+  const { id: resourceId } = useUrl('relations-groups');
+  const { data, isLoading, error, reload } = useFetch(`/relations-groups?filters[resourceId]=${resourceId}&limit=500`);
   const [isOpen, setIsOpen] = useState();
   const notice = useNotice();
 
   const handleDelete = async (id) => {
     if (!id) return;
-    await api.delete(`${url}/${id}`)
+    await api.delete(`/relations-groups/${id}`)
       .then(() => { reload(); notice(deleteSuccess); })
       .catch(() => notice(deleteError));
     setIsOpen(false);
   };
   const handleSave = async (body) => {
-    await api.post(url, body)
+    await api.post('/relations-groups', body)
       .then(() => { reload(); notice(saveSuccess); })
       .catch(() => notice(saveError));
     setIsOpen(false);
@@ -94,6 +95,8 @@ export default function StructureElementLiesPage() {
           </Modal>
         </BlocModal>
       </Bloc>
+      <hr />
+      <RelationsParticipations />
     </>
   );
 }

@@ -43,9 +43,9 @@ const getFileIcon = (mimetype) => {
 };
 
 export default function File({ file, onClick }) {
-  const displayName = (file.originalName.length < 30)
+  const displayName = (file.originalName?.length < 30)
     ? file.originalName
-    : file.orginalName.substring(0, 25);
+    : `${file.originalName?.substring(0, 25)}...`;
   return (
     <Col n="12" className={styles['file-wrapper']}>
       {getFileIcon(file.mimetype)}
@@ -65,7 +65,7 @@ export default function File({ file, onClick }) {
           : (
             <div>
               <p className="fr-mb-0">
-                {file.originalName}
+                {displayName}
               </p>
               <p className={styles['file-details']}>
                 {`${formatBytes(file.size)} -- ${getFileType(file.mimetype)}`}

@@ -29,7 +29,6 @@ export default function RessourcesPage() {
               <CardImage
                 src="https://curiexplore.enseignementsup-recherche.gouv.fr/static/media/logo-curiexplore.94b2a1be.svg"
                 alt="curieXplore logo"
-                width="200px"
               />
             </CardHeader>
             <CardDetail>
@@ -39,7 +38,11 @@ export default function RessourcesPage() {
               </BadgeGroup>
             </CardDetail>
             <CardTitle>CurieXplore</CardTitle>
-            <CardDescription as="div">CurieXplore est ...</CardDescription>
+            <CardDescription as="div">
+              La plateforme d'exploration des systèmes d'enseignement supérieur,
+              de recherche et d'innovation à l'international.
+              Réalisé en collaboration avec le ministère de l'Europe et des affaires étrangères.
+            </CardDescription>
           </Card>
         </Col>
         <Col n="12 sm-6 md-4" spacing="p-3w">
@@ -49,7 +52,7 @@ export default function RessourcesPage() {
           >
             <CardHeader>
               <CardImage
-                src="https://curiexplore.enseignementsup-recherche.gouv.fr/static/media/logo-curiexplore.94b2a1be.svg"
+                src="https://paysage.mesri.fr/images/logos/W3SuU.svg"
                 alt="logo"
               />
             </CardHeader>
@@ -61,7 +64,7 @@ export default function RessourcesPage() {
             </CardDetail>
             <CardTitle>scanR</CardTitle>
             <CardDescription as="div">
-              Moteur de la recherche et de l'innovation
+              Explorez le monde de la Recherche et de l'Innovation française avec scanR
             </CardDescription>
           </Card>
         </Col>
@@ -83,7 +86,7 @@ export default function RessourcesPage() {
               </BadgeGroup>
             </CardDetail>
             <CardTitle>L'état de l'enseignement supérieur</CardTitle>
-            <CardDescription as="div">Découvrez ...</CardDescription>
+            <CardDescription as="div">État de l'enseignement supérieur, de la recherche et de l'innovation</CardDescription>
           </Card>
         </Col>
         <Col n="12 sm-6 md-4" spacing="p-3w">
@@ -96,14 +99,17 @@ export default function RessourcesPage() {
                 src="https://dataesr.enseignementsup-recherche.pro/images/dataESR.svg"
                 alt="logo"
               />
+            </CardHeader>
+            <CardDetail>
               <BadgeGroup>
                 <Badge text="Badge #1" />
                 <Badge text="Badge #2" />
               </BadgeGroup>
-            </CardHeader>
+            </CardDetail>
             <CardTitle>#dataesr</CardTitle>
             <CardDescription as="div">
-              Découvrez l'offre de service #dataesr
+              #dataESR vous aide à trouver les ressources en données sur
+              l'enseignement supérieur, la recherche et l'innovation
             </CardDescription>
           </Card>
         </Col>
