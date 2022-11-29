@@ -47,7 +47,8 @@ const getDescription = (item) => {
     break;
   case 'projects':
     // Projet : Nom usuel + sigle ou nom court du projet > Catégorie principale > Localisation > Date de début
-    description += item?.startDate ? formatDescriptionDates(item?.startDate) : '';
+    description += item?.category ? item.category : '';
+    description += item?.startDate ? ` ${formatDescriptionDates(item?.startDate)}` : '';
     break;
   default:
   }
