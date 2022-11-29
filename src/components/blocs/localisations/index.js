@@ -54,37 +54,41 @@ export default function LocalisationsComponent() {
     setShowModal(true);
   };
 
-  const renderAddress = (localisation) => (
-    <div className={`fr-card fr-card--xs fr-card--horizontal fr-card--grey fr-card--no-border card-${apiObject}`}>
-      <div className="fr-card__body">
-        <div className="fr-card__content">
-          <p className="fr-card__title">
-            <span className="fr-pr-1w">
-              {`${localisation?.address || ''}, ${localisation?.postalCode || ''} ${localisation?.locality || ''}, ${localisation?.country}`}
-            </span>
-            <CopyButton
-              copyText={`${localisation?.address || ''}, ${localisation?.postalCode || ''} ${localisation?.locality || ''}, ${localisation?.country}`}
-              size="sm"
-            />
-          </p>
-          <div className="fr-card__start">
-            <p className="fr-card__detail fr-text--sm fr-mb-0">
-              <Icon name="ri-map-pin-fill" size="1x" />
-              Adresse
-              {' '}
-              {localisation.current ? 'actuelle' : 'historique'}
+  const renderAddress = (localisation) => {
+    // eslint-disable-next-line max-len
+    const address = `${localisation?.address || ''}${(localisation?.address) ? ',' : ''} ${localisation?.postalCode || ''} ${localisation?.locality || localisation?.city || ''}, ${localisation?.country}`;
+    return (
+      <div className={`fr-card fr-card--xs fr-card--horizontal fr-card--grey fr-card--no-border card-${apiObject}`}>
+        <div className="fr-card__body">
+          <div className="fr-card__content">
+            <p className="fr-card__title">
+              <span className="fr-pr-1w">
+                {address}
+              </span>
+              <CopyButton
+                copyText={address}
+                size="sm"
+              />
             </p>
+            <div className="fr-card__start">
+              <p className="fr-card__detail fr-text--sm fr-mb-0">
+                <Icon name="ri-map-pin-fill" size="1x" />
+                Adresse
+                {' '}
+                {localisation.current ? 'actuelle' : 'historique'}
+              </p>
+            </div>
+            <div className="fr-card__end fr-mt-0 fr-pt-0">
+              <p className="fr-card__detail">
+                {formatDescriptionDates(localisation.startDate || null, localisation.endDate || null)}
+              </p>
+            </div>
+            {editMode && <Button color="text" size="md" onClick={() => handleModalToggle(localisation)} tertiary borderless rounded icon="ri-edit-line" className="edit-button" />}
           </div>
-          <div className="fr-card__end fr-mt-0 fr-pt-0">
-            <p className="fr-card__detail">
-              {formatDescriptionDates(localisation.startDate || null, localisation.endDate || null)}
-            </p>
-          </div>
-          {editMode && <Button color="text" size="md" onClick={() => handleModalToggle(localisation)} tertiary borderless rounded icon="ri-edit-line" className="edit-button" />}
         </div>
       </div>
-    </div>
-  );
+    );
+  };
 
   if (error) return <div>Erreur</div>;
   if (isLoading) return <div>Chargement</div>;
@@ -99,23 +103,27 @@ export default function LocalisationsComponent() {
       </BlocActionButton>
       <BlocContent>
         {
-          data.totalCount === 1 && currentLocalisation?.coordinates && (
+          data.totalCount === 1 && (
             <Row>
-              <Col n="12" spacing="mb-1w">
-                <Map
-                  lat={currentLocalisation?.coordinates.lat}
-                  lng={currentLocalisation?.coordinates.lng}
-                  markers={[
-                    {
-                      address: `{${currentLocalisation?.address || ''}, ${currentLocalisation?.postalCode || ''} ${currentLocalisation?.locality || ''}, ${currentLocalisation?.country}}`,
-                      latLng: [
-                        currentLocalisation?.coordinates.lat,
-                        currentLocalisation?.coordinates.lng,
-                      ],
-                    },
-                  ]}
-                />
-              </Col>
+              {
+                (currentLocalisation?.coordinates) ? (
+                  <Col n="12" spacing="mb-1w">
+                    <Map
+                      lat={currentLocalisation?.coordinates.lat}
+                      lng={currentLocalisation?.coordinates.lng}
+                      markers={[
+                        {
+                          address: `{${currentLocalisation?.address || ''}, ${currentLocalisation?.postalCode || ''} ${currentLocalisation?.locality || ''}, ${currentLocalisation?.country}}`,
+                          latLng: [
+                            currentLocalisation?.coordinates.lat,
+                            currentLocalisation?.coordinates.lng,
+                          ],
+                        },
+                      ]}
+                    />
+                  </Col>
+                ) : null
+              }
               <Col n="12">
                 {data.totalCount === 1 && currentLocalisation?.country && renderAddress(currentLocalisation)}
               </Col>
