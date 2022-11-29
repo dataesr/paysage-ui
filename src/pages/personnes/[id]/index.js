@@ -27,7 +27,7 @@ import PersonsRelatedElements from './elements-lies';
 import PersonExportPage from './exporter';
 import { saveError, saveSuccess } from '../../../utils/notice-contents';
 import useAuth from '../../../hooks/useAuth';
-import { Error404, Error500 } from '../../../components/errors';
+import Error from '../../../components/errors';
 
 function PersonByIdPage() {
   const { viewer } = useAuth();
@@ -62,8 +62,7 @@ function PersonByIdPage() {
   };
 
   if (isLoading) return <PageSpinner />;
-  if (error) return <Error500 />;
-  if (!data) return <Error404 />;
+  if (error) return <Error status={error} />;
   const personName = `${data.firstName} ${data.lastName}`.trim();
   const genreIcon = (data.gender === 'Homme') ? 'ri-men-line' : 'ri-women-line';
   return (

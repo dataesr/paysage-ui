@@ -37,7 +37,7 @@ import StructureMottoForm from '../../../components/forms/structures/motto';
 import StructureHistoryForm from '../../../components/forms/structures/historique';
 import api from '../../../utils/api';
 import { getName } from '../../../utils/structures';
-import { Error404, Error500 } from '../../../components/errors';
+import Error from '../../../components/errors';
 
 function StructureByIdPage() {
   const { viewer } = useAuth();
@@ -86,8 +86,7 @@ function StructureByIdPage() {
   };
 
   if (isLoading) return <PageSpinner />;
-  if (error) return <Error500 />;
-  if (!data) return <Error404 />;
+  if (error) return <Error status={error} />;
   return (
     <Container spacing="pb-6w">
       <Row>

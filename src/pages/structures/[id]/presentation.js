@@ -20,7 +20,7 @@ import CurrentLegals from '../../../components/blocs/current-legal';
 import CurrentLogos from '../../../components/blocs/current-logo';
 import CurrentSupervisors from '../../../components/blocs/current-supervisors';
 import { PageSpinner } from '../../../components/spinner';
-import { Error404, Error500 } from '../../../components/errors';
+import Error from '../../../components/errors';
 
 export default function StructurePresentationPage() {
   useHashScroll();
@@ -29,9 +29,7 @@ export default function StructurePresentationPage() {
   const { editMode } = useEditMode();
 
   if (isLoading) return <PageSpinner />;
-  if (error) return <Error500 />;
-  if (!data) return <Error404 />;
-
+  if (error) return <Error status={error} />;
   return (
     <>
       <Row>

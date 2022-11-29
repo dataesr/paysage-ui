@@ -18,7 +18,7 @@ import { saveError, saveSuccess } from '../../utils/notice-contents';
 import useFetch from '../../hooks/useFetch';
 import RelatedObjectCard from '../../components/card/related-object-card';
 import { Bloc, BlocContent, BlocTitle } from '../../components/bloc';
-import { Error404, Error500 } from '../../components/errors';
+import Error from '../../components/errors';
 
 export default function OfficialTextByIdPage() {
   const { url } = useUrl();
@@ -46,8 +46,7 @@ export default function OfficialTextByIdPage() {
   };
 
   if (isLoading) return <PageSpinner />;
-  if (error) return <Error500 />;
-  if (!data) return <Error404 />;
+  if (error) return <Error status={error} />;
   return (
     <Container spacing="pb-6w">
       <Row>

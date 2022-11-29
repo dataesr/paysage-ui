@@ -11,7 +11,7 @@ import RelationsByTag from '../../components/blocs/relations-by-tag';
 import { STRUCTURE_TUTELLE } from '../../utils/relations-tags';
 import SupervisorsForm from '../../components/forms/supervisors';
 import { capitalize } from '../../utils/strings';
-import { Error404, Error500 } from '../../components/errors';
+import Error from '../../components/errors';
 
 export default function SupervisingMinistersByIdPage() {
   const { url } = useUrl();
@@ -20,8 +20,7 @@ export default function SupervisingMinistersByIdPage() {
   useEffect(() => { document.title = `Ministre de tutelle · ${data?.usualName}`; }, [data]);
 
   if (isLoading) return <PageSpinner />;
-  if (error) return <Error500 />;
-  if (!data) return <Error404 />;
+  if (error) return <Error status={error} />;
   return (
     <Container spacing="pb-6w">
       <Row>

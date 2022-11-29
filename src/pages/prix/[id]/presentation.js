@@ -10,15 +10,14 @@ import KeyValueCard from '../../../components/card/key-value-card';
 import useUrl from '../../../hooks/useUrl';
 import useFetch from '../../../hooks/useFetch';
 import { PageSpinner } from '../../../components/spinner';
-import { Error404, Error500 } from '../../../components/errors';
+import Error from '../../../components/errors';
 
 export default function PricePresentationPage() {
   const { url } = useUrl();
   const { data, isLoading, error } = useFetch(url);
   useHashScroll();
   if (isLoading) return <PageSpinner />;
-  if (error) return <Error500 />;
-  if (!data) return <Error404 />;
+  if (error) return <Error status={error} />;
   return (
     <>
       <Row>

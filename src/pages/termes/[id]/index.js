@@ -22,8 +22,7 @@ import TermExportPage from './exporter';
 import TermRelatedElements from './elements-lies';
 import { saveError, saveSuccess } from '../../../utils/notice-contents';
 import TermForm from '../../../components/forms/category-term';
-import Error500 from '../../../components/errors/500';
-import Error404 from '../../../components/errors/404';
+import Error from '../../../components/errors';
 
 function TermByIdPage() {
   const { url, id } = useUrl();
@@ -51,8 +50,7 @@ function TermByIdPage() {
     .catch(() => { setIsFormModalOpen(false); notice(saveError); });
 
   if (isLoading) return <PageSpinner />;
-  if (error) return <Error500 />;
-  if (!data) return <Error404 />;
+  if (error) return <Error status={error} />;
   return (
     <Container spacing="pb-6w">
       <Row>

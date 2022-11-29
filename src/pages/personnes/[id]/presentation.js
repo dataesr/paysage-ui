@@ -8,7 +8,7 @@ import useUrl from '../../../hooks/useUrl';
 import PersonCurrentMandates from '../../../components/blocs/current-mandates';
 import Wiki from '../../../components/blocs/wiki';
 import { PageSpinner } from '../../../components/spinner';
-import { Error404, Error500 } from '../../../components/errors';
+import Error from '../../../components/errors';
 
 export default function PersonPresentationPage() {
   useHashScroll();
@@ -16,8 +16,7 @@ export default function PersonPresentationPage() {
   const { data, isLoading, error } = useFetch(url);
 
   if (isLoading) return <PageSpinner />;
-  if (error) return <Error500 />;
-  if (!data) return <Error404 />;
+  if (error) return <Error status={error} />;
   return (
     <>
       <Row>

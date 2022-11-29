@@ -22,7 +22,7 @@ import CategoryRelatedElements from './elements-lies';
 import CategoryForm from '../../../components/forms/category-term';
 import CategoriesExportPage from './exporter';
 import { saveError, saveSuccess } from '../../../utils/notice-contents';
-import { Error404, Error500 } from '../../../components/errors';
+import Error from '../../../components/errors';
 
 function CategoryByIdPage() {
   const { url, id } = useUrl();
@@ -48,10 +48,8 @@ function CategoryByIdPage() {
   const onSave = async (body) => api.patch(url, body)
     .then(() => { reload(); setIsFormModalOpen(false); notice(saveSuccess); })
     .catch(() => { setIsFormModalOpen(false); notice(saveError); });
-
   if (isLoading) return <PageSpinner />;
-  if (error) return <Error500 />;
-  if (!data) return <Error404 />;
+  if (error) return <Error status={error} />;
   return (
     <Container spacing="pb-6w">
       <Row>

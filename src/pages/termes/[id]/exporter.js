@@ -13,7 +13,7 @@ import TermsRelatedElements from './elements-lies';
 import ActualitesOutlet from '../../../components/outlets/actualites';
 import OfficialTextOutlet from '../../../components/outlets/textes-officiels';
 import { PageSpinner, OverlaySpinner } from '../../../components/spinner';
-import { Error404, Error500 } from '../../../components/errors';
+import Error from '../../../components/errors';
 
 export default function TermExportPage() {
   const { id } = useParams();
@@ -36,9 +36,7 @@ export default function TermExportPage() {
     handlePrint();
   }, 5000);
 
-  if (isLoading) return <PageSpinner />;
-  if (error) return <Error500 />;
-  if (!data) return <Error404 />;
+  if (isLoading) return <PageSpinner />; if (error) return <Error status={error} />;
   return (
     <div className="print" ref={componentRef}>
       <Container spacing="pb-6w">

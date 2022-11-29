@@ -11,7 +11,7 @@ import useHashScroll from '../../../hooks/useHashScroll';
 import useFetch from '../../../hooks/useFetch';
 import Wiki from '../../../components/blocs/wiki';
 import { CATEGORIE_PARENT } from '../../../utils/relations-tags';
-import { Error404, Error500 } from '../../../components/errors';
+import Error from '../../../components/errors';
 
 export default function CategoryPresentationPage() {
   useHashScroll();
@@ -19,8 +19,7 @@ export default function CategoryPresentationPage() {
   const { data, isLoading, error } = useFetch(url);
 
   if (isLoading) return <PageSpinner />;
-  if (error) return <Error500 />;
-  if (!data) return <Error404 />;
+  if (error) return <Error status={error} />;
 
   return (
     <>

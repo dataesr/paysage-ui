@@ -9,7 +9,7 @@ import { PageSpinner } from '../../components/spinner';
 import useFetch from '../../hooks/useFetch';
 import RelationsByTag from '../../components/blocs/relations-by-tag';
 import { STRUCTURE_CATEGORIE_JURIDIQUE } from '../../utils/relations-tags';
-import { Error404, Error500 } from '../../components/errors';
+import Error from '../../components/errors';
 
 export default function LegalCategoriesByIdPage() {
   const { url } = useUrl();
@@ -18,8 +18,7 @@ export default function LegalCategoriesByIdPage() {
   useEffect(() => { document.title = `Catégorie juridique · ${data?.longNameFr}`; }, [data]);
 
   if (isLoading) return <PageSpinner />;
-  if (error) return <Error500 />;
-  if (!data) return <Error404 />;
+  if (error) return <Error status={error} />;
   return (
     <Container spacing="pb-6w">
       <Row>

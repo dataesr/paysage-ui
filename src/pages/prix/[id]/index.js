@@ -22,7 +22,7 @@ import PricePresentationPage from './presentation';
 import PriceCategories from './categories';
 import PriceExportPage from './exporter';
 import { saveError, saveSuccess } from '../../../utils/notice-contents';
-import { Error404, Error500 } from '../../../components/errors';
+import Error from '../../../components/errors';
 
 function PriceByIdPage() {
   const { url, id } = useUrl();
@@ -50,8 +50,7 @@ function PriceByIdPage() {
     .catch(() => { setIsFormModalOpen(false); notice(saveError); });
 
   if (isLoading) return <PageSpinner />;
-  if (error) return <Error500 />;
-  if (!data) return <Error404 />;
+  if (error) return <Error status={error} />;
   return (
     <Container spacing="pb-6w">
       <Row>

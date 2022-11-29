@@ -16,7 +16,7 @@ import PersonsRelatedElements from './elements-lies';
 import ActualitesOutlet from '../../../components/outlets/actualites';
 import OfficialTextOutlet from '../../../components/outlets/textes-officiels';
 import { OverlaySpinner, PageSpinner } from '../../../components/spinner';
-import { Error404, Error500 } from '../../../components/errors';
+import Error from '../../../components/errors';
 
 export default function PersonExportPage() {
   const { id } = useParams();
@@ -40,8 +40,7 @@ export default function PersonExportPage() {
   }, 5000);
 
   if (isLoading) return <PageSpinner />;
-  if (error) return <Error500 />;
-  if (!data) return <Error404 />;
+  if (error) return <Error status={error} />;
   const personName = `${data.firstName} ${data.lastName}`.trim();
   const genreIcon = (data.gender === 'Homme') ? 'ri-men-line' : 'ri-women-line';
   return (
