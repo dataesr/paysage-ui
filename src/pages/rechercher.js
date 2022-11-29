@@ -28,7 +28,7 @@ const getDescription = (item) => {
   case 'structures':
     // Structures : Nom usuel + sigle ou nom court > Catégorie principale > Localisation > Date de création
     description += item?.category ? item.category : '';
-    description += item?.locality ? ` à ${item.locality}` : '';
+    description += (item?.locality && item?.locality.length > 0) ? ` à ${item.locality[0]}` : '';
     description += item?.creationDate ? ` ${formatDescriptionDates(item?.creationDate)}` : '';
     break;
   case 'persons':
