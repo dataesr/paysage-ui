@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Text, Title, Col, Row } from '@dataesr/react-dsfr';
+import { Button, Text, Title } from '@dataesr/react-dsfr';
 import { useNavigate } from 'react-router-dom';
 import './not-found.scss';
 
