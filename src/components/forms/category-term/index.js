@@ -1,6 +1,7 @@
-import PropTypes from 'prop-types';
 import { Col, Container, Row, TextInput, Title } from '@dataesr/react-dsfr';
+import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
+
 import api from '../../../utils/api';
 import PaysageBlame from '../../paysage-blame';
 import useForm from '../../../hooks/useForm';
@@ -39,7 +40,7 @@ function sanitize(form) {
   return body;
 }
 
-export default function CategoryTermsForm({ id, data, onSave, onDelete }) {
+export default function CategoryTermsForm({ data, id, onDelete, onSave }) {
   const [showErrors, setShowErrors] = useState(false);
   const [startDateOfficialTextQuery, setStartDateOfficialTextQuery] = useState('');
   const [endDateOfficialTextQuery, setEndDateOfficialTextQuery] = useState('');
@@ -241,13 +242,13 @@ export default function CategoryTermsForm({ id, data, onSave, onDelete }) {
 }
 
 CategoryTermsForm.propTypes = {
-  id: PropTypes.string,
   data: PropTypes.oneOfType([PropTypes.shape, null]),
-  onSave: PropTypes.func.isRequired,
+  id: PropTypes.string,
   onDelete: PropTypes.func,
+  onSave: PropTypes.func.isRequired,
 };
 CategoryTermsForm.defaultProps = {
-  id: null,
   data: { relatedObjects: [] },
+  id: null,
   onDelete: null,
 };
