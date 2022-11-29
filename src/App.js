@@ -75,13 +75,10 @@ import { PriceByIdPage, PriceCategories, PriceExportPage, PricePresentationPage 
 import SupervisingMinistersByIdPage from './pages/supervising-ministers/id';
 import LegalCategoriesByIdPage from './pages/legal-categories/id';
 
-import { Error404 } from './components/errors';
-
 function App() {
   return (
     <Routes>
       <Route element={<Layout />}>
-        <Route path="*" element={<Error404 />} />
         <Route path="/se-connecter" element={<SignIn />} />
         <Route path="/creer-un-compte" element={<SignUp />} />
         <Route path="/mot-de-passe-oublie" element={<Passwordless />} />
