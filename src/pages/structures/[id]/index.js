@@ -9,7 +9,7 @@ import { Link as RouterLink, useNavigate, Outlet, useParams } from 'react-router
 import Button from '../../../components/button';
 import CopyBadgeButton from '../../../components/copy/copy-badge-button';
 import { DropdownButton, DropdownButtonItem } from '../../../components/dropdown-button';
-import Spinner from '../../../components/spinner';
+import { PageSpinner } from '../../../components/spinner';
 import useEditMode from '../../../hooks/useEditMode';
 import useFetch from '../../../hooks/useFetch';
 import useForm from '../../../hooks/useForm';
@@ -37,6 +37,7 @@ import StructureMottoForm from '../../../components/forms/structures/motto';
 import StructureHistoryForm from '../../../components/forms/structures/historique';
 import api from '../../../utils/api';
 import { getName } from '../../../utils/structures';
+import Error from '../../../components/errors';
 
 function StructureByIdPage() {
   const { viewer } = useAuth();
@@ -84,8 +85,8 @@ function StructureByIdPage() {
     setIsHistoryModalOpen(false);
   };
 
-  if (isLoading) return <Row className="fr-my-2w flex--space-around"><Spinner /></Row>;
-  if (error) return <>Erreur...</>;
+  if (isLoading) return <PageSpinner />;
+  if (error) return <Error status={error} />;
   return (
     <Container spacing="pb-6w">
       <Row>

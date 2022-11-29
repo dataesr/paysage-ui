@@ -11,7 +11,7 @@ import {
 } from '../../../../components/bloc';
 import Card from '../../../../components/card';
 import Map from '../../../../components/map';
-import Spinner from '../../../../components/spinner';
+import { Spinner } from '../../../../components/spinner';
 import getOptionsFromFacet from '../../../../hooks/useChart';
 import useFetch from '../../../../hooks/useFetch';
 import useUrl from '../../../../hooks/useUrl';

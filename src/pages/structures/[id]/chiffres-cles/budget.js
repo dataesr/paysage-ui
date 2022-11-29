@@ -8,7 +8,7 @@ import {
 import Card from '../../../../components/card';
 import ExpendableListCards from '../../../../components/card/expendable-list-cards';
 import WeblinkCard from '../../../../components/card/weblink-card';
-import Spinner from '../../../../components/spinner';
+import { Spinner } from '../../../../components/spinner';
 import useFetch from '../../../../hooks/useFetch';
 import useHashScroll from '../../../../hooks/useHashScroll';
 import useUrl from '../../../../hooks/useUrl';

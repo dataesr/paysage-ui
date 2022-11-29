@@ -10,7 +10,7 @@ import {
   BlocTitle,
 } from '../../../../components/bloc';
 import Card from '../../../../components/card';
-import Spinner from '../../../../components/spinner';
+import { Spinner } from '../../../../components/spinner';
 import getOptionsFromFacet from '../../../../hooks/useChart';
 import useFetch from '../../../../hooks/useFetch';
 import useUrl from '../../../../hooks/useUrl';

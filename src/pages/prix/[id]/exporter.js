@@ -12,7 +12,8 @@ import DocumentsOutlet from '../../../components/outlets/documents';
 import PrixCategories from './categories';
 import ActualitesOutlet from '../../../components/outlets/actualites';
 import OfficialTextOutlet from '../../../components/outlets/textes-officiels';
-import OverlaySpinner from '../../../components/spinner/overlay-spinner';
+import { OverlaySpinner, PageSpinner } from '../../../components/spinner';
+import Error from '../../../components/errors';
 
 export default function PriceExportPage() {
   const { id } = useParams();
@@ -35,9 +36,8 @@ export default function PriceExportPage() {
     handlePrint();
   }, 5000);
 
-  if (isLoading) return <>Chargement...</>;
-  if (error) return <>Erreur...</>;
-  if (!data) return null;
+  if (isLoading) return <PageSpinner />;
+  if (error) return <Error status={error} />;
   return (
     <div className="print" ref={componentRef}>
       <Container spacing="pb-6w">

@@ -35,7 +35,7 @@ export default function RelationCard({ relation, inverse, onEdit }) {
             {relation?.mandatePrecision && ` ${relation?.mandatePrecision}`}
             {' '}
             {(relation?.resource.collection === 'prices' && (relation.startDate || relation.endDate))
-              ? formatDescriptionDates(relation.startDate || null, relation.endDate || null).replace('depuis', '').replace('le', '')
+              ? relation.startDate?.split('-')?.[0] || 'Date inconnue'
               : formatDescriptionDates(relation.startDate || null, relation.endDate || null)}
           </p>
           {(relation.otherAssociatedObjects?.length > 0) && (

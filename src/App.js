@@ -56,7 +56,7 @@ import {
 import CategoriesAddPage from './pages/categories/ajouter';
 import { CategoryByIdPage, CategoryPresentationPage, CategoriesExportPage, CategoryRelatedElements } from './pages/categories/[id]';
 
-import { AccountPage, ProfilePage, PreferencesPage, SecurityPage, GroupsPage } from './pages/mon-compte';
+import { AccountPage, ProfilePage, PreferencesPage, SecurityPage } from './pages/mon-compte';
 import {
   AdminPage, AdminDashboardPage, AdminUsersPage, AdminNomenclaturesPage,
   AdminLegalCategoriesPage, AdminRelationTypesPage, AdminGroupsPage,
@@ -107,7 +107,6 @@ function App() {
             <Route path="" element={<Navigate to="/mon-compte/profile" replace />} />
             <Route path="profile" element={<ProfilePage />} />
             <Route path="preferences" element={<PreferencesPage />} />
-            <Route path="groupes" element={<GroupsPage />} />
             <Route path="securite" element={<SecurityPage />} />
           </Route>
 

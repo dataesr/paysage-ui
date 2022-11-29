@@ -30,7 +30,7 @@ async function customFetch({ method, url, body, headers, options: reqOptions }) 
     }
     return response;
   }
-  throw new Error();
+  throw new Error(response?.status || 500);
 }
 
 export default {

@@ -10,7 +10,7 @@ import Button from '../../components/button';
 import CopyBadgeButton from '../../components/copy/copy-badge-button';
 import { DropdownButton, DropdownButtonItem } from '../../components/dropdown-button';
 import useUrl from '../../hooks/useUrl';
-import Spinner from '../../components/spinner';
+import { PageSpinner } from '../../components/spinner';
 import api from '../../utils/api';
 import useNotice from '../../hooks/useNotice';
 import OfficiaTextForm from '../../components/forms/official-text';
@@ -18,6 +18,7 @@ import { saveError, saveSuccess } from '../../utils/notice-contents';
 import useFetch from '../../hooks/useFetch';
 import RelatedObjectCard from '../../components/card/related-object-card';
 import { Bloc, BlocContent, BlocTitle } from '../../components/bloc';
+import Error from '../../components/errors';
 
 export default function OfficialTextByIdPage() {
   const { url } = useUrl();
@@ -44,9 +45,8 @@ export default function OfficialTextByIdPage() {
     );
   };
 
-  if (isLoading) return <Row className="fr-my-2w flex--space-around"><Spinner /></Row>;
-  if (error) return <>Erreur...</>;
-  if (!data) return null;
+  if (isLoading) return <PageSpinner />;
+  if (error) return <Error status={error} />;
   return (
     <Container spacing="pb-6w">
       <Row>

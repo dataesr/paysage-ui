@@ -12,7 +12,8 @@ import DocumentsOutlet from '../../../components/outlets/documents';
 import ProjectCategories from './categories';
 import ActualitesOutlet from '../../../components/outlets/actualites';
 import OfficialTextOutlet from '../../../components/outlets/textes-officiels';
-import OverlaySpinner from '../../../components/spinner/overlay-spinner';
+import { PageSpinner, OverlaySpinner } from '../../../components/spinner';
+import Error from '../../../components/errors';
 
 export default function ProjectExportPage() {
   const { id } = useParams();
@@ -35,9 +36,8 @@ export default function ProjectExportPage() {
     handlePrint();
   }, 5000);
 
-  if (isLoading) return <>Chargement...</>;
-  if (error) return <>Erreur...</>;
-  if (!data) return null;
+  if (isLoading) return <PageSpinner />;
+  if (error) return <Error status={error} />;
   return (
     <div className="print" ref={componentRef}>
       <Container spacing="pb-6w">

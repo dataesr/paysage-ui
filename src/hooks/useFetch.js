@@ -8,7 +8,7 @@ import api from '../utils/api';
 
 export default function useFetch(url, headers) {
   const [data, setData] = useState(null);
-  const [error, setError] = useState(false);
+  const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [reloads, setReloads] = useState(0);
 
@@ -19,16 +19,19 @@ export default function useFetch(url, headers) {
 
     const fetchData = () => api
       .get(url, headers, { signal: abortController.signal })
-      .then((response) => { setData(response.data); setIsLoading(false); })
+      .then((response) => {
+        setData(response.data);
+        setIsLoading(false);
+      })
       .catch((e) => {
         if (e.name !== 'AbortError') {
-          setError(true);
+          setError(e.message || '500');
           setIsLoading(false);
         }
       });
 
     setIsLoading(true);
-    setError(false);
+    setError(null);
     setData(null);
     fetchData();
     return () => abortController.abort();

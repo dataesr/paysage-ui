@@ -3,7 +3,6 @@ import { Modal, ModalTitle, ModalContent } from '@dataesr/react-dsfr';
 import useFetch from '../../../hooks/useFetch';
 import useUrl from '../../../hooks/useUrl';
 import useHashScroll from '../../../hooks/useHashScroll';
-import Spinner from '../../../components/spinner';
 import RelationsByGroup from '../../../components/blocs/relations-by-group';
 import { Bloc, BlocTitle, BlocActionButton, BlocContent, BlocModal } from '../../../components/bloc';
 import RelationGroupForm from '../../../components/forms/relations-group';
@@ -40,8 +39,6 @@ export default function StructureElementLiesPage() {
     setIsOpen(false);
   };
 
-  if (isLoading) return <Spinner size={48} />;
-  if (error) return <>Erreur...</>;
   return (
     <>
       <RelationsByTag
@@ -82,7 +79,7 @@ export default function StructureElementLiesPage() {
       <Bloc isLoading={isLoading} error={error} data={data}>
         <BlocTitle as="h2" look="h4">Autres listes</BlocTitle>
         <BlocActionButton onClick={() => setIsOpen(true)}>Ajouter une liste</BlocActionButton>
-        <BlocContent>{(data.data?.length !== 0) && data.data?.map((group) => (<RelationsByGroup key={group.id} group={group} reloader={reload} />))}</BlocContent>
+        <BlocContent>{data?.data?.map((group) => (<RelationsByGroup key={group.id} group={group} reloader={reload} />))}</BlocContent>
         <BlocModal>
           <Modal isOpen={isOpen} size="lg" hide={() => setIsOpen(false)}>
             <ModalTitle>Ajouter un groupe d'éléments liés</ModalTitle>

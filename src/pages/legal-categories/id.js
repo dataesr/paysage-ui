@@ -5,10 +5,11 @@ import {
 } from '@dataesr/react-dsfr';
 import CopyBadgeButton from '../../components/copy/copy-badge-button';
 import useUrl from '../../hooks/useUrl';
-import Spinner from '../../components/spinner';
+import { PageSpinner } from '../../components/spinner';
 import useFetch from '../../hooks/useFetch';
 import RelationsByTag from '../../components/blocs/relations-by-tag';
 import { STRUCTURE_CATEGORIE_JURIDIQUE } from '../../utils/relations-tags';
+import Error from '../../components/errors';
 
 export default function LegalCategoriesByIdPage() {
   const { url } = useUrl();
@@ -16,9 +17,8 @@ export default function LegalCategoriesByIdPage() {
 
   useEffect(() => { document.title = `Catégorie juridique · ${data?.longNameFr}`; }, [data]);
 
-  if (isLoading) return <Row className="fr-my-2w flex--space-around"><Spinner /></Row>;
-  if (error) return <>Erreur...</>;
-  if (!data) return null;
+  if (isLoading) return <PageSpinner />;
+  if (error) return <Error status={error} />;
   return (
     <Container spacing="pb-6w">
       <Row>
