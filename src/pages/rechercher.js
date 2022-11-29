@@ -211,7 +211,7 @@ export default function SearchPage() {
           {data && <SearchResults data={data} />}
           {!!resultsCount && (
             <Row className="flex--space-around fr-pt-3w">
-              <Pagination currentPage={Number(currentPage)} pageCount={pageCount} onClick={(page) => { setSearchParams({ page, query }); }} className="lalilou" />
+              <Pagination currentPage={Number(currentPage)} pageCount={pageCount} onClick={(page) => { setSearchParams({ page, query }); }} />
             </Row>
           )}
         </Col>
