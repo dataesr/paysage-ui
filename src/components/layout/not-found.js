@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button } from '@dataesr/react-dsfr';
+import { Button, Text, Title, Col, Row } from '@dataesr/react-dsfr';
 import { useNavigate } from 'react-router-dom';
 import './not-found.scss';
 
@@ -10,7 +10,7 @@ export default function NotFound() {
 
   return randomDisplay === 1 ? (
     <div>
-      <header className="top-header" />
+      <div className="top-header" />
       <div>
         <div className="starsec" />
         <div className="starthird" />
@@ -27,39 +27,39 @@ export default function NotFound() {
           <div className="light" />
         </div>
       </div>
-      <section className="error">
+      <div className="error">
         <div className="error__content">
           <div className="error__message message">
-            <h1 className="message__title">Page Introuvable!</h1>
-            <p className="message__text">Désolé, la page que vous cherchez n'existe pas. </p>
-            <p className="message__text"> Vous pouvez relancer une recherche ou vous rendre sur la page d'accueil</p>
+            <Text className="message__title">Page Introuvable!</Text>
+            <Text className="message__text">Désolé, la page que vous cherchez n'existe pas. </Text>
+            <Text className="message__text"> Vous pouvez relancer une recherche ou vous rendre sur la page d'accueil</Text>
           </div>
           <Button
             onClick={() => navigate('/')}
           >
             En cliquant ici
           </Button>
-          <div className="error__nav e-nav" />
+          <Text className="error__nav e-nav" />
         </div>
 
-      </section>
+      </div>
 
     </div>
   ) : (
-    <section className="page_404">
+    <div className="page_404">
       <div className="container">
         <div className="row">
           <div className="col-sm-12 ">
             <div className="col-sm-10 col-sm-offset-1  text-center">
               <div className="four_zero_four_bg">
-                <h1 className="text-center ">Page Introuvable!</h1>
+                <Title className="message__title">Page Introuvable!</Title>
               </div>
-              <div className="contant_box_404">
-                <h3 className="h2">
+              <Text>
+                <Text className="h2">
                   Désolé, la page que vous cherchez n'existe pas.
-                </h3>
-                <h3 className="h2"> Vous pouvez relancer une recherche ou vous rendre sur la page d'accueil</h3>
-              </div>
+                  <Text> Vous pouvez relancer une recherche ou vous rendre sur la page d'accueil</Text>
+                </Text>
+              </Text>
               <Button
                 onClick={() => navigate('/')}
               >
@@ -69,6 +69,6 @@ export default function NotFound() {
           </div>
         </div>
       </div>
-    </section>
+    </div>
   );
 }
