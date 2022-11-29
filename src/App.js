@@ -10,6 +10,7 @@ import Passwordless from './pages/mot-de-passe-oublie';
 import RessourcesExternesPage from './pages/resources-externes';
 import SignIn from './pages/se-connecter';
 import SignUp from './pages/creer-un-compte';
+import NotFound from './components/layout/not-found';
 
 import ProtectedRoute from './components/protected-route';
 
@@ -86,6 +87,7 @@ function App() {
         <Route path="/mot-de-passe-oublie" element={<Passwordless />} />
         <Route path="/ressources-externes" element={<RessourcesExternesPage />} />
         <Route path="/aide" element={<HelpPage />} />
+        <Route path="*" element={<NotFound />} />
 
         <Route element={<ProtectedRoute roles={['admin']} />}>
           <Route path="/admin" element={<AdminPage />}>
