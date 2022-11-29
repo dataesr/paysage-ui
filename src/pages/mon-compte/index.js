@@ -5,7 +5,6 @@ import SecurityPage from './security';
 
 import ProfilePage from './profile';
 import PreferencesPage from './preferences';
-import GroupsPage from './groups';
 
 function AccountPage() {
   useEffect(() => { document.title = 'Paysage · Mon compte'; }, []);
@@ -25,9 +24,6 @@ function AccountPage() {
                 Sécurité
               </SideMenuLink>
             </SideMenuItem>
-            <SideMenuLink asLink={<RouterLink to="/mon-compte/groupes" replace />}>
-              Groupes
-            </SideMenuLink>
           </SideMenu>
         </Col>
         <Col n="12 md-9">
@@ -38,4 +34,4 @@ function AccountPage() {
   );
 }
 
-export { AccountPage, ProfilePage, PreferencesPage, SecurityPage, GroupsPage };
+export { AccountPage, ProfilePage, PreferencesPage, SecurityPage };

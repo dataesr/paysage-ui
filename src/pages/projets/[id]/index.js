@@ -14,7 +14,7 @@ import CopyBadgeButton from '../../../components/copy/copy-badge-button';
 import { DropdownButton, DropdownButtonItem } from '../../../components/dropdown-button';
 import ProjectForm from '../../../components/forms/project';
 import useUrl from '../../../hooks/useUrl';
-import Spinner from '../../../components/spinner';
+import { PageSpinner } from '../../../components/spinner';
 import api from '../../../utils/api';
 import useNotice from '../../../hooks/useNotice';
 
@@ -23,6 +23,7 @@ import ProjectExportPage from './exporter';
 import ProjectCategories from './categories';
 import ProjectPrices from './prix-et-recompenses';
 import { saveError, saveSuccess } from '../../../utils/notice-contents';
+import { Error404, Error500 } from '../../../components/errors';
 
 function ProjectByIdPage() {
   const { url, id } = useUrl();
@@ -50,9 +51,9 @@ function ProjectByIdPage() {
     .then(() => { reload(); setIsFormModalOpen(false); notice(saveSuccess); })
     .catch(() => { setIsFormModalOpen(false); notice(saveError); });
 
-  if (isLoading) return <Row className="fr-my-2w flex--space-around"><Spinner /></Row>;
-  if (error) return <>Erreur...</>;
-  if (!data) return null;
+  if (isLoading) return <PageSpinner />;
+  if (error) return <Error500 />;
+  if (!data) return <Error404 />;
   return (
     <Container spacing="pb-6w">
       <Row>

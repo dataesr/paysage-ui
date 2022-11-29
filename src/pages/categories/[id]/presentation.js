@@ -5,20 +5,22 @@ import SocialMedias from '../../../components/blocs/social-medias';
 import Weblinks from '../../../components/blocs/weblinks';
 import RelationsByTag from '../../../components/blocs/relations-by-tag';
 import KeyValueCard from '../../../components/card/key-value-card';
-import Spinner from '../../../components/spinner';
+import { PageSpinner } from '../../../components/spinner';
 import useUrl from '../../../hooks/useUrl';
 import useHashScroll from '../../../hooks/useHashScroll';
 import useFetch from '../../../hooks/useFetch';
 import Wiki from '../../../components/blocs/wiki';
 import { CATEGORIE_PARENT } from '../../../utils/relations-tags';
+import { Error404, Error500 } from '../../../components/errors';
 
 export default function CategoryPresentationPage() {
   useHashScroll();
   const { url } = useUrl();
   const { data, isLoading, error } = useFetch(url);
 
-  if (isLoading) return <Row className="fr-my-2w flex--space-around"><Spinner /></Row>;
-  if (error) return <>Erreur...</>;
+  if (isLoading) return <PageSpinner />;
+  if (error) return <Error500 />;
+  if (!data) return <Error404 />;
 
   return (
     <>

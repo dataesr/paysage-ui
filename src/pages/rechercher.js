@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Link as RouterLink, useLocation, useSearchParams } from 'react-router-dom';
 
 import { useEffect } from 'react';
-import Spinner from '../components/spinner';
+import { Spinner } from '../components/spinner';
 import useHashScroll from '../hooks/useHashScroll';
 import useSearch from '../hooks/useSearch';
 import { formatDescriptionDates } from '../utils/dates';
@@ -98,7 +98,8 @@ export default function SearchPage() {
   const { data, error, isLoading } = useSearch(getTypeFromUrl(type) || SEARCH_TYPES, query, itemsPerPage, start);
   const countAll = Object.values(counts).reduce((accumulator, value) => accumulator + value, 0);
   const resultsCount = type === 'rechercher' ? countAll : (counts?.[getTypeFromUrl(type)] || 0);
-  const pageCount = Math.ceil(resultsCount / itemsPerPage);
+  const resultsCountConstrained = (resultsCount > 10000) ? 10000 : resultsCount;
+  const pageCount = Math.ceil(resultsCountConstrained / itemsPerPage);
 
   useEffect(() => { document.title = 'Paysage · Rechercher'; }, []);
 

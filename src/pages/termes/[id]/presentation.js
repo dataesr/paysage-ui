@@ -2,7 +2,6 @@ import { Col, Row, Title } from '@dataesr/react-dsfr';
 import Identifiers from '../../../components/blocs/identifiers';
 import SocialMedias from '../../../components/blocs/social-medias';
 import Weblinks from '../../../components/blocs/weblinks';
-import Spinner from '../../../components/spinner';
 import useFetch from '../../../hooks/useFetch';
 import useUrl from '../../../hooks/useUrl';
 import KeyValueCard from '../../../components/card/key-value-card';
@@ -10,15 +9,17 @@ import useHashScroll from '../../../hooks/useHashScroll';
 import Wiki from '../../../components/blocs/wiki';
 import RelationsByTag from '../../../components/blocs/relations-by-tag';
 import { TERME_PARENT } from '../../../utils/relations-tags';
+import { PageSpinner } from '../../../components/spinner';
+import { Error404, Error500 } from '../../../components/errors';
 
 export default function TermPresentationPage() {
   useHashScroll();
   const { url } = useUrl();
   const { data, isLoading, error } = useFetch(url);
 
-  if (isLoading) return <Row className="fr-my-2w flex--space-around"><Spinner /></Row>;
-  if (error) return <>Erreur...</>;
-
+  if (isLoading) return <PageSpinner />;
+  if (error) return <Error500 />;
+  if (!data) return <Error404 />;
   return (
     <>
       <RelationsByTag

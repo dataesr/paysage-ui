@@ -2,7 +2,7 @@
 import { Children } from 'react';
 import PropTypes from 'prop-types';
 import { Container, Row, Highlight, ButtonGroup, Badge } from '@dataesr/react-dsfr';
-import Spinner from '../spinner';
+import { Spinner } from '../spinner';
 import useEditMode from '../../hooks/useEditMode';
 
 export default function Bloc({ children, data, error, isLoading, hideOnEmptyView, noBadge }) {

@@ -13,7 +13,7 @@ import Button from '../../../components/button';
 import CopyBadgeButton from '../../../components/copy/copy-badge-button';
 import { DropdownButton, DropdownButtonItem } from '../../../components/dropdown-button';
 import useUrl from '../../../hooks/useUrl';
-import Spinner from '../../../components/spinner';
+import { PageSpinner } from '../../../components/spinner';
 import api from '../../../utils/api';
 import useNotice from '../../../hooks/useNotice';
 
@@ -22,6 +22,8 @@ import TermExportPage from './exporter';
 import TermRelatedElements from './elements-lies';
 import { saveError, saveSuccess } from '../../../utils/notice-contents';
 import TermForm from '../../../components/forms/category-term';
+import Error500 from '../../../components/errors/500';
+import Error404 from '../../../components/errors/404';
 
 function TermByIdPage() {
   const { url, id } = useUrl();
@@ -48,9 +50,9 @@ function TermByIdPage() {
     .then(() => { reload(); setIsFormModalOpen(false); notice(saveSuccess); })
     .catch(() => { setIsFormModalOpen(false); notice(saveError); });
 
-  if (isLoading) return <Row className="fr-my-2w flex--space-around"><Spinner /></Row>;
-  if (error) return <>Erreur...</>;
-  if (!data) return null;
+  if (isLoading) return <PageSpinner />;
+  if (error) return <Error500 />;
+  if (!data) return <Error404 />;
   return (
     <Container spacing="pb-6w">
       <Row>

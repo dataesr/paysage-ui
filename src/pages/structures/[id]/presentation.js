@@ -13,13 +13,14 @@ import { INTERNAL_PAGES_TYPES, PALMARES_TYPES, WEBLINKS_TYPES } from '../../../c
 import useHashScroll from '../../../hooks/useHashScroll';
 import Wiki from '../../../components/blocs/wiki';
 import KeyValueCard from '../../../components/card/key-value-card';
-import Spinner from '../../../components/spinner';
 import useEditMode from '../../../hooks/useEditMode';
 import useFetch from '../../../hooks/useFetch';
 import useUrl from '../../../hooks/useUrl';
 import CurrentLegals from '../../../components/blocs/current-legal';
 import CurrentLogos from '../../../components/blocs/current-logo';
 import CurrentSupervisors from '../../../components/blocs/current-supervisors';
+import { PageSpinner } from '../../../components/spinner';
+import { Error404, Error500 } from '../../../components/errors';
 
 export default function StructurePresentationPage() {
   useHashScroll();
@@ -27,8 +28,9 @@ export default function StructurePresentationPage() {
   const { data, isLoading, error } = useFetch(url);
   const { editMode } = useEditMode();
 
-  if (isLoading) return <Row className="fr-my-2w flex--space-around"><Spinner /></Row>;
-  if (error) return <>Erreur...</>;
+  if (isLoading) return <PageSpinner />;
+  if (error) return <Error500 />;
+  if (!data) return <Error404 />;
 
   return (
     <>

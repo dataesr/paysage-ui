@@ -8,7 +8,8 @@ import SocialMedias from '../../../components/blocs/social-medias';
 import Weblinks from '../../../components/blocs/weblinks';
 import Wiki from '../../../components/blocs/wiki';
 import KeyValueCard from '../../../components/card/key-value-card';
-import Spinner from '../../../components/spinner';
+import { Error404, Error500 } from '../../../components/errors';
+import { PageSpinner } from '../../../components/spinner';
 import useFetch from '../../../hooks/useFetch';
 import useHashScroll from '../../../hooks/useHashScroll';
 import { toString } from '../../../utils/dates';
@@ -19,8 +20,9 @@ export default function ProjectPresentationPage() {
   const { id } = useParams();
   const { data, error, isLoading } = useFetch(`/projects/${id}`);
 
-  if (isLoading) return <Row className="fr-my-2w flex--space-around"><Spinner /></Row>;
-  if (error) return <>Erreur...</>;
+  if (isLoading) return <PageSpinner />;
+  if (error) return <Error500 />;
+  if (!data) return <Error404 />;
   return (
     <>
       <Row>

@@ -1,7 +1,7 @@
 import { Col, Container, Row } from '@dataesr/react-dsfr';
 
 import { BlocContent, BlocTitle } from '../../bloc';
-import Spinner from '../../spinner';
+import { Spinner } from '../../spinner';
 import useFetch from '../../../hooks/useFetch';
 import useUrl from '../../../hooks/useUrl';
 import cleanNumber from '../../../utils/clean-numbers';

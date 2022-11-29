@@ -14,7 +14,7 @@ import CopyBadgeButton from '../../../components/copy/copy-badge-button';
 import { DropdownButton, DropdownButtonItem } from '../../../components/dropdown-button';
 import PriceForm from '../../../components/forms/price';
 import useUrl from '../../../hooks/useUrl';
-import Spinner from '../../../components/spinner';
+import { PageSpinner } from '../../../components/spinner';
 import api from '../../../utils/api';
 import useNotice from '../../../hooks/useNotice';
 
@@ -22,6 +22,7 @@ import PricePresentationPage from './presentation';
 import PriceCategories from './categories';
 import PriceExportPage from './exporter';
 import { saveError, saveSuccess } from '../../../utils/notice-contents';
+import { Error404, Error500 } from '../../../components/errors';
 
 function PriceByIdPage() {
   const { url, id } = useUrl();
@@ -48,9 +49,9 @@ function PriceByIdPage() {
     .then(() => { reload(); setIsFormModalOpen(false); notice(saveSuccess); })
     .catch(() => { setIsFormModalOpen(false); notice(saveError); });
 
-  if (isLoading) return <Row className="fr-my-2w flex--space-around"><Spinner /></Row>;
-  if (error) return <>Erreur...</>;
-  if (!data) return null;
+  if (isLoading) return <PageSpinner />;
+  if (error) return <Error500 />;
+  if (!data) return <Error404 />;
   return (
     <Container spacing="pb-6w">
       <Row>
