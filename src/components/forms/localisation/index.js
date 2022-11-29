@@ -26,7 +26,7 @@ function validate(body) {
 
 function sanitize(form) {
   const fields = [
-    'cityId', 'distributionStatement', 'address', 'postOfficeBoxNumber', 'postalCode',
+    'cityId', 'city', 'distributionStatement', 'address', 'postOfficeBoxNumber', 'postalCode',
     'locality', 'place', 'country', 'telephone', 'coordinates', 'startDate', 'endDate',
   ];
   const body = {};
