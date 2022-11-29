@@ -4,7 +4,7 @@ import { ButtonGroup, Breadcrumb, BreadcrumbItem, Col, Container, Row, Title, Te
 import useToast from '../../hooks/useToast';
 import useAuth from '../../hooks/useAuth';
 import api from '../../utils/api';
-import Spinner from '../../components/spinner';
+import { Spinner } from '../../components/spinner';
 import Avatar from '../../components/avatar';
 import Button from '../../components/button';
 

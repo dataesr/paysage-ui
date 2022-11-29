@@ -26,14 +26,14 @@ function validate(body) {
 
 function sanitize(form) {
   const fields = [
-    'cityId', 'distributionStatement', 'address', 'postOfficeBoxNumber', 'postalCode',
+    'cityId', 'city', 'distributionStatement', 'address', 'postOfficeBoxNumber', 'postalCode',
     'locality', 'place', 'country', 'telephone', 'coordinates', 'startDate', 'endDate',
   ];
   const body = {};
   Object.keys(form).forEach((key) => { if (fields.includes(key)) { body[key] = form[key]; } });
   body.coordinates = {
-    lat: parseFloat(body.coordinates.lat),
-    lng: parseFloat(body.coordinates.lng),
+    lat: parseFloat(body.coordinates?.lat || 0),
+    lng: parseFloat(body.coordinates?.lng || 0),
   };
   return body;
 }

@@ -14,7 +14,7 @@ import CopyBadgeButton from '../../../components/copy/copy-badge-button';
 import { DropdownButton, DropdownButtonItem } from '../../../components/dropdown-button';
 import PersonForm from '../../../components/forms/person';
 import useUrl from '../../../hooks/useUrl';
-import Spinner from '../../../components/spinner';
+import { PageSpinner } from '../../../components/spinner';
 import api from '../../../utils/api';
 import useNotice from '../../../hooks/useNotice';
 
@@ -27,6 +27,7 @@ import PersonsRelatedElements from './elements-lies';
 import PersonExportPage from './exporter';
 import { saveError, saveSuccess } from '../../../utils/notice-contents';
 import useAuth from '../../../hooks/useAuth';
+import Error from '../../../components/errors';
 
 function PersonByIdPage() {
   const { viewer } = useAuth();
@@ -60,9 +61,8 @@ function PersonByIdPage() {
     return setIsFormModalOpen(false);
   };
 
-  if (isLoading) return <Row className="fr-my-2w flex--space-around"><Spinner /></Row>;
-  if (error) return <>Erreur...</>;
-  if (!data) return null;
+  if (isLoading) return <PageSpinner />;
+  if (error) return <Error status={error} />;
   const personName = `${data.firstName} ${data.lastName}`.trim();
   const genreIcon = (data.gender === 'Homme') ? 'ri-men-line' : 'ri-women-line';
   return (
@@ -109,10 +109,6 @@ function PersonByIdPage() {
             <SideMenuLink asLink={<RouterLink to="elements-lies" replace />}>
               <Icon name="ri-links-line" size="1x" />
               Eléments liés
-            </SideMenuLink>
-            <SideMenuLink asLink={<RouterLink to="participations" replace />}>
-              <Icon name="ri-stackshare-line" size="1x" />
-              Participations
             </SideMenuLink>
             {(viewer.role === 'admin') && (
               <SideMenuLink asLink={<RouterLink to="journal" replace />}>

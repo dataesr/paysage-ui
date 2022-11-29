@@ -10,6 +10,7 @@ import Passwordless from './pages/mot-de-passe-oublie';
 import RessourcesExternesPage from './pages/resources-externes';
 import SignIn from './pages/se-connecter';
 import SignUp from './pages/creer-un-compte';
+import NotFound from './components/layout/not-found';
 
 import ProtectedRoute from './components/protected-route';
 
@@ -55,7 +56,7 @@ import {
 import CategoriesAddPage from './pages/categories/ajouter';
 import { CategoryByIdPage, CategoryPresentationPage, CategoriesExportPage, CategoryRelatedElements } from './pages/categories/[id]';
 
-import { AccountPage, ProfilePage, PreferencesPage, SecurityPage, GroupsPage } from './pages/mon-compte';
+import { AccountPage, ProfilePage, PreferencesPage, SecurityPage } from './pages/mon-compte';
 import {
   AdminPage, AdminDashboardPage, AdminUsersPage, AdminNomenclaturesPage,
   AdminLegalCategoriesPage, AdminRelationTypesPage, AdminGroupsPage,
@@ -83,6 +84,7 @@ function App() {
         <Route path="/mot-de-passe-oublie" element={<Passwordless />} />
         <Route path="/ressources-externes" element={<RessourcesExternesPage />} />
         <Route path="/aide" element={<HelpPage />} />
+        <Route path="*" element={<NotFound />} />
 
         <Route element={<ProtectedRoute roles={['admin']} />}>
           <Route path="/admin" element={<AdminPage />}>
@@ -105,7 +107,6 @@ function App() {
             <Route path="" element={<Navigate to="/mon-compte/profile" replace />} />
             <Route path="profile" element={<ProfilePage />} />
             <Route path="preferences" element={<PreferencesPage />} />
-            <Route path="groupes" element={<GroupsPage />} />
             <Route path="securite" element={<SecurityPage />} />
           </Route>
 

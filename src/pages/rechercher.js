@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Link as RouterLink, useLocation, useSearchParams } from 'react-router-dom';
 
 import { useEffect } from 'react';
-import Spinner from '../components/spinner';
+import { Spinner } from '../components/spinner';
 import useHashScroll from '../hooks/useHashScroll';
 import useSearch from '../hooks/useSearch';
 import { formatDescriptionDates } from '../utils/dates';
@@ -27,7 +27,12 @@ const getDescription = (item) => {
   switch (item?.type) {
   case 'structures':
     // Structures : Nom usuel + sigle ou nom court > Catégorie principale > Localisation > Date de création
-    description += item?.locality ? ` à ${item.locality}` : '';
+    description += item?.category ? item.category : '';
+    if (item?.city) {
+      description += (item?.city && item?.city.length > 0) ? ` à ${item.city[0]}` : '';
+    } else {
+      description += (item?.locality && item?.locality.length > 0) ? ` à ${item.locality[0]}` : '';
+    }
     description += item?.creationDate ? ` ${formatDescriptionDates(item?.creationDate)}` : '';
     break;
   case 'persons':
@@ -42,7 +47,8 @@ const getDescription = (item) => {
     break;
   case 'projects':
     // Projet : Nom usuel + sigle ou nom court du projet > Catégorie principale > Localisation > Date de début
-    description += item?.startDate ? formatDescriptionDates(item?.startDate) : '';
+    description += item?.category ? item.category : '';
+    description += item?.startDate ? ` ${formatDescriptionDates(item?.startDate)}` : '';
     break;
   default:
   }
@@ -98,7 +104,8 @@ export default function SearchPage() {
   const { data, error, isLoading } = useSearch(getTypeFromUrl(type) || SEARCH_TYPES, query, itemsPerPage, start);
   const countAll = Object.values(counts).reduce((accumulator, value) => accumulator + value, 0);
   const resultsCount = type === 'rechercher' ? countAll : (counts?.[getTypeFromUrl(type)] || 0);
-  const pageCount = Math.ceil(resultsCount / itemsPerPage);
+  const resultsCountConstrained = (resultsCount > 10000) ? 10000 : resultsCount;
+  const pageCount = Math.ceil(resultsCountConstrained / itemsPerPage);
 
   useEffect(() => { document.title = 'Paysage · Rechercher'; }, []);
 
@@ -204,7 +211,7 @@ export default function SearchPage() {
           {data && <SearchResults data={data} />}
           {!!resultsCount && (
             <Row className="flex--space-around fr-pt-3w">
-              <Pagination currentPage={Number(currentPage)} pageCount={pageCount} onClick={(page) => { setSearchParams({ page, query }); }} className="lalilou" />
+              <Pagination currentPage={Number(currentPage)} pageCount={pageCount} onClick={(page) => { setSearchParams({ page, query }); }} />
             </Row>
           )}
         </Col>

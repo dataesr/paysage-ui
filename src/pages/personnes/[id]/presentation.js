@@ -2,20 +2,21 @@ import { Row, Title, Col, Icon } from '@dataesr/react-dsfr';
 import Identifiers from '../../../components/blocs/identifiers';
 import SocialMedias from '../../../components/blocs/social-medias';
 import Weblinks from '../../../components/blocs/weblinks';
-import Spinner from '../../../components/spinner';
 import useFetch from '../../../hooks/useFetch';
 import useHashScroll from '../../../hooks/useHashScroll';
 import useUrl from '../../../hooks/useUrl';
 import PersonCurrentMandates from '../../../components/blocs/current-mandates';
 import Wiki from '../../../components/blocs/wiki';
+import { PageSpinner } from '../../../components/spinner';
+import Error from '../../../components/errors';
 
 export default function PersonPresentationPage() {
   useHashScroll();
   const { url } = useUrl();
   const { data, isLoading, error } = useFetch(url);
 
-  if (isLoading) return <Row className="fr-my-2w flex--space-around"><Spinner /></Row>;
-  if (error) return <Row className="fr-my-2w flex--space-around">Erreur...</Row>;
+  if (isLoading) return <PageSpinner />;
+  if (error) return <Error status={error} />;
   return (
     <>
       <Row>

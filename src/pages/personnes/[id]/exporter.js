@@ -15,7 +15,8 @@ import PersonPrices from './prix-et-recompenses';
 import PersonsRelatedElements from './elements-lies';
 import ActualitesOutlet from '../../../components/outlets/actualites';
 import OfficialTextOutlet from '../../../components/outlets/textes-officiels';
-import OverlaySpinner from '../../../components/spinner/overlay-spinner';
+import { OverlaySpinner, PageSpinner } from '../../../components/spinner';
+import Error from '../../../components/errors';
 
 export default function PersonExportPage() {
   const { id } = useParams();
@@ -38,9 +39,8 @@ export default function PersonExportPage() {
     handlePrint();
   }, 5000);
 
-  if (isLoading) return <>Chargement...</>;
-  if (error) return <>Erreur...</>;
-  if (!data) return null;
+  if (isLoading) return <PageSpinner />;
+  if (error) return <Error status={error} />;
   const personName = `${data.firstName} ${data.lastName}`.trim();
   const genreIcon = (data.gender === 'Homme') ? 'ri-men-line' : 'ri-women-line';
   return (

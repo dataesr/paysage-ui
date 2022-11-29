@@ -5,7 +5,7 @@ import { forwardRef, useLayoutEffect, useRef, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 
 import styles from './styles.module.scss';
-import Spinner from '../spinner';
+import { Spinner } from '../spinner';
 import { capitalize } from '../../utils/strings';
 import { getName } from '../../utils/structures';
 

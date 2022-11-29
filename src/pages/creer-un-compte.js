@@ -114,7 +114,7 @@ export default function SignUp() {
                       <form onSubmit={nextStep}>
                         <TextInput
                           required
-                          label="Identifiant"
+                          label="Adresse électronique professionnelle"
                           type="email"
                           hint="Format attendu : nom@domaine.fr"
                           value={email}

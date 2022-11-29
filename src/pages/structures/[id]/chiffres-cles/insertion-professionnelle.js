@@ -6,7 +6,7 @@ import {
   BlocTitle,
 } from '../../../../components/bloc';
 import WeblinkCard from '../../../../components/card/weblink-card';
-import Spinner from '../../../../components/spinner';
+import { Spinner } from '../../../../components/spinner';
 import useFetch from '../../../../hooks/useFetch';
 import useUrl from '../../../../hooks/useUrl';
 

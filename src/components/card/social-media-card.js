@@ -53,7 +53,7 @@ export default function SocialMediaCard({
       break;
     }
 
-    return iconColor ? <Icon className="fr-mb-1w fr-pt-1w lalilou" name={rxIcon} size="3x" color={iconColor} /> : '';
+    return iconColor ? <Icon className="fr-mb-1w fr-pt-1w" name={rxIcon} size="3x" color={iconColor} /> : '';
   };
 
   return (
