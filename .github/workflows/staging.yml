@@ -27,7 +27,7 @@ jobs:
 
       - name: Get Tag
         id: version
-        run: echo ::set-output name=tag::${GITHUB_REF#refs/heads/}
+        run: echo "tag={GITHUB_REF#refs/heads/}" >> $GITHUB_OUTPUT
 
       - name: Push image
         run: |
