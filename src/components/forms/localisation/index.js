@@ -32,8 +32,8 @@ function sanitize(form) {
   const body = {};
   Object.keys(form).forEach((key) => { if (fields.includes(key)) { body[key] = form[key]; } });
   body.coordinates = {
-    lat: parseFloat(body.coordinates.lat),
-    lng: parseFloat(body.coordinates.lng),
+    lat: parseFloat(body.coordinates?.lat || 0),
+    lng: parseFloat(body.coordinates?.lng || 0),
   };
   return body;
 }
