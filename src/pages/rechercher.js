@@ -185,6 +185,8 @@ export default function SearchPage() {
                 <Badge type={(type === 'prix') ? 'info' : 'new'} text={counts.prices || '0'} />
               </Row>
             </SideMenuLink>
+            {/* TODO: Restore projects */}
+            {/*
             <SideMenuLink className={(type === 'projets') ? 'sidemenu__item--active' : ''} asLink={<RouterLink to={`projets?query=${query}&page=1`} replace />}>
               <Row alignItems="top">
                 <Text spacing="pr-2v" bold>
@@ -194,6 +196,7 @@ export default function SearchPage() {
                 <Badge type={(type === 'projets') ? 'info' : 'new'} text={counts.projects || '0'} />
               </Row>
             </SideMenuLink>
+            */}
             <SideMenuLink className={(type === 'textes-officiels') ? 'sidemenu__item--active' : ''} asLink={<RouterLink to={`textes-officiels?query=${query}&page=1`} replace />}>
               <Row alignItems="top">
                 <Text spacing="pr-2v" bold>

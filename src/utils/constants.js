@@ -108,4 +108,6 @@ export const STRUCTURES_CLOSURE_REASONS = [
   'autre',
 ];
 
-export const SEARCH_TYPES = 'categories%2Cofficial%2Dtexts%2Cpersons%2Cprices%2Cprojects%2Cstructures%2Cterms';
+// TODO: Restore projects
+// export const SEARCH_TYPES = 'categories%2Cofficial%2Dtexts%2Cpersons%2Cprices%2Cprojects%2Cstructures%2Cterms';
+export const SEARCH_TYPES = 'categories%2Cofficial%2Dtexts%2Cpersons%2Cprices%2Cstructures%2Cterms';

@@ -147,10 +147,11 @@ function StructureByIdPage() {
               <Icon name="ri-git-repository-line" size="1x" />
               Textes officiels
             </SideMenuLink>
-            <SideMenuLink asLink={<RouterLink to="projets" replace />}>
+            {/* TODO: Restore projects */}
+            {/* <SideMenuLink asLink={<RouterLink to="projets" replace />}>
               <Icon name="ri-booklet-line" size="1x" />
               Projets
-            </SideMenuLink>
+            </SideMenuLink> */}
             <SideMenuLink asLink={<RouterLink to="prix-et-recompenses" replace />}>
               <Icon name="ri-award-line" size="1x" />
               Prix & récompenses
@@ -281,19 +282,20 @@ function StructureByIdPage() {
                     label="Chiffres clés"
                   />
                   <Checkbox
-                    checked={form.prix}
-                    onChange={(e) => updateForm({ prix: e.target.checked })}
-                    label="Prix et récompenses"
-                  />
-                  <Checkbox
                     checked={form.textes}
                     onChange={(e) => updateForm({ textes: e.target.checked })}
                     label="Textes officiels"
                   />
-                  <Checkbox
+                  {/* TODO: Restore projects */}
+                  {/* <Checkbox
                     checked={form.projets}
                     onChange={(e) => updateForm({ projets: e.target.checked })}
                     label="Projets"
+                  /> */}
+                  <Checkbox
+                    checked={form.prix}
+                    onChange={(e) => updateForm({ prix: e.target.checked })}
+                    label="Prix et récompenses"
                   />
                   <Checkbox
                     checked={form.elements}
