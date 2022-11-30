@@ -16,7 +16,7 @@ export default function SignIn() {
   const [otp, setOtp] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [matchError, setMatchError] = useState(false);
+  const [error, setError] = useState('');
 
   const validateEmail = () => MAIL_REGEXP.test(email);
   const validateOtp = () => OTP_REGEXP.test(otp);
@@ -26,8 +26,8 @@ export default function SignIn() {
     e.preventDefault();
     if (validateEmail(email) && (validatePassword(password) === true)) {
       const { message } = await requestSignInEmail({ email, password });
-      if (message) { setStep(2); } else { setMatchError(true); }
-    } else { setMatchError(true); }
+      if (message.startsWith('Un nouveau code')) { setStep(2); } else { setError(message); }
+    } else { setError('Mauvaise combinaison utilisateur/mot de passe'); }
   };
   const handleSignIn = async (e) => {
     e.preventDefault();
@@ -70,7 +70,7 @@ export default function SignIn() {
               { (step === 1) && (
                 <Row justifyContent="center">
                   <Col>
-                    {matchError && <Alert description="Mauvaise combinaison Identifiant/Mot de passe " type="error" />}
+                    {(error) && <Alert description={error} type="error" />}
                     <form onSubmit={requestOtp}>
                       <TextInput
                         required
