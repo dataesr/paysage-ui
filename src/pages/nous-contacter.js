@@ -30,7 +30,7 @@ function sanitize(form) {
   return body;
 }
 
-export default function ContactPage({ id, onDelete, onSave }) {
+export default function ContactPage({ onSave }) {
   const { form, updateForm, errors } = useForm({}, validate);
   const [showErrors, setShowErrors] = useState(false);
 
@@ -48,8 +48,8 @@ export default function ContactPage({ id, onDelete, onSave }) {
       .then((response) =>
       // eslint-disable-next-line
       { console.log(response); })
-      .catch(() => { });
-    return onSave(body, id);
+      .catch((e) => { console.log(e); });
+    return null;
   };
 
   return (
@@ -119,9 +119,7 @@ export default function ContactPage({ id, onDelete, onSave }) {
               </Row>
               <FormFooter
                 buttonLabel="Envoyer"
-                id={id}
                 onSaveHandler={handleSubmit}
-                onDeleteHandler={onDelete}
               />
             </Container>
           </form>
@@ -132,11 +130,5 @@ export default function ContactPage({ id, onDelete, onSave }) {
 }
 
 ContactPage.propTypes = {
-  id: PropTypes.string,
-  onDelete: PropTypes.func,
   onSave: PropTypes.func.isRequired,
-};
-ContactPage.defaultProps = {
-  id: null,
-  onDelete: null,
 };
