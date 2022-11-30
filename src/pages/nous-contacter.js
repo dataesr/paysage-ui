@@ -9,7 +9,7 @@ import useForm from '../hooks/useForm';
 
 function validate(body) {
   const validationErrors = {};
-  if (!body.usualNameFr) { validationErrors.usualNameFr = 'Le nom usuel est obligatoire.'; }
+  if (!body.name) { validationErrors.name = 'Votre nom est obligatoire.'; }
   if (!body.email) { validationErrors.email = "L'email de contact est obligatoire."; }
   if (!body.message) { validationErrors.message = 'Veuillez écrire ici votre message'; }
   const priority = parseInt(body.priority, 10);
@@ -78,8 +78,8 @@ export default function ContactPage({ id, onDelete, onSave }) {
                     value={form.name || ''}
                     onChange={(e) => updateForm({ name: e.target.value })}
                     required
-                    message={(showErrors && errors.usualNameFr) ? errors.usualNameFr : null}
-                    messageType={(showErrors && errors.usualNameFr) ? 'error' : ''}
+                    message={(showErrors && errors.name) ? errors.name : null}
+                    messageType={(showErrors && errors.name) ? 'error' : ''}
                   />
                   <TextInput
                     label="Votre email"
