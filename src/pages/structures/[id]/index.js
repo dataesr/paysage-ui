@@ -154,11 +154,11 @@ function StructureByIdPage() {
             </SideMenuLink> */}
             <SideMenuLink asLink={<RouterLink to="prix-et-recompenses" replace />}>
               <Icon name="ri-award-line" size="1x" />
-              Prix & récompenses
+              Prix et récompenses
             </SideMenuLink>
             <SideMenuLink asLink={<RouterLink to="elements-lies" replace />}>
               <Icon name="ri-links-line" size="1x" />
-              Écosysteme & Réseaux
+              Écosystème et réseaux
             </SideMenuLink>
             {(viewer.role === 'admin') && (
               <SideMenuLink asLink={<RouterLink to="journal" replace />}>
@@ -272,14 +272,14 @@ function StructureByIdPage() {
                     label="Ressources"
                   />
                   <Checkbox
-                    checked={form.categories}
-                    onChange={(e) => updateForm({ categories: e.target.checked })}
-                    label="Categories et termes"
-                  />
-                  <Checkbox
                     checked={form.chiffres}
                     onChange={(e) => updateForm({ chiffres: e.target.checked })}
-                    label="Chiffres clés"
+                    label="Analyses et données"
+                  />
+                  <Checkbox
+                    checked={form.categories}
+                    onChange={(e) => updateForm({ categories: e.target.checked })}
+                    label="Catégories et termes"
                   />
                   <Checkbox
                     checked={form.textes}
@@ -300,7 +300,7 @@ function StructureByIdPage() {
                   <Checkbox
                     checked={form.elements}
                     onChange={(e) => updateForm({ elements: e.target.checked })}
-                    label="Eléments liés"
+                    label="Écosystème et réseaux"
                   />
                 </CheckboxGroup>
               </ModalContent>

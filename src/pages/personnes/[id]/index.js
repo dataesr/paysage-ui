@@ -80,7 +80,7 @@ function PersonByIdPage() {
             </SideMenuLink>
             <SideMenuLink asLink={<RouterLink to="mandats" replace />}>
               <Icon name="ri-building-line" size="1x" />
-              Rôles et Mandats
+              Rôles et mandats
             </SideMenuLink>
             <SideMenuLink asLink={<RouterLink to="evenements" replace />}>
               <Icon name="ri-calendar-line" size="1x" />
@@ -105,7 +105,7 @@ function PersonByIdPage() {
             </SideMenuLink> */}
             <SideMenuLink asLink={<RouterLink to="prix-et-recompenses" replace />}>
               <Icon name="ri-award-line" size="1x" />
-              Prix & récompenses
+              Prix et récompenses
             </SideMenuLink>
             <SideMenuLink asLink={<RouterLink to="elements-lies" replace />}>
               <Icon name="ri-links-line" size="1x" />
@@ -210,7 +210,7 @@ function PersonByIdPage() {
                   <Checkbox
                     checked={form.mandats}
                     onChange={(e) => updateForm({ mandats: e.target.checked })}
-                    label="Rôles et Mandats"
+                    label="Rôles et mandats"
                   />
                   <Checkbox
                     checked={form.evenements}
@@ -241,7 +241,7 @@ function PersonByIdPage() {
                   <Checkbox
                     checked={form.prix}
                     onChange={(e) => updateForm({ prix: e.target.checked })}
-                    label="Prix & récompenses"
+                    label="Prix et récompenses"
                   />
                   <Checkbox
                     checked={form.elements}
