@@ -19,24 +19,6 @@ export default function Footer({ switchTheme }) {
 
   return (
     <FooterWrapper>
-      <FooterTop>
-        <FooterTopCategory title="Liens utiles">
-          <FooterLink asLink={<RouterLink to="/help" />}>
-            Aide
-          </FooterLink>
-          <FooterLink asLink={<RouterLink to="/" />}>
-            Nous contacter
-          </FooterLink>
-        </FooterTopCategory>
-        <FooterTopCategory title="Liens utiles">
-          <FooterLink asLink={<RouterLink to="/help" />}>
-            Notes de version
-          </FooterLink>
-          <FooterLink asLink={<RouterLink to="/" />}>
-            Github
-          </FooterLink>
-        </FooterTopCategory>
-      </FooterTop>
       <FooterBody description="Paysage : Plateforme d'échanges et d'informations de la DGESIP et de la DGRI">
         <Logo
           asLink={<Link href="https://www.enseignementsup-recherche.gouv.fr/fr" target="_blank" rel="noreferrer" />}
@@ -63,14 +45,20 @@ export default function Footer({ switchTheme }) {
         </FooterBodyItem>
       </FooterBody>
       <FooterBottom>
-        <FooterLink href="#">
-          Plan du Site
+        <FooterLink asLink={<RouterLink to="/aide" />}>
+          Aide
         </FooterLink>
-        <FooterLink href="#">
-          Accessibilité
+        <FooterLink asLink={<RouterLink to="/projet-et-equipe" />}>
+          L'équipe et son projet
+        </FooterLink>
+        <FooterLink asLink={<RouterLink to="/nous-contacter" />}>
+          Nous contacter
         </FooterLink>
         <FooterLink href="#">
           Mentions légales
+        </FooterLink>
+        <FooterLink asLink={<Link href="https://github.com/orgs/dataesr/repositories?q=paysage&type=&language=&sort=" target="_blank" />}>
+          Github
         </FooterLink>
         <FooterLink target="_blank" href={`https://github.com/dataesr/paysage-ui/releases/tag/v${process.env.REACT_APP_VERSION}`}>
           {`Version de l'application v${process.env.REACT_APP_VERSION}`}
