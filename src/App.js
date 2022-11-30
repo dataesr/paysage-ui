@@ -64,6 +64,7 @@ import {
 
 import './styles/index.scss';
 import SearchPage from './pages/rechercher';
+import ContactPage from './pages/nous-contacter';
 import AgendaOutlet from './components/outlets/evenements';
 import DocumentsOutlet from './components/outlets/documents';
 import ActualitesOutlet from './components/outlets/actualites';
@@ -84,6 +85,7 @@ function App() {
         <Route path="/mot-de-passe-oublie" element={<Passwordless />} />
         <Route path="/ressources-externes" element={<RessourcesExternesPage />} />
         <Route path="/aide" element={<HelpPage />} />
+        <Route path="/nous-contacter" element={<ContactPage />} />
         <Route path="*" element={<NotFound />} />
 
         <Route element={<ProtectedRoute roles={['admin']} />}>
