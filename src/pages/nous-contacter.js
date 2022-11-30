@@ -118,6 +118,7 @@ export default function ContactPage({ id, onDelete, onSave }) {
                 </Col>
               </Row>
               <FormFooter
+                buttonLabel="Envoyer"
                 id={id}
                 onSaveHandler={handleSubmit}
                 onDeleteHandler={onDelete}

@@ -24,7 +24,7 @@ export default function Footer({ switchTheme }) {
           <FooterLink asLink={<RouterLink to="/help" />}>
             Aide
           </FooterLink>
-          <FooterLink asLink={<RouterLink to="/" />}>
+          <FooterLink asLink={<RouterLink to="/nous-contacter" />}>
             Nous contacter
           </FooterLink>
         </FooterTopCategory>

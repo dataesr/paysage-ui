@@ -5,7 +5,7 @@ import classNames from 'classnames';
 import Button from '../../button';
 import useViewport from '../../../hooks/useViewport';
 
-export default function FormFooter({ id, onDeleteHandler, onSaveHandler }) {
+export default function FormFooter({ id, onDeleteHandler, onSaveHandler, buttonLabel }) {
   const { mobile } = useViewport();
   const [confirm, setConfirm] = useState(false);
   const classnames = classNames('flex--space-between', { 'flex--col-reverse': mobile });
@@ -50,7 +50,7 @@ export default function FormFooter({ id, onDeleteHandler, onSaveHandler }) {
                   Supprimer
                 </Button>
               ) : <div />}
-              <Button icon="ri-save-line" onClick={onSaveHandler}>Sauvegarder</Button>
+              <Button icon="ri-save-line" onClick={onSaveHandler}>{buttonLabel}</Button>
             </ButtonGroup>
           </Col>
         </Row>
@@ -60,12 +60,14 @@ export default function FormFooter({ id, onDeleteHandler, onSaveHandler }) {
 }
 
 FormFooter.propTypes = {
+  buttonLabel: PropTypes.string,
   id: PropTypes.string,
   onSaveHandler: PropTypes.func.isRequired,
   onDeleteHandler: PropTypes.func,
 };
 
 FormFooter.defaultProps = {
+  buttonLabel: 'Sauvegarder',
   id: null,
   onDeleteHandler: () => {},
 };
