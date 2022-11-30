@@ -40,6 +40,7 @@ export default function Footer({ switchTheme }) {
       <FooterBody description="Paysage : Plateforme d'échanges et d'informations de la DGESIP et de la DGRI">
         <Logo
           asLink={<Link href="https://www.enseignementsup-recherche.gouv.fr/fr" target="_blank" rel="noreferrer" />}
+          splitCharacter={9}
         >
           Ministère de l‘enseignement supérieur et de la recherche
         </Logo>
