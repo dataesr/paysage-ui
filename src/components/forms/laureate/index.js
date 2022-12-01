@@ -20,8 +20,7 @@ import PaysageBlame from '../../paysage-blame';
 function sanitize(form) {
   const newForm = { ...form };
   if (newForm.otherAssociatedObjects?.length) newForm.otherAssociatedObjectIds = newForm.otherAssociatedObjects.map((associated) => associated.id);
-  const fields = ['resourceId', 'relatedObjectId', 'relationTypeId', 'relationsGroupId', 'relationTag',
-    'startDateOfficialTextId', 'endDateOfficialTextId', 'startDate', 'endDate', 'otherAssociatedObjectIds'];
+  const fields = ['resourceId', 'relatedObjectId', 'relationTypeId', 'relationsGroupId', 'relationTag', 'startDate', 'endDate', 'otherAssociatedObjectIds'];
   const body = {};
   Object.keys(newForm).forEach((key) => { if (fields.includes(key)) { body[key] = newForm[key]; } });
   return body;
@@ -141,7 +140,7 @@ export default function LaureateForm({ id, resourceType, relatedObjectTypes, dat
                   buttonLabel="Rechercher"
                   value={resourceQuery || ''}
                   label="Prix"
-                  hint="Rechercher parmis les prix"
+                  hint="Rechercher parmi les prix"
                   required
                   scope={form.resourceName}
                   placeholder={form.resourceId ? '' : 'Rechercher...'}
@@ -159,7 +158,9 @@ export default function LaureateForm({ id, resourceType, relatedObjectTypes, dat
                   buttonLabel="Rechercher"
                   value={relatedObjectQuery || ''}
                   label="Lauréat"
-                  hint="Rechercher parmis les structures, les personnes et les projets"
+                  // TODO: Restore projects
+                  // hint="Rechercher parmi les structures, les personnes et les projets"
+                  hint="Rechercher parmi les structures et les personnes"
                   required
                   scope={form.relatedObjectName}
                   placeholder={form.relatedObjectId ? '' : 'Rechercher...'}
@@ -175,7 +176,7 @@ export default function LaureateForm({ id, resourceType, relatedObjectTypes, dat
             <SearchBar
               buttonLabel="Rechercher"
               value={associatedQuery || ''}
-              label="Structure partageant le même prix"
+              label="Structure(s) partageant le même prix"
               placeholder="Rechercher..."
               onChange={(e) => { setAssociatedQuery(e.target.value); }}
               options={associatedOptions}

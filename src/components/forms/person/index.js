@@ -38,7 +38,7 @@ export default function PersonForm({ id, data, onSave, onDelete }) {
     return onSave(body);
   };
   const genderOptions = [
-    { value: '', label: 'Selectionner' },
+    { value: '', label: 'Sélectionner' },
     { value: 'Homme', label: 'Homme' },
     { value: 'Femme', label: 'Femme' },
     { value: 'Autre', label: 'Autre' },

@@ -1,8 +1,8 @@
 import { Col, Icon, Row, Text, Title } from '@dataesr/react-dsfr';
 import Highcharts from 'highcharts';
-import HighchartsReact from 'highcharts-react-official';
 import HCExportingData from 'highcharts/modules/export-data';
 import HCExporting from 'highcharts/modules/exporting';
+import HighchartsReact from 'highcharts-react-official';
 
 import {
   Bloc,
@@ -11,9 +11,10 @@ import {
 } from '../../../../components/bloc';
 import Card from '../../../../components/card';
 import { Spinner } from '../../../../components/spinner';
-import getOptionsFromFacet from '../../../../hooks/useChart';
 import useFetch from '../../../../hooks/useFetch';
 import useUrl from '../../../../hooks/useUrl';
+import cleanNumber from '../../../../utils/clean-numbers';
+import { capitalize } from '../../../../utils/strings';
 
 HCExporting(Highcharts);
 HCExportingData(Highcharts);
@@ -21,13 +22,77 @@ HCExportingData(Highcharts);
 export default function StructureRHPage() {
   const year = 2020;
   const { url } = useUrl('keynumbers');
-  const { data, error, isLoading } = useFetch(`${url}/biatss?filters[rentree]=${year}`);
-  const effectif = data?.data.reduce((accumulator, item) => accumulator + (item?.effectif || 0), 0);
+  const { data, error, isLoading } = useFetch(`${url}/biatss?filters[rentree]=${year}&limit=0`);
+
+  const commonOptions = {
+    legend: { enabled: false },
+    credits: { enabled: false },
+    lang: {
+      downloadCSV: 'Télécharger en CSV',
+      downloadJPEG: 'Téléchager en JPEG',
+      downloadPDF: 'Télécharger en PDF',
+      downloadPNG: 'Télécharger en PNG',
+      downloadSVG: 'Télécharger en SVG',
+      downloadXLS: 'Télécharger en XLS',
+      printChart: 'Imprimer le graphique',
+      viewFullscreen: 'Plein écran',
+    },
+    yAxis: { title: { text: 'Effectifs' } },
+    exporting: {
+      buttons: {
+        contextButton: {
+          menuItems: [
+            'viewFullscreen', 'printChart', 'separator', 'downloadPNG', 'downloadJPEG', 'downloadPDF',
+            'downloadSVG', 'separator', 'downloadCSV', 'downloadXLS', 'openInCloud',
+          ],
+        },
+      },
+    },
+    chart: { type: 'column' },
+    tooltip: {
+      // eslint-disable-next-line react/no-this-in-sfc
+      formatter() { return `<b>${this.point.name} :</b> ${this.point.value} BIATSS (${cleanNumber(this.point.y)} %)`; },
+    },
+  };
+
+  const effectifTotal = data?.data.reduce((accumulator, item) => accumulator + (item?.effectif || 0), 0);
+
+  const countStaffByField = ({ fieldName, label, extraField }) => {
+    let result = {};
+    data?.data.forEach((item) => {
+      const { [fieldName]: field, effectif } = item;
+      if (!Object.keys(result).includes(field)) {
+        result[field] = { staff: 0 };
+        if (extraField) {
+          result[field][extraField] = item?.[extraField];
+        }
+      }
+      result[field].staff += effectif;
+    });
+    result = Object.keys(result).sort().reduce(
+      (obj, key) => {
+        // eslint-disable-next-line no-param-reassign
+        obj[key] = result[key];
+        return obj;
+      },
+      {},
+    );
+    return Object.keys(result).map((item) => ({
+      name: label(item, result),
+      value: result[item].staff,
+      y: (result[item].staff / effectifTotal) * 100,
+    }));
+  };
+
+  const dataCategories = countStaffByField({ fieldName: 'categorie', label: (item) => `Catégorie ${item}` });
+  const dataTypes = countStaffByField({ fieldName: 'type_personnel', label: (item) => capitalize(item) });
+  const dataCorps = countStaffByField({ fieldName: 'code_corps', label: (item, result) => result[item].corps_lib, extraField: 'corps_lib' });
 
   const renderLabs = () => data?.data.map((item) => (
     <Bloc isLoading={isLoading} error={error} data={data} noBadge>
       <BlocTitle as="h4">
-        {item?.etablissement_compos_lib || 'Nom non renseigné'}
+        {item?.corps_lib || 'Corps non renseigné'}
+        {item?.code_corps ? ` (${item.code_corps})` : ''}
       </BlocTitle>
       <BlocContent>
         <Row gutters>
@@ -38,19 +103,6 @@ export default function StructureRHPage() {
                 <Row alignItems="middle">
                   <Text spacing="mr-1v mb-0">
                     {item?.effectif || 'Non renseigné'}
-                  </Text>
-                </Row>
-              )}
-            />
-          </Col>
-          <Col n="12 md-4">
-            <Card
-              title="Corps"
-              descriptionElement={(
-                <Row alignItems="middle">
-                  <Text spacing="mr-1v mb-0">
-                    {item?.corps_lib || 'Non renseigné'}
-                    {item?.code_corps ? ` (${item.code_corps})` : ''}
                   </Text>
                 </Row>
               )}
@@ -75,18 +127,6 @@ export default function StructureRHPage() {
                 <Row alignItems="middle">
                   <Text spacing="mr-1v mb-0">
                     {item?.categorie || 'Non renseigné'}
-                  </Text>
-                </Row>
-              )}
-            />
-          </Col>
-          <Col n="12 md-4">
-            <Card
-              title="Type d'établissement"
-              descriptionElement={(
-                <Row alignItems="middle">
-                  <Text spacing="mr-1v mb-0">
-                    {item?.etablissement_type || 'Non renseigné'}
                   </Text>
                 </Row>
               )}
@@ -119,18 +159,15 @@ export default function StructureRHPage() {
         {`Ressources humaines BIATSS pour l'année ${year}`}
       </Title>
       <Bloc isLoading={isLoading} error={error} data={data} noBadge>
-        <BlocTitle as="h4">
-          Effectif
-        </BlocTitle>
         <BlocContent>
           <Row gutters>
             <Col className="print-12" n="12 md-4">
               <Card
-                title="BIATSS"
+                title="Effectif"
                 descriptionElement={(
                   <Row alignItems="middle">
                     <Text spacing="mr-1v mb-0">
-                      {effectif || 'Non renseigné'}
+                      {effectifTotal || 'Non renseigné'}
                     </Text>
                   </Row>
                 )}
@@ -139,13 +176,36 @@ export default function StructureRHPage() {
             <Col className="print-12" n="12 md-8">
               <HighchartsReact
                 highcharts={Highcharts}
-                options={getOptionsFromFacet({
-                  data: data?.data || [],
-                  facet: 'code_corps',
-                  label: 'corps_lib',
-                  serieName: 'Effectif',
-                  title: 'Corps',
-                })}
+                options={{
+                  ...commonOptions,
+                  xAxis: { categories: dataCorps.map((item) => item.name) },
+                  series: [{ data: dataCorps }],
+                  title: { text: 'Répartition des effectifs par corps' },
+                }}
+              />
+            </Col>
+          </Row>
+          <Row gutters>
+            <Col className="print-12" n="12 md-6">
+              <HighchartsReact
+                highcharts={Highcharts}
+                options={{
+                  ...commonOptions,
+                  xAxis: { categories: dataCategories.map((item) => item.name) },
+                  series: [{ data: dataCategories }],
+                  title: { text: 'Répartition des effectifs par catégorie' },
+                }}
+              />
+            </Col>
+            <Col className="print-12" n="12 md-6">
+              <HighchartsReact
+                highcharts={Highcharts}
+                options={{
+                  ...commonOptions,
+                  xAxis: { categories: dataTypes.map((item) => item.name) },
+                  series: [{ data: dataTypes }],
+                  title: { text: 'Répartition des effectifs par type de personnel' },
+                }}
               />
             </Col>
           </Row>

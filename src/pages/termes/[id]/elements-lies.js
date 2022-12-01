@@ -18,7 +18,7 @@ export default function TermRelatedElements() {
   const { id: resourceId } = useUrl();
   const { data, isLoading, error, reload } = useFetch(`/relations-groups?filters[resourceId]=${resourceId}&limit=500`);
   const [isOpen, setIsOpen] = useState();
-  const notice = useNotice();
+  const { notice } = useNotice();
 
   const handleDelete = async (id) => {
     if (!id) return;
@@ -85,6 +85,7 @@ export default function TermRelatedElements() {
               <RelationGroupForm
                 onDelete={handleDelete}
                 onSave={handleSave}
+                data={{ priority: 99, accepts: [], resourceId }}
               />
             </ModalContent>
           </Modal>

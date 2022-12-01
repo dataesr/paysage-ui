@@ -19,6 +19,7 @@ export default function StructureGouvernancePage() {
         resourceType="structures"
         relatedObjectTypes={['persons']}
         Form={MandateForm}
+        noRelationType
       />
     </>
   );

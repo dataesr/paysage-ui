@@ -130,7 +130,7 @@ function StructureByIdPage() {
                 Offre de formation
               </SideMenuLink>
               <SideMenuLink asLink={<RouterLink to="chiffres-cles/ressources-humaines" replace />}>
-                Ressources humaines
+                BIATSS
               </SideMenuLink>
               <SideMenuLink asLink={<RouterLink to="chiffres-cles/budget" replace />}>
                 Indicateurs financiers
@@ -147,17 +147,18 @@ function StructureByIdPage() {
               <Icon name="ri-git-repository-line" size="1x" />
               Textes officiels
             </SideMenuLink>
-            <SideMenuLink asLink={<RouterLink to="projets" replace />}>
+            {/* TODO: Restore projects */}
+            {/* <SideMenuLink asLink={<RouterLink to="projets" replace />}>
               <Icon name="ri-booklet-line" size="1x" />
               Projets
-            </SideMenuLink>
+            </SideMenuLink> */}
             <SideMenuLink asLink={<RouterLink to="prix-et-recompenses" replace />}>
               <Icon name="ri-award-line" size="1x" />
-              Prix & récompenses
+              Prix et récompenses
             </SideMenuLink>
             <SideMenuLink asLink={<RouterLink to="elements-lies" replace />}>
               <Icon name="ri-links-line" size="1x" />
-              Écosysteme & Réseaux
+              Écosystème et réseaux
             </SideMenuLink>
             {(viewer.role === 'admin') && (
               <SideMenuLink asLink={<RouterLink to="journal" replace />}>
@@ -271,34 +272,35 @@ function StructureByIdPage() {
                     label="Ressources"
                   />
                   <Checkbox
-                    checked={form.categories}
-                    onChange={(e) => updateForm({ categories: e.target.checked })}
-                    label="Categories et termes"
-                  />
-                  <Checkbox
                     checked={form.chiffres}
                     onChange={(e) => updateForm({ chiffres: e.target.checked })}
-                    label="Chiffres clés"
+                    label="Analyses et données"
                   />
                   <Checkbox
-                    checked={form.prix}
-                    onChange={(e) => updateForm({ prix: e.target.checked })}
-                    label="Prix et récompenses"
+                    checked={form.categories}
+                    onChange={(e) => updateForm({ categories: e.target.checked })}
+                    label="Catégories et termes"
                   />
                   <Checkbox
                     checked={form.textes}
                     onChange={(e) => updateForm({ textes: e.target.checked })}
                     label="Textes officiels"
                   />
-                  <Checkbox
+                  {/* TODO: Restore projects */}
+                  {/* <Checkbox
                     checked={form.projets}
                     onChange={(e) => updateForm({ projets: e.target.checked })}
                     label="Projets"
+                  /> */}
+                  <Checkbox
+                    checked={form.prix}
+                    onChange={(e) => updateForm({ prix: e.target.checked })}
+                    label="Prix et récompenses"
                   />
                   <Checkbox
                     checked={form.elements}
                     onChange={(e) => updateForm({ elements: e.target.checked })}
-                    label="Eléments liés"
+                    label="Écosystème et réseaux"
                   />
                 </CheckboxGroup>
               </ModalContent>

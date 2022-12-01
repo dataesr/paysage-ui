@@ -61,13 +61,13 @@ export default function DocumentsOutlet() {
   };
 
   const renderGroupBadge = (canAccess = []) => {
-    if (!canAccess?.length > 0) return <Badge type="success" iconPosition="right" icon="ri-lock-unlock-line" text="Tous" />;
+    if (!canAccess?.length > 0) return null;
     const { groups } = viewer;
     const accessGroups = groups.filter((elem) => (canAccess.includes(elem.id)));
     if (accessGroups.length > 0) {
       return accessGroups.map((group) => <Badge key={group.id} type="success" iconPosition="right" icon="ri-lock-unlock-line" text={group.acronym || group.name} />);
     }
-    return <Badge type="success" iconPosition="right" icon="ri-lock-unlock-line" text="Tous" />;
+    return null;
   };
 
   const renderContent = () => {

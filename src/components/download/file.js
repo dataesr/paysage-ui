@@ -33,7 +33,7 @@ const mapping = {
   document: { icon: 'ri-file-word-fill', color: 'var(--blue-ecume-main-400)' },
   powerpoint: { icon: 'ri-file-ppt-fill', color: 'var(--grey-main-525)' },
   excel: { icon: 'ri-file-excel-fill', color: 'var(--green-emeraude-main-632)' },
-  archive: { icon: 'ri-file-zip-fill', color: 'var(--grey-main-525)' },
+  archive: { icon: 'ri-file-zip-fill', color: 'var(--yellow-tournesol-main-731)' },
 };
 
 const getFileIcon = (mimetype) => {

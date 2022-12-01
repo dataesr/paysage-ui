@@ -166,7 +166,7 @@ function CategoryByIdPage() {
                   <Checkbox
                     checked={form.related}
                     onChange={(e) => updateForm({ related: e.target.checked })}
-                    label="Elements liés"
+                    label="Eléments liés"
                   />
                   <Checkbox
                     checked={form.actualites}

@@ -23,7 +23,7 @@ export default function StructureElementLiesPage() {
   const { id: resourceId } = useUrl('relations-groups');
   const { data, isLoading, error, reload } = useFetch(`/relations-groups?filters[resourceId]=${resourceId}&limit=500`);
   const [isOpen, setIsOpen] = useState();
-  const notice = useNotice();
+  const { notice } = useNotice();
 
   const handleDelete = async (id) => {
     if (!id) return;
@@ -46,12 +46,14 @@ export default function StructureElementLiesPage() {
         blocName="Structures internes"
         resourceType="structures"
         relatedObjectTypes={['structures']}
+        noRelationType
       />
       <RelationsByTag
         tag={STRUCTURE_INTERNE}
         blocName="Structures parentes"
         resourceType="structures"
         relatedObjectTypes={['structures']}
+        noRelationType
         inverse
       />
       <RelationsByTag
@@ -59,12 +61,14 @@ export default function StructureElementLiesPage() {
         blocName="Prédécesseurs"
         resourceType="structures"
         relatedObjectTypes={['structures']}
+        noRelationType
       />
       <RelationsByTag
         tag={STRUCTURE_PREDECESSEUR}
         blocName="Successeurs"
         resourceType="structures"
         relatedObjectTypes={['structures']}
+        noRelationType
         inverse
       />
       <RelationsByTag
@@ -87,6 +91,7 @@ export default function StructureElementLiesPage() {
               <RelationGroupForm
                 onDelete={handleDelete}
                 onSave={handleSave}
+                data={{ priority: 99, accepts: [], resourceId }}
               />
             </ModalContent>
           </Modal>

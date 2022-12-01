@@ -1,4 +1,4 @@
-import { Icon } from '@dataesr/react-dsfr';
+import { Badge, Icon } from '@dataesr/react-dsfr';
 import PropTypes from 'prop-types';
 import { Link as RouterLink } from 'react-router-dom';
 
@@ -17,6 +17,7 @@ export default function KeyValueCard({
   onEdit,
   titleAsText,
   tooltip,
+  inactive,
 }) {
   const { editMode } = useEditMode();
 
@@ -51,6 +52,7 @@ export default function KeyValueCard({
                   title={tooltip}
                 />
               )}
+              {inactive && <Badge isSmall text="inactif" />}
             </p>
           </div>
           {editMode && onEdit && (
@@ -81,6 +83,7 @@ KeyValueCard.propTypes = {
   onEdit: PropTypes.func,
   titleAsText: PropTypes.string,
   tooltip: PropTypes.string,
+  inactive: PropTypes.bool,
 };
 KeyValueCard.defaultProps = {
   className: '',
@@ -91,4 +94,5 @@ KeyValueCard.defaultProps = {
   onEdit: null,
   titleAsText: false,
   tooltip: null,
+  inactive: false,
 };

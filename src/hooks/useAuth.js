@@ -88,9 +88,10 @@ export function AuthContextProvider({ children }) {
     const headers = { 'X-Paysage-OTP': otp, 'Content-Type': 'application/json' };
     const response = await fetch(url, { method: 'POST', body, headers })
       .catch(() => ({ error: unexpectedError }));
+    const data = await response.json()
+      .catch(() => ({ error: unexpectedError }));
+    response.data = data;
     if (response.ok) {
-      const data = await response.json()
-        .catch(() => ({ error: unexpectedError }));
       localStorage.setItem('__paysage_access__', data.accessToken);
       localStorage.setItem('__paysage_refresh__', data.refreshToken);
       const { data: user } = await api.get('/me');

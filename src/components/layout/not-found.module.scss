@@ -1,5 +1,9 @@
 
-// Lampe
+/*======================
+  404 Page lampe
+
+  source : https://codepen.io/uiswarup/pen/XWdXGGV
+=======================*/
 
 .starsec{
   content: " ";
@@ -54,10 +58,6 @@
 }
 }
 
-:focus {
-  outline: 0;
-}
-
 .clearfix:before, .clearfix:after {
   content: "\0020";
   display: block;
@@ -101,28 +101,23 @@
   -webkit-transform: translate(-50%, -50%);
           transform: translate(-50%, -50%);
 }
-
-// .error__message {
-//   text-align: center;
-//   color: #181828;
-// }
-
-// .message__title {
-//   font-weight: 900;
-//   text-transform: uppercase;
-//   letter-spacing: 5px;
-//    font-size: 5.6rem;
-//   padding-bottom: 40px;
-//   margin: 0 auto;
-// }
-
-// .message__text {
-//   line-height: 42px;
-//   font-size: 18px;
-//   max-width: 680px;
-//   margin: auto;
-// }
-
+.error__message {
+  text-align: center;
+}
+.message__title {
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 5px;
+  font-size: 5.6rem;
+  padding-bottom: 40px;
+  margin: 0 auto;
+}
+.message__text {
+  line-height: 42px;
+  font-size: 18px;
+  max-width: 680px;
+  margin: auto;
+}
 .error__nav {
   max-width: 600px;
   margin: 40px auto 0;
@@ -205,9 +200,7 @@
 .e-nav__link:nth-child(2):hover:after {
   color: #fff;
 }
-/* 2.1. END Section Error */
 
-/* 2.2. Social style */
 .error__social {
   position: absolute;
   top: 50%;
@@ -326,14 +319,6 @@
     z-index: 1;
     border-radius: 90px 90px 0px 0px;
 }
-/* 2.3. END Lamp */
-/***********************************
-			/* 2. END CONTENT */
-/***********************************/
-
-/***********************************
-			/* 3. RESPONSIVE */
-/***********************************/
 .error {
   overflow: hidden;
   max-height: 100vh;
@@ -385,7 +370,7 @@
   }
 }
 @media (max-width: 750px) {
-  body, html, {
+  body, html {
     max-height: 100vh;
   }
    .error__content {
@@ -435,8 +420,11 @@
 
 
 /*======================
-    404 page Homme de cro magnon
+  404 page Homme de cro magnon
+
+  source : https://codepen.io/Navedkhan012/pen/vrWQMY
 =======================*/
+
 
 
 .page_404{ padding:40px 0;
@@ -458,7 +446,6 @@
   .four_zero_four_bg h3{
 			 font-size:80px;
 			 }
-			 
 			 .link_404{			 
 	color: #fff!important;
     padding: 10px 20px;
