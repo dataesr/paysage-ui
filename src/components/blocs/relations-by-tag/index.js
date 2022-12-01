@@ -12,6 +12,19 @@ import useNotice from '../../../hooks/useNotice';
 import Map from '../../map/auto-bound-map';
 import { deleteError, saveError, saveSuccess, deleteSuccess } from '../../../utils/notice-contents';
 
+const getMarkers = (structures) => structures.map((element) => {
+  const { coordinates } = element.currentLocalisation.geometry;
+  const markersCoordinates = [...coordinates];
+  const reversed = markersCoordinates.reverse();
+  return ({
+    latLng: reversed,
+    address: `${element.displayName}
+         ${element.currentLocalisation?.address},
+         ${element.currentLocalisation?.postalCode},
+         ${element.currentLocalisation?.locality}`,
+  });
+});
+
 export default function RelationsByTag({ blocName, tag, resourceType, relatedObjectTypes, inverse, noRelationType, Form, sort }) {
   const queryObject = inverse ? 'relatedObjectId' : 'resourceId';
   const { notice } = useNotice();
@@ -61,19 +74,19 @@ export default function RelationsByTag({ blocName, tag, resourceType, relatedObj
   const renderCards = () => {
     const relatedKey = inverse ? 'resource' : 'relatedObject';
     if (!data && !data?.data?.length) return null;
-    const structures = data.data.filter((element) => (element[relatedKey]?.collection === 'structures' && element[relatedKey]?.currentLocalisation?.geometry?.coordinates));
-    const markers = structures.map((element) => {
-      const { coordinates } = element[relatedKey].currentLocalisation.geometry;
-      const markersCoordinates = [...coordinates];
-      const reversed = markersCoordinates.reverse();
-      return ({
-        latLng: reversed,
-        address: `${element[relatedKey].displayName}
-         ${element[relatedKey].currentLocalisation?.address},
-         ${element[relatedKey].currentLocalisation?.postalCode},
-         ${element[relatedKey].currentLocalisation?.locality}`,
-      });
-    });
+    const relatedStructures = data.data
+      .filter((element) => (element[relatedKey]?.collection === 'structures'))
+      .filter((element) => element[relatedKey]?.currentLocalisation?.geometry?.coordinates)
+      .map((element) => element[[relatedKey]]);
+    const relatedMarkers = getMarkers(relatedStructures);
+    const associatedStructures = data.data
+      .map((element) => element.otherAssociatedObjects)
+      .filter((element) => (element?.length > 0))
+      .flat()
+      .filter((element) => element.collection === 'structures')
+      .filter((element) => element?.currentLocalisation?.geometry?.coordinates);
+    const associatedStructuresMarkers = getMarkers(associatedStructures);
+
     const currentRelations = data?.data
       .filter((relation) => (!relation.endDate || (new Date(relation.endDate) >= new Date())))
       .map((relation) => ({ ...relation, current: true }));
@@ -90,7 +103,9 @@ export default function RelationsByTag({ blocName, tag, resourceType, relatedObj
         onEdit={() => onOpenModalHandler(element)}
       />
     ));
-    if (structures.length) {
+
+    const markers = [...relatedMarkers, ...associatedStructuresMarkers];
+    if (markers.length) {
       return (
         <Row gutters>
           <Col n="12">

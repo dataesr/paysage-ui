@@ -20,8 +20,7 @@ import PaysageBlame from '../../paysage-blame';
 function sanitize(form) {
   const newForm = { ...form };
   if (newForm.otherAssociatedObjects?.length) newForm.otherAssociatedObjectIds = newForm.otherAssociatedObjects.map((associated) => associated.id);
-  const fields = ['resourceId', 'relatedObjectId', 'relationTypeId', 'relationsGroupId', 'relationTag',
-    'startDateOfficialTextId', 'endDateOfficialTextId', 'startDate', 'endDate', 'otherAssociatedObjectIds'];
+  const fields = ['resourceId', 'relatedObjectId', 'relationTypeId', 'relationsGroupId', 'relationTag', 'startDate', 'endDate', 'otherAssociatedObjectIds'];
   const body = {};
   Object.keys(newForm).forEach((key) => { if (fields.includes(key)) { body[key] = newForm[key]; } });
   return body;
