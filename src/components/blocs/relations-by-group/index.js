@@ -16,7 +16,7 @@ import { deleteError, saveError, saveSuccess, deleteSuccess } from '../../../uti
 export default function RelationsByGroup({ group, reloader }) {
   const { id: groupId, name: groupName, accepts: groupAccepts } = group;
   const { notice } = useNotice();
-  const { id: resourceId, apiObject, url: listUrl } = useUrl('relations-groups');
+  const { id: resourceId, apiObject } = useUrl('relations-groups');
   const url = `/relations?filters[relationsGroupId]=${groupId}`;
   const { data, isLoading, error, reload } = useFetch(url);
   const [showModal, setShowModal] = useState(false);
@@ -39,13 +39,13 @@ export default function RelationsByGroup({ group, reloader }) {
   };
 
   const onSaveListHandler = async (body, id = null) => {
-    const saveUrl = `${listUrl}/${id}`;
+    const saveUrl = `/relations-groups/${id}`;
     await api.patch(saveUrl, body).then(() => { notice(saveSuccess); reloader(); }).catch(() => notice(saveError));
     return setShowListModal(false);
   };
 
   const onDeleteListHandler = async (id) => {
-    await api.delete(`${listUrl}/${id}`)
+    await api.delete(`/relations-groups/${id}`)
       .then(() => { notice(deleteSuccess); reloader(); })
       .catch(() => notice(deleteError));
     return setShowListModal(false);

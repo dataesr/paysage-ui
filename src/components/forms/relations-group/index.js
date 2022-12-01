@@ -24,7 +24,7 @@ function validate(body) {
   return validationErrors;
 }
 function sanitize(form) {
-  const fields = ['name', 'otherNames', 'accepts', 'priority'];
+  const fields = ['name', 'otherNames', 'accepts', 'priority', 'resourceId'];
   const body = {};
   Object.keys(form).forEach((key) => { if (fields.includes(key)) { body[key] = form[key]; } });
   return body;
