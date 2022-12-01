@@ -46,12 +46,14 @@ export default function StructureElementLiesPage() {
         blocName="Structures internes"
         resourceType="structures"
         relatedObjectTypes={['structures']}
+        noRelationType
       />
       <RelationsByTag
         tag={STRUCTURE_INTERNE}
         blocName="Structures parentes"
         resourceType="structures"
         relatedObjectTypes={['structures']}
+        noRelationType
         inverse
       />
       <RelationsByTag
@@ -59,12 +61,14 @@ export default function StructureElementLiesPage() {
         blocName="Prédécesseurs"
         resourceType="structures"
         relatedObjectTypes={['structures']}
+        noRelationType
       />
       <RelationsByTag
         tag={STRUCTURE_PREDECESSEUR}
         blocName="Successeurs"
         resourceType="structures"
         relatedObjectTypes={['structures']}
+        noRelationType
         inverse
       />
       <RelationsByTag

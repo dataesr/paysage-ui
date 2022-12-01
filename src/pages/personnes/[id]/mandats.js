@@ -21,6 +21,7 @@ export default function PersonMandats() {
         relatedObjectTypes={['persons']}
         Form={MandateForm}
         inverse
+        noRelationType
       />
     </>
   );
