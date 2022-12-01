@@ -1,9 +1,9 @@
 import { Breadcrumb, BreadcrumbItem, Col, Container, Row, TextInput, Title } from '@dataesr/react-dsfr';
 import { useState } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
+
 import api from '../utils/api';
 import useToast from '../hooks/useToast';
-
 import FormFooter from '../components/forms/form-footer';
 import useForm from '../hooks/useForm';
 import useAuth from '../hooks/useAuth';
@@ -16,11 +16,11 @@ function validate(body) {
 
 function sanitize(form) {
   const fields = [
+    'email',
+    'fonction',
+    'message',
     'name',
     'organization',
-    'fonction',
-    'email',
-    'message',
   ];
   const body = {};
   Object.keys(form).forEach((key) => { if (fields.includes(key)) { body[key] = form[key]; } });
@@ -76,9 +76,9 @@ export default function ContactPage() {
               <Row gutters>
                 <Col n="12 md-6">
                   <TextInput
+                    disabled
                     label="Votre nom et prénom"
                     value={form.name || ''}
-                    disabled
                   />
                   <TextInput
                     label="Votre email"
@@ -96,22 +96,22 @@ export default function ContactPage() {
                   />
                   <TextInput
                     label="Votre fonction"
-                    value={form.fonction || ''}
-                    onChange={(e) => updateForm({ fonction: e.target.value })}
                     message={(showErrors && errors.fonction) ? errors.fonction : null}
                     messageType={(showErrors && errors.fonction) ? 'error' : ''}
+                    onChange={(e) => updateForm({ fonction: e.target.value })}
+                    value={form.fonction || ''}
                   />
                 </Col>
                 <Col n="12 md-6">
                   <TextInput
                     label="Votre message"
-                    value={form.message || ''}
-                    onChange={(e) => updateForm({ message: e.target.value })}
-                    required
                     message={(showErrors && errors.message) ? errors.message : null}
                     messageType={(showErrors && errors.message) ? 'error' : ''}
-                    textarea
+                    onChange={(e) => updateForm({ message: e.target.value })}
+                    required
                     rows={13}
+                    textarea
+                    value={form.message || ''}
                   />
                 </Col>
               </Row>
