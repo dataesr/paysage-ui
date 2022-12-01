@@ -54,9 +54,13 @@
 }
 }
 
-:focus {
-  outline: 0;
-}
+// ATTENTION: les classes ecrites ici peuvent affecter tout le css du site car elles sont importées sans .module.scss
+// Par exemple, les deux lignes suivantes enlèvent les outlines de tout le site !
+// TODO: utiliser not-found.module.scss, importer la feuille de style dans le js et écrire les classes styles.starfifth ou styles["e-nav"]
+// Enfin, vérifier que toutes les classes présentes ici sont utilisées.
+// :focus {
+//   outline: 0;
+// }
 
 .clearfix:before, .clearfix:after {
   content: "\0020";
