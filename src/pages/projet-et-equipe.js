@@ -1,11 +1,20 @@
 /* eslint-disable max-len */
 import { useEffect } from 'react';
-import { Container, Link, Text, Title } from '@dataesr/react-dsfr';
+import { Link as RouterLink } from 'react-router-dom';
+import { Breadcrumb, BreadcrumbItem, Container, Link, Text, Title } from '@dataesr/react-dsfr';
 
 export default function ProjetEtEquipe() {
   useEffect(() => { document.title = 'Paysage · Projet & équipe'; }, []);
   return (
-    <Container>
+    <Container spacing="pb-6w">
+      <Breadcrumb>
+        <BreadcrumbItem asLink={<RouterLink to="/" />}>
+          Accueil
+        </BreadcrumbItem>
+        <BreadcrumbItem>
+          L'équipe et son projet
+        </BreadcrumbItem>
+      </Breadcrumb>
       <Title as="h2">
         Le projet Paysage
       </Title>
@@ -34,7 +43,7 @@ export default function ProjetEtEquipe() {
         Le choix de ces technologies inscrit Paysage dans les outils maitrisés par l'équipe du département des outils d'aide à la décision.
         Le code source du projet est sous licence MIT et disponible sur
         {' '}
-        <Link href="https://github.com/search?q=org%3Adataesr+paysage">Github</Link>
+        <Link href="https://github.com/search?q=org%3Adataesr+paysage" target="_blank">Github</Link>
         .
       </Text>
 
