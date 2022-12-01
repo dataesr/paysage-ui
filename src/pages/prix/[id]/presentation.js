@@ -46,7 +46,9 @@ export default function PricePresentationPage() {
         tag={LAUREAT}
         blocName="Lauréats"
         resourceType="prices"
-        relatedObjectTypes={['persons', 'structures', 'projects']}
+        // TODO: Restore projects
+        // relatedObjectTypes={['persons', 'structures', 'projects']}
+        relatedObjectTypes={['persons', 'structures']}
         Form={LaureateForm}
       />
       <Row gutters>
