@@ -168,6 +168,7 @@ export default function IdentifiersComponent() {
             key={el.id}
             onEdit={() => onOpenModalHandler(el)}
             linkTo={getLink(el)}
+            inactive={!(el?.active === true)}
           />,
         );
         if (el.type === 'Id unité CNRS') {
@@ -181,6 +182,7 @@ export default function IdentifiersComponent() {
               key={el.id}
               onEdit={() => onOpenModalHandler(el)}
               linkTo={getLink({ ...el, type: 'CNRS - grafilabo' })}
+              inactive={!(el?.active === true)}
             />,
           );
         }
@@ -195,6 +197,7 @@ export default function IdentifiersComponent() {
               key={el.id}
               onEdit={() => onOpenModalHandler(el)}
               linkTo={getLink({ ...el, type: 'Wikidata JSON' })}
+              inactive={!(el?.active === true)}
             />,
           );
         }
@@ -210,6 +213,7 @@ export default function IdentifiersComponent() {
               key={el.id}
               onEdit={() => onOpenModalHandler(el)}
               linkTo={getLink({ ...el, type: 'Siren' })}
+              inactive={!(el?.active === true)}
             />,
           );
           list.push(
@@ -221,6 +225,7 @@ export default function IdentifiersComponent() {
               icon="ri-fingerprint-2-line"
               key={el.id}
               onEdit={() => onOpenModalHandler(el)}
+              inactive={!(el?.active === true)}
             />,
           );
         }
