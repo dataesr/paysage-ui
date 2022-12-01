@@ -21,13 +21,27 @@ HCExportingData(Highcharts);
 export default function StructureRHPage() {
   const year = 2020;
   const { url } = useUrl('keynumbers');
-  const { data, error, isLoading } = useFetch(`${url}/biatss?filters[rentree]=${year}`);
+  const { data, error, isLoading } = useFetch(`${url}/biatss?filters[rentree]=${year}&limit=999999`);
+  let categories = [];
+  const dataCategoriesTmp = {};
+  data?.data.forEach((item) => {
+    const { categorie, effectif } = item;
+    if (!categories.includes(categorie)) {
+      categories.push(categorie);
+      dataCategoriesTmp[categorie] = 0;
+    }
+    dataCategoriesTmp[categorie] += effectif;
+  });
+  categories = categories.sort().map((item) => `Catégorie ${item}`);
+  const tmp = Object.keys(dataCategoriesTmp).sort();
+  const dataCategories = tmp.map((item) => ({ name: `Catégorie ${item}`, y: dataCategoriesTmp[item] }));
   const effectif = data?.data.reduce((accumulator, item) => accumulator + (item?.effectif || 0), 0);
 
   const renderLabs = () => data?.data.map((item) => (
     <Bloc isLoading={isLoading} error={error} data={data} noBadge>
       <BlocTitle as="h4">
-        {item?.etablissement_compos_lib || 'Nom non renseigné'}
+        {item?.corps_lib || 'Corps non renseigné'}
+        {item?.code_corps ? ` (${item.code_corps})` : ''}
       </BlocTitle>
       <BlocContent>
         <Row gutters>
@@ -38,19 +52,6 @@ export default function StructureRHPage() {
                 <Row alignItems="middle">
                   <Text spacing="mr-1v mb-0">
                     {item?.effectif || 'Non renseigné'}
-                  </Text>
-                </Row>
-              )}
-            />
-          </Col>
-          <Col n="12 md-4">
-            <Card
-              title="Corps"
-              descriptionElement={(
-                <Row alignItems="middle">
-                  <Text spacing="mr-1v mb-0">
-                    {item?.corps_lib || 'Non renseigné'}
-                    {item?.code_corps ? ` (${item.code_corps})` : ''}
                   </Text>
                 </Row>
               )}
@@ -75,18 +76,6 @@ export default function StructureRHPage() {
                 <Row alignItems="middle">
                   <Text spacing="mr-1v mb-0">
                     {item?.categorie || 'Non renseigné'}
-                  </Text>
-                </Row>
-              )}
-            />
-          </Col>
-          <Col n="12 md-4">
-            <Card
-              title="Type d'établissement"
-              descriptionElement={(
-                <Row alignItems="middle">
-                  <Text spacing="mr-1v mb-0">
-                    {item?.etablissement_type || 'Non renseigné'}
                   </Text>
                 </Row>
               )}
@@ -119,14 +108,11 @@ export default function StructureRHPage() {
         {`Ressources humaines BIATSS pour l'année ${year}`}
       </Title>
       <Bloc isLoading={isLoading} error={error} data={data} noBadge>
-        <BlocTitle as="h4">
-          Effectif
-        </BlocTitle>
         <BlocContent>
           <Row gutters>
             <Col className="print-12" n="12 md-4">
               <Card
-                title="BIATSS"
+                title="Effectif"
                 descriptionElement={(
                   <Row alignItems="middle">
                     <Text spacing="mr-1v mb-0">
@@ -145,6 +131,64 @@ export default function StructureRHPage() {
                   label: 'corps_lib',
                   serieName: 'Effectif',
                   title: 'Corps',
+                })}
+              />
+            </Col>
+          </Row>
+          <Row gutters>
+            <Col className="print-12" n="12 md-6">
+              <HighchartsReact
+                highcharts={Highcharts}
+                options={{
+                  legend: { enabled: false },
+                  credits: { enabled: false },
+                  lang: {
+                    downloadCSV: 'Télécharger en CSV',
+                    downloadJPEG: 'Téléchager en JPEG',
+                    downloadPDF: 'Télécharger en PDF',
+                    downloadPNG: 'Télécharger en PNG',
+                    downloadSVG: 'Télécharger en SVG',
+                    downloadXLS: 'Télécharger en XLS',
+                    printChart: 'Imprimer le graphique',
+                    viewFullscreen: 'Plein écran',
+                  },
+                  xAxis: { categories },
+                  yAxis: { title: { text: 'Effectif' } },
+                  exporting: {
+                    buttons: {
+                      contextButton: {
+                        menuItems: [
+                          'viewFullscreen', 'printChart', 'separator', 'downloadPNG', 'downloadJPEG', 'downloadPDF',
+                          'downloadSVG', 'separator', 'downloadCSV', 'downloadXLS', 'openInCloud',
+                        ],
+                      },
+                    },
+                  },
+                  chart: { type: 'column' },
+                  series: [{ data: dataCategories }],
+                  title: { text: 'Répartition des effectifs par catégorie' },
+                }}
+              />
+              {/* <HighchartsReact
+                highcharts={Highcharts}
+                options={getOptionsFromFacet({
+                  data: [{ categorie: 'A', y: 12 }, {  }] || [],
+                  facet: 'categorie',
+                  label: 'categorie',
+                  serieName: 'Effectif',
+                  title: 'Catégories',
+                })}
+              /> */}
+            </Col>
+            <Col className="print-12" n="12 md-6">
+              <HighchartsReact
+                highcharts={Highcharts}
+                options={getOptionsFromFacet({
+                  data: data?.data || [],
+                  facet: 'type_personnel',
+                  label: 'type_personnel',
+                  serieName: 'Effectif',
+                  title: 'Types de personnel',
                 })}
               />
             </Col>

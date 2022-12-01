@@ -130,7 +130,7 @@ function StructureByIdPage() {
                 Offre de formation
               </SideMenuLink>
               <SideMenuLink asLink={<RouterLink to="chiffres-cles/ressources-humaines" replace />}>
-                Ressources humaines
+                BIATSS
               </SideMenuLink>
               <SideMenuLink asLink={<RouterLink to="chiffres-cles/budget" replace />}>
                 Indicateurs financiers
