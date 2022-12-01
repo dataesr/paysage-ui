@@ -22,7 +22,7 @@ HCExportingData(Highcharts);
 export default function StructureRHPage() {
   const year = 2020;
   const { url } = useUrl('keynumbers');
-  const { data, error, isLoading } = useFetch(`${url}/biatss?filters[rentree]=${year}&limit=999999`);
+  const { data, error, isLoading } = useFetch(`${url}/biatss?filters[rentree]=${year}&limit=0`);
 
   const commonOptions = {
     legend: { enabled: false },
