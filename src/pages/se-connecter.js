@@ -6,11 +6,9 @@ import {
 import Button from '../components/button';
 import useAuth from '../hooks/useAuth';
 import { MAIL_REGEXP, PASSWORD_REGEXP, OTP_REGEXP } from '../utils/auth';
-import useNotice from '../hooks/useNotice';
 
 export default function SignIn() {
   const navigate = useNavigate();
-  const { notice } = useNotice();
   const { requestSignInEmail, signin } = useAuth();
   const [step, setStep] = useState(1);
   const [otp, setOtp] = useState('');
@@ -25,15 +23,19 @@ export default function SignIn() {
   const requestOtp = async (e) => {
     e.preventDefault();
     if (validateEmail(email) && (validatePassword(password) === true)) {
-      const { message } = await requestSignInEmail({ email, password });
-      if (message.startsWith('Un nouveau code')) { setStep(2); } else { setError(message); }
+      const response = await requestSignInEmail({ email, password });
+      if (response?.message?.startsWith('Un nouveau code')) {
+        setError('');
+        setStep(2);
+      } else {
+        setError(response?.error || response?.message);
+      }
     } else { setError('Mauvaise combinaison utilisateur/mot de passe'); }
   };
   const handleSignIn = async (e) => {
     e.preventDefault();
-
     const response = await signin({ email, password, otp });
-    if (response.ok) { navigate('/'); } else { notice({ content: response.data.message }); }
+    if (response.ok) { navigate('/'); } else { setError(response?.data?.error); }
   };
 
   useEffect(() => { document.title = 'Paysage · Se connecter'; }, []);
@@ -63,7 +65,7 @@ export default function SignIn() {
                     currentStep={step}
                     steps={2}
                     currentTitle={(step === 1) ? 'Identifiants de connexion' : 'Validation du code reçu par email'}
-                    nextStepTitle={(step === 1) && 'Validation du code reçu par email'}
+                    nextStepTitle={(step === 1) ? 'Validation du code reçu par email' : ''}
                   />
                 </Col>
               </Row>
@@ -118,12 +120,13 @@ export default function SignIn() {
               { (step === 2) && (
                 <Row justifyContent="center">
                   <Col>
+                    {(error) && <Alert description={error} type="error" />}
                     <form onSubmit={handleSignIn}>
                       <TextInput
                         required
                         label="Saisissez le code à 6 chiffres reçu par email"
                         value={otp}
-                        onChange={(e) => setOtp(e.target.value)}
+                        onChange={(e) => setOtp(e.target.value.trim())}
                         onBlur={validateOtp}
                       />
                       <Row spacing="my-2w">
