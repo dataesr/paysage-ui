@@ -8,7 +8,7 @@ function Error500() {
     <>
       <Title as="h1" look="h1">Erreur inattendue</Title>
       <Text size="sm" className="fr-mb-3w">Erreur 500</Text>
-      <Text size="lead" className="fr-mb-3w">Essayez de rafraichir la page ou bien ressayez plus tard.</Text>
+      <Text size="lead" className="fr-mb-3w">Essayez de rafraîchir la page ou bien réessayez plus tard.</Text>
       <Text size="sm" className="fr-mb-5w">
         Désolé, le service rencontre un problème, nous travaillons pour le résoudre le plus rapidement possible.
       </Text>
@@ -20,13 +20,13 @@ function Error404() {
     <>
       <Title as="h1" look="h1">Page non trouvée</Title>
       <Text size="sm" className="fr-mb-3w">Erreur 404</Text>
-      <Text size="lead" className="fr-mb-3w">La page que vous cherchez est introuvable. Excusez-nous pour la gène occasionnée.</Text>
+      <Text size="lead" className="fr-mb-3w">La page que vous cherchez est introuvable. Excusez-nous pour la gêne occasionnée.</Text>
       <Text size="sm" className="fr-mb-5w">
-        Si vous avez tapé l'adresse web dans le navigateur, vérifiez qu'elle est correcte. La page n’est peut-être plus disponible.
+        Si vous avez tapé l'adresse web dans le navigateur, vérifiez qu'elle est correcte. La page n'est peut-être plus disponible.
         <br />
-        Dans ce cas, pour continuer votre visite vous pouvez consulter notre page d’accueil, ou effectuer une recherche avec notre moteur de recherche en haut de page.
+        Dans ce cas, pour continuer votre visite, vous pouvez consulter notre page d'accueil, ou effectuer une recherche avec notre moteur de recherche en haut de page.
         <br />
-        Sinon contactez-nous pour que l’on puisse vous rediriger vers la bonne information.
+        Sinon contactez-nous pour que l'on puisse vous rediriger vers la bonne information.
       </Text>
     </>
   );
