@@ -8,7 +8,7 @@ export default function StructurePrixEtRecompensesPage() {
     <>
       <RelationsByTag
         tag={LAUREAT}
-        blocName="Prix et récompenses obtenues par la structure"
+        blocName="Prix et récompenses obtenus par la structure"
         resourceType="prices"
         relatedObjectTypes={['structures']}
         inverse

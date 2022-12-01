@@ -1,8 +1,8 @@
-// TODO: Put the form in /components/forms !?
 import { Breadcrumb, BreadcrumbItem, Col, Container, Row, TextInput, Title } from '@dataesr/react-dsfr';
 import { useState } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import api from '../utils/api';
+import useToast from '../hooks/useToast';
 
 import FormFooter from '../components/forms/form-footer';
 import useForm from '../hooks/useForm';
@@ -10,11 +10,10 @@ import useAuth from '../hooks/useAuth';
 
 function validate(body) {
   const validationErrors = {};
-  if (!body.name) { validationErrors.name = 'Votre nom est obligatoire.'; }
-  if (!body.email) { validationErrors.email = "L'email de contact est obligatoire."; }
-  if (!body.message) { validationErrors.message = 'Veuillez écrire ici votre message'; }
+  if (!body.message) { validationErrors.message = 'Veuillez écrire votre message'; }
   return validationErrors;
 }
+
 function sanitize(form) {
   const fields = [
     'name',
@@ -29,27 +28,30 @@ function sanitize(form) {
 }
 
 export default function ContactPage() {
-  // Prefill form if user is connected
   const { viewer } = useAuth();
   const initialForm = viewer?.id
     ? { name: `${viewer.firstName} ${viewer.lastName}`.trim(), organization: viewer?.service, fonction: viewer?.position, email: viewer?.email }
     : {};
   const { form, updateForm, errors } = useForm(initialForm, validate);
   const [showErrors, setShowErrors] = useState(false);
+  const { toast } = useToast();
+  const navigate = useNavigate();
+  const [validationMessage, setValidationMessage] = useState('');
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (event) => {
+    event.preventDefault();
     if (Object.keys(errors).length > 0) return setShowErrors(true);
-    // TODO: Send sanitized body, not form
-    // eslint-disable-next-line
     const body = sanitize(form);
-    api.post('/contact', form)
-      .then((response) =>
-      // eslint-disable-next-line
-      { console.log(response); })
-      // eslint-disable-next-line
-      .catch((e) => { console.log(e); });
-    return null;
-    // TODO: Set a state 'step' to 2 and display success page if step = 2
+    api.post('/contacts', body)
+      .then((response) => {
+        setValidationMessage(response.data.message);
+        toast({ toastType: 'success', description: 'Votre message a bien été envoyé' });
+        navigate('/');
+      })
+      .catch(() => {
+        toast({ toastType: 'error', description: "Une erreur s'est produite" });
+      });
+    return validationMessage;
   };
 
   return (
@@ -76,16 +78,12 @@ export default function ContactPage() {
                   <TextInput
                     label="Votre nom et prénom"
                     value={form.name || ''}
-                    onChange={(e) => updateForm({ name: e.target.value })}
-                    required
-                    message={(showErrors && errors.name) ? errors.name : null}
-                    messageType={(showErrors && errors.name) ? 'error' : ''}
+                    disabled
                   />
                   <TextInput
                     label="Votre email"
                     value={form.email || ''}
-                    onChange={(e) => updateForm({ email: e.target.value })}
-                    required
+                    disabled
                     message={(showErrors && errors.email) ? errors.email : null}
                     messageType={(showErrors && errors.email) ? 'error' : ''}
                   />
