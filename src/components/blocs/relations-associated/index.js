@@ -5,9 +5,9 @@ import { Bloc, BlocContent, BlocTitle } from '../../bloc';
 import useFetch from '../../../hooks/useFetch';
 import useUrl from '../../../hooks/useUrl';
 
-export default function RelationsAssociated({ blocName, tag }) {
+export default function RelationsAssociated({ blocName, tag, sort }) {
   const { id: resourceId } = useUrl();
-  const url = `/relations?filters[relationTag]=${tag}&filters[otherAssociatedObjectIds]=${resourceId}&limit=200`;
+  const url = `/relations?filters[relationTag]=${tag}&filters[otherAssociatedObjectIds]=${resourceId}&limit=200&sort=${sort}`;
   const { data, isLoading, error } = useFetch(url);
 
   const renderCards = () => {
@@ -31,8 +31,10 @@ export default function RelationsAssociated({ blocName, tag }) {
 RelationsAssociated.propTypes = {
   blocName: PropTypes.string,
   tag: PropTypes.string.isRequired,
+  sort: PropTypes.string,
 };
 
 RelationsAssociated.defaultProps = {
   blocName: '',
+  sort: '-startDate',
 };
