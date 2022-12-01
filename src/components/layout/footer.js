@@ -1,8 +1,6 @@
 import { Link as RouterLink } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import {
-  FooterTop,
-  FooterTopCategory,
   Footer as FooterWrapper,
   FooterBody,
   FooterBottom,
@@ -21,7 +19,7 @@ export default function Footer({ switchTheme }) {
     <FooterWrapper>
       <FooterBody description="Paysage : Plateforme d'échanges et d'informations de la DGESIP et de la DGRI">
         <Logo
-          asLink={<Link href="https://www.enseignementsup-recherche.gouv.fr/fr" target="_blank" rel="noreferrer" />}
+          asLink={<Link href="https://www.enseignementsup-recherche.gouv.fr/fr" />}
           splitCharacter={9}
         >
           Ministère de l‘enseignement supérieur et de la recherche
@@ -64,14 +62,15 @@ export default function Footer({ switchTheme }) {
         <FooterLink target="_blank" href={`https://github.com/dataesr/paysage-ui/releases/tag/v${process.env.REACT_APP_VERSION}`}>
           {`Version de l'application v${process.env.REACT_APP_VERSION}`}
         </FooterLink>
-        <FooterLink onClick={() => setIsOpen(true)}>
+        <FooterLink>
           <button
+            onClick={() => setIsOpen(true)}
             type="button"
-            className="fr-fi-theme-fill fr-link--icon-left"
+            className="fr-footer__bottom-link fr-fi-theme-fill fr-link--icon-left"
             aria-controls="fr-theme-modal"
             data-fr-opened={isOpen}
           >
-            Paramètres d’affichage
+            Paramètres d'affichage
           </button>
         </FooterLink>
         <FooterCopy to="/">

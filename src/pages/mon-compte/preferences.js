@@ -63,7 +63,7 @@ export default function PreferencesPage() {
         <Row className="fr-pb-5w">
           <RadioGroup
             isInline
-            legend="Choisissez un mode d'affichage des page par défaut"
+            legend="Choisissez un mode d'affichage des pages par défaut"
             value={JSON.parse(localStorage.getItem('prefers-edit-mode'))}
             onChange={(value) => {
               localStorage.setItem('prefers-edit-mode', value);

@@ -1,19 +1,18 @@
+// TODO: Put the form in /components/forms !?
 import { Breadcrumb, BreadcrumbItem, Col, Container, Row, TextInput, Title } from '@dataesr/react-dsfr';
-import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import api from '../utils/api';
 
 import FormFooter from '../components/forms/form-footer';
 import useForm from '../hooks/useForm';
+import useAuth from '../hooks/useAuth';
 
 function validate(body) {
   const validationErrors = {};
   if (!body.name) { validationErrors.name = 'Votre nom est obligatoire.'; }
   if (!body.email) { validationErrors.email = "L'email de contact est obligatoire."; }
   if (!body.message) { validationErrors.message = 'Veuillez écrire ici votre message'; }
-  const priority = parseInt(body.priority, 10);
-  if (priority > 99 || priority < 1) { validationErrors.for = 'Doit être compris en 1 (priorité forte) et 99 (priorité faible)'; }
   return validationErrors;
 }
 function sanitize(form) {
@@ -26,30 +25,31 @@ function sanitize(form) {
   ];
   const body = {};
   Object.keys(form).forEach((key) => { if (fields.includes(key)) { body[key] = form[key]; } });
-  body.priority = parseInt(body.priority, 10);
   return body;
 }
 
-export default function ContactPage({ onSave }) {
-  const { form, updateForm, errors } = useForm({}, validate);
+export default function ContactPage() {
+  // Prefill form if user is connected
+  const { viewer } = useAuth();
+  const initialForm = viewer?.id
+    ? { name: `${viewer.firstName} ${viewer.lastName}`.trim(), organization: viewer?.service, fonction: viewer?.position, email: viewer?.email }
+    : {};
+  const { form, updateForm, errors } = useForm(initialForm, validate);
   const [showErrors, setShowErrors] = useState(false);
 
-  // const handleSubmit = () => {
-  // if (Object.keys(errors).length > 0) return setShowErrors(true);
-  //   const body = sanitize(form);
-  // return onSave(body, id);
-  // };
-
-  const handleSubmit = async (event) => {
-    event.preventDefault();
+  const handleSubmit = async () => {
     if (Object.keys(errors).length > 0) return setShowErrors(true);
+    // TODO: Send sanitized body, not form
+    // eslint-disable-next-line
     const body = sanitize(form);
     api.post('/contact', form)
       .then((response) =>
       // eslint-disable-next-line
       { console.log(response); })
+      // eslint-disable-next-line
       .catch((e) => { console.log(e); });
     return null;
+    // TODO: Set a state 'step' to 2 and display success page if step = 2
   };
 
   return (
@@ -128,7 +128,3 @@ export default function ContactPage({ onSave }) {
     </Container>
   );
 }
-
-ContactPage.propTypes = {
-  onSave: PropTypes.func.isRequired,
-};
