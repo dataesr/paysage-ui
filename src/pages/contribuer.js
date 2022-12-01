@@ -39,7 +39,8 @@ export default function ContributePage() {
     { type: 'structures', icon: 'ri-building-line', name: 'Ajouter une structure', url: '/structures/ajouter' },
     { type: 'persons', icon: 'ri-user-3-line', name: 'Ajouter une personne', url: '/personnes/ajouter' },
     { type: 'prices', icon: 'ri-award-line', name: 'Ajouter un prix', url: '/prix/ajouter' },
-    { type: 'projects', icon: 'ri-booklet-line', name: 'Ajouter un projet', url: '/projets/ajouter' },
+    // TODO: Restore projects
+    // { type: 'projects', icon: 'ri-booklet-line', name: 'Ajouter un projet', url: '/projets/ajouter' },
     { type: 'categories', icon: 'ri-price-tag-3-line', name: 'Ajouter une catégorie', url: '/categories/ajouter' },
     { type: 'terms', icon: 'ri-hashtag', name: 'Ajouter un terme', url: '/termes/ajouter' },
   ];

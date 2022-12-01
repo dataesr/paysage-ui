@@ -34,13 +34,13 @@ export default function LegalCategoriesForm({ id, data, onSave, onDelete }) {
   };
 
   const sectorOptions = [
-    { value: null, label: "Selectionner un type d'objet" },
+    { value: null, label: "Sélectionner un type d'objet" },
     { value: 'public', label: 'Public' },
     { value: 'privé', label: 'Privé' },
     { value: 'sans objet', label: 'Sans objet' },
   ];
   const legalPersonalityOptions = [
-    { value: null, label: "Selectionner un type d'objet" },
+    { value: null, label: "Sélectionner un type d'objet" },
     { value: 'personne morale de droit public', label: 'Personne morale de droit public' },
     { value: 'personne morale de droit privé', label: 'Personne morale de droit privé' },
     { value: 'organisation internationale', label: 'Organisation internationale' },

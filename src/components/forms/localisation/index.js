@@ -26,8 +26,8 @@ function validate(body) {
 
 function sanitize(form) {
   const fields = [
-    'cityId', 'city', 'distributionStatement', 'address', 'postOfficeBoxNumber', 'postalCode',
-    'locality', 'place', 'country', 'telephone', 'coordinates', 'startDate', 'endDate',
+    'address', 'city', 'cityId', 'coordinates', 'country', 'distributionStatement', 'endDate',
+    'locality', 'place', 'postalCode', 'postOfficeBoxNumber', 'startDate', 'telephone',
   ];
   const body = {};
   Object.keys(form).forEach((key) => { if (fields.includes(key)) { body[key] = form[key]; } });

@@ -80,7 +80,7 @@ function PersonByIdPage() {
             </SideMenuLink>
             <SideMenuLink asLink={<RouterLink to="mandats" replace />}>
               <Icon name="ri-building-line" size="1x" />
-              Rôles et Mandats
+              Rôles et mandats
             </SideMenuLink>
             <SideMenuLink asLink={<RouterLink to="evenements" replace />}>
               <Icon name="ri-calendar-line" size="1x" />
@@ -98,13 +98,14 @@ function PersonByIdPage() {
               <Icon name="ri-git-repository-line" size="1x" />
               Textes officiels
             </SideMenuLink>
-            <SideMenuLink asLink={<RouterLink to="projets" replace />}>
+            {/* TODO: Restore projects */}
+            {/* <SideMenuLink asLink={<RouterLink to="projets" replace />}>
               <Icon name="ri-booklet-line" size="1x" />
               Projets
-            </SideMenuLink>
+            </SideMenuLink> */}
             <SideMenuLink asLink={<RouterLink to="prix-et-recompenses" replace />}>
               <Icon name="ri-award-line" size="1x" />
-              Prix & récompenses
+              Prix et récompenses
             </SideMenuLink>
             <SideMenuLink asLink={<RouterLink to="elements-lies" replace />}>
               <Icon name="ri-links-line" size="1x" />
@@ -209,7 +210,7 @@ function PersonByIdPage() {
                   <Checkbox
                     checked={form.mandats}
                     onChange={(e) => updateForm({ mandats: e.target.checked })}
-                    label="Rôles et Mandats"
+                    label="Rôles et mandats"
                   />
                   <Checkbox
                     checked={form.evenements}
@@ -231,10 +232,16 @@ function PersonByIdPage() {
                     onChange={(e) => updateForm({ textes: e.target.checked })}
                     label="Textes officiels"
                   />
+                  {/* TODO: Restore projects */}
+                  {/* <Checkbox
+                    checked={form.projets}
+                    onChange={(e) => updateForm({ projets: e.target.checked })}
+                    label="Projets"
+                  /> */}
                   <Checkbox
                     checked={form.prix}
                     onChange={(e) => updateForm({ prix: e.target.checked })}
-                    label="Prix & récompenses"
+                    label="Prix et récompenses"
                   />
                   <Checkbox
                     checked={form.elements}
