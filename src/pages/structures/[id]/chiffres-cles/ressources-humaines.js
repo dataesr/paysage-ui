@@ -88,7 +88,7 @@ export default function StructureRHPage() {
   const dataTypes = countStaffByField({ fieldName: 'type_personnel', label: (item) => capitalize(item) });
   const dataCorps = countStaffByField({ fieldName: 'code_corps', label: (item, result) => result[item].corps_lib, extraField: 'corps_lib' });
 
-  const renderLabs = () => data?.data.filter((item) => item.code_corps === 'ASI').map((item) => (
+  const renderLabs = () => data?.data.map((item) => (
     <Bloc isLoading={isLoading} error={error} data={data} noBadge>
       <BlocTitle as="h4">
         {item?.corps_lib || 'Corps non renseigné'}
