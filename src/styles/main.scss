@@ -101,11 +101,19 @@ HR {
   right: .25rem;
 }
 
-$objects: structures, persons, prices, terms, projects, categories, legal-categories, supervising-ministers;
+$objects: structures, persons, prices, terms, projects, categories, legal-categories, supervising-ministers, official-texts;
 
 @each $object in $objects {
   .card-#{$object} {
     border-left: .25rem solid var(--#{$object}-color) !important;
+      .fr-card__start {
+        .fr-card__detail {
+          color: var(--#{$object}-color) !important;
+        }
+      }
+  }
+  .card-#{$object}--bottom {
+    border-bottom: .25rem solid var(--#{$object}-color) !important;
       .fr-card__start {
         .fr-card__detail {
           color: var(--#{$object}-color) !important;
