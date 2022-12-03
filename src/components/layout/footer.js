@@ -11,8 +11,10 @@ import {
   Logo,
   Text,
 } from '@dataesr/react-dsfr';
+import useAuth from '../../hooks/useAuth';
 
 export default function Footer({ switchTheme }) {
+  const { viewer } = useAuth();
   const { isOpen, setIsOpen } = switchTheme;
 
   return (
@@ -50,9 +52,11 @@ export default function Footer({ switchTheme }) {
         <FooterLink asLink={<RouterLink to="/projet-et-equipe" />}>
           L'équipe et son projet
         </FooterLink>
-        <FooterLink asLink={<RouterLink to="/nous-contacter" />}>
-          Nous contacter
-        </FooterLink>
+        {viewer?.id && (
+          <FooterLink asLink={<RouterLink to="/nous-contacter" />}>
+            Nous contacter
+          </FooterLink>
+        )}
         <FooterLink href="#">
           Mentions légales
         </FooterLink>

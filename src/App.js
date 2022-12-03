@@ -86,7 +86,6 @@ function App() {
         <Route path="/mot-de-passe-oublie" element={<Passwordless />} />
         <Route path="/ressources-externes" element={<RessourcesExternesPage />} />
         <Route path="/aide" element={<HelpPage />} />
-        <Route path="/nous-contacter" element={<ContactPage />} />
         <Route path="/projet-et-equipe" element={<ProjetEtEquipe />} />
         <Route path="*" element={<NotFound />} />
 
@@ -107,6 +106,7 @@ function App() {
 
         <Route element={<ProtectedRoute />}>
           <Route path="/" element={<HomePage />} />
+          <Route path="/nous-contacter" element={<ContactPage />} />
           <Route path="/mon-compte" element={<AccountPage />}>
             <Route path="" element={<Navigate to="/mon-compte/profile" replace />} />
             <Route path="profile" element={<ProfilePage />} />
