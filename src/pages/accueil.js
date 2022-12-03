@@ -135,54 +135,52 @@ export default function HomePage() {
 
   const cardsToPrint = (lastCreations?.length > MAX_LAST_CREATIONS_CARDS) ? lastCreations.slice(0, MAX_LAST_CREATIONS_CARDS) : lastCreations;
   return (
-    <Container spacing="mt-5w" as="main">
-      <Row>
-        <Title as="h2">
-          Paysage de l'ESR
-        </Title>
-      </Row>
-      <Row className="fr-pb-8w">
-        <SearchBar
-          size="lg"
-          buttonLabel="Rechercher"
-          value={query}
-          label="Rechercher dans Paysage"
-          placeholder="Rechercher..."
-          onChange={(e) => setQuery(e.target.value)}
-          options={options || []}
-          optionsIcon="ri-arrow-right-line"
-          onSearch={handleSearch}
-          onSelect={handleSearchRedirection}
-          isSearching={false}
-          className="fullwidth"
-        />
-      </Row>
-      {(lastCreations?.length) ? (
-        <>
+    <Container fluid>
+      <Container fluid className="search-bg" spacing="py-5w mb-4w">
+        <Container>
           <Row>
             <Title as="h2">
-              <Icon name="ri-flashlight-line" size="1x" />
-              Derniers ajouts
+              Paysage de l'ESR
             </Title>
           </Row>
-          <Row gutters className="fr-pb-8w">
-            {cardsToPrint.map((element) => <Card key={element.id} item={element} />)}
+          <Row className="fr-pb-4w">
+            <SearchBar
+              size="lg"
+              buttonLabel="Rechercher"
+              value={query}
+              label="Rechercher dans Paysage"
+              placeholder="Rechercher..."
+              onChange={(e) => setQuery(e.target.value)}
+              options={options || []}
+              optionsIcon="ri-arrow-right-line"
+              onSearch={handleSearch}
+              onSelect={handleSearchRedirection}
+              isSearching={false}
+              className="fullwidth"
+            />
           </Row>
-        </>
-      ) : <PageSpinner />}
-      {(mostImportantCategories?.length) ? (
-        <>
-          <Row>
-            <Title as="h2">
-              <Icon name="ri-file-list-3-line" size="1x" />
-              Listes d'établissements
-            </Title>
-          </Row>
-          <Row gutters className="fr-pb-8w">
-            {mostImportantCategories.map((element) => <CardCategoriesEtablissement key={element.id} item={element} />)}
-          </Row>
-        </>
-      ) : <PageSpinner />}
+        </Container>
+      </Container>
+      <Container>
+        <Row>
+          <Title as="h2">
+            <Icon name="ri-flashlight-line" size="1x" />
+            Derniers ajouts
+          </Title>
+        </Row>
+        <Row gutters className="fr-pb-8w">
+          {(lastCreations?.length) ? cardsToPrint.map((element) => <Card key={element.id} item={element} />) : <PageSpinner />}
+        </Row>
+        <Row>
+          <Title as="h2">
+            <Icon name="ri-file-list-3-line" size="1x" />
+            Listes d'établissements
+          </Title>
+        </Row>
+        <Row gutters className="fr-pb-8w">
+          {(mostImportantCategories?.length) ? mostImportantCategories.map((element) => <CardCategoriesEtablissement key={element.id} item={element} />) : <PageSpinner />}
+        </Row>
+      </Container>
     </Container>
   );
 }

@@ -113,6 +113,9 @@ $objects: structures, persons, prices, terms, projects, categories, legal-catego
       }
   }
 }
+.search-bg {
+  background: var(--grey-card);
+}
 
 .turngrey {
   filter: brightness(70%);
