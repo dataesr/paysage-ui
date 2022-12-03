@@ -8,8 +8,9 @@ import useSearch from '../hooks/useSearch';
 import api from '../utils/api';
 import { SEARCH_TYPES } from '../utils/constants';
 import { toString } from '../utils/dates';
-import { getRelatedObjectName, getRelatedObjectUrl } from '../utils/parse-related-element';
+import { getRelatedObjectName } from '../utils/parse-related-element';
 import useDebounce from '../hooks/useDebounce';
+import { CATEGORIE_PARENT } from '../utils/relations-tags';
 
 const MAX_LAST_CREATIONS_CARDS = 12;
 
@@ -25,14 +26,13 @@ const icons = {
 
 function Card({ item }) {
   const displayName = getRelatedObjectName(item);
-  const href = getRelatedObjectUrl(item);
   const { createdBy: user } = item;
   return (
     <Col n="12 lg-4" as="li" key={item.id}>
       <Tile horizontal color={`var(--${item.collection}-color)`}>
         <div className="fr-tile__body">
           <p className="fr-tile__title">
-            <Link className="fr-tile__link fr-link--md" to={href}>
+            <Link className="fr-tile__link fr-link--md" to={`/${item.collection}/${item.id}`}>
               <Icon name={icons[item.collection]} size="1x" color={`var(--${item.collection}-color)`} />
               {displayName}
             </Link>
@@ -50,6 +50,26 @@ function Card({ item }) {
   );
 }
 Card.propTypes = {
+  item: PropTypes.object.isRequired,
+};
+
+function CardCategoriesEtablissement({ item }) {
+  return (
+    <Col n="12 lg-4" as="li" key={item.id}>
+      <Tile horizontal color={`var(--${item.collection}-color)`}>
+        <div className="fr-tile__body">
+          <p className="fr-tile__title">
+            <Link className="fr-tile__link fr-link--md" to={`${item.href}/elements-lies`}>
+              <Icon name={icons[item.collection]} size="1x" color={`var(--${item.collection}-color)`} />
+              {item.displayName}
+            </Link>
+          </p>
+        </div>
+      </Tile>
+    </Col>
+  );
+}
+CardCategoriesEtablissement.propTypes = {
   item: PropTypes.object.isRequired,
 };
 
@@ -82,18 +102,38 @@ function useFetchLastCreations() {
   return data;
 }
 
+function useFetchMostImportantCategories() {
+  const [data, setData] = useState(null);
+
+  useEffect(() => {
+    const abortController = new AbortController();
+    const getMostImportantCategories = async () => {
+      const categories = await api
+        .get(`/relations?filters[relatedObjectId]=j7jS2&filters[relationTag]=${CATEGORIE_PARENT}&sort=resource.priority`, {}, { signal: abortController.signal })
+        .then((response) => response?.data?.data?.map((element) => ({ ...element.resource, collection: 'categories' })))
+        .catch(() => []);
+      setData(categories);
+    };
+    getMostImportantCategories();
+    return () => abortController.abort();
+  }, []);
+
+  return data;
+}
+
 export default function HomePage() {
   const navigate = useNavigate();
   const [query, setQuery] = useState('');
   const debouncedQuery = useDebounce(query, 500);
-  const data = useFetchLastCreations();
+  const lastCreations = useFetchLastCreations();
+  const mostImportantCategories = useFetchMostImportantCategories();
   const { data: options } = useSearch(SEARCH_TYPES, debouncedQuery);
   useEffect(() => { document.title = 'Paysage · Accueil'; }, []);
 
   const handleSearchRedirection = ({ id, type }) => navigate(`/${type}/${id}`);
   const handleSearch = () => navigate(`rechercher?query=${query}`);
 
-  const cardsToPrint = (data?.length > MAX_LAST_CREATIONS_CARDS) ? data.slice(0, MAX_LAST_CREATIONS_CARDS) : data;
+  const cardsToPrint = (lastCreations?.length > MAX_LAST_CREATIONS_CARDS) ? lastCreations.slice(0, MAX_LAST_CREATIONS_CARDS) : lastCreations;
   return (
     <Container spacing="mt-5w" as="main">
       <Row className="fr-pb-5w">
@@ -115,13 +155,23 @@ export default function HomePage() {
           className="fullwidth"
         />
       </Row>
-      {(data?.length) ? (
+      {(lastCreations?.length) ? (
         <>
           <Row className="fr-pb-5w">
             <Title as="h2">Derniers ajouts</Title>
           </Row>
           <Row gutters className="fr-pb-5w">
             {cardsToPrint.map((element) => <Card key={element.id} item={element} />)}
+          </Row>
+        </>
+      ) : <PageSpinner />}
+      {(mostImportantCategories?.length) ? (
+        <>
+          <Row className="fr-pb-5w">
+            <Title as="h2">Listes d'établissements</Title>
+          </Row>
+          <Row gutters className="fr-pb-5w">
+            {mostImportantCategories.map((element) => <CardCategoriesEtablissement key={element.id} item={element} />)}
           </Row>
         </>
       ) : <PageSpinner />}
