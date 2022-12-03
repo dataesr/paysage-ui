@@ -136,10 +136,12 @@ export default function HomePage() {
   const cardsToPrint = (lastCreations?.length > MAX_LAST_CREATIONS_CARDS) ? lastCreations.slice(0, MAX_LAST_CREATIONS_CARDS) : lastCreations;
   return (
     <Container spacing="mt-5w" as="main">
-      <Row className="fr-pb-5w">
-        <Title as="h2">Paysage de l'ESR</Title>
+      <Row>
+        <Title as="h2">
+          Paysage de l'ESR
+        </Title>
       </Row>
-      <Row className="fr-pb-5w">
+      <Row className="fr-pb-8w">
         <SearchBar
           size="lg"
           buttonLabel="Rechercher"
@@ -157,20 +159,26 @@ export default function HomePage() {
       </Row>
       {(lastCreations?.length) ? (
         <>
-          <Row className="fr-pb-5w">
-            <Title as="h2">Derniers ajouts</Title>
+          <Row>
+            <Title as="h2">
+              <Icon name="ri-flashlight-line" size="1x" />
+              Derniers ajouts
+            </Title>
           </Row>
-          <Row gutters className="fr-pb-5w">
+          <Row gutters className="fr-pb-8w">
             {cardsToPrint.map((element) => <Card key={element.id} item={element} />)}
           </Row>
         </>
       ) : <PageSpinner />}
       {(mostImportantCategories?.length) ? (
         <>
-          <Row className="fr-pb-5w">
-            <Title as="h2">Listes d'établissements</Title>
+          <Row>
+            <Title as="h2">
+              <Icon name="ri-file-list-3-line" size="1x" />
+              Listes d'établissements
+            </Title>
           </Row>
-          <Row gutters className="fr-pb-5w">
+          <Row gutters className="fr-pb-8w">
             {mostImportantCategories.map((element) => <CardCategoriesEtablissement key={element.id} item={element} />)}
           </Row>
         </>
