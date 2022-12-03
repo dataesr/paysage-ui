@@ -16,6 +16,9 @@ export function getRelatedObjectName(relatedObject) {
   case 'legal-categories':
     relatedObjectName = relatedObject.longNameFr;
     break;
+  case 'official-texts':
+    relatedObjectName = relatedObject.title;
+    break;
   default:
     relatedObjectName = relatedObject.usualNameFr;
     break;
