@@ -16,8 +16,8 @@ const regexpValidateSocialMedia = (type) => {
   const validator = {
     Dailymotion: [/^(https:\/\/)?(www.)?dailymotion.com\/[A-Za-z0-9/:%_+.,#?!@&=-]+$/, 'https://www.dailymotion.com/<compte>'],
     Facebook: [/^(https:\/\/)?(www.)?facebook.com\/[A-Za-z0-9/:%_+.,#?!@&=-]+$/, 'https://www.facebook.com/<compte>'],
-    Github: [/^(https:\/\/)?(www.)?github.com\/0-9A-Za-z?$/, 'https://github.com/<compte>?tab=repositories'],
-    Instagram: [/^(https:\/\/)?(www.)?instagram.com\/([0-9A-Za-z_]?)\/$/, 'https://www.instagram.com/<compte>/?hl=fr'],
+    Github: [/^(https:\/\/)?(www.)?github.com\/[A-Za-z0-9/:%_+.,#?!@&=-]+$/, 'https://github.com/<compte>?tab=repositories'],
+    Instagram: [/^(https:\/\/)?(www.)?instagram.com\/[A-Za-z0-9/:%_+.,#?!@&=-]+$/, 'https://www.instagram.com/<compte>/'],
     Twitter: [/^(https:\/\/)?(www.)?twitter.com\/[0-9A-Za-z_]{1,15}$/, 'https://twitter.com/<compte>'],
     Youtube: [/^(https:\/\/)?(www.)?youtube.com\/[A-Za-z0-9/:%_+.,#?!@&=-]+$/, 'https://www.youtube.com/channel/<chaine>'],
     Linkedin: [/^(https:\/\/)?(www.)?linkedin.com\/.+\/.+\/$/, 'https://www.linkedin.com/<profil>'],

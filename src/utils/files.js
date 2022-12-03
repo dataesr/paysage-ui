@@ -20,6 +20,6 @@ export async function downloadFile(file) {
       link.setAttribute('download', file.originalName);
       document.body.appendChild(link);
       link.click();
-      link.body.removeChild(link);
+      document.body.removeChild(link);
     });
 }
