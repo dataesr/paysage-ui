@@ -11,6 +11,8 @@ import { toString } from '../utils/dates';
 import { getRelatedObjectName } from '../utils/parse-related-element';
 import useDebounce from '../hooks/useDebounce';
 import { CATEGORIE_PARENT } from '../utils/relations-tags';
+import KeyValueCard from '../components/card/key-value-card';
+import { capitalize } from '../utils/strings';
 
 const MAX_LAST_CREATIONS_CARDS = 12;
 
@@ -73,33 +75,36 @@ CardCategoriesEtablissement.propTypes = {
   item: PropTypes.object.isRequired,
 };
 
-const fetchLastCreations = async (collection, { signal }) => {
+const fetchLastCreationsWithMetrics = async (collection, { signal }) => {
   const params = 'sort=createdAt&limit=10';
   const response = await api
     .get(`/${collection}?${params}`, {}, { signal })
     .catch(() => ({ ok: false }));
   if (response.ok) {
     const data = response.data?.data?.map((element) => ({ ...element, collection }));
-    return data;
+    const metric = { [collection]: response?.data?.totalCount };
+    return { data, metric };
   }
-  return [];
+  return { data: [], metric: {} };
 };
 
 function useFetchLastCreations() {
-  const [data, setData] = useState(null);
+  const [data, setData] = useState([]);
+  const [metrics, setMetrics] = useState({});
 
   useEffect(() => {
     const abortController = new AbortController();
-    const collections = ['structures', 'categories', 'persons', 'prices', 'terms', 'official-texts', 'projects'];
+    const collections = ['structures', 'persons', 'prices', 'official-texts', 'categories', 'terms'];
     const getLastCreationsData = async () => {
-      const fetchedData = await Promise.all(collections.map((collection) => fetchLastCreations(collection, { signal: abortController.signal })));
-      setData(fetchedData.flat().sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)));
+      const fetchedData = await Promise.all(collections.map((collection) => fetchLastCreationsWithMetrics(collection, { signal: abortController.signal })));
+      setData(fetchedData.map((result) => result.data).flat().sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)));
+      setMetrics(fetchedData.map((result) => result.metric).reduce((result, current) => ({ ...result, ...current }), {}));
     };
     getLastCreationsData();
     return () => abortController.abort();
   }, []);
 
-  return data;
+  return [data, metrics];
 }
 
 function useFetchMostImportantCategories() {
@@ -121,18 +126,27 @@ function useFetchMostImportantCategories() {
   return data;
 }
 
+const objectMapping = {
+  structures: 'structures',
+  categories: 'catégories',
+  prices: 'prix',
+  terms: 'termes',
+  'official-texts': 'textes officiels',
+  persons: 'personnes',
+  projects: 'projets',
+};
+
 export default function HomePage() {
   const navigate = useNavigate();
   const [query, setQuery] = useState('');
   const debouncedQuery = useDebounce(query, 500);
-  const lastCreations = useFetchLastCreations();
+  const [lastCreations, metrics] = useFetchLastCreations();
   const mostImportantCategories = useFetchMostImportantCategories();
   const { data: options } = useSearch(SEARCH_TYPES, debouncedQuery);
   useEffect(() => { document.title = 'Paysage · Accueil'; }, []);
 
   const handleSearchRedirection = ({ id, type }) => navigate(`/${type}/${id}`);
   const handleSearch = () => navigate(`rechercher?query=${query}`);
-
   const cardsToPrint = (lastCreations?.length > MAX_LAST_CREATIONS_CARDS) ? lastCreations.slice(0, MAX_LAST_CREATIONS_CARDS) : lastCreations;
   return (
     <Container fluid>
@@ -148,7 +162,6 @@ export default function HomePage() {
               size="lg"
               buttonLabel="Rechercher"
               value={query}
-              label="Rechercher dans Paysage"
               placeholder="Rechercher..."
               onChange={(e) => setQuery(e.target.value)}
               options={options || []}
@@ -158,6 +171,25 @@ export default function HomePage() {
               isSearching={false}
               className="fullwidth"
             />
+          </Row>
+          <Row>
+            <Title as="h3" look="h5" spacing="mb-0">
+              <Icon name="ri-dashboard-3-line" size="1x" />
+              Métriques
+            </Title>
+          </Row>
+          <Row gutters spacing="mb-2w">
+            {(Object.keys(metrics)?.length > 0) ? (Object.keys(metrics).map((k) => (
+              <Col key={k} n="6 sm-4 md-2">
+                <KeyValueCard
+                  // linkIn={`/rechercher/${objectMapping[k]}?page=1&query=`}
+                  cardKey={capitalize(objectMapping[k])}
+                  cardValue={metrics[k]}
+                  icon={icons[k]}
+                  className={`fr-enlarge-link card-${k}--bottom`}
+                />
+              </Col>
+            ))) : null}
           </Row>
         </Container>
       </Container>
