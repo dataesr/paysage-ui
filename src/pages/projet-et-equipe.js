@@ -2,8 +2,10 @@
 import { useEffect } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import { Breadcrumb, BreadcrumbItem, Container, Link, Text, Title } from '@dataesr/react-dsfr';
+import useHashScroll from '../hooks/useHashScroll';
 
 export default function ProjetEtEquipe() {
+  useHashScroll();
   useEffect(() => { document.title = 'Paysage · Projet & équipe'; }, []);
   return (
     <Container spacing="pb-6w">
