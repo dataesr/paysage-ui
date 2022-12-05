@@ -159,7 +159,7 @@ const SearchBar = forwardRef((props, ref) => {
               <Spinner size={40} />
             </div>
           )}
-          {(!isSearching && options.length && showOptions) ? (
+          {(!isSearching && options.length && showOptions && value) ? (
             <ul className={styles.list} onMouseLeave={() => setActiveSuggestionIndex(null)}>
               {options.map((option, i) => (
                 <li
