@@ -34,7 +34,7 @@ export default function Weblinks({ types, title }) {
   const { weblinks } = useEnums();
   const { notice } = useNotice();
   const options = types?.length
-    ? weblinks[apiObject]?.filter((type) => types.includes(type.value))
+    ? weblinks[apiObject]?.filter((type) => types?.includes(type?.value))
     : weblinks[apiObject];
 
   const onSaveHandler = async (body, itemId) => {
