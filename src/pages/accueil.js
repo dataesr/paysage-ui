@@ -182,11 +182,10 @@ export default function HomePage() {
             {(Object.keys(metrics)?.length > 0) ? (Object.keys(metrics).map((k) => (
               <Col key={k} n="6 sm-4 md-2">
                 <KeyValueCard
-                  // linkIn={`/rechercher/${objectMapping[k]}?page=1&query=`}
                   cardKey={capitalize(objectMapping[k])}
                   cardValue={metrics[k]}
                   icon={icons[k]}
-                  className={`fr-enlarge-link card-${k}--bottom`}
+                  className={`card-${k}--bottom`}
                 />
               </Col>
             ))) : null}

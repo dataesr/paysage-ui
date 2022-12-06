@@ -22,7 +22,7 @@ export default function RelationCard({ relation, inverse, onEdit }) {
   const navigate = useNavigate();
   const { editMode } = useEditMode();
   const toPrintRelation = inverse ? relation.resource : relation.relatedObject;
-  const isFinished = ((relation.current !== undefined) && !relation.current) || (!relation.active);
+  const isFinished = ((relation.current !== undefined) && !relation.current) || (relation.active === false);
   return (
     <div className="fr-card fr-card--xs fr-card--grey fr-card--no-border">
       <div className={`fr-card__body ${styles['card-body']} ${styles[`${toPrintRelation.collection}-border`]} ${isFinished && 'turngrey'}`}>
