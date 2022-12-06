@@ -47,6 +47,9 @@ function validate(body) {
   const errorMessage = {};
   if (!body?.url) errorMessage.url = "L'url du lien est obligatoire";
   if (!body?.type) errorMessage.type = 'Le type de lien est obligatoire';
+  if (body.type === 'jorfsearch' && !body.url.includes('https://jorfsearch.steinertriples.ch')) {
+    errorMessage.url = 'Veuillez saisir votre URL avec cet exemple : https://jorfsearch.steinertriples.ch/name/<votreNom>';
+  }
   const validationRule = regexpValidateWebSite?.[body.type];
   if (validationRule && !validationRule.test(body.url)) errorMessage.url = 'Veuillez vérifier que le lien vers le site soit correct.';
   return errorMessage;

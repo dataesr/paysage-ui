@@ -5,6 +5,18 @@ import './styles.module.scss';
 import Button from '../button';
 import useEditMode from '../../hooks/useEditMode';
 
+// SVG Logo import //
+
+import dailymotion from '../../assets/svg-logo/dailymotion.svg';
+import flickr from '../../assets/svg-logo/flickr.svg';
+import pinterest from '../../assets/svg-logo/pinterest.svg';
+import scoopit from '../../assets/svg-logo/scoop-it.svg';
+import scribd from '../../assets/svg-logo/scribd.svg';
+import snapchat from '../../assets/svg-logo/snapchat.svg';
+import tiktok from '../../assets/svg-logo/tiktok.svg';
+import tumblr from '../../assets/svg-logo/tumblr.svg';
+import vimeo from '../../assets/svg-logo/vimeo.svg';
+
 export default function SocialMediaCard({
   account,
   mediaName,
@@ -15,31 +27,22 @@ export default function SocialMediaCard({
   const renderIcon = (iconType) => {
     let iconColor = null;
     let rxIcon = null;
+    let svg = null;
 
     switch (iconType) {
+    case 'Dailymotion':
+      svg = dailymotion;
+      break;
     case 'Facebook':
       iconColor = 'var(--facebook-icon-color)';
       rxIcon = 'ri-facebook-fill';
       break;
+    case 'Flickr':
+      svg = flickr;
+      break;
     case 'Instagram':
       iconColor = 'var(--instagram-icon-color)';
       rxIcon = 'ri-instagram-fill';
-      break;
-    case 'Linkedin':
-      iconColor = 'var(--linkedin-icon-color)';
-      rxIcon = 'ri-linkedin-fill';
-      break;
-    case 'Twitter':
-      iconColor = 'var(--twitter-icon-color)';
-      rxIcon = 'ri-twitter-fill';
-      break;
-    case 'Twitch':
-      iconColor = 'var(--twitch-icon-color)';
-      rxIcon = 'ri-twitch-fill';
-      break;
-    case 'Youtube':
-      iconColor = 'var(--youtube-icon-color)';
-      rxIcon = 'ri-youtube-fill';
       break;
     case 'Github':
       iconColor = 'var(--github-icon-color)';
@@ -49,11 +52,48 @@ export default function SocialMediaCard({
       iconColor = 'var(--gitlab-icon-color)';
       rxIcon = 'ri-gitlab-fill';
       break;
+    case 'Linkedin':
+      iconColor = 'var(--linkedin-icon-color)';
+      rxIcon = 'ri-linkedin-fill';
+      break;
+    case 'Pinterest':
+      svg = pinterest;
+      break;
+    case 'Scoopit':
+      svg = scoopit;
+      break;
+    case 'Scribd':
+      svg = scribd;
+      break;
+    case 'Snapchat':
+      svg = snapchat;
+      break;
+    case 'Tiktok':
+      svg = tiktok;
+      break;
+    case 'Tumblr':
+      svg = tumblr;
+      break;
+    case 'Twitter':
+      iconColor = 'var(--twitter-icon-color)';
+      rxIcon = 'ri-twitter-fill';
+      break;
+    case 'Twitch':
+      iconColor = 'var(--twitch-icon-color)';
+      rxIcon = 'ri-twitch-fill';
+      break;
+    case 'Vimeo':
+      svg = vimeo;
+      break;
+    case 'Youtube':
+      iconColor = 'var(--youtube-icon-color)';
+      rxIcon = 'ri-youtube-fill';
+      break;
     default:
       break;
     }
-
-    return iconColor ? <Icon className="fr-mb-1w fr-pt-1w" name={rxIcon} size="3x" color={iconColor} /> : '';
+    return iconColor ? <div className="fr-card__content"><Icon className="fr-mb-1w fr-pt-1w" name={rxIcon} size="3x" color={iconColor} /></div>
+      : <img className="fr-card__content" style={{ width: '100px' }} src={svg} alt="logo" />;
   };
 
   return (

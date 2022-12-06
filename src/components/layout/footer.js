@@ -49,9 +49,11 @@ export default function Footer({ switchTheme }) {
         <FooterLink asLink={<RouterLink to="/aide" />}>
           Aide
         </FooterLink>
-        <FooterLink asLink={<RouterLink to="/projet-et-equipe" />}>
-          L'équipe et son projet
-        </FooterLink>
+        {viewer?.id && (
+          <FooterLink asLink={<RouterLink to="/projet-et-equipe" />}>
+            L'équipe et son projet
+          </FooterLink>
+        )}
         {viewer?.id && (
           <FooterLink asLink={<RouterLink to="/nous-contacter" />}>
             Nous contacter
