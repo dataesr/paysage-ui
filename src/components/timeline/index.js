@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import styles from './styles.module.scss';
 
-export function TimelineItem({ date, children }) {
+export function TimelineItem({ approximate, date, children }) {
   const options = {
     year: 'numeric',
     month: 'short',
@@ -12,8 +12,8 @@ export function TimelineItem({ date, children }) {
   return (
     <div className={`${styles['timeline-item']}`}>
       <div className={styles['timeline-date']}>
-        <span className="fr-h3 fr-mb-0">{day}</span>
-        <span className="fr-text--sm fr-mb-0">{month}</span>
+        {(approximate && day === '1') ? null : <span className="fr-h3 fr-mb-0">{day}</span>}
+        {(approximate && month === '1') ? null : <span className="fr-text--sm fr-mb-0">{month}</span>}
         <span className="fr-text--sm fr-mb-0">{year}</span>
       </div>
       <div className={styles['timeline-content']}>
@@ -23,7 +23,12 @@ export function TimelineItem({ date, children }) {
   );
 }
 
+TimelineItem.defaultProps = {
+  approximate: false,
+};
+
 TimelineItem.propTypes = {
+  approximate: PropTypes.bool,
   date: PropTypes.string.isRequired,
   children: PropTypes.node.isRequired,
 };
