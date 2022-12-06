@@ -19,9 +19,9 @@ export default function JournalOutlet() {
         {data.data.map((event) => (
           <Col n="12" key={JSON.stringify(event)}>
             <div className="flex flex--center">
-              <Avatar name={event.user.lastName} size="24px" src={event.user.avatar} />
+              <Avatar name={event.user?.lastName} size="24px" src={event.user?.avatar} />
               <Text spacing="ml-1v mb-0">
-                {`${event.user.firstName} ${event.user.lastName}`}
+                {`${event.user?.firstName} ${event.user?.lastName}`}
                 {' le '}
                 {toString(event.createdAt, true, true)}
                 {' a '}

@@ -5,8 +5,9 @@ import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import api from '../utils/api';
 import useToast from '../hooks/useToast';
 import FormFooter from '../components/forms/form-footer';
-import useForm from '../hooks/useForm';
 import useAuth from '../hooks/useAuth';
+import useForm from '../hooks/useForm';
+import useHashScroll from '../hooks/useHashScroll';
 
 function validate(body) {
   const validationErrors = {};
@@ -28,6 +29,7 @@ function sanitize(form) {
 }
 
 export default function ContactPage() {
+  useHashScroll();
   const { viewer } = useAuth();
   const initialForm = viewer?.id
     ? { name: `${viewer.firstName} ${viewer.lastName}`.trim(), organization: viewer?.service, fonction: viewer?.position, email: viewer?.email }

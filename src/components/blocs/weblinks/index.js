@@ -117,10 +117,10 @@ export default function Weblinks({ types, title }) {
             <div className="flex-col flex--center">
               {renderIcon(el.type)}
               <span className="fr-text fr-text--sm fr-text--bold fr-m-0 flex-col">
-                {el.url.includes('jorfsearch.steinertriples') ? (
+                {el.url?.includes('jorfsearch.steinertriples') ? (
                   <a
                     className="fr-mb-0 fr-text fr-text--sm text-center"
-                    href={el.url.replace('.fr', '.ch')}
+                    href={el.url?.replace('.fr', '.ch')}
                     target="_blank"
                     rel="noreferrer"
                   >
