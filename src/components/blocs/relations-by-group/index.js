@@ -17,7 +17,7 @@ export default function RelationsByGroup({ group, reloader }) {
   const { id: groupId, name: groupName, accepts: groupAccepts } = group;
   const { notice } = useNotice();
   const { id: resourceId, apiObject } = useUrl('relations-groups');
-  const url = `/relations?filters[relationsGroupId]=${groupId}`;
+  const url = `/relations?filters[relationsGroupId]=${groupId}&limit=100`;
   const { data, isLoading, error, reload } = useFetch(url);
   const [showModal, setShowModal] = useState(false);
   const [showListModal, setShowListModal] = useState(false);
