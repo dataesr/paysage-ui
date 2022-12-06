@@ -305,9 +305,9 @@ export default function MandateForm({ id, resourceType, relatedObjectTypes, data
           <Col n="12">
             <RadioGroup legend="Raison du mandat :" isInline>
               <Radio
-                label="élection"
-                onChange={() => updateForm({ mandateReason: 'élection' })}
-                checked={form.mandateReason === 'élection'}
+                label="Élection"
+                onChange={() => updateForm({ mandateReason: 'election' })}
+                checked={form.mandateReason === 'election'}
               />
               <Radio
                 label="Nomination"
