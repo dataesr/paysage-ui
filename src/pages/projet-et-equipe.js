@@ -4,9 +4,11 @@ import { Link as RouterLink } from 'react-router-dom';
 import { Breadcrumb, BreadcrumbItem, Card, CardDescription, CardHeader, CardImage, CardTitle, Col, Container, Highlight, Icon, Row, Text, Title } from '@dataesr/react-dsfr';
 import image1 from '../assets/paysage-image-1.png';
 import { Timeline, TimelineItem } from '../components/timeline';
+import useHashScroll from '../hooks/useHashScroll';
 
 export default function ProjetEtEquipe() {
   useEffect(() => { document.title = 'Paysage · Projet & équipe'; }, []);
+  useHashScroll();
   return (
     <Container spacing="pb-6w">
       <Breadcrumb>
@@ -23,7 +25,7 @@ export default function ProjetEtEquipe() {
             Paysage
           </Title>
           <Highlight size="lg">
-            capitalisons sur les connaissances de chacun pour la connaissance de tous
+            Capitalisons sur les connaissances de chacun pour la connaissance de tous
           </Highlight>
         </Col>
       </Row>

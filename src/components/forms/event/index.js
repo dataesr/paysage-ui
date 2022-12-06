@@ -135,10 +135,11 @@ export default function EventForm({ id, data, onSave, onDelete }) {
           <Col n="12" spacing="pb-2w">
             <TextInput
               label="Description de l'évènement"
-              value={form.description || ''}
-              onChange={(e) => updateForm({ description: e.target.value })}
               message={(showErrors && errors.description) ? errors.description : null}
               messageType={(showErrors && errors.description) ? 'error' : ''}
+              onChange={(e) => updateForm({ description: e.target.value })}
+              textarea
+              value={form.description || ''}
             />
           </Col>
           <Col n="12" spacing="pb-2w">

@@ -22,9 +22,10 @@ export default function RelationCard({ relation, inverse, onEdit }) {
   const navigate = useNavigate();
   const { editMode } = useEditMode();
   const toPrintRelation = inverse ? relation.resource : relation.relatedObject;
+  const isFinished = ((relation.current !== undefined) && !relation.current) || (!relation.active);
   return (
     <div className="fr-card fr-card--xs fr-card--grey fr-card--no-border">
-      <div className={`fr-card__body ${styles['card-body']} ${styles[`${toPrintRelation.collection}-border`]} ${((relation.current !== undefined) && !relation.current) && 'turngrey'}`}>
+      <div className={`fr-card__body ${styles['card-body']} ${styles[`${toPrintRelation.collection}-border`]} ${isFinished && 'turngrey'}`}>
         <div className="fr-card__content">
           <p className="fr-card__desc">
             {relation.relationType && (
@@ -54,11 +55,11 @@ export default function RelationCard({ relation, inverse, onEdit }) {
               <Icon iconPosition="right" name="ri-arrow-right-line" />
             </RouterLink>
           </p>
-          {((relation.current !== undefined) && !relation.current) && (
+          {isFinished ? (
             <div className={`fr-card__start ${styles['card-end']}`}>
               <Badge text="terminé" />
             </div>
-          )}
+          ) : ''}
           {(relation.startDateOfficialText?.id || relation.endDateOfficialText?.id) && (
             <div className={`fr-card__end ${styles['card-end']}`}>
               {relation.startDateOfficialText?.id && (

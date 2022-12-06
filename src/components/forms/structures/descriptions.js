@@ -31,17 +31,17 @@ export default function StructureDescriptionForm({ data, onSave }) {
         <Row gutters>
           <Col n="12">
             <TextInput
-              textarea
               label="Description française"
               onChange={(e) => updateForm({ descriptionFr: e.target.value })}
+              textarea
               value={form.descriptionFr}
             />
           </Col>
           <Col n="12">
             <TextInput
-              textarea
               label="Description anglaise"
               onChange={(e) => updateForm({ descriptionEn: e.target.value })}
+              textarea
               value={form.descriptionEn}
             />
           </Col>

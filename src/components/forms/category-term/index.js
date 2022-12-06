@@ -177,15 +177,17 @@ export default function CategoryTermsForm({ data, id, onDelete, onSave }) {
           <Col n="12 md-6">
             <TextInput
               label="Description en français"
-              value={form.descriptionFr || ''}
               onChange={(e) => updateForm({ descriptionFr: e.target.value })}
+              textarea
+              value={form.descriptionFr || ''}
             />
           </Col>
           <Col n="12 md-6">
             <TextInput
               label="Description en anglais"
-              value={form.descriptionEn || ''}
               onChange={(e) => updateForm({ descriptionEn: e.target.value })}
+              textarea
+              value={form.descriptionEn || ''}
             />
           </Col>
           <Col n="12"><Title as="h2" look="h5" spacing="mb-0">Priorité</Title></Col>

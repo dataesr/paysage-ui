@@ -66,6 +66,7 @@ export default function GroupForm({ id, data, onSave, onDelete }) {
               onChange={(e) => updateForm({ description: e.target.value })}
               message={(showErrors && errors.description) ? errors.description : null}
               messageType={(showErrors && errors.description) ? 'error' : ''}
+              textarea
             />
           </Col>
           <Col n="12" spacing="pb-3w">

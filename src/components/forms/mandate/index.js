@@ -21,8 +21,8 @@ import { parseRelatedElement } from '../../../utils/parse-related-element';
 import PaysageBlame from '../../paysage-blame';
 
 function sanitize(form) {
-  const fields = ['resourceId', 'relatedObjectId', 'relationTypeId', 'relationTag',
-    'startDateOfficialTextId', 'endDateOfficialTextId', 'startDate', 'endDate', 'mandateTemporary', 'mandateReason',
+  const fields = ['active', 'resourceId', 'relatedObjectId', 'relationTypeId', 'relationTag',
+    'startDateOfficialTextId', 'endDateOfficialTextId', 'startDate', 'endDate', 'endDatePrevisional', 'mandateTemporary', 'mandateReason',
     'mandateEmail', 'mandatePosition', 'mandatePrecision'];
   const body = {};
   Object.keys(form).forEach((key) => { if (fields.includes(key)) { body[key] = form[key]; } });
@@ -242,12 +242,20 @@ export default function MandateForm({ id, resourceType, relatedObjectTypes, data
               label="Date de début"
               onDateChange={((v) => updateForm({ startDate: v }))}
             />
-          </Col>
-          <Col n="12">
             <DateInput
               value={form.endDate || ''}
               label="Date de fin"
-              onDateChange={((v) => updateForm({ endDate: v }))}
+              onDateChange={((v) => updateForm({ endDate: v, active: null }))}
+            />
+            <Checkbox
+              label="Date de fin inconnue mais passée"
+              onChange={(e) => updateForm({ active: !e.target.checked })}
+              checked={form.active === false}
+            />
+            <DateInput
+              value={form.endDatePrevisional || ''}
+              label="Date de fin prévisionelle"
+              onDateChange={((v) => updateForm({ endDatePrevisional: v, active: null }))}
             />
           </Col>
           <Col n="12"><Title as="h3" look="h5" spacing="mb-0">Textes officiels</Title></Col>
@@ -285,13 +293,6 @@ export default function MandateForm({ id, resourceType, relatedObjectTypes, data
             <Title as="h3" look="h5" spacing="mb-0">
               Information du mandat
             </Title>
-          </Col>
-          <Col n="12">
-            <DateInput
-              value={form.endDatePrevisional || ''}
-              label="Date de fin prévisionelle"
-              onDateChange={((v) => updateForm({ endDatePrevisional: v }))}
-            />
           </Col>
           <Col n="12">
             <Checkbox

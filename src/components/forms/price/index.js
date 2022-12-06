@@ -64,22 +64,22 @@ export default function PriceForm({ id, data, onSave, onDelete }) {
           </Col>
           <Col n="12 md-6">
             <TextInput
-              textarea
               label="Description du prix en français"
-              value={form.descriptionFr || ''}
-              onChange={(e) => updateForm({ descriptionFr: e.target.value })}
               message={(showErrors && errors.descriptionFr) ? errors.descriptionFr : null}
               messageType={(showErrors && errors.descriptionFr) ? 'error' : ''}
+              onChange={(e) => updateForm({ descriptionFr: e.target.value })}
+              textarea
+              value={form.descriptionFr || ''}
             />
           </Col>
           <Col n="12 md-6">
             <TextInput
-              textarea
               label="Description du prix en anglais"
-              value={form.descriptionEn || ''}
-              onChange={(e) => updateForm({ descriptionEn: e.target.value })}
               message={(showErrors && errors.descriptionEn) ? errors.descriptionEn : null}
               messageType={(showErrors && errors.descriptionEn) ? 'error' : ''}
+              onChange={(e) => updateForm({ descriptionEn: e.target.value })}
+              textarea
+              value={form.descriptionEn || ''}
             />
           </Col>
           <Col n="12">
