@@ -1,11 +1,6 @@
 import { Breadcrumb, BreadcrumbItem, Col, Container, Row, TextInput, Title } from '@dataesr/react-dsfr';
 import { useState } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
-<<<<<<< Updated upstream
-=======
-import api from '../utils/api';
-import useToast from '../hooks/useToast';
->>>>>>> Stashed changes
 
 import api from '../utils/api';
 import useToast from '../hooks/useToast';
@@ -34,7 +29,6 @@ function sanitize(form) {
 }
 
 export default function ContactPage() {
-<<<<<<< Updated upstream
   useHashScroll();
   const { viewer } = useAuth();
   const initialForm = viewer?.id
@@ -44,34 +38,19 @@ export default function ContactPage() {
   const [showErrors, setShowErrors] = useState(false);
   const { toast } = useToast();
   const navigate = useNavigate();
-=======
-  const { toast } = useToast();
-  const navigate = useNavigate();
-  const { form, updateForm, errors } = useForm({}, validate);
-  const [showErrors, setShowErrors] = useState(false);
->>>>>>> Stashed changes
   const [validationMessage, setValidationMessage] = useState('');
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     if (Object.keys(errors).length > 0) return setShowErrors(true);
     const body = sanitize(form);
-<<<<<<< Updated upstream
     api.post('/contacts', body)
-=======
-    api.post('/contact', body)
->>>>>>> Stashed changes
       .then((response) => {
         setValidationMessage(response.data.message);
         toast({ toastType: 'success', description: 'Votre message a bien été envoyé' });
         navigate('/');
       })
-<<<<<<< Updated upstream
       .catch(() => {
-=======
-    // eslint-disable-next-line
-      .catch((e) => { console.error(e);
->>>>>>> Stashed changes
         toast({ toastType: 'error', description: "Une erreur s'est produite" });
       });
     return validationMessage;
