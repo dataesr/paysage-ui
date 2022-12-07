@@ -43,7 +43,7 @@ OverlaySpinner.defaultProps = {
 };
 
 function PageSpinner({ size }) {
-  return <Row className="fr-my-2w flex--space-around"><Spinner size={size} /></Row>;
+  return <Row className="fr-my-2w flex--space-around fullwidth"><Spinner size={size} /></Row>;
 }
 PageSpinner.propTypes = {
   size: PropTypes.number,

@@ -7,7 +7,6 @@ import TagList from '../../../tag-list';
 
 export default function OfficialTextTimelineItem({ data, onEdit }) {
   const navigate = useNavigate();
-  console.log(data);
   if (!data) return null;
   const { publicationDate, nature, type, title, id, pageUrl, description, relatedObjects } = data;
   return (

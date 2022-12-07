@@ -87,9 +87,6 @@ export default function Routes() {
           <Route path="/se-connecter" element={<SignIn />} />
           <Route path="/creer-un-compte" element={<SignUp />} />
           <Route path="/mot-de-passe-oublie" element={<Passwordless />} />
-          <Route path="/ressources-externes" element={<RessourcesExternesPage />} />
-          <Route path="/aide" element={<HelpPage />} />
-          <Route path="/projet-et-equipe" element={<ProjetEtEquipe />} />
           <Route path="*" element={<NotFound />} />
 
           <Route element={<ProtectedRoute roles={['admin']} />}>
@@ -110,6 +107,9 @@ export default function Routes() {
           <Route element={<ProtectedRoute />}>
             <Route path="/" element={<HomePage />} />
             <Route path="/nous-contacter" element={<ContactPage />} />
+            <Route path="/aide" element={<HelpPage />} />
+            <Route path="/projet-et-equipe" element={<ProjetEtEquipe />} />
+            <Route path="/ressources-externes" element={<RessourcesExternesPage />} />
             <Route path="/mon-compte" element={<AccountPage />}>
               <Route path="" element={<Navigate to="/mon-compte/profile" replace />} />
               <Route path="profile" element={<ProfilePage />} />
