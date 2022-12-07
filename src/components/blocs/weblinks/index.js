@@ -34,7 +34,7 @@ export default function Weblinks({ types, title }) {
   const { weblinks } = useEnums();
   const { notice } = useNotice();
   const options = types?.length
-    ? weblinks[apiObject]?.filter((type) => types.includes(type.value))
+    ? weblinks[apiObject]?.filter((type) => types?.includes(type?.value))
     : weblinks[apiObject];
 
   const onSaveHandler = async (body, itemId) => {
@@ -117,27 +117,15 @@ export default function Weblinks({ types, title }) {
             <div className="flex-col flex--center">
               {renderIcon(el.type)}
               <span className="fr-text fr-text--sm fr-text--bold fr-m-0 flex-col">
-                {el.url.includes('jorfsearch.steinertriples') ? (
-                  <a
-                    className="fr-mb-0 fr-text fr-text--sm text-center"
-                    href={el.url.replace('.fr', '.ch')}
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    {options?.find((type) => el.type === type.value)?.label}
-                    {el.language && ` (${el.language})`}
-                  </a>
-                ) : (
-                  <a
-                    className="fr-mb-0 fr-text fr-text--sm text-center"
-                    href={el.url}
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    {options?.find((type) => el.type === type.value)?.label}
-                    {el.language && ` (${el.language})`}
-                  </a>
-                )}
+                <a
+                  className="fr-mb-0 fr-text fr-text--sm text-center"
+                  href={el.url}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  {options?.find((type) => el.type === type.value)?.label}
+                  {el.language && ` (${el.language})`}
+                </a>
                 <span className="only-print">{el.url}</span>
               </span>
             </div>

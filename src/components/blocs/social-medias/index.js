@@ -55,7 +55,7 @@ export default function SocialMediasComponent() {
         onClick={() => onOpenModalHandler(item)}
       />
     ));
-    return <ExpendableListCards list={list} nCol="12 lg-6 md-12 sm-6" />;
+    return <ExpendableListCards list={list} nCol="6 lg-6 md-12 sm-6" />;
   };
 
   return (

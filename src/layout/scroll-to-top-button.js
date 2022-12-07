@@ -32,5 +32,6 @@ export default function ScrollToTop() {
       icon="ri-arrow-up-line"
       onClick={scrollToTop}
     />
+
   );
 }

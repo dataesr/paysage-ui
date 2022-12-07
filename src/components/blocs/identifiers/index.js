@@ -82,7 +82,7 @@ export default function IdentifiersComponent() {
     case 'idRef':
       linkTo = `https://www.idref.fr/${el.value}`;
       break;
-    case 'ORCID':
+    case 'ORCID Id':
       linkTo = `https://orcid.org/${el.value}`;
       break;
     case 'ROR':

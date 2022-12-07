@@ -5,9 +5,9 @@ import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import api from '../utils/api';
 import useToast from '../hooks/useToast';
 import FormFooter from '../components/forms/form-footer';
-import useForm from '../hooks/useForm';
 import useAuth from '../hooks/useAuth';
 import usePageTitle from '../hooks/usePageTitle';
+import useForm from '../hooks/useForm';
 
 function validate(body) {
   const validationErrors = {};
