@@ -102,25 +102,26 @@ HR {
 }
 
 $objects: structures, persons, prices, terms, projects, categories, legal-categories, supervising-ministers, official-texts;
+$sides: left, bottom, right, top;
 
 @each $object in $objects {
   .card-#{$object} {
-    border-left: .25rem solid var(--#{$object}-color) !important;
-      .fr-card__start {
-        .fr-card__detail {
-          color: var(--#{$object}-color) !important;
-        }
+    --primaryColor: var(--#{$object}-color);
+    border-left: .25rem solid var(--primaryColor);
+    .fr-card__start {
+      .fr-card__detail {
+        color: var(--primaryColor) !important;
       }
-  }
-  .card-#{$object}--bottom {
-    border-bottom: .25rem solid var(--#{$object}-color) !important;
-      .fr-card__start {
-        .fr-card__detail {
-          color: var(--#{$object}-color) !important;
-        }
-      }
+    }
   }
 }
+@each $side in $sides {
+  .card--border-#{$side} {
+    border-left: 0 !important;
+    border-#{$side}: .25rem solid var(--primaryColor) !important;
+  }
+}
+
 .search-bg {
   background: var(--grey-card);
 }

@@ -27,7 +27,7 @@ import useEditMode from '../../../hooks/useEditMode';
 export default function Weblinks({ types, title }) {
   const { editMode } = useEditMode();
   const { url, apiObject } = useUrl('weblinks');
-  const { data, isLoading, error, reload } = useFetch(url);
+  const { data, isLoading, error, reload } = useFetch(`${url}?limit=500`);
   const [showModal, setShowModal] = useState(false);
   const [modalTitle, setModalTitle] = useState('');
   const [modalContent, setModalContent] = useState(null);

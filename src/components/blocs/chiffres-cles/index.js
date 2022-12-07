@@ -1,48 +1,27 @@
+import PropTypes from 'prop-types';
 import { Col, Container, Row } from '@dataesr/react-dsfr';
-
 import { BlocContent, BlocTitle } from '../../bloc';
-import { Spinner } from '../../spinner';
-import useFetch from '../../../hooks/useFetch';
-import useUrl from '../../../hooks/useUrl';
 import cleanNumber from '../../../utils/clean-numbers';
 import KeyValueCard from '../../card/key-value-card';
 
-export default function ChiffresCles() {
-  const { url } = useUrl();
-  const { data, isLoading, error } = useFetch(url);
-
-  if (isLoading) return <Spinner size={48} />;
-  if (error) return <>Erreur...</>;
-
+export default function ChiffresCles({ year, population, exercice, netAccountingResult }) {
   const all = [];
-  if (data && data.year && data.population) {
+  if (year && population) {
     all.push({
       icon: 'ri-user-line',
-      key: `Nombre d'étudiants inscrits en ${data.year} - Inscriptions principales`,
+      key: `Nombre d'étudiants inscrits en ${year} - Inscriptions principales`,
       linkIn: '../chiffres-cles/etudiants',
-      value: data.population.toLocaleString('fr-FR'),
+      value: population.toLocaleString('fr-FR'),
     });
   }
-  if (data && data.exercice && data.netAccountingResult) {
+  if (exercice && netAccountingResult) {
     all.push({
       icon: 'ri-scales-3-line',
-      key: `Résultat net comptable en ${data.exercice}`,
+      key: `Résultat net comptable en ${exercice}`,
       linkIn: '../chiffres-cles/budget',
-      value: `${cleanNumber(data.netAccountingResult)}€`,
+      value: `${cleanNumber(netAccountingResult)}€`,
     });
   }
-
-  const renderCards = () => all.map((el) => (
-    <Col n="12 md-6">
-      <KeyValueCard
-        cardKey={el.key}
-        cardValue={el.value}
-        icon={el.icon}
-        key={el.id}
-        linkIn={el.linkIn}
-      />
-    </Col>
-  ));
 
   if (all.length === 0) return null;
   return (
@@ -50,9 +29,33 @@ export default function ChiffresCles() {
       <BlocTitle as="h3" look="h6">Chiffres clés</BlocTitle>
       <BlocContent>
         <Row gutters>
-          {renderCards()}
+          {all.map((element) => (
+            <Col key={element.key} n="12 md-6">
+              <KeyValueCard
+                cardKey={element.key}
+                cardValue={element.value}
+                icon={element.icon}
+                key={element.id}
+                linkIn={element.linkIn}
+              />
+            </Col>
+          ))}
         </Row>
       </BlocContent>
     </Container>
   );
 }
+
+ChiffresCles.defaultProps = {
+  year: null,
+  population: null,
+  exercice: null,
+  netAccountingResult: null,
+};
+
+ChiffresCles.propTypes = {
+  year: PropTypes.string,
+  population: PropTypes.number,
+  exercice: PropTypes.string,
+  netAccountingResult: PropTypes.number,
+};

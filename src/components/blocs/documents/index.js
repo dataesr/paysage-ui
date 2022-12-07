@@ -1,22 +1,21 @@
 import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Badge, BadgeGroup, Col, Modal, ModalContent, ModalTitle, Row, Tag, Text } from '@dataesr/react-dsfr';
-import useEditMode from '../../hooks/useEditMode';
-import useFetch from '../../hooks/useFetch';
-import useHashScroll from '../../hooks/useHashScroll';
-import useNotice from '../../hooks/useNotice';
+import useEditMode from '../../../hooks/useEditMode';
+import useFetch from '../../../hooks/useFetch';
+import useNotice from '../../../hooks/useNotice';
 
-import api from '../../utils/api';
-import { saveError, saveSuccess, deleteError, deleteSuccess } from '../../utils/notice-contents';
+import api from '../../../utils/api';
+import { saveError, saveSuccess, deleteError, deleteSuccess } from '../../../utils/notice-contents';
 
 import {
   Bloc, BlocContent, BlocActionButton, BlocTitle, BlocModal,
-} from '../bloc';
-import Button from '../button';
-import { Download } from '../download';
-import DocumentForm from '../forms/documents';
-import useAuth from '../../hooks/useAuth';
-import TagList from '../tag-list';
+} from '../../bloc';
+import Button from '../../button';
+import { Download } from '../../download';
+import DocumentForm from '../../forms/documents';
+import useAuth from '../../../hooks/useAuth';
+import TagList from '../../tag-list';
 
 export default function DocumentsOutlet() {
   const { editMode } = useEditMode();
@@ -26,7 +25,6 @@ export default function DocumentsOutlet() {
   const url = `/documents?filters[relatesTo]=${resourceId}&sort=-startDate&limit=500`;
   const { data, isLoading, error, reload } = useFetch(url);
   const { notice } = useNotice();
-  useHashScroll();
   const [isOpen, setIsOpen] = useState(false);
   const [modalTitle, setModalTitle] = useState(null);
   const [modalContent, setModalContent] = useState(null);

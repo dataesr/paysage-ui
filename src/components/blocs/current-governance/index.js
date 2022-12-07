@@ -13,45 +13,35 @@ export default function StructureCurrentGovernance() {
   const { id } = useUrl();
   const { data, isLoading, error } = useFetch(`/relations?filters[resourceId]=${id}&filters[relationTag]=${tag}&limit=500&sort=relationType.priority`);
 
-  const renderCurrentMandates = () => {
-    if (!data?.data?.length > 0) return null;
-    const currentMandates = data?.data
-      .filter((mandate) => (!mandate.endDate || (mandate.endDate >= getComparableNow())))
-      .filter((mandate) => (mandate?.relationType?.priority < MANDATE_PRIORITY_THRESHOLD));
-    return (
-      <Row gutters>
-        {currentMandates.map((mandate) => (
-          <Col key={mandate.id} n="12 md-6">
-            <RelationCard
-              relation={mandate}
-            />
-          </Col>
-        ))}
-        {(currentMandates.length < data.data.length) && (
-          <Col n="12 md-6">
-            <GoToCard
-              to={`/structures/${id}/gouvernance-et-referents`}
-              title="Aller à la page gouvernance"
-            />
-          </Col>
-        )}
-      </Row>
-    );
-  };
+  if (!data?.data?.length > 0) return null;
+  const currentMandates = data?.data
+    .filter((mandate) => (!mandate.endDate || (mandate.endDate >= getComparableNow())))
+    .filter((mandate) => (mandate?.relationType?.priority < MANDATE_PRIORITY_THRESHOLD));
 
   return (
     <Bloc
       isLoading={isLoading}
       error={error}
-      data={{ totalCount: data?.data
-        .filter((mandate) => !mandate.endDate)
-        .filter((mandate) => (mandate?.relationType?.priority < MANDATE_PRIORITY_THRESHOLD))?.length || 0,
-      }}
+      data={{ totalCount: currentMandates?.length || 0 }}
       hideOnEmptyView
     >
       <BlocTitle as="h3" look="h5">Gouvernance actuelle</BlocTitle>
       <BlocContent>
-        {renderCurrentMandates()}
+        <Row gutters>
+          {currentMandates.map((mandate) => (
+            <Col key={mandate.id} n="12 md-6">
+              <RelationCard relation={mandate} />
+            </Col>
+          ))}
+          {(currentMandates.length < data.data.length) && (
+            <Col n="12 md-6">
+              <GoToCard
+                to={`/structures/${id}/gouvernance-et-referents`}
+                title="Aller à la page gouvernance"
+              />
+            </Col>
+          )}
+        </Row>
       </BlocContent>
     </Bloc>
   );

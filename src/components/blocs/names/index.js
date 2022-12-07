@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import { useState } from 'react';
 import {
   ModalContent,
@@ -15,7 +16,7 @@ import useNotice from '../../../hooks/useNotice';
 import { deleteError, saveError, saveSuccess, deleteSuccess } from '../../../utils/notice-contents';
 import Button from '../../button';
 
-export default function NamesComponent() {
+export default function NamesComponent({ visible }) {
   const { notice } = useNotice();
   const { url } = useUrl('names');
   const { data, isLoading, error, reload } = useFetch(url);
@@ -87,7 +88,7 @@ export default function NamesComponent() {
     ));
     return <ExpendableListCards list={list} />;
   };
-
+  if (!visible) return null;
   return (
     <Bloc isLoading={isLoading} error={error} data={data}>
       <BlocTitle as="h3" look="h6">Dénominations</BlocTitle>
@@ -102,3 +103,7 @@ export default function NamesComponent() {
     </Bloc>
   );
 }
+
+NamesComponent.propTypes = {
+  visible: PropTypes.bool.isRequired,
+};
