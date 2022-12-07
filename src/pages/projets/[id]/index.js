@@ -24,6 +24,7 @@ import ProjectCategories from './categories';
 import ProjectPrices from './prix-et-recompenses';
 import { saveError, saveSuccess } from '../../../utils/notice-contents';
 import Error from '../../../components/errors';
+import usePageTitle from '../../../hooks/usePageTitle';
 
 function ProjectByIdPage() {
   const { url, id } = useUrl();
@@ -45,14 +46,14 @@ function ProjectByIdPage() {
   const [isFormModalOpen, setIsFormModalOpen] = useState(false);
 
   useEffect(() => { reset(); }, [reset]);
-  useEffect(() => { document.title = `Projets · ${data?.nameFr}`; }, [data]);
+  usePageTitle(`Projets · ${data?.nameFr}`);
 
   const onSave = async (body) => api.patch(url, body)
     .then(() => { reload(); setIsFormModalOpen(false); notice(saveSuccess); })
     .catch(() => { setIsFormModalOpen(false); notice(saveError); });
 
   if (isLoading) return <PageSpinner />;
-  if (error) return <Error status={error} />;
+  if (error || !data) return <Error status={error} />;
   return (
     <Container spacing="pb-6w">
       <Row>
@@ -215,7 +216,7 @@ function ProjectByIdPage() {
               </ModalFooter>
             </Modal>
           </Row>
-          <Outlet />
+          <Outlet context={data} />
         </Col>
       </Row>
     </Container>

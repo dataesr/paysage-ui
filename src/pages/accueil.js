@@ -13,6 +13,7 @@ import useDebounce from '../hooks/useDebounce';
 import { CATEGORIE_PARENT } from '../utils/relations-tags';
 import KeyValueCard from '../components/card/key-value-card';
 import { capitalize } from '../utils/strings';
+import usePageTitle from '../hooks/usePageTitle';
 
 const MAX_LAST_CREATIONS_CARDS = 12;
 
@@ -138,12 +139,12 @@ const objectMapping = {
 
 export default function HomePage() {
   const navigate = useNavigate();
+  usePageTitle('Accueil');
   const [query, setQuery] = useState('');
   const debouncedQuery = useDebounce(query, 500);
   const [lastCreations, metrics] = useFetchLastCreations();
   const mostImportantCategories = useFetchMostImportantCategories();
   const { data: options } = useSearch(SEARCH_TYPES, debouncedQuery);
-  useEffect(() => { document.title = 'Paysage · Accueil'; }, []);
 
   const handleSearchRedirection = ({ id, type }) => navigate(`/${type}/${id}`);
   const handleSearch = () => navigate(`rechercher?query=${query}`);
@@ -186,7 +187,7 @@ export default function HomePage() {
                   cardKey={capitalize(objectMapping[k])}
                   cardValue={metrics[k]}
                   icon={icons[k]}
-                  className={`fr-enlarge-link card-${k}--bottom`}
+                  className={`fr-enlarge-link card-${k} card--border-bottom`}
                 />
               </Col>
             ))) : null}

@@ -7,6 +7,7 @@ import useToast from '../hooks/useToast';
 import FormFooter from '../components/forms/form-footer';
 import useForm from '../hooks/useForm';
 import useAuth from '../hooks/useAuth';
+import usePageTitle from '../hooks/usePageTitle';
 
 function validate(body) {
   const validationErrors = {};
@@ -28,6 +29,7 @@ function sanitize(form) {
 }
 
 export default function ContactPage() {
+  usePageTitle('Nous contacter');
   const { viewer } = useAuth();
   const initialForm = viewer?.id
     ? { name: `${viewer.firstName} ${viewer.lastName}`.trim(), organization: viewer?.service, fonction: viewer?.position, email: viewer?.email }

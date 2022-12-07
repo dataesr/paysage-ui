@@ -23,6 +23,7 @@ import useNotice from '../../hooks/useNotice';
 import api from '../../utils/api';
 import { STRUCTURES_CLOSURE_REASONS, STRUCTURES_CREATION_REASONS } from '../../utils/constants';
 import SearchBar from '../../components/search-bar';
+import usePageTitle from '../../hooks/usePageTitle';
 
 const steps = ['Identifiants', 'Dénominations', 'Création et fermeture'];
 
@@ -388,7 +389,7 @@ HistoryStep.propTypes = { ...stepProps, handleSave: PropTypes.func.isRequired };
 export default function StructureAddPage() {
   const { notice } = useNotice();
   const navigate = useNavigate();
-  useEffect(() => { document.title = 'Contribution · Ajouter une structure'; }, []);
+  usePageTitle('Contribution · Ajouter une structure');
   const validateForm = (body) => {
     const validationErrors = {};
     if (!body.usualNameFr) { validationErrors.usualNameFr = 'Le nom usuel en français est obligatoire'; }

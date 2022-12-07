@@ -7,11 +7,11 @@ import useFetch from '../../../hooks/useFetch';
 import CopyBadgeButton from '../../../components/copy/copy-badge-button';
 
 import CategoriesPresentationPage from './presentation';
-import AgendaOutlet from '../../../components/outlets/evenements';
-import DocumentsOutlet from '../../../components/outlets/documents';
+import AgendaOutlet from '../../../components/blocs/evenements';
+import DocumentsOutlet from '../../../components/blocs/documents';
 import CategoriesRelatedElements from './elements-lies';
-import ActualitesOutlet from '../../../components/outlets/actualites';
-import OfficialTextOutlet from '../../../components/outlets/textes-officiels';
+import ActualitesOutlet from '../../../components/blocs/actualites';
+import OfficialTextOutlet from '../../../components/blocs/textes-officiels';
 import { OverlaySpinner, PageSpinner } from '../../../components/spinner';
 import Error from '../../../components/errors';
 

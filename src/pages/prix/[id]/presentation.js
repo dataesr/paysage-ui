@@ -2,7 +2,6 @@ import { Row, Title, Icon, Col } from '@dataesr/react-dsfr';
 import Identifiers from '../../../components/blocs/identifiers';
 import RelationsByTag from '../../../components/blocs/relations-by-tag';
 import Weblinks from '../../../components/blocs/weblinks';
-import useHashScroll from '../../../hooks/useHashScroll';
 import LaureateForm from '../../../components/forms/laureate';
 import Wiki from '../../../components/blocs/wiki';
 import { LAUREAT, PRIX_PORTEUR } from '../../../utils/relations-tags';
@@ -15,7 +14,6 @@ import Error from '../../../components/errors';
 export default function PricePresentationPage() {
   const { url } = useUrl();
   const { data, isLoading, error } = useFetch(url);
-  useHashScroll();
   if (isLoading) return <PageSpinner />;
   if (error) return <Error status={error} />;
   return (

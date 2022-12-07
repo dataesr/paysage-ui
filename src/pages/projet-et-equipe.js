@@ -1,10 +1,10 @@
 /* eslint-disable max-len */
-import { useEffect } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import { Breadcrumb, BreadcrumbItem, Container, Link, Text, Title } from '@dataesr/react-dsfr';
+import usePageTitle from '../hooks/usePageTitle';
 
 export default function ProjetEtEquipe() {
-  useEffect(() => { document.title = 'Paysage · Projet & équipe'; }, []);
+  usePageTitle('Projet & équipe');
   return (
     <Container spacing="pb-6w">
       <Breadcrumb>

@@ -6,7 +6,6 @@ import RelationsByTag from '../../../components/blocs/relations-by-tag';
 import RelationsParticipations from '../../../components/blocs/relations-participations';
 import RelationGroupForm from '../../../components/forms/relations-group';
 import useFetch from '../../../hooks/useFetch';
-import useHashScroll from '../../../hooks/useHashScroll';
 import useNotice from '../../../hooks/useNotice';
 import useUrl from '../../../hooks/useUrl';
 import api from '../../../utils/api';
@@ -14,7 +13,6 @@ import { deleteError, deleteSuccess, saveError, saveSuccess } from '../../../uti
 import { PERSONNE_TERME, PRIX_TERME, PROJET_TERME, STRUCTURE_TERME, TERME_CATEGORIE } from '../../../utils/relations-tags';
 
 export default function TermRelatedElements() {
-  useHashScroll();
   const { id: resourceId } = useUrl();
   const { data, isLoading, error, reload } = useFetch(`/relations-groups?filters[resourceId]=${resourceId}&limit=500`);
   const [isOpen, setIsOpen] = useState();

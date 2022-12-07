@@ -1,8 +1,8 @@
-import { useEffect } from 'react';
 import { Container, Icon, Text } from '@dataesr/react-dsfr';
+import usePageTitle from '../hooks/usePageTitle';
 
 export default function Aide() {
-  useEffect(() => { document.title = 'Paysage · Aide'; }, []);
+  usePageTitle('Aide');
   return (
     <Container>
       <Text size="lg" bold className="fr-mt-5w">

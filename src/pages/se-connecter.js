@@ -1,13 +1,15 @@
 import { useEffect, useState } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import {
-  Container, Row, Col, TextInput, Text, Link, Title, Breadcrumb, BreadcrumbItem, ButtonGroup, Stepper, Alert,
+  Container, Row, Col, TextInput, Text, Link, Title, ButtonGroup, Stepper, Alert,
 } from '@dataesr/react-dsfr';
 import Button from '../components/button';
 import useAuth from '../hooks/useAuth';
 import { MAIL_REGEXP, PASSWORD_REGEXP, OTP_REGEXP } from '../utils/auth';
+import usePageTitle from '../hooks/usePageTitle';
 
 export default function SignIn() {
+  usePageTitle('Se connecter');
   const navigate = useNavigate();
   const { requestSignInEmail, signin } = useAuth();
   const [step, setStep] = useState(1);
@@ -41,15 +43,7 @@ export default function SignIn() {
   useEffect(() => { document.title = 'Paysage · Se connecter'; }, []);
 
   return (
-    <Container spacing="mb-6w">
-      <Row justifyContent="center">
-        <Col n="xs-12 sm-10 md-8 lg-6">
-          <Breadcrumb>
-            <BreadcrumbItem asLink={<RouterLink to="/" />}>Accueil</BreadcrumbItem>
-            <BreadcrumbItem>Se connecter</BreadcrumbItem>
-          </Breadcrumb>
-        </Col>
-      </Row>
+    <Container spacing="my-6w">
       <Row justifyContent="center">
         <Col n="xs-12 sm-10 md-8 lg-6">
           <Title as="h1" look="h3">Se connecter à Paysage</Title>

@@ -23,6 +23,7 @@ import TermRelatedElements from './elements-lies';
 import { saveError, saveSuccess } from '../../../utils/notice-contents';
 import TermForm from '../../../components/forms/category-term';
 import Error from '../../../components/errors';
+import usePageTitle from '../../../hooks/usePageTitle';
 
 function TermByIdPage() {
   const { url, id } = useUrl();
@@ -42,8 +43,8 @@ function TermByIdPage() {
   });
   const [isFormModalOpen, setIsFormModalOpen] = useState(false);
 
+  usePageTitle(`Termes · ${data?.usualNameFr}`);
   useEffect(() => { reset(); }, [reset]);
-  useEffect(() => { document.title = `Termes · ${data?.usualNameFr}`; }, [data]);
 
   const onSave = async (body) => api.patch(url, body)
     .then(() => { reload(); setIsFormModalOpen(false); notice(saveSuccess); })

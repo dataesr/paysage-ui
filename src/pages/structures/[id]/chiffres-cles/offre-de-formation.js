@@ -5,11 +5,9 @@ import {
   BlocContent,
 } from '../../../../components/bloc';
 import WeblinkCard from '../../../../components/card/weblink-card';
-import useHashScroll from '../../../../hooks/useHashScroll';
 import useUrl from '../../../../hooks/useUrl';
 
 export default function StructureOffreDeFormationPage() {
-  useHashScroll();
   const { id } = useUrl('keynumbers');
 
   return (

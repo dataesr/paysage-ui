@@ -3,7 +3,6 @@ import Identifiers from '../../../components/blocs/identifiers';
 import SocialMedias from '../../../components/blocs/social-medias';
 import Weblinks from '../../../components/blocs/weblinks';
 import useFetch from '../../../hooks/useFetch';
-import useHashScroll from '../../../hooks/useHashScroll';
 import useUrl from '../../../hooks/useUrl';
 import PersonCurrentMandates from '../../../components/blocs/current-mandates';
 import Wiki from '../../../components/blocs/wiki';
@@ -11,7 +10,6 @@ import { PageSpinner } from '../../../components/spinner';
 import Error from '../../../components/errors';
 
 export default function PersonPresentationPage() {
-  useHashScroll();
   const { url } = useUrl();
   const { data, isLoading, error } = useFetch(url);
 

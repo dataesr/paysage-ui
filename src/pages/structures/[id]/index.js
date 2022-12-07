@@ -38,6 +38,7 @@ import StructureHistoryForm from '../../../components/forms/structures/historiqu
 import api from '../../../utils/api';
 import { getName } from '../../../utils/structures';
 import Error from '../../../components/errors';
+import usePageTitle from '../../../hooks/usePageTitle';
 
 function StructureByIdPage() {
   const { viewer } = useAuth();
@@ -69,7 +70,7 @@ function StructureByIdPage() {
   const [isHistoryModalOpen, setIsHistoryModalOpen] = useState(false);
 
   useEffect(() => { reset(); }, [reset]);
-  useEffect(() => { document.title = `Structures · ${data?.currentName.usualName}`; }, [data]);
+  usePageTitle(`Structures · ${data?.currentName.usualName}`);
   useShortcuts(['Control', 'e'], useCallback(() => toggle(), [toggle]));
 
   const onSaveHandler = async (body) => {
@@ -86,7 +87,7 @@ function StructureByIdPage() {
   };
 
   if (isLoading) return <PageSpinner />;
-  if (error) return <Error status={error} />;
+  if (error || !data) return <Error status={error} />;
   return (
     <Container spacing="pb-6w">
       <Row>
@@ -353,7 +354,7 @@ function StructureByIdPage() {
               </ModalContent>
             </Modal>
           </Row>
-          <Outlet />
+          <Outlet context={data} />
         </Col>
       </Row>
     </Container>

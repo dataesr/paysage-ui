@@ -1,13 +1,13 @@
 import { Outlet, Link as RouterLink } from 'react-router-dom';
 import { Col, Container, Row, SideMenu, SideMenuItem, SideMenuLink } from '@dataesr/react-dsfr';
-import { useEffect } from 'react';
 import SecurityPage from './security';
 
 import ProfilePage from './profile';
 import PreferencesPage from './preferences';
+import usePageTitle from '../../hooks/usePageTitle';
 
 function AccountPage() {
-  useEffect(() => { document.title = 'Paysage · Mon compte'; }, []);
+  usePageTitle('Paysage · Mon compte');
   return (
     <Container spacing="mb-6w">
       <Row>

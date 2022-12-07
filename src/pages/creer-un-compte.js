@@ -1,15 +1,17 @@
 import { useEffect, useState } from 'react';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import {
-  ButtonGroup, Breadcrumb, BreadcrumbItem, Container, Row, Col, TextInput, Text, Title, Icon, Stepper, Highlight,
+  ButtonGroup, Container, Row, Col, TextInput, Text, Title, Icon, Stepper, Highlight,
 } from '@dataesr/react-dsfr';
 import useAuth from '../hooks/useAuth';
 import useToast from '../hooks/useToast';
 import Button from '../components/button';
 import PasswordHint from '../components/password-hint';
 import { MAIL_REGEXP, PASSWORD_REGEXP, getPasswordValidationInfo } from '../utils/auth';
+import usePageTitle from '../hooks/usePageTitle';
 
 export default function SignUp() {
+  usePageTitle('Créer un compte');
   const { toast } = useToast();
   const navigate = useNavigate();
   const { signup, viewer } = useAuth();
@@ -74,22 +76,20 @@ export default function SignUp() {
   useEffect(() => setPasswordValidation(getPasswordValidationInfo(password)), [password]);
 
   return (
-    <Container spacing="mb-6w">
-      <Row justifyContent="center">
-        <Col n="xs-12 sm-10 md-8 lg-7">
-          <Breadcrumb>
-            <BreadcrumbItem asLink={<RouterLink to="/" />}>Accueil</BreadcrumbItem>
-            <BreadcrumbItem>Créer un compte</BreadcrumbItem>
-          </Breadcrumb>
-        </Col>
-      </Row>
+    <Container spacing="my-6w">
       <Row justifyContent="center">
         <Col n="xs-12 sm-10 md-8 lg-7">
           <Title as="h1" look="h3">Création de compte sur Paysage</Title>
-          <Text>
-            Paysage est un service à destination des agents de la DGRI et de la DGSIP.
-            Si vous ne faites pas partie de ces services, un administrateur du site devra valider votre inscription avant que votre première connexion soit possible.
-          </Text>
+          <div className="fr-notice fr-notice--info fr-mb-2w">
+            <div className="fr-container">
+              <div className="fr-notice__body">
+                <Text className="fr-notice__title">
+                  Paysage est un service à destination des agents de la DGRI et de la DGSIP.
+                  Un administrateur du site devra valider votre inscription avant que votre première connexion soit possible.
+                </Text>
+              </div>
+            </div>
+          </div>
         </Col>
       </Row>
       <Container fluid>
@@ -108,7 +108,6 @@ export default function SignUp() {
                       />
                     </Col>
                   </Row>
-                  <hr />
                   <Row justifyContent="center">
                     <Col>
                       <form onSubmit={nextStep}>

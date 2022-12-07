@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import {
   Breadcrumb,
@@ -18,22 +18,16 @@ import OfficialTextAddPage from './textes-officiels/ajouter';
 import PersonAddPage from './personnes/ajouter';
 import ProjectAddPage from './projets/ajouter';
 import SearchBar from '../components/search-bar';
-import api from '../utils/api';
+import usePageTitle from '../hooks/usePageTitle';
+import useDebounce from '../hooks/useDebounce';
+import useSearch from '../hooks/useSearch';
+import { SEARCH_TYPES } from '../utils/constants';
 
 export default function ContributePage() {
   const [query, setQuery] = useState('');
-  const [options, setOptions] = useState([]);
-  const [isSearching, setIsSearching] = useState(false);
-  useEffect(() => { document.title = 'Paysage · Contribuer'; }, []);
-  useEffect(() => {
-    const getAutocompleteResult = async () => {
-      setIsSearching(true);
-      const response = await api.get(`/autocomplete?query=${query}&limit=15`);
-      setOptions(response.data?.data);
-      setIsSearching(false);
-    };
-    if (query) { getAutocompleteResult(); } else { setOptions([]); }
-  }, [query]);
+  usePageTitle('Contribuer');
+  const debouncedQuery = useDebounce(query, 500);
+  const { data: options, isLoading } = useSearch(SEARCH_TYPES, debouncedQuery);
 
   const data = [
     { type: 'structures', icon: 'ri-building-line', name: 'Ajouter une structure', url: '/structures/ajouter' },
@@ -68,7 +62,7 @@ export default function ContributePage() {
                 placeholder="Rechercher"
                 onChange={(e) => setQuery(e.target.value)}
                 options={options}
-                isSearching={isSearching}
+                isSearching={isLoading}
               />
             </Col>
           </div>

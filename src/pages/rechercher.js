@@ -2,15 +2,14 @@ import { Badge, Breadcrumb, BreadcrumbItem, Col, Container, Icon, Pagination, Ro
 import PropTypes from 'prop-types';
 import { Link as RouterLink, useLocation, useSearchParams } from 'react-router-dom';
 
-import { useEffect } from 'react';
 import { Spinner } from '../components/spinner';
-import useHashScroll from '../hooks/useHashScroll';
 import useSearch from '../hooks/useSearch';
 import { formatDescriptionDates } from '../utils/dates';
 import { capitalize } from '../utils/strings';
 import { getName } from '../utils/structures';
 import { getTypeFromUrl, getUrlFromType } from '../utils/types-url-mapper';
 import { SEARCH_TYPES } from '../utils/constants';
+import usePageTitle from '../hooks/usePageTitle';
 
 const icons = {
   structures: 'ri-building-line',
@@ -91,7 +90,7 @@ SearchResults.defaultProps = {
 };
 
 export default function SearchPage() {
-  useHashScroll();
+  usePageTitle('Rechercher');
   const { pathname } = useLocation();
   const [searchParams, setSearchParams] = useSearchParams();
   const query = searchParams.get('query');
@@ -106,8 +105,6 @@ export default function SearchPage() {
   const resultsCount = type === 'rechercher' ? countAll : (counts?.[getTypeFromUrl(type)] || 0);
   const resultsCountConstrained = (resultsCount > 10000) ? 10000 : resultsCount;
   const pageCount = Math.ceil(resultsCountConstrained / itemsPerPage);
-
-  useEffect(() => { document.title = 'Paysage · Rechercher'; }, []);
 
   return (
     <Container spacing="pb-6w">

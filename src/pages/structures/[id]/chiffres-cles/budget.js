@@ -10,12 +10,10 @@ import ExpendableListCards from '../../../../components/card/expendable-list-car
 import WeblinkCard from '../../../../components/card/weblink-card';
 import { Spinner } from '../../../../components/spinner';
 import useFetch from '../../../../hooks/useFetch';
-import useHashScroll from '../../../../hooks/useHashScroll';
 import useUrl from '../../../../hooks/useUrl';
 import cleanNumber from '../../../../utils/clean-numbers';
 
 export default function StructureBudgetPage() {
-  useHashScroll();
   const { url: urlStructure } = useUrl();
   const { data: dataStructure } = useFetch(urlStructure);
   const { id, url } = useUrl('keynumbers');
