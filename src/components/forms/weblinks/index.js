@@ -31,7 +31,7 @@ const regexpValidateWebSite = {
   DataGouvFr: /^(https?):\/\/[A-Za-z0-9/:%+.,#?!@&=-]+$/,
   mooc: /^(https:\/\/)?(www.)?fun-mooc.fr\/universities\/[A-Za-z0-9/:%+.,#?!@&=-]+\/$/,
   CanalU: /^(https:\/\/)?(www.)?canal-u.tv\/chaines\/[\w\-_]*(.fr)?$/,
-  ServicePublic: /^(https:\/\/)?(www.)?lannuaire.service-public.fr\/(gouvernement|institutions-juridictions|autorites-independantes)\/[^0-9][0-9]$/,
+  ServicePublic: /^(https:\/\/)?lannuaire.service-public.fr\/(gouvernement|institutions-juridictions|autorites-independantes)\/[A-Za-z0-9/:%+.,#?!@&=-]+$/,
   LeMonde: /(^https:\/\/)?(www.)?lemonde.fr\/[a-z]+(-[a-z]+)*\/$/,
   TheConversation: /(^https:\/\/)?(www.)?theconversation.com\/profiles\/[a-z-]{1,}-[0-9]{1,}$/,
   TalentCNRS: /(^https:\/\/)?(www.)?cnrs\.fr\/fr\/personne\/[a-z-]+(-0)?$/,
