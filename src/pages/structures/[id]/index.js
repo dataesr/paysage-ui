@@ -63,6 +63,17 @@ function StructureByIdPage() {
     textes: true,
   });
 
+  function badgeColor() {
+    if (data.structureStatus === 'active') {
+      return <Badge colorFamily="green-emeraude" text={data.structureStatus} />;
+    } if (data.structureStatus === 'inactive') {
+      return <Badge text="inactive" type="warning" />;
+    } if (data.structureStatus === 'forthcoming') {
+      return <Badge text="A venir" type="info" />;
+    }
+    return null;
+  }
+
   const [isStatusModalOpen, setIsStatusModalOpen] = useState(false);
   const [isDescriptionModalOpen, setIsDescriptionModalOpen] = useState(false);
   const [isMottoModalOpen, setIsMottoModalOpen] = useState(false);
@@ -236,7 +247,7 @@ function StructureByIdPage() {
               {getName(data?.currentName)}
               <BadgeGroup className="fr-pt-1w">
                 <Badge type="info" text="structure" />
-                <Badge colorFamily="green-emeraude" text={data.structureStatus || 'active'} />
+                {badgeColor()}
                 <CopyBadgeButton colorFamily="yellow-tournesol" text={data.id} lowercase />
               </BadgeGroup>
             </Title>
