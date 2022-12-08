@@ -34,6 +34,7 @@ export default function RelationCard({ relation, inverse, onEdit }) {
               </Text>
             )}
             {relation?.mandatePrecision && ` ${relation?.mandatePrecision}`}
+            {relation?.laureatePrecision && ` ${relation?.laureatePrecision}`}
             {' '}
             {(relation?.resource.collection === 'prices' && (relation.startDate || relation.endDate))
               ? relation.startDate?.split('-')?.[0] || 'Date inconnue'

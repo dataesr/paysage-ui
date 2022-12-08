@@ -8,6 +8,7 @@ import styles from './styles.module.scss';
 import { Spinner } from '../spinner';
 import { capitalize } from '../../utils/strings';
 import { getName } from '../../utils/structures';
+import { toString } from '../../utils/dates';
 
 const objectTypes = {
   categories: 'ri-price-tag-3-line',
@@ -176,9 +177,15 @@ const SearchBar = forwardRef((props, ref) => {
                     {option.type && <Icon size="xl" color={`var(--${option.type}-color)`} name={objectTypes[option.type]} />}
                     <Text className={styles.content}>
                       {getName(option)}
+                      <br />
+                      {option.category ? (
+                        <i>
+                          {` ${option.category}`}
+                        </i>
+                      ) : null}
                       {option.city ? ` à ${capitalize(option.city)}` : null}
-                      {option.category ? <i>{` (${option.category})`}</i> : null}
                       {option.creationDate ? ` depuis ${option.creationDate.slice(0, 4)}` : null}
+                      {option.publicationDate ? <strong>{` publié ${toString(option.publicationDate)}`}</strong> : null}
                     </Text>
                     {optionsIcon && <Badge type="info" isSmall hasIcon icon={optionsIcon} text="afficher la page" />}
                   </button>

@@ -7,6 +7,7 @@ import {
   TagGroup,
   Tag,
   Icon,
+  TextInput,
 } from '@dataesr/react-dsfr';
 import PropTypes from 'prop-types';
 import useForm from '../../../hooks/useForm';
@@ -20,7 +21,7 @@ import PaysageBlame from '../../paysage-blame';
 function sanitize(form) {
   const newForm = { ...form };
   if (newForm.otherAssociatedObjects?.length) newForm.otherAssociatedObjectIds = newForm.otherAssociatedObjects.map((associated) => associated.id);
-  const fields = ['resourceId', 'relatedObjectId', 'relationTypeId', 'relationsGroupId', 'relationTag', 'startDate', 'endDate', 'otherAssociatedObjectIds'];
+  const fields = ['resourceId', 'relatedObjectId', 'relationTypeId', 'relationsGroupId', 'relationTag', 'startDate', 'endDate', 'otherAssociatedObjectIds', 'laureatePrecision'];
   const body = {};
   Object.keys(newForm).forEach((key) => { if (fields.includes(key)) { body[key] = newForm[key]; } });
   return body;
@@ -201,6 +202,13 @@ export default function LaureateForm({ id, resourceType, relatedObjectTypes, dat
               value={form.startDate || ''}
               label="Date"
               onDateChange={((v) => updateForm({ startDate: v }))}
+            />
+          </Col>
+          <Col n="12">
+            <TextInput
+              label="Précisions"
+              value={form.laureatePrecision}
+              onChange={(e) => updateForm({ laureatePrecision: e.target.value })}
             />
           </Col>
         </Row>

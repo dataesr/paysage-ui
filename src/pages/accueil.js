@@ -16,6 +16,7 @@ import { capitalize } from '../utils/strings';
 import usePageTitle from '../hooks/usePageTitle';
 
 const MAX_LAST_CREATIONS_CARDS = 12;
+// const LAST_DAYS = 5;
 
 const icons = {
   structures: 'ri-building-line',
@@ -77,7 +78,8 @@ CardCategoriesEtablissement.propTypes = {
 };
 
 const fetchLastCreationsWithMetrics = async (collection, { signal }) => {
-  const params = 'sort=createdAt&limit=10';
+  // const params = `filters[createdAt][$gte]=${new Date(Date.now() - LAST_DAYS * 24 * 60 * 60 * 1000).toISOString()}&limit=10`;
+  const params = 'limit=10';
   const response = await api
     .get(`/${collection}?${params}`, {}, { signal })
     .catch(() => ({ ok: false }));
