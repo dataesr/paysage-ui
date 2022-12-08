@@ -164,7 +164,7 @@ export default function StructureHistoryForm({ data, onSave }) {
         <Row>
           <Col>
             <Select
-              label="Raison de création"
+              label="Raison de fermeture"
               options={closureReasonsOptions}
               selected={form?.closureReason}
               onChange={(e) => updateForm({ closureReason: e.target.value })}
