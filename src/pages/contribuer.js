@@ -35,8 +35,8 @@ export default function ContributePage() {
     { type: 'prices', icon: 'ri-award-line', name: 'Ajouter un prix', url: '/prix/ajouter' },
     // TODO: Restore projects
     // { type: 'projects', icon: 'ri-booklet-line', name: 'Ajouter un projet', url: '/projets/ajouter' },
-    { type: 'categories', icon: 'ri-price-tag-3-line', name: 'Ajouter une catégorie', url: '/categories/ajouter' },
     { type: 'terms', icon: 'ri-hashtag', name: 'Ajouter un terme', url: '/termes/ajouter' },
+    { type: 'categories', icon: 'ri-price-tag-3-line', name: 'Ajouter une catégorie', url: '/categories/ajouter' },
   ];
   return (
     <Container className="fr-mb-6w">
