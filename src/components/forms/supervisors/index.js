@@ -57,7 +57,7 @@ export default function SupervisorsForm({ id, data, onDelete, onSave }) {
   useEffect(() => {
     const getAutocompleteResult = async () => {
       setIsSearchingStartDateOfficialText(true);
-      const response = await api.get(`/autocomplete?query=${startDateOfficialTextQuery}&types=official-texts`);
+      const response = await api.get(`/search?query=${startDateOfficialTextQuery}&types=official-texts`);
       setStartDateOfficialTextOptions(response.data?.data);
       setIsSearchingStartDateOfficialText(false);
     };
@@ -67,7 +67,7 @@ export default function SupervisorsForm({ id, data, onDelete, onSave }) {
   useEffect(() => {
     const getAutocompleteResult = async () => {
       setIsSearchingEndDateOfficialText(true);
-      const response = await api.get(`/autocomplete?query=${endDateOfficialTextQuery}&types=official-texts`);
+      const response = await api.get(`/search?query=${endDateOfficialTextQuery}&types=official-texts`);
       setEndDateOfficialTextOptions(response.data?.data);
       setIsSearchingEndDateOfficialText(false);
     };

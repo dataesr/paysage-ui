@@ -10,7 +10,7 @@ export default function useSearch(scopes, query = '', limit = 10, start = 0) {
     const abortController = new AbortController();
     const fetchData = async () => {
       await api
-        .get(`/autocomplete?types=${scopes}&query=${query}&limit=${limit}&start=${start}`, {}, { signal: abortController.signal })
+        .get(`/search?types=${scopes}&query=${query}&limit=${limit}&start=${start}`, {}, { signal: abortController.signal })
         .then((response) => {
           setData(response.data?.data);
           const responseCounts = {};

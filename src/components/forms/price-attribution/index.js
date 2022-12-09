@@ -48,7 +48,7 @@ export default function PriceAttributionForm({ id, resourceType, relatedObjectTy
     const getAutocompleteResult = async () => {
       setIsSearchingRelatedObject(true);
       const types = encodeURIComponent(relatedObjectTypes.join(','));
-      const response = await api.get(`/autocomplete?query=${relatedObjectQuery}&types=${types}`);
+      const response = await api.get(`/search?query=${relatedObjectQuery}&types=${types}`);
       setRelatedObjectOptions(response.data?.data);
       setIsSearchingRelatedObject(false);
     };
@@ -58,7 +58,7 @@ export default function PriceAttributionForm({ id, resourceType, relatedObjectTy
   useEffect(() => {
     const getAutocompleteResult = async () => {
       setIsSearchingResource(true);
-      const response = await api.get(`/autocomplete?query=${resourceQuery}&types=${resourceType}`);
+      const response = await api.get(`/search?query=${resourceQuery}&types=${resourceType}`);
       setResourceOptions(response.data?.data);
       setIsSearchingResource(false);
     };

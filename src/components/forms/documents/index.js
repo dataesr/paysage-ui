@@ -76,7 +76,7 @@ export default function DocumentsForm({ id, data, onSave, onDelete }) {
   useEffect(() => {
     const getAutocompleteResult = async () => {
       setIsSearching(true);
-      const response = await api.get(`/autocomplete?query=${query}`);
+      const response = await api.get(`/search?query=${query}`);
       setOptions(response.data?.data);
       setIsSearching(false);
     };

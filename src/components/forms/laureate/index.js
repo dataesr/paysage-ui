@@ -56,7 +56,7 @@ export default function LaureateForm({ id, resourceType, relatedObjectTypes, dat
     const getAutocompleteResult = async () => {
       setIsSearchingRelatedObject(true);
       const types = encodeURIComponent(relatedObjectTypes.join(','));
-      const response = await api.get(`/autocomplete?query=${relatedObjectQuery}&types=${types}`);
+      const response = await api.get(`/search?query=${relatedObjectQuery}&types=${types}`);
       setRelatedObjectOptions(response.data?.data);
       setIsSearchingRelatedObject(false);
     };
@@ -66,7 +66,7 @@ export default function LaureateForm({ id, resourceType, relatedObjectTypes, dat
   useEffect(() => {
     const getAutocompleteResult = async () => {
       setIsSearchingResource(true);
-      const response = await api.get(`/autocomplete?query=${resourceQuery}&types=${resourceType}`);
+      const response = await api.get(`/search?query=${resourceQuery}&types=${resourceType}`);
       setResourceOptions(response.data?.data);
       setIsSearchingResource(false);
     };
@@ -76,7 +76,7 @@ export default function LaureateForm({ id, resourceType, relatedObjectTypes, dat
   useEffect(() => {
     const getAutocompleteResult = async () => {
       setIsSearchingStructure(true);
-      const response = await api.get(`/autocomplete?query=${associatedQuery}&types=structures`);
+      const response = await api.get(`/search?query=${associatedQuery}&types=structures`);
       setAssociatedOptions(response.data?.data);
       setIsSearchingStructure(false);
     };

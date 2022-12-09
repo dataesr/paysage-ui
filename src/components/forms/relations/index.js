@@ -86,7 +86,7 @@ export default function RelationForm({
       setIsSearchingRelatedObject(true);
       const types = encodeURIComponent(relatedObjectTypes.join(','));
       const response = await api.get(
-        `/autocomplete?query=${relatedObjectQuery}&types=${types}`,
+        `/search?query=${relatedObjectQuery}&types=${types}`,
       );
       setRelatedObjectOptions(response.data?.data);
       setIsSearchingRelatedObject(false);
@@ -102,7 +102,7 @@ export default function RelationForm({
     const getAutocompleteResult = async () => {
       setIsSearchingResource(true);
       const response = await api.get(
-        `/autocomplete?query=${resourceQuery}&types=${resourceType}`,
+        `/search?query=${resourceQuery}&types=${resourceType}`,
       );
       setResourceOptions(response.data?.data);
       setIsSearchingResource(false);
@@ -118,7 +118,7 @@ export default function RelationForm({
     const getAutocompleteResult = async () => {
       setIsSearchingStartDateOfficialText(true);
       const response = await api.get(
-        `/autocomplete?query=${startDateOfficialTextQuery}&types=official-texts`,
+        `/search?query=${startDateOfficialTextQuery}&types=official-texts`,
       );
       setStartDateOfficialTextOptions(response.data?.data);
       setIsSearchingStartDateOfficialText(false);
@@ -134,7 +134,7 @@ export default function RelationForm({
     const getAutocompleteResult = async () => {
       setIsSearchingEndDateOfficialText(true);
       const response = await api.get(
-        `/autocomplete?query=${endDateOfficialTextQuery}&types=official-texts`,
+        `/search?query=${endDateOfficialTextQuery}&types=official-texts`,
       );
       setEndDateOfficialTextOptions(response.data?.data);
       setIsSearchingEndDateOfficialText(false);
