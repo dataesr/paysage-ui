@@ -10,6 +10,7 @@ import useUrl from '../../../hooks/useUrl';
 import useFetch from '../../../hooks/useFetch';
 import { PageSpinner } from '../../../components/spinner';
 import Error from '../../../components/errors';
+import PriceAttributionForm from '../../../components/forms/price-attribution';
 
 export default function PricePresentationPage() {
   const { url } = useUrl();
@@ -38,7 +39,7 @@ export default function PricePresentationPage() {
         blocName="Structures décernant le prix"
         resourceType="prices"
         relatedObjectTypes={['structures']}
-        Form={LaureateForm}
+        Form={PriceAttributionForm}
       />
       <RelationsByTag
         tag={LAUREAT}

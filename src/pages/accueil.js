@@ -16,7 +16,7 @@ import { capitalize } from '../utils/strings';
 import usePageTitle from '../hooks/usePageTitle';
 
 const MAX_LAST_CREATIONS_CARDS = 12;
-// const LAST_DAYS = 5;
+const LAST_DAYS = 7;
 
 const icons = {
   structures: 'ri-building-line',
@@ -78,8 +78,7 @@ CardCategoriesEtablissement.propTypes = {
 };
 
 const fetchLastCreationsWithMetrics = async (collection, { signal }) => {
-  // const params = `filters[createdAt][$gte]=${new Date(Date.now() - LAST_DAYS * 24 * 60 * 60 * 1000).toISOString()}&limit=10`;
-  const params = 'limit=10';
+  const params = `filters[createdAt][$gte]=${new Date(Date.now() - LAST_DAYS * 24 * 60 * 60 * 1000).toISOString()}&limit=10`;
   const response = await api
     .get(`/${collection}?${params}`, {}, { signal })
     .catch(() => ({ ok: false }));
@@ -92,7 +91,7 @@ const fetchLastCreationsWithMetrics = async (collection, { signal }) => {
 };
 
 function useFetchLastCreations() {
-  const [data, setData] = useState([]);
+  const [data, setData] = useState(null);
   const [metrics, setMetrics] = useState({});
 
   useEffect(() => {
@@ -186,7 +185,7 @@ export default function HomePage() {
               <Col key={k} n="6 sm-4 md-2">
                 <KeyValueCard
                   cardKey={capitalize(objectMapping[k])}
-                  cardValue={metrics[k]}
+                  cardValue={`${metrics[k]}`}
                   icon={icons[k]}
                   className={`card-${k} card--border-bottom`}
                 />
@@ -196,21 +195,25 @@ export default function HomePage() {
         </Container>
       </Container>
       <Container>
-        <Row>
-          <Title as="h2">
-            <Icon name="ri-flashlight-line" size="1x" />
-            Derniers ajouts
-          </Title>
-        </Row>
-        <Row gutters className="fr-pb-8w">
-          {(lastCreations?.length) ? cardsToPrint.map((element) => <Card key={element.id} item={element} />) : <PageSpinner />}
-        </Row>
-        <Row>
-          <Title as="h2">
-            <Icon name="ri-file-list-3-line" size="1x" />
-            Listes d'établissements
-          </Title>
-        </Row>
+        {(lastCreations && (lastCreations.length > 0)) && (
+          <>
+            <Row>
+              <Title as="h2">
+                <Icon name="ri-flashlight-line" size="1x" />
+                Derniers ajouts
+              </Title>
+            </Row>
+            <Row gutters className="fr-pb-8w">
+              {cardsToPrint.map((element) => <Card key={element.id} item={element} />)}
+            </Row>
+            <Row>
+              <Title as="h2">
+                <Icon name="ri-file-list-3-line" size="1x" />
+                Listes d'établissements
+              </Title>
+            </Row>
+          </>
+        )}
         <Row gutters className="fr-pb-8w">
           {(mostImportantCategories?.length) ? mostImportantCategories.map((element) => <CardCategoriesEtablissement key={element.id} item={element} />) : <PageSpinner />}
         </Row>

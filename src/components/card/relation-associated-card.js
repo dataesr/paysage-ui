@@ -10,15 +10,14 @@ export default function RelationAssociatedCard({ relation }) {
       <div className={`fr-card__body ${styles['card-body']} ${styles[`${relation?.relatedObject?.collection}-border`]}`}>
         <div className="fr-card__content">
           <p className="fr-card__desc">
-            {(relation.startDate) && <Badge text={relation.startDate?.split('-')?.[0] || 'Date inconnue'} />}
-            <br />
             <RouterLink className="fr-text" to={relation?.resource?.href}>
               {relation?.resource?.displayName}
               <Icon iconPosition="right" name="ri-arrow-right-line" />
             </RouterLink>
             <br />
             {relation?.laureatePrecision && ` ${relation?.laureatePrecision}`}
-            {' '}
+            <br />
+            <Badge text={relation?.startDate?.split('-')?.[0] || 'Date inconnue'} />
           </p>
           {(relation.otherAssociatedObjects?.length > 0) && (
             <div className="fr-card__desc">

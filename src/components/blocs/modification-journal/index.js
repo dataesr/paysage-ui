@@ -4,9 +4,14 @@ import useFetch from '../../../hooks/useFetch';
 import { Bloc, BlocContent, BlocTitle } from '../../bloc';
 import Modification from './components/modification';
 
+const LAST_DAYS = 7;
+const DATE = new Date(Date.now() - LAST_DAYS * 24 * 60 * 60 * 1000).toISOString();
+
 export default function ModificationJournal() {
   const { id: resourceId } = useParams();
-  const url = resourceId ? `/journal?filters[resourceId]=${resourceId}&sort=-createdAt&limit=100` : '/journal?sort=-createdAt&limit=100';
+  const url = resourceId
+    ? `/journal?filters[resourceId]=${resourceId}&filters[createdAt][$gte]=${DATE}&sort=-createdAt&limit=100`
+    : `/journal?filters[createdAt][$gte]=${DATE}&sort=-createdAt&limit=100`;
   const { data, error, isLoading } = useFetch(url);
 
   return (
