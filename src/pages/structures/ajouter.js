@@ -36,8 +36,11 @@ const stepProps = {
 function IdentifiersStep({ globalForm, updateGlobalForm, setStep }) {
   const validateForm = (body) => {
     const validationErrors = {};
-    if (body.rnsr && !/^[0-9]{9}[A-Z]{1}$/.test(body.rnsr)) { validationErrors.rnsr = "Le numero RNSR doit être composé de 9 chiffres suivi d'une lettre majuscule"; }
-    if (body.siret && !/^[0-9]{14}$/.test(body.siret)) { validationErrors.siret = 'Le numero Siret doit être composé de 14 chiffres'; }
+    if (body.rnsr && !/^[0-9]{9}[A-Z]{1}$/.test(body.rnsr)) { validationErrors.rnsr = "Doit être composé de 9 chiffres suivi d'une lettre majuscule"; }
+    if (body.siret && !/^[0-9]{14}$/.test(body.siret)) { validationErrors.siret = 'Doit être composé de 14 chiffres'; }
+    if (body.ror && !/^[a-z0-9]{9}$/.test(body.ror)) { validationErrors.ror = 'Doit contenir 9 caractères'; }
+    if (body.wikidata && !/^Q[0-9]+$/.test(body.wikidata)) { validationErrors.wikidata = 'Doit commencer par "Q" et être suivi de 7 caractères'; }
+    if (body.uai && !/^[0-9]{7}[A-Z]$/.test(body.uai)) { validationErrors.uai = "Doit être composé de 7 chiffres suivi d'une lettre majuscule"; }
     return validationErrors;
   };
   const { form, updateForm, errors } = useForm(globalForm, validateForm);
