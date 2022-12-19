@@ -17,6 +17,7 @@ import useForm from '../../../hooks/useForm';
 import useAuth from '../../../hooks/useAuth';
 import useDebounce from '../../../hooks/useDebounce';
 import PaysageBlame from '../../paysage-blame';
+import getCountryISO3 from '../../../utils/country-codes';
 
 function validate(body) {
   const errors = {};
@@ -109,6 +110,7 @@ export default function LocalisationForm({ id, data, onDelete, onSave }) {
         cityId: element.data.properties.citycode,
         postalCode: element.data.properties.postcode,
         country: 'France',
+        iso3: 'FRA',
         locality: element.data.properties.city,
         city: element.data.properties.city,
         coordinates: {
@@ -118,6 +120,7 @@ export default function LocalisationForm({ id, data, onDelete, onSave }) {
       });
     } else {
       updateForm({
+        iso3: getCountryISO3[element.data?.address?.country_code?.toUpperCase()],
         address: element.data?.display_name,
         cityId: null,
         postalCode: element.data?.address.postcode,
