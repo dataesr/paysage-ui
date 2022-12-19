@@ -204,7 +204,7 @@ export default function DocumentsForm({ id, data, onSave, onDelete }) {
                 <TagGroup>
                   {form.relatedObjects.map((element) => (
                     <Tag key={element.id} onClick={() => handleObjectDelete(element.id)}>
-                      {element.id}
+                      {element.displayName}
                       <Icon iconPosition="right" name="ri-close-line" />
                     </Tag>
                   ))}
