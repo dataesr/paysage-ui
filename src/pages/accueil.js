@@ -46,7 +46,7 @@ function Card({ item }) {
             </Link>
           </p>
           <p className="fr-pl-3w fr-tile__desc fr-text--xs">
-            Crée le
+            Créé le
             {' '}
             {toString(item.createdAt, true)}
             {' par '}
