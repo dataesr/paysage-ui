@@ -186,6 +186,7 @@ const SearchBar = forwardRef((props, ref) => {
                       {option.city ? ` à ${capitalize(option.city)}` : null}
                       {option.creationDate ? ` depuis ${option.creationDate.slice(0, 4)}` : null}
                       {option.publicationDate ? <strong>{` publié ${toString(option.publicationDate)}`}</strong> : null}
+                      {(option?.structureStatus === 'inactive') ? <Badge text="inactive" /> : null}
                     </Text>
                     {optionsIcon && <Badge type="info" isSmall hasIcon icon={optionsIcon} text="afficher la page" />}
                   </button>

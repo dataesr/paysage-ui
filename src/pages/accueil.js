@@ -242,21 +242,19 @@ export default function HomePage() {
                 </Row>
               </>
             )}
-            <Row gutters className="fr-pb-8w">
-              {(mostImportantCategories?.length) && (
-                <>
-                  <Row>
-                    <Title as="h2">
-                      <Icon name="ri-file-list-3-line" size="1x" />
-                      Listes d'établissements
-                    </Title>
-                  </Row>
-                  <Row gutters>
-                    {mostImportantCategories.map((element) => <CardCategoriesEtablissement key={element.id} item={element} />)}
-                  </Row>
-                </>
-              )}
-            </Row>
+            {(mostImportantCategories?.length) && (
+              <>
+                <Row>
+                  <Title as="h2">
+                    <Icon name="ri-file-list-3-line" size="1x" />
+                    Listes d'établissements
+                  </Title>
+                </Row>
+                <Row gutters>
+                  {mostImportantCategories.map((element) => <CardCategoriesEtablissement key={element.id} item={element} />)}
+                </Row>
+              </>
+            )}
           </Container>
           <Container spacing="mb-8w">
             <Row gutters>

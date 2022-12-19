@@ -76,6 +76,8 @@ import { PriceByIdPage, PriceCategories, PriceExportPage, PricePresentationPage 
 import SupervisingMinistersByIdPage from '../pages/supervising-ministers/id';
 import LegalCategoriesByIdPage from '../pages/legal-categories/id';
 
+import ApiKeysPage from '../pages/admin/api-keys';
+
 import ScrollToTopOnPathnameChange from './scroll-top-on-pathname-change';
 
 export default function Routes() {
@@ -94,6 +96,7 @@ export default function Routes() {
               <Route path="" element={<Navigate to="dashboard" replace />} />
               <Route path="dashboard" element={<AdminDashboardPage />} />
               <Route path="utilisateurs" element={<AdminUsersPage />} />
+              <Route path="cles-api" element={<ApiKeysPage />} />
               <Route path="groupes" element={<AdminGroupsPage />} />
               <Route path="categories-juridiques" element={<AdminLegalCategoriesPage />} />
               <Route path="types-de-relation" element={<AdminRelationTypesPage />} />
