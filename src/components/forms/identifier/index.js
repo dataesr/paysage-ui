@@ -24,6 +24,7 @@ const regexpValidateIdentifiers = (type) => {
     ROR: [/^[a-z0-9]{9}$/, 'Doit contenir 9 caractères'],
     RNA: [/^W[0-9]{9}$/, 'Doit contenir 10 caractères'],
     RNSR: [/^\d{9}[A-Z]$/, 'Doit contenir 10 caractères'],
+
   };
   return validator[type] || [null, null];
 };
