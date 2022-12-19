@@ -15,13 +15,27 @@ import FormFooter from '../form-footer';
 import useForm from '../../../hooks/useForm';
 import PaysageBlame from '../../paysage-blame';
 
-function validate(body) {
-  const ret = {};
-  if (!body?.type) ret.type = "Le type de l'identifiant est obligatoire";
-  if (!body?.value) ret.value = "La valeur de l'identifiant est obligatoire";
-  return ret;
-}
+const regexpValidateIdentifiers = (type) => {
+  const validator = {
+    idRef: [/^(\d{8}[\dX]|)$/, 'Doit contenir 9 caractères'],
+    UAI: [/^[0-9]{7}[A-Z]$/, 'Doit contenir 8 caractères'],
+    Wikidata: [/^Q[0-9]+$/, 'Doit commencer par "Q" et être suivi de 7 caractères'],
+    Siret: [/^[0-9]{14}$/, 'Doit contenir 14 caractères'],
+    ROR: [/^[a-z0-9]{9}$/, 'Doit contenir 9 caractères'],
+    RNA: [/^W[0-9]{9}$/, 'Doit contenir 10 caractères'],
+    RNSR: [/^\d{9}[A-Z]$/, 'Doit contenir 10 caractères'],
+  };
+  return validator[type] || [null, null];
+};
 
+function validate(body) {
+  const errorMessage = {};
+  if (!body?.type) errorMessage.type = "Le type de l'identifiant est obligatoire";
+  if (!body?.value) errorMessage.value = "La valeur de l'identifiant est obligatoire";
+  const [regexp, error] = regexpValidateIdentifiers(body.type);
+  if (regexp && error && !regexp.test(body.value)) errorMessage.type = ` ${error}`;
+  return errorMessage;
+}
 function sanitize(form) {
   const fields = ['active', 'endDate', 'startDate', 'type', 'value'];
   const body = {};
@@ -73,7 +87,7 @@ export default function IdentifierForm({ id, data, onDelete, onSave, options }) 
               onChange={(e) => updateForm({ type: e.target.value })}
               options={options}
               required
-              selected={form?.type}
+              selected={form.type}
               tabIndex={0}
             />
           </Col>
@@ -84,7 +98,7 @@ export default function IdentifierForm({ id, data, onDelete, onSave, options }) 
               messageType={(showErrors && errors.value) ? 'error' : ''}
               onChange={(e) => updateForm({ value: e.target.value })}
               required
-              value={form?.value}
+              value={form.value}
             />
           </Col>
           <Col n="12">
