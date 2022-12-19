@@ -45,7 +45,7 @@ export default function StructureHistoryForm({ data, onSave }) {
   useEffect(() => {
     const getAutocompleteResultCreation = async () => {
       setIsSearchingCreation(true);
-      const response = await api.get(`/search?query=${queryTOCreation}&types=official-texts`);
+      const response = await api.get(`/autocomplete?query=${queryTOCreation}&types=official-texts`);
       setOptionsCreation(response.data?.data);
       setIsSearchingCreation(false);
     };
@@ -55,7 +55,7 @@ export default function StructureHistoryForm({ data, onSave }) {
   useEffect(() => {
     const getAutocompleteResultClosure = async () => {
       setIsSearchingClosure(true);
-      const response = await api.get(`/search?query=${queryTOClosure}&types=official-texts`);
+      const response = await api.get(`/autocomplete?query=${queryTOClosure}&types=official-texts`);
       setOptionsClosure(response.data?.data);
       setIsSearchingClosure(false);
     };

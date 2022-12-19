@@ -71,7 +71,7 @@ export default function MandateForm({ id, resourceType, relatedObjectTypes, data
     const getAutocompleteResult = async () => {
       setIsSearchingRelatedObject(true);
       const types = encodeURIComponent(relatedObjectTypes.join(','));
-      const response = await api.get(`/search?query=${relatedObjectQuery}&types=${types}`);
+      const response = await api.get(`/autocomplete?query=${relatedObjectQuery}&types=${types}`);
       setRelatedObjectOptions(response.data?.data);
       setIsSearchingRelatedObject(false);
     };
@@ -81,7 +81,7 @@ export default function MandateForm({ id, resourceType, relatedObjectTypes, data
   useEffect(() => {
     const getAutocompleteResult = async () => {
       setIsSearchingResource(true);
-      const response = await api.get(`/search?query=${resourceQuery}&types=${resourceType}`);
+      const response = await api.get(`/autocomplete?query=${resourceQuery}&types=${resourceType}`);
       setResourceOptions(response.data?.data);
       setIsSearchingResource(false);
     };
@@ -91,7 +91,7 @@ export default function MandateForm({ id, resourceType, relatedObjectTypes, data
   useEffect(() => {
     const getAutocompleteResult = async () => {
       setIsSearchingStartDateOfficialText(true);
-      const response = await api.get(`/search?query=${startDateOfficialTextQuery}&types=official-texts`);
+      const response = await api.get(`/autocomplete?query=${startDateOfficialTextQuery}&types=official-texts`);
       setStartDateOfficialTextOptions(response.data?.data);
       setIsSearchingStartDateOfficialText(false);
     };
@@ -101,7 +101,7 @@ export default function MandateForm({ id, resourceType, relatedObjectTypes, data
   useEffect(() => {
     const getAutocompleteResult = async () => {
       setIsSearchingEndDateOfficialText(true);
-      const response = await api.get(`/search?query=${endDateOfficialTextQuery}&types=official-texts`);
+      const response = await api.get(`/autocomplete?query=${endDateOfficialTextQuery}&types=official-texts`);
       setEndDateOfficialTextOptions(response.data?.data);
       setIsSearchingEndDateOfficialText(false);
     };

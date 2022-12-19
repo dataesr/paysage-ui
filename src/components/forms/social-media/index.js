@@ -35,7 +35,6 @@ function validate(body) {
   if (!body?.type) errorMessage.type = 'Le type du réseaux social est obligatoire';
   const [regexp, error] = regexpValidateSocialMedia(body.type);
   if (regexp && error && !regexp.test(body.account)) errorMessage.account = `Essayez ${error}`;
-
   return errorMessage;
 }
 
@@ -46,7 +45,6 @@ function sanitize(form) {
     if (fields.includes(key)) { body[key] = form[key]; }
   });
   if (!form.account.includes('https://')) { body.account = `https://${body.account}`; }
-  if (!form.account.includes('.fr')) { body.account = `${body.account}.fr`; }
   return body;
 }
 

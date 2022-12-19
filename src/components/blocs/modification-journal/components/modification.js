@@ -6,7 +6,7 @@ import Avatar from '../../../avatar';
 
 export default function Modification({ data }) {
   if (!data) return null;
-  const { user, createdAt, method, resourceType, resourceId, subResourceType } = data;
+  const { user = {}, createdAt, method, resourceType, resourceId, subResourceType } = data;
   return (
     <Col n="12" key={JSON.stringify(data)}>
       <div className="flex flex--center">

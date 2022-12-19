@@ -34,7 +34,7 @@ const icons = {
 
 function Card({ item }) {
   const displayName = getRelatedObjectName(item);
-  const { createdBy: user } = item;
+  const { createdBy: user = {} } = item;
   return (
     <Col n="12 lg-4" as="li" key={item.id}>
       <Tile horizontal color={`var(--${item.collection}-color)`}>
@@ -46,7 +46,7 @@ function Card({ item }) {
             </Link>
           </p>
           <p className="fr-pl-3w fr-tile__desc fr-text--xs">
-            Crée le
+            Créé le
             {' '}
             {toString(item.createdAt, true)}
             {' par '}
