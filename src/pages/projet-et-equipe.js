@@ -181,7 +181,7 @@ export default function ProjetEtEquipe() {
                   <Text spacing="mb-1w">Mise en production de Paysage V1 (5 000 structures décrites)</Text>
                 </TimelineItem>
                 <TimelineItem date="2022-12" approximate>
-                  <Text spacing="mb-1w">Mise en production de Paysage V2. Ergonomie repensée et conforme au design system de l’état, nouvelle architecture technique (10 000 structures décrites)</Text>
+                  <Text spacing="mb-1w">Mise en production de Paysage V2. Ergonomie repensée et conforme au système de design de l’état, nouvelle architecture technique (10 000 structures décrites)</Text>
                 </TimelineItem>
               </Timeline>
             </CardDescription>
@@ -199,10 +199,10 @@ export default function ProjetEtEquipe() {
                 <br />
                 Tout au long du projet, Tiphanie Pons a veillé, pour la DGESIP, à l’épanouissement du projet. Elle a partagé sa connaissance du fonctionnement du ministère et son expertise sur le paysage de l’ESRI.
                 <br />
-                Yann Caradec et Emmanuel Weisenburger ont été à l’origine du projet. Yann Caradec a en développé les deux premières versions notamment en s’appuyant sur l’expertise de Jean-Louis Billoët.
+                Yann Caradec et Emmanuel Weisenburger ont été à l’origine du projet. Yann Caradec en a développé les deux premières versions notamment en s’appuyant sur l’expertise de Jean-Louis Billoët.
                 <br />
                 <br />
-                Alexandra Bounyavath a construit une communauté, formé et informé sans relâche les utilisateurs sur le projet et identifié pour l’équipe de conception les besoins des utilisateurs. Pauline Gaudet-Chardonnet a été à l’origine d’une première esquisse de Design.
+                Alexandra Bounyavath a construit une communauté, formé et informé sans relâche les utilisateurs sur le projet et identifié pour l’équipe de conception les besoins des utilisateurs. Pauline Gaudet-Chardonnet a été à l’origine d’une première esquisse de design.
                 <br />
                 Anne L’Hôte, Frédéric Olland et Jeremy Peglion ont imaginé une architecture technique à l’état de l’art. Associés à Mihoub Debache, ils ont développé l’interface de Paysage. Alexandra Bounyavath, Yann Caradec, Julia Grandhay, Isabelle Paulin, Mialy Rakondrazaka et Emmanuel Weisenburger ont travaillé à l’enrichissement et à la fiabilisation des données de Paysage.
               </Text>
