@@ -28,7 +28,7 @@ function validate(body) {
 function sanitize(form) {
   const fields = [
     'address', 'city', 'cityId', 'coordinates', 'country', 'distributionStatement', 'endDate',
-    'locality', 'place', 'postalCode', 'postOfficeBoxNumber', 'startDate', 'telephone',
+    'locality', 'phonenumber', 'place', 'postalCode', 'postOfficeBoxNumber', 'startDate',
   ];
   const body = {};
   Object.keys(form).forEach((key) => { if (fields.includes(key)) { body[key] = form[key]; } });
@@ -257,8 +257,8 @@ export default function LocalisationForm({ id, data, onDelete, onSave }) {
           <Col n="md-6" className="fr-pr-1w">
             <TextInput
               label="Téléphone"
-              value={form.telephone}
-              onChange={(e) => updateForm({ telephone: e.target.value })}
+              value={form.phonenumber}
+              onChange={(e) => updateForm({ phonenumber: e.target.value })}
             />
           </Col>
 
