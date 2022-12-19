@@ -70,7 +70,7 @@ export default function RelationsByGroup({ group, reloader }) {
   // What to do with relatedObject! Shared Model or Card adaptability ?
   const renderCards = () => {
     if (!data && !data?.data?.length) return null;
-    const structures = data.data.filter((element) => (element.relatedObject?.type === 'structure' && element.relatedObject?.currentLocalisation?.geometry?.coordinates));
+    const structures = data.data.filter((element) => (element.relatedObject?.collection === 'structures' && element.relatedObject?.currentLocalisation?.geometry?.coordinates));
     const markers = structures.map((element) => {
       const { coordinates } = element.relatedObject.currentLocalisation.geometry;
       const markersCoordinates = [...coordinates];
