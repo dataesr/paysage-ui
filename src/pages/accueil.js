@@ -171,7 +171,7 @@ export default function HomePage() {
   const { data } = useFetch(`/follow-ups?filters[eventDate][$gte]=${DATE30}&sort=-eventDate&limit=5`);
   const { data: press } = useFetch(`/press?filters[publicationDate][$gte]=${DATE7.slice(0, 10)}&sort=-publicationDate&limit=4`);
   // TODO: Restore projects
-  if (counts?.projects) delete counts.projects;
+  delete counts.projects;
   const { data: options } = useSearch(SEARCH_TYPES, debouncedQuery);
 
   const handleSearchRedirection = ({ id, type }) => navigate(`/${type}/${id}`);
