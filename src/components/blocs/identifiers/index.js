@@ -156,8 +156,12 @@ export default function IdentifiersComponent() {
   const renderCards = () => {
     if (!data) return null;
     const list = [];
+    const inactives = data.data.filter((el) => (el.active === false));
+    const actives = data.data.filter((el) => (el.active !== false));
+    const orderedList = [...actives, ...inactives];
+
     if (data) {
-      data.data?.forEach((el) => {
+      orderedList?.forEach((el) => {
         const inactive = (el.active === false);
         list.push(
           <KeyValueCard
