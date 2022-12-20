@@ -17,7 +17,7 @@ const langOptions = [
   { label: 'Allemand', value: 'de' },
   { label: 'Espagnol', value: 'es' },
   { label: 'Italien', value: 'it' },
-  { label: 'Potuguais', value: 'pt' },
+  { label: 'Portugais', value: 'pt' },
   { label: 'Chinois', value: 'cn' },
   { label: 'Arabe', value: 'ar' },
   { label: 'Autre langue', value: 'na' },
