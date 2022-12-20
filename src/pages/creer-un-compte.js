@@ -7,7 +7,7 @@ import useAuth from '../hooks/useAuth';
 import useToast from '../hooks/useToast';
 import Button from '../components/button';
 import PasswordHint from '../components/password-hint';
-import { MAIL_REGEXP, PASSWORD_REGEXP, getPasswordValidationInfo } from '../utils/auth';
+import { MAIL_REGEXP, PASSWORD_REGEXP, getPasswordValidationInfo, DOMAINS_REGEXP } from '../utils/auth';
 import usePageTitle from '../hooks/usePageTitle';
 
 export default function SignUp() {
@@ -57,7 +57,6 @@ export default function SignUp() {
     }
     setStep(step + 1);
   };
-  useEffect(() => { document.title = 'Paysage · Créer un compte'; }, []);
   useEffect(() => {
     if (firstName.length >= 2) return setFirstNameError('');
     return setFirstNameError('Le prénom doit avoir au moins deux caractères');
@@ -69,6 +68,7 @@ export default function SignUp() {
   }, [lastName]);
 
   useEffect(() => {
+    if (DOMAINS_REGEXP.test(email)) return setEmailError('Vous devez utiliser une adresse email professionelle');
     if (MAIL_REGEXP.test(email)) return setEmailError('');
     return setEmailError('Veuillez entrer une adresse email valide.');
   }, [email]);
