@@ -24,7 +24,7 @@ function sanitize(form) {
   return body;
 }
 
-export default function PriceForm({ id, data, onSave, onDelete }) {
+export default function PrizeForm({ id, data, onSave, onDelete }) {
   const { form, updateForm, errors } = useForm(data, validate);
   const [showErrors, setShowErrors] = useState(false);
 
@@ -111,13 +111,13 @@ export default function PriceForm({ id, data, onSave, onDelete }) {
   );
 }
 
-PriceForm.propTypes = {
+PrizeForm.propTypes = {
   id: PropTypes.string,
   data: PropTypes.oneOfType([PropTypes.shape, null]),
   onSave: PropTypes.func.isRequired,
   onDelete: PropTypes.func,
 };
-PriceForm.defaultProps = {
+PrizeForm.defaultProps = {
   id: null,
   data: {},
   onDelete: null,

@@ -7,7 +7,7 @@ export function getRelatedObjectName(relatedObject) {
   case 'structures':
     relatedObjectName = relatedObject.currentName.usualName;
     break;
-  case 'prices':
+  case 'prizes':
     relatedObjectName = relatedObject.nameFr;
     break;
   case 'projects':
@@ -41,8 +41,8 @@ export function getRelatedObjectUrl(relatedObject) {
   case 'structure':
     url = `/structures/${relatedObject.id}`;
     break;
-  case 'price':
-    url = `/prices/${relatedObject.id}`;
+  case 'prize':
+    url = `/prizes/${relatedObject.id}`;
     break;
   case 'project':
     url = `/projects/${relatedObject.id}`;

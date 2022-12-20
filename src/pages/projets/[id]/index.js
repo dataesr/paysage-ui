@@ -21,7 +21,7 @@ import useNotice from '../../../hooks/useNotice';
 import ProjectPresentationPage from './presentation';
 import ProjectExportPage from './exporter';
 import ProjectCategories from './categories';
-import ProjectPrices from './prix-et-recompenses';
+import ProjectPrizes from './prix-et-recompenses';
 import { saveError, saveSuccess } from '../../../utils/notice-contents';
 import Error from '../../../components/errors';
 import usePageTitle from '../../../hooks/usePageTitle';
@@ -225,8 +225,8 @@ function ProjectByIdPage() {
 
 export {
   ProjectByIdPage,
+  ProjectCategories,
   ProjectExportPage,
   ProjectPresentationPage,
-  ProjectCategories,
-  ProjectPrices,
+  ProjectPrizes,
 };

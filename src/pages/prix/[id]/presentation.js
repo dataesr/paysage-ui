@@ -10,9 +10,9 @@ import useUrl from '../../../hooks/useUrl';
 import useFetch from '../../../hooks/useFetch';
 import { PageSpinner } from '../../../components/spinner';
 import Error from '../../../components/errors';
-import PriceAttributionForm from '../../../components/forms/price-attribution';
+import PrizeAttributionForm from '../../../components/forms/prize-attribution';
 
-export default function PricePresentationPage() {
+export default function PrizePresentationPage() {
   const { url } = useUrl();
   const { data, isLoading, error } = useFetch(url);
   if (isLoading) return <PageSpinner />;
@@ -37,14 +37,14 @@ export default function PricePresentationPage() {
       <RelationsByTag
         tag={PRIX_PORTEUR}
         blocName="Structures décernant le prix"
-        resourceType="prices"
+        resourceType="prizes"
         relatedObjectTypes={['structures']}
-        Form={PriceAttributionForm}
+        Form={PrizeAttributionForm}
       />
       <RelationsByTag
         tag={LAUREAT}
         blocName="Lauréats"
-        resourceType="prices"
+        resourceType="prizes"
         // TODO: Restore projects
         // relatedObjectTypes={['persons', 'structures', 'projects']}
         relatedObjectTypes={['persons', 'structures']}

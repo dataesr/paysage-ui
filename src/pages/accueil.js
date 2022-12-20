@@ -27,7 +27,7 @@ const icons = {
   persons: 'ri-user-3-line',
   categories: 'ri-price-tag-3-line',
   terms: 'ri-hashtag',
-  prices: 'ri-award-line',
+  prizes: 'ri-award-line',
   projects: 'ri-booklet-line',
   officialtexts: 'ri-git-repository-line',
 };
@@ -100,7 +100,7 @@ function useFetchLastCreations() {
 
   useEffect(() => {
     const abortController = new AbortController();
-    const collections = ['structures', 'persons', 'prices', 'official-texts', 'categories', 'terms'];
+    const collections = ['structures', 'persons', 'prizes', 'official-texts', 'categories', 'terms'];
     const getLastCreationsData = async () => {
       const fetchedData = await Promise.all(collections.map((collection) => fetchLastCreationsWithMetrics(collection, { signal: abortController.signal })));
       setData(fetchedData.map((result) => result.data).flat().sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)));
@@ -153,7 +153,7 @@ function useFetchMostImportantCategories() {
 const objectMapping = {
   structures: 'structures',
   categories: 'catégories',
-  prices: 'prix',
+  prizes: 'prix',
   terms: 'termes',
   officialtexts: 'textes officiels',
   persons: 'personnes',

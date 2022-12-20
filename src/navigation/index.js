@@ -38,7 +38,7 @@ import {
   PersonExportPage,
   PersonMandats,
   PersonPresentationPage,
-  PersonPrices,
+  PersonPrizes,
   PersonProjets,
   PersonsRelatedElements,
 } from '../pages/personnes/[id]';
@@ -50,7 +50,7 @@ import {
   ProjectByIdPage,
   ProjectPresentationPage,
   ProjectCategories,
-  ProjectPrices,
+  ProjectPrizes,
   ProjectExportPage,
 } from '../pages/projets/[id]';
 
@@ -72,8 +72,8 @@ import DocumentsOutlet from '../components/blocs/documents';
 import ActualitesOutlet from '../components/blocs/actualites';
 import OfficialTextsOutlet from '../components/blocs/textes-officiels';
 import JournalOutlet from '../components/blocs/modification-journal';
-import PriceAddPage from '../pages/prix/ajouter';
-import { PriceByIdPage, PriceCategories, PriceExportPage, PricePresentationPage } from '../pages/prix/[id]';
+import PrizeAddPage from '../pages/prix/ajouter';
+import { PrizeByIdPage, PrizeCategories, PrizeExportPage, PrizePresentationPage } from '../pages/prix/[id]';
 import SupervisingMinistersByIdPage from '../pages/supervising-ministers/id';
 import LegalCategoriesByIdPage from '../pages/legal-categories/id';
 
@@ -171,7 +171,7 @@ export default function Routes() {
               <Route path="projets" element={<PersonProjets />} />
               <Route path="actualites" element={<ActualitesOutlet />} />
               <Route path="evenements" element={<AgendaOutlet />} />
-              <Route path="prix-et-recompenses" element={<PersonPrices />} />
+              <Route path="prix-et-recompenses" element={<PersonPrizes />} />
               <Route path="categories" element={<PersonCategories />} />
               <Route path="documents" element={<DocumentsOutlet />} />
               <Route path="textes-officiels" element={<OfficialTextsOutlet />} />
@@ -193,13 +193,13 @@ export default function Routes() {
               <Route path="journal" element={<JournalOutlet />} />
             </Route>
 
-            <Route path="/prix/ajouter" element={<PriceAddPage />} />
-            <Route path="/prix/:id/exporter" element={<PriceExportPage />} />
-            <Route path="/prices/:id" element={<Redirect />} />
-            <Route path="/prix/:id" element={<PriceByIdPage />}>
+            <Route path="/prix/ajouter" element={<PrizeAddPage />} />
+            <Route path="/prix/:id/exporter" element={<PrizeExportPage />} />
+            <Route path="/prizes/:id" element={<Redirect />} />
+            <Route path="/prix/:id" element={<PrizeByIdPage />}>
               <Route path="" element={<Navigate to="presentation" replace />} />
-              <Route path="presentation" element={<PricePresentationPage />} />
-              <Route path="categories" element={<PriceCategories />} />
+              <Route path="presentation" element={<PrizePresentationPage />} />
+              <Route path="categories" element={<PrizeCategories />} />
               <Route path="actualites" element={<ActualitesOutlet />} />
               <Route path="evenements" element={<AgendaOutlet />} />
               <Route path="documents" element={<DocumentsOutlet />} />
@@ -216,7 +216,7 @@ export default function Routes() {
               <Route path="categories" element={<ProjectCategories />} />
               <Route path="actualites" element={<ActualitesOutlet />} />
               <Route path="evenements" element={<AgendaOutlet />} />
-              <Route path="prix-et-recompenses" element={<ProjectPrices />} />
+              <Route path="prix-et-recompenses" element={<ProjectPrizes />} />
               <Route path="documents" element={<DocumentsOutlet />} />
               <Route path="textes-officiels" element={<OfficialTextsOutlet />} />
               <Route path="journal" element={<JournalOutlet />} />

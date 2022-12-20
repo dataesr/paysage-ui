@@ -12,20 +12,20 @@ import useEditMode from '../../../hooks/useEditMode';
 import Button from '../../../components/button';
 import CopyBadgeButton from '../../../components/copy/copy-badge-button';
 import { DropdownButton, DropdownButtonItem } from '../../../components/dropdown-button';
-import PriceForm from '../../../components/forms/price';
+import PrizeForm from '../../../components/forms/prize';
 import useUrl from '../../../hooks/useUrl';
 import { PageSpinner } from '../../../components/spinner';
 import api from '../../../utils/api';
 import useNotice from '../../../hooks/useNotice';
 
-import PricePresentationPage from './presentation';
-import PriceCategories from './categories';
-import PriceExportPage from './exporter';
+import PrizePresentationPage from './presentation';
+import PrizeCategories from './categories';
+import PrizeExportPage from './exporter';
 import { saveError, saveSuccess } from '../../../utils/notice-contents';
 import Error from '../../../components/errors';
 import usePageTitle from '../../../hooks/usePageTitle';
 
-function PriceByIdPage() {
+function PrizeByIdPage() {
   const { url, id } = useUrl();
   const { data, isLoading, error, reload } = useFetch(url);
   const navigate = useNavigate();
@@ -109,7 +109,7 @@ function PriceByIdPage() {
                         {data.nameFr}
                       </ModalTitle>
                       <ModalContent>
-                        <PriceForm id={data.id} data={data} onSave={onSave} />
+                        <PrizeForm id={data.id} data={data} onSave={onSave} />
                       </ModalContent>
                     </Modal>
                   </DropdownButtonItem>
@@ -212,8 +212,8 @@ function PriceByIdPage() {
 }
 
 export {
-  PriceByIdPage,
-  PriceExportPage,
-  PricePresentationPage,
-  PriceCategories,
+  PrizeByIdPage,
+  PrizeCategories,
+  PrizeExportPage,
+  PrizePresentationPage,
 };

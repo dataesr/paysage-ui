@@ -1,16 +1,16 @@
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { Breadcrumb, BreadcrumbItem, Col, Container, Row, Title } from '@dataesr/react-dsfr';
-import PriceForm from '../../components/forms/price';
+import PrizeForm from '../../components/forms/prize';
 import api from '../../utils/api';
 import useNotice from '../../hooks/useNotice';
 import { saveError, saveSuccess } from '../../utils/notice-contents';
 import usePageTitle from '../../hooks/usePageTitle';
 
-export default function PriceAddPage() {
+export default function PrizeAddPage() {
   usePageTitle('Contribution · Ajouter un prix');
   const navigate = useNavigate();
   const { notice } = useNotice();
-  const onSave = async (body) => api.post('/prices', body)
+  const onSave = async (body) => api.post('/prizes', body)
     .then((response) => { notice(saveSuccess); navigate(`/prix/${response.data.id}`); })
     .catch(() => { notice(saveError); });
   return (
@@ -34,7 +34,7 @@ export default function PriceAddPage() {
         </Col>
       </Row>
 
-      <PriceForm onSave={onSave} />
+      <PrizeForm onSave={onSave} />
     </Container>
   );
 }

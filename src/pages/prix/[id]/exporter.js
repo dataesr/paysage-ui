@@ -15,13 +15,13 @@ import OfficialTextOutlet from '../../../components/blocs/textes-officiels';
 import { OverlaySpinner, PageSpinner } from '../../../components/spinner';
 import Error from '../../../components/errors';
 
-export default function PriceExportPage() {
+export default function PrizeExportPage() {
   const { id } = useParams();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
 
-  const { data, isLoading, error } = useFetch(`/prices/${id}`);
+  const { data, isLoading, error } = useFetch(`/prizes/${id}`);
   const componentRef = useRef();
 
   const handlePrint = useReactToPrint({

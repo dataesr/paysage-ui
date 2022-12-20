@@ -25,7 +25,7 @@ export function EnumContextProvider({ children }) {
           weblinks: {
             structures: [DEFAULT_SELECT, ...getOptions(data, 'StructureWeblinkTypesEnum')],
             persons: [DEFAULT_SELECT, ...getOptions(data, 'PersonWeblinkTypesEnum')],
-            prices: [DEFAULT_SELECT, ...getOptions(data, 'PriceWeblinkTypesEnum')],
+            prizes: [DEFAULT_SELECT, ...getOptions(data, 'PrizeWeblinkTypesEnum')],
             categories: [DEFAULT_SELECT, ...getOptions(data, 'CategoryWeblinkTypesEnum')],
             terms: [DEFAULT_SELECT, ...getOptions(data, 'TermWeblinkTypesEnum')],
             projects: [DEFAULT_SELECT, ...getOptions(data, 'ProjectWeblinkTypesEnum')],
@@ -34,7 +34,7 @@ export function EnumContextProvider({ children }) {
           identifiers: {
             persons: [DEFAULT_SELECT, ...getOptions(data, 'PersonIdentifierTypesEnum')],
             structures: [DEFAULT_SELECT, ...getOptions(data, 'StructureIdentifierTypesEnum')],
-            prices: [DEFAULT_SELECT, ...getOptions(data, 'PriceIdentifierTypesEnum')],
+            prizes: [DEFAULT_SELECT, ...getOptions(data, 'PrizeIdentifierTypesEnum')],
             categories: [DEFAULT_SELECT, ...getOptions(data, 'CategoryIdentifierTypesEnum')],
             terms: [DEFAULT_SELECT, ...getOptions(data, 'TermIdentifierTypesEnum')],
             projects: [DEFAULT_SELECT, ...getOptions(data, 'ProjectIdentifierTypesEnum')],

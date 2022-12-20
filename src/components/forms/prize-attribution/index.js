@@ -22,7 +22,7 @@ function sanitize(form) {
   return body;
 }
 
-export default function PriceAttributionForm({ id, resourceType, relatedObjectTypes, data, onDelete, onSave, inverse }) {
+export default function PrizeAttributionForm({ id, resourceType, relatedObjectTypes, data, onDelete, onSave, inverse }) {
   const validator = (body) => {
     const errors = {};
     if (!body?.relatedObjectId && !inverse) {
@@ -167,7 +167,7 @@ export default function PriceAttributionForm({ id, resourceType, relatedObjectTy
   );
 }
 
-PriceAttributionForm.propTypes = {
+PrizeAttributionForm.propTypes = {
   id: PropTypes.string,
   relatedObjectTypes: PropTypes.arrayOf(PropTypes.string),
   resourceType: PropTypes.string.isRequired,
@@ -177,7 +177,7 @@ PriceAttributionForm.propTypes = {
   inverse: PropTypes.bool,
 };
 
-PriceAttributionForm.defaultProps = {
+PrizeAttributionForm.defaultProps = {
   id: null,
   relatedObjectTypes: [''],
   data: {},

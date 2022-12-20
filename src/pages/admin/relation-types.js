@@ -104,7 +104,7 @@ export default function RelationTypesPage() {
                     <Tag key={object} as="span">
                       {object === 'persons' ? 'Personnes' : null}
                       {object === 'structures' ? 'Structures' : null}
-                      {object === 'prices' ? 'Prix' : null}
+                      {object === 'prizes' ? 'Prix' : null}
                       {object === 'projects' ? 'Projets' : null}
                       {object === 'terms' ? 'Termes' : null}
                       {object === 'categories' ? 'Categories' : null}

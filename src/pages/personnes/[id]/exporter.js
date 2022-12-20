@@ -11,7 +11,7 @@ import PersonMandats from './mandats';
 import AgendaOutlet from '../../../components/blocs/evenements';
 import DocumentsOutlet from '../../../components/blocs/documents';
 import PersonCategories from './categories';
-import PersonPrices from './prix-et-recompenses';
+import PersonPrizes from './prix-et-recompenses';
 import PersonsRelatedElements from './elements-lies';
 import ActualitesOutlet from '../../../components/blocs/actualites';
 import OfficialTextOutlet from '../../../components/blocs/textes-officiels';
@@ -67,7 +67,7 @@ export default function PersonExportPage() {
             {searchParams.get('ressources') && <DocumentsOutlet />}
             {searchParams.get('categories') && <PersonCategories />}
             {searchParams.get('textes') && <OfficialTextOutlet />}
-            {searchParams.get('prix') && <PersonPrices />}
+            {searchParams.get('prix') && <PersonPrizes />}
             {searchParams.get('elements') && <PersonsRelatedElements />}
           </Col>
         </Row>

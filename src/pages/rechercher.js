@@ -16,7 +16,7 @@ const icons = {
   persons: 'ri-user-3-line',
   categories: 'ri-price-tag-3-line',
   terms: 'ri-hashtag',
-  prices: 'ri-award-line',
+  prizes: 'ri-award-line',
   projects: 'ri-booklet-line',
   'official-texts': 'ri-git-repository-line',
 };
@@ -161,7 +161,7 @@ export default function SearchPage() {
                   <Icon name="ri-award-line" size="1x" />
                   Prix scientifiques
                 </Text>
-                <Badge type={(type === 'prix') ? 'info' : 'new'} text={counts.prices || '0'} />
+                <Badge type={(type === 'prix') ? 'info' : 'new'} text={counts.prizes || '0'} />
               </Row>
             </SideMenuLink>
             <SideMenuLink className={(type === 'textes-officiels') ? 'sidemenu__item--active' : ''} asLink={<RouterLink to={`textes-officiels?query=${query}&page=1`} replace />}>

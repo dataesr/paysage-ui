@@ -5,7 +5,7 @@ const pageBorderColors = {
   structures: 'var(--structures-color)',
   personnes: 'var(--persons-color)',
   categories: 'var(--categories-color)',
-  prix: 'var(--prices-color)',
+  prix: 'var(--prizes-color)',
   projets: 'var(--projects-color)',
   documents: 'var(--documents-color)',
   termes: 'var(--terms-color)',

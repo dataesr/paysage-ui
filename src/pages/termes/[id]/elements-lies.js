@@ -52,7 +52,7 @@ export default function TermRelatedElements() {
       <RelationsByTag
         tag={PRIX_TERME}
         blocName="Prix associés"
-        resourceType="prices"
+        resourceType="prizes"
         relatedObjectTypes={['terms']}
         noRelationType
         inverse

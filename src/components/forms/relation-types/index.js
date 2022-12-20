@@ -24,7 +24,7 @@ function sanitize(form) {
 const objectNameMapper = [
   { name: 'Personnes', object: 'persons' },
   { name: 'Structures', object: 'structures' },
-  { name: 'Prix', object: 'prices' },
+  { name: 'Prix', object: 'prizes' },
   { name: 'Projets', object: 'projects' },
   { name: 'Termes', object: 'terms' },
   { name: 'Catégories', object: 'categories' },

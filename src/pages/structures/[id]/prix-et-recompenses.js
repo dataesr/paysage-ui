@@ -1,7 +1,7 @@
 import RelationsAssociated from '../../../components/blocs/relations-associated';
 import RelationsByTag from '../../../components/blocs/relations-by-tag';
 import LaureateForm from '../../../components/forms/laureate';
-import PriceAttributionForm from '../../../components/forms/price-attribution';
+import PrizeAttributionForm from '../../../components/forms/prize-attribution';
 import { LAUREAT, PRIX_PORTEUR } from '../../../utils/relations-tags';
 
 export default function StructurePrixEtRecompensesPage() {
@@ -10,7 +10,7 @@ export default function StructurePrixEtRecompensesPage() {
       <RelationsByTag
         tag={LAUREAT}
         blocName="Prix et récompenses obtenus par la structure"
-        resourceType="prices"
+        resourceType="prizes"
         relatedObjectTypes={['structures']}
         inverse
         Form={LaureateForm}
@@ -22,10 +22,10 @@ export default function StructurePrixEtRecompensesPage() {
       <RelationsByTag
         tag={PRIX_PORTEUR}
         blocName="Prix attribués par la structure"
-        resourceType="prices"
+        resourceType="prizes"
         relatedObjectTypes={['structures']}
         inverse
-        Form={PriceAttributionForm}
+        Form={PrizeAttributionForm}
       />
     </>
   );

@@ -58,7 +58,7 @@ export default function CategoriesRelatedElements() {
       <RelationsByTag
         tag={PRIX_CATEGORIE}
         blocName="Prix associés"
-        resourceType="prices"
+        resourceType="prizes"
         relatedObjectTypes={['categories']}
         noRelationType
         inverse

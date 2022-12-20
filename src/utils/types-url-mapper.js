@@ -2,7 +2,7 @@ const URLTypesMapper = [
   ['categories', 'categories'],
   ['categories-juridiques', 'legal-categories'],
   ['personnes', 'persons'],
-  ['prix', 'prices'],
+  ['prix', 'prizes'],
   ['projets', 'projects'],
   ['structures', 'structures'],
   ['termes', 'terms'],

@@ -41,7 +41,7 @@ export default function RelationCard({ relation, inverse, onEdit }) {
             {relation?.mandatePrecision && ` ${relation?.mandatePrecision}`}
             {relation?.laureatePrecision && ` ${relation?.laureatePrecision}`}
             {' '}
-            {(relation?.resource.collection === 'prices' && (relation.startDate || relation.endDate))
+            {(relation?.resource.collection === 'prizes' && (relation.startDate || relation.endDate))
               ? relation.startDate?.split('-')?.[0] || 'Date inconnue'
               : isComming}
           </p>

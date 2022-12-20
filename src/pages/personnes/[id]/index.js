@@ -22,7 +22,7 @@ import PersonPresentationPage from './presentation';
 import PersonMandats from './mandats';
 import PersonCategories from './categories';
 import PersonProjets from './projets';
-import PersonPrices from './prix-et-recompenses';
+import PersonPrizes from './prix-et-recompenses';
 import PersonsRelatedElements from './elements-lies';
 import PersonExportPage from './exporter';
 import { saveError, saveSuccess } from '../../../utils/notice-contents';
@@ -273,11 +273,11 @@ function PersonByIdPage() {
 
 export {
   PersonByIdPage,
-  PersonExportPage,
-  PersonPresentationPage,
-  PersonMandats,
   PersonCategories,
+  PersonExportPage,
+  PersonMandats,
+  PersonPresentationPage,
+  PersonPrizes,
   PersonProjets,
-  PersonPrices,
   PersonsRelatedElements,
 };

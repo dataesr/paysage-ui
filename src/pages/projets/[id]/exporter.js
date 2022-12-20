@@ -6,7 +6,7 @@ import { useReactToPrint } from 'react-to-print';
 import useFetch from '../../../hooks/useFetch';
 import CopyBadgeButton from '../../../components/copy/copy-badge-button';
 import ProjectPresentationPage from './presentation';
-import ProjectPrices from './prix-et-recompenses';
+import ProjectPrizes from './prix-et-recompenses';
 import AgendaOutlet from '../../../components/blocs/evenements';
 import DocumentsOutlet from '../../../components/blocs/documents';
 import ProjectCategories from './categories';
@@ -59,7 +59,7 @@ export default function ProjectExportPage() {
             {searchParams.get('evenements') && <AgendaOutlet />}
             {searchParams.get('ressources') && <DocumentsOutlet />}
             {searchParams.get('categories') && <ProjectCategories />}
-            {searchParams.get('prix') && <ProjectPrices />}
+            {searchParams.get('prix') && <ProjectPrizes />}
             {searchParams.get('textes') && <OfficialTextOutlet />}
           </Col>
         </Row>

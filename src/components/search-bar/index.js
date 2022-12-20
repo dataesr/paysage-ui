@@ -14,7 +14,7 @@ const objectTypes = {
   categories: 'ri-price-tag-3-line',
   'official-texts': 'ri-git-repository-line',
   persons: 'ri-user-3-line',
-  prices: 'ri-award-line',
+  prizes: 'ri-award-line',
   projects: 'ri-booklet-fill',
   structures: 'ri-building-line',
   terms: 'ri-hashtag',

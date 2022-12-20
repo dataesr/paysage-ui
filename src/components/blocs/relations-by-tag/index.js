@@ -153,7 +153,7 @@ RelationsByTag.defaultProps = {
   Form: RelationsForm,
   inverse: false,
   noRelationType: false,
-  relatedObjectTypes: ['persons', 'structures', 'prices', 'terms', 'projects', 'categories'],
+  relatedObjectTypes: ['persons', 'structures', 'prizes', 'terms', 'projects', 'categories'],
   resourceType: 'structures',
   sort: '-startDate',
 };

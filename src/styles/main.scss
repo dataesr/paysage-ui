@@ -101,7 +101,7 @@ HR {
   right: .25rem;
 }
 
-$objects: structures, persons, prices, terms, projects, categories, legal-categories, supervising-ministers, official-texts, officialtexts;
+$objects: structures, persons, prizes, terms, projects, categories, legal-categories, supervising-ministers, official-texts, officialtexts;
 $sides: left, bottom, right, top;
 
 @each $object in $objects {
