@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import Button from '../button';
-import styles from './styles.module.scss';
+import Button from '../components/button';
+import styles from './scroll-to-top-button.module.scss';
 
 export default function ScrollToTop() {
   const [isVisible, setIsVisible] = useState(false);
@@ -13,16 +13,12 @@ export default function ScrollToTop() {
   };
 
   useEffect(() => {
-    const toggleVisibility = () => {
-      if (window.pageYOffset > 600) {
-        setIsVisible(true);
-      } else {
-        setIsVisible(false);
-      }
-    };
+    const toggleVisibility = () => ((window.pageYOffset > 600)
+      ? setIsVisible(true)
+      : setIsVisible(false)
+    );
 
     window.addEventListener('scroll', toggleVisibility);
-
     return () => window.removeEventListener('scroll', toggleVisibility);
   }, []);
 
@@ -36,5 +32,6 @@ export default function ScrollToTop() {
       icon="ri-arrow-up-line"
       onClick={scrollToTop}
     />
+
   );
 }

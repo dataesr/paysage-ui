@@ -1,8 +1,8 @@
 import PropTypes from 'prop-types';
 import { Navigate, Outlet, useLocation } from 'react-router-dom';
-import useAuth from '../../hooks/useAuth';
-import Error from '../errors';
-import { PageSpinner } from '../spinner';
+import useAuth from '../hooks/useAuth';
+import Error from '../components/errors';
+import { PageSpinner } from '../components/spinner';
 
 export default function ProtectedRoute({ roles }) {
   const { viewer, isLoading } = useAuth();

@@ -2,7 +2,6 @@ import { Row, Title, Icon, Col } from '@dataesr/react-dsfr';
 import Identifiers from '../../../components/blocs/identifiers';
 import RelationsByTag from '../../../components/blocs/relations-by-tag';
 import Weblinks from '../../../components/blocs/weblinks';
-import useHashScroll from '../../../hooks/useHashScroll';
 import LaureateForm from '../../../components/forms/laureate';
 import Wiki from '../../../components/blocs/wiki';
 import { LAUREAT, PRIX_PORTEUR } from '../../../utils/relations-tags';
@@ -11,11 +10,11 @@ import useUrl from '../../../hooks/useUrl';
 import useFetch from '../../../hooks/useFetch';
 import { PageSpinner } from '../../../components/spinner';
 import Error from '../../../components/errors';
+import PriceAttributionForm from '../../../components/forms/price-attribution';
 
 export default function PricePresentationPage() {
   const { url } = useUrl();
   const { data, isLoading, error } = useFetch(url);
-  useHashScroll();
   if (isLoading) return <PageSpinner />;
   if (error) return <Error status={error} />;
   return (
@@ -40,7 +39,7 @@ export default function PricePresentationPage() {
         blocName="Structures décernant le prix"
         resourceType="prices"
         relatedObjectTypes={['structures']}
-        Form={LaureateForm}
+        Form={PriceAttributionForm}
       />
       <RelationsByTag
         tag={LAUREAT}

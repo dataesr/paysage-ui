@@ -1,9 +1,8 @@
 import PropTypes from 'prop-types';
-import { Col, Container, Icon, Row, Tile, Title } from '@dataesr/react-dsfr';
+import { Badge, BadgeGroup, Col, Container, Icon, Row, Tag, Text, Tile, Title } from '@dataesr/react-dsfr';
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import SearchBar from '../components/search-bar';
-import { PageSpinner } from '../components/spinner';
 import useSearch from '../hooks/useSearch';
 import api from '../utils/api';
 import { SEARCH_TYPES } from '../utils/constants';
@@ -13,8 +12,15 @@ import useDebounce from '../hooks/useDebounce';
 import { CATEGORIE_PARENT } from '../utils/relations-tags';
 import KeyValueCard from '../components/card/key-value-card';
 import { capitalize } from '../utils/strings';
+import usePageTitle from '../hooks/usePageTitle';
+import useFetch from '../hooks/useFetch';
+import { Timeline, TimelineItem } from '../components/timeline';
+import TagList from '../components/tag-list';
+import Button from '../components/button';
 
 const MAX_LAST_CREATIONS_CARDS = 12;
+const DATE7 = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
+const DATE30 = new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString();
 
 const icons = {
   structures: 'ri-building-line',
@@ -23,12 +29,12 @@ const icons = {
   terms: 'ri-hashtag',
   prices: 'ri-award-line',
   projects: 'ri-booklet-line',
-  'official-texts': 'ri-git-repository-line',
+  officialtexts: 'ri-git-repository-line',
 };
 
 function Card({ item }) {
   const displayName = getRelatedObjectName(item);
-  const { createdBy: user } = item;
+  const { createdBy: user = {} } = item;
   return (
     <Col n="12 lg-4" as="li" key={item.id}>
       <Tile horizontal color={`var(--${item.collection}-color)`}>
@@ -40,7 +46,7 @@ function Card({ item }) {
             </Link>
           </p>
           <p className="fr-pl-3w fr-tile__desc fr-text--xs">
-            Crée le
+            Créé le
             {' '}
             {toString(item.createdAt, true)}
             {' par '}
@@ -76,7 +82,7 @@ CardCategoriesEtablissement.propTypes = {
 };
 
 const fetchLastCreationsWithMetrics = async (collection, { signal }) => {
-  const params = 'sort=createdAt&limit=10';
+  const params = `filters[createdAt][$gte]=${DATE7}&limit=10`;
   const response = await api
     .get(`/${collection}?${params}`, {}, { signal })
     .catch(() => ({ ok: false }));
@@ -89,7 +95,7 @@ const fetchLastCreationsWithMetrics = async (collection, { signal }) => {
 };
 
 function useFetchLastCreations() {
-  const [data, setData] = useState([]);
+  const [data, setData] = useState(null);
   const [metrics, setMetrics] = useState({});
 
   useEffect(() => {
@@ -105,6 +111,24 @@ function useFetchLastCreations() {
   }, []);
 
   return [data, metrics];
+}
+
+function useFetchCounts() {
+  const [counts, setCounts] = useState(null);
+  const [error, setError] = useState(false);
+
+  useEffect(() => {
+    const abortController = new AbortController();
+    const getCounts = async () => api
+      .get('/metadata/counts', {}, { signal: abortController.signal })
+      .then((response) => setCounts(response.data))
+      .catch(() => setError(true));
+
+    getCounts();
+    return () => abortController.abort();
+  }, []);
+
+  return { counts, error, isLoading: (!counts && !error) };
 }
 
 function useFetchMostImportantCategories() {
@@ -131,88 +155,187 @@ const objectMapping = {
   categories: 'catégories',
   prices: 'prix',
   terms: 'termes',
-  'official-texts': 'textes officiels',
+  officialtexts: 'textes officiels',
   persons: 'personnes',
   projects: 'projets',
 };
 
 export default function HomePage() {
   const navigate = useNavigate();
+  usePageTitle('Accueil');
   const [query, setQuery] = useState('');
   const debouncedQuery = useDebounce(query, 500);
   const [lastCreations, metrics] = useFetchLastCreations();
   const mostImportantCategories = useFetchMostImportantCategories();
+  const { counts, isLoading } = useFetchCounts();
+  const { data } = useFetch(`/follow-ups?filters[eventDate][$gte]=${DATE30}&sort=-eventDate&limit=5`);
+  const { data: press } = useFetch(`/press?filters[publicationDate][$gte]=${DATE7.slice(0, 10)}&sort=-publicationDate&limit=4`);
+  // TODO: Restore projects
+  if (counts?.projects) delete counts.projects;
   const { data: options } = useSearch(SEARCH_TYPES, debouncedQuery);
-  useEffect(() => { document.title = 'Paysage · Accueil'; }, []);
 
   const handleSearchRedirection = ({ id, type }) => navigate(`/${type}/${id}`);
   const handleSearch = () => navigate(`rechercher?query=${query}`);
   const cardsToPrint = (lastCreations?.length > MAX_LAST_CREATIONS_CARDS) ? lastCreations.slice(0, MAX_LAST_CREATIONS_CARDS) : lastCreations;
   return (
     <Container fluid>
-      <Container fluid className="search-bg" spacing="py-5w mb-4w">
-        <Container>
-          <Row>
-            <Title as="h2">
-              Paysage de l'ESR
-            </Title>
-          </Row>
-          <Row className="fr-pb-4w">
-            <SearchBar
-              size="lg"
-              buttonLabel="Rechercher"
-              value={query}
-              placeholder="Rechercher..."
-              onChange={(e) => setQuery(e.target.value)}
-              options={options || []}
-              optionsIcon="ri-arrow-right-line"
-              onSearch={handleSearch}
-              onSelect={handleSearchRedirection}
-              isSearching={false}
-              className="fullwidth"
-            />
-          </Row>
-          <Row>
-            <Title as="h3" look="h5" spacing="mb-0">
-              <Icon name="ri-dashboard-3-line" size="1x" />
-              Métriques
-            </Title>
-          </Row>
-          <Row gutters spacing="mb-2w">
-            {(Object.keys(metrics)?.length > 0) ? (Object.keys(metrics).map((k) => (
-              <Col key={k} n="6 sm-4 md-2">
-                <KeyValueCard
-                  // linkIn={`/rechercher/${objectMapping[k]}?page=1&query=`}
-                  cardKey={capitalize(objectMapping[k])}
-                  cardValue={metrics[k]}
-                  icon={icons[k]}
-                  className={`fr-enlarge-link card-${k}--bottom`}
+      {(!isLoading) && (
+        <>
+          <Container fluid className="search-bg" spacing="py-5w mb-4w">
+            <Container>
+              <Row>
+                <Title as="h2">
+                  Paysage de l'ESR
+                </Title>
+              </Row>
+              <Row className="fr-pb-10w">
+                <SearchBar
+                  size="lg"
+                  buttonLabel="Rechercher"
+                  value={query}
+                  placeholder="Rechercher..."
+                  onChange={(e) => setQuery(e.target.value)}
+                  options={options || []}
+                  optionsIcon="ri-arrow-right-line"
+                  onSearch={handleSearch}
+                  onSelect={handleSearchRedirection}
+                  isSearching={false}
+                  className="fullwidth"
                 />
+              </Row>
+              {(counts && Object.keys(counts)?.length > 0) && (
+                <>
+                  <Row>
+                    <Title as="h3" look="h5" spacing="mb-0">
+                      <Icon name="ri-dashboard-3-line" size="1x" />
+                      Métriques
+                    </Title>
+                  </Row>
+                  <Row gutters spacing="mb-2w">
+                    {Object.keys(counts).map((k) => (
+                      <Col key={k} n="4 sm-4 md-4">
+                        <KeyValueCard
+                          cardKey={capitalize(objectMapping[k])}
+                          cardValue={`${counts[k]}`}
+                          icon={icons[k]}
+                          className={`card-${k} card--border-bottom`}
+                          tooltip={`+ ${metrics[k]} sur les 7 derniers jours`}
+                        />
+                      </Col>
+                    ))}
+                  </Row>
+                </>
+              )}
+            </Container>
+          </Container>
+          <Container>
+            {(lastCreations && (lastCreations.length > 0)) && (
+              <>
+                <Row>
+                  <Title as="h2">
+                    <Icon name="ri-flashlight-line" size="1x" />
+                    Derniers ajouts
+                  </Title>
+                </Row>
+                <Row gutters className="fr-pb-8w">
+                  {cardsToPrint.map((element) => <Card key={element.id} item={element} />)}
+                </Row>
+              </>
+            )}
+            {(mostImportantCategories?.length) && (
+              <>
+                <Row>
+                  <Title as="h2">
+                    <Icon name="ri-file-list-3-line" size="1x" />
+                    Listes d'établissements
+                  </Title>
+                </Row>
+                <Row gutters>
+                  {mostImportantCategories.map((element) => <CardCategoriesEtablissement key={element.id} item={element} />)}
+                </Row>
+              </>
+            )}
+          </Container>
+          <Container spacing="mb-8w">
+            <Row gutters>
+              <Col n="6">
+                {(data?.data?.length > 0) && (
+                  <>
+                    <Row>
+                      <Title as="h2">
+                        <Icon name="ri-flashlight-line" size="1x" />
+                        Évenements récents
+                      </Title>
+                    </Row>
+                    <Timeline>
+                      {data.data.map((event) => (
+                        <TimelineItem date={event.eventDate} key={event.id}>
+                          <Text spacing="mb-1w" bold>{event.title}</Text>
+                          {event.description && <Text size="xs" spacing="mb-1w">{event.description}</Text>}
+                          {event.relatedObjects && (
+                            <TagList>
+                              {event.relatedObjects.map(
+                                (related) => <Tag iconPosition="right" icon="ri-arrow-right-line" onClick={() => navigate(related.href)} key={related.id}>{related.displayName}</Tag>,
+                              )}
+                            </TagList>
+                          )}
+                        </TimelineItem>
+                      ))}
+                    </Timeline>
+                  </>
+                )}
               </Col>
-            ))) : null}
-          </Row>
-        </Container>
-      </Container>
-      <Container>
-        <Row>
-          <Title as="h2">
-            <Icon name="ri-flashlight-line" size="1x" />
-            Derniers ajouts
-          </Title>
-        </Row>
-        <Row gutters className="fr-pb-8w">
-          {(lastCreations?.length) ? cardsToPrint.map((element) => <Card key={element.id} item={element} />) : <PageSpinner />}
-        </Row>
-        <Row>
-          <Title as="h2">
-            <Icon name="ri-file-list-3-line" size="1x" />
-            Listes d'établissements
-          </Title>
-        </Row>
-        <Row gutters className="fr-pb-8w">
-          {(mostImportantCategories?.length) ? mostImportantCategories.map((element) => <CardCategoriesEtablissement key={element.id} item={element} />) : <PageSpinner />}
-        </Row>
-      </Container>
+              <Col n="6">
+                {(press?.data?.length > 0) && (
+                  <>
+                    <Row>
+                      <Title as="h2">
+                        <Icon name="ri-flashlight-line" size="1x" />
+                        Dernières actualités
+                      </Title>
+                    </Row>
+                    <Row gutters>
+                      {press.data.map((event) => (
+                        <Col n="12">
+                          <div className="fr-card fr-card--xs fr-card--shadow">
+                            <div className="fr-card__body">
+                              <div className="fr-card__content">
+                                <div className="fr-card__start">
+                                  <Row className="flex--space-between">
+                                    <BadgeGroup>
+                                      <Badge type="new" text={event?.publicationDate} />
+                                      {event?.sourceName && <Badge text={event?.sourceName} />}
+                                    </BadgeGroup>
+                                  </Row>
+                                </div>
+                                <p className="fr-card__title fr-text--md fr-mb-0">
+                                  {event?.title}
+                                  <Button title="Voir la dépeche" onClick={() => { window.open(event?.sourceUrl, '_blank'); }} rounded borderless icon="ri-external-link-line" />
+                                </p>
+                                {event?.summary && <div className="fr-card__desc fr-mt-0">{`${event.summary.substring(0, 100)}...`}</div>}
+                                <div className="fr-card__end">
+                                  {(event?.relatedObjects.length > 1) && <Text spacing="mb-1w" bold>Autres objets associés :</Text>}
+                                  {event?.relatedObjects && (
+                                    <TagList>
+                                      {event?.relatedObjects.map(
+                                        (related) => <Tag iconPosition="right" icon="ri-arrow-right-line" onClick={() => navigate(related.href)} key={related.id}>{related.displayName}</Tag>,
+                                      )}
+                                    </TagList>
+                                  )}
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </Col>
+                      ))}
+                    </Row>
+                  </>
+                )}
+              </Col>
+            </Row>
+          </Container>
+        </>
+      )}
     </Container>
   );
 }

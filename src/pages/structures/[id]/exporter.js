@@ -8,8 +8,8 @@ import CopyBadgeButton from '../../../components/copy/copy-badge-button';
 
 import StructurePresentationPage from './presentation';
 import StructureGouvernancePage from './gouvernance';
-import DocumentsOutlet from '../../../components/outlets/documents';
-import AgendaOutlet from '../../../components/outlets/evenements';
+import DocumentsOutlet from '../../../components/blocs/documents';
+import AgendaOutlet from '../../../components/blocs/evenements';
 import StructureCategoriesPage from './categories';
 import StructureBudgetPage from './chiffres-cles/budget';
 import StructureEtudiantsPage from './chiffres-cles/etudiants';
@@ -19,8 +19,8 @@ import StructureInsertionProfessionnellePage from './chiffres-cles/insertion-pro
 import StructurePrixEtRecompensesPage from './prix-et-recompenses';
 import StructureProjectsPage from './projets';
 import StructureElementLiesPage from './elements-lies';
-import OfficialTextOutlet from '../../../components/outlets/textes-officiels';
-import ActualitesOutlet from '../../../components/outlets/actualites';
+import OfficialTextOutlet from '../../../components/blocs/textes-officiels';
+import ActualitesOutlet from '../../../components/blocs/actualites';
 import { PageSpinner, OverlaySpinner } from '../../../components/spinner';
 import Error from '../../../components/errors';
 

@@ -17,7 +17,7 @@ export default function RelationsByGroup({ group, reloader }) {
   const { id: groupId, name: groupName, accepts: groupAccepts } = group;
   const { notice } = useNotice();
   const { id: resourceId, apiObject } = useUrl('relations-groups');
-  const url = `/relations?filters[relationsGroupId]=${groupId}`;
+  const url = `/relations?filters[relationsGroupId]=${groupId}&limit=100`;
   const { data, isLoading, error, reload } = useFetch(url);
   const [showModal, setShowModal] = useState(false);
   const [showListModal, setShowListModal] = useState(false);
@@ -70,7 +70,7 @@ export default function RelationsByGroup({ group, reloader }) {
   // What to do with relatedObject! Shared Model or Card adaptability ?
   const renderCards = () => {
     if (!data && !data?.data?.length) return null;
-    const structures = data.data.filter((element) => (element.relatedObject?.type === 'structure' && element.relatedObject?.currentLocalisation?.geometry?.coordinates));
+    const structures = data.data.filter((element) => (element.relatedObject?.collection === 'structures' && element.relatedObject?.currentLocalisation?.geometry?.coordinates));
     const markers = structures.map((element) => {
       const { coordinates } = element.relatedObject.currentLocalisation.geometry;
       const markersCoordinates = [...coordinates];

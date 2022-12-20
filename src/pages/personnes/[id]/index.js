@@ -28,6 +28,7 @@ import PersonExportPage from './exporter';
 import { saveError, saveSuccess } from '../../../utils/notice-contents';
 import useAuth from '../../../hooks/useAuth';
 import Error from '../../../components/errors';
+import usePageTitle from '../../../hooks/usePageTitle';
 
 function PersonByIdPage() {
   const { viewer } = useAuth();
@@ -52,7 +53,7 @@ function PersonByIdPage() {
   const [isFormModalOpen, setIsFormModalOpen] = useState(false);
 
   useEffect(() => { reset(); }, [reset]);
-  useEffect(() => { document.title = `Personnes · ${`${data?.firstName} ${data?.lastName}`.trim()}`; }, [data]);
+  usePageTitle(`Personnes · ${`${data?.firstName} ${data?.lastName}`.trim()}`);
 
   const onSave = async (body) => {
     await api.patch(url, body)

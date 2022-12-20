@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import {
   Card,
   CardDescription,
@@ -10,9 +9,10 @@ import {
   Title,
   CardHeader,
 } from '@dataesr/react-dsfr';
+import usePageTitle from '../hooks/usePageTitle';
 
 export default function RessourcesPage() {
-  useEffect(() => { document.title = 'Paysage · Ressources'; }, []);
+  usePageTitle('Ressources');
   return (
     <Container spacing="mt-5w">
       <Title as="h2">Les ressources externes</Title>

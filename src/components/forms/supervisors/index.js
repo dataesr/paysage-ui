@@ -26,8 +26,8 @@ function sanitize(form) {
 export default function SupervisorsForm({ id, data, onDelete, onSave }) {
   const validator = (body) => {
     const errors = {};
-    if (!body?.relatedObjectId) {
-      errors.relatedObjectId = 'Vous devez sélectionner un objet à lier';
+    if (!body?.resourceId) {
+      errors.resourceId = 'Vous devez sélectionner un objet à lier';
     }
     return errors;
   };
@@ -116,11 +116,11 @@ export default function SupervisorsForm({ id, data, onDelete, onSave }) {
             <Select
               label="Ministre de tutelle"
               options={ministersOptions}
-              selected={form.relatedObjectId}
-              onChange={(e) => updateForm({ relatedObjectId: e.target.value })}
+              selected={form.resourceId}
+              onChange={(e) => updateForm({ resourceId: e.target.value })}
               required
-              message={(showErrors && errors.relatedObjectId) ? errors.relatedObjectId : null}
-              messageType={(showErrors && errors.relatedObjectId) ? 'error' : ''}
+              message={(showErrors && errors.resourceId) ? errors.resourceId : null}
+              messageType={(showErrors && errors.resourceId) ? 'error' : ''}
             />
           </Col>
           <Col n="12">

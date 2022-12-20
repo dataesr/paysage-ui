@@ -14,7 +14,6 @@ import ExpendableListCards from '../../../../components/card/expendable-list-car
 import WeblinkCard from '../../../../components/card/weblink-card';
 import { Spinner } from '../../../../components/spinner';
 import useFetch from '../../../../hooks/useFetch';
-import useHashScroll from '../../../../hooks/useHashScroll';
 import useUrl from '../../../../hooks/useUrl';
 import cleanNumber from '../../../../utils/clean-numbers';
 
@@ -22,7 +21,6 @@ HCExporting(Highcharts);
 HCExportingData(Highcharts);
 
 export default function StructureEtudiantsPage() {
-  useHashScroll();
   const { id, url } = useUrl('keynumbers');
   const { data, error, isLoading } = useFetch(`${url}/population`);
 

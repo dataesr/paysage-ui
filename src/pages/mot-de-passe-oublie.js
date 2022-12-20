@@ -1,14 +1,16 @@
 import { useState, useEffect } from 'react';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import {
-  Container, Row, Col, TextInput, Icon, Highlight, Text, Link, Title, Breadcrumb, BreadcrumbItem, ButtonGroup, Stepper, Alert,
+  Container, Row, Col, TextInput, Icon, Highlight, Text, Link, Title, ButtonGroup, Stepper, Alert,
 } from '@dataesr/react-dsfr';
 import Button from '../components/button';
 import PasswordHint from '../components/password-hint';
 import useAuth from '../hooks/useAuth';
 import { MAIL_REGEXP, PASSWORD_REGEXP, OTP_REGEXP, getPasswordValidationInfo } from '../utils/auth';
+import usePageTitle from '../hooks/usePageTitle';
 
 export default function Passwordless() {
+  usePageTitle('Mot de passe oublié');
   const navigate = useNavigate();
   const { requestPasswordChangeEmail, changePassword, viewer } = useAuth();
   if (viewer?.id) { navigate('/'); }
@@ -78,15 +80,7 @@ export default function Passwordless() {
   useEffect(() => setPasswordValidation(getPasswordValidationInfo(password)), [password]);
 
   return (
-    <Container spacing="mb-6w">
-      <Row justifyContent="center">
-        <Col n="xs-12 sm-10 md-8 lg-6">
-          <Breadcrumb>
-            <BreadcrumbItem asLink={<RouterLink to="/" />}>Accueil</BreadcrumbItem>
-            <BreadcrumbItem>Récupération de mot de passe</BreadcrumbItem>
-          </Breadcrumb>
-        </Col>
-      </Row>
+    <Container spacing="my-6w">
       <Row justifyContent="center">
         <Col n="xs-12 sm-10 md-8 lg-6">
           <Title as="h1" look="h3">Mot de passe oublié ?</Title>
@@ -220,7 +214,7 @@ export default function Passwordless() {
                               <PasswordHint display={(passwordValidation.length === true) ? 'success' : passwordErrorDisplay} hint="8 caractères minimum" />
                               <PasswordHint display={(passwordValidation.uppercase === true) ? 'success' : passwordErrorDisplay} hint="1 majuscule minimum" />
                               <PasswordHint display={(passwordValidation.lowercase === true) ? 'success' : passwordErrorDisplay} hint="1 miniscule minimum" />
-                              <PasswordHint display={(passwordValidation.special === true) ? 'success' : passwordErrorDisplay} hint="1 caractère spécial minimum parmi @$!%*#?&:_." />
+                              <PasswordHint display={(passwordValidation.special === true) ? 'success' : passwordErrorDisplay} hint="1 caractère spécial minimum parmi @$!%*#?&:_" />
                               <PasswordHint display={(passwordValidation.integer === true) ? 'success' : passwordErrorDisplay} hint="1 chiffre minimum" />
                             </Text>
                           )}

@@ -20,7 +20,7 @@ const regexpValidateSocialMedia = (type) => {
     Instagram: [/^(https:\/\/)?(www.)?instagram.com\/[A-Za-z0-9/:%_+.,#?!@&=-]+$/, 'https://www.instagram.com/<compte>/'],
     Twitter: [/^(https:\/\/)?(www.)?twitter.com\/[0-9A-Za-z_]{1,15}$/, 'https://twitter.com/<compte>'],
     Youtube: [/^(https:\/\/)?(www.)?youtube.com\/[A-Za-z0-9/:%_+.,#?!@&=-]+$/, 'https://www.youtube.com/channel/<chaine>'],
-    Linkedin: [/^(https:\/\/)?(www.)?linkedin.com\/.+\/.+\/$/, 'https://www.linkedin.com/<profil>'],
+    Linkedin: [/^(https:\/\/)?(www.)?(fr.)?linkedin.com\/.+\/[A-Za-z0-9/:%_+.,#?!@&=-]+$/, 'https://www.linkedin.com/<profil>'],
     Twitch: [/^(https:\/\/)?(www.)?twitch\.tv\/([a-z0-9_]+)($|\?)/, 'https://twitch.tv/<chaine>'],
     Tiktok: [/^(https:\/\/)?(www.)?tiktok\.com\/([A-Za-z0-9/:%_+.,#?!@&=-]+)($|\?)/, 'https://www.tiktok.com/@<compte>'],
     Pinterest: [/^(https:\/\/)?(www.)?pinterest.fr\/[A-Za-z0-9/:%_+.,#?!@&=-]+$/, 'https://www.pinterest.fr/<compte>/'],
@@ -35,7 +35,6 @@ function validate(body) {
   if (!body?.type) errorMessage.type = 'Le type du réseaux social est obligatoire';
   const [regexp, error] = regexpValidateSocialMedia(body.type);
   if (regexp && error && !regexp.test(body.account)) errorMessage.account = `Essayez ${error}`;
-
   return errorMessage;
 }
 
@@ -46,7 +45,6 @@ function sanitize(form) {
     if (fields.includes(key)) { body[key] = form[key]; }
   });
   if (!form.account.includes('https://')) { body.account = `https://${body.account}`; }
-  if (!form.account.includes('.fr')) { body.account = `${body.account}.fr`; }
   return body;
 }
 

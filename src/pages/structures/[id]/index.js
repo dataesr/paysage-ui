@@ -38,6 +38,7 @@ import StructureHistoryForm from '../../../components/forms/structures/historiqu
 import api from '../../../utils/api';
 import { getName } from '../../../utils/structures';
 import Error from '../../../components/errors';
+import usePageTitle from '../../../hooks/usePageTitle';
 
 function StructureByIdPage() {
   const { viewer } = useAuth();
@@ -63,13 +64,24 @@ function StructureByIdPage() {
     textes: true,
   });
 
+  function badgeColor() {
+    if (data.structureStatus === 'active') {
+      return <Badge colorFamily="green-emeraude" text={data.structureStatus} />;
+    } if (data.structureStatus === 'inactive') {
+      return <Badge text="inactive" type="warning" />;
+    } if (data.structureStatus === 'forthcoming') {
+      return <Badge text="A venir" type="info" />;
+    }
+    return null;
+  }
+
   const [isStatusModalOpen, setIsStatusModalOpen] = useState(false);
   const [isDescriptionModalOpen, setIsDescriptionModalOpen] = useState(false);
   const [isMottoModalOpen, setIsMottoModalOpen] = useState(false);
   const [isHistoryModalOpen, setIsHistoryModalOpen] = useState(false);
 
   useEffect(() => { reset(); }, [reset]);
-  useEffect(() => { document.title = `Structures · ${data?.currentName.usualName}`; }, [data]);
+  usePageTitle(`Structures · ${data?.currentName.usualName}`);
   useShortcuts(['Control', 'e'], useCallback(() => toggle(), [toggle]));
 
   const onSaveHandler = async (body) => {
@@ -86,7 +98,7 @@ function StructureByIdPage() {
   };
 
   if (isLoading) return <PageSpinner />;
-  if (error) return <Error status={error} />;
+  if (error || !data) return <Error status={error} />;
   return (
     <Container spacing="pb-6w">
       <Row>
@@ -236,7 +248,7 @@ function StructureByIdPage() {
               {getName(data?.currentName)}
               <BadgeGroup className="fr-pt-1w">
                 <Badge type="info" text="structure" />
-                <Badge colorFamily="green-emeraude" text={data.structureStatus || 'active'} />
+                {badgeColor()}
                 <CopyBadgeButton colorFamily="yellow-tournesol" text={data.id} lowercase />
               </BadgeGroup>
             </Title>
@@ -353,7 +365,7 @@ function StructureByIdPage() {
               </ModalContent>
             </Modal>
           </Row>
-          <Outlet />
+          <Outlet context={data} />
         </Col>
       </Row>
     </Container>

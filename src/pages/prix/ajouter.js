@@ -1,18 +1,18 @@
-import { useEffect } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { Breadcrumb, BreadcrumbItem, Col, Container, Row, Title } from '@dataesr/react-dsfr';
 import PriceForm from '../../components/forms/price';
 import api from '../../utils/api';
 import useNotice from '../../hooks/useNotice';
 import { saveError, saveSuccess } from '../../utils/notice-contents';
+import usePageTitle from '../../hooks/usePageTitle';
 
 export default function PriceAddPage() {
+  usePageTitle('Contribution · Ajouter un prix');
   const navigate = useNavigate();
   const { notice } = useNotice();
   const onSave = async (body) => api.post('/prices', body)
     .then((response) => { notice(saveSuccess); navigate(`/prix/${response.data.id}`); })
     .catch(() => { notice(saveError); });
-  useEffect(() => { document.title = 'Contribution · Ajouter un prix'; }, []);
   return (
     <Container spacing="mb-6w">
       <Row>

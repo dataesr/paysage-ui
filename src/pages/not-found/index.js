@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button, Text } from '@dataesr/react-dsfr';
 import { useNavigate } from 'react-router-dom';
-import styles from './not-found.module.scss';
+import styles from './styles.module.scss';
 
 const randomDisplay = Math.floor(Math.random() * 2);
 

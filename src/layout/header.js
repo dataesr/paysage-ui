@@ -18,11 +18,11 @@ import {
   ToolItem,
   ToolItemGroup,
 } from '@dataesr/react-dsfr';
-import useAuth from '../../hooks/useAuth';
-import useDebounce from '../../hooks/useDebounce';
-import SearchBar from '../search-bar';
-import api from '../../utils/api';
-import { SEARCH_TYPES } from '../../utils/constants';
+import useAuth from '../hooks/useAuth';
+import useDebounce from '../hooks/useDebounce';
+import SearchBar from '../components/search-bar';
+import api from '../utils/api';
+import { SEARCH_TYPES } from '../utils/constants';
 
 const {
   REACT_APP_HEADER_TAG: headerTag,
@@ -147,13 +147,13 @@ export default function Header() {
           )}
         </Tool>
       </HeaderBody>
-      <HeaderNav path={pathname}>
-        <NavItem
-          title="Accueil"
-          asLink={<RouterLink to="/">Accueil</RouterLink>}
-          current={pathname === '/'}
-        />
-        {viewer?.id && (
+      {viewer?.id && (
+        <HeaderNav path={pathname}>
+          <NavItem
+            title="Accueil"
+            asLink={<RouterLink to="/">Accueil</RouterLink>}
+            current={pathname === '/'}
+          />
           <>
             <NavItem
               title="Je contribue"
@@ -166,30 +166,30 @@ export default function Header() {
               current={pathname.startsWith('/rechercher')}
             />
           </>
-        )}
-        <NavItem
-          title="Ressources"
-          current={pathname.startsWith('/ressources')}
-        >
-          <NavSubItem
-            current={pathname.startsWith('/ressources-externes')}
-            title="Les ressources externes"
-            asLink={<RouterLink to="/ressources-externes" />}
-          />
-        </NavItem>
-        {viewer?.id && ['admin'].includes(viewer?.role) && (
           <NavItem
-            title="Administration"
-            current={pathname.startsWith('/admin')}
-            asLink={<RouterLink to="/admin" />}
+            title="Ressources"
+            current={pathname.startsWith('/ressources')}
+          >
+            <NavSubItem
+              current={pathname.startsWith('/ressources-externes')}
+              title="Les ressources externes"
+              asLink={<RouterLink to="/ressources-externes" />}
+            />
+          </NavItem>
+          {viewer?.id && ['admin'].includes(viewer?.role) && (
+            <NavItem
+              title="Administration"
+              current={pathname.startsWith('/admin')}
+              asLink={<RouterLink to="/admin" />}
+            />
+          )}
+          <NavItem
+            title="Aide"
+            asLink={<RouterLink to="/aide" />}
+            current={pathname.startsWith('/aide')}
           />
-        )}
-        <NavItem
-          title="Aide"
-          asLink={<RouterLink to="/aide" />}
-          current={pathname.startsWith('/aide')}
-        />
-      </HeaderNav>
+        </HeaderNav>
+      )}
     </HeaderWrapper>
   );
 }

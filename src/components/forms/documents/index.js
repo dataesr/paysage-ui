@@ -139,10 +139,11 @@ export default function DocumentsForm({ id, data, onSave, onDelete }) {
           <Col n="12">
             <TextInput
               label="Description"
-              value={form.description || ''}
-              onChange={(e) => updateForm({ description: e.target.value })}
               message={(showErrors && errors.description) ? errors.description : null}
               messageType={(showErrors && errors.description) ? 'error' : ''}
+              onChange={(e) => updateForm({ description: e.target.value })}
+              textarea
+              value={form.description || ''}
             />
           </Col>
           <Col n="12">
@@ -203,7 +204,7 @@ export default function DocumentsForm({ id, data, onSave, onDelete }) {
                 <TagGroup>
                   {form.relatedObjects.map((element) => (
                     <Tag key={element.id} onClick={() => handleObjectDelete(element.id)}>
-                      {element.id}
+                      {element.displayName}
                       <Icon iconPosition="right" name="ri-close-line" />
                     </Tag>
                   ))}

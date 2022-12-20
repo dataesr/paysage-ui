@@ -7,14 +7,12 @@ import RelationsByTag from '../../../components/blocs/relations-by-tag';
 import KeyValueCard from '../../../components/card/key-value-card';
 import { PageSpinner } from '../../../components/spinner';
 import useUrl from '../../../hooks/useUrl';
-import useHashScroll from '../../../hooks/useHashScroll';
 import useFetch from '../../../hooks/useFetch';
 import Wiki from '../../../components/blocs/wiki';
 import { CATEGORIE_PARENT } from '../../../utils/relations-tags';
 import Error from '../../../components/errors';
 
 export default function CategoryPresentationPage() {
-  useHashScroll();
   const { url } = useUrl();
   const { data, isLoading, error } = useFetch(url);
 

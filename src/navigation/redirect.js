@@ -1,5 +1,5 @@
 import { Navigate } from 'react-router-dom';
-import useUrl from '../../hooks/useUrl';
+import useUrl from '../hooks/useUrl';
 
 function getRoute(apiObject) {
   switch (apiObject) {

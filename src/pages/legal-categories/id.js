@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import {
   Badge, BadgeGroup, Breadcrumb, BreadcrumbItem, Col, Container, Row, Title,
@@ -10,12 +9,13 @@ import useFetch from '../../hooks/useFetch';
 import RelationsByTag from '../../components/blocs/relations-by-tag';
 import { STRUCTURE_CATEGORIE_JURIDIQUE } from '../../utils/relations-tags';
 import Error from '../../components/errors';
+import usePageTitle from '../../hooks/usePageTitle';
 
 export default function LegalCategoriesByIdPage() {
   const { url } = useUrl();
   const { data, isLoading, error } = useFetch(url);
 
-  useEffect(() => { document.title = `Catégorie juridique · ${data?.longNameFr}`; }, [data]);
+  usePageTitle(`Catégorie juridique · ${data?.longNameFr}`);
 
   if (isLoading) return <PageSpinner />;
   if (error) return <Error status={error} />;

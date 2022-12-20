@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import RelationCard from '../../card/relation-card';
+import RelationAssociatedCard from '../../card/relation-associated-card';
 import ExpendableListCards from '../../card/expendable-list-cards';
 import { Bloc, BlocContent, BlocTitle } from '../../bloc';
 import useFetch from '../../../hooks/useFetch';
@@ -13,7 +13,7 @@ export default function RelationsAssociated({ blocName, tag, sort }) {
   const renderCards = () => {
     if (!data && !data?.data?.length) return null;
     const list = data.data.map((element) => (
-      <RelationCard relation={element} />
+      <RelationAssociatedCard relation={element} />
     ));
     return (
       <ExpendableListCards list={list} nCol="12 md-6" />

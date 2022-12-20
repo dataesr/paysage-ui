@@ -19,6 +19,7 @@ import useFetch from '../../hooks/useFetch';
 import RelatedObjectCard from '../../components/card/related-object-card';
 import { Bloc, BlocContent, BlocTitle } from '../../components/bloc';
 import Error from '../../components/errors';
+import usePageTitle from '../../hooks/usePageTitle';
 
 export default function OfficialTextByIdPage() {
   const { url } = useUrl();
@@ -26,9 +27,9 @@ export default function OfficialTextByIdPage() {
   const { notice } = useNotice();
   const { editMode, reset, toggle } = useEditMode();
   const [isFormModalOpen, setIsFormModalOpen] = useState(false);
+  usePageTitle(`Texte officiels · ${data?.title}`);
 
   useEffect(() => { reset(); }, [reset]);
-  useEffect(() => { document.title = `Texte officiels · ${data?.title}`; }, [data]);
 
   const onSave = async (body) => api.patch(url, body)
     .then(() => { reload(); setIsFormModalOpen(false); notice(saveSuccess); })

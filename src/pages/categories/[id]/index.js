@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Link as RouterLink, useNavigate, Outlet } from 'react-router-dom';
 import {
   Badge,
@@ -23,13 +23,14 @@ import CategoryForm from '../../../components/forms/category-term';
 import CategoriesExportPage from './exporter';
 import { saveError, saveSuccess } from '../../../utils/notice-contents';
 import Error from '../../../components/errors';
+import usePageTitle from '../../../hooks/usePageTitle';
 
 function CategoryByIdPage() {
   const { url, id } = useUrl();
   const { data, isLoading, error, reload } = useFetch(url);
   const navigate = useNavigate();
   const { notice } = useNotice();
-  const { editMode, reset, toggle } = useEditMode();
+  const { editMode, toggle } = useEditMode();
   const [isExportOpen, setIsExportOpen] = useState(false);
   // const [isFavorite, setIsFavorite] = useState(false);
   const { form, updateForm } = useForm({
@@ -42,8 +43,7 @@ function CategoryByIdPage() {
   });
   const [isFormModalOpen, setIsFormModalOpen] = useState(false);
 
-  useEffect(() => { reset(); }, [reset]);
-  useEffect(() => { document.title = `Catégories · ${data?.usualNameFr}`; }, [data]);
+  usePageTitle(`Catégories · ${data?.usualNameFr}`);
 
   const onSave = async (body) => api.patch(url, body)
     .then(() => { reload(); setIsFormModalOpen(false); notice(saveSuccess); })

@@ -1,3 +1,4 @@
+import { useOutletContext } from 'react-router-dom';
 import { Col, Row, Title } from '@dataesr/react-dsfr';
 
 import ChiffresCles from '../../../components/blocs/chiffres-cles';
@@ -10,26 +11,18 @@ import Names from '../../../components/blocs/names';
 import SocialMedias from '../../../components/blocs/social-medias';
 import Weblinks from '../../../components/blocs/weblinks';
 import { INTERNAL_PAGES_TYPES, PALMARES_TYPES, WEBLINKS_TYPES } from '../../../components/blocs/weblinks/constants';
-import useHashScroll from '../../../hooks/useHashScroll';
 import Wiki from '../../../components/blocs/wiki';
 import KeyValueCard from '../../../components/card/key-value-card';
 import useEditMode from '../../../hooks/useEditMode';
-import useFetch from '../../../hooks/useFetch';
-import useUrl from '../../../hooks/useUrl';
 import CurrentLegals from '../../../components/blocs/current-legal';
 import CurrentLogos from '../../../components/blocs/current-logo';
 import CurrentSupervisors from '../../../components/blocs/current-supervisors';
-import { PageSpinner } from '../../../components/spinner';
-import Error from '../../../components/errors';
 
 export default function StructurePresentationPage() {
-  useHashScroll();
-  const { url } = useUrl();
-  const { data, isLoading, error } = useFetch(url);
+  const data = useOutletContext();
   const { editMode } = useEditMode();
-
-  if (isLoading) return <PageSpinner />;
-  if (error) return <Error status={error} />;
+  if (!data) return null;
+  const { year, population, exercice, netAccountingResult, motto, descriptionFr, descriptionEn } = data;
   return (
     <>
       <Row>
@@ -37,17 +30,18 @@ export default function StructurePresentationPage() {
           <Title as="h3" look="h4">En un coup d'oeil</Title>
         </Col>
       </Row>
+      <Names visible={editMode} />
       <Row gutters spacing="mb-5w">
         <CurrentLegals />
         <CurrentSupervisors />
         <CurrentLogos />
-        {data?.motto && (
+        {motto && (
           <Col n="12 lg-4">
             <KeyValueCard
               titleAsText
               className="card-structures"
               cardKey="Devise"
-              cardValue={data?.motto}
+              cardValue={motto}
               icon="ri-mic-2-line"
             />
           </Col>
@@ -67,14 +61,18 @@ export default function StructurePresentationPage() {
             titleAsText
             className="card-structures"
             cardKey="Description"
-            cardValue={data?.descriptionFr || data?.descriptionEn}
+            cardValue={descriptionFr || descriptionEn}
             icon="ri-align-left"
           />
         </Col>
       </Row>
-      <ChiffresCles />
+      <ChiffresCles
+        year={year}
+        population={population}
+        exercice={exercice}
+        netAccountingResult={netAccountingResult}
+      />
       <StructureCurrentGovernance />
-      {editMode ? <Names /> : <div className="hide"><Names /></div>}
       <Title as="h3" look="h4">Présence sur le web</Title>
       <Row gutters>
         <Col n="12 md-6">

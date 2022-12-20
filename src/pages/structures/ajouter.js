@@ -23,6 +23,7 @@ import useNotice from '../../hooks/useNotice';
 import api from '../../utils/api';
 import { STRUCTURES_CLOSURE_REASONS, STRUCTURES_CREATION_REASONS } from '../../utils/constants';
 import SearchBar from '../../components/search-bar';
+import usePageTitle from '../../hooks/usePageTitle';
 
 const steps = ['Identifiants', 'Dénominations', 'Création et fermeture'];
 
@@ -35,8 +36,11 @@ const stepProps = {
 function IdentifiersStep({ globalForm, updateGlobalForm, setStep }) {
   const validateForm = (body) => {
     const validationErrors = {};
-    if (body.rnsr && !/^[0-9]{9}[A-Z]{1}$/.test(body.rnsr)) { validationErrors.rnsr = "Le numero RNSR doit être composé de 9 chiffres suivi d'une lettre majuscule"; }
-    if (body.siret && !/^[0-9]{14}$/.test(body.siret)) { validationErrors.siret = 'Le numero Siret doit être composé de 14 chiffres'; }
+    if (body.rnsr && !/^[0-9]{9}[A-Z]{1}$/.test(body.rnsr)) { validationErrors.rnsr = "Doit être composé de 9 chiffres suivi d'une lettre majuscule"; }
+    if (body.siret && !/^[0-9]{14}$/.test(body.siret)) { validationErrors.siret = 'Doit être composé de 14 chiffres'; }
+    if (body.ror && !/^[a-z0-9]{9}$/.test(body.ror)) { validationErrors.ror = 'Doit contenir 9 caractères'; }
+    if (body.wikidata && !/^Q[0-9]+$/.test(body.wikidata)) { validationErrors.wikidata = 'Doit commencer par "Q" et être suivi de 7 caractères'; }
+    if (body.uai && !/^[0-9]{7}[A-Z]$/.test(body.uai)) { validationErrors.uai = "Doit être composé de 7 chiffres suivi d'une lettre majuscule"; }
     return validationErrors;
   };
   const { form, updateForm, errors } = useForm(globalForm, validateForm);
@@ -388,7 +392,7 @@ HistoryStep.propTypes = { ...stepProps, handleSave: PropTypes.func.isRequired };
 export default function StructureAddPage() {
   const { notice } = useNotice();
   const navigate = useNavigate();
-  useEffect(() => { document.title = 'Contribution · Ajouter une structure'; }, []);
+  usePageTitle('Contribution · Ajouter une structure');
   const validateForm = (body) => {
     const validationErrors = {};
     if (!body.usualNameFr) { validationErrors.usualNameFr = 'Le nom usuel en français est obligatoire'; }

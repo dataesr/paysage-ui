@@ -6,7 +6,7 @@ import RelationCard from '../../card/relation-card';
 
 export default function RelationsParticipations() {
   const { id: resourceId } = useUrl();
-  const url = `/relations?filters[relatedObjectId]=${resourceId}&filters[relationsGroupId][$exists]=true`;
+  const url = `/relations?filters[relatedObjectId]=${resourceId}&filters[relationsGroupId][$exists]=true&limit=100`;
   const { data, isLoading, error } = useFetch(url);
 
   const renderCards = () => {

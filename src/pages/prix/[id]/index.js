@@ -23,6 +23,7 @@ import PriceCategories from './categories';
 import PriceExportPage from './exporter';
 import { saveError, saveSuccess } from '../../../utils/notice-contents';
 import Error from '../../../components/errors';
+import usePageTitle from '../../../hooks/usePageTitle';
 
 function PriceByIdPage() {
   const { url, id } = useUrl();
@@ -43,7 +44,7 @@ function PriceByIdPage() {
   const [isFormModalOpen, setIsFormModalOpen] = useState(false);
 
   useEffect(() => { reset(); }, [reset]);
-  useEffect(() => { document.title = `Prix · ${data?.nameFr}`; }, [data]);
+  usePageTitle(`Prix · ${data?.nameFr}`);
 
   const onSave = async (body) => api.patch(url, body)
     .then(() => { reload(); setIsFormModalOpen(false); notice(saveSuccess); })

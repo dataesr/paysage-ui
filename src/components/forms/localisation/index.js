@@ -17,6 +17,7 @@ import useForm from '../../../hooks/useForm';
 import useAuth from '../../../hooks/useAuth';
 import useDebounce from '../../../hooks/useDebounce';
 import PaysageBlame from '../../paysage-blame';
+import getCountryISO3 from '../../../utils/country-codes';
 
 function validate(body) {
   const errors = {};
@@ -27,7 +28,7 @@ function validate(body) {
 function sanitize(form) {
   const fields = [
     'address', 'city', 'cityId', 'coordinates', 'country', 'distributionStatement', 'endDate',
-    'locality', 'place', 'postalCode', 'postOfficeBoxNumber', 'startDate', 'telephone',
+    'iso3', 'locality', 'phonenumber', 'place', 'postalCode', 'postOfficeBoxNumber', 'startDate',
   ];
   const body = {};
   Object.keys(form).forEach((key) => { if (fields.includes(key)) { body[key] = form[key]; } });
@@ -109,6 +110,7 @@ export default function LocalisationForm({ id, data, onDelete, onSave }) {
         cityId: element.data.properties.citycode,
         postalCode: element.data.properties.postcode,
         country: 'France',
+        iso3: 'FRA',
         locality: element.data.properties.city,
         city: element.data.properties.city,
         coordinates: {
@@ -118,6 +120,7 @@ export default function LocalisationForm({ id, data, onDelete, onSave }) {
       });
     } else {
       updateForm({
+        iso3: getCountryISO3[element.data?.address?.country_code?.toUpperCase()],
         address: element.data?.display_name,
         cityId: null,
         postalCode: element.data?.address.postcode,
@@ -254,8 +257,8 @@ export default function LocalisationForm({ id, data, onDelete, onSave }) {
           <Col n="md-6" className="fr-pr-1w">
             <TextInput
               label="Téléphone"
-              value={form.telephone}
-              onChange={(e) => updateForm({ telephone: e.target.value })}
+              value={form.phonenumber}
+              onChange={(e) => updateForm({ phonenumber: e.target.value })}
             />
           </Col>
 

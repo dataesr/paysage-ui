@@ -5,7 +5,6 @@ import Weblinks from '../../../components/blocs/weblinks';
 import useFetch from '../../../hooks/useFetch';
 import useUrl from '../../../hooks/useUrl';
 import KeyValueCard from '../../../components/card/key-value-card';
-import useHashScroll from '../../../hooks/useHashScroll';
 import Wiki from '../../../components/blocs/wiki';
 import RelationsByTag from '../../../components/blocs/relations-by-tag';
 import { TERME_PARENT } from '../../../utils/relations-tags';
@@ -13,7 +12,6 @@ import { PageSpinner } from '../../../components/spinner';
 import Error from '../../../components/errors';
 
 export default function TermPresentationPage() {
-  useHashScroll();
   const { url } = useUrl();
   const { data, isLoading, error } = useFetch(url);
 

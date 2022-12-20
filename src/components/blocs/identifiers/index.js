@@ -27,7 +27,7 @@ import {
 export default function IdentifiersComponent() {
   const { notice } = useNotice();
   const { url, apiObject } = useUrl('identifiers');
-  const { data, isLoading, error, reload } = useFetch(url);
+  const { data, isLoading, error, reload } = useFetch(`${url}?limit=500`);
   const [showModal, setShowModal] = useState(false);
   const [modalTitle, setModalTitle] = useState('');
   const [modalContent, setModalContent] = useState(null);
@@ -82,7 +82,7 @@ export default function IdentifiersComponent() {
     case 'idRef':
       linkTo = `https://www.idref.fr/${el.value}`;
       break;
-    case 'ORCID':
+    case 'ORCID Id':
       linkTo = `https://orcid.org/${el.value}`;
       break;
     case 'ROR':
@@ -158,6 +158,7 @@ export default function IdentifiersComponent() {
     const list = [];
     if (data) {
       data.data?.forEach((el) => {
+        const inactive = (el.active === false);
         list.push(
           <KeyValueCard
             cardKey={options?.find((type) => (el.type === type.value))?.label}
@@ -168,7 +169,7 @@ export default function IdentifiersComponent() {
             key={el.id}
             onEdit={() => onOpenModalHandler(el)}
             linkTo={getLink(el)}
-            inactive={!(el?.active === true)}
+            inactive={inactive}
           />,
         );
         if (el.type === 'Id unité CNRS') {
@@ -182,7 +183,7 @@ export default function IdentifiersComponent() {
               key={el.id}
               onEdit={() => onOpenModalHandler(el)}
               linkTo={getLink({ ...el, type: 'CNRS - grafilabo' })}
-              inactive={!(el?.active === true)}
+              inactive={inactive}
             />,
           );
         }
@@ -197,7 +198,7 @@ export default function IdentifiersComponent() {
               key={el.id}
               onEdit={() => onOpenModalHandler(el)}
               linkTo={getLink({ ...el, type: 'Wikidata JSON' })}
-              inactive={!(el?.active === true)}
+              inactive={inactive}
             />,
           );
         }
@@ -213,7 +214,7 @@ export default function IdentifiersComponent() {
               key={el.id}
               onEdit={() => onOpenModalHandler(el)}
               linkTo={getLink({ ...el, type: 'Siren' })}
-              inactive={!(el?.active === true)}
+              inactive={inactive}
             />,
           );
           list.push(
@@ -225,7 +226,7 @@ export default function IdentifiersComponent() {
               icon="ri-fingerprint-2-line"
               key={el.id}
               onEdit={() => onOpenModalHandler(el)}
-              inactive={!(el?.active === true)}
+              inactive={inactive}
             />,
           );
         }

@@ -1,5 +1,5 @@
 import { Col, Icon, Row, Title } from '@dataesr/react-dsfr';
-import { useParams } from 'react-router-dom';
+import { useOutletContext } from 'react-router-dom';
 
 import Identifiers from '../../../components/blocs/identifiers';
 import Localisations from '../../../components/blocs/localisations';
@@ -8,20 +8,12 @@ import SocialMedias from '../../../components/blocs/social-medias';
 import Weblinks from '../../../components/blocs/weblinks';
 import Wiki from '../../../components/blocs/wiki';
 import KeyValueCard from '../../../components/card/key-value-card';
-import Error from '../../../components/errors';
-import { PageSpinner } from '../../../components/spinner';
-import useFetch from '../../../hooks/useFetch';
-import useHashScroll from '../../../hooks/useHashScroll';
 import { toString } from '../../../utils/dates';
 import { PROJET_CONTACT, PROJET_PARTICIPATION } from '../../../utils/relations-tags';
 
 export default function ProjectPresentationPage() {
-  useHashScroll();
-  const { id } = useParams();
-  const { data, error, isLoading } = useFetch(`/projects/${id}`);
+  const data = useOutletContext();
 
-  if (isLoading) return <PageSpinner />;
-  if (error) return <Error status={error} />;
   return (
     <>
       <Row>

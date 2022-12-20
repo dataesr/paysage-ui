@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { Modal, ModalTitle, ModalContent } from '@dataesr/react-dsfr';
 import useFetch from '../../../hooks/useFetch';
 import useUrl from '../../../hooks/useUrl';
-import useHashScroll from '../../../hooks/useHashScroll';
 import RelationsByGroup from '../../../components/blocs/relations-by-group';
 import { Bloc, BlocTitle, BlocActionButton, BlocContent, BlocModal } from '../../../components/bloc';
 import RelationGroupForm from '../../../components/forms/relations-group';
@@ -16,7 +15,6 @@ const saveSuccess = { content: 'Le groupe a été ajoutée avec succès.', autoD
 const deleteSuccess = { content: 'Le groupe a été supprimée avec succès.', autoDismissAfter: 6000, type: 'success' };
 
 export default function PersonsRelatedElements() {
-  useHashScroll();
   const { id: resourceId } = useUrl();
   const { data, isLoading, error, reload } = useFetch(`/relations-groups?filters[resourceId]=${resourceId}&limit=500`);
   const [isOpen, setIsOpen] = useState();

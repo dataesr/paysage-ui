@@ -1,22 +1,21 @@
 import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Badge, BadgeGroup, Modal, ModalContent, ModalTitle, Row, Tag, Text } from '@dataesr/react-dsfr';
-import TagList from '../tag-list';
-import useEditMode from '../../hooks/useEditMode';
-import useFetch from '../../hooks/useFetch';
-import useHashScroll from '../../hooks/useHashScroll';
-import useNotice from '../../hooks/useNotice';
+import TagList from '../../tag-list';
+import useEditMode from '../../../hooks/useEditMode';
+import useFetch from '../../../hooks/useFetch';
+import useNotice from '../../../hooks/useNotice';
 
-import api from '../../utils/api';
-import { saveError, saveSuccess, deleteError, deleteSuccess } from '../../utils/notice-contents';
+import api from '../../../utils/api';
+import { saveError, saveSuccess, deleteError, deleteSuccess } from '../../../utils/notice-contents';
 
 import {
   Bloc, BlocContent, BlocActionButton, BlocTitle, BlocModal,
-} from '../bloc';
-import Button from '../button';
-import { Download } from '../download';
-import EventForm from '../forms/event';
-import { Timeline, TimelineItem } from '../timeline';
+} from '../../bloc';
+import Button from '../../button';
+import { Download } from '../../download';
+import EventForm from '../../forms/event';
+import { Timeline, TimelineItem } from '../../timeline';
 
 export default function AgendaOutlet() {
   const { editMode } = useEditMode();
@@ -25,7 +24,6 @@ export default function AgendaOutlet() {
   const url = `/follow-ups?filters[relatesTo]=${resourceId}&sort=-eventDate&limit=50`;
   const { data, isLoading, error, reload } = useFetch(url);
   const { notice } = useNotice();
-  useHashScroll();
   const [isOpen, setIsOpen] = useState(false);
   const [modalTitle, setModalTitle] = useState(null);
   const [modalContent, setModalContent] = useState(null);

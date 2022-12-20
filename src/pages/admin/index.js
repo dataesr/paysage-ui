@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import { Col, Container, Row, SideMenu, SideMenuItem, SideMenuLink } from '@dataesr/react-dsfr';
 import { Link as RouterLink, Outlet } from 'react-router-dom';
 
@@ -8,9 +7,10 @@ import AdminUsersPage from './users';
 import AdminLegalCategoriesPage from './categories-juridiques';
 import AdminRelationTypesPage from './relation-types';
 import AdminGroupsPage from './groupes';
+import usePageTitle from '../../hooks/usePageTitle';
 
 function AdminPage() {
-  useEffect(() => { document.title = 'Paysage · Administration du site'; }, []);
+  usePageTitle('Administration du site');
   return (
     <Container spacing="mb-6w">
       <Row>

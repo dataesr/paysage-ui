@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import {
   Badge, BadgeGroup, Breadcrumb, BreadcrumbItem, Col, Container, Row, Title,
@@ -12,12 +11,12 @@ import { STRUCTURE_TUTELLE } from '../../utils/relations-tags';
 import SupervisorsForm from '../../components/forms/supervisors';
 import { capitalize } from '../../utils/strings';
 import Error from '../../components/errors';
+import usePageTitle from '../../hooks/usePageTitle';
 
 export default function SupervisingMinistersByIdPage() {
   const { url } = useUrl();
   const { data, isLoading, error } = useFetch(url);
-
-  useEffect(() => { document.title = `Ministre de tutelle · ${data?.usualName}`; }, [data]);
+  usePageTitle(`Ministre de tutelle · ${data?.usualName}`);
 
   if (isLoading) return <PageSpinner />;
   if (error) return <Error status={error} />;
