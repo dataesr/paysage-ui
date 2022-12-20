@@ -145,14 +145,14 @@ export default function PriceAttributionForm({ id, resourceType, relatedObjectTy
           <Col n="12" className="fr-pb-2w">
             <DateInput
               value={form.startDate || ''}
-              label="Date"
+              label="Date de début"
               onDateChange={((v) => updateForm({ startDate: v }))}
             />
           </Col>
           <Col n="12" className="fr-pb-2w">
             <DateInput
               value={form.endDate || ''}
-              label="Date"
+              label="Date de fin"
               onDateChange={((v) => updateForm({ endDate: v }))}
             />
           </Col>
