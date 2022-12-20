@@ -23,7 +23,10 @@ export default function RelationCard({ relation, inverse, onEdit }) {
   const { editMode } = useEditMode();
   const toPrintRelation = inverse ? relation.resource : relation.relatedObject;
   const isFinished = ((relation.current !== undefined) && !relation.current) || (relation.active === false);
-  const isComming = ((relation.startDate > getComparableNow() ? formatDescriptionDates(relation.startDate || null, relation.endDate || null).replace('depuis le', 'A partir du')
+  const isComming = ((relation.startDate > getComparableNow()
+    ? formatDescriptionDates(relation.startDate || null, relation.endDate || null)
+      .replace('depuis le', 'À partir du')
+      .replace('depuis', 'À partir de')
     : formatDescriptionDates(relation.startDate || null, relation.endDate || null)));
   return (
     <div className="fr-card fr-card--xs fr-card--grey fr-card--no-border">
