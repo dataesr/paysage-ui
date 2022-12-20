@@ -45,6 +45,7 @@ function sanitize(form) {
     if (fields.includes(key)) { body[key] = form[key]; }
   });
   if (!form.account.includes('https://')) { body.account = `https://${body.account}`; }
+  if (form.account.includes('.fr')) { body.account = body.account.replace('.fr', ''); }
   return body;
 }
 
