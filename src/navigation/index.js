@@ -13,6 +13,7 @@ import SignUp from '../pages/creer-un-compte';
 import NotFound from '../pages/not-found';
 
 import ProtectedRoute from './protected-route';
+import VisitorRoute from './visitor-route';
 
 import {
   StructureBudgetPage,
@@ -84,10 +85,12 @@ export default function Routes() {
       <ScrollToTopOnPathnameChange />
       <RouterRoutes>
         <Route element={<Layout />}>
-          <Route path="/se-connecter" element={<SignIn />} />
-          <Route path="/creer-un-compte" element={<SignUp />} />
-          <Route path="/mot-de-passe-oublie" element={<Passwordless />} />
           <Route path="*" element={<NotFound />} />
+          <Route element={<VisitorRoute />}>
+            <Route path="/se-connecter" element={<SignIn />} />
+            <Route path="/creer-un-compte" element={<SignUp />} />
+            <Route path="/mot-de-passe-oublie" element={<Passwordless />} />
+          </Route>
 
           <Route element={<ProtectedRoute roles={['admin']} />}>
             <Route path="/admin" element={<AdminPage />}>
