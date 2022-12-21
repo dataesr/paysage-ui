@@ -7,7 +7,6 @@ import HighchartsReact from 'highcharts-react-official';
 import {
   Bloc,
   BlocContent,
-  BlocTitle,
 } from '../../../../components/bloc';
 import Card from '../../../../components/card';
 import { Spinner } from '../../../../components/spinner';
@@ -25,19 +24,9 @@ export default function StructureRHPage() {
   const { data, error, isLoading } = useFetch(`${url}/biatss?filters[rentree]=${year}&limit=0`);
 
   const commonOptions = {
-    legend: { enabled: false },
+    chart: { type: 'column' },
+    colors: ['pink', 'blue'],
     credits: { enabled: false },
-    lang: {
-      downloadCSV: 'Télécharger en CSV',
-      downloadJPEG: 'Téléchager en JPEG',
-      downloadPDF: 'Télécharger en PDF',
-      downloadPNG: 'Télécharger en PNG',
-      downloadSVG: 'Télécharger en SVG',
-      downloadXLS: 'Télécharger en XLS',
-      printChart: 'Imprimer le graphique',
-      viewFullscreen: 'Plein écran',
-    },
-    yAxis: { title: { text: 'Effectifs' } },
     exporting: {
       buttons: {
         contextButton: {
@@ -48,26 +37,38 @@ export default function StructureRHPage() {
         },
       },
     },
-    chart: { type: 'column' },
+    lang: {
+      downloadCSV: 'Télécharger en CSV',
+      downloadJPEG: 'Téléchager en JPEG',
+      downloadPDF: 'Télécharger en PDF',
+      downloadPNG: 'Télécharger en PNG',
+      downloadSVG: 'Télécharger en SVG',
+      downloadXLS: 'Télécharger en XLS',
+      printChart: 'Imprimer le graphique',
+      viewFullscreen: 'Plein écran',
+    },
+    plotOptions: { column: { dataLabels: { enabled: true }, stacking: 'normal' } },
     tooltip: {
       // eslint-disable-next-line react/no-this-in-sfc
-      formatter() { return `<b>${this.point.name} :</b> ${this.point.value} BIATSS (${cleanNumber(this.point.y)} %)`; },
+      formatter() { return `<b>${this.x} - ${this.series.name} :</b> ${this.point.y} BIATSS (${cleanNumber((this.point.y / this.point.stackTotal) * 100)} %)`; },
     },
+    yAxis: { title: { text: 'Effectifs' } },
   };
 
   const effectifTotal = data?.data.reduce((accumulator, item) => accumulator + (item?.effectif || 0), 0);
 
-  const countStaffByField = ({ fieldName, label, extraField }) => {
+  const countStaffByFieldAndGender = ({ fieldName, label, extraField }) => {
     let result = {};
     data?.data.forEach((item) => {
-      const { [fieldName]: field, effectif } = item;
+      const { [fieldName]: field } = item;
       if (!Object.keys(result).includes(field)) {
-        result[field] = { staff: 0 };
+        result[field] = { women: 0, men: 0 };
         if (extraField) {
           result[field][extraField] = item?.[extraField];
         }
       }
-      result[field].staff += effectif;
+      result[field].women += item?.effectif_femmes || 0;
+      result[field].men += item?.effectif_hommes || 0;
     });
     result = Object.keys(result).sort().reduce(
       (obj, key) => {
@@ -77,78 +78,17 @@ export default function StructureRHPage() {
       },
       {},
     );
-    return Object.keys(result).map((item) => ({
-      name: label(item, result),
-      value: result[item].staff,
-      y: (result[item].staff / effectifTotal) * 100,
-    }));
+    const categories = Object.keys(result).map((item) => label(item, result));
+    const women = Object.keys(result).map((item) => result[item]?.women || 0);
+    const men = Object.keys(result).map((item) => result[item]?.men || 0);
+    const series = [{ name: 'Femmes', data: women }, { name: 'Hommes', data: men }];
+    return { categories, series };
   };
 
-  const dataCategories = countStaffByField({ fieldName: 'categorie', label: (item) => `Catégorie ${item}` });
-  const dataTypes = countStaffByField({ fieldName: 'type_personnel', label: (item) => capitalize(item) });
-  const dataCorps = countStaffByField({ fieldName: 'code_corps', label: (item, result) => result[item].corps_lib, extraField: 'corps_lib' });
-
-  const renderLabs = () => data?.data.map((item) => (
-    <Bloc isLoading={isLoading} error={error} data={data} noBadge>
-      <BlocTitle as="h4">
-        {item?.corps_lib || 'Corps non renseigné'}
-        {item?.code_corps ? ` (${item.code_corps})` : ''}
-      </BlocTitle>
-      <BlocContent>
-        <Row gutters>
-          <Col n="12 md-4">
-            <Card
-              title="Effectif"
-              descriptionElement={(
-                <Row alignItems="middle">
-                  <Text spacing="mr-1v mb-0">
-                    {item?.effectif || 'Non renseigné'}
-                  </Text>
-                </Row>
-              )}
-            />
-          </Col>
-          <Col n="12 md-4">
-            <Card
-              title="Type de personnel"
-              descriptionElement={(
-                <Row alignItems="middle">
-                  <Text spacing="mr-1v mb-0">
-                    {item?.type_personnel || 'Non renseigné'}
-                  </Text>
-                </Row>
-              )}
-            />
-          </Col>
-          <Col n="12 md-4">
-            <Card
-              title="Catégorie"
-              descriptionElement={(
-                <Row alignItems="middle">
-                  <Text spacing="mr-1v mb-0">
-                    {item?.categorie || 'Non renseigné'}
-                  </Text>
-                </Row>
-              )}
-            />
-          </Col>
-          <Col n="12 md-4">
-            <Card
-              title="Filière"
-              descriptionElement={(
-                <Row alignItems="middle">
-                  <Text spacing="mr-1v mb-0">
-                    {item?.filiere_lib || 'Non renseigné'}
-                    {item?.code_filiere ? ` (${item.code_filiere})` : ''}
-                  </Text>
-                </Row>
-              )}
-            />
-          </Col>
-        </Row>
-      </BlocContent>
-    </Bloc>
-  ));
+  const { categories: categoriesCategorie, series: seriesCategorie } = countStaffByFieldAndGender({ fieldName: 'categorie', label: (item) => `Catégorie ${item}` });
+  const { categories: categoriesCorps, series: seriesCorps } = countStaffByFieldAndGender({ fieldName: 'code_corps', label: (item, result) => result[item].corps_lib, extraField: 'corps_lib' });
+  const { categories: categoriesFiliere, series: seriesFiliere } = countStaffByFieldAndGender({ fieldName: 'code_filiere', label: (item, result) => result[item].filiere_lib, extraField: 'filiere_lib' });
+  const { categories: categoriesTypePersonnel, series: seriesTypePersonnel } = countStaffByFieldAndGender({ fieldName: 'type_personnel', label: (item) => capitalize(item) });
 
   if (isLoading) return <Spinner size={48} />;
   if (error) return <>Erreur...</>;
@@ -178,9 +118,9 @@ export default function StructureRHPage() {
                 highcharts={Highcharts}
                 options={{
                   ...commonOptions,
-                  xAxis: { categories: dataCorps.map((item) => item.name) },
-                  series: [{ data: dataCorps }],
+                  series: seriesCorps,
                   title: { text: 'Répartition des effectifs par corps' },
+                  xAxis: { categories: categoriesCorps },
                 }}
               />
             </Col>
@@ -191,9 +131,9 @@ export default function StructureRHPage() {
                 highcharts={Highcharts}
                 options={{
                   ...commonOptions,
-                  xAxis: { categories: dataCategories.map((item) => item.name) },
-                  series: [{ data: dataCategories }],
+                  series: seriesCategorie,
                   title: { text: 'Répartition des effectifs par catégorie' },
+                  xAxis: { categories: categoriesCategorie },
                 }}
               />
             </Col>
@@ -202,16 +142,28 @@ export default function StructureRHPage() {
                 highcharts={Highcharts}
                 options={{
                   ...commonOptions,
-                  xAxis: { categories: dataTypes.map((item) => item.name) },
-                  series: [{ data: dataTypes }],
-                  title: { text: 'Répartition des effectifs par type de personnel' },
+                  series: seriesTypePersonnel,
+                  title: { text: 'Répartition des effectifs par type de personnel et par genre' },
+                  xAxis: { categories: categoriesTypePersonnel },
+                }}
+              />
+            </Col>
+          </Row>
+          <Row gutters>
+            <Col className="print-12" n="12 md-6">
+              <HighchartsReact
+                highcharts={Highcharts}
+                options={{
+                  ...commonOptions,
+                  series: seriesFiliere,
+                  title: { text: 'Répartition des effectifs par filière et par genre' },
+                  xAxis: { categories: categoriesFiliere },
                 }}
               />
             </Col>
           </Row>
         </BlocContent>
       </Bloc>
-      {renderLabs()}
     </>
   );
 }
