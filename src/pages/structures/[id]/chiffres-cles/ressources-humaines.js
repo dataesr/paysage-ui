@@ -25,7 +25,7 @@ export default function StructureRHPage() {
 
   const commonOptions = {
     chart: { type: 'column' },
-    colors: ['pink', 'blue'],
+    colors: ['#fa96f2', '#adadf9'],
     credits: { enabled: false },
     exporting: {
       buttons: {
@@ -52,14 +52,14 @@ export default function StructureRHPage() {
       // eslint-disable-next-line react/no-this-in-sfc
       formatter() { return `<b>${this.x} - ${this.series.name} :</b> ${this.point.y} BIATSS (${cleanNumber((this.point.y / this.point.stackTotal) * 100)} %)`; },
     },
-    yAxis: { title: { text: 'Effectifs' } },
+    yAxis: { title: { text: 'Effectifs' }, stackLabels: { enabled: true } },
   };
 
   const effectifTotal = data?.data.reduce((accumulator, item) => accumulator + (item?.effectif || 0), 0);
 
-  const countStaffByFieldAndGender = ({ fieldName, label, extraField }) => {
+  const countStaffByFieldAndGender = ({ fieldName, label, extraField, filter = (item) => item }) => {
     let result = {};
-    data?.data.forEach((item) => {
+    data?.data.filter(filter).forEach((item) => {
       const { [fieldName]: field } = item;
       if (!Object.keys(result).includes(field)) {
         result[field] = { women: 0, men: 0 };
@@ -89,6 +89,7 @@ export default function StructureRHPage() {
   const { categories: categoriesCorps, series: seriesCorps } = countStaffByFieldAndGender({ fieldName: 'code_corps', label: (item, result) => result[item].corps_lib, extraField: 'corps_lib' });
   const { categories: categoriesFiliere, series: seriesFiliere } = countStaffByFieldAndGender({ fieldName: 'code_filiere', label: (item, result) => result[item].filiere_lib, extraField: 'filiere_lib' });
   const { categories: categoriesTypePersonnel, series: seriesTypePersonnel } = countStaffByFieldAndGender({ fieldName: 'type_personnel', label: (item) => capitalize(item) });
+  const { categories: categoriesBap, series: seriesBap } = countStaffByFieldAndGender({ fieldName: 'code_bap', label: (item, result) => result[item].bap_lib, extraField: 'bap_lib', filter: (item) => item?.code_bap && item?.bap_lib && item.code_filiere === 'ITRF' });
 
   if (isLoading) return <Spinner size={48} />;
   if (error) return <>Erreur...</>;
@@ -119,7 +120,7 @@ export default function StructureRHPage() {
                 options={{
                   ...commonOptions,
                   series: seriesCorps,
-                  title: { text: 'Répartition des effectifs par corps' },
+                  title: { text: 'Répartition des effectifs par corps et par genre' },
                   xAxis: { categories: categoriesCorps },
                 }}
               />
@@ -132,7 +133,7 @@ export default function StructureRHPage() {
                 options={{
                   ...commonOptions,
                   series: seriesCategorie,
-                  title: { text: 'Répartition des effectifs par catégorie' },
+                  title: { text: 'Répartition des effectifs par catégorie et par genre' },
                   xAxis: { categories: categoriesCategorie },
                 }}
               />
@@ -158,6 +159,17 @@ export default function StructureRHPage() {
                   series: seriesFiliere,
                   title: { text: 'Répartition des effectifs par filière et par genre' },
                   xAxis: { categories: categoriesFiliere },
+                }}
+              />
+            </Col>
+            <Col className="print-12" n="12 md-6">
+              <HighchartsReact
+                highcharts={Highcharts}
+                options={{
+                  ...commonOptions,
+                  series: seriesBap,
+                  title: { text: 'Répartition des effectifs par BAP et par genre pour les ITRF' },
+                  xAxis: { categories: categoriesBap },
                 }}
               />
             </Col>
