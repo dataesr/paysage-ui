@@ -90,6 +90,8 @@ export default function StructureRHPage() {
   const { categories: categoriesFiliere, series: seriesFiliere } = countStaffByFieldAndGender({ fieldName: 'code_filiere', label: (item, result) => result[item].filiere_lib, extraField: 'filiere_lib' });
   const { categories: categoriesTypePersonnel, series: seriesTypePersonnel } = countStaffByFieldAndGender({ fieldName: 'type_personnel', label: (item) => capitalize(item) });
   const { categories: categoriesBap, series: seriesBap } = countStaffByFieldAndGender({ fieldName: 'code_bap', label: (item, result) => result[item].bap_lib, extraField: 'bap_lib', filter: (item) => item?.code_bap && item?.bap_lib && item.code_filiere === 'ITRF' });
+  const { categories: categoriesAge, series: seriesAge } = countStaffByFieldAndGender({ fieldName: 'classe_age3', label: (item) => item, filter: (item) => item?.classe_age3 });
+  seriesAge[1].data = seriesAge[1].data.map((item) => -item);
 
   if (isLoading) return <Spinner size={48} />;
   if (error) return <>Erreur...</>;
@@ -170,6 +172,27 @@ export default function StructureRHPage() {
                   series: seriesBap,
                   title: { text: 'Répartition des effectifs par BAP et par genre pour les ITRF' },
                   xAxis: { categories: categoriesBap },
+                }}
+              />
+            </Col>
+          </Row>
+          <Row gutters>
+            <Col className="print-12" n="12 md-6">
+              <HighchartsReact
+                highcharts={Highcharts}
+                options={{
+                  ...commonOptions,
+                  chart: { type: 'bar' },
+                  plotOptions: { series: { stacking: 'normal', dataLabels: { enabled: true } } },
+                  series: seriesAge,
+                  title: { text: 'Répartition des effectifs par âge et par genre' },
+                  tooltip: {
+                    // eslint-disable-next-line react/no-this-in-sfc
+                    formatter() { return `<b>${this.x} - ${this.series.name} :</b> ${Math.abs(this.point.y)} BIATSS`; },
+                  },
+                  xAxis: [{ categories: categoriesAge, reversed: false }, { categories: categoriesAge, reversed: false, opposite: true, linkedTo: 0 }],
+                  // eslint-disable-next-line react/no-this-in-sfc
+                  yAxis: { title: { text: 'Effectifs' }, labels: { formatter() { return Math.abs(this.value); } } },
                 }}
               />
             </Col>
