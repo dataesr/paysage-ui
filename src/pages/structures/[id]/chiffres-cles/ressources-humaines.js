@@ -1,3 +1,4 @@
+/* eslint-disable react/no-this-in-sfc */
 import { Col, Icon, Row, Text, Title } from '@dataesr/react-dsfr';
 import Highcharts from 'highcharts';
 import HCExportingData from 'highcharts/modules/export-data';
@@ -49,7 +50,6 @@ export default function StructureRHPage() {
     },
     plotOptions: { column: { dataLabels: { enabled: true }, stacking: 'normal' } },
     tooltip: {
-      // eslint-disable-next-line react/no-this-in-sfc
       formatter() { return `<b>${this.x} - ${this.series.name} :</b> ${this.point.y} BIATSS (${cleanNumber((this.point.y / this.point.stackTotal) * 100)} %)`; },
     },
     yAxis: { title: { text: 'Effectifs' }, stackLabels: { enabled: true } },
@@ -183,15 +183,13 @@ export default function StructureRHPage() {
                 options={{
                   ...commonOptions,
                   chart: { type: 'bar' },
-                  plotOptions: { series: { stacking: 'normal', dataLabels: { enabled: true } } },
+                  plotOptions: { series: { stacking: 'normal', dataLabels: { enabled: true, formatter() { return Math.abs(this.y); } } } },
                   series: seriesAge,
                   title: { text: 'Répartition des effectifs par âge et par genre' },
                   tooltip: {
-                    // eslint-disable-next-line react/no-this-in-sfc
                     formatter() { return `<b>${this.x} - ${this.series.name} :</b> ${Math.abs(this.point.y)} BIATSS`; },
                   },
                   xAxis: [{ categories: categoriesAge, reversed: false }, { categories: categoriesAge, reversed: false, opposite: true, linkedTo: 0 }],
-                  // eslint-disable-next-line react/no-this-in-sfc
                   yAxis: { title: { text: 'Effectifs' }, labels: { formatter() { return Math.abs(this.value); } } },
                 }}
               />
