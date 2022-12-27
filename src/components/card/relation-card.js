@@ -23,10 +23,12 @@ export default function RelationCard({ relation, inverse, onEdit }) {
   const { editMode } = useEditMode();
   const toPrintRelation = inverse ? relation.resource : relation.relatedObject;
   const isFinished = ((relation.current !== undefined) && !relation.current) || (relation.active === false);
+  const interimMandate = relation.mandateTemporary ? ' par intérim' : '';
+
   const isComming = ((relation.startDate > getComparableNow()
     ? formatDescriptionDates(relation.startDate || null, relation.endDate || null)
-      .replace('depuis le', 'À partir du')
-      .replace('depuis', 'À partir de')
+      .replace('depuis le', 'à partir du')
+      .replace('depuis', 'à partir de')
     : formatDescriptionDates(relation.startDate || null, relation.endDate || null)));
   return (
     <div className="fr-card fr-card--xs fr-card--grey fr-card--no-border">
@@ -38,6 +40,7 @@ export default function RelationCard({ relation, inverse, onEdit }) {
                 {relation.relationType?.[getRelationTypeLabel(relation?.relatedObject?.gender)] || relation.relationType?.name}
               </Text>
             )}
+            {interimMandate}
             {relation?.mandatePrecision && ` ${relation?.mandatePrecision}`}
             {relation?.laureatePrecision && ` ${relation?.laureatePrecision}`}
             {' '}
