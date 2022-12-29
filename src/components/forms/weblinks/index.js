@@ -29,7 +29,7 @@ const regexpValidateWebSite = {
   Onisep: /^(https?):\/\/www.onisep.fr\/http\/redirection\/etablissement\/identifiant\/\d+$/,
   POpenData: /^(https?):\/\/[A-Za-z0-9/:%+.,#?!@&=-]+$/,
   DataGouvFr: /^(https?):\/\/[A-Za-z0-9/:%+.,#?!@&=-]+$/,
-  mooc: /^(https:\/\/)?(www.)?fun-mooc.fr\/universities\/[A-Za-z0-9/:%+.,#?!@&=-]+\/$/,
+  mooc: /^(https:\/\/)?(www.)?fun-mooc.fr\/fr?\/(etablissements)?(universities)?\/[A-Za-z0-9:%+.,#?!@&=-]+\/$/,
   CanalU: /^(https:\/\/)?(www.)?canal-u.tv\/chaines\/[\w\-_]*(.fr)?$/,
   ServicePublic: /^(https:\/\/)?lannuaire.service-public.fr\/(gouvernement|institutions-juridictions|autorites-independantes)\/[A-Za-z0-9/:%+.,#?!@&=-]+$/,
   LeMonde: /(^https:\/\/)?(www.)?lemonde.fr\/[a-z]+(-[a-z]+)*\/$/,
