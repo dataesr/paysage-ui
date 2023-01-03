@@ -6,30 +6,33 @@ import useUrl from '../../../hooks/useUrl';
 import { capitalize } from '../../../utils/strings';
 
 const WIKI_LANG_ORDER = ['frwiki', 'enwiki', 'dewiki', 'itwiki', 'eswiki'];
+const WIKI_URL = 'https://www.wikidata.org/w/api.php?format=json&origin=*&action=wbgetentities&ids=';
 const getWikipediaUrl = (lang, title) => `https://${lang.slice(0, lang.length - 4)}.wikipedia.org/wiki/${title.replace(' ', '_')}`;
 const filterWikipediaSiteLinks = (sitelinks) => [...new Set([...WIKI_LANG_ORDER, ...Object.keys(sitelinks)])]
   .filter((lang) => lang !== 'commonswiki')
   .filter((lang) => Object.keys(sitelinks).includes(lang))
-  .map((lang) => ({ lang: lang.slice(0, lang.length - 4).toUpperCase(), link: getWikipediaUrl(lang, sitelinks[lang]?.title) }));
+  .map((lang) => ({ lang: lang?.slice(0, lang.length - 4).toUpperCase(), link: getWikipediaUrl(lang, sitelinks[lang]?.title) }));
 
 export default function Wiki() {
   const { url, apiObject } = useUrl();
-  const { data: wikidata } = useFetch(`${url}/identifiers?filters[type]=Wikidata`);
+  const { data: wikidata } = useFetch(`${url}/identifiers?filters[type]=Wikidata&filters`);
   const [activity, setActivity] = useState(null);
   const [wikis, setWikis] = useState(null);
 
   useEffect(() => {
-    const getActivity = async (wikiId) => fetch(`https://www.wikidata.org/w/api.php?format=json&origin=*&action=wbgetentities&ids=${wikiId}`)
-      .then((response) => response.json())
-      .then((json) => {
-        setActivity(json?.entities?.[wikiId]?.descriptions?.fr?.value);
-        const sitelinks = filterWikipediaSiteLinks(json?.entities?.[wikiId]?.sitelinks);
-        setWikis(sitelinks);
-      })
-      .catch(() => null);
-
+    const getActivity = async (wikidatas) => {
+      const allWikis = wikidatas
+        .filter((w) => w.active)
+        .map((wiki) => fetch(`${WIKI_URL}${wiki.value}`)
+          .then((res) => res.json())
+          .then((doc) => doc.entities[Object.keys(doc.entities)[0]]));
+      const datas = await Promise.all(allWikis);
+      setActivity(datas.filter((el) => el)[0]?.descriptions?.fr?.value);
+      const { sitelinks } = datas.filter((el) => el)[0];
+      setWikis(filterWikipediaSiteLinks(sitelinks));
+    };
     if (wikidata?.data?.length) {
-      getActivity(wikidata.data[0]?.value);
+      getActivity(wikidata.data);
     }
   }, [wikidata]);
   if (activity || wikis?.length > 0) {
