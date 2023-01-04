@@ -23,7 +23,7 @@ export default function RelationCard({ relation, inverse, onEdit }) {
   const { editMode } = useEditMode();
   const toPrintRelation = inverse ? relation.resource : relation.relatedObject;
   const isFinished = ((relation.current !== undefined) && !relation.current) || (relation.active === false) || (relation.endDate < getComparableNow());
-  const previsionalEndDate = relation.endDatePrevisional ? ` (fin prévisionelle :${formatDescriptionDates(relation.endDatePrevisional)})`.replace('depuis le', '').replace('depuis', '') : '';
+  const previsionalEndDate = relation.endDatePrevisional ? ` (fin prévisionelle${formatDescriptionDates(relation.endDatePrevisional)})`.replace('depuis le', '').replace('depuis', '') : '';
   const interimMandate = relation.mandateTemporary ? ' par intérim ' : '';
   const isComming = ((relation.startDate > getComparableNow()
     ? formatDescriptionDates(relation.startDate || null, relation.endDate || null)
