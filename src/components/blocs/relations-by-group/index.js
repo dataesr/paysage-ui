@@ -12,6 +12,7 @@ import useNotice from '../../../hooks/useNotice';
 import Map from '../../map/auto-bound-map';
 import RelationCard from '../../card/relation-card';
 import { deleteError, saveError, saveSuccess, deleteSuccess } from '../../../utils/notice-contents';
+import { getComparableNow } from '../../../utils/dates';
 
 export default function RelationsByGroup({ group, reloader }) {
   const { id: groupId, name: groupName, accepts: groupAccepts } = group;
@@ -70,8 +71,15 @@ export default function RelationsByGroup({ group, reloader }) {
   // What to do with relatedObject! Shared Model or Card adaptability ?
   const renderCards = () => {
     if (!data && !data?.data?.length) return null;
-    const structures = data.data.filter((element) => (element.relatedObject?.collection === 'structures' && element.relatedObject?.currentLocalisation?.geometry?.coordinates));
-    const markers = structures.map((element) => {
+    const inactives = data.data.filter((element) => (element.relatedObject?.collection === 'structures'
+    && element.relatedObject?.currentLocalisation?.geometry?.coordinates
+    && (element?.endDate < getComparableNow() || !element.endDate)));
+
+    const actives = data.data.filter((element) => (inactives && (element?.endDate > getComparableNow())));
+
+    const orderedList = [...actives, ...inactives];
+
+    const markers = orderedList.map((element) => {
       const { coordinates } = element.relatedObject.currentLocalisation.geometry;
       const markersCoordinates = [...coordinates];
       const reversed = markersCoordinates.reverse();
@@ -83,13 +91,13 @@ export default function RelationsByGroup({ group, reloader }) {
          ${element.relatedObject.currentLocalisation?.locality}`,
       });
     });
-    const list = data.data.map((element) => (
+    const list = orderedList.map((element) => (
       <RelationCard
         relation={element}
         onEdit={() => onOpenModalHandler(element)}
       />
     ));
-    if (structures.length) {
+    if (orderedList.length) {
       return (
         <Row gutters>
           <Col n="12">
