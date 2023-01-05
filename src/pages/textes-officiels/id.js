@@ -105,7 +105,7 @@ export default function OfficialTextByIdPage() {
               </BadgeGroup>
             </Title>
           </Row>
-          {data.pageUrl && <Link href={data.pageUrl}>Accéder au texte</Link>}
+          {data.pageUrl && <Link target="_blank" href={data.pageUrl}>Accéder au texte</Link>}
           <Bloc data={{ totalCount: data?.relatedObjects?.length }} error={error} isLoading={isLoading}>
             <BlocTitle as="h3" look="h6">Objets liés au texte officiel</BlocTitle>
             <BlocContent>
