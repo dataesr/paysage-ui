@@ -23,7 +23,11 @@ export default function RelationCard({ relation, inverse, onEdit }) {
   const { editMode } = useEditMode();
   const toPrintRelation = inverse ? relation.resource : relation.relatedObject;
   const isFinished = ((relation.current !== undefined) && !relation.current) || (relation.active === false) || (relation.endDate < getComparableNow());
-  const previsionalEndDate = relation.endDatePrevisional ? ` (fin prévisionelle${formatDescriptionDates(relation.endDatePrevisional)})`.replace('depuis le', '').replace('depuis', '') : '';
+  const previsionalEndDateForFullDate = relation?.endDatePrevisional?.length > 7
+    ? ` (fin de mandat au${formatDescriptionDates(relation.endDatePrevisional)})`.replace('depuis le', '').replace('depuis', '') : '';
+  const previsionalEndDateForCompactDate = relation?.endDatePrevisional?.length <= 7
+    ? ` (fin de mandat en${formatDescriptionDates(relation.endDatePrevisional)})`.replace('depuis le', '').replace('depuis', '') : '';
+
   const interimMandate = relation.mandateTemporary ? ' par intérim ' : '';
   const isComming = ((relation.startDate > getComparableNow()
     ? formatDescriptionDates(relation.startDate || null, relation.endDate || null)
@@ -46,7 +50,8 @@ export default function RelationCard({ relation, inverse, onEdit }) {
             {(relation?.resource.collection === 'prizes' && (relation.startDate || relation.endDate))
               ? (relation.startDate?.split('-')?.[0]) || 'Date inconnue'
               : isComming}
-            {previsionalEndDate}
+            {previsionalEndDateForFullDate}
+            {previsionalEndDateForCompactDate}
           </p>
           {(relation.otherAssociatedObjects?.length > 0) && (
             <div className="fr-card__desc">
