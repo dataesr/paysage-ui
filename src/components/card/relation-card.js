@@ -30,10 +30,9 @@ export default function RelationCard({ relation, inverse, onEdit }) {
 
   const interimMandate = relation.mandateTemporary ? ' par intérim ' : '';
   const isComming = ((relation.startDate > getComparableNow()
-    ? formatDescriptionDates(relation.startDate || null, relation.endDate || null)
+    && formatDescriptionDates(relation.startDate || null, relation.endDate || null)
       .replace('depuis le', 'à partir du')
-      .replace('depuis', 'à partir de')
-    : formatDescriptionDates(relation.startDate || null, relation.endDate || null)));
+      .replace('depuis', 'à partir de')));
   return (
     <div className="fr-card fr-card--xs fr-card--grey fr-card--no-border">
       <div className={`fr-card__body ${styles['card-body']} ${styles[`${toPrintRelation.collection}-border`]} ${isFinished && 'turngrey'}`}>
@@ -49,7 +48,7 @@ export default function RelationCard({ relation, inverse, onEdit }) {
             {relation?.laureatePrecision && ` ${relation?.laureatePrecision}`}
             {(relation?.resource.collection === 'prizes' && (relation.startDate || relation.endDate))
               ? (relation.startDate?.split('-')?.[0]) || 'Date inconnue'
-              : isComming}
+              : isComming }
             {previsionalEndDateForFullDate}
             {previsionalEndDateForCompactDate}
           </p>
@@ -64,17 +63,22 @@ export default function RelationCard({ relation, inverse, onEdit }) {
               </TagGroup>
             </div>
           )}
+          {isComming && (
+            <div className="fr-card__start ">
+              <Badge type="info" text="A venir" />
+            </div>
+          )}
           <p className={`fr-card__title ${styles[`${toPrintRelation.collection}-title`]}`}>
             <RouterLink className="fr-text--lg" to={toPrintRelation?.href}>
               {toPrintRelation?.displayName}
               <Icon iconPosition="right" name="ri-arrow-right-line" />
             </RouterLink>
           </p>
-          {isFinished ? (
+          {isFinished && (
             <div className={`fr-card__start ${styles['card-end']}`}>
               <Badge text="terminé" />
             </div>
-          ) : ''}
+          )}
           {(relation.startDateOfficialText?.id || relation.endDateOfficialText?.id) && (
             <div className={`fr-card__end ${styles['card-end']}`}>
               {relation.startDateOfficialText?.id && (
