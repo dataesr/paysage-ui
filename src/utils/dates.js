@@ -70,8 +70,8 @@ export function formatDescriptionDatesForMandateAndPrizes({ startDate = null, en
       return ret;
     }
     let ret = '';
-    if (startDate.length === 10) {
-      ret += ` du ${toString(startDate)}`;
+    if (startDate.length) {
+      ret += ` depuis le ${toString(startDate)}`;
     }
     if (startDate.length < 10) {
       ret += ` depuis ${toString(startDate)}`;
