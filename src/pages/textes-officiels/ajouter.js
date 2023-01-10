@@ -1,6 +1,6 @@
 import { Link as RouterLink, useSearchParams } from 'react-router-dom';
 import { Breadcrumb, BreadcrumbItem, Col, Container, Row, Title } from '@dataesr/react-dsfr';
-import OfficiaTextAddForm from '../../components/forms/official-text';
+import OfficiaTextForm from '../../components/blocs/textes-officiels/components/official-text-form';
 import usePageTitle from '../../hooks/usePageTitle';
 
 export default function OfficialTextAddPage() {
@@ -26,7 +26,7 @@ export default function OfficialTextAddPage() {
           <Title as="h2">Ajouter un texte officiel</Title>
         </Col>
       </Row>
-      <OfficiaTextAddForm from={search.get('redirect')} />
+      <OfficiaTextForm from={search.get('redirect')} />
     </Container>
   );
 }
