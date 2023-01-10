@@ -55,7 +55,7 @@ function User({
   const roleOptions = [
     { value: 'admin', label: 'Administrateur' },
     { value: 'user', label: 'Utilisateur' },
-    { value: 'viewer', label: 'Invité' },
+    { value: 'reader', label: 'Invité' },
   ];
 
   return (

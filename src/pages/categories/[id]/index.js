@@ -131,7 +131,7 @@ function CategoryByIdPage() {
                 onClick={() => setIsFavorite(!isFavorite)}
                 icon={`ri-star-${isFavorite ? 'fill' : 'line'}`}
               /> */}
-              {(viewer.role !== 'viewer') && (
+              {(viewer.role !== 'reader') && (
                 <Button
                   tertiary
                   borderless

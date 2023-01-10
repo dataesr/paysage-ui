@@ -139,7 +139,7 @@ function ProjectByIdPage() {
                 onClick={() => setIsFavorite(!isFavorite)}
                 icon={`ri-star-${isFavorite ? 'fill' : 'line'}`}
               /> */}
-              {(viewer.role !== 'viewer') && (
+              {(viewer.role !== 'reader') && (
                 <Button
                   tertiary
                   borderless

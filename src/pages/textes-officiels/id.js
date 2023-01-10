@@ -83,7 +83,7 @@ export default function OfficialTextByIdPage() {
                   </DropdownButtonItem>
                 </DropdownButton>
               )}
-              {(viewer.role !== 'viewer') && (
+              {(viewer.role !== 'reader') && (
                 <Button
                   tertiary
                   borderless

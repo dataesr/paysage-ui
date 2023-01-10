@@ -60,7 +60,7 @@ export default function PreferencesPage() {
         <Row className="fr-pb-5w">
           <Col><Title as="h3" look="h5">Mode édition</Title></Col>
         </Row>
-        {(viewer.role !== 'viewer') && (
+        {(viewer.role !== 'reader') && (
           <Row className="fr-pb-5w">
             <RadioGroup
               isInline

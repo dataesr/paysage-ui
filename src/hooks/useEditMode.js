@@ -28,7 +28,7 @@ export function EditModeContextProvider({ children }) {
   }, [reset]);
 
   const value = useMemo(
-    () => ({ editMode: (viewer.role === 'viewer') ? 'false' : editMode, reset, toggle, setEditMode }),
+    () => ({ editMode: (viewer.role === 'reader') ? 'false' : editMode, reset, toggle, setEditMode }),
     [viewer, editMode, reset, toggle, setEditMode],
   );
 

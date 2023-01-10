@@ -155,7 +155,7 @@ export default function Header() {
             current={pathname === '/'}
           />
           <>
-            {(viewer.role !== 'viewer') && (
+            {(viewer.role !== 'reader') && (
               <NavItem
                 title="Je contribue"
                 asLink={<RouterLink to="/contribuer" />}
