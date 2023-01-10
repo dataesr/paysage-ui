@@ -13,7 +13,7 @@ import useUrl from '../../hooks/useUrl';
 import { PageSpinner } from '../../components/spinner';
 import api from '../../utils/api';
 import useNotice from '../../hooks/useNotice';
-import OfficiaTextForm from '../../components/forms/official-text';
+import OfficialTextForm from '../../components/forms/official-text';
 import { saveError, saveSuccess } from '../../utils/notice-contents';
 import useFetch from '../../hooks/useFetch';
 import RelatedObjectCard from '../../components/card/related-object-card';
@@ -77,7 +77,7 @@ export default function OfficialTextByIdPage() {
                         Modifier les informations
                       </ModalTitle>
                       <ModalContent>
-                        <OfficiaTextForm id={data.id} data={data} onSave={onSave} />
+                        <OfficialTextForm id={data.id} data={data} onSave={onSave} />
                       </ModalContent>
                     </Modal>
                   </DropdownButtonItem>
