@@ -44,20 +44,6 @@ export function getComparableNow() {
 export function formatDescriptionDatesForMandateAndPrizes({ startDate = null, endDate = null, endDatePrevisional = null }) {
   if (!startDate && !endDate && !endDatePrevisional) { return null; }
 
-  if (startDate && endDate) {
-    let ret = '';
-    if (startDate.length < 10 && endDate.length < 10) { ret += ` de ${toString(startDate)} à ${toString(endDate)}`; }
-    if (startDate.length < 10 && endDate.length === 10) { ret += ` de ${toString(startDate)} au ${toString(endDate)}`; }
-    if (startDate.length === 10 && endDate.length < 10) { ret += ` du ${toString(startDate)} à ${toString(endDate)}`; }
-    if (endDate.length === 10) {
-      ret += ` au ${toString(endDate)}`;
-    }
-    if (endDate.length < 10) {
-      ret += ` jusqu'en ${toString(endDate)}`;
-    }
-    return ret;
-  }
-
   if (startDate && !endDate) {
     if (startDate > getComparableNow()) {
       let ret = '';
@@ -70,7 +56,7 @@ export function formatDescriptionDatesForMandateAndPrizes({ startDate = null, en
       return ret;
     }
     let ret = '';
-    if (startDate.length) {
+    if (startDate.length === 10) {
       ret += ` depuis le ${toString(startDate)}`;
     }
     if (startDate.length < 10) {
@@ -82,10 +68,24 @@ export function formatDescriptionDatesForMandateAndPrizes({ startDate = null, en
   if (!startDate && endDate) {
     let ret = '';
     if (endDate.length === 10) {
-      ret += ` au ${toString(endDate)}`;
+      ret += ` jusqu'au ${toString(endDate)}`;
     }
     if (endDate.length < 10) {
       ret += ` jusqu'en ${toString(endDate)}`;
+    }
+    return ret;
+  }
+  if (startDate && endDate) {
+    let ret = '';
+    if (startDate.length < 10) {
+      ret = ` de ${toString(startDate)} `;
+    } else {
+      ret = ` du ${toString(startDate)} `;
+    }
+    if (endDate.length < 10) {
+      ret += ` à ${toString(endDate)} `;
+    } else {
+      ret += ` au ${toString(endDate)}`;
     }
     return ret;
   }
