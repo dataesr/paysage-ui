@@ -242,7 +242,7 @@ export default function HomePage() {
                 </Row>
               </>
             )}
-            {(mostImportantCategories?.length) && (
+            {(mostImportantCategories?.length > 0) && (
               <>
                 <Row>
                   <Title as="h2">
