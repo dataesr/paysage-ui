@@ -7,10 +7,12 @@ import {
   useState,
 } from 'react';
 import PropTypes from 'prop-types';
+import useAuth from './useAuth';
 
 const Context = createContext();
 
 export function EditModeContextProvider({ children }) {
+  const { viewer } = useAuth();
   const [editMode, setEditMode] = useState(null);
 
   const reset = useCallback(() => {
@@ -25,7 +27,10 @@ export function EditModeContextProvider({ children }) {
     reset();
   }, [reset]);
 
-  const value = useMemo(() => ({ editMode, reset, toggle, setEditMode }), [editMode, reset, toggle, setEditMode]);
+  const value = useMemo(
+    () => ({ editMode: (viewer.role === 'viewer') ? 'false' : editMode, reset, toggle, setEditMode }),
+    [viewer, editMode, reset, toggle, setEditMode],
+  );
 
   return (
     <Context.Provider value={value}>

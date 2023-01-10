@@ -169,14 +169,16 @@ function PersonByIdPage() {
                 onClick={() => setIsFavorite(!isFavorite)}
                 icon={`ri-star-${isFavorite ? 'fill' : 'line'}`}
               /> */}
-              <Button
-                tertiary
-                borderless
-                rounded
-                title="Activer le mode édition"
-                onClick={() => toggle()}
-                icon={`ri-edit-${editMode ? 'fill' : 'line'}`}
-              />
+              {(viewer.role !== 'viewer') && (
+                <Button
+                  tertiary
+                  borderless
+                  rounded
+                  title="Activer le mode édition"
+                  onClick={() => toggle()}
+                  icon={`ri-edit-${editMode ? 'fill' : 'line'}`}
+                />
+              )}
             </ButtonGroup>
           </Row>
           <Row className="flex--space-between flex--wrap-reverse">

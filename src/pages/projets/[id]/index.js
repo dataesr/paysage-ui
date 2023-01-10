@@ -25,9 +25,11 @@ import ProjectPrizes from './prix-et-recompenses';
 import { saveError, saveSuccess } from '../../../utils/notice-contents';
 import Error from '../../../components/errors';
 import usePageTitle from '../../../hooks/usePageTitle';
+import useAuth from '../../../hooks/useAuth';
 
 function ProjectByIdPage() {
   const { url, id } = useUrl();
+  const { viewer } = useAuth();
   const { data, isLoading, error, reload } = useFetch(url);
   const navigate = useNavigate();
   const { notice } = useNotice();
@@ -137,14 +139,16 @@ function ProjectByIdPage() {
                 onClick={() => setIsFavorite(!isFavorite)}
                 icon={`ri-star-${isFavorite ? 'fill' : 'line'}`}
               /> */}
-              <Button
-                tertiary
-                borderless
-                rounded
-                title="Activer le mode édition"
-                onClick={() => toggle()}
-                icon={`ri-edit-${editMode ? 'fill' : 'line'}`}
-              />
+              {(viewer.role !== 'viewer') && (
+                <Button
+                  tertiary
+                  borderless
+                  rounded
+                  title="Activer le mode édition"
+                  onClick={() => toggle()}
+                  icon={`ri-edit-${editMode ? 'fill' : 'line'}`}
+                />
+              )}
             </ButtonGroup>
           </Row>
           <Row>

@@ -106,6 +106,15 @@ export default function Routes() {
               <Route path="nomenclatures/types-de-mail" element={<AdminNomenclaturesPage route="/email-types" title="Types d'email" />} />
             </Route>
           </Route>
+          <Route element={<ProtectedRoute roles={['admin', 'users']} />}>
+            <Route path="/structures/ajouter" element={<StructureAddPage />} />
+            <Route path="/categories/ajouter" element={<CategoriesAddPage />} />
+            <Route path="/personnes/ajouter" element={<PersonAddPage />} />
+            <Route path="/termes/ajouter" element={<TermsAddPage />} />
+            <Route path="/prix/ajouter" element={<PrizeAddPage />} />
+            <Route path="/projets/ajouter" element={<ProjectAddPage />} />
+            <Route path="/textes-officiels/ajouter" element={<OfficialTextAddPage />} />
+          </Route>
 
           <Route element={<ProtectedRoute />}>
             <Route path="/" element={<HomePage />} />
@@ -122,7 +131,6 @@ export default function Routes() {
 
             <Route path="/rechercher/*" element={<SearchPage />} />
 
-            <Route path="/structures/ajouter" element={<StructureAddPage />} />
             <Route path="/structures/:id/exporter" element={<StructureExportPage />} />
             <Route path="/structures/:id" element={<StructureByIdPage />}>
               <Route path="" element={<Navigate to="presentation" replace />} />
@@ -148,7 +156,6 @@ export default function Routes() {
               <Route path="journal" element={<JournalOutlet />} />
             </Route>
 
-            <Route path="/categories/ajouter" element={<CategoriesAddPage />} />
             <Route path="/categories/:id/exporter" element={<CategoriesExportPage />} />
             <Route path="/categories/:id" element={<CategoryByIdPage />}>
               <Route path="" element={<Navigate to="presentation" replace />} />
@@ -161,7 +168,6 @@ export default function Routes() {
               <Route path="journal" element={<JournalOutlet />} />
             </Route>
 
-            <Route path="/personnes/ajouter" element={<PersonAddPage />} />
             <Route path="/personnes/:id/exporter" element={<PersonExportPage />} />
             <Route path="/persons/:id" element={<Redirect />} />
             <Route path="/personnes/:id" element={<PersonByIdPage />}>
@@ -179,7 +185,6 @@ export default function Routes() {
               <Route path="journal" element={<JournalOutlet />} />
             </Route>
 
-            <Route path="/termes/ajouter" element={<TermsAddPage />} />
             <Route path="/termes/:id/exporter" element={<TermExportPage />} />
             <Route path="/terms/:id" element={<Redirect />} />
             <Route path="/termes/:id" element={<TermByIdPage />}>
@@ -193,7 +198,6 @@ export default function Routes() {
               <Route path="journal" element={<JournalOutlet />} />
             </Route>
 
-            <Route path="/prix/ajouter" element={<PrizeAddPage />} />
             <Route path="/prix/:id/exporter" element={<PrizeExportPage />} />
             <Route path="/prizes/:id" element={<Redirect />} />
             <Route path="/prix/:id" element={<PrizeByIdPage />}>
@@ -207,7 +211,6 @@ export default function Routes() {
               <Route path="journal" element={<JournalOutlet />} />
             </Route>
 
-            <Route path="/projets/ajouter" element={<ProjectAddPage />} />
             <Route path="/projets/:id/exporter" element={<ProjectExportPage />} />
             <Route path="/projects/:id" element={<Redirect />} />
             <Route path="/projets/:id" element={<ProjectByIdPage />}>
@@ -222,7 +225,6 @@ export default function Routes() {
               <Route path="journal" element={<JournalOutlet />} />
             </Route>
 
-            <Route path="/textes-officiels/ajouter" element={<OfficialTextAddPage />} />
             <Route path="/official-texts/:id" element={<Redirect />} />
             <Route path="/textes-officiels/:id" element={<OfficialTextsByIdPage />} />
 

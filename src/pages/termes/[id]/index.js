@@ -24,9 +24,11 @@ import { saveError, saveSuccess } from '../../../utils/notice-contents';
 import TermForm from '../../../components/forms/category-term';
 import Error from '../../../components/errors';
 import usePageTitle from '../../../hooks/usePageTitle';
+import useAuth from '../../../hooks/useAuth';
 
 function TermByIdPage() {
   const { url, id } = useUrl();
+  const { viewer } = useAuth();
   const { data, isLoading, error, reload } = useFetch(url);
   const navigate = useNavigate();
   const { notice } = useNotice();
@@ -131,14 +133,16 @@ function TermByIdPage() {
                 onClick={() => setIsFavorite(!isFavorite)}
                 icon={`ri-star-${isFavorite ? 'fill' : 'line'}`}
               /> */}
-              <Button
-                tertiary
-                borderless
-                rounded
-                title="Activer le mode édition"
-                onClick={() => toggle()}
-                icon={`ri-edit-${editMode ? 'fill' : 'line'}`}
-              />
+              {(viewer.role !== 'viewer') && (
+                <Button
+                  tertiary
+                  borderless
+                  rounded
+                  title="Activer le mode édition"
+                  onClick={() => toggle()}
+                  icon={`ri-edit-${editMode ? 'fill' : 'line'}`}
+                />
+              )}
             </ButtonGroup>
           </Row>
           <Row>

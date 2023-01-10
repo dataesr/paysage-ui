@@ -20,9 +20,11 @@ import RelatedObjectCard from '../../components/card/related-object-card';
 import { Bloc, BlocContent, BlocTitle } from '../../components/bloc';
 import Error from '../../components/errors';
 import usePageTitle from '../../hooks/usePageTitle';
+import useAuth from '../../hooks/useAuth';
 
 export default function OfficialTextByIdPage() {
   const { url } = useUrl();
+  const { viewer } = useAuth();
   const { data, isLoading, error, reload } = useFetch(url);
   const { notice } = useNotice();
   const { editMode, reset, toggle } = useEditMode();
@@ -81,14 +83,16 @@ export default function OfficialTextByIdPage() {
                   </DropdownButtonItem>
                 </DropdownButton>
               )}
-              <Button
-                tertiary
-                borderless
-                rounded
-                title="Activer le mode édition"
-                onClick={() => toggle()}
-                icon={`ri-edit-${editMode ? 'fill' : 'line'}`}
-              />
+              {(viewer.role !== 'viewer') && (
+                <Button
+                  tertiary
+                  borderless
+                  rounded
+                  title="Activer le mode édition"
+                  onClick={() => toggle()}
+                  icon={`ri-edit-${editMode ? 'fill' : 'line'}`}
+                />
+              )}
             </ButtonGroup>
 
           </Row>
