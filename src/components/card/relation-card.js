@@ -24,17 +24,9 @@ export default function RelationCard({ relation, inverse, onEdit }) {
   const toPrintRelation = inverse ? relation.resource : relation.relatedObject;
   const isComming = relation.startDate > getComparableNow();
   const interimMandate = relation.mandateTemporary ? ' par intérim ' : '';
-
   const isFinished = ((relation.current !== undefined)
-
   && !relation.current) || (relation.active === false) || (relation.endDate < getComparableNow());
-  const renderDate = (rel) => (
-    <>
-      { formatDescriptionDatesForMandateAndPrizes({ startDate: rel.startDate }) }
-      { formatDescriptionDatesForMandateAndPrizes({ endDate: rel.endDate }) }
-      { formatDescriptionDatesForMandateAndPrizes({ endDatePrevisional: rel.endDatePrevisional }) }
-    </>
-  );
+
   const renderPriceDate = relation.startDate ? ` obtenu en ${relation.startDate?.split('-')?.[0]}` : ' Date inconnue';
 
   return (
@@ -52,7 +44,7 @@ export default function RelationCard({ relation, inverse, onEdit }) {
             {relation?.laureatePrecision && ` ${relation?.laureatePrecision}`}
             {(relation?.resource.collection === 'prizes')
               ? renderPriceDate
-              : renderDate(relation) }
+              : formatDescriptionDatesForMandateAndPrizes(relation) }
           </p>
           {(relation.otherAssociatedObjects?.length > 0) && (
             <div className="fr-card__desc">
