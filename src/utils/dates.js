@@ -35,41 +35,103 @@ export function reverseDate(d) {
   }
 }
 
+export function getComparableNow() {
+  const now = new Date();
+  return now.toISOString().split('T')[0];
+}
+// const numberToReplace = date.charAt(date.length - 2) + date.charAt(date.length - 1);
+
+export function formatDescriptionDatesForMandateAndPrizes({ startDate = null, endDate = null, endDatePrevisional = null }) {
+  if (!startDate && !endDate && !endDatePrevisional) { return null; }
+
+  if (startDate && !endDate) {
+    if (startDate > getComparableNow()) {
+      let ret = '';
+      if (startDate.length === 10) {
+        ret += ` à partir du ${toString(startDate)}`;
+      }
+      if (startDate.length < 10) {
+        ret += ` à partir de ${toString(startDate)}`;
+      }
+      return ret;
+    }
+    let ret = '';
+    if (startDate.length === 10) {
+      ret += ` depuis le ${toString(startDate)}`;
+    }
+    if (startDate.length < 10) {
+      ret += ` depuis ${toString(startDate)}`;
+    }
+    return ret;
+  }
+
+  if (!startDate && endDate) {
+    let ret = '';
+    if (endDate.length === 10) {
+      ret += ` jusqu'au ${toString(endDate)}`;
+    }
+    if (endDate.length < 10) {
+      ret += ` jusqu'en ${toString(endDate)}`;
+    }
+    return ret;
+  }
+  if (startDate && endDate) {
+    let ret = '';
+    if (startDate.length < 10) {
+      ret = ` de ${toString(startDate)} `;
+    } else {
+      ret = ` du ${toString(startDate)} `;
+    }
+    if (endDate.length < 10) {
+      ret += ` à ${toString(endDate)} `;
+    } else {
+      ret += ` au ${toString(endDate)}`;
+    }
+    return ret;
+  }
+
+  if (endDatePrevisional) {
+    if (endDatePrevisional.length === 10) {
+      return ` (fin de mandat le ${toString(endDatePrevisional)})`;
+    }
+    if (endDatePrevisional.length < 10) {
+      return ` (fin de mandat en ${toString(endDatePrevisional)})`;
+    }
+  }
+
+  return null;
+}
+
 export function formatDescriptionDates(startDate = null, endDate = null) {
   if (!startDate && !endDate) { return null; }
   if (!startDate && endDate) {
     if (endDate.split('-').length === 1) {
-      return `jusqu'à ${toString(endDate)}`;
+      return ` jusqu'à ${toString(endDate)}`;
     }
     if (endDate.split('-').length === 2) {
       return `jusqu'en ${toString(endDate)}`;
     }
-    return `jusqu'au ${toString(endDate)}`;
+    return ` jusqu'au ${toString(endDate)}`;
   }
   if (startDate && !endDate) {
     if (startDate.split('-').length !== 3) {
-      return `depuis ${toString(startDate)}`;
+      return ` depuis ${toString(startDate)}`;
     }
-    return `depuis le ${toString(startDate)}`;
+    return ` depuis le ${toString(startDate)}`;
   }
   if (startDate && endDate) {
     let ret = '';
     if (startDate.split('-').length !== 3) {
-      ret = `de ${toString(startDate)} `;
+      ret = ` de ${toString(startDate)} `;
     } else {
-      ret = `du ${toString(startDate)} `;
+      ret = ` du ${toString(startDate)} `;
     }
     if (endDate.split('-').length === 1) {
-      ret += `à ${toString(endDate)} `;
+      ret += ` à ${toString(endDate)} `;
     } else {
-      ret += `au ${toString(endDate)}`;
+      ret += ` au ${toString(endDate)}`;
     }
     return ret;
   }
   return null;
-}
-
-export function getComparableNow() {
-  const now = new Date();
-  return now.toISOString().split('T')[0];
 }

@@ -24,9 +24,11 @@ import PrizeExportPage from './exporter';
 import { saveError, saveSuccess } from '../../../utils/notice-contents';
 import Error from '../../../components/errors';
 import usePageTitle from '../../../hooks/usePageTitle';
+import useAuth from '../../../hooks/useAuth';
 
 function PrizeByIdPage() {
   const { url, id } = useUrl();
+  const { viewer } = useAuth();
   const { data, isLoading, error, reload } = useFetch(url);
   const navigate = useNavigate();
   const { notice } = useNotice();
@@ -131,14 +133,16 @@ function PrizeByIdPage() {
                 onClick={() => setIsFavorite(!isFavorite)}
                 icon={`ri-star-${isFavorite ? 'fill' : 'line'}`}
               /> */}
-              <Button
-                tertiary
-                borderless
-                rounded
-                title="Activer le mode édition"
-                onClick={() => toggle()}
-                icon={`ri-edit-${editMode ? 'fill' : 'line'}`}
-              />
+              {(viewer.role !== 'reader') && (
+                <Button
+                  tertiary
+                  borderless
+                  rounded
+                  title="Activer le mode édition"
+                  onClick={() => toggle()}
+                  icon={`ri-edit-${editMode ? 'fill' : 'line'}`}
+                />
+              )}
             </ButtonGroup>
           </Row>
           <Row>

@@ -3,6 +3,7 @@ import { Bloc, BlocContent, BlocTitle } from '../../bloc';
 import useFetch from '../../../hooks/useFetch';
 import useUrl from '../../../hooks/useUrl';
 import RelationCard from '../../card/relation-card';
+import { getComparableNow } from '../../../utils/dates';
 
 export default function RelationsParticipations() {
   const { id: resourceId } = useUrl();
@@ -11,7 +12,15 @@ export default function RelationsParticipations() {
 
   const renderCards = () => {
     if (!data && !data?.data?.length) return null;
-    const list = data.data.map((element) => (
+    const inactives = data.data.filter((element) => (element.relatedObject?.collection === 'structures'
+    && element.relatedObject?.currentLocalisation?.geometry?.coordinates
+    && (element?.endDate < getComparableNow() || !element.endDate)));
+
+    const actives = data.data.filter((element) => (inactives && (element?.endDate > getComparableNow())));
+
+    const orderedList = [...actives, ...inactives];
+
+    const list = orderedList.map((element) => (
       <RelationCard
         relation={element}
         onEdit={null}

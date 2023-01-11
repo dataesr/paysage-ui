@@ -155,11 +155,13 @@ export default function Header() {
             current={pathname === '/'}
           />
           <>
-            <NavItem
-              title="Je contribue"
-              asLink={<RouterLink to="/contribuer" />}
-              current={pathname.startsWith('/contribuer')}
-            />
+            {(viewer.role !== 'reader') && (
+              <NavItem
+                title="Je contribue"
+                asLink={<RouterLink to="/contribuer" />}
+                current={pathname.startsWith('/contribuer')}
+              />
+            )}
             <NavItem
               title="Je recherche"
               asLink={<RouterLink to="/rechercher?query=&page=1" />}

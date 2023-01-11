@@ -17,7 +17,7 @@ import PaysageBlame from '../../paysage-blame';
 
 const regexpValidateIdentifiers = (type) => {
   const validator = {
-    idRef: [/^\d{8}[\dX]{1}$/, 'Doit contenir 9 caractères'],
+    idRef: [/^\d{8}[\dX]{1}$/, 'Identifiant incorrect'],
     UAI: [/^[0-9]{7}[A-Z]{1}$/, "Doit commencer par 7 chiffres suivis d'une lettre majuscule"],
     Wikidata: [/^Q[0-9]+$/, 'Doit commencer par "Q" et être suivi de 7 caractères'],
     Siret: [/^[0-9]{14}$/, 'Doit contenir 14 chiffres'],

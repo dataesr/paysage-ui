@@ -57,29 +57,33 @@ export default function PreferencesPage() {
             ))}
           </RadioGroup>
         </Row>
-        <Row className="fr-pb-5w">
-          <Col><Title as="h3" look="h5">Mode édition</Title></Col>
-        </Row>
-        <Row className="fr-pb-5w">
-          <RadioGroup
-            isInline
-            legend="Choisissez un mode d'affichage des pages par défaut"
-            value={JSON.parse(localStorage.getItem('prefers-edit-mode'))}
-            onChange={(value) => {
-              localStorage.setItem('prefers-edit-mode', value);
-            }}
-          >
-            {views.map((view) => (
-              <Radio
-                key={view.value}
-                label={view.label}
-                value={view.value}
-                isExtended
-                svg={view.svg}
-              />
-            ))}
-          </RadioGroup>
-        </Row>
+        {(viewer.role !== 'reader') && (
+          <>
+            <Row className="fr-pb-5w">
+              <Col><Title as="h3" look="h5">Mode édition</Title></Col>
+            </Row>
+            <Row className="fr-pb-5w">
+              <RadioGroup
+                isInline
+                legend="Choisissez un mode d'affichage des pages par défaut"
+                value={JSON.parse(localStorage.getItem('prefers-edit-mode'))}
+                onChange={(value) => {
+                  localStorage.setItem('prefers-edit-mode', value);
+                }}
+              >
+                {views.map((view) => (
+                  <Radio
+                    key={view.value}
+                    label={view.label}
+                    value={view.value}
+                    isExtended
+                    svg={view.svg}
+                  />
+                ))}
+              </RadioGroup>
+            </Row>
+          </>
+        )}
       </Container>
     </>
   );

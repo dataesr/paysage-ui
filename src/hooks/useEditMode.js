@@ -25,7 +25,10 @@ export function EditModeContextProvider({ children }) {
     reset();
   }, [reset]);
 
-  const value = useMemo(() => ({ editMode, reset, toggle, setEditMode }), [editMode, reset, toggle, setEditMode]);
+  const value = useMemo(
+    () => ({ editMode, reset, toggle, setEditMode }),
+    [editMode, reset, toggle, setEditMode],
+  );
 
   return (
     <Context.Provider value={value}>
