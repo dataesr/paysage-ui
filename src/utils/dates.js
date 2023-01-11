@@ -62,6 +62,14 @@ export function formatDescriptionDatesForMandateAndPrizes({ startDate = null, en
     if (startDate.length < 10) {
       ret += ` depuis ${toString(startDate)}`;
     }
+    if (endDatePrevisional) {
+      if (endDatePrevisional.length === 10) {
+        ret += ` (fin de mandat le ${toString(endDatePrevisional)})`;
+      }
+      if (endDatePrevisional.length < 10) {
+        ret += ` (fin de mandat en ${toString(endDatePrevisional)})`;
+      }
+    }
     return ret;
   }
 
@@ -88,15 +96,6 @@ export function formatDescriptionDatesForMandateAndPrizes({ startDate = null, en
       ret += ` au ${toString(endDate)}`;
     }
     return ret;
-  }
-
-  if (endDatePrevisional) {
-    if (endDatePrevisional.length === 10) {
-      return ` (fin de mandat le ${toString(endDatePrevisional)})`;
-    }
-    if (endDatePrevisional.length < 10) {
-      return ` (fin de mandat en ${toString(endDatePrevisional)})`;
-    }
   }
 
   return null;
