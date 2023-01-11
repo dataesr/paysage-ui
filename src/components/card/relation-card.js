@@ -2,7 +2,7 @@ import { Text, Link, TagGroup, Tag, Icon, Badge } from '@dataesr/react-dsfr';
 import PropTypes from 'prop-types';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import useEditMode from '../../hooks/useEditMode';
-import { formatDescriptionDates, getComparableNow, toString } from '../../utils/dates';
+import { formatDescriptionDatesForMandateAndPrizes, getComparableNow, toString } from '../../utils/dates';
 import Button from '../button';
 import CopyButton from '../copy/copy-button';
 import styles from './styles.module.scss';
@@ -22,17 +22,13 @@ export default function RelationCard({ relation, inverse, onEdit }) {
   const navigate = useNavigate();
   const { editMode } = useEditMode();
   const toPrintRelation = inverse ? relation.resource : relation.relatedObject;
-  const isFinished = ((relation.current !== undefined) && !relation.current) || (relation.active === false) || (relation.endDate < getComparableNow());
-  const previsionalEndDateForFullDate = relation?.endDatePrevisional?.length > 7
-    ? ` (fin de mandat au${formatDescriptionDates(relation.endDatePrevisional)})`.replace('depuis le', '').replace('depuis', '') : '';
-  const previsionalEndDateForCompactDate = relation?.endDatePrevisional?.length <= 7
-    ? ` (fin de mandat en${formatDescriptionDates(relation.endDatePrevisional)})`.replace('depuis le', '').replace('depuis', '') : '';
-
+  const isComming = relation.startDate > getComparableNow();
   const interimMandate = relation.mandateTemporary ? ' par intérim ' : '';
-  const isComming = ((relation.startDate > getComparableNow()
-    && formatDescriptionDates(relation.startDate || null, relation.endDate || null)
-      .replace('depuis le', 'à partir du')
-      .replace('depuis', 'à partir de')));
+  const isFinished = ((relation.current !== undefined)
+  && !relation.current) || (relation.active === false) || (relation.endDate < getComparableNow());
+
+  const renderPriceDate = relation.startDate ? ` obtenu en ${relation.startDate?.split('-')?.[0]}` : ' Date inconnue';
+
   return (
     <div className="fr-card fr-card--xs fr-card--grey fr-card--no-border">
       <div className={`fr-card__body ${styles['card-body']} ${styles[`${toPrintRelation.collection}-border`]} ${isFinished && 'turngrey'}`}>
@@ -44,13 +40,11 @@ export default function RelationCard({ relation, inverse, onEdit }) {
               </Text>
             )}
             {interimMandate}
-            {relation?.mandatePrecision && ` ${relation?.mandatePrecision}`}
+            {relation?.mandatesPrecision && ` ${relation?.mandatePrecision}`}
             {relation?.laureatePrecision && ` ${relation?.laureatePrecision}`}
-            {(relation?.resource.collection === 'prizes' && (relation.startDate || relation.endDate))
-              ? (relation.startDate?.split('-')?.[0]) || 'Date inconnue'
-              : isComming }
-            {previsionalEndDateForFullDate}
-            {previsionalEndDateForCompactDate}
+            {(relation?.resource.collection === 'prizes')
+              ? renderPriceDate
+              : formatDescriptionDatesForMandateAndPrizes(relation) }
           </p>
           {(relation.otherAssociatedObjects?.length > 0) && (
             <div className="fr-card__desc">

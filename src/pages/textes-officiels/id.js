@@ -3,7 +3,7 @@ import { Link as RouterLink } from 'react-router-dom';
 import {
   Badge,
   BadgeGroup, Breadcrumb, BreadcrumbItem, ButtonGroup,
-  Col, Container, Icon, Link, Modal, ModalContent, ModalTitle, Row, Title,
+  Col, Container, Icon, Link, Modal, ModalContent, ModalTitle, Row, Title, Text,
 } from '@dataesr/react-dsfr';
 import useEditMode from '../../hooks/useEditMode';
 import Button from '../../components/button';
@@ -13,7 +13,7 @@ import useUrl from '../../hooks/useUrl';
 import { PageSpinner } from '../../components/spinner';
 import api from '../../utils/api';
 import useNotice from '../../hooks/useNotice';
-import OfficiaTextForm from '../../components/forms/official-text';
+import OfficialTextForm from '../../components/forms/official-text';
 import { saveError, saveSuccess } from '../../utils/notice-contents';
 import useFetch from '../../hooks/useFetch';
 import RelatedObjectCard from '../../components/card/related-object-card';
@@ -21,6 +21,7 @@ import { Bloc, BlocContent, BlocTitle } from '../../components/bloc';
 import Error from '../../components/errors';
 import usePageTitle from '../../hooks/usePageTitle';
 import useAuth from '../../hooks/useAuth';
+import Logo from '../../assets/svg-logo/favicon-32x32.png';
 
 export default function OfficialTextByIdPage() {
   const { url } = useUrl();
@@ -47,6 +48,26 @@ export default function OfficialTextByIdPage() {
       </Row>
     );
   };
+
+  // const renderIcon = (iconType) => {
+  //   let rxIcon = '';
+
+  //   switch (iconType) {
+  //   default:
+  //     rxIcon = Logo;
+  //     break;
+  //   }
+
+  //   return (
+  //     <div className="fr-card__content">
+  //       <Icon
+  //         className="fr-mb-1w fr-pt-1w"
+  //         name={rxIcon}
+  //         size="3x"
+  //       />
+  //     </div>
+  //   );
+  // };
 
   if (isLoading) return <PageSpinner />;
   if (error) return <Error status={error} />;
@@ -77,7 +98,7 @@ export default function OfficialTextByIdPage() {
                         Modifier les informations
                       </ModalTitle>
                       <ModalContent>
-                        <OfficiaTextForm id={data.id} data={data} onSave={onSave} />
+                        <OfficialTextForm id={data.id} data={data} onSave={onSave} />
                       </ModalContent>
                     </Modal>
                   </DropdownButtonItem>
@@ -97,7 +118,7 @@ export default function OfficialTextByIdPage() {
 
           </Row>
           <Row>
-            <Title as="h2">
+            <Title className="fr-mb-1w" as="h2">
               {data.title}
               <BadgeGroup className="fr-pt-1w">
                 <Badge text="texte officiel" type="info" />
@@ -108,8 +129,30 @@ export default function OfficialTextByIdPage() {
                 />
               </BadgeGroup>
             </Title>
+            {data.textExtract && (
+              <Text size="sm">
+                <i>
+                  {' « '}
+                  {data.textExtract}
+                  {' » '}
+                </i>
+              </Text>
+            )}
           </Row>
-          {data.pageUrl && <Link target="_blank" href={data.pageUrl}>Accéder au texte</Link>}
+          <Row gutters>
+            <Col n="12 md-4 sm-6 lg-3" className="fr-mb-2w">
+              <div className="fr-card fr-card--sm fr-card--grey fr-card--no-border">
+                <div className={`fr-card__body ${!editMode && 'fr-enlarge-link'}`}>
+                  <div className="fr-card__content">
+                    <div className="flex-col flex--center">
+                      <img src={Logo} alt="" />
+                      {data.pageUrl && <Link target="_blank" href={data.pageUrl}>Accéder au texte</Link>}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </Col>
+          </Row>
           <Bloc data={{ totalCount: data?.relatedObjects?.length }} error={error} isLoading={isLoading}>
             <BlocTitle as="h3" look="h6">Objets liés au texte officiel</BlocTitle>
             <BlocContent>

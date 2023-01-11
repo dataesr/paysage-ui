@@ -35,7 +35,7 @@ function sanitize(form) {
   return body;
 }
 
-export default function OfficiaTextForm({ id, data, onSave, onDelete }) {
+export default function OfficialTextForm({ id, data, onSave, onDelete }) {
   const [showErrors, setShowErrors] = useState(false);
   const [query, setQuery] = useState('');
   const [options, setOptions] = useState('');
@@ -274,13 +274,13 @@ export default function OfficiaTextForm({ id, data, onSave, onDelete }) {
   );
 }
 
-OfficiaTextForm.propTypes = {
+OfficialTextForm.propTypes = {
   id: PropTypes.string,
   data: PropTypes.oneOfType([PropTypes.shape, null]),
   onSave: PropTypes.func.isRequired,
   onDelete: PropTypes.func,
 };
-OfficiaTextForm.defaultProps = {
+OfficialTextForm.defaultProps = {
   id: null,
   data: { relatedObjects: [] },
   onDelete: null,
