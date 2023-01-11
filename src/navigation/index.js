@@ -78,11 +78,13 @@ import SupervisingMinistersByIdPage from '../pages/supervising-ministers/id';
 import LegalCategoriesByIdPage from '../pages/legal-categories/id';
 
 import ScrollToTopOnPathnameChange from './scroll-top-on-pathname-change';
+import MatomoReport from './matomo-report';
 
 export default function Routes() {
   return (
     <>
       <ScrollToTopOnPathnameChange />
+      <MatomoReport />
       <RouterRoutes>
         <Route element={<Layout />}>
           <Route path="*" element={<NotFound />} />
