@@ -48,6 +48,7 @@ export default function StructureRHPage() {
       printChart: 'Imprimer le graphique',
       viewFullscreen: 'Plein écran',
     },
+    legend: { reversed: true },
     plotOptions: { column: { dataLabels: { enabled: true }, stacking: 'normal' } },
     tooltip: {
       formatter() { return `<b>${this.x} - ${this.series.name} :</b> ${this.point.y} BIATSS (${cleanNumber((this.point.y / this.point.stackTotal) * 100)} %)`; },
