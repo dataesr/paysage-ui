@@ -8,7 +8,6 @@ import {
   useTransition,
 } from 'react';
 import PropTypes from 'prop-types';
-import { useMatomo } from '@jonkoops/matomo-tracker-react';
 import api from '../utils/api';
 
 const AuthContext = createContext();
@@ -33,20 +32,18 @@ export function AuthContextProvider({ children }) {
   const [viewer, setViewer] = useState({});
   const [isLoading, setIsLoading] = useState(true);
   const [isPending, startTransition] = useTransition();
-  const { pushInstruction } = useMatomo();
 
   const fetchViewer = useCallback(async () => {
     await api.get('/me')
       .then((response) => {
         if (response.ok) {
           setViewer(response.data);
-          pushInstruction('setUserId', response.data.email);
         }
       });
     startTransition(() => {
       setIsLoading(false);
     });
-  }, [pushInstruction]);
+  }, []);
 
   useEffect(() => {
     setIsLoading(true);
