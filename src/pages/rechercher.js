@@ -35,6 +35,7 @@ const getDescription = (item) => {
     description += item?.creationDate ? ` ${formatDescriptionDates(item?.creationDate)}` : '';
     break;
   case 'persons':
+    if (item.activity) { description += item.activity; }
     // Personnes : Prénom, nom > dernier mandat renseigné ou activité récupérée de wikidata > structure associée au mandat
     break;
   case 'categories':
