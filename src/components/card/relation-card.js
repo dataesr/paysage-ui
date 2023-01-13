@@ -34,13 +34,16 @@ export default function RelationCard({ relation, inverse, onEdit }) {
       <div className={`fr-card__body ${styles['card-body']} ${styles[`${toPrintRelation.collection}-border`]} ${isFinished && 'turngrey'}`}>
         <div className="fr-card__content">
           <p className="fr-card__desc">
-            {relation.relationType && (
+            {relation.mandatePrecision ? (
+              <Text as="span" bold>
+                {relation?.mandatePrecision }
+              </Text>
+            ) : (
               <Text as="span" bold>
                 {relation.relationType?.[getRelationTypeLabel(relation?.relatedObject?.gender)] || relation.relationType?.name}
               </Text>
-            )}
+            ) }
             {interimMandate}
-            {relation?.mandatesPrecision && ` ${relation?.mandatePrecision}`}
             {relation?.laureatePrecision && ` ${relation?.laureatePrecision}`}
             {(relation?.resource.collection === 'prizes')
               ? renderPriceDate
