@@ -139,7 +139,7 @@ export default function IdentifiersComponent() {
     case 'Numéro national de Thèse':
       linkTo = `http://www.theses.fr/${el.value}`;
       break;
-    case 'UNIVD':
+    case 'Univ-droit jurist ID':
       linkTo = `https://univ-droit.fr/universitaires/${el.value}`;
       break;
     case 'Wikidata':
