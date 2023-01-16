@@ -8,6 +8,7 @@ import PersonCurrentMandates from '../../../components/blocs/current-mandates';
 import Wiki from '../../../components/blocs/wiki';
 import { PageSpinner } from '../../../components/spinner';
 import Error from '../../../components/errors';
+import KeyValueCard from '../../../components/card/key-value-card';
 
 export default function PersonPresentationPage() {
   const { url } = useUrl();
@@ -23,6 +24,17 @@ export default function PersonPresentationPage() {
         </Col>
       </Row>
       <Row gutters spacing="mb-5w">
+        <Col n="12 md-6">
+          {data.activity && (
+            <KeyValueCard
+              icon="ri-align-left"
+              titleAsText
+              cardKey="Activité"
+              cardValue={data.activity}
+              className="card-persons"
+            />
+          )}
+        </Col>
         <Wiki />
         <Col n="12">
           <div className="fr-card fr-card--xs fr-card--horizontal fr-card--grey fr-card--no-border card-persons">
