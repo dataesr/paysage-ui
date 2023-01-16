@@ -41,9 +41,9 @@ export default function RelationCard({ relation, inverse, onEdit }) {
             ) : (
               <Text as="span" bold>
                 {relation.relationType?.[getRelationTypeLabel(relation?.relatedObject?.gender)] || relation.relationType?.name}
+                {interimMandate}
               </Text>
             ) }
-            {interimMandate}
             {relation?.laureatePrecision && ` ${relation?.laureatePrecision}`}
             {(relation?.resource.collection === 'prizes')
               ? renderPriceDate
