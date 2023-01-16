@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Icon, Tag, Col, Badge } from '@dataesr/react-dsfr';
+import { Icon, Tag, Col, Alert } from '@dataesr/react-dsfr';
 import TagList from '../../tag-list';
 import useFetch from '../../../hooks/useFetch';
 import useUrl from '../../../hooks/useUrl';
@@ -54,16 +54,12 @@ export default function Wiki() {
                   Dans Wikipédia
                 </p>
                 {wikidata?.data?.length > 1 ? (
-                  <>
-                    <Badge
-                      hasIcon
-                      isSmall
-                      type="warning"
-                    />
-                    <p>
-                      Attention, plusieurs Wikidatas sont renseignés. Merci de privilégier le plus complet.
-                    </p>
-                  </>
+                  <Alert
+                    description="Attention, plusieurs Wikidatas sont renseignés. Merci de privilégier le plus complet."
+                    small
+                    type="error"
+
+                  />
                 ) : null}
               </div>
             </div>
