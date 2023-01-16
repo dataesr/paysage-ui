@@ -53,13 +53,17 @@ export default function Wiki() {
                   <Icon name="ri-global-line" size="1x" />
                   Dans Wikipédia
                 </p>
-
                 {wikidata?.data?.length > 1 ? (
-                  <Badge
-                    hasIcon
-                    text="Attention, plusieurs Wikidatas sont renseignés. Merci de privilégier le plus complet."
-                    type="warning"
-                  />
+                  <>
+                    <Badge
+                      hasIcon
+                      isSmall
+                      type="warning"
+                    />
+                    <p>
+                      Attention, plusieurs Wikidatas sont renseignés. Merci de privilégier le plus complet.
+                    </p>
+                  </>
                 ) : null}
               </div>
             </div>
