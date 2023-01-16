@@ -49,7 +49,7 @@ export default function Wiki() {
                 </p>
               )}
               <div className="fr-card__start">
-                <p className="fr-card__detail fr-text--sm fr-mb-0">
+                <p className="fr-card__detail fr-text--sm fr-mb-2">
                   <Icon name="ri-global-line" size="1x" />
                   Dans Wikipédia
                 </p>
@@ -58,7 +58,6 @@ export default function Wiki() {
                     description="Attention, plusieurs Wikidatas sont renseignés. Merci de privilégier le plus complet."
                     small
                     type="error"
-
                   />
                 ) : null}
               </div>
