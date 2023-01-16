@@ -10,6 +10,7 @@ import FormFooter from '../form-footer';
 import SearchBar from '../../search-bar';
 import PaysageBlame from '../../paysage-blame';
 import useAuth from '../../../hooks/useAuth';
+import { Spinner } from '../../spinner';
 
 function validate(body) {
   const validationErrors = {};
@@ -39,6 +40,7 @@ export default function DocumentsForm({ id, data, onSave, onDelete }) {
   const [query, setQuery] = useState('');
   const [options, setOptions] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = () => {
     const relatesTo = form.relatedObjects?.length ? form.relatedObjects.map((element) => element.id) : [];
@@ -95,6 +97,7 @@ export default function DocumentsForm({ id, data, onSave, onDelete }) {
           updateForm({ files: [...form.files, ...response.data.data] });
           setFilesErrors(false);
           setFiles([]);
+          setIsLoading(false);
         })
         .catch(() => { setFilesErrors(true); setFiles([]); });
     };
@@ -169,24 +172,27 @@ export default function DocumentsForm({ id, data, onSave, onDelete }) {
               required
               label="Ajouter des fichiers"
               hint="Format acceptés csv, jpg, png, pdf, doc, docx, xls, xlsx, csv"
-              onChange={(e) => setFiles(e.target.files)}
+              onChange={(e) => { setIsLoading(true); setFiles(e.target.files); }}
               multiple
               message={(filesErrors) ? "Une erreur est survenue à l'ajout des fichiers" : null}
               messageType={(filesErrors) ? 'error' : ''}
             />
             {(filesErrors) ? <Text size="xs" className="fr-error-text">Une erreur est survenue à l'ajout des fichiers. Veuillez réessayer</Text> : null}
-            {(form.files?.length > 0) && (
-              <Row spacing="mt-2w">
-                <TagGroup>
-                  {form.files.map((file) => (
-                    <Tag key={file.url} onClick={() => handleObjectFile(file.url)}>
-                      {file.originalName}
-                      <Icon iconPosition="right" name="ri-close-line" />
-                    </Tag>
-                  ))}
-                </TagGroup>
-              </Row>
-            )}
+            {(!isLoading) ? (
+              form.files?.length > 0
+              && (
+                <Row spacing="mt-2w">
+                  <TagGroup>
+                    {form.files.map((file) => (
+                      <Tag key={file.url} onClick={() => handleObjectFile(file.url)}>
+                        {file.originalName}
+                        <Icon iconPosition="right" name="ri-close-line" />
+                      </Tag>
+                    ))}
+                  </TagGroup>
+                </Row>
+              )
+            ) : <Spinner />}
           </Col>
           <Col n="12">
             <SearchBar

@@ -84,7 +84,9 @@ jobs:
           body: "${{ steps.changelog.outputs.changes }}"
 
   notify:
-    needs: deploy
+    needs: 
+      - deploy
+      - release
     if: always()
     runs-on: ubuntu-latest
     steps:

@@ -66,6 +66,10 @@
           text-align: start;
           padding: 0 1rem;
           flex-grow: 1;
+          overflow: hidden;
+          // max-height: 100px;
+          white-space: nowrap;
+          text-overflow: ellipsis;
           // margin-right: auto;
         }
       }

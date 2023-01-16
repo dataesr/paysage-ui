@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Icon, Tag, Col } from '@dataesr/react-dsfr';
+import { Icon, Tag, Col, Alert } from '@dataesr/react-dsfr';
 import TagList from '../../tag-list';
 import useFetch from '../../../hooks/useFetch';
 import useUrl from '../../../hooks/useUrl';
@@ -49,10 +49,17 @@ export default function Wiki() {
                 </p>
               )}
               <div className="fr-card__start">
-                <p className="fr-card__detail fr-text--sm fr-mb-0">
+                <p className="fr-card__detail fr-text--sm fr-mb-2">
                   <Icon name="ri-global-line" size="1x" />
                   Dans Wikipédia
                 </p>
+                {wikidata?.data?.length > 1 ? (
+                  <Alert
+                    description="Attention, plusieurs Wikidatas sont renseignés. Merci de privilégier le plus complet."
+                    small
+                    type="error"
+                  />
+                ) : null}
               </div>
             </div>
             {(wikis?.length > 0) && (

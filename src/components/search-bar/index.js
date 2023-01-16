@@ -184,6 +184,11 @@ const SearchBar = forwardRef((props, ref) => {
                         </i>
                       ) : null}
                       {option.city ? ` à ${capitalize(option.city)}` : null}
+                      {option.activity && (
+                        <i>
+                          {capitalize(option.activity)}
+                        </i>
+                      )}
                       {option.creationDate ? ` depuis ${option.creationDate.slice(0, 4)}` : null}
                       {option.publicationDate ? <strong>{` publié ${toString(option.publicationDate)}`}</strong> : null}
                       {(option?.structureStatus === 'inactive') ? <Badge text="inactive" /> : null}

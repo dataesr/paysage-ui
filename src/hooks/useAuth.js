@@ -35,7 +35,11 @@ export function AuthContextProvider({ children }) {
 
   const fetchViewer = useCallback(async () => {
     await api.get('/me')
-      .then((response) => { if (response.ok) setViewer(response.data); });
+      .then((response) => {
+        if (response.ok) {
+          setViewer(response.data);
+        }
+      });
     startTransition(() => {
       setIsLoading(false);
     });
