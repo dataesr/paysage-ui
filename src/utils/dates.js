@@ -41,8 +41,19 @@ export function getComparableNow() {
 }
 // const numberToReplace = date.charAt(date.length - 2) + date.charAt(date.length - 1);
 
-export function formatDescriptionDatesForMandateAndPrizes({ startDate = null, endDate = null, endDatePrevisional = null }) {
-  if (!startDate && !endDate && !endDatePrevisional) { return null; }
+export function formatDescriptionDatesForMandateAndPrizes({ startDate = null, endDate = null, endDatePrevisional = null, active = null }) {
+  if (!startDate && !endDate && !endDatePrevisional && !active) { return null; }
+
+  if (startDate < getComparableNow() && !active && !endDate) {
+    let ret = '';
+    if (startDate.length === 10) {
+      ret += ` du ${toString(startDate)} jusqu'à une date inconnue`;
+    }
+    if (startDate.length < 10) {
+      ret += ` de ${toString(startDate)} jusqu'à une date inconnue`;
+    }
+    return ret;
+  }
 
   if (startDate && !endDate) {
     if (startDate > getComparableNow()) {
