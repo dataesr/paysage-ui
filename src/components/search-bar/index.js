@@ -177,23 +177,35 @@ const SearchBar = forwardRef((props, ref) => {
                     {option.type && <Icon size="xl" color={`var(--${option.type}-color)`} name={objectTypes[option.type]} />}
                     <Text className={styles.content}>
                       {getName(option)}
+                      { (size === 'lg' && option.structureStatus === 'inactive') && <Badge type="warning" isSmall text="Inactive" /> }
                       <br />
-                      {option.category ? (
+                      {option.category && option?.structureStatus === 'active' && (
                         <i>
                           {` ${option.category}`}
+                          {option.city && ` à ${capitalize(option.city)}`}
+                          {option.creationDate && ` depuis ${option.creationDate.slice(0, 4)}`}
                         </i>
-                      ) : null}
-                      {option.city ? ` à ${capitalize(option.city)}` : null}
+                      )}
+                      {option.category && option?.structureStatus === 'inactive' && (
+                        <i style={{ color: '#BFCDDB' }}>
+                          {` ${option.category}`}
+                          {option.city && ` à ${capitalize(option.city)}`}
+                          {option.creationDate && ` depuis ${option.creationDate.slice(0, 4)}`}
+                        </i>
+                      )}
                       {option.activity && (
                         <i>
                           {capitalize(option.activity)}
                         </i>
                       )}
-                      {option.creationDate ? ` depuis ${option.creationDate.slice(0, 4)}` : null}
                       {option.publicationDate ? <strong>{` publié ${toString(option.publicationDate)}`}</strong> : null}
-                      {(option?.structureStatus === 'inactive') ? <Badge text="inactive" /> : null}
                     </Text>
-                    {optionsIcon && <Badge type="info" isSmall hasIcon icon={optionsIcon} text="afficher la page" />}
+                    {(size === 'lg' && option.structureStatus === 'inactive') && (
+                      <Badge type="info" isSmall hasIcon icon={optionsIcon} text="afficher la page" />
+                    )}
+                    {(size === 'md' && option.structureStatus === 'inactive') && (
+                      <Badge type="warning" isSmall text="Inactive" />
+                    )}
                   </button>
                 </li>
               ))}
