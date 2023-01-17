@@ -44,7 +44,7 @@ export function getComparableNow() {
 export function formatDescriptionDatesForMandateAndPrizes({ startDate = null, endDate = null, endDatePrevisional = null, active = null }) {
   if (!startDate && !endDate && !endDatePrevisional && !active) { return null; }
 
-  if (startDate < getComparableNow() && !active && !endDate) {
+  if (startDate < getComparableNow() && !active && !endDate && !endDatePrevisional) {
     let ret = '';
     if (startDate.length === 10) {
       ret += ` du ${toString(startDate)} jusqu'à une date inconnue`;
