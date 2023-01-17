@@ -6,10 +6,11 @@ import {
   TextInput,
   RadioGroup,
   Radio,
+  Checkbox,
 } from '@dataesr/react-dsfr';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
-
+import { getComparableNow } from '../../../utils/dates';
 import DateInput from '../../date-input';
 import FormFooter from '../form-footer';
 import useForm from '../../../hooks/useForm';
@@ -20,7 +21,7 @@ const regexpValidateIdentifiers = (type) => {
     idRef: [/^\d{8}[\dX]{1}$/, 'Identifiant incorrect'],
     UAI: [/^[0-9]{7}[A-Z]{1}$/, "Doit commencer par 7 chiffres suivis d'une lettre majuscule"],
     Wikidata: [/^Q[0-9]+$/, 'Doit commencer par "Q" et être suivi de 7 caractères'],
-    Siret: [/^[0-9]{14}$/, 'Doit contenir 14 chiffres'],
+    Siret: [/^\s*(?:\d\s*){14}$/, 'Doit contenir 14 chiffres'],
     ROR: [/^[a-z0-9]{9}$/, 'Doit contenir 9 caractères'],
     RNA: [/^W[0-9]{9}$/, 'Doit commencer par "W" suivi par 9 chiffres'],
     RNSR: [/^\d{9}[A-Z]{1}$/, "Doit commencer par 9 chiffres suivis d'une lettre majuscule"],
@@ -37,10 +38,13 @@ function validate(body) {
   if (regexp && !regexp.test(body.value)) errorMessage.value = error;
   return errorMessage;
 }
+
 function sanitize(form) {
   const fields = ['active', 'endDate', 'startDate', 'type', 'value'];
   const body = {};
   Object.keys(form).forEach((key) => { if (fields.includes(key)) { body[key] = form[key]; } });
+  if (body.endDate && body.endDate < getComparableNow()) { body.active = false; }
+  if (body.type === 'Siret' && body?.value?.replaceAll(' ', '').trim().length === 14) { body.value = body?.value?.replaceAll(' ', '').trim(); }
   return body;
 }
 
@@ -112,10 +116,15 @@ export default function IdentifierForm({ id, data, onDelete, onSave, options }) 
           <Col n="12">
             <DateInput
               value={form?.endDate}
-              label="Date de début"
+              label="Date de fin"
               onDateChange={(value) => updateForm({ endDate: value })}
             />
           </Col>
+          <Checkbox
+            label="Date de fin inconnue mais passée"
+            onChange={(e) => updateForm({ active: !e.target.checked })}
+            checked={form.active === false}
+          />
         </Row>
         <FormFooter
           id={data?.id}
