@@ -189,8 +189,9 @@ const SearchBar = forwardRef((props, ref) => {
                       {option.category && option?.structureStatus === 'inactive' && (
                         <i style={{ color: '#BFCDDB' }}>
                           {` ${option.category}`}
-                          {option.city && ` à ${capitalize(option.city)}`}
-                          {option.creationDate && ` depuis ${option.creationDate.slice(0, 4)}`}
+                          {/* Waiting for information if we should display city and creation date for inactive structures */}
+                          {/* {option.city && ` à ${capitalize(option.city)}`} */}
+                          {/* {option.creationDate && ` jusqu'à ${option.creationDate.slice(0, 4)}`} */}
                         </i>
                       )}
                       {option.activity && (
