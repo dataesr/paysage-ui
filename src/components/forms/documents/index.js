@@ -15,11 +15,11 @@ import isValidUrl from '../../../utils/url-validation';
 
 function validate(body) {
   const validationErrors = {};
-  if (!body.title) { validationErrors.title = "Le titre de l'évènement est obligatoire."; }
+  if (!body.title) { validationErrors.title = 'Le nom du document est obligatoire.'; }
   if (!body.startDate) { validationErrors.startDate = 'Une date est obligatoire.'; }
   if (!body.documentTypeId) { validationErrors.type = 'Le type est obligatoire.'; }
   if (!body.files?.length) { validationErrors.files = 'Un fichier est obligatoire.'; }
-  if (isValidUrl(body.documentUrl) === false) { validationErrors.documentUrl = "L'URL est invalide"; }
+  if (isValidUrl(body.documentUrl) === false) { validationErrors.documentUrl = "L'URL est invalide."; }
   return validationErrors;
 }
 
