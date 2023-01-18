@@ -4,8 +4,6 @@ import {
   Row,
   Select,
   TextInput,
-  RadioGroup,
-  Radio,
   Checkbox,
 } from '@dataesr/react-dsfr';
 import PropTypes from 'prop-types';
@@ -68,22 +66,6 @@ export default function IdentifierForm({ id, data, onDelete, onSave, options }) 
           createdAt={data.createdAt}
         />
         <Row gutters>
-          <Col n="12">
-            <RadioGroup isInline>
-              <Radio
-                label="Actif"
-                value
-                checked={form?.active}
-                onChange={() => updateForm({ active: true })}
-              />
-              <Radio
-                label="Inactif"
-                value={false}
-                checked={!form?.active}
-                onChange={() => updateForm({ active: false })}
-              />
-            </RadioGroup>
-          </Col>
           <Col n="12">
             <Select
               label="Type"
