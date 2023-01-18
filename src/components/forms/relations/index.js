@@ -225,22 +225,6 @@ export default function RelationForm({
           createdAt={data.createdAt}
         />
         <Row>
-          <Col n="12">
-            <RadioGroup isInline>
-              <Radio
-                label="Actif"
-                value
-                checked={form?.active}
-                onChange={() => updateForm({ active: true })}
-              />
-              <Radio
-                label="Inactif"
-                value={false}
-                checked={!form?.active}
-                onChange={() => updateForm({ active: false })}
-              />
-            </RadioGroup>
-          </Col>
           {inverse ? (
             <Col n="12" className="fr-pb-2w">
               <SearchBar
