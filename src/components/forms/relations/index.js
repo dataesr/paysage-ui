@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Container, Col, Checkbox, Row, SearchableSelect, RadioGroup, Radio } from '@dataesr/react-dsfr';
+import { Container, Col, Checkbox, Row, SearchableSelect } from '@dataesr/react-dsfr';
 import PropTypes from 'prop-types';
 import useForm from '../../../hooks/useForm';
 import DateInput from '../../date-input';
@@ -314,12 +314,12 @@ export default function RelationForm({
               label="Date de fin"
               onDateChange={(v) => updateForm({ endDate: v })}
             />
+            <Checkbox
+              label="Date de fin inconnue mais passée"
+              onChange={(e) => updateForm({ active: !e.target.checked })}
+              checked={form.active === false}
+            />
           </Col>
-          <Checkbox
-            label="Date de fin inconnue mais passée"
-            onChange={(e) => updateForm({ active: !e.target.checked })}
-            checked={form.active === false}
-          />
           <Col n="12" className="fr-pb-2w">
             <SearchBar
               buttonLabel="Rechercher"
