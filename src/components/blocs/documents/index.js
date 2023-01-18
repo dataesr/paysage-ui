@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Badge, BadgeGroup, Col, Modal, ModalContent, ModalTitle, Row, Tag, Text } from '@dataesr/react-dsfr';
+import { Badge, BadgeGroup, Col, Modal, ModalContent, ModalTitle, Row, Tag, Text, Link } from '@dataesr/react-dsfr';
 import useEditMode from '../../../hooks/useEditMode';
 import useFetch from '../../../hooks/useFetch';
 import useNotice from '../../../hooks/useNotice';
@@ -95,6 +95,15 @@ export default function DocumentsOutlet() {
                   {document.description && <div className="fr-card__desc">{document.description}</div>}
                   <div className="fr-card__end">
                     {(document.relatedObjects.length > 1) && <Text spacing="mb-1w" bold>Autres objets associés :</Text>}
+                    {document.documentUrl && (
+                      <Row>
+                        <Col className="fr-pb-1w">
+                          <Link target="_blank" href={document.documentUrl} rel="noreferrer">
+                            Lien vers le document
+                          </Link>
+                        </Col>
+                      </Row>
+                    )}
                     {document.relatedObjects && (
                       <TagList maxTags={2}>
                         {document.relatedObjects
