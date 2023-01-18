@@ -82,7 +82,16 @@ export function formatDescriptionDatesForMandateAndPrizes({ startDate = null, en
     }
     return ret;
   }
-
+  if (!startDate && endDate) {
+    let ret = '';
+    if (endDate.length === 10) {
+      ret += ` jusqu'au ${toString(endDate)}`;
+    }
+    if (endDate.length < 10) {
+      ret += ` jusqu'en ${toString(endDate)}`;
+    }
+    return ret;
+  }
   if (startDate && endDate) {
     let ret = '';
     if (startDate.length < 10) {
