@@ -60,22 +60,22 @@ export default function RelationCard({ relation, inverse, onEdit }) {
               </TagGroup>
             </div>
           )}
-          {isComming && (
-            <div className="fr-card__start ">
-              <Badge type="info" text="A venir" />
-            </div>
-          )}
           <p className={`fr-card__title ${styles[`${toPrintRelation.collection}-title`]}`}>
             <RouterLink className="fr-text--lg" to={toPrintRelation?.href}>
               {toPrintRelation?.displayName}
               <Icon iconPosition="right" name="ri-arrow-right-line" />
             </RouterLink>
+            {isFinished && (
+              <div className={`fr-card__start ${styles['card-end']}`}>
+                <Badge text="terminé" />
+              </div>
+            )}
+            {isComming && (
+              <div className="fr-card__start ">
+                <Badge type="info" text="A venir" />
+              </div>
+            )}
           </p>
-          {isFinished && (
-            <div className={`fr-card__start ${styles['card-end']}`}>
-              <Badge text="terminé" />
-            </div>
-          )}
           {(relation.startDateOfficialText?.id || relation.endDateOfficialText?.id) && (
             <div className={`fr-card__end ${styles['card-end']}`}>
               {relation.startDateOfficialText?.id && (
