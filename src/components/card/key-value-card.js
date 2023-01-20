@@ -5,6 +5,7 @@ import { Link as RouterLink } from 'react-router-dom';
 import Button from '../button';
 import CopyButton from '../copy/copy-button';
 import useEditMode from '../../hooks/useEditMode';
+import { capitalize } from '../../utils/strings';
 
 export default function KeyValueCard({
   cardKey,
@@ -25,14 +26,16 @@ export default function KeyValueCard({
     <div className={`fr-card fr-card--xs fr-card--horizontal fr-card--grey fr-card--no-border ${className}`}>
       <div className="fr-card__body">
         <div className="fr-card__content">
-          <p className="fr-card__title">
-            <span
-              className={`fr-pr-1w ${(cardValue && titleAsText) && 'fr-text--md fr-text--regular'} ${!cardValue && 'fr-text--sm fr-text--regular italic'}`}
-            >
-              {cardValue || 'Non renseigné'}
-            </span>
-            {copy && <CopyButton copyText={cardValue} size="sm" />}
-          </p>
+          {cardValue && (
+            <p className="fr-card__title">
+              <span
+                className={`fr-pr-1w ${(cardValue && titleAsText) && 'fr-text--md fr-text--regular'} ${!cardValue && 'fr-text--sm fr-text--regular italic'}`}
+              >
+                {capitalize(cardValue) || 'Non renseigné'}
+              </span>
+              {copy && <CopyButton copyText={cardValue} size="sm" />}
+            </p>
+          )}
           <div className="fr-card__start">
             <p className="fr-card__detail fr-text--sm fr-mb-0">
               {icon && <Icon name={icon} size="1x" />}

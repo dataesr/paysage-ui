@@ -168,7 +168,7 @@ export default function MandateForm({ id, resourceType, relatedObjectTypes, data
     : [{ label: 'Appartient à la liste', value: null }];
   return (
     <form>
-      <Container>
+      <Container fluid>
         <PaysageBlame
           createdBy={data.createdBy}
           updatedBy={data.updatedBy}
@@ -235,73 +235,10 @@ export default function MandateForm({ id, resourceType, relatedObjectTypes, data
               messageType={(showErrors && errors.mandatePrecision) ? 'error' : ''}
             />
           </Col>
-          <Col n="12"><Title as="h3" look="h5" spacing="mb-0">Dates</Title></Col>
-          <Col n="12">
-            <DateInput
-              value={form.startDate || ''}
-              label="Date de début"
-              onDateChange={((v) => updateForm({ startDate: v }))}
-            />
-            <DateInput
-              value={form.endDate || ''}
-              label="Date de fin"
-              onDateChange={((v) => updateForm({ endDate: v, active: null }))}
-            />
-            <Checkbox
-              label="Date de fin inconnue mais passée"
-              onChange={(e) => updateForm({ active: !e.target.checked })}
-              checked={form.active === false}
-            />
-            <DateInput
-              value={form.endDatePrevisional || ''}
-              label="Date de fin prévisionelle"
-              onDateChange={((v) => updateForm({ endDatePrevisional: v, active: null }))}
-            />
-          </Col>
-          <Col n="12"><Title as="h3" look="h5" spacing="mb-0">Textes officiels</Title></Col>
-          <Col n="12">
-            <SearchBar
-              buttonLabel="Rechercher"
-              value={startDateOfficialTextQuery || ''}
-              label="Texte officiel de début de relation"
-              hint="Rechercher et sélectionner un texte officiel"
-              scope={form.startDateOfficialTextName}
-              placeholder={form.startDateOfficialTextId ? '' : 'Rechercher...'}
-              onChange={(e) => { updateForm({ startDateOfficialTextId: null }); setStartDateOfficialTextQuery(e.target.value); }}
-              options={startDateOfficialTextOptions}
-              onSelect={handleStartDateOfficialTextSelect}
-              onDeleteScope={handleStartDateOfficialTextOptionsUnselect}
-              isSearching={isSearchingStartDateOfficialText}
-            />
-          </Col>
-          <Col n="12">
-            <SearchBar
-              buttonLabel="Rechercher"
-              value={endDateOfficialTextQuery || ''}
-              label="Texte officiel de fin de relation"
-              hint="Rechercher et sélectionner un texte officiel"
-              scope={form.endDateOfficialTextName}
-              placeholder={form.endDateOfficialTextId ? '' : 'Rechercher...'}
-              onChange={(e) => { updateForm({ endDateOfficialTextId: null }); setEndDateOfficialTextQuery(e.target.value); }}
-              options={endDateOfficialTextOptions}
-              onSelect={handleEndDateOfficialTextSelect}
-              onDeleteScope={handleEndDateOfficialTextOptionsUnselect}
-              isSearching={isSearchingEndDateOfficialText}
-            />
-          </Col>
           <Col n="12">
             <Title as="h3" look="h5" spacing="mb-0">
               Information du mandat
             </Title>
-          </Col>
-          <Col n="12">
-            <Checkbox
-              label="Mandat par intérim"
-              checked={form.mandateTemporary}
-              onChange={() => updateForm({ mandateTemporary: !form.mandateTemporary })}
-              message={(showErrors && errors.mandateTemporary) ? errors.mandateTemporary : null}
-              messageType={(showErrors && errors.mandateTemporary) ? 'error' : ''}
-            />
           </Col>
           <Col n="12">
             <RadioGroup legend="Raison du mandat :" isInline>
@@ -318,7 +255,16 @@ export default function MandateForm({ id, resourceType, relatedObjectTypes, data
             </RadioGroup>
           </Col>
           <Col n="12">
-            <RadioGroup legend="Position du mandat :" isInline>
+            <Checkbox
+              label="Mandat par intérim"
+              checked={form.mandateTemporary}
+              onChange={() => updateForm({ mandateTemporary: !form.mandateTemporary })}
+              message={(showErrors && errors.mandateTemporary) ? errors.mandateTemporary : null}
+              messageType={(showErrors && errors.mandateTemporary) ? 'error' : ''}
+            />
+          </Col>
+          <Col n="12">
+            <RadioGroup className="fr-mb-1w" legend="Position du mandat :" isInline>
               <Radio
                 legend="Position du mandat"
                 label="1er mandat"
@@ -349,6 +295,56 @@ export default function MandateForm({ id, resourceType, relatedObjectTypes, data
               onChange={(e) => updateForm({ mandateEmail: e.target.value })}
               message={(showErrors && errors.mandateEmail) ? errors.mandateEmail : null}
               messageType={(showErrors && errors.mandateEmail) ? 'error' : ''}
+            />
+          </Col>
+          <Col n="12">
+            <DateInput
+              value={form.startDate || ''}
+              label="Date de début"
+              onDateChange={((v) => updateForm({ startDate: v }))}
+            />
+            <SearchBar
+              buttonLabel="Rechercher"
+              value={startDateOfficialTextQuery || ''}
+              label="Texte officiel de début de relation"
+              hint="Rechercher et sélectionner un texte officiel"
+              scope={form.startDateOfficialTextName}
+              placeholder={form.startDateOfficialTextId ? '' : 'Rechercher...'}
+              onChange={(e) => { updateForm({ startDateOfficialTextId: null }); setStartDateOfficialTextQuery(e.target.value); }}
+              options={startDateOfficialTextOptions}
+              onSelect={handleStartDateOfficialTextSelect}
+              onDeleteScope={handleStartDateOfficialTextOptionsUnselect}
+              isSearching={isSearchingStartDateOfficialText}
+            />
+          </Col>
+          <Col n="12">
+            <DateInput
+              value={form.endDatePrevisional || ''}
+              label="Date de fin prévisionelle"
+              onDateChange={((v) => updateForm({ endDatePrevisional: v, active: null }))}
+            />
+            <DateInput
+              value={form.endDate || ''}
+              label="Date de fin"
+              onDateChange={((v) => updateForm({ endDate: v, active: null }))}
+            />
+            <Checkbox
+              label="Date de fin inconnue mais passée"
+              onChange={(e) => updateForm({ active: !e.target.checked })}
+              checked={form.active === false}
+            />
+            <SearchBar
+              buttonLabel="Rechercher"
+              value={endDateOfficialTextQuery || ''}
+              label="Texte officiel de fin de relation"
+              hint="Rechercher et sélectionner un texte officiel"
+              scope={form.endDateOfficialTextName}
+              placeholder={form.endDateOfficialTextId ? '' : 'Rechercher...'}
+              onChange={(e) => { updateForm({ endDateOfficialTextId: null }); setEndDateOfficialTextQuery(e.target.value); }}
+              options={endDateOfficialTextOptions}
+              onSelect={handleEndDateOfficialTextSelect}
+              onDeleteScope={handleEndDateOfficialTextOptionsUnselect}
+              isSearching={isSearchingEndDateOfficialText}
             />
           </Col>
         </Row>

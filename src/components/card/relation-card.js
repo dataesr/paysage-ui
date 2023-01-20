@@ -34,13 +34,16 @@ export default function RelationCard({ relation, inverse, onEdit }) {
       <div className={`fr-card__body ${styles['card-body']} ${styles[`${toPrintRelation.collection}-border`]} ${isFinished && 'turngrey'}`}>
         <div className="fr-card__content">
           <p className="fr-card__desc">
-            {relation.relationType && (
+            {relation.mandatePrecision ? (
+              <Text as="span" bold>
+                {relation?.mandatePrecision }
+              </Text>
+            ) : (
               <Text as="span" bold>
                 {relation.relationType?.[getRelationTypeLabel(relation?.relatedObject?.gender)] || relation.relationType?.name}
+                {interimMandate}
               </Text>
-            )}
-            {interimMandate}
-            {relation?.mandatesPrecision && ` ${relation?.mandatePrecision}`}
+            ) }
             {relation?.laureatePrecision && ` ${relation?.laureatePrecision}`}
             {(relation?.resource.collection === 'prizes')
               ? renderPriceDate
@@ -57,22 +60,22 @@ export default function RelationCard({ relation, inverse, onEdit }) {
               </TagGroup>
             </div>
           )}
-          {isComming && (
-            <div className="fr-card__start ">
-              <Badge type="info" text="A venir" />
-            </div>
-          )}
           <p className={`fr-card__title ${styles[`${toPrintRelation.collection}-title`]}`}>
             <RouterLink className="fr-text--lg" to={toPrintRelation?.href}>
               {toPrintRelation?.displayName}
               <Icon iconPosition="right" name="ri-arrow-right-line" />
             </RouterLink>
+            {isFinished && (
+              <div className={`fr-card__start ${styles['card-end']}`}>
+                <Badge text="terminé" />
+              </div>
+            )}
+            {isComming && (
+              <div className="fr-card__start ">
+                <Badge type="info" text="A venir" />
+              </div>
+            )}
           </p>
-          {isFinished && (
-            <div className={`fr-card__start ${styles['card-end']}`}>
-              <Badge text="terminé" />
-            </div>
-          )}
           {(relation.startDateOfficialText?.id || relation.endDateOfficialText?.id) && (
             <div className={`fr-card__end ${styles['card-end']}`}>
               {relation.startDateOfficialText?.id && (
@@ -91,14 +94,19 @@ export default function RelationCard({ relation, inverse, onEdit }) {
               )}
             </div>
           )}
-          {relation.mandateEmail && (
-            <div className={`fr-card__end ${styles['card-end']}`}>
-              <p className="fr-card__detail flex flex--center">
-                <Icon name="ri-mail-line" size="1x" />
-                {relation.mandateEmail}
-                <CopyButton copyText={relation.mandateEmail} size="sm" />
-              </p>
-            </div>
+          {!isFinished && (
+            <>
+              {' '}
+              {relation.mandateEmail && (
+                <div className={`fr-card__end ${styles['card-end']}`}>
+                  <p className="fr-card__detail flex flex--center">
+                    <Icon name="ri-mail-line" size="1x" />
+                    {relation.mandateEmail}
+                    <CopyButton copyText={relation.mandateEmail} size="sm" />
+                  </p>
+                </div>
+              )}
+            </>
           )}
           {(editMode && onEdit) && <Button size="md" onClick={onEdit} tertiary borderless rounded icon="ri-edit-line" className={styles['edit-button']} />}
         </div>

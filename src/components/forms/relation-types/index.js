@@ -15,7 +15,7 @@ function validate(body) {
   return validationErrors;
 }
 function sanitize(form) {
-  const fields = ['name', 'pluralName', 'feminineName', 'priority', 'otherNames', 'for'];
+  const fields = ['name', 'pluralName', 'maleName', 'feminineName', 'priority', 'otherNames', 'for'];
   const body = {};
   Object.keys(form).forEach((key) => { if (fields.includes(key)) { body[key] = form[key]; } });
   body.priority = parseInt(body.priority, 10);
@@ -63,6 +63,9 @@ export default function RelationTypesForm({ id, data, onSave, onDelete }) {
           </Col>
           <Col n="12" spacing="pb-3w">
             <TextInput label="Nom pluriel" value={form.pluralName} onChange={(e) => updateForm({ pluralName: e.target.value })} />
+          </Col>
+          <Col n="12" spacing="pb-3w">
+            <TextInput label="Nom au masculin" value={form.maleName} onChange={(e) => updateForm({ maleName: e.target.value })} />
           </Col>
           <Col n="12" spacing="pb-3w">
             <TextInput label="Nom au féminin" value={form.feminineName} onChange={(e) => updateForm({ feminineName: e.target.value })} />

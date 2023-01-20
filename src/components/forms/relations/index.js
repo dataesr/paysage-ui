@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Container, Col, Row, SearchableSelect } from '@dataesr/react-dsfr';
+import { Container, Col, Checkbox, Row, SearchableSelect } from '@dataesr/react-dsfr';
 import PropTypes from 'prop-types';
 import useForm from '../../../hooks/useForm';
 import DateInput from '../../date-input';
@@ -12,15 +12,17 @@ import PaysageBlame from '../../paysage-blame';
 
 function sanitize(form) {
   const fields = [
-    'resourceId',
+    'active',
+    'endDate',
+    'endDateOfficialTextId',
+    'inactive',
     'relatedObjectId',
-    'relationTypeId',
     'relationsGroupId',
     'relationTag',
-    'startDateOfficialTextId',
-    'endDateOfficialTextId',
+    'relationTypeId',
+    'resourceId',
     'startDate',
-    'endDate',
+    'startDateOfficialTextId',
   ];
   const body = {};
   Object.keys(form).forEach((key) => {
@@ -311,6 +313,11 @@ export default function RelationForm({
               value={form.endDate || ''}
               label="Date de fin"
               onDateChange={(v) => updateForm({ endDate: v })}
+            />
+            <Checkbox
+              label="Date de fin inconnue mais passée"
+              onChange={(e) => updateForm({ active: !e.target.checked })}
+              checked={form.active === false}
             />
           </Col>
           <Col n="12" className="fr-pb-2w">
