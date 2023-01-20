@@ -34,6 +34,9 @@ export default function SignUp() {
   const [passwordValidation, setPasswordValidation] = useState(getPasswordValidationInfo(password));
   const [passwordErrorDisplay, setPasswordErrorDisplay] = useState('info');
 
+  const disableNext = (Object.values(passwordValidation).filter((e) => !e)?.length || emailError);
+  console.log(disableNext);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (firstNameError || lastNameError) {
@@ -136,7 +139,11 @@ export default function SignUp() {
                               <PasswordHint display={(passwordValidation.length === true) ? 'success' : passwordErrorDisplay} hint="8 caractères minimum" />
                               <PasswordHint display={(passwordValidation.uppercase === true) ? 'success' : passwordErrorDisplay} hint="1 majuscule minimum" />
                               <PasswordHint display={(passwordValidation.lowercase === true) ? 'success' : passwordErrorDisplay} hint="1 miniscule minimum" />
-                              <PasswordHint display={(passwordValidation.special === true) ? 'success' : passwordErrorDisplay} hint="1 caractère spécial minimum parmi @$!%*#?&:_" />
+                              <PasswordHint
+                                display={(passwordValidation.special === true) ? 'success' : passwordErrorDisplay}
+                                hint={'1 caractère spécial minimum parmi !"#$%&\'()`*+,-./:;<=>?@[]^_{|}~'}
+                              />
+                              {(passwordValidation.forbidden === false) && <PasswordHint display="error" hint="Certains caractères spéciaux et les espaces ne sont pas autorisés" />}
                               <PasswordHint display={(passwordValidation.integer === true) ? 'success' : passwordErrorDisplay} hint="1 chiffre minimum" />
                             </Text>
                           )}
@@ -144,7 +151,7 @@ export default function SignUp() {
                         <Row spacing="my-2w">
                           <Col>
                             <ButtonGroup>
-                              <Button submit>
+                              <Button disabled={disableNext} submit>
                                 Suivant
                               </Button>
                             </ButtonGroup>
