@@ -171,13 +171,14 @@ const SearchBar = forwardRef((props, ref) => {
                   <button
                     tabIndex={-1}
                     className={styles.btn}
+                    // style={{ backgroundColor: `${(option.structureStatus === 'inactive') ? 'var(--background-contrast-warning)' : 'inherit' }` }}
+                    style={{ color: `${(option.structureStatus === 'inactive') ? 'var(--text-mention-grey' : 'inherit' }` }}
                     type="button"
                     onMouseDown={() => { onSelect(option); }}
                   >
                     {option.type && <Icon size="xl" color={`var(--${option.type}-color)`} name={objectTypes[option.type]} />}
                     <Text className={styles.content}>
                       {getName(option)}
-                      { (size === 'lg' && option.structureStatus === 'inactive') && <Badge type="warning" isSmall text="Inactive" /> }
                       <br />
                       {option.category && option?.structureStatus === 'active' && (
                         <i>
@@ -187,11 +188,10 @@ const SearchBar = forwardRef((props, ref) => {
                         </i>
                       )}
                       {option.category && option?.structureStatus === 'inactive' && (
-                        <i style={{ color: '#BFCDDB' }}>
+                        <i>
                           {` ${option.category}`}
-                          {/* Waiting for information if we should display city and creation date for inactive structures */}
-                          {/* {option.city && ` à ${capitalize(option.city)}`} */}
-                          {/* {option.creationDate && ` jusqu'à ${option.creationDate.slice(0, 4)}`} */}
+                          {option.city && ` à ${capitalize(option.city)}`}
+                          {option.closureDate && ` jusqu'à ${option.closureDate.slice(0, 4)}`}
                         </i>
                       )}
                       {option.activity && (
@@ -201,10 +201,7 @@ const SearchBar = forwardRef((props, ref) => {
                       )}
                       {option.publicationDate ? <strong>{` publié ${toString(option.publicationDate)}`}</strong> : null}
                     </Text>
-                    {(size === 'lg' && option.structureStatus === 'inactive') && (
-                      <Badge type="info" isSmall hasIcon icon={optionsIcon} text="afficher la page" />
-                    )}
-                    {(size === 'md' && option.structureStatus === 'inactive') && (
+                    {(option.structureStatus === 'inactive') && (
                       <Badge type="warning" isSmall text="Inactive" />
                     )}
                   </button>
