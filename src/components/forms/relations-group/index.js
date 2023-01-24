@@ -20,7 +20,7 @@ function validate(body) {
   if (!body.name) { validationErrors.name = 'Le nom est obligatoire'; }
   if (!body.accepts?.length) { validationErrors.accepts = 'Ce champs est obligatoire'; }
   const priority = parseInt(body.priority, 10);
-  if (priority > 99 || priority < 1) { validationErrors.accepts = 'Doit être compris en 1 (priorité forte) et 99 (priorité faible)'; }
+  if (priority > 99 || priority < 1) { validationErrors.accepts = 'Doit être compris entre 1 (priorité forte) et 99 (priorité faible)'; }
   return validationErrors;
 }
 function sanitize(form) {
