@@ -65,6 +65,7 @@ export default function StructurePresentationPage() {
             icon="ri-align-left"
           />
         </Col>
+        <Col n="12"><Wiki /></Col>
       </Row>
       <ChiffresCles
         year={year}
@@ -81,7 +82,6 @@ export default function StructurePresentationPage() {
         <Col n="12 md-6">
           <SocialMedias />
         </Col>
-        {!editMode ? <Col n="12"><Wiki /></Col> : <div className="hide"><Col n="12"><Wiki /></Col></div>}
         <Col n="12 md-6">
           <Weblinks types={WEBLINKS_TYPES} title="Ailleurs sur le web" />
         </Col>
