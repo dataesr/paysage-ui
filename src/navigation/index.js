@@ -1,16 +1,17 @@
 import { Navigate, Routes as RouterRoutes, Route } from 'react-router-dom';
 
-import Redirect from './redirect';
-import { ContributePage, PersonAddPage, ProjectAddPage, StructureAddPage, OfficialTextAddPage } from '../pages/contribuer';
-import HelpPage from '../pages/aide';
-import HomePage from '../pages/accueil';
 import Layout from '../layout';
-import OfficialTextsByIdPage from '../pages/textes-officiels/id';
+import HomePage from '../pages/accueil';
+import HelpPage from '../pages/aide';
+import { ContributePage, PersonAddPage, ProjectAddPage, StructureAddPage, OfficialTextAddPage } from '../pages/contribuer';
+import SignUp from '../pages/creer-un-compte';
+import ImportPage from '../pages/import';
 import Passwordless from '../pages/mot-de-passe-oublie';
+import NotFound from '../pages/not-found';
 import RessourcesExternesPage from '../pages/resources-externes';
 import SignIn from '../pages/se-connecter';
-import SignUp from '../pages/creer-un-compte';
-import NotFound from '../pages/not-found';
+import OfficialTextsByIdPage from '../pages/textes-officiels/id';
+import Redirect from './redirect';
 
 import ProtectedRoute from './protected-route';
 import VisitorRoute from './visitor-route';
@@ -237,6 +238,8 @@ export default function Routes() {
             <Route path="/categories-juridiques/:id" element={<LegalCategoriesByIdPage />} />
 
             <Route path="/contribuer" element={<ContributePage />} />
+
+            <Route path="/import" element={<ImportPage />} />
           </Route>
         </Route>
       </RouterRoutes>
