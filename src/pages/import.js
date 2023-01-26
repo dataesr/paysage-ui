@@ -141,19 +141,28 @@ export default function ImportPage({ data }) {
         <Row>
           <Col n="12">
             <Row>
-              <Col n="6">
+              <Col n="1">
+                Ligne
+              </Col>
+              <Col n="5">
                 Acronyme - Nom
+              </Col>
+              <Col n="1">
+                Id
               </Col>
               <Col n="2">
                 Status
               </Col>
-              <Col n="4">
+              <Col n="3">
                 Message
               </Col>
             </Row>
-            {responses.map((response) => (
+            {responses.map((response, index) => (
               <Row key={response.data.id}>
-                <Col n="6">
+                <Col n="1">
+                  {index + 1}
+                </Col>
+                <Col n="5">
                   {response?.data?.id && (
                     <Link href={`/structures/${response?.data?.id}`}>
                       {response?.data?.currentName?.shortName}
@@ -162,10 +171,13 @@ export default function ImportPage({ data }) {
                     </Link>
                   )}
                 </Col>
+                <Col n="1">
+                  {response?.data?.id}
+                </Col>
                 <Col n="2">
                   <Icon name={response?.status.toString()[0] === '2' ? 'ri-thumb-up-fill' : 'ri-thumb-down-fill'} />
                 </Col>
-                <Col n="4">
+                <Col n="3">
                   {response?.statusText}
                 </Col>
               </Row>
