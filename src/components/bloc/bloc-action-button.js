@@ -18,6 +18,7 @@ BlocActionButton.propTypes = {
   onClick: PropTypes.func.isRequired,
   color: PropTypes.string,
   isSmall: PropTypes.bool,
+  edit: PropTypes.bool,
 };
 
 BlocActionButton.defaultProps = {
@@ -26,4 +27,5 @@ BlocActionButton.defaultProps = {
   icon: 'ri-add-circle-line',
   color: null,
   isSmall: false,
+  edit: true,
 };
