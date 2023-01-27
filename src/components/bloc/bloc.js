@@ -22,8 +22,10 @@ export default function Bloc({ children, data, error, isLoading, hideOnEmptyView
             {!noBadge && <Badge className="fr-ml-1v" type="info" text={data?.totalCount} />}
           </Row>
         </div>
-        {(editMode) && (<ButtonGroup size="sm" isInlineFrom="xs">{editActions.map((element, i) => <span key={i}>{element}</span>)}</ButtonGroup>)}
-        {(!editMode && (data?.totalCount > 0)) && (<ButtonGroup size="sm" isInlineFrom="xs">{viewActions.map((element, i) => <span key={i}>{element}</span>)}</ButtonGroup>)}
+        <ButtonGroup size="sm" isInlineFrom="xs">
+          {(editMode) && editActions.map((element, i) => <span key={i}>{element}</span>)}
+          {((data?.totalCount > 0)) && viewActions.map((element, i) => <span key={i}>{element}</span>)}
+        </ButtonGroup>
       </Row>
       {isLoading && <Row className="fr-my-2w flex--space-around"><Spinner /></Row>}
       {error && <Highlight color="var(--page-border)">Une erreur s'est produite lors du chargement des données</Highlight>}

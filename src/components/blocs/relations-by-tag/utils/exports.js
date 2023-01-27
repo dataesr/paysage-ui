@@ -16,13 +16,12 @@ function downloadCsvFile(csv, filename) {
   document.body.removeChild(link);
 }
 
-function createCsvStructureRowFromRelation(relation, inverse) {
+function createCsvStructureRowFromRelation(relation, inverse, listName) {
   const toExport = inverse ? relation.resource : relation.relatedObject;
-  // const parent = inverse ? relation.relatedObject : relation.resource;
   return {
     Libellé: toExport.displayName,
-    Status: toExport.structureStatus,
-    'Type de liaison': relation.relationTag,
+    Type: listName,
+    'Status de la liaison': (relation.active === false || (relation.startDate < relation.endDate)) ? 'Terminée' : 'En cours',
     'Date de début': relation.startDate,
     'Date de fin': relation.endDate,
     'Date de fin prévue': relation.endDatePrevisional,
@@ -30,26 +29,40 @@ function createCsvStructureRowFromRelation(relation, inverse) {
     'Lien du texte officiel de début de liaison': relation.startDateOfficialText?.pageUrl,
     'Texte officiel de fin de liaison': relation.endDateOfficialText?.title,
     'Lien du texte officiel de fin de liaison': relation.endDateOfficialText?.pageUrl,
-    'ID Paysage': toExport.id,
     'Nom officiel': toExport?.currentName?.officialName,
     'Nom court': toExport?.currentName?.shortName,
-    Géolocalisation: toExport.currentLocalisation?.geometry?.coordinates?.toString(),
-    Adresse: toExport.currentLocalisation?.address,
-    Téléphone: toExport.currentLocalisation?.telephone,
-    'Code commune': toExport.currentLocalisation?.cityId,
-    Commune: toExport.currentLocalisation?.city,
-    Pays: toExport.currentLocalisation?.country,
-    wikidata: toExport.identifiers?.find((i) => (i.type === 'Wikidata'))?.value,
-    idref: toExport.identifiers?.find((i) => (i.type === 'idRef'))?.value,
-    uai: toExport.identifiers?.find((i) => (i.type === 'UAI'))?.value,
-    siret: toExport.identifiers?.find((i) => (i.type === 'Siret'))?.value,
-    grid: toExport.identifiers?.find((i) => (i.type === 'GRID'))?.value,
-    ror: toExport.identifiers?.find((i) => (i.type === 'ROR'))?.value,
-    Type: toExport.collection,
     Acronyme: toExport?.currentName?.acronymFr,
+    'Catégorie juridique': toExport.legalcategory?.longNameFr,
     Catégorie: toExport.category?.usualNameFr,
     Catégories: toExport.categories?.map((c) => c.usualNameFr).join('|'),
-    'Catégorie juridique': toExport.legalcategory?.longNameFr,
+    'Status de la structure': toExport.structureStatus,
+    'Date de création': toExport?.creationDate,
+    'Date de fermeture': toExport?.closureDate,
+    Géolocalisation: toExport.currentLocalisation?.geometry?.coordinates?.toString(),
+    Adresse: toExport.currentLocalisation?.address,
+    'Code postal': toExport.currentLocalisation?.postalCode,
+    Commune: toExport.currentLocalisation?.city,
+    Localité: toExport.currentLocalisation?.locality,
+    'Mention de distribution': toExport.currentLocalisation?.postOfficeBoxNumber,
+    'Code commune': toExport.currentLocalisation?.cityId,
+    Pays: toExport.currentLocalisation?.country,
+    'Code Pays': toExport.currentLocalisation?.iso3,
+    'Site web': (toExport?.websites?.length) && (toExport?.websites.find((w) => w.language === 'Fr') || toExport?.websites?.[0]),
+    Téléphone: toExport.currentLocalisation?.telephone,
+    'ID Paysage': toExport.id,
+    wikidata: toExport.identifiers?.filter((i) => (i.type === 'Wikidata')).sort((a, b) => a?.startDate?.localCompare(b?.startDate)).map((i) => i.value).join('|'),
+    idref: toExport.identifiers?.filter((i) => (i.type === 'idRef')).sort((a, b) => a?.startDate?.localCompare(b?.startDate)).map((i) => i.value).join('|'),
+    uai: toExport.identifiers?.filter((i) => (i.type === 'UAI')).sort((a, b) => a?.startDate?.localCompare(b?.startDate)).map((i) => i.value).join('|'),
+    siret: toExport.identifiers?.filter((i) => (i.type === 'Siret')).sort((a, b) => a?.startDate?.localCompare(b?.startDate)).map((i) => i.value).join('|'),
+    grid: toExport.identifiers?.filter((i) => (i.type === 'GRID')).sort((a, b) => a?.startDate?.localCompare(b?.startDate)).map((i) => i.value).join('|'),
+    ror: toExport.identifiers?.filter((i) => (i.type === 'ROR')).sort((a, b) => a?.startDate?.localCompare(b?.startDate)).map((i) => i.value).join('|'),
+    'Identifiant Annelis': toExport.identifiers?.filter((i) => (i.type === 'ALId')).sort((a, b) => a?.startDate?.localCompare(b?.startDate)).map((i) => i.value).join('|'),
+    'Identifiant bibliothèque ESGBU': toExport.identifiers?.filter((i) => (i.type === 'BibId')).sort((a, b) => a?.startDate?.localCompare(b?.startDate)).map((i) => i.value).join('|'),
+    'Identifiant établissement ESGBU': toExport.identifiers?.filter((i) => (i.type === 'EtId')).sort((a, b) => a?.startDate?.localCompare(b?.startDate)).map((i) => i.value).join('|'),
+    ESGBU: toExport.identifiers?.filter((i) => (i.type === 'ESGBU')).sort((a, b) => a?.startDate?.localCompare(b?.startDate)).map((i) => i.value).join('|'),
+    'Identifiant Ecole doctorale': toExport.identifiers?.filter((i) => (i.type === "Numéro d'ED")).sort((a, b) => a?.startDate?.localCompare(b?.startDate)).map((i) => i.value).join('|'),
+    'Email générique Direction': toExport?.emails.find((m) => m.emailTypeId === 'NVdq8NVdq8NVdq8')?.email,
+    'Email générique DGS/SG': toExport?.emails.find((m) => m.emailTypeId === '4puTu4puTu4puTu')?.email,
   };
 }
 
@@ -101,9 +114,9 @@ const regularMapping = {
   structures: createCsvStructureRowFromRelation,
 };
 
-export function exportToCsv(data, filename, tag, inverse = false) {
+export function exportToCsv(data, filename, listName, tag, inverse = false) {
   const func = inverse ? inverseMapping[tag] : regularMapping[tag];
-  const exportList = data?.map((item) => func(item, inverse));
+  const exportList = data?.map((item) => func(item, inverse, listName));
   const csv = createCsvFile(exportList);
   return downloadCsvFile(csv, filename);
 }

@@ -124,7 +124,7 @@ export default function RelationsByGroup({ group, reloader }) {
         <BlocActionButton
           icon="ri-download-line"
           edit={false}
-          onClick={() => exportToCsv(data?.data, `${resourceId}-${groupName}`, groupAccepts[0])}
+          onClick={() => exportToCsv(data?.data, `${resourceId}-${groupName}`, groupName, groupAccepts[0])}
         >
           Télécharger la liste
         </BlocActionButton>

@@ -128,7 +128,7 @@ export default function RelationsByTag({ blocName, tag, resourceType, relatedObj
       <BlocTitle as="h3" look="h6">{blocName || tag}</BlocTitle>
       <BlocActionButton onClick={() => onOpenModalHandler()}>Ajouter un élément</BlocActionButton>
       {hasExport(tag, inverse) && (
-        <BlocActionButton icon="ri-download-line" edit={false} onClick={() => exportToCsv(data?.data, `${resourceId}-${tag}`, tag, inverse)}>Télécharger la liste</BlocActionButton>
+        <BlocActionButton icon="ri-download-line" edit={false} onClick={() => exportToCsv(data?.data, `${resourceId}-${tag}`, blocName, tag, inverse)}>Télécharger la liste</BlocActionButton>
       )}
       <BlocContent>{renderCards()}</BlocContent>
       <BlocModal>
