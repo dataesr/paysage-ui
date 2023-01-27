@@ -1,4 +1,4 @@
-import React, { useEffect, useId, useMemo } from 'react';
+import React, { useEffect, useId } from 'react';
 import PropTypes from 'prop-types';
 import './spinner.scss';
 import { Row, Text } from '@dataesr/react-dsfr';

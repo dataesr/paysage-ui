@@ -19,6 +19,7 @@ function downloadCsvFile(csv, filename) {
 
 function createCsvStructureRowFromRelation(relation, inverse, listName) {
   const toExport = inverse ? relation.resource : relation.relatedObject;
+  console.log(toExport);
   return {
     Libellé: toExport.displayName,
     Type: listName,
@@ -40,16 +41,18 @@ function createCsvStructureRowFromRelation(relation, inverse, listName) {
     'Date de création': toExport?.creationDate,
     'Date de fermeture': toExport?.closureDate,
     Géolocalisation: toExport.currentLocalisation?.geometry?.coordinates?.toString(),
+    'Mention de distribution': toExport.currentLocalisation?.distributionStatement,
     Adresse: toExport.currentLocalisation?.address,
+    'Lieu-dit': toExport.currentLocalisation?.place,
+    'Numéro de boite postale': toExport.currentLocalisation?.postOfficeBoxNumber,
     'Code postal': toExport.currentLocalisation?.postalCode,
-    Commune: toExport.currentLocalisation?.city,
     Localité: toExport.currentLocalisation?.locality,
-    'Mention de distribution': toExport.currentLocalisation?.postOfficeBoxNumber,
+    Commune: toExport.currentLocalisation?.city,
     'Code commune': toExport.currentLocalisation?.cityId,
     Pays: toExport.currentLocalisation?.country,
     'Code Pays': toExport.currentLocalisation?.iso3,
-    'Site web': (toExport?.websites?.length) && (toExport?.websites.find((w) => w.language === 'Fr') || toExport?.websites?.[0]),
-    Téléphone: toExport.currentLocalisation?.telephone,
+    'Site web': (toExport?.websites?.length) ? (toExport?.websites.find((w) => w.language?.toLowerCase() === 'fr')?.url || toExport?.websites?.[0]?.url) : null,
+    Téléphone: toExport.currentLocalisation?.phonenumber,
     'ID Paysage': toExport.id,
     wikidata: toExport.identifiers?.filter((i) => (i.type === 'Wikidata')).sort((a, b) => a?.startDate?.localCompare(b?.startDate)).map((i) => i.value).join('|'),
     idref: toExport.identifiers?.filter((i) => (i.type === 'idRef')).sort((a, b) => a?.startDate?.localCompare(b?.startDate)).map((i) => i.value).join('|'),
@@ -58,9 +61,9 @@ function createCsvStructureRowFromRelation(relation, inverse, listName) {
     grid: toExport.identifiers?.filter((i) => (i.type === 'GRID')).sort((a, b) => a?.startDate?.localCompare(b?.startDate)).map((i) => i.value).join('|'),
     ror: toExport.identifiers?.filter((i) => (i.type === 'ROR')).sort((a, b) => a?.startDate?.localCompare(b?.startDate)).map((i) => i.value).join('|'),
     'Identifiant Annelis': toExport.identifiers?.filter((i) => (i.type === 'ALId')).sort((a, b) => a?.startDate?.localCompare(b?.startDate)).map((i) => i.value).join('|'),
-    'Identifiant bibliothèque ESGBU': toExport.identifiers?.filter((i) => (i.type === 'BibId')).sort((a, b) => a?.startDate?.localCompare(b?.startDate)).map((i) => i.value).join('|'),
     'Identifiant établissement ESGBU': toExport.identifiers?.filter((i) => (i.type === 'EtId')).sort((a, b) => a?.startDate?.localCompare(b?.startDate)).map((i) => i.value).join('|'),
-    ESGBU: toExport.identifiers?.filter((i) => (i.type === 'ESGBU')).sort((a, b) => a?.startDate?.localCompare(b?.startDate)).map((i) => i.value).join('|'),
+    'Identifiant SCD ESGBU': toExport.identifiers?.filter((i) => (i.type === 'ESGBU')).sort((a, b) => a?.startDate?.localCompare(b?.startDate)).map((i) => i.value).join('|'),
+    'Identifiant bibliothèque ESGBU': toExport.identifiers?.filter((i) => (i.type === 'BibId')).sort((a, b) => a?.startDate?.localCompare(b?.startDate)).map((i) => i.value).join('|'),
     'Identifiant Ecole doctorale': toExport.identifiers?.filter((i) => (i.type === "Numéro d'ED")).sort((a, b) => a?.startDate?.localCompare(b?.startDate)).map((i) => i.value).join('|'),
     'Email générique Direction': toExport?.emails.find((m) => m.emailTypeId === 'NVdq8NVdq8NVdq8')?.email,
     'Email générique DGS/SG': toExport?.emails.find((m) => m.emailTypeId === '4puTu4puTu4puTu')?.email,
