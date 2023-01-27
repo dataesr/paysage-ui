@@ -99,14 +99,7 @@ export default function ImportPage({ data }) {
     });
     const results = await Promise.all(structuresJson.map((structure) => api.post('/structures', structure)
       .then((response) => response)
-      .catch((error) => { console.log(error.toString()); return ({ status: error?.message, statusText: error.toString(), data: {} }); })))
-      .then((arrayOfValuesOrErrors) => arrayOfValuesOrErrors)
-      .catch((err) => {
-        // eslint-disable-next-line no-console
-        console.log('ERROR');
-        console.log(err.message); // some coding error in handling happened
-      });
-    console.log(results);
+      .catch((error) => ({ status: error?.message, statusText: error.toString(), data: {} }))));
     setResponses(results);
     updateForm({ data: '' });
   };
