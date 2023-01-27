@@ -1,16 +1,17 @@
-import { Parser } from 'json2csv';
+import * as XLSX from 'xlsx';
 
-const parser = new Parser({ delimiter: ';', quote: '' });
-
-function createCsvFile(exportList) {
-  return parser.parse(exportList);
+function createXLSXFile(exportList) {
+  const ws = XLSX.utils.json_to_sheet(exportList);
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, 'liste');
+  return XLSX.write(wb, { bookType: 'xlsx', type: 'buffer' });
 }
 
 function downloadCsvFile(csv, filename) {
-  const downloadUrl = URL.createObjectURL(new Blob([csv], { type: 'text/csv' }));
+  const downloadUrl = URL.createObjectURL(new Blob([csv], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' }));
   const link = document.createElement('a');
   link.href = downloadUrl;
-  link.setAttribute('download', `${filename}.csv`);
+  link.setAttribute('download', `${filename}.xlsx`);
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
@@ -117,8 +118,8 @@ const regularMapping = {
 export function exportToCsv(data, filename, listName, tag, inverse = false) {
   const func = inverse ? inverseMapping[tag] : regularMapping[tag];
   const exportList = data?.map((item) => func(item, inverse, listName));
-  const csv = createCsvFile(exportList);
-  return downloadCsvFile(csv, filename);
+  const xlsx = createXLSXFile(exportList);
+  return downloadCsvFile(xlsx, filename);
 }
 export function hasExport(tag, inverse = false) {
   return !!(inverse ? inverseMapping[tag] : regularMapping[tag]);

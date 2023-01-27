@@ -1,6 +1,5 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useId, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
-import { v4 as uuidv4 } from 'uuid';
 import { Link } from '@dataesr/react-dsfr';
 import Button from '../button';
 import styles from './styles.module.scss';
@@ -36,7 +35,7 @@ function useOnClickOutside(ref, handler) {
 export function DropdownButton({
   children, className, title, align, ...remainingProps
 }) {
-  const id = useRef(uuidv4());
+  const id = useId();
   const listRef = useRef();
   const buttonRef = useRef();
   const [isExpanded, setIsExpanded] = useState(false);

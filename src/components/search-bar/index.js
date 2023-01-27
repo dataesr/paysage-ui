@@ -1,8 +1,7 @@
 import { Badge, Icon, Text } from '@dataesr/react-dsfr';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
-import { forwardRef, useLayoutEffect, useRef, useState } from 'react';
-import { v4 as uuidv4 } from 'uuid';
+import { forwardRef, useId, useLayoutEffect, useRef, useState } from 'react';
 
 import styles from './styles.module.scss';
 import { Spinner } from '../spinner';
@@ -40,8 +39,8 @@ const SearchBar = forwardRef((props, ref) => {
     value,
     ...remainingProps
   } = props;
-  const inputId = useRef(uuidv4());
-  const hintId = useRef(uuidv4());
+  const inputId = useId();
+  const hintId = useId();
   const scopeRef = useRef();
   const _className = classNames('fr-search-bar', {
     'fr-search-bar--lg': (size === 'lg'),
