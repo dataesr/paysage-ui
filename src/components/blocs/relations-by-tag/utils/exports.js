@@ -19,7 +19,6 @@ function downloadCsvFile(csv, filename) {
 
 function createCsvStructureRowFromRelation(relation, inverse, listName) {
   const toExport = inverse ? relation.resource : relation.relatedObject;
-  console.log(toExport);
   return {
     Libellé: toExport.displayName,
     Type: listName,
