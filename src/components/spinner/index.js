@@ -1,11 +1,10 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useId } from 'react';
 import PropTypes from 'prop-types';
-import { v4 as uuidv4 } from 'uuid';
 import './spinner.scss';
 import { Row, Text } from '@dataesr/react-dsfr';
 
 function Spinner({ size }) {
-  const id = useMemo(() => uuidv4(), []);
+  const id = useId();
   useEffect(() => {
     document.getElementById(id).style.setProperty('width', `${size}px`);
     document.getElementById(id).style.setProperty('height', `${size}px`);

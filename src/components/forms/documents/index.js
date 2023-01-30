@@ -11,18 +11,20 @@ import SearchBar from '../../search-bar';
 import PaysageBlame from '../../paysage-blame';
 import useAuth from '../../../hooks/useAuth';
 import { Spinner } from '../../spinner';
+import isValidUrl from '../../../utils/url-validation';
 
 function validate(body) {
   const validationErrors = {};
-  if (!body.title) { validationErrors.title = "Le titre de l'évènement est obligatoire."; }
+  if (!body.title) { validationErrors.title = 'Le nom du document est obligatoire.'; }
   if (!body.startDate) { validationErrors.startDate = 'Une date est obligatoire.'; }
   if (!body.documentTypeId) { validationErrors.type = 'Le type est obligatoire.'; }
-  if (!body.files?.length) { validationErrors.files = 'Un fichier est obligatoire'; }
+  if (!body.files?.length) { validationErrors.files = 'Un fichier est obligatoire.'; }
+  if (isValidUrl(body.documentUrl) === false && body.documentUrl !== '') { validationErrors.documentUrl = "L'URL est invalide."; }
   return validationErrors;
 }
 
 function sanitize(form) {
-  const fields = ['title', 'description', 'documentTypeId', 'files', 'startDate', 'endDate', 'relatesTo', 'canAccess', 'isPublic'];
+  const fields = ['title', 'description', 'documentUrl', 'documentTypeId', 'files', 'startDate', 'endDate', 'relatesTo', 'canAccess', 'isPublic'];
   const body = {};
   Object.keys(form).forEach((key) => { if (fields.includes(key)) { body[key] = form[key]; } });
   return body;
@@ -147,6 +149,14 @@ export default function DocumentsForm({ id, data, onSave, onDelete }) {
               onChange={(e) => updateForm({ description: e.target.value })}
               textarea
               value={form.description || ''}
+            />
+            <TextInput
+              label="Lien vers le document"
+              type="URL"
+              message={(showErrors && errors.documentUrl) ? errors.documentUrl : null}
+              messageType={(showErrors && errors.documentUrl) ? 'error' : ''}
+              onChange={(e) => updateForm({ documentUrl: e.target.value })}
+              value={form.documentUrl || ''}
             />
           </Col>
           <Col n="12">

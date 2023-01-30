@@ -94,6 +94,9 @@ export default function LocalisationsComponent() {
   if (isLoading) return <div>Chargement</div>;
 
   const currentLocalisation = data.data.find((item) => item.current === true);
+  const inactives = data.data.filter((el) => (el.current === false)).sort((a, b) => a.startDate - b.startDate);
+  const actives = data.data.filter((el) => (el.current !== false));
+  const orderedList = [...actives, ...inactives];
 
   return (
     <Bloc isLoading={isLoading} error={error} data={data}>
@@ -161,7 +164,7 @@ export default function LocalisationsComponent() {
               <Tab label="Historique des adresses" className="fr-p-0 fr-pt-1v">
                 <Row gutters as="ul">
                   {
-                    data.data.map((item) => (
+                    orderedList.map((item) => (
                       <Col n="12" as="li" key={`HistoriqueLocalisation${item.id}`}>
                         {renderAddress(item)}
                       </Col>

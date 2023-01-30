@@ -1,7 +1,6 @@
 import { Col, Icon, Row } from '@dataesr/react-dsfr';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
-import { v4 as uuidv4 } from 'uuid';
 import styles from './styles.module.scss';
 
 function ExpandCard({ isExpanded, toggle }) {
@@ -68,8 +67,8 @@ export default function ExpendableListCards({
   if (cards.length <= max) {
     return (
       <Row gutters>
-        {cards.map((el) => (
-          <Col n={nCol} key={uuidv4()}>
+        {cards.map((el, i) => (
+          <Col n={nCol} key={i}>
             {el}
           </Col>
         ))}
@@ -78,13 +77,13 @@ export default function ExpendableListCards({
   }
   return (
     <Row gutters>
-      {!showAll && cards.slice(0, max - 1).map((el) => (
-        <Col n={nCol} key={uuidv4()}>
+      {!showAll && cards.slice(0, max - 1).map((el, i) => (
+        <Col n={nCol} key={i}>
           {el}
         </Col>
       ))}
-      {showAll && cards.map((el) => (
-        <Col n={nCol} key={uuidv4()}>
+      {showAll && cards.map((el, i) => (
+        <Col n={nCol} key={i}>
           {el}
         </Col>
       ))}

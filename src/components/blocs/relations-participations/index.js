@@ -7,16 +7,24 @@ import { getComparableNow } from '../../../utils/dates';
 
 export default function RelationsParticipations() {
   const { id: resourceId } = useUrl();
-  const url = `/relations?filters[relatedObjectId]=${resourceId}&filters[relationsGroupId][$exists]=true&limit=100`;
+  const url = `/relations?filters[relatedObjectId]=${resourceId}&filters[relationsGroupId][$exists]&sort=relatedObject.collection=true&limit=100`;
   const { data, isLoading, error } = useFetch(url);
 
   const renderCards = () => {
     if (!data && !data?.data?.length) return null;
-    const inactives = data.data.filter((element) => (element.relatedObject?.collection === 'structures'
-    && element.relatedObject?.currentLocalisation?.geometry?.coordinates
-    && (element?.endDate < getComparableNow() || !element.endDate)));
+    const actives = data.data
+      .filter((element) => (
+        (element.active === true)
+      || (element.endDate > getComparableNow())
+      || (element.startDate > getComparableNow())
+      || (element.startDate < getComparableNow() && element.endDate > getComparableNow())
+      || (element.startDate < getComparableNow() && !element.endDate && element.active !== false)
+      || (element.startDate === null && element.endDate === null && element.active !== false)
+      ));
 
-    const actives = data.data.filter((element) => (inactives && (element?.endDate > getComparableNow())));
+    const activesIds = actives.map((element) => element.id);
+
+    const inactives = data.data.filter((element) => (!activesIds.includes(element.id)));
 
     const orderedList = [...actives, ...inactives];
 

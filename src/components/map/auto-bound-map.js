@@ -51,8 +51,8 @@ export default function Map({ height, markers, onMarkerDragEnd, width }) {
         attribution="<a href='https://www.jawg.io' target='_blank'>&copy; Jawg</a>"
         url={`https://tile.jawg.io/jawg-${theme}/{z}/{x}/{y}.png?access-token=5V4ER9yrsLxoHQrAGQuYNu4yWqXNqKAM6iaX5D1LGpRNTBxvQL3enWXpxMQqTrY8`}
       />
-      {markers.map((marker) => (
-        <Marker icon={getIcon(marker.color)} draggable={!!onMarkerDragEnd} eventHandlers={eventHandlers} key={marker.latLng} position={marker.latLng}>
+      {markers.map((marker, i) => (
+        <Marker icon={getIcon(marker.color)} draggable={!!onMarkerDragEnd} eventHandlers={eventHandlers} key={i} position={marker.latLng}>
           <Tooltip>
             {marker?.label && (
               <>

@@ -8,12 +8,13 @@ import useEditMode from '../../hooks/useEditMode';
 export default function Bloc({ children, data, error, isLoading, hideOnEmptyView, noBadge }) {
   const { editMode } = useEditMode();
   const header = Children.toArray(children).find((child) => child.props.__TYPE === 'BlocTitle');
-  const actions = Children.toArray(children).filter((child) => child.props.__TYPE === 'BlocActionButton');
+  const editActions = Children.toArray(children).filter((child) => (child.props.__TYPE === 'BlocActionButton' && child.props.edit));
+  const viewActions = Children.toArray(children).filter((child) => (child.props.__TYPE === 'BlocActionButton' && !child.props.edit));
   const modals = Children.toArray(children).filter((child) => child.props.__TYPE === 'BlocModal');
   const blocContent = Children.toArray(children).find((child) => child.props.__TYPE === 'BlocContent');
   if (!editMode && !data?.totalCount && hideOnEmptyView) return null;
   return (
-    <Container fluid className="fr-mb-5w" as="section">
+    <Container fluid className={`${(data?.totalCount > 0) && 'fr-mb-5w'}`} as="section">
       <Row className="flex--nowrap">
         <div className="flex--grow">
           <Row className="flex flex--start">
@@ -21,11 +22,14 @@ export default function Bloc({ children, data, error, isLoading, hideOnEmptyView
             {!noBadge && <Badge className="fr-ml-1v" type="info" text={data?.totalCount} />}
           </Row>
         </div>
-        {(editMode) && (<ButtonGroup size="sm" isInlineFrom="xs">{actions.map((element, i) => <div key={i}>{element}</div>)}</ButtonGroup>)}
+        <ButtonGroup size="sm" isInlineFrom="xs">
+          {(editMode) && editActions.map((element, i) => <span key={i}>{element}</span>)}
+          {((data?.totalCount > 0)) && viewActions.map((element, i) => <span key={i}>{element}</span>)}
+        </ButtonGroup>
       </Row>
       {isLoading && <Row className="fr-my-2w flex--space-around"><Spinner /></Row>}
       {error && <Highlight color="var(--page-border)">Une erreur s'est produite lors du chargement des données</Highlight>}
-      {(!error && !isLoading && !data?.totalCount) && <Highlight color="var(--page-border)">Cette section est vide pour le moment</Highlight>}
+      {/* {(!error && !isLoading && !data?.totalCount) && <Highlight color="var(--page-border)">Cette section est vide pour le moment</Highlight>} */}
       {data?.totalCount ? blocContent : null}
       {modals}
     </Container>

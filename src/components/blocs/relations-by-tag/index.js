@@ -11,6 +11,7 @@ import useUrl from '../../../hooks/useUrl';
 import useNotice from '../../../hooks/useNotice';
 import Map from '../../map/auto-bound-map';
 import { deleteError, saveError, saveSuccess, deleteSuccess } from '../../../utils/notice-contents';
+import { exportToCsv, hasExport } from './utils/exports';
 
 const getMarkers = (structures) => structures.map((element) => {
   const { coordinates } = element.currentLocalisation.geometry;
@@ -29,7 +30,7 @@ export default function RelationsByTag({ blocName, tag, resourceType, relatedObj
   const queryObject = inverse ? 'relatedObjectId' : 'resourceId';
   const { notice } = useNotice();
   const { id: resourceId } = useUrl();
-  const url = `/relations?filters[relationTag]=${tag}&filters[${queryObject}]=${resourceId}&limit=200&sort=${sort}`;
+  const url = `/relations?filters[relationTag]=${tag}&filters[${queryObject}]=${resourceId}&limit=2000&sort=${sort}`;
   const { data, isLoading, error, reload } = useFetch(url);
   const [showModal, setShowModal] = useState(false);
   const [modalTitle, setModalTitle] = useState('');
@@ -126,6 +127,9 @@ export default function RelationsByTag({ blocName, tag, resourceType, relatedObj
     <Bloc isLoading={isLoading} error={error} data={data}>
       <BlocTitle as="h3" look="h6">{blocName || tag}</BlocTitle>
       <BlocActionButton onClick={() => onOpenModalHandler()}>Ajouter un élément</BlocActionButton>
+      {hasExport(tag, inverse) && (
+        <BlocActionButton icon="ri-download-line" edit={false} onClick={() => exportToCsv(data?.data, `${resourceId}-${tag}`, blocName, tag, inverse)}>Télécharger la liste</BlocActionButton>
+      )}
       <BlocContent>{renderCards()}</BlocContent>
       <BlocModal>
         <Modal isOpen={showModal} size="lg" hide={() => setShowModal(false)}>

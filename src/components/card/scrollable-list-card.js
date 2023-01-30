@@ -1,6 +1,5 @@
 import { Col } from '@dataesr/react-dsfr';
 import PropTypes from 'prop-types';
-import { v4 as uuidv4 } from 'uuid';
 
 export default function ScrollableListCards({ cards, nCol, height }) {
   if (!cards.length) return null;
@@ -9,8 +8,8 @@ export default function ScrollableListCards({ cards, nCol, height }) {
       style={{ height, overflow: 'scroll' }}
       className="fr-grid-row fr-grid-row--gutters"
     >
-      {cards.map((el) => (
-        <Col n={nCol} key={uuidv4()}>
+      {cards.map((el, i) => (
+        <Col n={nCol} key={i}>
           {el}
         </Col>
       ))}

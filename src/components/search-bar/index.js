@@ -1,8 +1,7 @@
 import { Badge, Icon, Text } from '@dataesr/react-dsfr';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
-import { forwardRef, useLayoutEffect, useRef, useState } from 'react';
-import { v4 as uuidv4 } from 'uuid';
+import { forwardRef, useId, useLayoutEffect, useRef, useState } from 'react';
 
 import styles from './styles.module.scss';
 import { Spinner } from '../spinner';
@@ -40,8 +39,8 @@ const SearchBar = forwardRef((props, ref) => {
     value,
     ...remainingProps
   } = props;
-  const inputId = useRef(uuidv4());
-  const hintId = useRef(uuidv4());
+  const inputId = useId();
+  const hintId = useId();
   const scopeRef = useRef();
   const _className = classNames('fr-search-bar', {
     'fr-search-bar--lg': (size === 'lg'),
@@ -171,6 +170,8 @@ const SearchBar = forwardRef((props, ref) => {
                   <button
                     tabIndex={-1}
                     className={styles.btn}
+                    // style={{ backgroundColor: `${(option.structureStatus === 'inactive') ? 'var(--background-contrast-warning)' : 'inherit' }` }}
+                    style={{ color: `${(option.structureStatus === 'inactive') ? 'var(--text-mention-grey' : 'inherit' }` }}
                     type="button"
                     onMouseDown={() => { onSelect(option); }}
                   >
@@ -178,22 +179,30 @@ const SearchBar = forwardRef((props, ref) => {
                     <Text className={styles.content}>
                       {getName(option)}
                       <br />
-                      {option.category ? (
+                      {option.category && option?.structureStatus === 'active' && (
                         <i>
                           {` ${option.category}`}
+                          {option.city && ` à ${capitalize(option.city)}`}
+                          {option.creationDate && ` depuis ${option.creationDate.slice(0, 4)}`}
                         </i>
-                      ) : null}
-                      {option.city ? ` à ${capitalize(option.city)}` : null}
+                      )}
+                      {option.category && option?.structureStatus === 'inactive' && (
+                        <i>
+                          {` ${option.category}`}
+                          {option.city && ` à ${capitalize(option.city)}`}
+                          {option.closureDate && ` jusqu'à ${option.closureDate.slice(0, 4)}`}
+                        </i>
+                      )}
                       {option.activity && (
                         <i>
                           {capitalize(option.activity)}
                         </i>
                       )}
-                      {option.creationDate ? ` depuis ${option.creationDate.slice(0, 4)}` : null}
                       {option.publicationDate ? <strong>{` publié ${toString(option.publicationDate)}`}</strong> : null}
-                      {(option?.structureStatus === 'inactive') ? <Badge text="inactive" /> : null}
                     </Text>
-                    {optionsIcon && <Badge type="info" isSmall hasIcon icon={optionsIcon} text="afficher la page" />}
+                    {(option.structureStatus === 'inactive') && (
+                      <Badge type="warning" isSmall text="Inactive" />
+                    )}
                   </button>
                 </li>
               ))}

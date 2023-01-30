@@ -13,12 +13,13 @@ import Map from '../../map/auto-bound-map';
 import RelationCard from '../../card/relation-card';
 import { deleteError, saveError, saveSuccess, deleteSuccess } from '../../../utils/notice-contents';
 import { getComparableNow } from '../../../utils/dates';
+import { exportToCsv } from '../relations-by-tag/utils/exports';
 
 export default function RelationsByGroup({ group, reloader }) {
   const { id: groupId, name: groupName, accepts: groupAccepts } = group;
   const { notice } = useNotice();
   const { id: resourceId, apiObject } = useUrl('relations-groups');
-  const url = `/relations?filters[relationsGroupId]=${groupId}&limit=100`;
+  const url = `/relations?filters[relationsGroupId]=${groupId}&sort=relatedObject.collection&limit=100`;
   const { data, isLoading, error, reload } = useFetch(url);
   const [showModal, setShowModal] = useState(false);
   const [showListModal, setShowListModal] = useState(false);
@@ -71,26 +72,38 @@ export default function RelationsByGroup({ group, reloader }) {
   // What to do with relatedObject! Shared Model or Card adaptability ?
   const renderCards = () => {
     if (!data && !data?.data?.length) return null;
-    const inactives = data.data.filter((element) => (element.relatedObject?.collection === 'structures'
-    && element.relatedObject?.currentLocalisation?.geometry?.coordinates
-    && (element?.endDate < getComparableNow() || !element.endDate)));
 
-    const actives = data.data.filter((element) => (inactives && (element?.endDate > getComparableNow())));
+    const actives = data.data
+      .filter((element) => (
+        (element.active === true)
+      || (element.endDate > getComparableNow())
+      || (element.startDate > getComparableNow())
+      || (element.startDate < getComparableNow() && element.endDate > getComparableNow())
+      || (element.startDate < getComparableNow() && !element.endDate && element.active !== false)
+      || (element.startDate === null && element.endDate === null && element.active !== false)
+      ));
+
+    const activesIds = actives.map((element) => element.id);
+
+    const inactives = data.data.filter((element) => (!activesIds.includes(element.id)));
 
     const orderedList = [...actives, ...inactives];
 
-    const markers = orderedList.map((element) => {
-      const { coordinates } = element.relatedObject.currentLocalisation.geometry;
-      const markersCoordinates = [...coordinates];
-      const reversed = markersCoordinates.reverse();
-      return ({
-        latLng: reversed,
-        address: `${element.relatedObject.currentName.usualName}
+    const markers = orderedList
+      .filter((el) => el.relatedObject?.currentLocalisation?.geometry?.coordinates)
+      .map((element) => {
+        const { coordinates } = element.relatedObject.currentLocalisation.geometry;
+        const markersCoordinates = [...coordinates];
+        const reversed = markersCoordinates.reverse();
+        return ({
+          latLng: reversed,
+          address: `${element.relatedObject.currentName.usualName}
          ${element.relatedObject.currentLocalisation?.address},
          ${element.relatedObject.currentLocalisation?.postalCode},
          ${element.relatedObject.currentLocalisation?.locality}`,
+        });
       });
-    });
+
     const list = orderedList.map((element) => (
       <RelationCard
         relation={element}
@@ -119,6 +132,15 @@ export default function RelationsByGroup({ group, reloader }) {
       <BlocTitle as="h3" look="h6">{groupName}</BlocTitle>
       {reloader && <BlocActionButton icon="ri-edit-line" onClick={() => setShowListModal(true)}>Editer la liste</BlocActionButton>}
       <BlocActionButton onClick={() => onOpenModalHandler()}>Ajouter un élément</BlocActionButton>
+      {(groupAccepts?.length === 1) && (
+        <BlocActionButton
+          icon="ri-download-line"
+          edit={false}
+          onClick={() => exportToCsv(data?.data, `${resourceId}-${groupName}`, groupName, groupAccepts[0])}
+        >
+          Télécharger la liste
+        </BlocActionButton>
+      )}
       <BlocContent>{renderCards()}</BlocContent>
       <BlocModal>
         <Modal isOpen={showModal} size="lg" hide={() => setShowModal(false)}>

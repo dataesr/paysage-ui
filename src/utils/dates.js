@@ -41,8 +41,8 @@ export function getComparableNow() {
 }
 // const numberToReplace = date.charAt(date.length - 2) + date.charAt(date.length - 1);
 
-export function formatDescriptionDatesForMandateAndPrizes({ startDate = null, endDate = null, endDatePrevisional = null }) {
-  if (!startDate && !endDate && !endDatePrevisional) { return null; }
+export function formatDescriptionDatesForMandateAndPrizes({ startDate = null, endDate = null, endDatePrevisional = null, active = null }) {
+  if (!startDate && !endDate && !endDatePrevisional && !active) { return null; }
 
   if (startDate && !endDate) {
     if (startDate > getComparableNow()) {
@@ -52,6 +52,16 @@ export function formatDescriptionDatesForMandateAndPrizes({ startDate = null, en
       }
       if (startDate.length < 10) {
         ret += ` à partir de ${toString(startDate)}`;
+      }
+      return ret;
+    }
+    if (startDate < getComparableNow() && active === false && !endDate && !endDatePrevisional) {
+      let ret = '';
+      if (startDate.length === 10) {
+        ret += ` du ${toString(startDate)} jusqu'à une date inconnue`;
+      }
+      if (startDate.length < 10) {
+        ret += ` de ${toString(startDate)} jusqu'à une date inconnue`;
       }
       return ret;
     }
@@ -72,7 +82,6 @@ export function formatDescriptionDatesForMandateAndPrizes({ startDate = null, en
     }
     return ret;
   }
-
   if (!startDate && endDate) {
     let ret = '';
     if (endDate.length === 10) {
