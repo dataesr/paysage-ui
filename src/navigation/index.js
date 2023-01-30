@@ -239,7 +239,9 @@ export default function Routes() {
 
             <Route path="/contribuer" element={<ContributePage />} />
 
-            <Route path="/import" element={<ImportPage />} />
+            <Route element={<ProtectedRoute roles={['admin']} />}>
+              <Route path="/import" element={<ImportPage />} />
+            </Route>
           </Route>
         </Route>
       </RouterRoutes>
