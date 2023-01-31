@@ -69,11 +69,43 @@ function createCsvStructureRowFromRelation(relation, inverse, listName) {
     'Email générique DGS/SG': toExport?.emails.find((m) => m.emailTypeId === '4puTu4puTu4puTu')?.email,
   };
 }
+function createCsvLaureatesFromRelation(relation, inverse, listName) {
+  const laureate = relation.relatedObject;
+  const prize = relation.resource;
+  const { otherAssociatedObjects } = relation;
+  return {
+    Liste: listName,
+    'Type de Lauréat': (laureate.collection === 'structures') ? 'Structure' : 'Personne',
+    Précision: `${relation.laureatePrecision ? relation.laureatePrecision : ''}`,
+    'Libellé Lauréat': laureate.displayName,
+    'Code Paysage Lauréat': laureate.id,
+    'idref lauréat': laureate.identifiers?.filter((i) => (i.type === 'idRef')).sort((a, b) => a?.startDate?.localCompare(b?.startDate)).map((i) => i.value).join('|'),
+    'Orcid lauréat': laureate.identifiers?.filter((i) => (i.type === 'ORCID')).sort((a, b) => a?.startDate?.localCompare(b?.startDate)).map((i) => i.value).join('|'),
+    'Libellé du prix': prize.displayName,
+    'Libellé complément prix': prize.descriptionFr,
+    'Code Paysage Prix': prize.id,
+    'Année lauréat': relation.startDate,
+    'Affiliation lauréat associée à obtention -- libellé': otherAssociatedObjects.map((item) => item.currentName?.usualName).join(';'),
+    'Affiliation lauréat associée à obtention -- code paysage': otherAssociatedObjects.map((item) => item.id).join(';'),
+    'Affiliation lauréat associée à obtention -- code RNSR': otherAssociatedObjects
+      .map((item) => item.identifiers?.length && item.identifiers.filter((i) => i.active).find((i) => (i.type === 'RNSR'))?.value)
+      .join(';'),
+    'Affiliation lauréat associée à obtention -- code Wikidata': otherAssociatedObjects
+      .map((item) => item.identifiers?.length && item.identifiers.filter((i) => i.active).find((i) => (i.type === 'Wikidata'))?.value)
+      .join(';'),
+    'Affiliation lauréat associée à obtention -- code SIREN': otherAssociatedObjects
+      .map((item) => item.identifiers?.length && item.identifiers.filter((i) => i.active).find((i) => (i.type === 'Siret'))?.value)
+      .join(';'),
+    'Affiliation lauréat associée à obtention -- code ROR': otherAssociatedObjects
+      .map((item) => item.identifiers?.length && item.identifiers.filter((i) => i.active).find((i) => (i.type === 'ROR'))?.value)
+      .join(';'),
+  };
+}
 
 const inverseMapping = {
   'categorie-parent': null,
   gouvernance: null,
-  laureat: null,
+  laureat: createCsvLaureatesFromRelation,
   'personne-categorie': null,
   'personne-terme': null,
   'prix-categorie': null,
@@ -96,12 +128,12 @@ const inverseMapping = {
 const regularMapping = {
   'categorie-parent': null,
   gouvernance: null,
-  laureat: null,
+  laureat: createCsvLaureatesFromRelation,
   'personne-categorie': null,
   'personne-terme': null,
   'prix-categorie': null,
   'prix-terme': null,
-  'prix-porteur': null,
+  'prix-porteur': createCsvStructureRowFromRelation,
   'projet-contact': null,
   'projet-categorie': null,
   'projet-participation': null,
@@ -116,6 +148,7 @@ const regularMapping = {
   'terme-categorie': null,
   'terme-parent': null,
   structures: createCsvStructureRowFromRelation,
+  'prix-des-membres': createCsvLaureatesFromRelation,
 };
 
 export function exportToCsv(data, filename, listName, tag, inverse = false) {
