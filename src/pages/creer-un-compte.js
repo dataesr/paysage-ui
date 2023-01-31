@@ -35,7 +35,6 @@ export default function SignUp() {
   const [passwordErrorDisplay, setPasswordErrorDisplay] = useState('info');
 
   const disableNext = (Object.values(passwordValidation).filter((e) => !e)?.length || emailError);
-  console.log(disableNext);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -87,7 +86,7 @@ export default function SignUp() {
             <div className="fr-container">
               <div className="fr-notice__body">
                 <Text className="fr-notice__title">
-                  Paysage est un service à destination des agents de la DGRI et de la DGSIP.
+                  Paysage est un service à destination des agents de la DGRI et de la DGESIP.
                   Un administrateur du site devra valider votre inscription avant que votre première connexion soit possible.
                 </Text>
               </div>
