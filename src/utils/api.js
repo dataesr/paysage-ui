@@ -1,3 +1,5 @@
+import HTTPError from './http.error';
+
 const setDefaultHeaders = (requestHeaders = {}) => {
   const accessToken = localStorage.getItem('__paysage_access__');
   const { 'Content-Type': contentType, Accept, ...rest } = requestHeaders;
@@ -30,7 +32,8 @@ async function customFetch({ method, url, body, headers, options: reqOptions }) 
     }
     return response;
   }
-  throw new Error(response?.status || 500);
+  response.error = await response.json();
+  throw new HTTPError(response?.status || 500, response);
 }
 
 export default {

@@ -23,15 +23,15 @@
     "xlsx": "^0.18.5"
   },
   "scripts": {
-    "start": "PORT=3001 react-scripts start",
     "build": "react-scripts build",
     "build:staging": "env-cmd -f .env.staging react-scripts build",
-    "test": "react-scripts test",
+    "deploy": "git switch main && git pull origin main --rebase --tags && git merge origin staging && npm version $npm_config_level && git push origin main --tags && git switch staging",
     "eject": "react-scripts eject",
     "lint": "eslint --fix src/**/*.js",
     "prettier": "prettier --write **/*.js",
+    "start": "PORT=3001 react-scripts start",
     "stylelint": "stylelint --fix **/*.scss",
-    "deploy": "git switch main && git pull origin main --rebase --tags && git merge origin staging && npm version $npm_config_level && git push origin main --tags && git switch staging"
+    "test": "react-scripts test"
   },
   "eslintConfig": {
     "extends": [

@@ -313,6 +313,7 @@ export default function RelationForm({
               value={form.endDate || ''}
               label="Date de fin"
               onDateChange={(v) => updateForm({ endDate: v })}
+              checked={form.active === false}
             />
             <Checkbox
               label="Date de fin inconnue mais passée"

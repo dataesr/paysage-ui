@@ -86,12 +86,23 @@ export default function StructureRHPage() {
     return { categories, series };
   };
 
-  const { categories: categoriesCategorie, series: seriesCategorie } = countStaffByFieldAndGender({ fieldName: 'categorie', label: (item) => `Catégorie ${item}` });
-  const { categories: categoriesCorps, series: seriesCorps } = countStaffByFieldAndGender({ fieldName: 'code_corps', label: (item, result) => result[item].corps_lib, extraField: 'corps_lib' });
-  const { categories: categoriesFiliere, series: seriesFiliere } = countStaffByFieldAndGender({ fieldName: 'code_filiere', label: (item, result) => result[item].filiere_lib, extraField: 'filiere_lib' });
-  const { categories: categoriesTypePersonnel, series: seriesTypePersonnel } = countStaffByFieldAndGender({ fieldName: 'type_personnel', label: (item) => capitalize(item) });
-  const { categories: categoriesBap, series: seriesBap } = countStaffByFieldAndGender({ fieldName: 'code_bap', label: (item, result) => result[item].bap_lib, extraField: 'bap_lib', filter: (item) => item?.code_bap && item?.bap_lib && item.code_filiere === 'ITRF' });
-  const { categories: categoriesAge, series: seriesAge } = countStaffByFieldAndGender({ fieldName: 'classe_age3', label: (item) => item, filter: (item) => item?.classe_age3 });
+  const { categories: categoriesCategorie, series: seriesCategorie } = countStaffByFieldAndGender({ fieldName: 'categorie',
+    label: (item) => `Catégorie ${item}` });
+  const { categories: categoriesCorps, series: seriesCorps } = countStaffByFieldAndGender({ fieldName: 'code_corps',
+    label: (item, result) => result[item].corps_lib,
+    extraField: 'corps_lib' });
+  const { categories: categoriesFiliere, series: seriesFiliere } = countStaffByFieldAndGender({ fieldName: 'code_filiere',
+    label: (item, result) => result[item].filiere_lib,
+    extraField: 'filiere_lib' });
+  const { categories: categoriesTypePersonnel, series: seriesTypePersonnel } = countStaffByFieldAndGender({ fieldName: 'type_personnel',
+    label: (item) => capitalize(item) });
+  const { categories: categoriesBap, series: seriesBap } = countStaffByFieldAndGender({ fieldName: 'code_bap',
+    label: (item, result) => result[item].bap_lib,
+    extraField: 'bap_lib',
+    filter: (item) => item?.code_bap && item?.bap_lib && item.code_filiere === 'ITRF' });
+  const { categories: categoriesAge, series: seriesAge } = countStaffByFieldAndGender({ fieldName: 'classe_age3',
+    label: (item) => item,
+    filter: (item) => item?.classe_age3 });
   seriesAge[1].data = seriesAge[1].data.map((item) => -item);
 
   if (isLoading) return <Spinner size={48} />;

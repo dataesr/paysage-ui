@@ -99,7 +99,7 @@ export default function ImportPage({ data }) {
     });
     const results = await Promise.all(structuresJson.map((structure) => api.post('/structures', structure)
       .then((response) => response)
-      .catch((error) => ({ status: error?.message, statusText: error.toString(), data: {} }))));
+      .catch((error) => ({ status: error?.message, statusText: `${error?.error} : ${JSON.stringify(error?.details?.[0])}`, data: {} }))));
     setResponses(results);
     updateForm({ data: '' });
   };
@@ -133,7 +133,7 @@ export default function ImportPage({ data }) {
       {!!responses.length && (
         <Row>
           <Col n="12">
-            <Row>
+            <Row key="headers">
               <Col n="1">
                 Ligne
               </Col>
