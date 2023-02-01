@@ -1,9 +1,15 @@
 import * as XLSX from 'xlsx';
+import { getComparableNow } from '../../../../utils/dates';
+import getRelationTypeLabel from '../../../../utils/get-relation-type-key';
 
-function createXLSXFile(exportList) {
-  const ws = XLSX.utils.json_to_sheet(exportList);
+const isFinished = (relation) => ((relation.current !== undefined) && !relation.current) || (relation.active === false) || (relation.endDate < getComparableNow());
+
+function createXLSXFile(sheetsObject) {
   const wb = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(wb, ws, 'liste');
+  Object.entries(sheetsObject).forEach(([k, v]) => {
+    const ws = XLSX.utils.json_to_sheet(v);
+    XLSX.utils.book_append_sheet(wb, ws, k);
+  });
   return XLSX.write(wb, { bookType: 'xlsx', type: 'buffer' });
 }
 
@@ -17,12 +23,12 @@ function downloadCsvFile(csv, filename) {
   document.body.removeChild(link);
 }
 
-function createCsvStructureRowFromRelation(relation, inverse, listName) {
+function createCsvStructureRowFromRelation({ relation, inverse, listName }) {
   const toExport = inverse ? relation.resource : relation.relatedObject;
   return {
     Libellé: toExport.displayName,
     Type: listName,
-    'Status de la liaison': (relation.active === false || (relation.startDate < relation.endDate)) ? 'Terminée' : 'En cours',
+    'Status de la liaison': isFinished(relation) ? 'Terminée' : 'En cours',
     'Date de début': relation.startDate,
     'Date de fin': relation.endDate,
     'Date de fin prévue': relation.endDatePrevisional,
@@ -69,7 +75,7 @@ function createCsvStructureRowFromRelation(relation, inverse, listName) {
     'Email générique DGS/SG': toExport?.emails.find((m) => m.emailTypeId === '4puTu4puTu4puTu')?.email,
   };
 }
-function createCsvLaureatesFromRelation(relation, inverse, listName) {
+function createCsvLaureatesFromRelation({ relation, listName }) {
   const laureate = relation.relatedObject;
   const prize = relation.resource;
   const { otherAssociatedObjects } = relation;
@@ -102,9 +108,52 @@ function createCsvLaureatesFromRelation(relation, inverse, listName) {
   };
 }
 
+function createCsvGovernanceFromRelation({ relation, listName }) {
+  const person = relation.relatedObject;
+  const structure = relation.resource;
+  return {
+    Liste: listName,
+    'Identifiant paysage de la personne': person.id,
+    Nom: person.lastName,
+    Prénom: person.firstName,
+    Genre: person.gender,
+    'Identifiant paysage de la structure': structure.id,
+    'Libellé structure': structure.displayName,
+    'Type de fonction': relation.relationType?.[getRelationTypeLabel(person.gender)],
+    'Intitulé exacte de la fonction': relation.mandatePrecision,
+    'Raison du mandat (nomination/election)': relation.mandateReason,
+    'Position du mandat': (relation.mandatePosition !== 'ND') ? relation.mandatePosition : null,
+    'Adresse email associée au mandat': relation.mandateEmail,
+    'Fonction par intérim': relation.mandateTemporary ? 'Oui' : null,
+    'Date de début': relation.startDate,
+    'Date de fin': relation.endDate,
+    'Date de fin prévue': relation.endDatePrevisional,
+    'Texte officiel de début de fonction': relation.startDateOfficialText?.title,
+    'Lien du texte officiel de début de fonction': relation.startDateOfficialText?.pageUrl,
+    'Texte officiel de fin de fonction': relation.endDateOfficialText?.title,
+    'Lien du texte officiel de fin de fonction': relation.endDateOfficialText?.pageUrl,
+    'Fonction terminée': isFinished(relation) ? 'Oui' : null,
+    'idref de la personne': person.identifiers?.filter((i) => (i.type === 'idRef')).sort((a, b) => a?.startDate?.localCompare(b?.startDate)).map((i) => i.value).join('|'),
+    'Orcid de la personne': person.identifiers?.filter((i) => (i.type === 'ORCID')).sort((a, b) => a?.startDate?.localCompare(b?.startDate)).map((i) => i.value).join('|'),
+    'wikidata de la personne': person.identifiers?.filter((i) => (i.type === 'Wikidata')).sort((a, b) => a?.startDate?.localCompare(b?.startDate)).map((i) => i.value).join('|'),
+    'wikidata de la structure': structure.identifiers?.filter((i) => (i.type === 'Wikidata')).sort((a, b) => a?.startDate?.localCompare(b?.startDate)).map((i) => i.value).join('|'),
+    'idref de la structure': structure.identifiers?.filter((i) => (i.type === 'idRef')).sort((a, b) => a?.startDate?.localCompare(b?.startDate)).map((i) => i.value).join('|'),
+    'uai de la structure': structure.identifiers?.filter((i) => (i.type === 'UAI')).sort((a, b) => a?.startDate?.localCompare(b?.startDate)).map((i) => i.value).join('|'),
+    'siret de la structure': structure.identifiers?.filter((i) => (i.type === 'Siret')).sort((a, b) => a?.startDate?.localCompare(b?.startDate)).map((i) => i.value).join('|'),
+    'grid de la structure': structure.identifiers?.filter((i) => (i.type === 'GRID')).sort((a, b) => a?.startDate?.localCompare(b?.startDate)).map((i) => i.value).join('|'),
+    'ror de la structure': structure.identifiers?.filter((i) => (i.type === 'ROR')).sort((a, b) => a?.startDate?.localCompare(b?.startDate)).map((i) => i.value).join('|'),
+    'Identifiant Annelis de la structure': structure.identifiers?.filter((i) => (i.type === 'ALId')).sort((a, b) => a?.startDate?.localCompare(b?.startDate)).map((i) => i.value).join('|'),
+    'Identifiant établissement ESGBU de la structure': structure.identifiers?.filter((i) => (i.type === 'EtId')).sort((a, b) => a?.startDate?.localCompare(b?.startDate)).map((i) => i.value).join('|'),
+    'Identifiant SCD ESGBU de la structure': structure.identifiers?.filter((i) => (i.type === 'ESGBU')).sort((a, b) => a?.startDate?.localCompare(b?.startDate)).map((i) => i.value).join('|'),
+    'Identifiant bibliothèque ESGBU de la structure': structure.identifiers?.filter((i) => (i.type === 'BibId')).sort((a, b) => a?.startDate?.localCompare(b?.startDate)).map((i) => i.value).join('|'),
+    'Identifiant Ecole doctorale de la structure': structure.identifiers?.filter((i) => (i.type === "Numéro d'ED"))
+      .sort((a, b) => a?.startDate?.localCompare(b?.startDate)).map((i) => i.value).join('|'),
+  };
+}
+
 const inverseMapping = {
   'categorie-parent': null,
-  gouvernance: null,
+  gouvernance: createCsvGovernanceFromRelation,
   laureat: createCsvLaureatesFromRelation,
   'personne-categorie': null,
   'personne-terme': null,
@@ -119,7 +168,7 @@ const inverseMapping = {
   'structure-categorie-juridique': createCsvStructureRowFromRelation,
   'structure-interne': createCsvStructureRowFromRelation,
   'structure-predecesseur': createCsvStructureRowFromRelation,
-  'referent-mesr': null,
+  'referent-mesr': createCsvGovernanceFromRelation,
   'structure-terme': createCsvStructureRowFromRelation,
   'structure-tutelle': null,
   'terme-categorie': null,
@@ -127,7 +176,7 @@ const inverseMapping = {
 };
 const regularMapping = {
   'categorie-parent': null,
-  gouvernance: null,
+  gouvernance: createCsvGovernanceFromRelation,
   laureat: createCsvLaureatesFromRelation,
   'personne-categorie': null,
   'personne-terme': null,
@@ -142,7 +191,7 @@ const regularMapping = {
   'structure-categorie-juridique': null,
   'structure-interne': createCsvStructureRowFromRelation,
   'structure-predecesseur': createCsvStructureRowFromRelation,
-  'referent-mesr': null,
+  'referent-mesr': createCsvGovernanceFromRelation,
   'structure-terme': null,
   'structure-tutelle': createCsvStructureRowFromRelation,
   'terme-categorie': null,
@@ -151,12 +200,20 @@ const regularMapping = {
   'prix-des-membres': createCsvLaureatesFromRelation,
 };
 
-export function exportToCsv(data, filename, listName, tag, inverse = false) {
+const hasSingleSheet = ['prix-des-membres', 'laureat'];
+
+export function exportToCsv({ data, fileName, listName, tag, inverse = false }) {
   const func = inverse ? inverseMapping[tag] : regularMapping[tag];
-  const exportList = data?.map((item) => func(item, inverse, listName));
-  const xlsx = createXLSXFile(exportList);
-  return downloadCsvFile(xlsx, filename);
+  const sheetsObject = {};
+  const singleSheet = hasSingleSheet.includes(tag);
+  if (!singleSheet) {
+    sheetsObject.Actif = data?.filter((i) => !isFinished(i))?.map((item) => func({ relation: item, inverse, listName }));
+    sheetsObject.Inactif = data?.filter((i) => isFinished(i))?.map((item) => func({ relation: item, inverse, listName }));
+  }
+  sheetsObject.Tout = data?.map((item) => func({ relation: item, inverse, listName }));
+  const xlsx = createXLSXFile(sheetsObject);
+  return downloadCsvFile(xlsx, fileName);
 }
-export function hasExport(tag, inverse = false) {
+export function hasExport({ tag, inverse = false }) {
   return !!(inverse ? inverseMapping[tag] : regularMapping[tag]);
 }

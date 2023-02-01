@@ -6,17 +6,7 @@ import { formatDescriptionDatesForMandateAndPrizes, getComparableNow, toString }
 import Button from '../button';
 import CopyButton from '../copy/copy-button';
 import styles from './styles.module.scss';
-
-function getRelationTypeLabel(gender = null) {
-  switch (gender) {
-  case 'Femme':
-    return 'feminineName';
-  case 'Homme':
-    return 'maleName';
-  default:
-    return 'name';
-  }
-}
+import getRelationTypeLabelKey from '../../utils/get-relation-type-key';
 
 export default function RelationCard({ relation, inverse, onEdit }) {
   const navigate = useNavigate();
@@ -40,7 +30,7 @@ export default function RelationCard({ relation, inverse, onEdit }) {
               </Text>
             ) : (
               <Text as="span" bold>
-                {relation.relationType?.[getRelationTypeLabel(relation?.relatedObject?.gender)] || relation.relationType?.name}
+                {relation.relationType?.[getRelationTypeLabelKey(relation?.relatedObject?.gender)] || relation.relationType?.name}
                 {interimMandate}
               </Text>
             ) }

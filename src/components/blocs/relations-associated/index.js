@@ -26,7 +26,13 @@ export default function RelationsAssociated({ blocName, tag, sort }) {
       <BlocActionButton
         icon="ri-download-line"
         edit={false}
-        onClick={() => exportToCsv(data?.data, `${resourceId}-prix-des-membres`, 'Prix des membres', 'prix-des-membres')}
+        onClick={() => exportToCsv({
+          data: data?.data,
+          fileName: `${resourceId}-prix-des-membres`,
+          listName: 'Prix des membres',
+          tag: 'prix-des-membres',
+          singleSheet: true,
+        })}
       >
         Télécharger la liste
       </BlocActionButton>

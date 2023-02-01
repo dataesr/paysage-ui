@@ -13,7 +13,7 @@ import Map from '../../map/auto-bound-map';
 import RelationCard from '../../card/relation-card';
 import { deleteError, saveError, saveSuccess, deleteSuccess } from '../../../utils/notice-contents';
 import { getComparableNow } from '../../../utils/dates';
-import { exportToCsv } from '../relations-by-tag/utils/exports';
+import { exportToCsv, hasExport } from '../relations-by-tag/utils/exports';
 
 export default function RelationsByGroup({ group, reloader }) {
   const { id: groupId, name: groupName, accepts: groupAccepts } = group;
@@ -132,7 +132,7 @@ export default function RelationsByGroup({ group, reloader }) {
       <BlocTitle as="h3" look="h6">{groupName}</BlocTitle>
       {reloader && <BlocActionButton icon="ri-edit-line" onClick={() => setShowListModal(true)}>Editer la liste</BlocActionButton>}
       <BlocActionButton onClick={() => onOpenModalHandler()}>Ajouter un élément</BlocActionButton>
-      {(groupAccepts?.length === 1) && (
+      {(groupAccepts?.length === 1 && hasExport(groupAccepts[0])) && (
         <BlocActionButton
           icon="ri-download-line"
           edit={false}
