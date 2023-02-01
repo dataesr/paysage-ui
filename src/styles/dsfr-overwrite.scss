@@ -56,3 +56,8 @@
 .fr-input {
   resize: none;
 }
+
+// prevent from a double cross on closing modals
+.fr-link--close:before {
+  display: none !important;
+}
