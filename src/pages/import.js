@@ -111,7 +111,7 @@ export default function ImportPage({ data }) {
       const resourceId = structuresJson?.[index]?.parent;
       const relatedObjectId = result?.data?.id;
       if (resourceId && relatedObjectId) {
-        return api.post('/relations', { resourceId, relatedObjectId })
+        return api.post('/relations', { resourceId, relatedObjectId, relationTag: 'structure-interne' })
           .then((response) => response)
           .catch((error) => ({ status: error?.message, statusText: `${error?.error} : ${JSON.stringify(error?.details?.[0])}`, data: {} }));
       }
