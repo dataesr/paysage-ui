@@ -46,7 +46,7 @@ export const ENUMS_LABELS_MAPPER = {
   rankingLeiden: 'Classement de Leiden',
   rankingWebometrics: 'Classement Webometrics',
   // type of Identifiers
-  ALId: 'Identifiant Annelis',
+  'id annelis': 'Identifiant Annelis',
   BibId: 'Identifiant bibliothèque ESGBU',
   BNF: 'Identifiant BnF',
   CJ3: 'Catégorie juridique INSEE (niveau III)',

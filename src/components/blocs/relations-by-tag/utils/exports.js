@@ -28,12 +28,13 @@ const getCivilityArticle = (gender) => {
 
 const getCivilityAddress = (relation, person) => {
   const annuaire = relation.mandatePrecision || relation.relationType?.[getRelationTypeLabel(person.gender)];
+  if (!annuaire) return '';
+  const interim = relation.mandateTemporary ? ' par interim' : '';
+  if (!['Homme', 'Femme'].includes(person.gender)) return `${annuaire}${interim}`;
   let article = getCivilityArticle(person.gender);
   const civility = getCivility(person.gender);
-  if (!annuaire) return '';
   if (['a', 'e', 'i', 'o', 'u', 'y'].includes(annuaire[0].toLowerCase())) { article = "l'"; }
-  if (annuaire && article && civility) return `${civility} ${article}${annuaire}`;
-  return null;
+  return `${civility} ${article}${annuaire}${interim}`;
 };
 
 function createXLSXFile(sheetsObject) {
@@ -98,7 +99,7 @@ function createCsvStructureRowFromRelation({ relation, inverse, listName }) {
     siret: toExport.identifiers?.filter((i) => (i.type === 'Siret')).sort((a, b) => a?.startDate?.localCompare(b?.startDate)).map((i) => i.value).join('|'),
     grid: toExport.identifiers?.filter((i) => (i.type === 'GRID')).sort((a, b) => a?.startDate?.localCompare(b?.startDate)).map((i) => i.value).join('|'),
     ror: toExport.identifiers?.filter((i) => (i.type === 'ROR')).sort((a, b) => a?.startDate?.localCompare(b?.startDate)).map((i) => i.value).join('|'),
-    'Identifiant Annelis': toExport.identifiers?.filter((i) => (i.type === 'ALId')).sort((a, b) => a?.startDate?.localCompare(b?.startDate)).map((i) => i.value).join('|'),
+    'Identifiant Annelis': toExport.identifiers?.filter((i) => (i.type === 'id annelis')).sort((a, b) => a?.startDate?.localCompare(b?.startDate)).map((i) => i.value).join('|'),
     'Identifiant établissement ESGBU': toExport.identifiers?.filter((i) => (i.type === 'EtId')).sort((a, b) => a?.startDate?.localCompare(b?.startDate)).map((i) => i.value).join('|'),
     'Identifiant SCD ESGBU': toExport.identifiers?.filter((i) => (i.type === 'ESGBU')).sort((a, b) => a?.startDate?.localCompare(b?.startDate)).map((i) => i.value).join('|'),
     'Identifiant bibliothèque ESGBU': toExport.identifiers?.filter((i) => (i.type === 'BibId')).sort((a, b) => a?.startDate?.localCompare(b?.startDate)).map((i) => i.value).join('|'),
@@ -140,18 +141,19 @@ function createCsvLaureatesFromRelation({ relation, listName }) {
   };
 }
 
-function createCsvGovernanceFromRelation({ relation }) {
+function createCsvGovernanceFromRelation({ relation, short = false }) {
   const person = relation.relatedObject;
   const structure = relation.resource;
-  return {
-    Etablissement: structure.category?.usualNameFr,
+  const result = {
+    'Type de structure': structure.category?.usualNameFr,
     Civilité: getCivility(person.gender),
     Nom: person.lastName,
     Prénom: person.firstName,
     Structure: structure.displayName,
-    'Civilité annuaire': relation.mandatePrecision || relation.relationType?.[getRelationTypeLabel(person.gender)],
+    Fonction: relation.mandatePrecision || relation.relationType?.[getRelationTypeLabel(person.gender)],
     'Civilité Adresse + Lettre': getCivilityAddress(relation, person),
-    Adresse: structure.currentLocalisation?.address,
+    Adresse: `${structure.currentLocalisation?.distributionStatement ? structure.currentLocalisation.distributionStatement : ''} \
+    ${structure.currentLocalisation?.address} ${structure.currentLocalisation?.place ? structure.currentLocalisation.place : ''}`?.trim(),
     CP: structure.currentLocalisation?.postalCode,
     Ville: structure.currentLocalisation?.locality,
     Email: relation.mandateEmail,
@@ -166,7 +168,7 @@ function createCsvGovernanceFromRelation({ relation }) {
     'Lien du texte officiel de début de fonction': relation.startDateOfficialText?.pageUrl,
     'Texte officiel de fin de fonction': relation.endDateOfficialText?.title,
     'Lien du texte officiel de fin de fonction': relation.endDateOfficialText?.pageUrl,
-    'Fonction terminée': isFinished(relation) ? 'Oui' : null,
+    'Fonction terminée à une date inconnue': (isFinished(relation) && !relation.endDate) ? 'Oui' : null,
     'Identifiant paysage de la structure': structure.id,
     'Identifiant paysage de la personne': person.id,
     'idref de la personne': person.identifiers?.filter((i) => (i.type === 'idRef')).sort((a, b) => a?.startDate?.localCompare(b?.startDate)).map((i) => i.value).join('|'),
@@ -178,13 +180,21 @@ function createCsvGovernanceFromRelation({ relation }) {
     'siret de la structure': structure.identifiers?.filter((i) => (i.type === 'Siret')).sort((a, b) => a?.startDate?.localCompare(b?.startDate)).map((i) => i.value).join('|'),
     'grid de la structure': structure.identifiers?.filter((i) => (i.type === 'GRID')).sort((a, b) => a?.startDate?.localCompare(b?.startDate)).map((i) => i.value).join('|'),
     'ror de la structure': structure.identifiers?.filter((i) => (i.type === 'ROR')).sort((a, b) => a?.startDate?.localCompare(b?.startDate)).map((i) => i.value).join('|'),
-    'Identifiant Annelis de la structure': structure.identifiers?.filter((i) => (i.type === 'ALId')).sort((a, b) => a?.startDate?.localCompare(b?.startDate)).map((i) => i.value).join('|'),
+    'Identifiant Annelis de la structure': structure.identifiers?.filter((i) => (i.type === 'id annelis')).sort((a, b) => a?.startDate?.localCompare(b?.startDate)).map((i) => i.value).join('|'),
     'Identifiant établissement ESGBU de la structure': structure.identifiers?.filter((i) => (i.type === 'EtId')).sort((a, b) => a?.startDate?.localCompare(b?.startDate)).map((i) => i.value).join('|'),
     'Identifiant SCD ESGBU de la structure': structure.identifiers?.filter((i) => (i.type === 'ESGBU')).sort((a, b) => a?.startDate?.localCompare(b?.startDate)).map((i) => i.value).join('|'),
     'Identifiant bibliothèque ESGBU de la structure': structure.identifiers?.filter((i) => (i.type === 'BibId')).sort((a, b) => a?.startDate?.localCompare(b?.startDate)).map((i) => i.value).join('|'),
     'Identifiant Ecole doctorale de la structure': structure.identifiers?.filter((i) => (i.type === "Numéro d'ED"))
       .sort((a, b) => a?.startDate?.localCompare(b?.startDate)).map((i) => i.value).join('|'),
   };
+  if (short) {
+    delete result.Adresse;
+    delete result.CP;
+    delete result.Ville;
+    delete result.Email;
+    delete result['Civilité Adresse + Lettre'];
+  }
+  return result;
 }
 
 const inverseMapping = {
@@ -244,9 +254,9 @@ export function exportToCsv({ data, fileName, listName, tag, inverse = false }) 
   const singleSheet = hasSingleSheet.includes(tag);
   if (!singleSheet) {
     sheetsObject.Actif = data?.filter((i) => !isFinished(i))?.map((item) => func({ relation: item, inverse, listName }));
-    sheetsObject.Inactif = data?.filter((i) => isFinished(i))?.map((item) => func({ relation: item, inverse, listName }));
+    sheetsObject.Inactif = data?.filter((i) => isFinished(i))?.map((item) => func({ relation: item, inverse, listName, short: true }));
   }
-  sheetsObject.Tout = data?.map((item) => func({ relation: item, inverse, listName }));
+  sheetsObject.Tout = data?.map((item) => func({ relation: item, inverse, listName, short: true }));
   const xlsx = createXLSXFile(sheetsObject);
   return downloadCsvFile(xlsx, fileName);
 }
