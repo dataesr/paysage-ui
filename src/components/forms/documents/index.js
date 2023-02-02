@@ -19,7 +19,7 @@ function validate(body) {
   if (!body.startDate) { validationErrors.startDate = 'Une date est obligatoire.'; }
   if (!body.documentTypeId) { validationErrors.type = 'Le type est obligatoire.'; }
   if (!body.files?.length) { validationErrors.files = 'Un fichier est obligatoire.'; }
-  if (isValidUrl(body.documentUrl) === false && body.documentUrl !== '') { validationErrors.documentUrl = "L'URL est invalide."; }
+  if (body.documentUrl && isValidUrl(body.documentUrl) === false) { validationErrors.documentUrl = "L'URL est invalide."; }
   return validationErrors;
 }
 
