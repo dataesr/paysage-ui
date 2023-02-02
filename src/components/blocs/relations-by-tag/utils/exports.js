@@ -4,6 +4,38 @@ import getRelationTypeLabel from '../../../../utils/get-relation-type-key';
 
 const isFinished = (relation) => ((relation.current !== undefined) && !relation.current) || (relation.active === false) || (relation.endDate < getComparableNow());
 
+const getCivility = (gender) => {
+  switch (gender) {
+  case 'Homme':
+    return 'Monsieur';
+  case 'Femme':
+    return 'Madame';
+  default:
+    return null;
+  }
+};
+
+const getCivilityArticle = (gender) => {
+  switch (gender) {
+  case 'Homme':
+    return 'le ';
+  case 'Femme':
+    return 'la ';
+  default:
+    return null;
+  }
+};
+
+const getCivilityAddress = (relation, person) => {
+  const annuaire = relation.mandatePrecision || relation.relationType?.[getRelationTypeLabel(person.gender)];
+  let article = getCivilityArticle(person.gender);
+  const civility = getCivility(person.gender);
+  if (!annuaire) return '';
+  if (['a', 'e', 'i', 'o', 'u', 'y'].includes(annuaire[0].toLowerCase())) { article = "l'"; }
+  if (annuaire && article && civility) return `${civility} ${article}${annuaire}`;
+  return null;
+};
+
 function createXLSXFile(sheetsObject) {
   const wb = XLSX.utils.book_new();
   Object.entries(sheetsObject).forEach(([k, v]) => {
@@ -108,22 +140,24 @@ function createCsvLaureatesFromRelation({ relation, listName }) {
   };
 }
 
-function createCsvGovernanceFromRelation({ relation, listName }) {
+function createCsvGovernanceFromRelation({ relation }) {
   const person = relation.relatedObject;
   const structure = relation.resource;
   return {
-    Liste: listName,
-    'Identifiant paysage de la personne': person.id,
+    Etablissement: structure.category?.usualNameFr,
+    Civilité: getCivility(person.gender),
     Nom: person.lastName,
     Prénom: person.firstName,
+    Structure: structure.displayName,
+    'Civilité annuaire': relation.mandatePrecision || relation.relationType?.[getRelationTypeLabel(person.gender)],
+    'Civilité Adresse + Lettre': getCivilityAddress(relation, person),
+    Adresse: structure.currentLocalisation?.address,
+    CP: structure.currentLocalisation?.postalCode,
+    Ville: structure.currentLocalisation?.locality,
+    Email: relation.mandateEmail,
     Genre: person.gender,
-    'Identifiant paysage de la structure': structure.id,
-    'Libellé structure': structure.displayName,
-    'Type de fonction': relation.relationType?.[getRelationTypeLabel(person.gender)],
-    'Intitulé exacte de la fonction': relation.mandatePrecision,
     'Raison du mandat (nomination/election)': relation.mandateReason,
     'Position du mandat': (relation.mandatePosition !== 'ND') ? relation.mandatePosition : null,
-    'Adresse email associée au mandat': relation.mandateEmail,
     'Fonction par intérim': relation.mandateTemporary ? 'Oui' : null,
     'Date de début': relation.startDate,
     'Date de fin': relation.endDate,
@@ -133,6 +167,8 @@ function createCsvGovernanceFromRelation({ relation, listName }) {
     'Texte officiel de fin de fonction': relation.endDateOfficialText?.title,
     'Lien du texte officiel de fin de fonction': relation.endDateOfficialText?.pageUrl,
     'Fonction terminée': isFinished(relation) ? 'Oui' : null,
+    'Identifiant paysage de la structure': structure.id,
+    'Identifiant paysage de la personne': person.id,
     'idref de la personne': person.identifiers?.filter((i) => (i.type === 'idRef')).sort((a, b) => a?.startDate?.localCompare(b?.startDate)).map((i) => i.value).join('|'),
     'Orcid de la personne': person.identifiers?.filter((i) => (i.type === 'ORCID')).sort((a, b) => a?.startDate?.localCompare(b?.startDate)).map((i) => i.value).join('|'),
     'wikidata de la personne': person.identifiers?.filter((i) => (i.type === 'Wikidata')).sort((a, b) => a?.startDate?.localCompare(b?.startDate)).map((i) => i.value).join('|'),
