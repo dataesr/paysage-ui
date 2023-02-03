@@ -87,13 +87,29 @@ export default function RelationCard({ relation, inverse, onEdit }) {
           {!isFinished && (
             <>
               {' '}
-              {relation.mandateEmail && (
+              {(relation.mandateEmail || relation.personalEmail || relation.mandatePhonenumber) && (
                 <div className={`fr-card__end ${styles['card-end']}`}>
-                  <p className="fr-card__detail flex flex--center">
-                    <Icon name="ri-mail-line" size="1x" />
-                    {relation.mandateEmail}
-                    <CopyButton copyText={relation.mandateEmail} size="sm" />
-                  </p>
+                  {(relation.mandateEmail) && (
+                    <p className="fr-card__detail flex flex--center">
+                      <Icon name="ri-mail-line" size="1x" />
+                      {relation.mandateEmail}
+                      <CopyButton copyText={relation.mandateEmail} size="sm" />
+                    </p>
+                  )}
+                  {(relation.personalEmail) && (
+                    <p className="fr-card__detail flex flex--center">
+                      <Icon name="ri-mail-line" size="1x" />
+                      {relation.personalEmail}
+                      <CopyButton copyText={relation.personalEmail} size="sm" />
+                    </p>
+                  )}
+                  {(relation.mandatePhonenumber) && (
+                    <p className="fr-card__detail flex flex--center">
+                      <Icon name="ri-phone-line" size="1x" />
+                      {relation.mandatePhonenumber}
+                      <CopyButton copyText={relation.mandatePhonenumber} size="sm" />
+                    </p>
+                  )}
                 </div>
               )}
             </>

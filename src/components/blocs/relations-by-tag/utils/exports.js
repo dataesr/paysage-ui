@@ -37,6 +37,12 @@ const getCivilityAddress = (relation, person) => {
   return `${civility} ${article}${annuaire}${interim}`;
 };
 
+const addInterim = (input, interim) => {
+  if (!input) return null;
+  if (interim) return `${input} par intérim`;
+  return input;
+};
+
 function createXLSXFile(sheetsObject) {
   const wb = XLSX.utils.book_new();
   Object.entries(sheetsObject).forEach(([k, v]) => {
@@ -150,29 +156,33 @@ function createCsvGovernanceFromRelation({ relation, short = false }) {
     Nom: person.lastName,
     Prénom: person.firstName,
     Structure: structure.displayName,
-    Fonction: relation.mandatePrecision || relation.relationType?.[getRelationTypeLabel(person.gender)],
+    Titre: addInterim(relation.mandatePrecision || relation.relationType?.[getRelationTypeLabel(person.gender)], relation.mandateTemporary),
     'Civilité Adresse + Lettre': getCivilityAddress(relation, person),
-    Adresse: `${structure.currentLocalisation?.distributionStatement ? structure.currentLocalisation.distributionStatement : ''} \
-    ${structure.currentLocalisation?.address} ${structure.currentLocalisation?.place ? structure.currentLocalisation.place : ''}`?.trim(),
+    Adresse: [structure.currentLocalisation?.distributionStatement, structure.currentLocalisation?.address, structure.currentLocalisation?.place]
+      .map((a) => a).join('\n'),
     CP: structure.currentLocalisation?.postalCode,
     Ville: structure.currentLocalisation?.locality,
     Email: relation.mandateEmail,
+    'Email personel': relation.personalEmail,
+    Téléphone: relation.mandatePhonenumber,
     Genre: person.gender,
+    Fonction: relation.relationType?.[getRelationTypeLabel(person.gender)],
+    'Intitulé exact de la fonction': relation.mandatePrecision,
     'Raison du mandat (nomination/election)': relation.mandateReason,
     'Position du mandat': (relation.mandatePosition !== 'ND') ? relation.mandatePosition : null,
     'Fonction par intérim': relation.mandateTemporary ? 'Oui' : null,
     'Date de début': relation.startDate,
     'Date de fin': relation.endDate,
+    'Fonction terminée à une date inconnue': (isFinished(relation) && !relation.endDate) ? 'Oui' : null,
     'Date de fin prévue': relation.endDatePrevisional,
     'Texte officiel de début de fonction': relation.startDateOfficialText?.title,
     'Lien du texte officiel de début de fonction': relation.startDateOfficialText?.pageUrl,
     'Texte officiel de fin de fonction': relation.endDateOfficialText?.title,
     'Lien du texte officiel de fin de fonction': relation.endDateOfficialText?.pageUrl,
-    'Fonction terminée à une date inconnue': (isFinished(relation) && !relation.endDate) ? 'Oui' : null,
     'Identifiant paysage de la structure': structure.id,
     'Identifiant paysage de la personne': person.id,
     'idref de la personne': person.identifiers?.filter((i) => (i.type === 'idRef')).sort((a, b) => a?.startDate?.localCompare(b?.startDate)).map((i) => i.value).join('|'),
-    'Orcid de la personne': person.identifiers?.filter((i) => (i.type === 'ORCID')).sort((a, b) => a?.startDate?.localCompare(b?.startDate)).map((i) => i.value).join('|'),
+    'Orcid de la personne': person.identifiers?.filter((i) => (i.type === 'ORCID Id')).sort((a, b) => a?.startDate?.localCompare(b?.startDate)).map((i) => i.value).join('|'),
     'wikidata de la personne': person.identifiers?.filter((i) => (i.type === 'Wikidata')).sort((a, b) => a?.startDate?.localCompare(b?.startDate)).map((i) => i.value).join('|'),
     'wikidata de la structure': structure.identifiers?.filter((i) => (i.type === 'Wikidata')).sort((a, b) => a?.startDate?.localCompare(b?.startDate)).map((i) => i.value).join('|'),
     'idref de la structure': structure.identifiers?.filter((i) => (i.type === 'idRef')).sort((a, b) => a?.startDate?.localCompare(b?.startDate)).map((i) => i.value).join('|'),
