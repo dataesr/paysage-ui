@@ -159,7 +159,7 @@ function createCsvGovernanceFromRelation({ relation, short = false }) {
     Titre: addInterim(relation.mandatePrecision || relation.relationType?.[getRelationTypeLabel(person.gender)], relation.mandateTemporary),
     'Civilité Adresse + Lettre': getCivilityAddress(relation, person),
     Adresse: [structure.currentLocalisation?.distributionStatement, structure.currentLocalisation?.address, structure.currentLocalisation?.place]
-      .map((a) => a).join('\n'),
+      .map((a) => a).join('\n').trim(),
     CP: structure.currentLocalisation?.postalCode,
     Ville: structure.currentLocalisation?.locality,
     'Email générique': relation.mandateEmail,

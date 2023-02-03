@@ -307,7 +307,7 @@ export default function MandateForm({ id, resourceType, relatedObjectTypes, data
           </Col>
           <Col n="12">
             <TextInput
-              label="Adresse email personelle de la personne :"
+              label="Adresse email nominative :"
               value={form.personalEmail}
               onChange={(e) => updateForm({ personalEmail: e.target.value })}
               message={(showErrors && errors.personalEmail) ? errors.personalEmail : null}
