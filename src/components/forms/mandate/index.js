@@ -25,7 +25,15 @@ function sanitize(form) {
     'startDateOfficialTextId', 'endDateOfficialTextId', 'startDate', 'endDate', 'endDatePrevisional', 'mandateTemporary', 'mandateReason',
     'mandateEmail', 'mandatePosition', 'mandatePrecision', 'personalEmail', 'mandatePhonenumber'];
   const body = {};
-  Object.keys(form).forEach((key) => { if (fields.includes(key)) { body[key] = form[key]; } });
+  Object.keys(form).forEach((key) => {
+    if (fields.includes(key)) {
+      if (form[key] === '') {
+        body[key] = null;
+      } else {
+        body[key] = form[key];
+      }
+    }
+  });
   return body;
 }
 

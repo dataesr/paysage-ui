@@ -162,8 +162,8 @@ function createCsvGovernanceFromRelation({ relation, short = false }) {
       .map((a) => a).join('\n'),
     CP: structure.currentLocalisation?.postalCode,
     Ville: structure.currentLocalisation?.locality,
-    Email: relation.mandateEmail,
-    'Email personel': relation.personalEmail,
+    'Email générique': relation.mandateEmail,
+    'Email nominatif': relation.personalEmail,
     Téléphone: relation.mandatePhonenumber,
     Genre: person.gender,
     Fonction: relation.relationType?.[getRelationTypeLabel(person.gender)],
@@ -201,8 +201,11 @@ function createCsvGovernanceFromRelation({ relation, short = false }) {
     delete result.Adresse;
     delete result.CP;
     delete result.Ville;
-    delete result.Email;
+    delete result.Téléphone;
+    delete result['Email générique'];
     delete result['Civilité Adresse + Lettre'];
+    delete result['Email nominatif'];
+    delete result.mandatePhonenumer;
   }
   return result;
 }
