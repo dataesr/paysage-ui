@@ -19,7 +19,7 @@ function validate(body) {
   if (!body.startDate) { validationErrors.startDate = 'Une date est obligatoire.'; }
   if (!body.documentTypeId) { validationErrors.type = 'Le type est obligatoire.'; }
   if (!body.files?.length) { validationErrors.files = 'Un fichier est obligatoire.'; }
-  if (!body.isPublic && !body.canAccess.length) { validationErrors.canAccess = 'Selectionnez au moins 1 groupe à qui vous voulez restreindre cette ressource.'; }
+  if (!body.isPublic && !body.canAccess.length) { validationErrors.canAccess = 'Selectionnez au moins 1 groupe.'; }
   if (body.documentUrl && isValidUrl(body.documentUrl) === false) { validationErrors.documentUrl = "L'URL est invalide."; }
   return validationErrors;
 }
