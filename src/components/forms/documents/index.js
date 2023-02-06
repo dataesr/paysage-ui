@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { Col, Container, File, Icon, Radio, RadioGroup, Row, Select, Tag, TagGroup, Text, TextInput, Title } from '@dataesr/react-dsfr';
+import { Checkbox, CheckboxGroup, Col, Container, File, Icon, Radio, RadioGroup, Row, Select, Tag, TagGroup, Text, TextInput, Title } from '@dataesr/react-dsfr';
 import useNotice from '../../../hooks/useNotice';
 import useForm from '../../../hooks/useForm';
 import useFetch from '../../../hooks/useFetch';
@@ -19,14 +19,16 @@ function validate(body) {
   if (!body.startDate) { validationErrors.startDate = 'Une date est obligatoire.'; }
   if (!body.documentTypeId) { validationErrors.type = 'Le type est obligatoire.'; }
   if (!body.files?.length) { validationErrors.files = 'Un fichier est obligatoire.'; }
-  if (isValidUrl(body.documentUrl) === false && body.documentUrl !== '') { validationErrors.documentUrl = "L'URL est invalide."; }
+  if (!body.isPublic && !body.canAccess.length) { validationErrors.canAccess = 'Sélectionnez au moins 1 groupe.'; }
+  if (body.documentUrl && isValidUrl(body.documentUrl) === false) { validationErrors.documentUrl = "L'URL est invalide."; }
   return validationErrors;
 }
 
 function sanitize(form) {
-  const fields = ['title', 'description', 'documentUrl', 'documentTypeId', 'files', 'startDate', 'endDate', 'relatesTo', 'canAccess', 'isPublic'];
+  const fields = ['title', 'canAccess', 'description', 'documentUrl', 'documentTypeId', 'files', 'startDate', 'endDate', 'relatesTo', 'canAccess', 'isPublic'];
   const body = {};
   Object.keys(form).forEach((key) => { if (fields.includes(key)) { body[key] = form[key]; } });
+  if (body.isPublic === true) { body.canAccess = []; }
   return body;
 }
 
@@ -152,6 +154,7 @@ export default function DocumentsForm({ id, data, onSave, onDelete }) {
             />
             <TextInput
               label="Lien vers le document"
+              hint="Saisissez une url valide, commençant par https://"
               type="URL"
               message={(showErrors && errors.documentUrl) ? errors.documentUrl : null}
               messageType={(showErrors && errors.documentUrl) ? 'error' : ''}
@@ -184,8 +187,7 @@ export default function DocumentsForm({ id, data, onSave, onDelete }) {
               hint="Format acceptés csv, jpg, png, pdf, doc, docx, xls, xlsx, csv"
               onChange={(e) => { setIsLoading(true); setFiles(e.target.files); }}
               multiple
-              message={(filesErrors) ? "Une erreur est survenue à l'ajout des fichiers" : null}
-              messageType={(filesErrors) ? 'error' : ''}
+              errorMessage={(showErrors && errors.files) ? errors.files : null}
             />
             {(filesErrors) ? <Text size="xs" className="fr-error-text">Une erreur est survenue à l'ajout des fichiers. Veuillez réessayer</Text> : null}
             {(!isLoading) ? (
@@ -238,32 +240,31 @@ export default function DocumentsForm({ id, data, onSave, onDelete }) {
                 onChange={() => updateForm({ isPublic: true })}
               />
               <Radio
-                label="Restreindre l'accès"
-                value={false}
                 checked={!form?.isPublic}
+                label="Restreindre l'accès"
+                required
                 onChange={() => updateForm({ isPublic: false })}
+                value={false}
               />
+              {(!form.isPublic && viewer?.groups?.length > 0) ? (
+                <CheckboxGroup
+                  required
+                  isInline
+                  legend="Sélectionner les groupes qui pourront accéder à la ressource"
+                  message={(!form.canAccess.length) ? errors.canAccess : null}
+                  messageType={(showErrors && errors.canAccess) ? 'error' : ''}
+                >
+                  {viewer.groups.map((group) => (
+                    <Checkbox
+                      checked={form.canAccess?.includes(group.id)}
+                      onClick={() => handleGroupSelect(group.id)}
+                      label={group.acronym || group.name}
+                    />
+                  ))}
+                </CheckboxGroup>
+              ) : null }
             </RadioGroup>
           </Col>
-          {(!form.isPublic && viewer?.groups?.length > 0) && (
-            <Col n="12">
-              <Text>
-                Sélectionner les groupes qui pourront accéder à la resource
-              </Text>
-              <TagGroup className="fr-mt-1w">
-                {viewer.groups.map((group) => (
-                  <Tag
-                    size="sm"
-                    className="no-span"
-                    selected={form.canAccess?.includes(group.id)}
-                    onClick={() => handleGroupSelect(group.id)}
-                  >
-                    {group.acronym || group.name}
-                  </Tag>
-                ))}
-              </TagGroup>
-            </Col>
-          )}
         </Row>
         <FormFooter
           id={id || null}

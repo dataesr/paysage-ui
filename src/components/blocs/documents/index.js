@@ -1,10 +1,9 @@
 import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Badge, BadgeGroup, Col, Modal, ModalContent, ModalTitle, Row, Tag, Text, Link } from '@dataesr/react-dsfr';
+import { Badge, BadgeGroup, Col, Modal, ModalContent, ModalTitle, Row, Tag, Text, Link, Icon } from '@dataesr/react-dsfr';
 import useEditMode from '../../../hooks/useEditMode';
 import useFetch from '../../../hooks/useFetch';
 import useNotice from '../../../hooks/useNotice';
-
 import api from '../../../utils/api';
 import { saveError, saveSuccess, deleteError, deleteSuccess } from '../../../utils/notice-contents';
 
@@ -23,6 +22,7 @@ export default function DocumentsOutlet() {
   const { id: resourceId } = useParams();
   const navigate = useNavigate();
   const url = `/documents?filters[relatesTo]=${resourceId}&sort=-startDate&limit=500`;
+  const getHCERES = useFetch(`/structures/${resourceId}/weblinks?filters[type]=hceres`);
   const { data, isLoading, error, reload } = useFetch(url);
   const { notice } = useNotice();
   const [isOpen, setIsOpen] = useState(false);
@@ -71,57 +71,78 @@ export default function DocumentsOutlet() {
   const renderContent = () => {
     if (!data || !data.data.length) return null;
     return (
-      <Row gutters>
-        {data.data.map((document) => (
-          <Col n="12 md-6" key={document.id}>
-            <div className="fr-card fr-card--xs fr-card--shadow">
-              <div className="fr-card__body">
-                <div className="fr-card__content">
-                  <div className="fr-card__start">
-                    <Row className="flex--space-between">
-                      <BadgeGroup>
-                        {renderGroupBadge(document.canAccess)}
-                      </BadgeGroup>
-                      {editMode && <Button onClick={() => onOpenModalHandler(document)} className="edit-button" icon="ri-edit-line" title="Editer le document" tertiary borderless rounded />}
-                    </Row>
-                  </div>
-                  <p className="fr-card__title">{document.title}</p>
-                  <Row className="fr-card__desc">
-                    <BadgeGroup className="fr-mt-1v">
-                      <Badge text={document.documentType?.usualName} />
-                      <Badge type="info" text={document.startDate?.slice(0, 4)} />
-                    </BadgeGroup>
-                  </Row>
-                  {document.description && <div className="fr-card__desc">{document.description}</div>}
-                  <div className="fr-card__end">
-                    {(document.relatedObjects.length > 1) && <Text spacing="mb-1w" bold>Autres objets associés :</Text>}
-                    {document.documentUrl && (
-                      <Row>
-                        <Col className="fr-pb-1w">
-                          <Link target="_blank" href={document.documentUrl} rel="noreferrer">
-                            Lien vers le document
-                          </Link>
-                        </Col>
+      <>
+        {getHCERES.data?.data[0]?.url && (
+          <Col n="12 md-4 sm-6 lg-3" className="fr-mb-2w">
+            <div className="fr-card fr-card--sm fr-card--grey fr-card--no-border">
+              <Link target="_blank" href={getHCERES.data?.data[0]?.url}>
+                <div className="flex-col flex--center">
+                  <Text>Rapport(s) d'évaluation </Text>
+                  <Icon
+                    className="fr-mb-1w fr-pt-1w"
+                    size="3x"
+                    name="ri-global-line"
+                  />
+                  <Text>Consulter le site du HCERES</Text>
+                </div>
+              </Link>
+            </div>
+          </Col>
+        ) }
+        <Row gutters>
+          {data.data.map((document) => (
+            <Col n="12 md-6" key={document.id}>
+              <div className="fr-card fr-card--xs fr-card--shadow">
+                <div className="fr-card__body">
+                  <div className="fr-card__content">
+                    <div className="fr-card__start">
+                      <Row className="flex--space-between">
+                        <BadgeGroup>
+                          {renderGroupBadge(document.canAccess)}
+                        </BadgeGroup>
+                        {editMode && <Button onClick={() => onOpenModalHandler(document)} className="edit-button" icon="ri-edit-line" title="Editer le document" tertiary borderless rounded />}
                       </Row>
-                    )}
-                    {document.relatedObjects && (
-                      <TagList maxTags={2}>
-                        {document.relatedObjects
-                          .filter((related) => (related.id !== resourceId))
-                          .map((related) => <Tag iconPosition="right" icon="ri-arrow-right-line" onClick={() => navigate(related.href)} key={related.id}>{related.displayName}</Tag>)}
-                      </TagList>
-                    )}
-                    <Row>
-                      {document.files.map((file) => (<Download key={file.url} file={file} />
-                      ))}
+                    </div>
+                    <p className="fr-card__title">{document.title}</p>
+                    <Row className="fr-card__desc">
+                      <BadgeGroup className="fr-mt-1v">
+                        <Badge text={document.documentType?.usualName} />
+                        <Badge type="info" text={document.startDate?.slice(0, 4)} />
+                      </BadgeGroup>
                     </Row>
+                    {document.description && <div className="fr-card__desc">{document.description}</div>}
+                    <div className="fr-card__end">
+                      {(document.relatedObjects.length > 1) && <Text spacing="mb-1w" bold>Autres objets associés :</Text>}
+                      {document.documentUrl && (
+                        <Row>
+                          <Col className="fr-pb-1w">
+                            <Link target="_blank" href={document.documentUrl} rel="noreferrer">
+                              Lien vers le document
+                            </Link>
+                          </Col>
+                        </Row>
+                      )}
+                      {document.relatedObjects && (
+                        <TagList maxTags={2}>
+                          {document.relatedObjects
+                            .filter((related) => (related.id !== resourceId))
+                            .map((related) => <Tag iconPosition="right" icon="ri-arrow-right-line" onClick={() => navigate(related.href)} key={related.id}>{related.displayName}</Tag>)}
+                        </TagList>
+                      )}
+                      <Row>
+                        {document.files.map((file) => (<Download key={file.url} file={file} />
+                        ))}
+                      </Row>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          </Col>
-        ))}
-      </Row>
+            </Col>
+          ))}
+        </Row>
+
+      </>
+
     );
   };
 

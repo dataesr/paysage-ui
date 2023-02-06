@@ -6,17 +6,7 @@ import { formatDescriptionDatesForMandateAndPrizes, getComparableNow, toString }
 import Button from '../button';
 import CopyButton from '../copy/copy-button';
 import styles from './styles.module.scss';
-
-function getRelationTypeLabel(gender = null) {
-  switch (gender) {
-  case 'Femme':
-    return 'feminineName';
-  case 'Homme':
-    return 'maleName';
-  default:
-    return 'name';
-  }
-}
+import getRelationTypeLabelKey from '../../utils/get-relation-type-key';
 
 export default function RelationCard({ relation, inverse, onEdit }) {
   const navigate = useNavigate();
@@ -40,7 +30,7 @@ export default function RelationCard({ relation, inverse, onEdit }) {
               </Text>
             ) : (
               <Text as="span" bold>
-                {relation.relationType?.[getRelationTypeLabel(relation?.relatedObject?.gender)] || relation.relationType?.name}
+                {relation.relationType?.[getRelationTypeLabelKey(relation?.relatedObject?.gender)] || relation.relationType?.name}
                 {interimMandate}
               </Text>
             ) }
@@ -97,13 +87,29 @@ export default function RelationCard({ relation, inverse, onEdit }) {
           {!isFinished && (
             <>
               {' '}
-              {relation.mandateEmail && (
+              {(relation.mandateEmail || relation.personalEmail || relation.mandatePhonenumber) && (
                 <div className={`fr-card__end ${styles['card-end']}`}>
-                  <p className="fr-card__detail flex flex--center">
-                    <Icon name="ri-mail-line" size="1x" />
-                    {relation.mandateEmail}
-                    <CopyButton copyText={relation.mandateEmail} size="sm" />
-                  </p>
+                  {(relation.mandateEmail) && (
+                    <p className="fr-card__detail flex flex--center">
+                      <Icon name="ri-mail-line" size="1x" />
+                      {relation.mandateEmail}
+                      <CopyButton copyText={relation.mandateEmail} size="sm" />
+                    </p>
+                  )}
+                  {(relation.personalEmail) && (
+                    <p className="fr-card__detail flex flex--center">
+                      <Icon name="ri-mail-line" size="1x" />
+                      {relation.personalEmail}
+                      <CopyButton copyText={relation.personalEmail} size="sm" />
+                    </p>
+                  )}
+                  {(relation.mandatePhonenumber) && (
+                    <p className="fr-card__detail flex flex--center">
+                      <Icon name="ri-phone-line" size="1x" />
+                      {relation.mandatePhonenumber}
+                      <CopyButton copyText={relation.mandatePhonenumber} size="sm" />
+                    </p>
+                  )}
                 </div>
               )}
             </>

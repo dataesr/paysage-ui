@@ -56,7 +56,15 @@ export default function LocalisationsComponent() {
 
   const renderAddress = (localisation) => {
     // eslint-disable-next-line max-len
-    const address = `${localisation?.address || ''}${(localisation?.address) ? ',' : ''} ${localisation?.postalCode || ''} ${localisation?.locality || localisation?.city || ''}, ${localisation?.country}`;
+    const address = ` ${localisation?.distributionStatement || ''}
+    ${(localisation?.distributionStatement) ? ',' : ''} 
+    ${localisation?.address || ''}
+    ${(localisation?.address) ? ',' : ''} 
+    ${localisation?.place || ''}
+    ${(localisation?.place) ? ',' : ''} 
+    ${localisation?.postalCode || ''} 
+    ${localisation?.locality || localisation?.city || ''}, 
+    ${localisation?.country}`;
     return (
       <div className={`fr-card fr-card--xs fr-card--horizontal fr-card--grey fr-card--no-border card-${apiObject}`}>
         <div className="fr-card__body">

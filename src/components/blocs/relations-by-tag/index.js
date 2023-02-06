@@ -12,6 +12,7 @@ import useNotice from '../../../hooks/useNotice';
 import Map from '../../map/auto-bound-map';
 import { deleteError, saveError, saveSuccess, deleteSuccess } from '../../../utils/notice-contents';
 import { exportToCsv, hasExport } from './utils/exports';
+import { getComparableNow } from '../../../utils/dates';
 
 const getMarkers = (structures) => structures.map((element) => {
   const { coordinates } = element.currentLocalisation.geometry;
@@ -88,15 +89,21 @@ export default function RelationsByTag({ blocName, tag, resourceType, relatedObj
       .filter((element) => element?.currentLocalisation?.geometry?.coordinates);
     const associatedStructuresMarkers = getMarkers(associatedStructures);
 
-    const currentRelations = data?.data
-      .filter((relation) => (!relation.endDate || (new Date(relation.endDate) >= new Date())))
-      .map((relation) => ({ ...relation, current: true }));
+    const currentRelations = data.data
+      .filter((element) => (
+        (element.active === true)
+      || (element.endDate > getComparableNow())
+      || (element.startDate > getComparableNow())
+      || (element.startDate < getComparableNow() && element.endDate > getComparableNow())
+      || (element.startDate < getComparableNow() && !element.endDate && element.active !== false)
+      || (element.startDate === null && element.endDate === null && element.active !== false)
+      ));
 
-    const pastRelations = data?.data
-      .filter((relation) => (relation.endDate && (new Date(relation.endDate) < new Date())))
-      .map((relation) => ({ ...relation, current: false }));
+    const activesIds = currentRelations.map((element) => element.id);
 
-    const list = [...currentRelations, ...pastRelations].map((element) => (
+    const inactives = data.data.filter((element) => (!activesIds.includes(element.id)));
+
+    const list = [...currentRelations, ...inactives].map((element) => (
       <RelationCard
         key={element.id}
         inverse={inverse}
@@ -127,8 +134,20 @@ export default function RelationsByTag({ blocName, tag, resourceType, relatedObj
     <Bloc isLoading={isLoading} error={error} data={data}>
       <BlocTitle as="h3" look="h6">{blocName || tag}</BlocTitle>
       <BlocActionButton onClick={() => onOpenModalHandler()}>Ajouter un élément</BlocActionButton>
-      {hasExport(tag, inverse) && (
-        <BlocActionButton icon="ri-download-line" edit={false} onClick={() => exportToCsv(data?.data, `${resourceId}-${tag}`, blocName, tag, inverse)}>Télécharger la liste</BlocActionButton>
+      {hasExport({ tag, inverse }) && (
+        <BlocActionButton
+          icon="ri-download-line"
+          edit={false}
+          onClick={() => exportToCsv({
+            data: data?.data,
+            fileName: `${resourceId}-${tag}`,
+            listName: blocName,
+            tag,
+            inverse,
+          })}
+        >
+          Télécharger la liste
+        </BlocActionButton>
       )}
       <BlocContent>{renderCards()}</BlocContent>
       <BlocModal>

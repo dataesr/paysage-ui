@@ -1,9 +1,10 @@
 import PropTypes from 'prop-types';
 import RelationAssociatedCard from '../../card/relation-associated-card';
 import ExpendableListCards from '../../card/expendable-list-cards';
-import { Bloc, BlocContent, BlocTitle } from '../../bloc';
+import { Bloc, BlocActionButton, BlocContent, BlocTitle } from '../../bloc';
 import useFetch from '../../../hooks/useFetch';
 import useUrl from '../../../hooks/useUrl';
+import { exportToCsv } from '../relations-by-tag/utils/exports';
 
 export default function RelationsAssociated({ blocName, tag, sort }) {
   const { id: resourceId } = useUrl();
@@ -22,6 +23,19 @@ export default function RelationsAssociated({ blocName, tag, sort }) {
 
   return (
     <Bloc isLoading={isLoading} error={error} data={data}>
+      <BlocActionButton
+        icon="ri-download-line"
+        edit={false}
+        onClick={() => exportToCsv({
+          data: data?.data,
+          fileName: `${resourceId}-prix-des-membres`,
+          listName: 'Prix des membres',
+          tag: 'prix-des-membres',
+          singleSheet: true,
+        })}
+      >
+        Télécharger la liste
+      </BlocActionButton>
       <BlocTitle as="h3" look="h6">{blocName || tag}</BlocTitle>
       <BlocContent>{renderCards()}</BlocContent>
     </Bloc>

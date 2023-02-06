@@ -23,9 +23,17 @@ import PaysageBlame from '../../paysage-blame';
 function sanitize(form) {
   const fields = ['active', 'resourceId', 'relatedObjectId', 'relationTypeId', 'relationTag',
     'startDateOfficialTextId', 'endDateOfficialTextId', 'startDate', 'endDate', 'endDatePrevisional', 'mandateTemporary', 'mandateReason',
-    'mandateEmail', 'mandatePosition', 'mandatePrecision'];
+    'mandateEmail', 'mandatePosition', 'mandatePrecision', 'personalEmail', 'mandatePhonenumber'];
   const body = {};
-  Object.keys(form).forEach((key) => { if (fields.includes(key)) { body[key] = form[key]; } });
+  Object.keys(form).forEach((key) => {
+    if (fields.includes(key)) {
+      if (form[key] === '') {
+        body[key] = null;
+      } else {
+        body[key] = form[key];
+      }
+    }
+  });
   return body;
 }
 
@@ -295,6 +303,24 @@ export default function MandateForm({ id, resourceType, relatedObjectTypes, data
               onChange={(e) => updateForm({ mandateEmail: e.target.value })}
               message={(showErrors && errors.mandateEmail) ? errors.mandateEmail : null}
               messageType={(showErrors && errors.mandateEmail) ? 'error' : ''}
+            />
+          </Col>
+          <Col n="12">
+            <TextInput
+              label="Adresse email nominative :"
+              value={form.personalEmail}
+              onChange={(e) => updateForm({ personalEmail: e.target.value })}
+              message={(showErrors && errors.personalEmail) ? errors.personalEmail : null}
+              messageType={(showErrors && errors.personalEmail) ? 'error' : ''}
+            />
+          </Col>
+          <Col n="12">
+            <TextInput
+              label="Numéro de téléphone :"
+              value={form.mandatePhonenumber}
+              onChange={(e) => updateForm({ mandatePhonenumber: e.target.value })}
+              message={(showErrors && errors.mandatePhonenumber) ? errors.mandatePhonenumber : null}
+              messageType={(showErrors && errors.mandatePhonenumber) ? 'error' : ''}
             />
           </Col>
           <Col n="12">

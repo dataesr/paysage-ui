@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { useState } from 'react';
 
 import FormFooter from '../components/forms/form-footer';
+import { Spinner } from '../components/spinner';
 import useForm from '../hooks/useForm';
 import api from '../utils/api';
 import { capitalize } from '../utils/strings';
@@ -28,9 +29,13 @@ function sanitize(form) {
 
 export default function ImportPage({ data }) {
   const { form, updateForm } = useForm(data);
+  const [isLoading, setIsLoading] = useState(false);
+  const [parents, setParents] = useState([]);
+  const [queries, setQueries] = useState([]);
   const [responses, setResponses] = useState([]);
 
   const handleUploadClick = async () => {
+    setIsLoading(true);
     const structuresTsv = JSON.parse(JSON.stringify(form.data)).split(LINE_SEPARATOR);
     const headers = structuresTsv.shift().split(TSV_SEPARATOR);
     const structuresJson = structuresTsv.filter((item) => item.length).map((item) => {
@@ -77,7 +82,7 @@ export default function ImportPage({ data }) {
         // : objectItem['Date de création approximative {O = Oui, N = Non}'],
         closureDate: objectItem['Date de fermeture {2020-07-02}'],
         // : objectItem['Date de fermeture approximative {O = Oui, N = Non}'],
-        // : objectItem['Parent {rechercher le code}'],
+        parent: objectItem['Parent {rechercher le code}'],
       };
       if (objectItem?.["Localisation [A1 = France métropolitaine et les DOM, A2 = Collectivités d'outre-mer, A3 = Hors de France]"] !== 'A3') {
         structure.country = 'France';
@@ -97,15 +102,28 @@ export default function ImportPage({ data }) {
       });
       return structure;
     });
-    const results = await Promise.all(structuresJson.map((structure) => api.post('/structures', structure)
+    setQueries(structuresJson);
+    const responsesPromises = await Promise.all(structuresJson.map((structure) => api.post('/structures', structure)
       .then((response) => response)
       .catch((error) => ({ status: error?.message, statusText: `${error?.error} : ${JSON.stringify(error?.details?.[0])}`, data: {} }))));
-    setResponses(results);
+    setResponses(responsesPromises);
+    const parentsPromises = await Promise.all(responsesPromises.map((result, index) => {
+      const resourceId = structuresJson?.[index]?.parent;
+      const relatedObjectId = result?.data?.id;
+      if (resourceId && relatedObjectId) {
+        return api.post('/relations', { resourceId, relatedObjectId, relationTag: 'structure-interne' })
+          .then((response) => response)
+          .catch((error) => ({ status: error?.message, statusText: `${error?.error} : ${JSON.stringify(error?.details?.[0])}`, data: {} }));
+      }
+      return Promise.resolve(null);
+    }));
+    setParents(parentsPromises);
     updateForm({ data: '' });
+    setIsLoading(false);
   };
 
   return (
-    <Container spacing="pb-6w">
+    <Container spacing="py-6w">
       <Row>
         <Col n="12">
           <form acceptCharset="UTF-8">
@@ -116,6 +134,12 @@ export default function ImportPage({ data }) {
               onChange={(e) => updateForm({ type: e.target.value })}
               required
             />
+            <p>
+              Récupérer le
+              {' '}
+              <Link href="/models/AjoutEnMasseStructure.xlsx">fichier modèle</Link>
+              , le remplir (une ligne correspond à un élément), copier puis coller dans le champ ci-dessous les cellules correspondant aux éléments à ajouter.
+            </p>
             <TextInput
               label="Import en masse"
               onChange={(e) => updateForm({ data: e.target.value })}
@@ -130,6 +154,7 @@ export default function ImportPage({ data }) {
           </form>
         </Col>
       </Row>
+      {isLoading && <Row className="fr-my-2w flex--space-around"><Spinner /></Row>}
       {!!responses.length && (
         <Row>
           <Col n="12">
@@ -137,41 +162,62 @@ export default function ImportPage({ data }) {
               <Col n="1">
                 Ligne
               </Col>
-              <Col n="5">
+              <Col n="1">
+                Status
+              </Col>
+              <Col n="3">
                 Acronyme - Nom
               </Col>
               <Col n="1">
                 Id
               </Col>
-              <Col n="2">
-                Status
-              </Col>
               <Col n="3">
                 Message
               </Col>
+              <Col n="3">
+                Parent
+              </Col>
             </Row>
             {responses.map((response, index) => (
-              <Row key={response.data.id}>
+              <Row key={index}>
                 <Col n="1">
                   {index + 1}
                 </Col>
-                <Col n="5">
-                  {response?.data?.id && (
+                <Col n="1">
+                  <Icon
+                    color={response?.status.toString()[0] === '2' ? 'var(--green-menthe-main-548)' : 'var(--orange-terre-battue-main-645)'}
+                    name={response?.status.toString()[0] === '2' ? 'ri-thumb-up-fill' : 'ri-thumb-down-fill'}
+                  />
+                </Col>
+                <Col n="3">
+                  {response?.data?.id ? (
                     <Link href={`/structures/${response?.data?.id}`}>
-                      {response?.data?.currentName?.shortName}
-                      {' - '}
-                      {response?.data?.currentName?.usualName}
+                      <span>
+                        {queries?.[index]?.acronymFr}
+                        {queries?.[index]?.acronymFr && ' - '}
+                        {queries?.[index]?.shortName}
+                        {queries?.[index]?.shortName && ' - '}
+                        {queries?.[index]?.usualName}
+                      </span>
                     </Link>
+                  ) : (
+                    <span>
+                      {queries?.[index]?.acronymFr}
+                      {queries?.[index]?.acronymFr && ' - '}
+                      {queries?.[index]?.shortName}
+                      {queries?.[index]?.shortName && ' - '}
+                      {queries?.[index]?.usualName}
+                    </span>
                   )}
                 </Col>
                 <Col n="1">
                   {response?.data?.id}
                 </Col>
-                <Col n="2">
-                  <Icon name={response?.status.toString()[0] === '2' ? 'ri-thumb-up-fill' : 'ri-thumb-down-fill'} />
-                </Col>
                 <Col n="3">
                   {response?.statusText}
+                </Col>
+                <Col n="3">
+                  {parents?.[index]?.status || ' x '}
                 </Col>
               </Row>
             ))}
