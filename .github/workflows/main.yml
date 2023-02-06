@@ -39,7 +39,7 @@ jobs:
           docker push $IMAGE_ID:${{ steps.version.outputs.tag }}
 
   deploy:
-    name: Update staging deployment
+    name: Update production deployment
     runs-on: ubuntu-latest
     needs: publish-ghcr
     steps:
