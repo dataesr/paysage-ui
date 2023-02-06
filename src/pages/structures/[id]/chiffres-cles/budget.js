@@ -14,16 +14,14 @@ import useUrl from '../../../../hooks/useUrl';
 import cleanNumber from '../../../../utils/clean-numbers';
 
 export default function StructureBudgetPage() {
-  const { url: urlStructure } = useUrl();
-  const { data: dataStructure } = useFetch(urlStructure);
   const { id, url } = useUrl('keynumbers');
   const { data, error, isLoading } = useFetch(`${url}/finance?sort=-exercice&limit=2`);
 
-  const hasBudget = dataStructure?.structureStatus === 'active';
-
-  const lastData = data?.data?.[hasBudget ? 1 : 0] || {};
+  const lastIndex = Math.max(data?.data?.length || 0, O);
+  const lastData = data?.data?.[lastIndex] || {};
+  const lastYear = lastData?.exercice;
   const currentData = data?.data?.[0] || {};
-  const year = lastData?.exercice;
+  const currentYear = currentData?.exercice;
 
   const financialBalance = [{
     field: 'resultat_net_comptable',
@@ -279,9 +277,12 @@ Il constitue une marge de sécurité financière destinée à financer une parti
         const { color, tooltip } = getIconColorAndTooltip(item);
         return (
           <Card
-            subtitle={hasBudget && difference && (
-              <div title="Budget 2022">
-                (Budget 2022 :&ensp;
+            subtitle={difference && (
+              <div title={`Budget ${currentYear}`}>
+                (Budget
+                {currentYear}
+                {' '}
+                :&ensp;
                 {difference}
                 {color && (<Icon name={`ri-stop-fill fr-badge--${color}`} className="fr-ml-1w fr-mr-0 fr-icon--sm" title={tooltip} />)}
                 )
@@ -310,7 +311,7 @@ Il constitue une marge de sécurité financière destinée à financer une parti
     <>
       <Title as="h3">
         <Icon name="ri-scales-3-fill" className="fr-pl-1w" />
-        {`Données financières - Situation en ${year}`}
+        {`Données financières - Situation en ${lastYear}${lastData?.source === 'Budget' ? ' (Budget)' : ''}`}
       </Title>
       <Bloc isLoading={isLoading} error={error} data={data} noBadge>
         <BlocTitle as="h4">

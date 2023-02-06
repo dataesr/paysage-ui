@@ -184,7 +184,7 @@ export default function DocumentsForm({ id, data, onSave, onDelete }) {
             <File
               required
               label="Ajouter des fichiers"
-              hint="Format acceptés csv, jpg, png, pdf, doc, docx, xls, xlsx, csv"
+              hint="Formats acceptés csv, doc, docx, jpg, pdf, png, xls, xlsx"
               onChange={(e) => { setIsLoading(true); setFiles(e.target.files); }}
               multiple
               errorMessage={(showErrors && errors.files) ? errors.files : null}
