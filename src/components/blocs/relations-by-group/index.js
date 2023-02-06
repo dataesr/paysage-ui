@@ -132,7 +132,7 @@ export default function RelationsByGroup({ group, reloader }) {
       <BlocTitle as="h3" look="h6">{groupName}</BlocTitle>
       {reloader && <BlocActionButton icon="ri-edit-line" onClick={() => setShowListModal(true)}>Editer la liste</BlocActionButton>}
       <BlocActionButton onClick={() => onOpenModalHandler()}>Ajouter un élément</BlocActionButton>
-      {(groupAccepts?.length === 1 && hasExport(groupAccepts[0])) && (
+      {(groupAccepts?.length === 1 && hasExport({ tag: groupAccepts[0] })) && (
         <BlocActionButton
           icon="ri-download-line"
           edit={false}

@@ -114,6 +114,72 @@ function createCsvStructureRowFromRelation({ relation, inverse, listName }) {
     'Email générique DGS/SG': toExport?.emails.find((m) => m.emailTypeId === '4puTu4puTu4puTu')?.email,
   };
 }
+
+function createCategoryTermRowFromRelation({ relation, inverse, listName }) {
+  const toExport = inverse ? relation.resource : relation.relatedObject;
+  const currentObject = inverse ? relation.relatedObject : relation.resource;
+  return {
+    'ID paysage ressource': currentObject.id,
+    Ressource: currentObject.displayName,
+    'ID paysage': toExport.id,
+    Libellé: toExport.displayName,
+    'Libellé en anglais': toExport.usualNameFr,
+    Description: toExport.decriptionFr,
+    'Desciption en anglais': toExport.displayName,
+    Type: listName,
+    'Date de début': relation.startDate,
+    'Date de fin': relation.endDate,
+    'Relation terminée à une date inconnue': (isFinished(relation) && !relation.endDate) ? 'Oui' : null,
+    'Date de fin prévue': relation.endDatePrevisional,
+    'Texte officiel de début de liaison': relation.startDateOfficialText?.title,
+    'Lien du texte officiel de début de liaison': relation.startDateOfficialText?.pageUrl,
+    'Texte officiel de fin de liaison': relation.endDateOfficialText?.title,
+    'Lien du texte officiel de fin de liaison': relation.endDateOfficialText?.pageUrl,
+  };
+}
+function createTutelleRowFromRelation({ relation, inverse, listName }) {
+  const toExport = inverse ? relation.resource : relation.relatedObject;
+  const currentObject = inverse ? relation.relatedObject : relation.resource;
+  return {
+    'ID paysage ressource': currentObject.id,
+    Ressource: currentObject.displayName,
+    'ID paysage': toExport.id,
+    Libellé: toExport.displayName,
+    Type: listName,
+    'Date de début': relation.startDate,
+    'Date de fin': relation.endDate,
+    'Relation terminée à une date inconnue': (isFinished(relation) && !relation.endDate) ? 'Oui' : null,
+    'Date de fin prévue': relation.endDatePrevisional,
+    'Texte officiel de début de liaison': relation.startDateOfficialText?.title,
+    'Lien du texte officiel de début de liaison': relation.startDateOfficialText?.pageUrl,
+    'Texte officiel de fin de liaison': relation.endDateOfficialText?.title,
+    'Lien du texte officiel de fin de liaison': relation.endDateOfficialText?.pageUrl,
+  };
+}
+function createLegalCategoryRowFromRelation({ relation, inverse, listName }) {
+  const toExport = inverse ? relation.resource : relation.relatedObject;
+  const currentObject = inverse ? relation.relatedObject : relation.resource;
+  return {
+    'ID paysage ressource': currentObject.id,
+    Ressource: currentObject.displayName,
+    'ID paysage': toExport.id,
+    Libellé: toExport.displayName,
+    'Libellé en anglais': toExport.longNameEn,
+    'Personalité morale': toExport.legalPersonality,
+    Secteur: toExport.sector,
+    'Appartient à la recherche publique': toExport.inPublicReasearch,
+    'Code INSEE': toExport.inseeCode,
+    Type: listName,
+    'Date de début': relation.startDate,
+    'Date de fin': relation.endDate,
+    'Relation terminée à une date inconnue': (isFinished(relation) && !relation.endDate) ? 'Oui' : null,
+    'Date de fin prévue': relation.endDatePrevisional,
+    'Texte officiel de début de liaison': relation.startDateOfficialText?.title,
+    'Lien du texte officiel de début de liaison': relation.startDateOfficialText?.pageUrl,
+    'Texte officiel de fin de liaison': relation.endDateOfficialText?.title,
+    'Lien du texte officiel de fin de liaison': relation.endDateOfficialText?.pageUrl,
+  };
+}
 function createCsvLaureatesFromRelation({ relation, listName }) {
   const laureate = relation.relatedObject;
   const prize = relation.resource;
@@ -211,7 +277,7 @@ function createCsvGovernanceFromRelation({ relation, short = false }) {
 }
 
 const inverseMapping = {
-  'categorie-parent': null,
+  'categorie-parent': createCategoryTermRowFromRelation,
   gouvernance: createCsvGovernanceFromRelation,
   laureat: createCsvLaureatesFromRelation,
   'personne-categorie': null,
@@ -229,32 +295,32 @@ const inverseMapping = {
   'structure-predecesseur': createCsvStructureRowFromRelation,
   'referent-mesr': createCsvGovernanceFromRelation,
   'structure-terme': createCsvStructureRowFromRelation,
-  'structure-tutelle': null,
-  'terme-categorie': null,
-  'terme-parent': null,
+  'structure-tutelle': createTutelleRowFromRelation,
+  'terme-categorie': createCategoryTermRowFromRelation,
+  'terme-parent': createCategoryTermRowFromRelation,
 };
 const regularMapping = {
-  'categorie-parent': null,
+  'categorie-parent': createCategoryTermRowFromRelation,
   gouvernance: createCsvGovernanceFromRelation,
   laureat: createCsvLaureatesFromRelation,
-  'personne-categorie': null,
-  'personne-terme': null,
-  'prix-categorie': null,
-  'prix-terme': null,
+  'personne-categorie': createCategoryTermRowFromRelation,
+  'personne-terme': createCategoryTermRowFromRelation,
+  'prix-categorie': createCategoryTermRowFromRelation,
+  'prix-terme': createCategoryTermRowFromRelation,
   'prix-porteur': createCsvStructureRowFromRelation,
   'projet-contact': null,
-  'projet-categorie': null,
+  'projet-categorie': createCategoryTermRowFromRelation,
   'projet-participation': null,
-  'projet-terme': null,
-  'structure-categorie': null,
-  'structure-categorie-juridique': null,
+  'projet-terme': createCategoryTermRowFromRelation,
+  'structure-categorie': createCategoryTermRowFromRelation,
+  'structure-categorie-juridique': createLegalCategoryRowFromRelation,
   'structure-interne': createCsvStructureRowFromRelation,
   'structure-predecesseur': createCsvStructureRowFromRelation,
   'referent-mesr': createCsvGovernanceFromRelation,
-  'structure-terme': null,
+  'structure-terme': createCategoryTermRowFromRelation,
   'structure-tutelle': createCsvStructureRowFromRelation,
-  'terme-categorie': null,
-  'terme-parent': null,
+  'terme-categorie': createCategoryTermRowFromRelation,
+  'terme-parent': createCategoryTermRowFromRelation,
   structures: createCsvStructureRowFromRelation,
   'prix-des-membres': createCsvLaureatesFromRelation,
 };
