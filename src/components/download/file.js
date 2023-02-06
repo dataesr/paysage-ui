@@ -54,7 +54,7 @@ export default function File({ file, onClick }) {
           ? (
             <div>
               <button onClick={onClick} type="button" className={styles['file-download-button']}>
-                {displayName}
+                Télécharger le document
                 <Icon name="ri-download-line" iconPosition="right" />
               </button>
               <p className={styles['file-details']}>
