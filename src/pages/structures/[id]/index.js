@@ -39,6 +39,7 @@ import api from '../../../utils/api';
 import { getName } from '../../../utils/structures';
 import Error from '../../../components/errors';
 import usePageTitle from '../../../hooks/usePageTitle';
+import { getComparableNow } from '../../../utils/dates';
 
 function StructureByIdPage() {
   const { viewer } = useAuth();
@@ -65,11 +66,11 @@ function StructureByIdPage() {
   });
 
   function badgeColor() {
-    if (data.structureStatus === 'active') {
+    if (data.structureStatus === 'active' || data.closureDate > getComparableNow()) {
       return <Badge colorFamily="green-emeraude" text={data.structureStatus} />;
-    } if (data.structureStatus === 'inactive') {
+    } if (data.structureStatus === 'inactive' || data.closureDate < getComparableNow()) {
       return <Badge text="inactive" type="warning" />;
-    } if (data.structureStatus === 'forthcoming') {
+    } if (data.structureStatus === 'forthcoming' || data.creationDate > getComparableNow()) {
       return <Badge text="A venir" type="info" />;
     }
     return null;
