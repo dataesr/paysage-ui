@@ -17,9 +17,7 @@ export default function StructureBudgetPage() {
   const { id, url } = useUrl('keynumbers');
   const { data, error, isLoading } = useFetch(`${url}/finance?sort=-exercice&limit=2`);
 
-  // eslint-disable-next-line no-undef
-  const lastIndex = Math.max(data?.data?.length || 0, O);
-  const lastData = data?.data?.[lastIndex] || {};
+  const lastData = data?.data?.[Math.max(data?.data?.length || 0, 0)] || {};
   const lastYear = lastData?.exercice;
   const currentData = data?.data?.[0] || {};
   const currentYear = currentData?.exercice;
