@@ -70,6 +70,7 @@ function createCsvStructureRowFromRelation({ relation, inverse, listName }) {
     'Status de la liaison': isFinished(relation) ? 'Terminée' : 'En cours',
     'Date de début': relation.startDate,
     'Date de fin': relation.endDate,
+    'Terminée à une date inconnue': (isFinished(relation) && !relation.endDate) ? 'Oui' : null,
     'Date de fin prévue': relation.endDatePrevisional,
     'Texte officiel de début de liaison': relation.startDateOfficialText?.title,
     'Lien du texte officiel de début de liaison': relation.startDateOfficialText?.pageUrl,
@@ -275,13 +276,37 @@ function createCsvGovernanceFromRelation({ relation, short = false }) {
   }
   return result;
 }
+function createCsvPersonFromRelation({ relation, inverse }) {
+  const person = inverse ? relation.resource : relation.relatedObject;
+  const relatedObject = inverse ? relation.relatedObject : relation.resource;
+  return {
+    'ID paysage ressource': relatedObject.id,
+    Ressource: relatedObject.displayName,
+    Civilité: getCivility(person.gender),
+    Nom: person.lastName,
+    Prénom: person.firstName,
+    Fonction: relation.relationType?.[getRelationTypeLabel(person.gender)] || 'Appartient à la liste',
+    'Date de début': relation.startDate,
+    'Date de fin': relation.endDate,
+    'Terminée à une date inconnue': (isFinished(relation) && !relation.endDate) ? 'Oui' : null,
+    'Date de fin prévue': relation.endDatePrevisional,
+    'Texte officiel de début de fonction': relation.startDateOfficialText?.title,
+    'Lien du texte officiel de début de fonction': relation.startDateOfficialText?.pageUrl,
+    'Texte officiel de fin de fonction': relation.endDateOfficialText?.title,
+    'Lien du texte officiel de fin de fonction': relation.endDateOfficialText?.pageUrl,
+    'Identifiant paysage de la personne': person.id,
+    'idref de la personne': person.identifiers?.filter((i) => (i.type === 'idRef')).sort((a, b) => a?.startDate?.localCompare(b?.startDate)).map((i) => i.value).join('|'),
+    'Orcid de la personne': person.identifiers?.filter((i) => (i.type === 'ORCID Id')).sort((a, b) => a?.startDate?.localCompare(b?.startDate)).map((i) => i.value).join('|'),
+    'wikidata de la personne': person.identifiers?.filter((i) => (i.type === 'Wikidata')).sort((a, b) => a?.startDate?.localCompare(b?.startDate)).map((i) => i.value).join('|'),
+  };
+}
 
 const inverseMapping = {
   'categorie-parent': createCategoryTermRowFromRelation,
   gouvernance: createCsvGovernanceFromRelation,
   laureat: createCsvLaureatesFromRelation,
-  'personne-categorie': null,
-  'personne-terme': null,
+  'personne-categorie': createCsvPersonFromRelation,
+  'personne-terme': createCsvPersonFromRelation,
   'prix-categorie': null,
   'prix-terme': null,
   'prix-porteur': null,
@@ -322,6 +347,7 @@ const regularMapping = {
   'terme-categorie': createCategoryTermRowFromRelation,
   'terme-parent': createCategoryTermRowFromRelation,
   structures: createCsvStructureRowFromRelation,
+  persons: createCsvPersonFromRelation,
   'prix-des-membres': createCsvLaureatesFromRelation,
 };
 
