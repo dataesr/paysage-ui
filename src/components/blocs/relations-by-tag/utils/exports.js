@@ -301,14 +301,35 @@ function createCsvPersonFromRelation({ relation, inverse }) {
   };
 }
 
+function createCsvPrizeFromRelation({ relation, inverse }) {
+  const prize = inverse ? relation.resource : relation.relatedObject;
+  const relatedObject = inverse ? relation.relatedObject : relation.resource;
+  return {
+    'ID paysage ressource': relatedObject.id,
+    Ressource: relatedObject.displayName,
+    Libellé: prize.displayName,
+    'Libellé anglais': prize.nameEn,
+    Description: prize.descriptionFr,
+    'Description en anglais': prize.descriptionEn,
+    'Date de début': relation.startDate,
+    'Date de fin': relation.endDate,
+    'Terminée à une date inconnue': (isFinished(relation) && !relation.endDate) ? 'Oui' : null,
+    'Date de fin prévue': relation.endDatePrevisional,
+    'Texte officiel de début de fonction': relation.startDateOfficialText?.title,
+    'Lien du texte officiel de début de fonction': relation.startDateOfficialText?.pageUrl,
+    'Texte officiel de fin de fonction': relation.endDateOfficialText?.title,
+    'Lien du texte officiel de fin de fonction': relation.endDateOfficialText?.pageUrl,
+  };
+}
+
 const inverseMapping = {
   'categorie-parent': createCategoryTermRowFromRelation,
   gouvernance: createCsvGovernanceFromRelation,
   laureat: createCsvLaureatesFromRelation,
   'personne-categorie': createCsvPersonFromRelation,
   'personne-terme': createCsvPersonFromRelation,
-  'prix-categorie': null,
-  'prix-terme': null,
+  'prix-categorie': createCsvPrizeFromRelation,
+  'prix-terme': createCsvPrizeFromRelation,
   'prix-porteur': null,
   'projet-contact': null,
   'projet-categorie': null,
@@ -348,6 +369,7 @@ const regularMapping = {
   'terme-parent': createCategoryTermRowFromRelation,
   structures: createCsvStructureRowFromRelation,
   persons: createCsvPersonFromRelation,
+  prizes: createCsvPrizeFromRelation,
   'prix-des-membres': createCsvLaureatesFromRelation,
 };
 
