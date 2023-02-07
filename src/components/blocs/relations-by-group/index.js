@@ -110,7 +110,7 @@ export default function RelationsByGroup({ group, reloader }) {
         onEdit={() => onOpenModalHandler(element)}
       />
     ));
-    if (orderedList.length) {
+    if (markers.length) {
       return (
         <Row gutters>
           <Col n="12">
