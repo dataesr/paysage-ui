@@ -310,107 +310,116 @@ Il constitue une marge de sécurité financière destinée à financer une parti
   if (error) return <>Erreur...</>;
   return (
     <>
-      <Title as="h3">
-        <Icon name="ri-scales-3-fill" className="fr-pl-1w" />
-        {`Données financières - Situation en ${beforeLastYear}${beforeLastData?.source === 'Budget' ? ' (Budget)' : ''}`}
-      </Title>
-      <Bloc isLoading={isLoading} error={error} data={data} noBadge>
-        <BlocTitle as="h4">
-          Equilibre financier
-        </BlocTitle>
-        <BlocContent>
-          {renderCards(financialBalance)}
-        </BlocContent>
-      </Bloc>
-      <Bloc isLoading={isLoading} error={error} data={data} noBadge>
-        <BlocTitle as="h4">
-          Cycle d'exploitation
-        </BlocTitle>
-        <BlocContent>
-          {renderCards(operatingCycle)}
-        </BlocContent>
-      </Bloc>
-      <Bloc isLoading={isLoading} error={error} data={data} noBadge>
-        <BlocTitle as="h4">
-          Financement de l'activité
-        </BlocTitle>
-        <BlocContent>
-          {renderCards(activityFinancing)}
-        </BlocContent>
-      </Bloc>
-      <Bloc isLoading={isLoading} error={error} data={data} noBadge>
-        <BlocTitle as="h4">
-          Autofinancement des investissements
-        </BlocTitle>
-        <BlocContent>
-          {renderCards(investmentsSelfFinancing)}
-        </BlocContent>
-      </Bloc>
-      <Bloc isLoading={isLoading} error={error} data={data} noBadge>
-        <BlocTitle as="h4">
-          Indicateurs GBCP
-        </BlocTitle>
-        <BlocContent>
-          {renderCards(gbcpIndicators)}
-        </BlocContent>
-      </Bloc>
-      <Bloc isLoading={isLoading} error={error} data={data} noBadge>
-        <BlocTitle as="h4">
-          Recettes formation
-        </BlocTitle>
-        <BlocContent>
-          {renderCards(trainingRevenues)}
-        </BlocContent>
-      </Bloc>
-      <Bloc isLoading={isLoading} error={error} data={data} noBadge>
-        <BlocTitle as="h4">
-          Recettes recherche
-        </BlocTitle>
-        <BlocContent>
-          {renderCards(researchRevenues)}
-        </BlocContent>
-      </Bloc>
-      <Bloc isLoading={isLoading} error={error} data={data} noBadge>
-        <BlocTitle as="h4">
-          Autres recettes
-        </BlocTitle>
-        <BlocContent>
-          {renderCards(otherRevenues)}
-        </BlocContent>
-      </Bloc>
-      <Bloc isLoading={isLoading} error={error} data={data} noBadge>
-        <BlocTitle as="h4">
-          Ressources en ligne : #dataESR
-        </BlocTitle>
-        <BlocContent>
-          <Row gutters>
-            <Col n="12 md-6">
-              <WeblinkCard
-                title={(
-                  <>
-                    <Icon className="ri-table-line" />
-                    Tableau de bord financier
-                  </>
-                )}
-                downloadUrl="https://dataesr.fr/FR/T445/P844/tableau_de_bord_financier_-_finance"
-                canEdit={false}
-              />
-            </Col>
-            <Col n="12 md-6">
-              <WeblinkCard
-                title={(
-                  <>
-                    <Icon className="ri-table-line" />
-                    Données en open data
-                  </>
-                )}
-                downloadUrl={`https://data.enseignementsup-recherche.gouv.fr/explore/dataset/fr-esr-operateurs-indicateurs-financiers/table/?sort=exercice&refine.etablissement_id_paysage=${id}`}
-                canEdit={false}
-              />
-            </Col>
-          </Row>
-        </BlocContent>
-      </Bloc>
+      {!data?.data?.length && (
+        <Title as="h3">
+          Pas de données financières pour cette structure
+        </Title>
+      )}
+      {!!data?.data?.length && (
+        <>
+          <Title as="h3">
+            <Icon name="ri-scales-3-fill" className="fr-pl-1w" />
+            {`Données financières - Situation en ${beforeLastYear}${beforeLastData?.source === 'Budget' ? ' (Budget)' : ''}`}
+          </Title>
+          <Bloc isLoading={isLoading} error={error} data={data} noBadge>
+            <BlocTitle as="h4">
+              Equilibre financier
+            </BlocTitle>
+            <BlocContent>
+              {renderCards(financialBalance)}
+            </BlocContent>
+          </Bloc>
+          <Bloc isLoading={isLoading} error={error} data={data} noBadge>
+            <BlocTitle as="h4">
+              Cycle d'exploitation
+            </BlocTitle>
+            <BlocContent>
+              {renderCards(operatingCycle)}
+            </BlocContent>
+          </Bloc>
+          <Bloc isLoading={isLoading} error={error} data={data} noBadge>
+            <BlocTitle as="h4">
+              Financement de l'activité
+            </BlocTitle>
+            <BlocContent>
+              {renderCards(activityFinancing)}
+            </BlocContent>
+          </Bloc>
+          <Bloc isLoading={isLoading} error={error} data={data} noBadge>
+            <BlocTitle as="h4">
+              Autofinancement des investissements
+            </BlocTitle>
+            <BlocContent>
+              {renderCards(investmentsSelfFinancing)}
+            </BlocContent>
+          </Bloc>
+          <Bloc isLoading={isLoading} error={error} data={data} noBadge>
+            <BlocTitle as="h4">
+              Indicateurs GBCP
+            </BlocTitle>
+            <BlocContent>
+              {renderCards(gbcpIndicators)}
+            </BlocContent>
+          </Bloc>
+          <Bloc isLoading={isLoading} error={error} data={data} noBadge>
+            <BlocTitle as="h4">
+              Recettes formation
+            </BlocTitle>
+            <BlocContent>
+              {renderCards(trainingRevenues)}
+            </BlocContent>
+          </Bloc>
+          <Bloc isLoading={isLoading} error={error} data={data} noBadge>
+            <BlocTitle as="h4">
+              Recettes recherche
+            </BlocTitle>
+            <BlocContent>
+              {renderCards(researchRevenues)}
+            </BlocContent>
+          </Bloc>
+          <Bloc isLoading={isLoading} error={error} data={data} noBadge>
+            <BlocTitle as="h4">
+              Autres recettes
+            </BlocTitle>
+            <BlocContent>
+              {renderCards(otherRevenues)}
+            </BlocContent>
+          </Bloc>
+          <Bloc isLoading={isLoading} error={error} data={data} noBadge>
+            <BlocTitle as="h4">
+              Ressources en ligne : #dataESR
+            </BlocTitle>
+            <BlocContent>
+              <Row gutters>
+                <Col n="12 md-6">
+                  <WeblinkCard
+                    title={(
+                      <>
+                        <Icon className="ri-table-line" />
+                        Tableau de bord financier
+                      </>
+                    )}
+                    downloadUrl="https://dataesr.fr/FR/T445/P844/tableau_de_bord_financier_-_finance"
+                    canEdit={false}
+                  />
+                </Col>
+                <Col n="12 md-6">
+                  <WeblinkCard
+                    title={(
+                      <>
+                        <Icon className="ri-table-line" />
+                        Données en open data
+                      </>
+                    )}
+                    downloadUrl={`https://data.enseignementsup-recherche.gouv.fr/explore/dataset/fr-esr-operateurs-indicateurs-financiers/table/?sort=exercice&refine.etablissement_id_paysage=${id}`}
+                    canEdit={false}
+                  />
+                </Col>
+              </Row>
+            </BlocContent>
+          </Bloc>
+        </>
+      )}
     </>
   );
 }
