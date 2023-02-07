@@ -186,50 +186,49 @@ export default function LocalisationForm({ id, data, onDelete, onSave }) {
             />
           </Col>
           <Col n="12"><Title as="h2" look="h3" spacing="mb-0">Coordonnées</Title></Col>
-          <Col n="12 md-8">
-            <TextInput
-              label="Adresse"
-              value={form.address}
-              onChange={(e) => updateForm({ address: e.target.value })}
-
-            />
-          </Col>
-          <Col n="12 md-4">
-            <TextInput
-              label="Lieu dit"
-              value={form.place}
-              onChange={(e) => updateForm({ place: e.target.value })}
-            />
-          </Col>
-          <Col n="12 md-6">
+          <Col n="12 md-12">
             <TextInput
               label="Mention de distribution"
               value={form.distributionStatement}
               onChange={(e) => updateForm({ distributionStatement: e.target.value })}
             />
           </Col>
-          <Col n="12 md-6">
+          <Col n="12 md-12">
             <TextInput
-              label="Numéro de boite postale"
+              label="Adresse"
+              value={form.address}
+              onChange={(e) => updateForm({ address: e.target.value })}
+            />
+          </Col>
+          <Col n="8 md-8">
+            <TextInput
+              label="Lieu dit"
+              value={form.place}
+              onChange={(e) => updateForm({ place: e.target.value })}
+            />
+          </Col>
+          <Col n="4 md-4">
+            <TextInput
+              label="BP"
               value={form.postOfficeBoxNumber}
               onChange={(e) => updateForm({ postOfficeBoxNumber: e.target.value })}
             />
           </Col>
-          <Col n="12 md-6">
-            <TextInput
-              label="Localité"
-              value={form.locality}
-              onChange={(e) => updateForm({ locality: e.target.value })}
-            />
-          </Col>
-          <Col n="12 md-6">
+          <Col n="4 md-4">
             <TextInput
               label="Code postal"
               value={form.postalCode}
               onChange={(e) => updateForm({ postalCode: e.target.value })}
             />
           </Col>
-          <Col n="12 md-6">
+          <Col n="8 md-8">
+            <TextInput
+              label="Localité"
+              value={form.locality}
+              onChange={(e) => updateForm({ locality: e.target.value })}
+            />
+          </Col>
+          <Col n="4 md-4">
             <TextInput
               disabled={viewer.role !== 'admin'}
               label="Code ville"
@@ -237,14 +236,14 @@ export default function LocalisationForm({ id, data, onDelete, onSave }) {
               onChange={(e) => updateForm({ cityId: e.target.value })}
             />
           </Col>
-          <Col n="12 md-6">
+          <Col n="8 md-8">
             <TextInput
               label="Commune"
               value={form.city}
               onChange={(e) => updateForm({ city: e.target.value })}
             />
           </Col>
-          <Col n="md-6">
+          <Col n="12 md-6">
             <TextInput
               label="Pays"
               value={form.country}
@@ -254,7 +253,7 @@ export default function LocalisationForm({ id, data, onDelete, onSave }) {
               messageType={(showErrors && errors.country) ? 'error' : ''}
             />
           </Col>
-          <Col n="md-6" className="fr-pr-1w">
+          <Col n="12 md-6" className="fr-pr-1w">
             <TextInput
               label="Téléphone"
               value={form.phonenumber}

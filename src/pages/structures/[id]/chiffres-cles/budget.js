@@ -14,16 +14,14 @@ import useUrl from '../../../../hooks/useUrl';
 import cleanNumber from '../../../../utils/clean-numbers';
 
 export default function StructureBudgetPage() {
-  const { url: urlStructure } = useUrl();
-  const { data: dataStructure } = useFetch(urlStructure);
   const { id, url } = useUrl('keynumbers');
   const { data, error, isLoading } = useFetch(`${url}/finance?sort=-exercice&limit=2`);
 
-  const hasBudget = dataStructure?.structureStatus === 'active';
-
-  const lastData = data?.data?.[hasBudget ? 1 : 0] || {};
-  const currentData = data?.data?.[0] || {};
-  const year = lastData?.exercice;
+  const lastIndex = Math.max((data?.data?.length || 0) - 1, 0);
+  const beforeLastData = data?.data?.[lastIndex] || {};
+  const beforeLastYear = beforeLastData?.exercice;
+  const lastData = data?.data?.[lastIndex - 1] || {};
+  const lastYear = lastData?.exercice;
 
   const financialBalance = [{
     field: 'resultat_net_comptable',
@@ -236,7 +234,7 @@ Il constitue une marge de sécurité financière destinée à financer une parti
   }];
 
   const getIconColorAndTooltip = (item) => {
-    const difference = currentData?.[item?.field];
+    const difference = lastData?.[item?.field];
     let color;
     let tooltip = '';
     if (difference) {
@@ -266,22 +264,26 @@ Il constitue une marge de sécurité financière destinée à financer une parti
 
   const renderCards = (all) => {
     const list = all
-      .filter((item) => lastData?.[item?.field])
+      .filter((item) => beforeLastData?.[item?.field])
       .map((item) => {
-        let difference = currentData?.[item?.field];
+        let difference = lastData?.[item?.field];
         if (difference) {
           difference = cleanNumber(difference);
           difference = item?.suffix ? `${difference}${item.suffix}` : difference;
         }
-        let value = lastData?.[item?.field];
+        let value = beforeLastData?.[item?.field];
         value = cleanNumber(value);
         value = item?.suffix ? `${value}${item.suffix}` : value;
         const { color, tooltip } = getIconColorAndTooltip(item);
         return (
           <Card
-            subtitle={hasBudget && difference && (
-              <div title="Budget 2022">
-                (Budget 2022 :&ensp;
+            subtitle={difference && (
+              <div title={`Budget ${lastYear}`}>
+                (Budget
+                {' '}
+                {lastYear}
+                {' '}
+                :&ensp;
                 {difference}
                 {color && (<Icon name={`ri-stop-fill fr-badge--${color}`} className="fr-ml-1w fr-mr-0 fr-icon--sm" title={tooltip} />)}
                 )
@@ -310,7 +312,7 @@ Il constitue une marge de sécurité financière destinée à financer une parti
     <>
       <Title as="h3">
         <Icon name="ri-scales-3-fill" className="fr-pl-1w" />
-        {`Données financières - Situation en ${year}`}
+        {`Données financières - Situation en ${beforeLastYear}${beforeLastData?.source === 'Budget' ? ' (Budget)' : ''}`}
       </Title>
       <Bloc isLoading={isLoading} error={error} data={data} noBadge>
         <BlocTitle as="h4">
