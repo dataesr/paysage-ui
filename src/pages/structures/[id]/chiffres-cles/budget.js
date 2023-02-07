@@ -312,7 +312,7 @@ Il constitue une marge de sécurité financière destinée à financer une parti
     <>
       {!data?.data?.length && (
         <Title as="h3">
-          Pas de données financières pour cette structure
+          Pas de données financières connues pour cette structure
         </Title>
       )}
       {!!data?.data?.length && (
