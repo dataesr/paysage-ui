@@ -75,7 +75,7 @@ export default function DocumentsOutlet() {
       <Row gutters>
         {data.data.map((document) => (
           <Col n="12 md-6" key={document.id}>
-            <div className="fr-card fr-card--xs fr-card--shadow">
+            <div className="fr-card fr-card--xs fr-card--shadow" style={{ zIndex: 'calc(var(--ground) + 499 !important' }}>
               <div className="fr-card__body">
                 <div className="fr-card__content">
                   <div className="fr-card__start">
