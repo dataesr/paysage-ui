@@ -50,6 +50,9 @@ export default function RelationForm({
     if (!body?.resourceId && inverse) {
       errors.relatedObjectId = 'Vous devez sélectionner un objet à lier';
     }
+    if (body.endDate && (new Date(body.startDate) > new Date(body.endDate))) {
+      errors.endDate = 'La date de fin ne peux pas être avant la date de début';
+    }
     return errors;
   };
   const relationTypeUrl = relatedObjectTypes.length > 1
@@ -243,6 +246,12 @@ export default function RelationForm({
                 onSelect={handleResourceSelect}
                 onDeleteScope={handleResourceUnselect}
                 isSearching={isSearchingResource}
+                message={
+                  showErrors && errors.resourceId
+                    ? errors.resourceId
+                    : null
+                }
+                messageType={showErrors && errors.resourceId ? 'error' : ''}
               />
             </Col>
           ) : (
@@ -263,6 +272,12 @@ export default function RelationForm({
                 onSelect={handleRelatedObjectSelect}
                 onDeleteScope={handleRelatedObjectUnselect}
                 isSearching={isSearchingRelatedObject}
+                message={
+                  showErrors && errors.relatedObjectId
+                    ? errors.relatedObjectId
+                    : null
+                }
+                messageType={showErrors && errors.relatedObjectId ? 'error' : ''}
               />
             </Col>
           )}
@@ -314,6 +329,12 @@ export default function RelationForm({
               label="Date de fin"
               onDateChange={(v) => updateForm({ endDate: v })}
               checked={form.active === false}
+              message={
+                showErrors && errors.endDate
+                  ? errors.endDate
+                  : null
+              }
+              messageType={showErrors && errors.endDate ? 'error' : ''}
             />
             <Checkbox
               label="Date de fin inconnue mais passée"

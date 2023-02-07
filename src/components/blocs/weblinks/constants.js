@@ -27,6 +27,7 @@ export const WEBLINKS_TYPES = [
   'mooc',
   'CanalU',
   'ServicePublic',
+  'PiaWEB',
   // 'Sujet d\'actualités sue le site web du journal Le Monde'
   'EdCF',
   'OE1',
