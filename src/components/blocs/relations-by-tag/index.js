@@ -97,9 +97,10 @@ export default function RelationsByTag({ blocName, tag, resourceType, relatedObj
       || (element.startDate < getComparableNow() && element.endDate > getComparableNow())
       || (element.startDate < getComparableNow() && !element.endDate && element.active !== false)
       || (element.startDate === null && element.endDate === null && element.active !== false)
-      ));
+      )).sort((a, b) => new Date(b.startDate) - new Date(a.startDate));
 
-    const activesIds = currentRelations.map((element) => element.id);
+    const activesIds = currentRelations
+      .map((element) => element.id);
 
     const inactives = data.data.filter((element) => (!activesIds.includes(element.id)));
 
