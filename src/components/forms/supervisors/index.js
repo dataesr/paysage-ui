@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import {
   Container,
   Col,
+  Checkbox,
   Row,
   Select,
 } from '@dataesr/react-dsfr';
@@ -15,12 +16,14 @@ import { parseRelatedElement } from '../../../utils/parse-related-element';
 import PaysageBlame from '../../paysage-blame';
 import useFetch from '../../../hooks/useFetch';
 import { capitalize } from '../../../utils/strings';
+import { getComparableNow } from '../../../utils/dates';
 
 function sanitize(form) {
-  const fields = ['resourceId', 'relatedObjectId', 'relationTag',
+  const fields = ['active', 'resourceId', 'relatedObjectId', 'relationTag',
     'startDateOfficialTextId', 'endDateOfficialTextId', 'startDate', 'endDate'];
   const body = {};
   Object.keys(form).forEach((key) => { if (fields.includes(key)) { body[key] = form[key]; } });
+  if (body.endDate < getComparableNow()) { body.active = false; }
   return body;
 }
 export default function SupervisorsForm({ id, data, onDelete, onSave }) {
@@ -150,6 +153,11 @@ export default function SupervisorsForm({ id, data, onDelete, onSave }) {
               value={form.endDate || ''}
               label="Date de fin"
               onDateChange={((v) => updateForm({ endDate: v }))}
+            />
+            <Checkbox
+              label="Date de fin inconnue mais passée"
+              onChange={(e) => updateForm({ active: !e.target.checked })}
+              checked={form.active === false}
             />
           </Col>
           <Col n="12">
