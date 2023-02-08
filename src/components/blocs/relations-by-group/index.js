@@ -19,7 +19,7 @@ export default function RelationsByGroup({ group, reloader }) {
   const { id: groupId, name: groupName, accepts: groupAccepts } = group;
   const { notice } = useNotice();
   const { id: resourceId, apiObject } = useUrl('relations-groups');
-  const url = `/relations?filters[relationsGroupId]=${groupId}&sort=relatedObject.collection&limit=100`;
+  const url = `/relations?filters[relationsGroupId]=${groupId}&sort=relatedObject.collection&limit=10000`;
   const { data, isLoading, error, reload } = useFetch(url);
   const [showModal, setShowModal] = useState(false);
   const [showListModal, setShowListModal] = useState(false);
@@ -110,7 +110,7 @@ export default function RelationsByGroup({ group, reloader }) {
         onEdit={() => onOpenModalHandler(element)}
       />
     ));
-    if (orderedList.length) {
+    if (markers.length) {
       return (
         <Row gutters>
           <Col n="12">
@@ -136,7 +136,7 @@ export default function RelationsByGroup({ group, reloader }) {
         <BlocActionButton
           icon="ri-download-line"
           edit={false}
-          onClick={() => exportToCsv(data?.data, `${resourceId}-${groupName}`, groupName, groupAccepts[0])}
+          onClick={() => exportToCsv({ data: data?.data, fileName: `${resourceId}-${groupName}`, listName: groupName, tag: groupAccepts[0] })}
         >
           Télécharger la liste
         </BlocActionButton>

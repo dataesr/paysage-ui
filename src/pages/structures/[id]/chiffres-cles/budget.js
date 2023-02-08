@@ -14,16 +14,14 @@ import useUrl from '../../../../hooks/useUrl';
 import cleanNumber from '../../../../utils/clean-numbers';
 
 export default function StructureBudgetPage() {
-  const { url: urlStructure } = useUrl();
-  const { data: dataStructure } = useFetch(urlStructure);
   const { id, url } = useUrl('keynumbers');
   const { data, error, isLoading } = useFetch(`${url}/finance?sort=-exercice&limit=2`);
 
-  const hasBudget = dataStructure?.structureStatus === 'active';
-
-  const lastData = data?.data?.[hasBudget ? 1 : 0] || {};
-  const currentData = data?.data?.[0] || {};
-  const year = lastData?.exercice;
+  const lastIndex = Math.max((data?.data?.length || 0) - 1, 0);
+  const beforeLastData = data?.data?.[lastIndex] || {};
+  const beforeLastYear = beforeLastData?.exercice;
+  const lastData = data?.data?.[lastIndex - 1] || {};
+  const lastYear = lastData?.exercice;
 
   const financialBalance = [{
     field: 'resultat_net_comptable',
@@ -236,7 +234,7 @@ Il constitue une marge de sécurité financière destinée à financer une parti
   }];
 
   const getIconColorAndTooltip = (item) => {
-    const difference = currentData?.[item?.field];
+    const difference = lastData?.[item?.field];
     let color;
     let tooltip = '';
     if (difference) {
@@ -266,22 +264,26 @@ Il constitue une marge de sécurité financière destinée à financer une parti
 
   const renderCards = (all) => {
     const list = all
-      .filter((item) => lastData?.[item?.field])
+      .filter((item) => beforeLastData?.[item?.field])
       .map((item) => {
-        let difference = currentData?.[item?.field];
+        let difference = lastData?.[item?.field];
         if (difference) {
           difference = cleanNumber(difference);
           difference = item?.suffix ? `${difference}${item.suffix}` : difference;
         }
-        let value = lastData?.[item?.field];
+        let value = beforeLastData?.[item?.field];
         value = cleanNumber(value);
         value = item?.suffix ? `${value}${item.suffix}` : value;
         const { color, tooltip } = getIconColorAndTooltip(item);
         return (
           <Card
-            subtitle={hasBudget && difference && (
-              <div title="Budget 2022">
-                (Budget 2022 :&ensp;
+            subtitle={difference && (
+              <div title={`Budget ${lastYear}`}>
+                (Budget
+                {' '}
+                {lastYear}
+                {' '}
+                :&ensp;
                 {difference}
                 {color && (<Icon name={`ri-stop-fill fr-badge--${color}`} className="fr-ml-1w fr-mr-0 fr-icon--sm" title={tooltip} />)}
                 )
@@ -308,107 +310,116 @@ Il constitue une marge de sécurité financière destinée à financer une parti
   if (error) return <>Erreur...</>;
   return (
     <>
-      <Title as="h3">
-        <Icon name="ri-scales-3-fill" className="fr-pl-1w" />
-        {`Données financières - Situation en ${year}`}
-      </Title>
-      <Bloc isLoading={isLoading} error={error} data={data} noBadge>
-        <BlocTitle as="h4">
-          Equilibre financier
-        </BlocTitle>
-        <BlocContent>
-          {renderCards(financialBalance)}
-        </BlocContent>
-      </Bloc>
-      <Bloc isLoading={isLoading} error={error} data={data} noBadge>
-        <BlocTitle as="h4">
-          Cycle d'exploitation
-        </BlocTitle>
-        <BlocContent>
-          {renderCards(operatingCycle)}
-        </BlocContent>
-      </Bloc>
-      <Bloc isLoading={isLoading} error={error} data={data} noBadge>
-        <BlocTitle as="h4">
-          Financement de l'activité
-        </BlocTitle>
-        <BlocContent>
-          {renderCards(activityFinancing)}
-        </BlocContent>
-      </Bloc>
-      <Bloc isLoading={isLoading} error={error} data={data} noBadge>
-        <BlocTitle as="h4">
-          Autofinancement des investissements
-        </BlocTitle>
-        <BlocContent>
-          {renderCards(investmentsSelfFinancing)}
-        </BlocContent>
-      </Bloc>
-      <Bloc isLoading={isLoading} error={error} data={data} noBadge>
-        <BlocTitle as="h4">
-          Indicateurs GBCP
-        </BlocTitle>
-        <BlocContent>
-          {renderCards(gbcpIndicators)}
-        </BlocContent>
-      </Bloc>
-      <Bloc isLoading={isLoading} error={error} data={data} noBadge>
-        <BlocTitle as="h4">
-          Recettes formation
-        </BlocTitle>
-        <BlocContent>
-          {renderCards(trainingRevenues)}
-        </BlocContent>
-      </Bloc>
-      <Bloc isLoading={isLoading} error={error} data={data} noBadge>
-        <BlocTitle as="h4">
-          Recettes recherche
-        </BlocTitle>
-        <BlocContent>
-          {renderCards(researchRevenues)}
-        </BlocContent>
-      </Bloc>
-      <Bloc isLoading={isLoading} error={error} data={data} noBadge>
-        <BlocTitle as="h4">
-          Autres recettes
-        </BlocTitle>
-        <BlocContent>
-          {renderCards(otherRevenues)}
-        </BlocContent>
-      </Bloc>
-      <Bloc isLoading={isLoading} error={error} data={data} noBadge>
-        <BlocTitle as="h4">
-          Ressources en ligne : #dataESR
-        </BlocTitle>
-        <BlocContent>
-          <Row gutters>
-            <Col n="12 md-6">
-              <WeblinkCard
-                title={(
-                  <>
-                    <Icon className="ri-table-line" />
-                    Tableau de bord financier
-                  </>
-                )}
-                downloadUrl="https://dataesr.fr/FR/T445/P844/tableau_de_bord_financier_-_finance"
-                canEdit={false}
-              />
-            </Col>
-            <Col n="12 md-6">
-              <WeblinkCard
-                title={(
-                  <>
-                    <Icon className="ri-table-line" />
-                    Données en open data
-                  </>
-                )}
-                downloadUrl={`https://data.enseignementsup-recherche.gouv.fr/explore/dataset/fr-esr-operateurs-indicateurs-financiers/table/?sort=exercice&refine.etablissement_id_paysage=${id}`}
-                canEdit={false}
-              />
-            </Col>
-          </Row>
-        </BlocContent>
-      </Bloc>
+      {!data?.data?.length && (
+        <Title as="h3">
+          Pas de données financières connues pour cette structure
+        </Title>
+      )}
+      {!!data?.data?.length && (
+        <>
+          <Title as="h3">
+            <Icon name="ri-scales-3-fill" className="fr-pl-1w" />
+            {`Données financières - Situation en ${beforeLastYear}${beforeLastData?.source === 'Budget' ? ' (Budget)' : ''}`}
+          </Title>
+          <Bloc isLoading={isLoading} error={error} data={data} noBadge>
+            <BlocTitle as="h4">
+              Equilibre financier
+            </BlocTitle>
+            <BlocContent>
+              {renderCards(financialBalance)}
+            </BlocContent>
+          </Bloc>
+          <Bloc isLoading={isLoading} error={error} data={data} noBadge>
+            <BlocTitle as="h4">
+              Cycle d'exploitation
+            </BlocTitle>
+            <BlocContent>
+              {renderCards(operatingCycle)}
+            </BlocContent>
+          </Bloc>
+          <Bloc isLoading={isLoading} error={error} data={data} noBadge>
+            <BlocTitle as="h4">
+              Financement de l'activité
+            </BlocTitle>
+            <BlocContent>
+              {renderCards(activityFinancing)}
+            </BlocContent>
+          </Bloc>
+          <Bloc isLoading={isLoading} error={error} data={data} noBadge>
+            <BlocTitle as="h4">
+              Autofinancement des investissements
+            </BlocTitle>
+            <BlocContent>
+              {renderCards(investmentsSelfFinancing)}
+            </BlocContent>
+          </Bloc>
+          <Bloc isLoading={isLoading} error={error} data={data} noBadge>
+            <BlocTitle as="h4">
+              Indicateurs GBCP
+            </BlocTitle>
+            <BlocContent>
+              {renderCards(gbcpIndicators)}
+            </BlocContent>
+          </Bloc>
+          <Bloc isLoading={isLoading} error={error} data={data} noBadge>
+            <BlocTitle as="h4">
+              Recettes formation
+            </BlocTitle>
+            <BlocContent>
+              {renderCards(trainingRevenues)}
+            </BlocContent>
+          </Bloc>
+          <Bloc isLoading={isLoading} error={error} data={data} noBadge>
+            <BlocTitle as="h4">
+              Recettes recherche
+            </BlocTitle>
+            <BlocContent>
+              {renderCards(researchRevenues)}
+            </BlocContent>
+          </Bloc>
+          <Bloc isLoading={isLoading} error={error} data={data} noBadge>
+            <BlocTitle as="h4">
+              Autres recettes
+            </BlocTitle>
+            <BlocContent>
+              {renderCards(otherRevenues)}
+            </BlocContent>
+          </Bloc>
+          <Bloc isLoading={isLoading} error={error} data={data} noBadge>
+            <BlocTitle as="h4">
+              Ressources en ligne : #dataESR
+            </BlocTitle>
+            <BlocContent>
+              <Row gutters>
+                <Col n="12 md-6">
+                  <WeblinkCard
+                    title={(
+                      <>
+                        <Icon className="ri-table-line" />
+                        Tableau de bord financier
+                      </>
+                    )}
+                    downloadUrl="https://dataesr.fr/FR/T445/P844/tableau_de_bord_financier_-_finance"
+                    canEdit={false}
+                  />
+                </Col>
+                <Col n="12 md-6">
+                  <WeblinkCard
+                    title={(
+                      <>
+                        <Icon className="ri-table-line" />
+                        Données en open data
+                      </>
+                    )}
+                    downloadUrl={`https://data.enseignementsup-recherche.gouv.fr/explore/dataset/fr-esr-operateurs-indicateurs-financiers/table/?sort=exercice&refine.etablissement_id_paysage=${id}`}
+                    canEdit={false}
+                  />
+                </Col>
+              </Row>
+            </BlocContent>
+          </Bloc>
+        </>
+      )}
     </>
   );
 }

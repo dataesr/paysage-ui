@@ -22,18 +22,19 @@ HCExporting(Highcharts);
 HCExportingData(Highcharts);
 
 export default function StructureImmobilierPage() {
-  const year = new Date().getFullYear();
   const { url: urlLocalisations } = useUrl('localisations');
   const { data: dataLocalisations } = useFetch(urlLocalisations);
   const currentLocalisation = dataLocalisations?.data?.[0];
   const { url } = useUrl('keynumbers');
-  const { data, error, isLoading } = useFetch(`${url}/real-estate?filters[annee]=${year}&limit=9999`);
+  const { data, error, isLoading } = useFetch(`${url}/real-estate?sort=-annee&limit=999`);
+  const lastYear = data?.data?.[0]?.annee;
+  const allData = data?.data?.filter((item) => item?.annee === lastYear) || [];
 
   const markers = [];
   if (currentLocalisation?.coordinates?.lat && currentLocalisation?.coordinates?.lng) {
     markers.push({
       address: `${currentLocalisation?.address} ${currentLocalisation?.postalCode} ${currentLocalisation?.locality}`,
-      label: data?.data?.[0]?.etablissement,
+      label: allData?.[0]?.etablissement,
       latLng: [
         currentLocalisation?.coordinates?.lat,
         currentLocalisation?.coordinates?.lng,
@@ -42,7 +43,7 @@ export default function StructureImmobilierPage() {
       zIndexOffset: 99,
     });
   }
-  data?.data?.filter((item) => item?.latlong)?.forEach((item) => {
+  allData?.filter((item) => item?.latlong)?.forEach((item) => {
     markers.push({
       address: `${item?.adresse} ${item?.cp} ${item?.com_nom}`,
       label: item?.libelle_bat_ter,
@@ -72,7 +73,7 @@ export default function StructureImmobilierPage() {
     G: '> 450',
   };
 
-  const renderBuildings = () => data?.data.map((item) => (
+  const renderBuildings = () => allData.map((item) => (
     <Bloc isLoading={isLoading} error={error} data={data} noBadge>
       <BlocTitle as="h4">
         {item?.libelle_bat_ter || 'Nom non renseigné'}
@@ -224,89 +225,98 @@ export default function StructureImmobilierPage() {
   if (error) return <>Erreur...</>;
   return (
     <>
-      <Title as="h3">
-        <Icon name="ri-community-fill" className="fr-pl-1w" />
-        {`Immobilier en ${year}`}
-      </Title>
-      <Bloc isLoading={isLoading} error={error} data={data} noBadge>
-        <BlocTitle as="h4">
-          Sobriété
-        </BlocTitle>
-        <BlocContent>
-          <Row gutters>
-            <Col className="print-12" n="12 md-6">
-              <HighchartsReact
-                highcharts={Highcharts}
-                options={getOptionsFromFacet({
-                  colors: energyColors,
-                  data: data?.data || [],
-                  facet: 'energie_class',
-                  serieName: 'Nombre de bâtiments',
-                  title: 'Répartition des classes d\'énergie des bâtiments',
-                })}
+      {!allData?.length && (
+        <Title as="h3">
+          Pas de données immobilières connues pour cette structure
+        </Title>
+      )}
+      {!!allData?.length && (
+        <>
+          <Title as="h3">
+            <Icon name="ri-community-fill" className="fr-pl-1w" />
+            {`Immobilier en ${lastYear}`}
+          </Title>
+          <Bloc isLoading={isLoading} error={error} data={data} noBadge>
+            <BlocTitle as="h4">
+              Sobriété
+            </BlocTitle>
+            <BlocContent>
+              <Row gutters>
+                <Col className="print-12" n="12 md-6">
+                  <HighchartsReact
+                    highcharts={Highcharts}
+                    options={getOptionsFromFacet({
+                      colors: energyColors,
+                      data: allData,
+                      facet: 'energie_class',
+                      serieName: 'Nombre de bâtiments',
+                      title: 'Répartition des classes d\'énergie des bâtiments',
+                    })}
+                  />
+                </Col>
+                <Col className="print-12" n="12 md-6">
+                  <HighchartsReact
+                    highcharts={Highcharts}
+                    options={getOptionsFromFacet({
+                      colors: energyColors,
+                      data: allData,
+                      facet: 'ges',
+                      serieName: 'Nombre de bâtiments',
+                      title: 'Répartition des gaz à effet de serre des bâtiments',
+                    })}
+                  />
+                </Col>
+                <Col className="print-12" n="12 md-6">
+                  <HighchartsReact
+                    highcharts={Highcharts}
+                    options={getOptionsFromFacet({
+                      data: allData,
+                      facet: 'categorie_erp',
+                      serieName: 'Nombre de bâtiments',
+                      title: 'Répartition des catégories d\'établissement recevant du public',
+                    })}
+                  />
+                </Col>
+                <Col className="print-12" n="12 md-6">
+                  <HighchartsReact
+                    highcharts={Highcharts}
+                    options={getOptionsFromFacet({
+                      data: allData,
+                      facet: 'type_erp',
+                      serieName: 'Nombre de bâtiments',
+                      title: 'Répartition des types d\'établissement recevant du public',
+                    })}
+                  />
+                </Col>
+                <Col className="print-12" n="12 md-6">
+                  <HighchartsReact
+                    highcharts={Highcharts}
+                    options={getOptionsFromFacet({
+                      data: allData,
+                      facet: 'bilan_carbone',
+                      serieName: 'Nombre de bâtiments',
+                      title: 'Existence d\'un bilan carbone des bâtiments',
+                    })}
+                  />
+                </Col>
+              </Row>
+            </BlocContent>
+          </Bloc>
+          <Bloc isLoading={isLoading} error={error} data={data} noBadge>
+            <BlocTitle as="h4">
+              Géographie
+            </BlocTitle>
+            <BlocContent>
+              <Map
+                lat={currentLocalisation?.coordinates?.lat}
+                lng={currentLocalisation?.coordinates?.lng}
+                markers={markers}
               />
-            </Col>
-            <Col className="print-12" n="12 md-6">
-              <HighchartsReact
-                highcharts={Highcharts}
-                options={getOptionsFromFacet({
-                  colors: energyColors,
-                  data: data?.data || [],
-                  facet: 'ges',
-                  serieName: 'Nombre de bâtiments',
-                  title: 'Répartition des gaz à effet de serre des bâtiments',
-                })}
-              />
-            </Col>
-            <Col className="print-12" n="12 md-6">
-              <HighchartsReact
-                highcharts={Highcharts}
-                options={getOptionsFromFacet({
-                  data: data?.data || [],
-                  facet: 'categorie_erp',
-                  serieName: 'Nombre de bâtiments',
-                  title: 'Répartition des catégories d\'établissement recevant du public',
-                })}
-              />
-            </Col>
-            <Col className="print-12" n="12 md-6">
-              <HighchartsReact
-                highcharts={Highcharts}
-                options={getOptionsFromFacet({
-                  data: data?.data || [],
-                  facet: 'type_erp',
-                  serieName: 'Nombre de bâtiments',
-                  title: 'Répartition des types d\'établissement recevant du public',
-                })}
-              />
-            </Col>
-            <Col className="print-12" n="12 md-6">
-              <HighchartsReact
-                highcharts={Highcharts}
-                options={getOptionsFromFacet({
-                  data: data?.data || [],
-                  facet: 'bilan_carbone',
-                  serieName: 'Nombre de bâtiments',
-                  title: 'Existence d\'un bilan carbone des bâtiments',
-                })}
-              />
-            </Col>
-          </Row>
-        </BlocContent>
-      </Bloc>
-      <Bloc isLoading={isLoading} error={error} data={data} noBadge>
-        <BlocTitle as="h4">
-          Géographie
-        </BlocTitle>
-        <BlocContent>
-          <Map
-            lat={currentLocalisation?.coordinates?.lat}
-            lng={currentLocalisation?.coordinates?.lng}
-            markers={markers}
-          />
-        </BlocContent>
-      </Bloc>
-      {renderBuildings()}
+            </BlocContent>
+          </Bloc>
+          {renderBuildings()}
+        </>
+      )}
     </>
   );
 }

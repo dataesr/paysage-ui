@@ -16,6 +16,7 @@ export const ENUMS_LABELS_MAPPER = {
   websiteHistory: 'Page histoire',
   websitePhotoLibrary: 'Photothèque',
   websiteNewsCast: 'websiteNewsCast',
+  PiaWEB: 'Données PiaWEB',
   Hal: 'Portail HAL',
   Onisep: 'Page Onisep.fr',
   POpenData: 'Plateforme Opendata',
