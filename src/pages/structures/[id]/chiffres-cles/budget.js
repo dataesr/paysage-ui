@@ -17,11 +17,14 @@ export default function StructureBudgetPage() {
   const { id, url } = useUrl('keynumbers');
   const { data, error, isLoading } = useFetch(`${url}/finance?sort=-exercice&limit=2`);
 
-  const lastIndex = Math.max((data?.data?.length || 0) - 1, 0);
-  const beforeLastData = data?.data?.[lastIndex] || {};
-  const beforeLastYear = beforeLastData?.exercice;
-  const lastData = data?.data?.[lastIndex - 1] || {};
-  const lastYear = lastData?.exercice;
+  let budget = data?.data?.[0]?.source === 'Budget' ? data?.data?.[0] : undefined;
+  let financialAccount = data?.data?.[budget ? 1 : 0];
+  if (!financialAccount && budget) {
+    financialAccount = budget;
+    budget = undefined;
+  }
+  const budgetYear = budget?.exercice;
+  const financialAccountYear = financialAccount?.exercice;
 
   const financialBalance = [{
     field: 'resultat_net_comptable',
@@ -234,26 +237,26 @@ Il constitue une marge de sécurité financière destinée à financer une parti
   }];
 
   const getIconColorAndTooltip = (item) => {
-    const difference = lastData?.[item?.field];
+    const budgetValue = budget?.[item?.field];
     let color;
     let tooltip = '';
-    if (difference) {
+    if (budgetValue) {
       if (item.thresholdSort === 'asc') {
-        if (difference < item.thresholdRed) {
+        if (budgetValue < item.thresholdRed) {
           color = 'pink-tuile';
           tooltip += `Seuil d'alerte : Valeur < ${item.thresholdRed}`;
         }
-        if (item.thresholdRed <= difference && difference <= item.thresholdGreen) {
+        if (item.thresholdRed <= budgetValue && budgetValue <= item.thresholdGreen) {
           color = 'yellow-tournesol';
           tooltip += `Seuil de vigilance : ${item.thresholdRed} ≤ Valeur ≤ ${item.thresholdGreen}`;
         }
       }
       if (item.thresholdSort === 'desc') {
-        if (difference > item.thresholdRed) {
+        if (budgetValue > item.thresholdRed) {
           color = 'pink-tuile';
           tooltip += `Seuil d'alerte : Valeur > ${item.thresholdRed}`;
         }
-        if (item.thresholdGreen <= difference && difference <= item.thresholdRed) {
+        if (item.thresholdGreen <= budgetValue && budgetValue <= item.thresholdRed) {
           color = 'yellow-tournesol';
           tooltip += `Seuil de vigilance : ${item.thresholdGreen} ≤ Valeur ≤ ${item.thresholdRed}`;
         }
@@ -264,32 +267,32 @@ Il constitue une marge de sécurité financière destinée à financer une parti
 
   const renderCards = (all) => {
     const list = all
-      .filter((item) => beforeLastData?.[item?.field])
+      .filter((item) => financialAccount?.[item?.field])
       .map((item) => {
-        let difference = lastData?.[item?.field];
-        if (difference) {
-          difference = cleanNumber(difference);
-          difference = item?.suffix ? `${difference}${item.suffix}` : difference;
+        let budgetValue = budget?.[item?.field];
+        if (budgetValue) {
+          budgetValue = cleanNumber(budgetValue);
+          budgetValue = item?.suffix ? `${budgetValue}${item.suffix}` : budgetValue;
         }
-        let value = beforeLastData?.[item?.field];
-        value = cleanNumber(value);
-        value = item?.suffix ? `${value}${item.suffix}` : value;
+        let financialAccountValue = financialAccount?.[item?.field];
+        financialAccountValue = cleanNumber(financialAccountValue);
+        financialAccountValue = item?.suffix ? `${financialAccountValue}${item.suffix}` : financialAccountValue;
         const { color, tooltip } = getIconColorAndTooltip(item);
         return (
           <Card
-            subtitle={difference && (
-              <div title={`Budget ${lastYear}`}>
+            subtitle={budgetValue && (
+              <div title={`budget year-${budgetYear}`}>
                 (Budget
                 {' '}
-                {lastYear}
+                {budgetYear}
                 {' '}
                 :&ensp;
-                {difference}
+                {budgetValue}
                 {color && (<Icon name={`ri-stop-fill fr-badge--${color}`} className="fr-ml-1w fr-mr-0 fr-icon--sm" title={tooltip} />)}
                 )
               </div>
             )}
-            title={value}
+            title={financialAccountValue}
             descriptionElement={(
               <Row alignItems="middle">
                 <Text spacing="mr-1v mb-0">
@@ -319,7 +322,7 @@ Il constitue une marge de sécurité financière destinée à financer une parti
         <>
           <Title as="h3">
             <Icon name="ri-scales-3-fill" className="fr-pl-1w" />
-            {`Données financières - Situation en ${beforeLastYear}${beforeLastData?.source === 'Budget' ? ' (Budget)' : ''}`}
+            {`Données financières - Situation en ${financialAccountYear}${financialAccount?.source === 'Budget' ? ' (Budget)' : ''}`}
           </Title>
           <Bloc isLoading={isLoading} error={error} data={data} noBadge>
             <BlocTitle as="h4">
