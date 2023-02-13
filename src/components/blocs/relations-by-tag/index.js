@@ -133,7 +133,7 @@ export default function RelationsByTag({ blocName, tag, resourceType, relatedObj
   };
 
   return (
-    <Bloc isLoading={isLoading} error={error} data={data}>
+    <Bloc isLoading={isLoading} error={error} data={data} isRelation>
       <BlocTitle as="h3" look="h6">{blocName || tag}</BlocTitle>
       <BlocActionButton onClick={() => onOpenModalHandler()}>Ajouter un élément</BlocActionButton>
       {hasExport({ tag, inverse }) && (
