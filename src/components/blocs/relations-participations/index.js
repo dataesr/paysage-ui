@@ -1,4 +1,4 @@
-import { Col, Badge, Row, BadgeGroup } from '@dataesr/react-dsfr';
+import { Col, Row } from '@dataesr/react-dsfr';
 import ExpendableListCards from '../../card/expendable-list-cards';
 import { Bloc, BlocContent, BlocTitle } from '../../bloc';
 
@@ -29,7 +29,6 @@ export default function RelationsParticipations() {
     const inactives = data.data.filter((element) => (!activesIds.includes(element.id)));
 
     const orderedList = [...actives, ...inactives];
-    const isComing = actives.filter((el) => el.startDate > getComparableNow());
 
     const list = orderedList.map((element) => (
       <RelationCard
@@ -40,41 +39,6 @@ export default function RelationsParticipations() {
     ));
     return (
       <Row gutters>
-        {(actives.length > 0 && inactives.length > 0) && (
-          <Col n="12">
-            <Col n="12">
-              <BadgeGroup>
-                {isComing.length > 0 && (
-                  <Badge
-                    isSmall
-                    type="info"
-                    text={`Dont ${isComing.length === 1 ? `${isComing.length} relation à venir` : `${isComing.length} relations à venir` } `}
-                    spacing="ml-0"
-                  />
-                ) }
-                {actives.length > 0 && (
-                  <Badge
-                    isSmall
-                    type="success"
-                    text={`Dont ${actives.length - isComing.length === 1 ? `${actives.length - isComing.length} relation active` : `${actives.length - isComing.length} relations actives` } `}
-                    spacing="mb-0"
-                  />
-                ) }
-                {inactives.length > 0 && (
-                  <Badge
-                    isSmall
-                    type="inactive"
-                    colorFamily="brown-opera"
-                    text={`Dont ${inactives.length === 1 ? `${inactives.length} relation inactive` : `${inactives.length} relations inactives` } `}
-                    spacing="mb-0"
-                  />
-                )}
-
-              </BadgeGroup>
-            </Col>
-          </Col>
-
-        )}
         <Col n="12">
           <ExpendableListCards list={list} nCol="12 md-6" />
         </Col>
@@ -82,7 +46,7 @@ export default function RelationsParticipations() {
     );
   };
   return (
-    <Bloc isLoading={isLoading} error={error} data={data}>
+    <Bloc isLoading={isLoading} error={error} data={data} isRelation>
       <BlocTitle as="h3" look="h6">Participations</BlocTitle>
       <BlocContent>{renderCards()}</BlocContent>
     </Bloc>

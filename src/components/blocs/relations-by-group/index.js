@@ -103,7 +103,6 @@ export default function RelationsByGroup({ group, reloader }) {
          ${element.relatedObject.currentLocalisation?.locality}`,
         });
       });
-    const isComing = actives.filter((el) => el.startDate > getComparableNow());
     const list = orderedList.map((element) => (
       <RelationCard
         relation={element}
@@ -113,37 +112,6 @@ export default function RelationsByGroup({ group, reloader }) {
     if (markers.length) {
       return (
         <Row gutters>
-          <Col n="12">
-            <BadgeGroup>
-              {isComing.length > 0 && (
-                <Badge
-                  isSmall
-                  type="info"
-                  text={`Dont ${isComing.length === 1 ? `${isComing.length} relation à venir` : `${isComing.length} relations à venir` } `}
-                  spacing="ml-0"
-                />
-              ) }
-              {actives.length > 0 && (
-                <Badge
-                  isSmall
-                  type="success"
-                  text={`Dont ${actives.length - isComing.length === 1 ? `${actives.length - isComing.length} relation active` : `${actives.length - isComing.length} relations actives` } `}
-                  spacing="mb-0"
-                />
-              ) }
-              {inactives.length > 0 && (
-                <Badge
-                  isSmall
-                  type="inactive"
-                  colorFamily="brown-opera"
-                  text={`Dont ${inactives.length === 1 ? `${inactives.length} relation inactive` : `${inactives.length} relations inactives` } `}
-                  spacing="mb-0"
-                />
-              )}
-
-            </BadgeGroup>
-
-          </Col>
           <Col n="12">
             <Map height="320px" markers={markers} zoom={8} />
           </Col>
@@ -160,7 +128,7 @@ export default function RelationsByGroup({ group, reloader }) {
 
   return (
 
-    <Bloc isLoading={isLoading} error={error} data={data}>
+    <Bloc isLoading={isLoading} error={error} data={data} isRelation>
       <BlocTitle as="h3" look="h6">{groupName}</BlocTitle>
       {reloader && <BlocActionButton icon="ri-edit-line" onClick={() => setShowListModal(true)}>Editer la liste</BlocActionButton>}
       <BlocActionButton onClick={() => onOpenModalHandler()}>Ajouter un élément</BlocActionButton>
