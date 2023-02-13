@@ -256,7 +256,7 @@ export default function HomePage() {
               </>
             )}
           </Container>
-          <Container spacing="mb-8w">
+          {/* <Container spacing="mb-8w">
             <Row gutters>
               <Col n="6">
                 {(data?.data?.length > 0) && (
@@ -333,7 +333,7 @@ export default function HomePage() {
                 )}
               </Col>
             </Row>
-          </Container>
+          </Container> */}
         </>
       )}
     </Container>
