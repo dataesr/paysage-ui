@@ -22,7 +22,7 @@ export default function StructurePresentationPage() {
   const data = useOutletContext();
   const { editMode } = useEditMode();
   if (!data) return null;
-  const { year, population, exercice, netAccountingResult, motto, descriptionFr, descriptionEn } = data;
+  const { descriptionEn, descriptionFr, exercice, motto, netAccountingResult, population, source, year } = data;
   return (
     <>
       <Row>
@@ -68,10 +68,11 @@ export default function StructurePresentationPage() {
         <Col n="12"><Wiki /></Col>
       </Row>
       <ChiffresCles
-        year={year}
-        population={population}
         exercice={exercice}
         netAccountingResult={netAccountingResult}
+        population={population}
+        source={source}
+        year={year}
       />
       <StructureCurrentGovernance />
       <Title as="h3" look="h4">Présence sur le web</Title>

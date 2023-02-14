@@ -24,7 +24,8 @@ export default function StructureEtudiantsPage() {
   const { id, url } = useUrl('keynumbers');
   const { data, error, isLoading } = useFetch(`${url}/population`);
 
-  const sortedData = data?.data.sort((a, b) => a.annee - b.annee) || [];
+  // eslint-disable-next-line no-nested-ternary
+  const sortedData = data?.data?.sort((a, b) => ((b.annee > a.annee) ? 1 : ((a.annee > b.annee) ? -1 : 0))) || [];
   const lastData = sortedData?.[sortedData.length - 1];
   const year = lastData?.annee_universitaire || '';
   const categories = sortedData.map((item) => item.annee);
