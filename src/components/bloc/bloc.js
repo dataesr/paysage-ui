@@ -9,7 +9,7 @@ import { getComparableNow } from '../../utils/dates';
 const isFinished = (relation) => (relation?.active === false) || (relation?.endDate < getComparableNow());
 
 function calcultateCount(data) {
-  const current = data?.filter((el) => (el.startDate < getComparableNow()) && !isFinished(el))?.length;
+  const current = data?.filter((el) => (el.startDate < getComparableNow() || (!el.startDate && !el.endDate)) && !isFinished(el))?.length;
   const inactive = data?.filter((el) => isFinished(el))?.length;
   const forthcoming = data?.filter((el) => el.startDate > getComparableNow())?.length;
 
