@@ -35,6 +35,8 @@ export default function Passwordless() {
   const [requestOtpError, setRequestOtpError] = useState(false);
   const [changePasswordError, setChangePasswordError] = useState(false);
 
+  const disableNext = (Object.values(passwordValidation).filter((e) => !e)?.length || emailError);
+
   const requestOtp = async (e) => {
     e.preventDefault();
     if (emailError) return setEmailErrorDisplay(true);
@@ -214,7 +216,11 @@ export default function Passwordless() {
                               <PasswordHint display={(passwordValidation.length === true) ? 'success' : passwordErrorDisplay} hint="8 caractères minimum" />
                               <PasswordHint display={(passwordValidation.uppercase === true) ? 'success' : passwordErrorDisplay} hint="1 majuscule minimum" />
                               <PasswordHint display={(passwordValidation.lowercase === true) ? 'success' : passwordErrorDisplay} hint="1 miniscule minimum" />
-                              <PasswordHint display={(passwordValidation.special === true) ? 'success' : passwordErrorDisplay} hint="1 caractère spécial minimum parmi @$!%*#?&:_" />
+                              <PasswordHint
+                                display={(passwordValidation.special === true) ? 'success' : passwordErrorDisplay}
+                                hint={'1 caractère spécial minimum parmi !"#$%&\'()`*+,-./:;<=>?@[]^_{|}~'}
+                              />
+                              {(passwordValidation.forbidden === false) && <PasswordHint display="error" hint="Certains caractères spéciaux et les espaces ne sont pas autorisés" />}
                               <PasswordHint display={(passwordValidation.integer === true) ? 'success' : passwordErrorDisplay} hint="1 chiffre minimum" />
                             </Text>
                           )}
@@ -233,7 +239,7 @@ export default function Passwordless() {
                         <Row spacing="my-2w">
                           <Col>
                             <ButtonGroup>
-                              <Button submit>
+                              <Button submit disabled={disableNext}>
                                 Changer mon mot de passe
                               </Button>
                             </ButtonGroup>
