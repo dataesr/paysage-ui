@@ -228,7 +228,7 @@ export default function HomePage() {
               )}
             </Container>
           </Container>
-          <Container>
+          <Container spacing="mb-8w">
             {(lastCreations && (lastCreations.length > 0)) && (
               <>
                 <Row>
