@@ -22,13 +22,13 @@ HCExportingData(Highcharts);
 
 export default function StructureEtudiantsPage() {
   const { id, url } = useUrl('keynumbers');
-  const { data, error, isLoading } = useFetch(`${url}/population`);
+  const { data, error, isLoading } = useFetch(`${url}/population?sort=annee`);
 
   // eslint-disable-next-line no-nested-ternary
-  const sortedData = data?.data?.sort((a, b) => ((b.annee > a.annee) ? 1 : ((a.annee > b.annee) ? -1 : 0))) || [];
-  const lastData = sortedData?.[sortedData.length - 1];
+  const allData = data?.data || [];
+  const lastData = allData?.[allData.length - 1];
   const year = lastData?.annee_universitaire || '';
-  const categories = sortedData.map((item) => item.annee);
+  const categories = allData.map((item) => item.annee);
   const commonOptions = {
     credits: { enabled: false },
     lang: {
@@ -243,7 +243,7 @@ export default function StructureEtudiantsPage() {
     ...commonOptions,
     series: [{
       name: lastData?.etablissement_lib || 'Structure sans nom',
-      data: sortedData.map((item) => item?.effectif || 0),
+      data: allData.map((item) => item?.effectif || 0),
     }],
     title: { text: 'Evolution des effectifs' },
   };
@@ -253,15 +253,15 @@ export default function StructureEtudiantsPage() {
     series: [
       {
         name: 'Etudiants inscrits en 1er cycle',
-        data: sortedData.map((item) => item?.cursus_lmdl || 0),
+        data: allData.map((item) => item?.cursus_lmdl || 0),
       },
       {
         name: 'Etudiants inscrits en 2ème cycle',
-        data: sortedData.map((item) => item?.cursus_lmdm || 0),
+        data: allData.map((item) => item?.cursus_lmdm || 0),
       },
       {
         name: 'Etudiants inscrits en 3ème cycle',
-        data: sortedData.map((item) => item?.cursus_lmdd || 0),
+        data: allData.map((item) => item?.cursus_lmdd || 0),
       },
     ],
     title: { text: 'Évolution des effectifs par cycle' },
@@ -272,23 +272,23 @@ export default function StructureEtudiantsPage() {
     series: [
       {
         name: 'Etudiants inscrits en Droit, sciences économiques, AES',
-        data: sortedData.map((item) => item?.gd_discisciplinedsa || 0),
+        data: allData.map((item) => item?.gd_discisciplinedsa || 0),
       },
       {
         name: 'Etudiants inscrits en Lettres, langues et sciences humaines',
-        data: sortedData.map((item) => item?.gd_discisciplinellsh || 0),
+        data: allData.map((item) => item?.gd_discisciplinellsh || 0),
       },
       {
         name: 'Etudiants inscrits en Sciences et sciences de l\'ingénieur',
-        data: sortedData.map((item) => item?.gd_discisciplinesi || 0),
+        data: allData.map((item) => item?.gd_discisciplinesi || 0),
       },
       {
         name: 'Etudiants inscrits en STAPS',
-        data: sortedData.map((item) => item?.gd_discisciplinestaps || 0),
+        data: allData.map((item) => item?.gd_discisciplinestaps || 0),
       },
       {
         name: 'Etudiants inscrits en Santé',
-        data: sortedData.map((item) => item?.gd_discisciplinesante || 0),
+        data: allData.map((item) => item?.gd_discisciplinesante || 0),
       },
     ],
     title: { text: 'Évolution des effectifs par discipline' },
@@ -299,23 +299,23 @@ export default function StructureEtudiantsPage() {
     series: [
       {
         name: 'Etudiants inscrits préparant un diplôme universitaire de technologie',
-        data: sortedData.map((item) => item?.diplomedut || 0),
+        data: allData.map((item) => item?.diplomedut || 0),
       },
       {
         name: 'Etudiants inscrits en Licence',
-        data: sortedData.map((item) => item?.diplomelic_l_aut || 0),
+        data: allData.map((item) => item?.diplomelic_l_aut || 0),
       },
       {
         name: 'Etudiants inscrits en Master',
-        data: sortedData.map((item) => (item?.diplomemast_m_autres || 0) + (item?.diplomemast_m_enseignement || 0)),
+        data: allData.map((item) => (item?.diplomemast_m_autres || 0) + (item?.diplomemast_m_enseignement || 0)),
       },
       {
         name: 'Etudiants inscrits en formations d\'ingénieurs',
-        data: sortedData.map((item) => item?.diplomeing || 0),
+        data: allData.map((item) => item?.diplomeing || 0),
       },
       {
         name: 'Etudiants inscrits en Doctorat',
-        data: sortedData.map((item) => item?.diplomehdr || 0),
+        data: allData.map((item) => item?.diplomehdr || 0),
       },
     ],
     title: { text: 'Évolution des effectifs dans les principaux diplômes' },
@@ -326,39 +326,39 @@ export default function StructureEtudiantsPage() {
     series: [
       {
         name: 'Etudiants inscrits préparant un diplôme d\'accès aux études universitaires',
-        data: sortedData.map((item) => item?.diplomedaeu || 0),
+        data: allData.map((item) => item?.diplomedaeu || 0),
       },
       {
         name: 'Etudiants inscrits en Capacité en droit',
-        data: sortedData.map((item) => item?.diplomecapa || 0),
+        data: allData.map((item) => item?.diplomecapa || 0),
       },
       {
         name: 'Etudiants inscrits en Licence professionnelle',
-        data: sortedData.map((item) => item?.diplomelic_pro || 0),
+        data: allData.map((item) => item?.diplomelic_pro || 0),
       },
       {
         name: 'Etudiants inscrits en Master enseignement (dont)',
-        data: sortedData.map((item) => item?.diplomemast_m_enseignement || 0),
+        data: allData.map((item) => item?.diplomemast_m_enseignement || 0),
       },
       {
         name: 'Etudiants inscrits en PACES',
-        data: sortedData.map((item) => item?.diplomesante_paces || 0),
+        data: allData.map((item) => item?.diplomesante_paces || 0),
       },
       {
         name: 'Etudiants inscrits dans les formations paramédicales',
-        data: sortedData.map((item) => item?.diplomesante_paramedical || 0),
+        data: allData.map((item) => item?.diplomesante_paramedical || 0),
       },
       {
         name: 'Etudiants inscrits dans les autres formations de santé',
-        data: sortedData.map((item) => item?.diplomesante_autres_form || 0),
+        data: allData.map((item) => item?.diplomesante_autres_form || 0),
       },
       {
         name: 'Etudiants inscrits en HDR',
-        data: sortedData.map((item) => item?.diplomehdr || 0),
+        data: allData.map((item) => item?.diplomehdr || 0),
       },
       {
         name: 'Etudiants inscrits dans les diplômes d\'établissement',
-        data: sortedData.map((item) => item?.diplomeautres_form || 0),
+        data: allData.map((item) => item?.diplomeautres_form || 0),
       },
     ],
     title: { text: 'Évolution des effectifs dans d\'autres types de diplômes' },
@@ -368,7 +368,7 @@ export default function StructureEtudiantsPage() {
     ...commonOptions,
     legend: { enabled: false },
     series: [{
-      data: sortedData.map((item) => ((item?.mobilite_internm || 0) / item.effectif) * 100),
+      data: allData.map((item) => ((item?.mobilite_internm || 0) / item.effectif) * 100),
     }],
     title: { text: 'Évolution de la part des étudiants inscrits en mobilité internationale (en %)' },
     tooltip: {
@@ -382,13 +382,13 @@ export default function StructureEtudiantsPage() {
     ...commonOptions,
     series: [{
       name: 'Nouveaux bacheliers issus d\'un bac général',
-      data: sortedData.map((item) => ((item?.nbaca || 0) / item.nouv_bachelier) * 100),
+      data: allData.map((item) => ((item?.nbaca || 0) / item.nouv_bachelier) * 100),
     }, {
       name: 'Nouveaux bacheliers issus d\'un bac technologique',
-      data: sortedData.map((item) => (((item?.nouv_bachelier || 0) - ((item?.nbaca || 0) + (item?.nbac6 || 0))) / item.nouv_bachelier) * 100),
+      data: allData.map((item) => (((item?.nouv_bachelier || 0) - ((item?.nbaca || 0) + (item?.nbac6 || 0))) / item.nouv_bachelier) * 100),
     }, {
       name: 'Nouveaux bacheliers issus d\'un bac professionnel',
-      data: sortedData.map((item) => ((item?.nbac6 || 0) / item.nouv_bachelier) * 100),
+      data: allData.map((item) => ((item?.nbac6 || 0) / item.nouv_bachelier) * 100),
     }],
     title: { text: 'Répartitions des nouveaux bacheliers (en %)' },
     tooltip: {
@@ -402,13 +402,13 @@ export default function StructureEtudiantsPage() {
     ...commonOptions,
     series: [{
       name: 'Nouveaux bacheliers en avance au bac d\'un an ou plus',
-      data: sortedData.map((item) => ((item?.nbac_ageavance || 0) / item.nouv_bachelier) * 100),
+      data: allData.map((item) => ((item?.nbac_ageavance || 0) / item.nouv_bachelier) * 100),
     }, {
       name: 'Nouveaux bacheliers à l\'heure au bac',
-      data: sortedData.map((item) => ((item?.nbac_agea_l_heure || 0) / item.nouv_bachelier) * 100),
+      data: allData.map((item) => ((item?.nbac_agea_l_heure || 0) / item.nouv_bachelier) * 100),
     }, {
       name: 'Nouveaux bacheliers en retard au bac d\'un an ou plus',
-      data: sortedData.map((item) => ((item?.nbac_ageretard || 0) / item.nouv_bachelier) * 100),
+      data: allData.map((item) => ((item?.nbac_ageretard || 0) / item.nouv_bachelier) * 100),
     }],
     title: { text: 'Âge au bac des nouveaux bacheliers (en %)' },
     tooltip: {
