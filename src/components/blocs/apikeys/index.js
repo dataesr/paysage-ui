@@ -4,7 +4,7 @@ import { Bloc, BlocActionButton, BlocContent, BlocModal, BlocTitle } from '../..
 import useFetch from '../../../hooks/useFetch';
 import useNotice from '../../../hooks/useNotice';
 import api from '../../../utils/api';
-import { saveError, saveSuccess } from '../../../utils/notice-contents';
+import { deleteError, deleteSuccess, saveError, saveSuccess } from '../../../utils/notice-contents';
 import ApiKeysList from './components/apikeys-list';
 import ApiKeyForm from './components/form';
 
@@ -22,6 +22,14 @@ export default function ApiKeys() {
     })
     .catch(() => notice(saveError))
     .finally(() => setShowModal(false));
+
+  const onDelete = (id) => api.delete(`/admin/api-keys/${id}`)
+    .then(() => {
+      notice(deleteSuccess);
+      reload();
+    })
+    .catch(() => notice(deleteError))
+    .finally(() => setShowModal(false));
   const apiKeys = data?.data?.map((item) => ({ ...item, user: `${item?.user?.firstName} ${item?.user?.lastName}`.trim() })) || [];
   return (
     <Bloc isLoading={isLoading} error={error} data={data} forceActionDisplay>
@@ -32,7 +40,7 @@ export default function ApiKeys() {
         Ajouter une clé api
       </BlocActionButton>
       <BlocContent>
-        <ApiKeysList data={apiKeys} deleteItem={() => {}} highlight={newKey} />
+        <ApiKeysList data={apiKeys} deleteItem={onDelete} highlight={newKey} />
       </BlocContent>
       <BlocModal>
         <Modal isOpen={showModal} size="lg" hide={() => setShowModal(false)}>
