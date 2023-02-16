@@ -70,7 +70,7 @@ export default function ApiKeysList({ data, deleteItem, highlight }) {
                   icon={`ri-arrow-${(sort.field === 'createdAt' && !sort.ascending) ? 'up' : 'down'}-fill`}
                   onClick={() => setSort({ field: 'createdAt', type: 'date' })}
                 />
-                <Text className="fr-mb-0" bold>Crée le</Text>
+                <Text className="fr-mb-0" bold>Créé le</Text>
               </Row>
             </Col>
             <Col n="1" />
