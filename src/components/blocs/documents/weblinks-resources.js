@@ -9,10 +9,11 @@ import ExpendableListCards from '../../card/expendable-list-cards';
 const mapping = {
   PiaWEB: 'Données PiaWEB',
   hceres: "Rapport d'évaluation HCERES",
+  jorfsearch: 'Page JORFSearch',
 };
 
 export default function WeblinksResources({ resourceId }) {
-  const { data, isLoading, error } = useFetch(`/structures/${resourceId}/weblinks?filters[type][$in]=hceres&filters[type][$in]=PiaWEB`);
+  const { data, isLoading, error } = useFetch(`/structures/${resourceId}/weblinks?filters[type][$in]=hceres&filters[type][$in]=PiaWEB&filters[type][$in]=jorfsearch`);
 
   const cards = data?.data?.filter((el) => Object.keys(mapping).includes(el.type)).map((el) => (
     <div key={el.id} className="fr-card fr-card--sm fr-card--grey fr-card--no-border">
