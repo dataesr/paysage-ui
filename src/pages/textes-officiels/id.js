@@ -121,7 +121,8 @@ export default function OfficialTextByIdPage() {
             <Title className="fr-mb-1w" as="h2">
               {data.title}
               <BadgeGroup className="fr-pt-1w">
-                <Badge text="texte officiel" type="info" />
+                <Badge text={data.nature} type="info" />
+                <Badge text={data.type} colorFamily="purple-glycine" />
                 <CopyBadgeButton
                   colorFamily="yellow-tournesol"
                   text={data.id}
