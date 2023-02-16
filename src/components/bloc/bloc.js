@@ -5,7 +5,7 @@ import { Container, Row, Highlight, ButtonGroup, Badge } from '@dataesr/react-ds
 import { Spinner } from '../spinner';
 import useEditMode from '../../hooks/useEditMode';
 
-export default function Bloc({ children, data, error, isLoading, hideOnEmptyView, noBadge }) {
+export default function Bloc({ children, data, error, isLoading, hideOnEmptyView, noBadge, forceActionDisplay }) {
   const { editMode } = useEditMode();
   const header = Children.toArray(children).find((child) => child.props.__TYPE === 'BlocTitle');
   const editActions = Children.toArray(children).filter((child) => (child.props.__TYPE === 'BlocActionButton' && child.props.edit));
@@ -23,7 +23,7 @@ export default function Bloc({ children, data, error, isLoading, hideOnEmptyView
           </Row>
         </div>
         <ButtonGroup size="sm" isInlineFrom="xs">
-          {(editMode) && editActions.map((element, i) => <span key={i}>{element}</span>)}
+          {(editMode || forceActionDisplay) && editActions.map((element, i) => <span key={i}>{element}</span>)}
           {((data?.totalCount > 0)) && viewActions.map((element, i) => <span key={i}>{element}</span>)}
         </ButtonGroup>
       </Row>
@@ -43,6 +43,7 @@ Bloc.propTypes = {
   error: PropTypes.bool,
   hideOnEmptyView: PropTypes.bool,
   noBadge: PropTypes.bool,
+  forceActionDisplay: PropTypes.bool,
 };
 
 Bloc.defaultProps = {
@@ -52,4 +53,5 @@ Bloc.defaultProps = {
   error: null,
   hideOnEmptyView: false,
   noBadge: false,
+  forceActionDisplay: false,
 };
