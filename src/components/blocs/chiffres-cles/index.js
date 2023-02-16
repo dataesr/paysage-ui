@@ -4,7 +4,7 @@ import { BlocContent, BlocTitle } from '../../bloc';
 import cleanNumber from '../../../utils/clean-numbers';
 import KeyValueCard from '../../card/key-value-card';
 
-export default function ChiffresCles({ year, population, exercice, netAccountingResult }) {
+export default function ChiffresCles({ exercice, netAccountingResult, population, source, year }) {
   const all = [];
   if (year && population) {
     all.push({
@@ -17,7 +17,7 @@ export default function ChiffresCles({ year, population, exercice, netAccounting
   if (exercice && netAccountingResult) {
     all.push({
       icon: 'ri-scales-3-line',
-      key: `Résultat net comptable en ${exercice}`,
+      key: `Résultat net comptable en ${exercice} (${source})`,
       linkIn: '../chiffres-cles/budget',
       value: `${cleanNumber(netAccountingResult)}€`,
     });
@@ -47,15 +47,17 @@ export default function ChiffresCles({ year, population, exercice, netAccounting
 }
 
 ChiffresCles.defaultProps = {
-  year: null,
-  population: null,
   exercice: null,
   netAccountingResult: null,
+  population: null,
+  source: null,
+  year: null,
 };
 
 ChiffresCles.propTypes = {
-  year: PropTypes.string,
-  population: PropTypes.number,
   exercice: PropTypes.string,
   netAccountingResult: PropTypes.number,
+  population: PropTypes.number,
+  source: PropTypes.string,
+  year: PropTypes.string,
 };

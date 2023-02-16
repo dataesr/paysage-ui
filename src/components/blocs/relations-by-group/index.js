@@ -81,7 +81,7 @@ export default function RelationsByGroup({ group, reloader }) {
       || (element.startDate < getComparableNow() && element.endDate > getComparableNow())
       || (element.startDate < getComparableNow() && !element.endDate && element.active !== false)
       || (element.startDate === null && element.endDate === null && element.active !== false)
-      ));
+      )).sort((a, b) => new Date(b.startDate) - new Date(a.startDate));
 
     const activesIds = actives.map((element) => element.id);
 
@@ -103,7 +103,6 @@ export default function RelationsByGroup({ group, reloader }) {
          ${element.relatedObject.currentLocalisation?.locality}`,
         });
       });
-
     const list = orderedList.map((element) => (
       <RelationCard
         relation={element}
@@ -128,7 +127,8 @@ export default function RelationsByGroup({ group, reloader }) {
   };
 
   return (
-    <Bloc isLoading={isLoading} error={error} data={data}>
+
+    <Bloc isLoading={isLoading} error={error} data={data} isRelation>
       <BlocTitle as="h3" look="h6">{groupName}</BlocTitle>
       {reloader && <BlocActionButton icon="ri-edit-line" onClick={() => setShowListModal(true)}>Editer la liste</BlocActionButton>}
       <BlocActionButton onClick={() => onOpenModalHandler()}>Ajouter un élément</BlocActionButton>

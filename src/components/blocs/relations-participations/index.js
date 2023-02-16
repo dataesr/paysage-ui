@@ -1,5 +1,7 @@
+import { Col, Row } from '@dataesr/react-dsfr';
 import ExpendableListCards from '../../card/expendable-list-cards';
 import { Bloc, BlocContent, BlocTitle } from '../../bloc';
+
 import useFetch from '../../../hooks/useFetch';
 import useUrl from '../../../hooks/useUrl';
 import RelationCard from '../../card/relation-card';
@@ -20,7 +22,7 @@ export default function RelationsParticipations() {
       || (element.startDate < getComparableNow() && element.endDate > getComparableNow())
       || (element.startDate < getComparableNow() && !element.endDate && element.active !== false)
       || (element.startDate === null && element.endDate === null && element.active !== false)
-      ));
+      )).sort((a, b) => new Date(b.startDate) - new Date(a.startDate));
 
     const activesIds = actives.map((element) => element.id);
 
@@ -36,11 +38,15 @@ export default function RelationsParticipations() {
       />
     ));
     return (
-      <ExpendableListCards list={list} nCol="12 md-6" />
+      <Row gutters>
+        <Col n="12">
+          <ExpendableListCards list={list} nCol="12 md-6" />
+        </Col>
+      </Row>
     );
   };
   return (
-    <Bloc isLoading={isLoading} error={error} data={data}>
+    <Bloc isLoading={isLoading} error={error} data={data} isRelation>
       <BlocTitle as="h3" look="h6">Participations</BlocTitle>
       <BlocContent>{renderCards()}</BlocContent>
     </Bloc>

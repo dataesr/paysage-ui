@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { Badge, BadgeGroup, Col, Container, Icon, Row, Tag, Text, Tile, Title } from '@dataesr/react-dsfr';
+import { Col, Container, Icon, Row, Tile, Title } from '@dataesr/react-dsfr';
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import SearchBar from '../components/search-bar';
@@ -13,14 +13,10 @@ import { CATEGORIE_PARENT } from '../utils/relations-tags';
 import KeyValueCard from '../components/card/key-value-card';
 import { capitalize } from '../utils/strings';
 import usePageTitle from '../hooks/usePageTitle';
-import useFetch from '../hooks/useFetch';
-import { Timeline, TimelineItem } from '../components/timeline';
-import TagList from '../components/tag-list';
-import Button from '../components/button';
 
 const MAX_LAST_CREATIONS_CARDS = 12;
 const DATE7 = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
-const DATE30 = new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString();
+// const DATE30 = new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString();
 
 const icons = {
   structures: 'ri-building-line',
@@ -168,8 +164,8 @@ export default function HomePage() {
   const [lastCreations, metrics] = useFetchLastCreations();
   const mostImportantCategories = useFetchMostImportantCategories();
   const { counts, isLoading } = useFetchCounts();
-  const { data } = useFetch(`/follow-ups?filters[eventDate][$gte]=${DATE30}&sort=-eventDate&limit=5`);
-  const { data: press } = useFetch(`/press?filters[publicationDate][$gte]=${DATE7.slice(0, 10)}&sort=-publicationDate&limit=4`);
+  // const { data } = useFetch(`/follow-ups?filters[eventDate][$gte]=${DATE30}&sort=-eventDate&limit=5`);
+  // const { data: press } = useFetch(`/press?filters[publicationDate][$gte]=${DATE7.slice(0, 10)}&sort=-publicationDate&limit=4`);
   // TODO: Restore projects
   if (counts) delete counts.projects;
   const { data: options } = useSearch(SEARCH_TYPES, debouncedQuery);
@@ -228,7 +224,7 @@ export default function HomePage() {
               )}
             </Container>
           </Container>
-          <Container>
+          <Container spacing="mb-8w">
             {(lastCreations && (lastCreations.length > 0)) && (
               <>
                 <Row>
@@ -256,7 +252,7 @@ export default function HomePage() {
               </>
             )}
           </Container>
-          <Container spacing="mb-8w">
+          {/* <Container spacing="mb-8w">
             <Row gutters>
               <Col n="6">
                 {(data?.data?.length > 0) && (
@@ -333,7 +329,7 @@ export default function HomePage() {
                 )}
               </Col>
             </Row>
-          </Container>
+          </Container> */}
         </>
       )}
     </Container>

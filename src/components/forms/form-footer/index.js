@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import { ButtonGroup, Col, Row, Text } from '@dataesr/react-dsfr';
 import classNames from 'classnames';
@@ -8,6 +8,14 @@ import useViewport from '../../../hooks/useViewport';
 export default function FormFooter({ id, onDeleteHandler, onSaveHandler, buttonLabel }) {
   const { mobile } = useViewport();
   const [confirm, setConfirm] = useState(false);
+  const submitButtonRef = useRef();
+  const deleteButtonRef = useRef();
+
+  function handleSubmit() {
+    submitButtonRef?.current.setAttribute('disabled', true);
+    onSaveHandler();
+  }
+
   const classnames = classNames('flex--space-between', { 'flex--col-reverse': mobile });
   return (
     <>
@@ -26,7 +34,11 @@ export default function FormFooter({ id, onDeleteHandler, onSaveHandler, buttonL
                 Annuler
               </Button>
               <Button
-                onClick={() => onDeleteHandler(id)}
+                ref={deleteButtonRef}
+                onClick={() => {
+                  deleteButtonRef?.current.setAttribute('disabled', true);
+                  onDeleteHandler(id);
+                }}
                 color="error"
                 icon="ri-chat-delete-line"
               >
@@ -50,7 +62,7 @@ export default function FormFooter({ id, onDeleteHandler, onSaveHandler, buttonL
                   Supprimer
                 </Button>
               ) : <div />}
-              <Button icon="ri-save-line" onClick={onSaveHandler}>{buttonLabel}</Button>
+              <Button ref={submitButtonRef} icon="ri-save-line" onClick={() => handleSubmit()}>{buttonLabel}</Button>
             </ButtonGroup>
           </Col>
         </Row>

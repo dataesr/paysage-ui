@@ -56,15 +56,15 @@ export default function LocalisationsComponent() {
 
   const renderAddress = (localisation) => {
     // eslint-disable-next-line max-len
-    const address = ` ${localisation?.distributionStatement || ''}
-    ${(localisation?.distributionStatement) ? ',' : ''} 
-    ${localisation?.address || ''}
-    ${(localisation?.address) ? ',' : ''} 
-    ${localisation?.place || ''}
-    ${(localisation?.place) ? ',' : ''} 
-    ${localisation?.postalCode || ''} 
-    ${localisation?.locality || localisation?.city || ''}, 
-    ${localisation?.country}`;
+    let address = '';
+    if (localisation.distributionStatement) { address += `${localisation.distributionStatement },\n`; }
+    if (localisation.address) { address += `${localisation.address },\n`; }
+    if (localisation.place) { address += `${localisation.place },\n`; }
+    if (localisation.postOfficeBoxNumber) { address += `${localisation.postOfficeBoxNumber },\n`; }
+    if (localisation.postalCode) { address += `${localisation.postalCode },\n`; }
+    if (localisation.city) { address += `${localisation.city },\n`; }
+    if (localisation.country) { address += `${localisation.country}\n`; }
+
     return (
       <div className={`fr-card fr-card--xs fr-card--horizontal fr-card--grey fr-card--no-border card-${apiObject}`}>
         <div className="fr-card__body">
