@@ -65,7 +65,7 @@ export default function ApiKeyForm({ onSave }) {
               required
               buttonLabel="Rechercher un utilisateur"
               isSearching={isSearching}
-              label="Sélctionner un utilisateur"
+              label="Sélectionner un utilisateur"
               onChange={(e) => { setUserQuery(e.target.value); }}
               onSelect={handleUserSelect}
               options={userOptions}
