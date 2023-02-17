@@ -40,7 +40,7 @@ const regexpValidateWebSite = {
   OE1: /(^https:\/\/)?(www.)?books.openedition.org\//,
   OE2: /(^https:\/\/)?(www.)?openedition.org\/catalogue-journals\?limit=30/,
   OE3: /(^https:\/\/)?(www.)?openedition.org\/\d{1,8}$/,
-  hceres: /(^https:\/\/)?(www.)?hceres.fr\/fr\/[a-z0-9/-]+$/,
+  hceres: /^https:\/\/www.hceres.fr\/fr\//i,
 };
 
 function validate(body) {
