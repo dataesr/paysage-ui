@@ -11,11 +11,6 @@ export default function FormFooter({ id, onDeleteHandler, onSaveHandler, buttonL
   const submitButtonRef = useRef();
   const deleteButtonRef = useRef();
 
-  function handleSubmit() {
-    submitButtonRef?.current.setAttribute('disabled', true);
-    onSaveHandler();
-  }
-
   const classnames = classNames('flex--space-between', { 'flex--col-reverse': mobile });
   return (
     <>
@@ -62,7 +57,19 @@ export default function FormFooter({ id, onDeleteHandler, onSaveHandler, buttonL
                   Supprimer
                 </Button>
               ) : <div />}
-              <Button ref={submitButtonRef} icon="ri-save-line" onClick={() => handleSubmit()}>{buttonLabel}</Button>
+              <Button
+                ref={submitButtonRef}
+                icon="ri-save-line"
+                onClick={(e) => {
+                  submitButtonRef?.current.setAttribute('disabled', true);
+                  onSaveHandler(e);
+                  setTimeout(() => {
+                    submitButtonRef?.current.removeAttribute('disabled');
+                  }, 3000);
+                }}
+              >
+                {buttonLabel}
+              </Button>
             </ButtonGroup>
           </Col>
         </Row>
