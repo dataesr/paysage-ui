@@ -15,8 +15,8 @@ import PaysageBlame from '../../paysage-blame';
 
 function validate(body) {
   const validationErrors = {};
-  if (!body.firstName) { validationErrors.title = 'Le prénom est obligatoire.'; }
-  if (!body.lastName) { validationErrors.eventDate = 'Le nom est obligatoire.'; }
+  if (!body.firstName) { validationErrors.firstName = 'Le prénom est obligatoire.'; }
+  if (!body.lastName) { validationErrors.lastName = 'Le nom est obligatoire.'; }
   if (!body.gender) { validationErrors.type = 'Le genre est obligatoire.'; }
   return validationErrors;
 }
@@ -60,8 +60,8 @@ export default function PersonForm({ id, data, onSave, onDelete }) {
               label="Prénom"
               value={form.firstName}
               onChange={(e) => updateForm({ firstName: e.target.value })}
-              message={(showErrors && errors.fistName) ? errors.fistName : null}
-              messageType={(showErrors && errors.fistName) ? 'error' : ''}
+              message={(showErrors && errors.firstName) ? errors.firstName : null}
+              messageType={(showErrors && errors.firstName) ? 'error' : ''}
             />
           </Col>
           <Col n="12 md-6">
