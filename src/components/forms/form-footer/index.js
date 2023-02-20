@@ -61,10 +61,10 @@ export default function FormFooter({ id, onDeleteHandler, onSaveHandler, buttonL
                 ref={submitButtonRef}
                 icon="ri-save-line"
                 onClick={(e) => {
-                  submitButtonRef?.current.setAttribute('disabled', true);
+                  submitButtonRef?.current?.setAttribute('disabled', true);
                   onSaveHandler(e);
                   setTimeout(() => {
-                    submitButtonRef?.current.removeAttribute('disabled');
+                    submitButtonRef?.current?.removeAttribute('disabled');
                   }, 3000);
                 }}
               >
