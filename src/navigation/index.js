@@ -61,7 +61,7 @@ import { CategoryByIdPage, CategoryPresentationPage, CategoriesExportPage, Categ
 import { AccountPage, ProfilePage, PreferencesPage, SecurityPage } from '../pages/mon-compte';
 import {
   AdminPage, AdminDashboardPage, AdminUsersPage, AdminNomenclaturesPage,
-  AdminLegalCategoriesPage, AdminRelationTypesPage, AdminGroupsPage,
+  AdminLegalCategoriesPage, AdminRelationTypesPage, AdminGroupsPage, AdminApiKeysPage,
 } from '../pages/admin';
 
 import '../styles/index.scss';
@@ -101,6 +101,7 @@ export default function Routes() {
               <Route path="dashboard" element={<AdminDashboardPage />} />
               <Route path="utilisateurs" element={<AdminUsersPage />} />
               <Route path="groupes" element={<AdminGroupsPage />} />
+              <Route path="apikeys" element={<AdminApiKeysPage />} />
               <Route path="categories-juridiques" element={<AdminLegalCategoriesPage />} />
               <Route path="types-de-relation" element={<AdminRelationTypesPage />} />
               <Route path="nomenclatures" element={<Navigate to="nomenclatures/types-de-document" replace />} />

@@ -59,7 +59,7 @@ export default function LocalisationForm({ id, data, onDelete, onSave }) {
       const respJson = await response.json();
       const opt = (isFrance)
         ? respJson.features.map((element) => ({
-          name: `${element.properties.label} (${element.properties.context}})`,
+          name: `${element.properties.label} (${element.properties.context})`,
           data: element,
         }))
         : respJson.map((element) => ({
@@ -171,18 +171,18 @@ export default function LocalisationForm({ id, data, onDelete, onSave }) {
           </Col>
           <Col n="12">
             <SearchBar
-              size="lg"
               buttonLabel="Rechercher"
-              value={query}
-              label="Adresse recherchée"
               hint="Rechercher et sélectionner une adresse"
-              scope={scope}
-              placeholder={scope ? '' : 'Rechercher...'}
-              onChange={(e) => { setQuery(e.target.value); }}
-              options={options}
-              onSelect={handleSelect}
-              onDeleteScope={handleUnselect}
               isSearching={isSearching}
+              label="Adresse recherchée"
+              onDeleteScope={handleUnselect}
+              onChange={(e) => { setQuery(e.target.value); }}
+              onSelect={handleSelect}
+              options={options}
+              placeholder={scope ? '' : 'Rechercher...'}
+              scope={scope}
+              size="lg"
+              value={query}
             />
           </Col>
           <Col n="12"><Title as="h2" look="h3" spacing="mb-0">Coordonnées</Title></Col>

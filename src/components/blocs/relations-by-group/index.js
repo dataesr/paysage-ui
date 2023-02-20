@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Col, Modal, ModalContent, ModalTitle, Row, Badge, BadgeGroup } from '@dataesr/react-dsfr';
+import { Col, Modal, ModalContent, ModalTitle, Row } from '@dataesr/react-dsfr';
 import api from '../../../utils/api';
 import ExpendableListCards from '../../card/expendable-list-cards';
 import { Bloc, BlocActionButton, BlocContent, BlocModal, BlocTitle } from '../../bloc';

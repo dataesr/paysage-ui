@@ -7,6 +7,7 @@ import AdminUsersPage from './users';
 import AdminLegalCategoriesPage from './categories-juridiques';
 import AdminRelationTypesPage from './relation-types';
 import AdminGroupsPage from './groupes';
+import AdminApiKeysPage from './api-keys';
 import usePageTitle from '../../hooks/usePageTitle';
 
 function AdminPage() {
@@ -24,6 +25,9 @@ function AdminPage() {
             </SideMenuLink>
             <SideMenuLink asLink={<RouterLink to="/admin/groupes" replace />}>
               Groupes d'utilisateurs
+            </SideMenuLink>
+            <SideMenuLink asLink={<RouterLink to="/admin/apikeys" replace />}>
+              Clés API
             </SideMenuLink>
             <SideMenuItem expandedDefault title="Nomenclatures">
               <SideMenuLink asLink={<RouterLink to="/admin/categories-juridiques" replace />}>
@@ -54,5 +58,5 @@ function AdminPage() {
 
 export {
   AdminDashboardPage, AdminPage, AdminUsersPage, AdminNomenclaturesPage,
-  AdminLegalCategoriesPage, AdminRelationTypesPage, AdminGroupsPage,
+  AdminLegalCategoriesPage, AdminRelationTypesPage, AdminGroupsPage, AdminApiKeysPage,
 };
