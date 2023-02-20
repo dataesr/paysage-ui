@@ -37,7 +37,7 @@ export default function ApiKeys() {
         Clés API
       </BlocTitle>
       <BlocActionButton onClick={() => setShowModal((prev) => !prev)}>
-        Ajouter une clé api
+        Ajouter une clé API
       </BlocActionButton>
       <BlocContent>
         <ApiKeysList data={apiKeys} deleteItem={onDelete} highlight={newKey} />
