@@ -11,6 +11,7 @@ import useFetch from '../../../hooks/useFetch';
 import Wiki from '../../../components/blocs/wiki';
 import { CATEGORIE_PARENT } from '../../../utils/relations-tags';
 import Error from '../../../components/errors';
+import RelationCurrent from '../../../components/blocs/current-relations';
 
 export default function CategoryPresentationPage() {
   const { url } = useUrl();
@@ -21,6 +22,7 @@ export default function CategoryPresentationPage() {
 
   return (
     <>
+      <RelationCurrent />
       <RelationsByTag
         tag={CATEGORIE_PARENT}
         blocName="Parents"
