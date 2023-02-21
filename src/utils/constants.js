@@ -51,7 +51,6 @@ export const ENUMS_LABELS_MAPPER = {
   BibId: 'Identifiant bibliothèque ESGBU',
   BNF: 'Identifiant BnF',
   CJ3: 'Catégorie juridique INSEE (niveau III)',
-  cvHal: 'Identifiant cvHal',
   CTI: 'Identifiant CTI',
   dataESR: 'Identifiant dataESR',
   ED: "Numéro de l'ED",
