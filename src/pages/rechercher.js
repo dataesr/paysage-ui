@@ -69,6 +69,14 @@ function SearchResults({ data }) {
                     {getName(item)}
                   </RouterLink>
                 </p>
+                {item.structureStatus === 'inactive' && (
+                  <Badge
+                    isSmall
+                    colorFamily="brown-opera"
+                    text="Inactive"
+                    spacing="mb-0"
+                  />
+                ) }
                 <p className="fr-tile__desc">
                   {getDescription(item)}
                 </p>
