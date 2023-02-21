@@ -100,17 +100,27 @@ function createCsvStructureRowFromRelation({ relation, inverse, listName }) {
     'Site web': (toExport?.websites?.length) ? (toExport?.websites.find((w) => w.language?.toLowerCase() === 'fr')?.url || toExport?.websites?.[0]?.url) : null,
     Téléphone: toExport.currentLocalisation?.phonenumber,
     'ID Paysage': toExport.id,
-    wikidata: toExport.identifiers?.filter((i) => (i.type === 'Wikidata')).sort((a, b) => a?.startDate?.localCompare(b?.startDate)).map((i) => i.value).join('|'),
-    idref: toExport.identifiers?.filter((i) => (i.type === 'idRef')).sort((a, b) => a?.startDate?.localCompare(b?.startDate)).map((i) => i.value).join('|'),
-    uai: toExport.identifiers?.filter((i) => (i.type === 'UAI')).sort((a, b) => a?.startDate?.localCompare(b?.startDate)).map((i) => i.value).join('|'),
-    siret: toExport.identifiers?.filter((i) => (i.type === 'Siret')).sort((a, b) => a?.startDate?.localCompare(b?.startDate)).map((i) => i.value).join('|'),
-    grid: toExport.identifiers?.filter((i) => (i.type === 'GRID')).sort((a, b) => a?.startDate?.localCompare(b?.startDate)).map((i) => i.value).join('|'),
-    ror: toExport.identifiers?.filter((i) => (i.type === 'ROR')).sort((a, b) => a?.startDate?.localCompare(b?.startDate)).map((i) => i.value).join('|'),
-    'Identifiant Annelis': toExport.identifiers?.filter((i) => (i.type === 'id annelis')).sort((a, b) => a?.startDate?.localCompare(b?.startDate)).map((i) => i.value).join('|'),
-    'Identifiant établissement ESGBU': toExport.identifiers?.filter((i) => (i.type === 'EtId')).sort((a, b) => a?.startDate?.localCompare(b?.startDate)).map((i) => i.value).join('|'),
-    'Identifiant SCD ESGBU': toExport.identifiers?.filter((i) => (i.type === 'ESGBU')).sort((a, b) => a?.startDate?.localCompare(b?.startDate)).map((i) => i.value).join('|'),
-    'Identifiant bibliothèque ESGBU': toExport.identifiers?.filter((i) => (i.type === 'BibId')).sort((a, b) => a?.startDate?.localCompare(b?.startDate)).map((i) => i.value).join('|'),
-    'Identifiant Ecole doctorale': toExport.identifiers?.filter((i) => (i.type === "Numéro d'ED")).sort((a, b) => a?.startDate?.localCompare(b?.startDate)).map((i) => i.value).join('|'),
+    wikidata: toExport.identifiers?.filter((i) => (i.type === 'Wikidata'))
+      .sort((a, b) => a?.startDate?.localeCompare(b?.startDate)).map((i) => i.value).join('|'),
+    idref: toExport.identifiers?.filter((i) => (i.type === 'idRef'))
+      .sort((a, b) => a?.startDate?.localeCompare(b?.startDate)).map((i) => i.value).join('|'),
+    uai: toExport.identifiers?.filter((i) => (i.type === 'UAI'))
+      .sort((a, b) => a?.startDate?.localeCompare(b?.startDate)).map((i) => i.value).join('|'),
+    siret: toExport.identifiers?.filter((i) => (i.type === 'Siret'))
+      .sort((a, b) => a?.startDate?.localeCompare(b?.startDate)).map((i) => i.value).join('|'),
+    grid: toExport.identifiers?.filter((i) => (i.type === 'GRID'))
+      .sort((a, b) => a?.startDate?.localeCompare(b?.startDate)).map((i) => i.value).join('|'),
+    ror: toExport.identifiers?.filter((i) => (i.type === 'ROR'))
+      .sort((a, b) => a?.startDate?.localeCompare(b?.startDate)).map((i) => i.value).join('|'),
+    'Identifiant Annelis': toExport.identifiers?.filter((i) => (i.type === 'id annelis'))
+      .sort((a, b) => a?.startDate?.localeCompare(b?.startDate)).map((i) => i.value).join('|'),
+    'Identifiant établissement ESGBU': toExport.identifiers?.filter((i) => (i.type === 'EtId'))
+      .sort((a, b) => a?.startDate?.localeCompare(b?.startDate)).map((i) => i.value).join('|'),
+    'Identifiant SCD ESGBU': toExport.identifiers?.filter((i) => (i.type === 'ESGBU')).sort((a, b) => a?.startDate?.localeCompare(b?.startDate)).map((i) => i.value).join('|'),
+    'Identifiant bibliothèque ESGBU': toExport.identifiers?.filter((i) => (i.type === 'BibId'))
+      .sort((a, b) => a?.startDate?.localeCompare(b?.startDate)).map((i) => i.value).join('|'),
+    'Identifiant Ecole doctorale': toExport.identifiers?.filter((i) => (i.type === "Numéro d'ED"))
+      .sort((a, b) => a?.startDate?.localeCompare(b?.startDate)).map((i) => i.value).join('|'),
     'Email générique Direction': toExport?.emails.find((m) => m.emailTypeId === 'NVdq8NVdq8NVdq8')?.email,
     'Email générique DGS/SG': toExport?.emails.find((m) => m.emailTypeId === '4puTu4puTu4puTu')?.email,
   };
@@ -191,8 +201,10 @@ function createCsvLaureatesFromRelation({ relation, listName }) {
     Précision: `${relation.laureatePrecision ? relation.laureatePrecision : ''}`,
     'Libellé Lauréat': laureate.displayName,
     'Code Paysage Lauréat': laureate.id,
-    'idref lauréat': laureate.identifiers?.filter((i) => (i.type === 'idRef')).sort((a, b) => a?.startDate?.localCompare(b?.startDate)).map((i) => i.value).join('|'),
-    'Orcid lauréat': laureate.identifiers?.filter((i) => (i.type === 'ORCID')).sort((a, b) => a?.startDate?.localCompare(b?.startDate)).map((i) => i.value).join('|'),
+    'idref lauréat': laureate.identifiers?.filter((i) => (i.type === 'idRef'))
+      .sort((a, b) => a?.startDate?.localeCompare(b?.startDate)).map((i) => i.value).join('|'),
+    'Orcid lauréat': laureate.identifiers?.filter((i) => (i.type === 'ORCID'))
+      .sort((a, b) => a?.startDate?.localeCompare(b?.startDate)).map((i) => i.value).join('|'),
     'Libellé du prix': prize.displayName,
     'Libellé complément prix': prize.descriptionFr,
     'Code Paysage Prix': prize.id,
@@ -248,21 +260,34 @@ function createCsvGovernanceFromRelation({ relation, short = false }) {
     'Lien du texte officiel de fin de fonction': relation.endDateOfficialText?.pageUrl,
     'Identifiant paysage de la structure': structure.id,
     'Identifiant paysage de la personne': person.id,
-    'idref de la personne': person.identifiers?.filter((i) => (i.type === 'idRef')).sort((a, b) => a?.startDate?.localCompare(b?.startDate)).map((i) => i.value).join('|'),
-    'Orcid de la personne': person.identifiers?.filter((i) => (i.type === 'ORCID Id')).sort((a, b) => a?.startDate?.localCompare(b?.startDate)).map((i) => i.value).join('|'),
-    'wikidata de la personne': person.identifiers?.filter((i) => (i.type === 'Wikidata')).sort((a, b) => a?.startDate?.localCompare(b?.startDate)).map((i) => i.value).join('|'),
-    'wikidata de la structure': structure.identifiers?.filter((i) => (i.type === 'Wikidata')).sort((a, b) => a?.startDate?.localCompare(b?.startDate)).map((i) => i.value).join('|'),
-    'idref de la structure': structure.identifiers?.filter((i) => (i.type === 'idRef')).sort((a, b) => a?.startDate?.localCompare(b?.startDate)).map((i) => i.value).join('|'),
-    'uai de la structure': structure.identifiers?.filter((i) => (i.type === 'UAI')).sort((a, b) => a?.startDate?.localCompare(b?.startDate)).map((i) => i.value).join('|'),
-    'siret de la structure': structure.identifiers?.filter((i) => (i.type === 'Siret')).sort((a, b) => a?.startDate?.localCompare(b?.startDate)).map((i) => i.value).join('|'),
-    'grid de la structure': structure.identifiers?.filter((i) => (i.type === 'GRID')).sort((a, b) => a?.startDate?.localCompare(b?.startDate)).map((i) => i.value).join('|'),
-    'ror de la structure': structure.identifiers?.filter((i) => (i.type === 'ROR')).sort((a, b) => a?.startDate?.localCompare(b?.startDate)).map((i) => i.value).join('|'),
-    'Identifiant Annelis de la structure': structure.identifiers?.filter((i) => (i.type === 'id annelis')).sort((a, b) => a?.startDate?.localCompare(b?.startDate)).map((i) => i.value).join('|'),
-    'Identifiant établissement ESGBU de la structure': structure.identifiers?.filter((i) => (i.type === 'EtId')).sort((a, b) => a?.startDate?.localCompare(b?.startDate)).map((i) => i.value).join('|'),
-    'Identifiant SCD ESGBU de la structure': structure.identifiers?.filter((i) => (i.type === 'ESGBU')).sort((a, b) => a?.startDate?.localCompare(b?.startDate)).map((i) => i.value).join('|'),
-    'Identifiant bibliothèque ESGBU de la structure': structure.identifiers?.filter((i) => (i.type === 'BibId')).sort((a, b) => a?.startDate?.localCompare(b?.startDate)).map((i) => i.value).join('|'),
+    'idref de la personne': person.identifiers?.filter((i) => (i.type === 'idRef'))
+      .sort((a, b) => a?.startDate?.localeCompare(b?.startDate)).map((i) => i.value).join('|'),
+    'Orcid de la personne': person.identifiers?.filter((i) => (i.type === 'ORCID Id'))
+      .sort((a, b) => a?.startDate?.localeCompare(b?.startDate)).map((i) => i.value).join('|'),
+    'wikidata de la personne': person.identifiers?.filter((i) => (i.type === 'Wikidata'))
+      .sort((a, b) => a?.startDate?.localeCompare(b?.startDate)).map((i) => i.value).join('|'),
+    'wikidata de la structure': structure.identifiers?.filter((i) => (i.type === 'Wikidata'))
+      .sort((a, b) => a?.startDate?.localeCompare(b?.startDate)).map((i) => i.value).join('|'),
+    'idref de la structure': structure.identifiers?.filter((i) => (i.type === 'idRef'))
+      .sort((a, b) => a?.startDate?.localeCompare(b?.startDate)).map((i) => i.value).join('|'),
+    'uai de la structure': structure.identifiers?.filter((i) => (i.type === 'UAI'))
+      .sort((a, b) => a?.startDate?.localeCompare(b?.startDate)).map((i) => i.value).join('|'),
+    'siret de la structure': structure.identifiers?.filter((i) => (i.type === 'Siret'))
+      .sort((a, b) => a?.startDate?.localeCompare(b?.startDate)).map((i) => i.value).join('|'),
+    'grid de la structure': structure.identifiers?.filter((i) => (i.type === 'GRID'))
+      .sort((a, b) => a?.startDate?.localeCompare(b?.startDate)).map((i) => i.value).join('|'),
+    'ror de la structure': structure.identifiers?.filter((i) => (i.type === 'ROR'))
+      .sort((a, b) => a?.startDate?.localeCompare(b?.startDate)).map((i) => i.value).join('|'),
+    'Identifiant Annelis de la structure': structure.identifiers?.filter((i) => (i.type === 'id annelis'))
+      .sort((a, b) => a?.startDate?.localeCompare(b?.startDate)).map((i) => i.value).join('|'),
+    'Identifiant établissement ESGBU de la structure': structure.identifiers?.filter((i) => (i.type === 'EtId'))
+      .sort((a, b) => a?.startDate?.localeCompare(b?.startDate)).map((i) => i.value).join('|'),
+    'Identifiant SCD ESGBU de la structure': structure.identifiers?.filter((i) => (i.type === 'ESGBU'))
+      .sort((a, b) => a?.startDate?.localeCompare(b?.startDate)).map((i) => i.value).join('|'),
+    'Identifiant bibliothèque ESGBU de la structure': structure.identifiers?.filter((i) => (i.type === 'BibId'))
+      .sort((a, b) => a?.startDate?.localeCompare(b?.startDate)).map((i) => i.value).join('|'),
     'Identifiant Ecole doctorale de la structure': structure.identifiers?.filter((i) => (i.type === "Numéro d'ED"))
-      .sort((a, b) => a?.startDate?.localCompare(b?.startDate)).map((i) => i.value).join('|'),
+      .sort((a, b) => a?.startDate?.localeCompare(b?.startDate)).map((i) => i.value).join('|'),
   };
   if (short) {
     delete result.Adresse;
@@ -295,9 +320,12 @@ function createCsvPersonFromRelation({ relation, inverse }) {
     'Texte officiel de fin de fonction': relation.endDateOfficialText?.title,
     'Lien du texte officiel de fin de fonction': relation.endDateOfficialText?.pageUrl,
     'Identifiant paysage de la personne': person.id,
-    'idref de la personne': person.identifiers?.filter((i) => (i.type === 'idRef')).sort((a, b) => a?.startDate?.localCompare(b?.startDate)).map((i) => i.value).join('|'),
-    'Orcid de la personne': person.identifiers?.filter((i) => (i.type === 'ORCID Id')).sort((a, b) => a?.startDate?.localCompare(b?.startDate)).map((i) => i.value).join('|'),
-    'wikidata de la personne': person.identifiers?.filter((i) => (i.type === 'Wikidata')).sort((a, b) => a?.startDate?.localCompare(b?.startDate)).map((i) => i.value).join('|'),
+    'idref de la personne': person.identifiers?.filter((i) => (i.type === 'idRef'))
+      .sort((a, b) => a?.startDate?.localeCompare(b?.startDate)).map((i) => i.value).join('|'),
+    'Orcid de la personne': person.identifiers?.filter((i) => (i.type === 'ORCID Id'))
+      .sort((a, b) => a?.startDate?.localeCompare(b?.startDate)).map((i) => i.value).join('|'),
+    'wikidata de la personne': person.identifiers?.filter((i) => (i.type === 'Wikidata'))
+      .sort((a, b) => a?.startDate?.localeCompare(b?.startDate)).map((i) => i.value).join('|'),
   };
 }
 
