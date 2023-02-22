@@ -60,7 +60,7 @@ export const ENUMS_LABELS_MAPPER = {
   GRID: 'GRID',
   isni: 'Identifiant Isni',
   ISIL: 'Identifiant ISIL',
-  IdREF: 'IdRef',
+  idRef: 'idRef',
   idHal: 'idHal',
   IS03: 'Code ISO 3',
   ISO2: 'Code ISO 2',
