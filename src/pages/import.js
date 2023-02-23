@@ -30,16 +30,12 @@ function sanitize(form) {
 }
 
 export default function ImportPage({ data }) {
-  const { form, updateForm } = useForm(data);
+  const [errorResponses, setErrorResponses] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [parents, setParents] = useState([]);
   const [queries, setQueries] = useState([]);
   const [responses, setResponses] = useState([]);
-  const [errorResponses, setErrorResponses] = useState([]);
-
-  // const PageSize = 2;
-  // const [currentPage, setCurrentPage] = useState(1);
-  // const firstPageIndex = (currentPage - 1) * PageSize;
+  const { form, updateForm } = useForm(data);
 
   const checkUploadOnClick = async () => {
     setIsLoading(true);
@@ -121,37 +117,26 @@ export default function ImportPage({ data }) {
         return null;
       });
 
-    const checkSiret = (siret, index) => api.get(`/autocomplete?types=structures&query=${siret}`)
-      .then((response) => {
-        const responsesWithSiretToCheck = response.data.data.map((el) => el.identifiers);
-        if (siret?.length !== 14) {
-          return { index, error: `Le siret ${siret} est invalide` };
-        }
-        if (!responsesWithSiretToCheck.includes(siret)) {
-          return { index, error: `Le siret ${siret} existe déjà` };
-        }
-        return null;
-      });
+    const checkAllFields = async () => {
+      const errors = [];
+      const namePromises = [];
+      const siretPromises = [];
 
-    const namePromises = [];
-    const siretPromises = [];
-    const errors = [];
+      for (let index = 0; index < structuresJson.length; index += 1) {
+        const element = structuresJson[index];
+        namePromises.push(checkName(element.usualName, index));
+      }
 
-    for (let index = 0; index < structuresJson.length; index += 1) {
-      const element = structuresJson[index];
-      namePromises.push(checkName(element.usualName, index));
-      siretPromises.push(checkSiret(element.siret, index));
-    }
+      const results = await Promise.all([...namePromises, ...siretPromises]);
+      errors.push(...results.filter((result) => result !== null));
 
-    Promise.all([...namePromises, ...siretPromises])
-      .then((results) => {
-        errors.push(...results.filter((result) => result !== null));
-        // console.log(results);
-      })
-      .catch(() => {
-        // console.error(err);
-      });
-    setErrorResponses(errors);
+      return errors;
+    };
+
+    checkAllFields().then((errors) => {
+      setErrorResponses(errors);
+    });
+
     updateForm({ data: '' });
     setIsLoading(false);
   };
@@ -163,12 +148,10 @@ export default function ImportPage({ data }) {
     const structuresJson = structuresTsv.filter((item) => item.length).map((item) => {
       const splittedItem = item.split(TSV_SEPARATOR);
       const objectItem = {};
-      // Map field with header
       for (let i = 0; i < headers.length; i += 1) {
         const key = JSON.parse(JSON.stringify(headers[i]));
         objectItem[key] = splittedItem[i];
       }
-      // Convert header title to API field name
       const structure = {
         usualName: objectItem['Nom usuel en français'],
         shortName: objectItem['Nom court en français'],
@@ -215,7 +198,6 @@ export default function ImportPage({ data }) {
         const [lat, lng] = latlng;
         structure.coordinates = { lat: Number(lat), lng: Number(lng) };
       }
-      // Clean empty fields
       Object.keys(structure).forEach((key) => {
         const value = structure[key];
         if (value === '' || value === null || value === undefined) {
@@ -225,13 +207,11 @@ export default function ImportPage({ data }) {
       return structure;
     });
     setQueries(structuresJson);
-    // Creation de la Structure
     const responsesPromises = await Promise.all(structuresJson.map((structure) => api.post('/structures', structure)
       .then((response) => response)
       .catch((error) => ({ status: error?.message, statusText: `${error?.error} : ${JSON.stringify(error?.details?.[0])}`, data: {} }))));
     setResponses(responsesPromises);
 
-    // Creation de la Relation
     const parentsPromises = await Promise.all(responsesPromises.map((result, index) => {
       const resourceId = structuresJson?.[index]?.parent;
       const relatedObjectId = result?.data?.id;
@@ -282,29 +262,36 @@ export default function ImportPage({ data }) {
         <Row>
           <Col n="12">
             <Alert
-              description={`Il y a ${errorResponses.length} erreurs ou warning dans la vérification`}
+              description={`Il y a ${errorResponses.length} erreures ou warning`}
               title="Warning"
               type="warning"
             />
           </Col>
-          <Col>
-            {errorResponses.map((el, index) => (
-              <Row>
+          <Col n="12">
+            <Row key="headers">
+              <Col n="1">
+                Ligne
+              </Col>
+              <Col n="3">
+                Nom de la structure
+              </Col>
+              <Col n="5">
+                Erreurs
+              </Col>
+            </Row>
+            {errorResponses.map((response, index) => (
+              <Row key={index}>
                 <Col n="1">
                   {index + 1}
                 </Col>
                 <Col n="3">
                   <span>
-                    {el?.acronymFr}
-                    {el?.acronymFr && ' - '}
-                    {el?.shortName}
-                    {el?.shortName && ' - '}
-                    {el?.name}
+                    {response.name}
                   </span>
                 </Col>
-                <Col n="6">
+                <Col n="5">
                   <span>
-                    {el?.error}
+                    {response?.error}
                   </span>
                 </Col>
               </Row>
@@ -382,9 +369,6 @@ export default function ImportPage({ data }) {
                 </Col>
               </Row>
             ))}
-            {/* <Row className="flex--space-around fr-pt-3w">
-              <Pagination currentPage={Number(currentPage)} onClick={(page) => setCurrentPage(page)} />
-            </Row> */}
           </Col>
         </Row>
       )}
