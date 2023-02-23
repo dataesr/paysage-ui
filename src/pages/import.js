@@ -1,4 +1,4 @@
-import { Col, Container, Icon, Link, Row, Select, TextInput } from '@dataesr/react-dsfr';
+import { Alert, Col, Container, Icon, Link, Row, Select, TextInput, Button } from '@dataesr/react-dsfr';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 
@@ -9,7 +9,9 @@ import api from '../utils/api';
 import { capitalize } from '../utils/strings';
 
 const LINE_SEPARATOR = '\n';
+// Ligne
 const TSV_SEPARATOR = '\t';
+// Colonne
 
 const statusMapping = {
   O: 'active',
@@ -33,8 +35,13 @@ export default function ImportPage({ data }) {
   const [parents, setParents] = useState([]);
   const [queries, setQueries] = useState([]);
   const [responses, setResponses] = useState([]);
+  const [errorResponses, setErrorResponses] = useState([]);
 
-  const handleUploadClick = async () => {
+  // const PageSize = 2;
+  // const [currentPage, setCurrentPage] = useState(1);
+  // const firstPageIndex = (currentPage - 1) * PageSize;
+
+  const checkUploadOnClick = async () => {
     setIsLoading(true);
     const structuresTsv = JSON.parse(JSON.stringify(form.data)).split(LINE_SEPARATOR);
     const headers = structuresTsv.shift().split(TSV_SEPARATOR);
@@ -100,13 +107,131 @@ export default function ImportPage({ data }) {
           delete structure[key];
         }
       });
+
       return structure;
     });
     setQueries(structuresJson);
+
+    const checkName = (name, index) => api.get(`/autocomplete?types=structures&query=${name}`)
+      .then((response) => {
+        const responsesWithNameToCheck = response.data.data.map((el) => el.name);
+        if (responsesWithNameToCheck.includes(name)) {
+          return { name, index, error: `${name} existe déjà dans la base de donnée` };
+        }
+        return null;
+      });
+
+    const checkSiret = (siret, index) => api.get(`/autocomplete?types=structures&query=${siret}`)
+      .then((response) => {
+        const responsesWithSiretToCheck = response.data.data.map((el) => el.identifiers);
+        if (siret?.length !== 14) {
+          return { index, error: `Le siret ${siret} est invalide` };
+        }
+        if (!responsesWithSiretToCheck.includes(siret)) {
+          return { index, error: `Le siret ${siret} existe déjà` };
+        }
+        return null;
+      });
+
+    const namePromises = [];
+    const siretPromises = [];
+    const errors = [];
+
+    for (let index = 0; index < structuresJson.length; index += 1) {
+      const element = structuresJson[index];
+      namePromises.push(checkName(element.usualName, index));
+      siretPromises.push(checkSiret(element.siret, index));
+    }
+
+    Promise.all([...namePromises, ...siretPromises])
+      .then((results) => {
+        errors.push(...results.filter((result) => result !== null));
+        // console.log(results);
+      })
+      .catch(() => {
+        // console.error(err);
+      });
+    setErrorResponses(errors);
+    updateForm({ data: '' });
+    setIsLoading(false);
+  };
+
+  const handleUploadClick = async () => {
+    setIsLoading(true);
+    const structuresTsv = JSON.parse(JSON.stringify(form.data)).split(LINE_SEPARATOR);
+    const headers = structuresTsv.shift().split(TSV_SEPARATOR);
+    const structuresJson = structuresTsv.filter((item) => item.length).map((item) => {
+      const splittedItem = item.split(TSV_SEPARATOR);
+      const objectItem = {};
+      // Map field with header
+      for (let i = 0; i < headers.length; i += 1) {
+        const key = JSON.parse(JSON.stringify(headers[i]));
+        objectItem[key] = splittedItem[i];
+      }
+      // Convert header title to API field name
+      const structure = {
+        usualName: objectItem['Nom usuel en français'],
+        shortName: objectItem['Nom court en français'],
+        acronymFr: objectItem['Sigle en français'],
+        nameEn: objectItem['Nom long en anglais :'],
+        acronymEn: objectItem['Nom courten anglais :'],
+        officialName: objectItem['Nom officiel dans la langue originale'],
+        acronymLocal: objectItem['Nom court officiel dans la langue originale'],
+        otherNames: objectItem['Autres dénominations possibles séparées par des ;']?.split(';'),
+        structureStatus: statusMapping[objectItem['Statut [O = Ouvert, F = Fermé, P = Potentiel]']],
+        categories: objectItem[JSON.stringify('Code de la/des catégories {rechercher le code, séparation ;}')]?.split(';'),
+        legalCategory: objectItem['Code du statut juridique {rechercher le code}'],
+        cityId: objectItem['Code commune {rechercher le code}'],
+        idref: objectItem['Identifiant IdRef [123456789]'],
+        wikidata: objectItem['Identifiant Wikidata [Q1234]'],
+        ror: objectItem['Identifiant ROR [12cd5fg89]'],
+        uai: objectItem['Code UAI [1234567X]'],
+        siret: objectItem['Numéro siret [12345678901234]'],
+        rnsr: objectItem['Numéro RNSR [123456789X]'],
+        ed: objectItem["Numéro de l'ED [123]"],
+        websiteFr: objectItem['Site internet en français'],
+        websiteEn: objectItem['Site internet en anglais'],
+        twitter: objectItem['Compte twitter [https://twitter.com/XXX]'],
+        linkedIn: objectItem['Compte linkedIn [https://www.linkedin.com/in/XXX-XXX-123456/]'],
+        // : objectItem['Mention de dInformation Scientifique et Techniqueribution :'],
+        address: objectItem['Adresse :'],
+        place: objectItem['Lieu dit :'],
+        postOfficeBoxNumber: objectItem['Boite postale :'],
+        postalCode: objectItem['Code postal :'],
+        locality: objectItem["Localité d'acheminement :"],
+        // iso3: objectItem[JSON.stringify('Nom du pays en français {rechercher le libellé ou le code ISO}')]?.toUpperCase(),
+        creationDate: objectItem['Date de création {2020-07-02}'],
+        // : objectItem['Date de création approximative {O = Oui, N = Non}'],
+        closureDate: objectItem['Date de fermeture {2020-07-02}'],
+        // : objectItem['Date de fermeture approximative {O = Oui, N = Non}'],
+        parent: objectItem['Parent {rechercher le code}'],
+      };
+      if (objectItem?.["Localisation [A1 = France métropolitaine et les DOM, A2 = Collectivités d'outre-mer, A3 = Hors de France]"] !== 'A3') {
+        structure.country = 'France';
+        structure.iso3 = 'FRA';
+      }
+      const latlng = objectItem['Coordonnées GPS [-12.34,5.6789]']?.split(',');
+      if (latlng?.length === 2) {
+        const [lat, lng] = latlng;
+        structure.coordinates = { lat: Number(lat), lng: Number(lng) };
+      }
+      // Clean empty fields
+      Object.keys(structure).forEach((key) => {
+        const value = structure[key];
+        if (value === '' || value === null || value === undefined) {
+          delete structure[key];
+        }
+      });
+      return structure;
+    });
+    setQueries(structuresJson);
+    // Creation de la Structure
     const responsesPromises = await Promise.all(structuresJson.map((structure) => api.post('/structures', structure)
       .then((response) => response)
       .catch((error) => ({ status: error?.message, statusText: `${error?.error} : ${JSON.stringify(error?.details?.[0])}`, data: {} }))));
     setResponses(responsesPromises);
+
+    // Creation de la Relation
     const parentsPromises = await Promise.all(responsesPromises.map((result, index) => {
       const resourceId = structuresJson?.[index]?.parent;
       const relatedObjectId = result?.data?.id;
@@ -148,13 +273,49 @@ export default function ImportPage({ data }) {
               textarea
               value={form?.data}
             />
-            <FormFooter
-              onSaveHandler={() => handleUploadClick(sanitize(form))}
-            />
+            <Button onClick={() => checkUploadOnClick(sanitize(form))}>Vérification</Button>
           </form>
         </Col>
       </Row>
       {isLoading && <Row className="fr-my-2w flex--space-around"><Spinner /></Row>}
+      {errorResponses?.length ? (
+        <Row>
+          <Col n="12">
+            <Alert
+              description={`Il y a ${errorResponses.length} erreurs ou warning dans la vérification`}
+              title="Warning"
+              type="warning"
+            />
+          </Col>
+          <Col>
+            {errorResponses.map((el, index) => (
+              <Row>
+                <Col n="1">
+                  {index + 1}
+                </Col>
+                <Col n="3">
+                  <span>
+                    {el?.acronymFr}
+                    {el?.acronymFr && ' - '}
+                    {el?.shortName}
+                    {el?.shortName && ' - '}
+                    {el?.name}
+                  </span>
+                </Col>
+                <Col n="6">
+                  <span>
+                    {el?.error}
+                  </span>
+                </Col>
+              </Row>
+            ))}
+          </Col>
+        </Row>
+      ) : (
+        <FormFooter
+          onSaveHandler={() => handleUploadClick(sanitize(form))}
+        />
+      )}
       {!!responses.length && (
         <Row>
           <Col n="12">
@@ -221,6 +382,9 @@ export default function ImportPage({ data }) {
                 </Col>
               </Row>
             ))}
+            {/* <Row className="flex--space-around fr-pt-3w">
+              <Pagination currentPage={Number(currentPage)} onClick={(page) => setCurrentPage(page)} />
+            </Row> */}
           </Col>
         </Row>
       )}
