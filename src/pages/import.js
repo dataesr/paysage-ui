@@ -1,4 +1,4 @@
-import { Alert, Col, Container, Icon, Link, Row, Select, TextInput, Button } from '@dataesr/react-dsfr';
+import { Accordion, AccordionItem, Alert, Col, Container, Icon, Link, Row, Select, TextInput, Button } from '@dataesr/react-dsfr';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 
@@ -110,20 +110,31 @@ export default function ImportPage({ data }) {
       .then((response) => {
         const responsesWithNameToCheck = response.data.data.map((el) => el.name);
         if (responsesWithNameToCheck.includes(name)) {
-          return { name, index, warning: `${name} est probablement un doublon` };
+          return { name, index, warnings: [{ message: `${name} est probablement un doublon` }] };
         }
-        return { name, index, warning: null };
+        return { name, index, warnings: [] };
+      });
+
+    const checkWikidata = (name, wikidata, index) => api.get(`/autocomplete?types=structures&query=${wikidata}`)
+      .then((response) => {
+        const responsesWithWikidataToCheck = response.data.data.find((el) => el?.identifiers);
+        if (wikidata === undefined) return { name, wikidata, index, warnings: [] };
+        if (responsesWithWikidataToCheck?.identifiers?.includes(wikidata)) {
+          return { name, wikidata, index, warnings: [{ message: `Le wikidata ${wikidata} existe déjà` }] };
+        }
+        return { name, wikidata, index, warnings: [] };
       });
 
     const checkAllFields = async () => {
       const warnings = [];
       const noWarnings = [];
       const namePromises = structuresJson.map((element, index) => checkName(element.usualName, index));
+      const wikidataPromise = structuresJson.map((element, index) => checkWikidata(element.usualName, element.wikidata, index));
 
-      const results = await Promise.all([...namePromises]);
+      const results = await Promise.all([...namePromises, ...wikidataPromise]);
 
       results.forEach((result) => {
-        if (result.warning) {
+        if (result.warnings.length > 0) {
           warnings.push(result);
         } else {
           noWarnings.push(result);
@@ -135,7 +146,6 @@ export default function ImportPage({ data }) {
     };
     checkAllFields().then(() => {
     });
-    updateForm({ data: '' });
     setIsLoading(false);
   };
 
@@ -251,95 +261,145 @@ export default function ImportPage({ data }) {
               textarea
               value={form?.data}
             />
-            <Button onClick={() => checkUploadOnClick(sanitize(form))}>Vérification</Button>
+            <Row>
+              <Col>
+                <Button onClick={() => checkUploadOnClick(sanitize(form))}>Vérification</Button>
+              </Col>
+              {form?.data?.length > 0 && (
+                <Col>
+                  <Button
+                    colors={['#f55', '#fff']}
+                    onClick={() => updateForm({ data: '' })}
+                  >
+                    Effacer
+                  </Button>
+                </Col>
+              )}
+            </Row>
           </form>
         </Col>
       </Row>
       {isLoading && <Row className="fr-my-2w flex--space-around"><Spinner /></Row>}
-      {checkedResponsesWithNoWarning?.length && (
+      {checkedResponsesWithNoWarning?.length > 0 && (
         <Row gutters>
           <Col n="12">
-            <Alert
-              description={`Il y a ${checkedResponsesWithNoWarning?.length} vérification(s) avec succés`}
-              title="Succes"
-              type="success"
-            />
-          </Col>
-          <Col n="12">
-            <Row gutters key="headers">
-              <Col n="1">
-                Ligne
-              </Col>
-              <Col n="3">
-                Nom de la structure
-              </Col>
-            </Row>
-            {checkedResponsesWithNoWarning?.map((response, index) => (
-              <Row gutters key={index}>
-                <>
-                  <Col n="1">
-                    {response.index + 1}
-                  </Col>
-                  <Col n="6">
-                    <span>
-                      {response?.name}
-                    </span>
-                  </Col>
-                </>
-              </Row>
-            ))}
+            <Col n="12">
+              <Alert
+                description={`Il y a ${checkedResponsesWithNoWarning?.length} vérification(s) avec succés`}
+                title="Succes"
+                type="success"
+              />
+            </Col>
+            <Accordion>
+              <AccordionItem
+                title="Voir toutes les vérifications avec succés"
+              >
+                <Col n="12">
+                  <Row gutters key="headers">
+                    <Col n="1">
+                      Ligne
+                    </Col>
+                    <Col n="3">
+                      Nom de la structure
+                    </Col>
+                    <Col n="3">
+                      Wikidata
+                    </Col>
+                  </Row>
+                  {checkedResponsesWithNoWarning?.sort((a, b) => a.index - b.index).map((response, index) => (
+                    <Row gutters key={index}>
+                      <Col n="1">
+                        {response.index + 1}
+                      </Col>
+                      <Col n="3">
+                        <span>
+                          {response?.name}
+                        </span>
+                      </Col>
+                      <Col n="3">
+                        <span>
+                          {response?.wikidata}
+                        </span>
+                      </Col>
+                    </Row>
+                  ))}
+                </Col>
+              </AccordionItem>
+            </Accordion>
           </Col>
         </Row>
       ) }
-      {checkedResponsesWithWarning?.length ? (
+      {checkedResponsesWithWarning?.length > 0 && (
         <Row gutters>
           <Col n="12">
-            <Alert
-              description={`Il y a ${checkedResponsesWithWarning?.length} warning`}
-              title="Warning"
-              type="warning"
-            />
-          </Col>
-          <Col n="12">
-            <Row gutters key="headers">
-              <Col n="1">
-                Ligne
-              </Col>
-              <Col n="3">
-                Nom de la structure
-              </Col>
-              <Col n="5">
-                Erreurs
-              </Col>
-            </Row>
-            {checkedResponsesWithWarning?.map((response, index) => (
-              <Row gutters key={index}>
-                {response?.warning && (
-                  <>
+            <Col n="12">
+              <Alert
+                description={`Il y a ${checkedResponsesWithWarning?.length} warning`}
+                title="Warning"
+                type="warning"
+              />
+            </Col>
+            <Accordion>
+              <AccordionItem
+                title="Voir tous les warnings"
+              >
+                <Col n="12">
+                  <Row gutters key="headers">
                     <Col n="1">
-                      {response.index + 1}
+                      Ligne
                     </Col>
                     <Col n="3">
-                      <span>
-                        {response?.name}
-                      </span>
+                      Nom de la structure
                     </Col>
                     <Col n="5">
-                      <span>
-                        {response?.warning}
-                      </span>
+                      Erreurs
                     </Col>
-                  </>
-                )}
-              </Row>
-            ))}
+                  </Row>
+                  {checkedResponsesWithWarning.sort((a, b) => a.index - b.index).map((response, index) => (
+                    response.warnings.length > 0 && (
+                      <Row gutters key={index}>
+                        <Col n="1">
+                          {response.index + 1}
+                        </Col>
+                        <Col n="3">
+                          <span>
+                            {response?.name}
+                          </span>
+                        </Col>
+                        <Col n="5">
+                          <span>
+                            {response?.warnings.map((warning) => warning.message).join(',')}
+                          </span>
+                        </Col>
+                        <Col>
+                          <Button
+                            colors={['#f55', '#fff']}
+                            onClick={() => {
+                              const updatedResponsesWithWarning = [...checkedResponsesWithWarning];
+                              const ignoredResponse = updatedResponsesWithWarning.splice(index, 1)[0];
+                              setCheckedResponsesWithWarning(updatedResponsesWithWarning);
+                              const updatedResponsesWithNoWarning = [...checkedResponsesWithNoWarning, ignoredResponse];
+                              setCheckedResponsesWithNoWarnings(updatedResponsesWithNoWarning);
+                            }}
+                            size="sm"
+                          >
+                            Ignorer le warning
+                          </Button>
+                        </Col>
+                      </Row>
+                    )
+                  ))}
+                </Col>
+              </AccordionItem>
+            </Accordion>
           </Col>
         </Row>
-      ) : (
+      )}
+      {!checkedResponsesWithWarning.length && (
         <FormFooter
           onSaveHandler={() => handleUploadClick(sanitize(form))}
         />
-      )}
+      ) }
       {!!responses.length && (
         <Row>
           <Col n="12">
