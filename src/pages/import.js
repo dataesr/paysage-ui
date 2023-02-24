@@ -278,7 +278,7 @@ export default function ImportPage({ data }) {
               <Row gutters key={index}>
                 <>
                   <Col n="1">
-                    {index + 1}
+                    {response.index + 1}
                   </Col>
                   <Col n="6">
                     <span>
@@ -317,7 +317,7 @@ export default function ImportPage({ data }) {
                 {response?.warning && (
                   <>
                     <Col n="1">
-                      {index + 1}
+                      {response.index + 1}
                     </Col>
                     <Col n="3">
                       <span>
