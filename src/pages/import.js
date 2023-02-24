@@ -2,16 +2,14 @@ import { Alert, Col, Container, Icon, Link, Row, Select, TextInput, Button } fro
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 
-import FormFooter from '../components/forms/form-footer';
-import { Spinner } from '../components/spinner';
-import useForm from '../hooks/useForm';
-import api from '../utils/api';
 import { capitalize } from '../utils/strings';
+import { Spinner } from '../components/spinner';
+import api from '../utils/api';
+import FormFooter from '../components/forms/form-footer';
+import useForm from '../hooks/useForm';
 
 const LINE_SEPARATOR = '\n';
-// Ligne
 const TSV_SEPARATOR = '\t';
-// Colonne
 
 const statusMapping = {
   O: 'active',
@@ -30,7 +28,8 @@ function sanitize(form) {
 }
 
 export default function ImportPage({ data }) {
-  const [errorResponses, setErrorResponses] = useState([]);
+  const [checkedResponsesWithWarning, setCheckedResponsesWithWarning] = useState([]);
+  const [checkedResponsesWithNoWarning, setCheckedResponsesWithNoWarnings] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [parents, setParents] = useState([]);
   const [queries, setQueries] = useState([]);
@@ -96,7 +95,6 @@ export default function ImportPage({ data }) {
         const [lat, lng] = latlng;
         structure.coordinates = { lat: Number(lat), lng: Number(lng) };
       }
-      // Clean empty fields
       Object.keys(structure).forEach((key) => {
         const value = structure[key];
         if (value === '' || value === null || value === undefined) {
@@ -112,31 +110,31 @@ export default function ImportPage({ data }) {
       .then((response) => {
         const responsesWithNameToCheck = response.data.data.map((el) => el.name);
         if (responsesWithNameToCheck.includes(name)) {
-          return { name, index, error: `${name} existe déjà dans la base de donnée` };
+          return { name, index, warning: `${name} est probablement un doublon` };
         }
-        return null;
+        return { name, index, warning: null };
       });
 
     const checkAllFields = async () => {
-      const errors = [];
-      const namePromises = [];
-      const siretPromises = [];
+      const warnings = [];
+      const noWarnings = [];
+      const namePromises = structuresJson.map((element, index) => checkName(element.usualName, index));
 
-      for (let index = 0; index < structuresJson.length; index += 1) {
-        const element = structuresJson[index];
-        namePromises.push(checkName(element.usualName, index));
-      }
+      const results = await Promise.all([...namePromises]);
 
-      const results = await Promise.all([...namePromises, ...siretPromises]);
-      errors.push(...results.filter((result) => result !== null));
-
-      return errors;
+      results.forEach((result) => {
+        if (result.warning) {
+          warnings.push(result);
+        } else {
+          noWarnings.push(result);
+        }
+      });
+      setCheckedResponsesWithWarning(warnings);
+      setCheckedResponsesWithNoWarnings(noWarnings);
+      return { warnings, noWarnings };
     };
-
-    checkAllFields().then((errors) => {
-      setErrorResponses(errors);
+    checkAllFields().then(() => {
     });
-
     updateForm({ data: '' });
     setIsLoading(false);
   };
@@ -229,7 +227,7 @@ export default function ImportPage({ data }) {
 
   return (
     <Container spacing="py-6w">
-      <Row>
+      <Row gutters>
         <Col n="12">
           <form acceptCharset="UTF-8">
             <Select
@@ -258,17 +256,52 @@ export default function ImportPage({ data }) {
         </Col>
       </Row>
       {isLoading && <Row className="fr-my-2w flex--space-around"><Spinner /></Row>}
-      {errorResponses?.length ? (
-        <Row>
+      {checkedResponsesWithNoWarning?.length && (
+        <Row gutters>
           <Col n="12">
             <Alert
-              description={`Il y a ${errorResponses.length} erreures ou warning`}
+              description={`Il y a ${checkedResponsesWithNoWarning?.length} vérification(s) avec succés`}
+              title="Succes"
+              type="success"
+            />
+          </Col>
+          <Col n="12">
+            <Row gutters key="headers">
+              <Col n="1">
+                Ligne
+              </Col>
+              <Col n="3">
+                Nom de la structure
+              </Col>
+            </Row>
+            {checkedResponsesWithNoWarning?.map((response, index) => (
+              <Row gutters key={index}>
+                <>
+                  <Col n="1">
+                    {index + 1}
+                  </Col>
+                  <Col n="6">
+                    <span>
+                      {response?.name}
+                    </span>
+                  </Col>
+                </>
+              </Row>
+            ))}
+          </Col>
+        </Row>
+      ) }
+      {checkedResponsesWithWarning?.length ? (
+        <Row gutters>
+          <Col n="12">
+            <Alert
+              description={`Il y a ${checkedResponsesWithWarning?.length} warning`}
               title="Warning"
               type="warning"
             />
           </Col>
           <Col n="12">
-            <Row key="headers">
+            <Row gutters key="headers">
               <Col n="1">
                 Ligne
               </Col>
@@ -279,21 +312,25 @@ export default function ImportPage({ data }) {
                 Erreurs
               </Col>
             </Row>
-            {errorResponses.map((response, index) => (
-              <Row key={index}>
-                <Col n="1">
-                  {index + 1}
-                </Col>
-                <Col n="3">
-                  <span>
-                    {response.name}
-                  </span>
-                </Col>
-                <Col n="5">
-                  <span>
-                    {response?.error}
-                  </span>
-                </Col>
+            {checkedResponsesWithWarning?.map((response, index) => (
+              <Row gutters key={index}>
+                {response?.warning && (
+                  <>
+                    <Col n="1">
+                      {index + 1}
+                    </Col>
+                    <Col n="3">
+                      <span>
+                        {response?.name}
+                      </span>
+                    </Col>
+                    <Col n="5">
+                      <span>
+                        {response?.warning}
+                      </span>
+                    </Col>
+                  </>
+                )}
               </Row>
             ))}
           </Col>
