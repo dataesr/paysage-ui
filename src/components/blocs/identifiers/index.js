@@ -130,9 +130,6 @@ export default function IdentifiersComponent() {
     case 'idHal':
       linkTo = `https://aurehal.archives-ouvertes.fr/structure/read/id/${el.value}`;
       break;
-    case 'cvHal':
-      linkTo = `https://cv.archives-ouvertes.fr/${el.value}`;
-      break;
     case 'WOS':
       linkTo = `https://publons.com/researcher/${el.value}/`;
       break;

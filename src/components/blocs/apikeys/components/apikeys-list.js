@@ -12,6 +12,7 @@ export default function ApiKeysList({ data, deleteItem, highlight }) {
   const [sort, setSort] = useSort({ field: 'createdAt', type: 'date', ascending: false });
   const [actionnedItem, setActionnedItem] = useState();
   const sortedData = sort.ascending ? data.sort(sort.sorter) : data.sort(sort.sorter).reverse();
+
   return (
     <Container fluid>
       <Row alignItems="middle">
@@ -70,7 +71,9 @@ export default function ApiKeysList({ data, deleteItem, highlight }) {
                   icon={`ri-arrow-${(sort.field === 'createdAt' && !sort.ascending) ? 'up' : 'down'}-fill`}
                   onClick={() => setSort({ field: 'createdAt', type: 'date' })}
                 />
-                <Text className="fr-mb-0" bold>Créé le</Text>
+                <Text className="fr-mb-0" bold>
+                  Créée le
+                </Text>
               </Row>
             </Col>
             <Col n="1" />

@@ -1,12 +1,12 @@
-import { Col, Container, Icon, Link, Row, Select, TextInput } from '@dataesr/react-dsfr';
+import { Accordion, AccordionItem, Alert, Button, Col, Container, Icon, Link, Row, Select, TextInput } from '@dataesr/react-dsfr';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 
-import FormFooter from '../components/forms/form-footer';
-import { Spinner } from '../components/spinner';
-import useForm from '../hooks/useForm';
-import api from '../utils/api';
 import { capitalize } from '../utils/strings';
+import { Spinner } from '../components/spinner';
+import api from '../utils/api';
+import FormFooter from '../components/forms/form-footer';
+import useForm from '../hooks/useForm';
 
 const LINE_SEPARATOR = '\n';
 const TSV_SEPARATOR = '\t';
@@ -28,13 +28,15 @@ function sanitize(form) {
 }
 
 export default function ImportPage({ data }) {
-  const { form, updateForm } = useForm(data);
+  const [checkedResponsesWithWarnings, setCheckedResponsesWithWarnings] = useState([]);
+  const [checkedResponsesWithNoWarnings, setCheckedResponsesWithNoWarnings] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [parents, setParents] = useState([]);
   const [queries, setQueries] = useState([]);
   const [responses, setResponses] = useState([]);
+  const { form, updateForm } = useForm(data);
 
-  const handleUploadClick = async () => {
+  const checkUploadOnClick = async () => {
     setIsLoading(true);
     const structuresTsv = JSON.parse(JSON.stringify(form.data)).split(LINE_SEPARATOR);
     const headers = structuresTsv.shift().split(TSV_SEPARATOR);
@@ -93,22 +95,54 @@ export default function ImportPage({ data }) {
         const [lat, lng] = latlng;
         structure.coordinates = { lat: Number(lat), lng: Number(lng) };
       }
-      // Clean empty fields
       Object.keys(structure).forEach((key) => {
         const value = structure[key];
         if (value === '' || value === null || value === undefined) {
           delete structure[key];
         }
       });
+
       return structure;
     });
     setQueries(structuresJson);
-    const responsesPromises = await Promise.all(structuresJson.map((structure) => api.post('/structures', structure)
+
+    const checkName = (name, index) => api.get(`/autocomplete?types=structures&query=${name}`)
+      .then((response) => {
+        const responsesWithNameToCheck = response.data.data.map((el) => el.name);
+        const idOfExistingStructure = response.data.data.find((el) => el.name === name)?.id;
+        if (responsesWithNameToCheck.includes(name)) {
+          return { name, index, warnings: [{ message: `${name} est probablement un doublon` }], id: idOfExistingStructure };
+        }
+        return { name, index, warnings: [], id: null };
+      });
+    const namePromises = structuresJson.map((element, index) => checkName(element.usualName, index));
+    const results = await Promise.all(namePromises);
+    const allResults = structuresJson.map((element, index) => {
+      const result = results.find((r) => r.index === index);
+      const tmp = { ...element, index };
+      if (result?.warnings?.length > 0) { tmp.warnings = result.warnings; }
+      return tmp;
+    });
+    const warnings = allResults.filter((el) => el.warnings && el.warnings.length > 0);
+    const noWarnings = allResults.filter((el) => !el.warnings);
+    setCheckedResponsesWithWarnings(warnings);
+    setCheckedResponsesWithNoWarnings(noWarnings);
+    setIsLoading(false);
+  };
+
+  const onClickToSave = async (structure) => {
+    const saveResponse = await api.post('/structures', structure)
       .then((response) => response)
-      .catch((error) => ({ status: error?.message, statusText: `${error?.error} : ${JSON.stringify(error?.details?.[0])}`, data: {} }))));
-    setResponses(responsesPromises);
+      .catch((error) => ({ status: error?.message, statusText: `${error?.error} : ${JSON.stringify(error?.details?.[0])}`, data: {} }));
+    return saveResponse;
+  };
+
+  const handleUploadClick = async () => {
+    setIsLoading(true);
+    setQueries(checkedResponsesWithNoWarnings);
+    const responsesPromises = await Promise.all(checkedResponsesWithNoWarnings.map((structure) => onClickToSave(structure)));
     const parentsPromises = await Promise.all(responsesPromises.map((result, index) => {
-      const resourceId = structuresJson?.[index]?.parent;
+      const resourceId = checkedResponsesWithNoWarnings?.[index]?.parent;
       const relatedObjectId = result?.data?.id;
       if (resourceId && relatedObjectId) {
         return api.post('/relations', { resourceId, relatedObjectId, relationTag: 'structure-interne' })
@@ -119,12 +153,13 @@ export default function ImportPage({ data }) {
     }));
     setParents(parentsPromises);
     updateForm({ data: '' });
+    setResponses(responsesPromises);
     setIsLoading(false);
   };
 
   return (
     <Container spacing="py-6w">
-      <Row>
+      <Row gutters>
         <Col n="12">
           <form acceptCharset="UTF-8">
             <Select
@@ -148,13 +183,146 @@ export default function ImportPage({ data }) {
               textarea
               value={form?.data}
             />
-            <FormFooter
-              onSaveHandler={() => handleUploadClick(sanitize(form))}
-            />
+            <Row>
+              <Col>
+                <Button onClick={() => checkUploadOnClick(sanitize(form))}>Vérification</Button>
+              </Col>
+              {form?.data?.length > 0 && (
+                <Col>
+                  <Button
+                    colors={['#f55', '#fff']}
+                    onClick={() => updateForm({ data: '' })}
+                  >
+                    Effacer
+                  </Button>
+                </Col>
+              )}
+            </Row>
           </form>
         </Col>
       </Row>
       {isLoading && <Row className="fr-my-2w flex--space-around"><Spinner /></Row>}
+      {(checkedResponsesWithNoWarnings?.length) > 0 && (
+        <Row gutters>
+          <Col n="12">
+            <Col n="12">
+              <Alert
+                description={`Il y a ${checkedResponsesWithNoWarnings?.length} vérification(s) avec succés`}
+                title="Succes"
+                type="success"
+              />
+            </Col>
+            <Accordion>
+              <AccordionItem
+                title="Voir toutes les vérifications avec succés"
+              >
+                <Col n="12">
+                  <Row gutters key="headers">
+                    <Col n="1">
+                      Ligne
+                    </Col>
+                    <Col n="3">
+                      Nom de la structure
+                    </Col>
+                  </Row>
+                  {checkedResponsesWithNoWarnings?.sort((a, b) => a.index - b.index).map((response, index) => (
+                    <Row gutters key={index}>
+                      <Col n="1">
+                        {response.index + 1}
+                      </Col>
+                      <Col n="3">
+                        <span>
+                          {response?.usualName}
+                        </span>
+                      </Col>
+                    </Row>
+                  ))}
+                </Col>
+              </AccordionItem>
+            </Accordion>
+          </Col>
+        </Row>
+      ) }
+      {checkedResponsesWithWarnings?.length > 0 && (
+        <Row gutters>
+          <Col n="12">
+            <Col n="12">
+              <Alert
+                description={`Il y a ${checkedResponsesWithWarnings?.length} warning`}
+                title="Warning"
+                type="warning"
+              />
+            </Col>
+            <Accordion>
+              <AccordionItem
+                title="Voir tous les warnings"
+              >
+                <Col n="12">
+                  <Row gutters key="headers">
+                    <Col n="1">
+                      Ligne
+                    </Col>
+                    <Col n="3">
+                      Nom de la structure
+                    </Col>
+                    <Col n="5">
+                      Warnings
+                    </Col>
+                  </Row>
+                  {checkedResponsesWithWarnings?.map((response, index) => (
+                    (response?.warnings?.length > 0
+                      && (
+                        <Row gutters key={index}>
+                          <Col n="1">
+                            {response.index + 1}
+                          </Col>
+                          <Col n="3">
+                            <span>
+                              {response?.usualName}
+                            </span>
+                            {response?.id && (
+                              <Col>
+                                <Link target="_blank" href={`/structures/${response?.id}`}>
+                                  Vérifiez
+                                </Link>
+                              </Col>
+                            )}
+                          </Col>
+                          <Col n="5">
+                            <span>
+                              {response?.warnings?.map((warning) => warning.message).join(',')}
+                            </span>
+                          </Col>
+                          <Col>
+                            <Button
+                              colors={['#f55', '#fff']}
+                              onClick={async () => {
+                                const saveResponse = await onClickToSave(response);
+                                const ignoredResponse = checkedResponsesWithWarnings.splice(index, 1)[0];
+                                setCheckedResponsesWithWarnings(checkedResponsesWithWarnings);
+                                setCheckedResponsesWithNoWarnings([...checkedResponsesWithNoWarnings, ignoredResponse]);
+                                setResponses([...responses, saveResponse]);
+                              }}
+                              size="sm"
+                            >
+                              Ignorer le warning
+                            </Button>
+                          </Col>
+                        </Row>
+                      )
+                    )
+                  ))}
+                </Col>
+              </AccordionItem>
+            </Accordion>
+          </Col>
+        </Row>
+      )}
+      {(!checkedResponsesWithWarnings.length) && (
+        <FormFooter
+          onSaveHandler={() => handleUploadClick(sanitize(form))}
+        />
+      ) }
       {!!responses.length && (
         <Row>
           <Col n="12">
@@ -185,8 +353,8 @@ export default function ImportPage({ data }) {
                 </Col>
                 <Col n="1">
                   <Icon
-                    color={response?.status.toString()[0] === '2' ? 'var(--green-menthe-main-548)' : 'var(--orange-terre-battue-main-645)'}
-                    name={response?.status.toString()[0] === '2' ? 'ri-thumb-up-fill' : 'ri-thumb-down-fill'}
+                    color={response?.status?.toString()?.[0] === '2' ? 'var(--green-menthe-main-548)' : 'var(--orange-terre-battue-main-645)'}
+                    name={response?.status?.toString()?.[0] === '2' ? 'ri-thumb-up-fill' : 'ri-thumb-down-fill'}
                   />
                 </Col>
                 <Col n="3">

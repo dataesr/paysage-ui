@@ -390,7 +390,7 @@ Il constitue une marge de sécurité financière destinée à financer une parti
           </Bloc>
           <Bloc isLoading={isLoading} error={error} data={data} noBadge>
             <BlocTitle as="h4">
-              Ressources en ligne : #dataESR
+              Ressource(s) en ligne : #dataESR
             </BlocTitle>
             <BlocContent>
               <Row gutters>

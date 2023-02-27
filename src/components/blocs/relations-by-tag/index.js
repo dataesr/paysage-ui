@@ -27,7 +27,7 @@ const getMarkers = (structures) => structures.map((element) => {
   });
 });
 
-export default function RelationsByTag({ blocName, tag, resourceType, relatedObjectTypes, inverse, noRelationType, Form, sort }) {
+export default function RelationsByTag({ blocName, tag, resourceType, relatedObjectTypes, inverse, noRelationType, Form, sort, max }) {
   const queryObject = inverse ? 'relatedObjectId' : 'resourceId';
   const { notice } = useNotice();
   const { id: resourceId } = useUrl();
@@ -122,7 +122,8 @@ export default function RelationsByTag({ blocName, tag, resourceType, relatedObj
             <Map height="320px" markers={markers} zoom={8} />
           </Col>
           <Col n="12">
-            <ExpendableListCards list={list} nCol="6" />
+            {max ? <ExpendableListCards list={list.slice(0, max)} nCol="6" />
+              : <ExpendableListCards list={list} nCol="6" />}
           </Col>
         </Row>
       );
@@ -166,6 +167,7 @@ RelationsByTag.propTypes = {
   blocName: PropTypes.string,
   Form: PropTypes.func,
   inverse: PropTypes.bool,
+  max: PropTypes.number,
   noRelationType: PropTypes.bool,
   relatedObjectTypes: PropTypes.arrayOf(PropTypes.string),
   resourceType: PropTypes.string,
@@ -178,6 +180,7 @@ RelationsByTag.defaultProps = {
   Form: RelationsForm,
   inverse: false,
   noRelationType: false,
+  max: null,
   relatedObjectTypes: ['persons', 'structures', 'prizes', 'terms', 'projects', 'categories'],
   resourceType: 'structures',
   sort: '-startDate',
