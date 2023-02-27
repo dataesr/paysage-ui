@@ -1,4 +1,4 @@
-import { Accordion, AccordionItem, Alert, Col, Container, Icon, Link, Row, Select, TextInput, Button } from '@dataesr/react-dsfr';
+import { Accordion, AccordionItem, Alert, Button, Col, Container, Icon, Link, Row, Select, TextInput } from '@dataesr/react-dsfr';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 
@@ -28,8 +28,8 @@ function sanitize(form) {
 }
 
 export default function ImportPage({ data }) {
-  const [checkedResponsesWithWarning, setCheckedResponsesWithWarning] = useState([]);
-  const [checkedResponsesWithNoWarning, setCheckedResponsesWithNoWarnings] = useState([]);
+  const [checkedResponsesWithWarnings, setCheckedResponsesWithWarnings] = useState([]);
+  const [checkedResponsesWithNoWarnings, setCheckedResponsesWithNoWarnings] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [parents, setParents] = useState([]);
   const [queries, setQueries] = useState([]);
@@ -109,119 +109,40 @@ export default function ImportPage({ data }) {
     const checkName = (name, index) => api.get(`/autocomplete?types=structures&query=${name}`)
       .then((response) => {
         const responsesWithNameToCheck = response.data.data.map((el) => el.name);
+        const idOfExistingStructure = response.data.data.find((el) => el.name === name)?.id;
         if (responsesWithNameToCheck.includes(name)) {
-          return { name, index, warnings: [{ message: `${name} est probablement un doublon` }] };
+          return { name, index, warnings: [{ message: `${name} est probablement un doublon` }], id: idOfExistingStructure };
         }
-        return { name, index, warnings: [] };
+        return { name, index, warnings: [], id: null };
       });
-
-    const checkWikidata = (name, wikidata, index) => api.get(`/autocomplete?types=structures&query=${wikidata}`)
-      .then((response) => {
-        const responsesWithWikidataToCheck = response.data.data.find((el) => el?.identifiers);
-        if (wikidata === undefined) return { name, wikidata, index, warnings: [] };
-        if (responsesWithWikidataToCheck?.identifiers?.includes(wikidata)) {
-          return { name, wikidata, index, warnings: [{ message: `Le wikidata ${wikidata} existe déjà` }] };
-        }
-        return { name, wikidata, index, warnings: [] };
-      });
-
-    const checkAllFields = async () => {
-      const warnings = [];
-      const noWarnings = [];
-      const namePromises = structuresJson.map((element, index) => checkName(element.usualName, index));
-      const wikidataPromise = structuresJson.map((element, index) => checkWikidata(element.usualName, element.wikidata, index));
-
-      const results = await Promise.all([...namePromises, ...wikidataPromise]);
-
-      results.forEach((result) => {
-        if (result.warnings.length > 0) {
-          warnings.push(result);
-        } else {
-          noWarnings.push(result);
-        }
-      });
-      setCheckedResponsesWithWarning(warnings);
-      setCheckedResponsesWithNoWarnings(noWarnings);
-      return { warnings, noWarnings };
-    };
-    checkAllFields().then(() => {
+    const namePromises = structuresJson.map((element, index) => checkName(element.usualName, index));
+    const results = await Promise.all(namePromises);
+    const allResults = structuresJson.map((element, index) => {
+      const result = results.find((r) => r.index === index);
+      const tmp = { ...element, index };
+      if (result?.warnings?.length > 0) { tmp.warnings = result.warnings; }
+      return tmp;
     });
+    const warnings = allResults.filter((el) => el.warnings && el.warnings.length > 0);
+    const noWarnings = allResults.filter((el) => !el.warnings);
+    setCheckedResponsesWithWarnings(warnings);
+    setCheckedResponsesWithNoWarnings(noWarnings);
     setIsLoading(false);
+  };
+
+  const onClickToSave = async (structure) => {
+    const saveResponse = await api.post('/structures', structure)
+      .then((response) => response)
+      .catch((error) => ({ status: error?.message, statusText: `${error?.error} : ${JSON.stringify(error?.details?.[0])}`, data: {} }));
+    return saveResponse;
   };
 
   const handleUploadClick = async () => {
     setIsLoading(true);
-    const structuresTsv = JSON.parse(JSON.stringify(form.data)).split(LINE_SEPARATOR);
-    const headers = structuresTsv.shift().split(TSV_SEPARATOR);
-    const structuresJson = structuresTsv.filter((item) => item.length).map((item) => {
-      const splittedItem = item.split(TSV_SEPARATOR);
-      const objectItem = {};
-      for (let i = 0; i < headers.length; i += 1) {
-        const key = JSON.parse(JSON.stringify(headers[i]));
-        objectItem[key] = splittedItem[i];
-      }
-      const structure = {
-        usualName: objectItem['Nom usuel en français'],
-        shortName: objectItem['Nom court en français'],
-        acronymFr: objectItem['Sigle en français'],
-        nameEn: objectItem['Nom long en anglais :'],
-        acronymEn: objectItem['Nom courten anglais :'],
-        officialName: objectItem['Nom officiel dans la langue originale'],
-        acronymLocal: objectItem['Nom court officiel dans la langue originale'],
-        otherNames: objectItem['Autres dénominations possibles séparées par des ;']?.split(';'),
-        structureStatus: statusMapping[objectItem['Statut [O = Ouvert, F = Fermé, P = Potentiel]']],
-        categories: objectItem[JSON.stringify('Code de la/des catégories {rechercher le code, séparation ;}')]?.split(';'),
-        legalCategory: objectItem['Code du statut juridique {rechercher le code}'],
-        cityId: objectItem['Code commune {rechercher le code}'],
-        idref: objectItem['Identifiant IdRef [123456789]'],
-        wikidata: objectItem['Identifiant Wikidata [Q1234]'],
-        ror: objectItem['Identifiant ROR [12cd5fg89]'],
-        uai: objectItem['Code UAI [1234567X]'],
-        siret: objectItem['Numéro siret [12345678901234]'],
-        rnsr: objectItem['Numéro RNSR [123456789X]'],
-        ed: objectItem["Numéro de l'ED [123]"],
-        websiteFr: objectItem['Site internet en français'],
-        websiteEn: objectItem['Site internet en anglais'],
-        twitter: objectItem['Compte twitter [https://twitter.com/XXX]'],
-        linkedIn: objectItem['Compte linkedIn [https://www.linkedin.com/in/XXX-XXX-123456/]'],
-        // : objectItem['Mention de dInformation Scientifique et Techniqueribution :'],
-        address: objectItem['Adresse :'],
-        place: objectItem['Lieu dit :'],
-        postOfficeBoxNumber: objectItem['Boite postale :'],
-        postalCode: objectItem['Code postal :'],
-        locality: objectItem["Localité d'acheminement :"],
-        // iso3: objectItem[JSON.stringify('Nom du pays en français {rechercher le libellé ou le code ISO}')]?.toUpperCase(),
-        creationDate: objectItem['Date de création {2020-07-02}'],
-        // : objectItem['Date de création approximative {O = Oui, N = Non}'],
-        closureDate: objectItem['Date de fermeture {2020-07-02}'],
-        // : objectItem['Date de fermeture approximative {O = Oui, N = Non}'],
-        parent: objectItem['Parent {rechercher le code}'],
-      };
-      if (objectItem?.["Localisation [A1 = France métropolitaine et les DOM, A2 = Collectivités d'outre-mer, A3 = Hors de France]"] !== 'A3') {
-        structure.country = 'France';
-        structure.iso3 = 'FRA';
-      }
-      const latlng = objectItem['Coordonnées GPS [-12.34,5.6789]']?.split(',');
-      if (latlng?.length === 2) {
-        const [lat, lng] = latlng;
-        structure.coordinates = { lat: Number(lat), lng: Number(lng) };
-      }
-      Object.keys(structure).forEach((key) => {
-        const value = structure[key];
-        if (value === '' || value === null || value === undefined) {
-          delete structure[key];
-        }
-      });
-      return structure;
-    });
-    setQueries(structuresJson);
-    const responsesPromises = await Promise.all(structuresJson.map((structure) => api.post('/structures', structure)
-      .then((response) => response)
-      .catch((error) => ({ status: error?.message, statusText: `${error?.error} : ${JSON.stringify(error?.details?.[0])}`, data: {} }))));
-    setResponses(responsesPromises);
-
+    setQueries(checkedResponsesWithNoWarnings);
+    const responsesPromises = await Promise.all(checkedResponsesWithNoWarnings.map((structure) => onClickToSave(structure)));
     const parentsPromises = await Promise.all(responsesPromises.map((result, index) => {
-      const resourceId = structuresJson?.[index]?.parent;
+      const resourceId = checkedResponsesWithNoWarnings?.[index]?.parent;
       const relatedObjectId = result?.data?.id;
       if (resourceId && relatedObjectId) {
         return api.post('/relations', { resourceId, relatedObjectId, relationTag: 'structure-interne' })
@@ -232,6 +153,7 @@ export default function ImportPage({ data }) {
     }));
     setParents(parentsPromises);
     updateForm({ data: '' });
+    setResponses(responsesPromises);
     setIsLoading(false);
   };
 
@@ -280,12 +202,12 @@ export default function ImportPage({ data }) {
         </Col>
       </Row>
       {isLoading && <Row className="fr-my-2w flex--space-around"><Spinner /></Row>}
-      {checkedResponsesWithNoWarning?.length > 0 && (
+      {(checkedResponsesWithNoWarnings?.length) > 0 && (
         <Row gutters>
           <Col n="12">
             <Col n="12">
               <Alert
-                description={`Il y a ${checkedResponsesWithNoWarning?.length} vérification(s) avec succés`}
+                description={`Il y a ${checkedResponsesWithNoWarnings?.length} vérification(s) avec succés`}
                 title="Succes"
                 type="success"
               />
@@ -302,23 +224,15 @@ export default function ImportPage({ data }) {
                     <Col n="3">
                       Nom de la structure
                     </Col>
-                    <Col n="3">
-                      Wikidata
-                    </Col>
                   </Row>
-                  {checkedResponsesWithNoWarning?.sort((a, b) => a.index - b.index).map((response, index) => (
+                  {checkedResponsesWithNoWarnings?.sort((a, b) => a.index - b.index).map((response, index) => (
                     <Row gutters key={index}>
                       <Col n="1">
                         {response.index + 1}
                       </Col>
                       <Col n="3">
                         <span>
-                          {response?.name}
-                        </span>
-                      </Col>
-                      <Col n="3">
-                        <span>
-                          {response?.wikidata}
+                          {response?.usualName}
                         </span>
                       </Col>
                     </Row>
@@ -329,12 +243,12 @@ export default function ImportPage({ data }) {
           </Col>
         </Row>
       ) }
-      {checkedResponsesWithWarning?.length > 0 && (
+      {checkedResponsesWithWarnings?.length > 0 && (
         <Row gutters>
           <Col n="12">
             <Col n="12">
               <Alert
-                description={`Il y a ${checkedResponsesWithWarning?.length} warning`}
+                description={`Il y a ${checkedResponsesWithWarnings?.length} warning`}
                 title="Warning"
                 type="warning"
               />
@@ -352,41 +266,50 @@ export default function ImportPage({ data }) {
                       Nom de la structure
                     </Col>
                     <Col n="5">
-                      Erreurs
+                      Warnings
                     </Col>
                   </Row>
-                  {checkedResponsesWithWarning.sort((a, b) => a.index - b.index).map((response, index) => (
-                    response.warnings.length > 0 && (
-                      <Row gutters key={index}>
-                        <Col n="1">
-                          {response.index + 1}
-                        </Col>
-                        <Col n="3">
-                          <span>
-                            {response?.name}
-                          </span>
-                        </Col>
-                        <Col n="5">
-                          <span>
-                            {response?.warnings.map((warning) => warning.message).join(',')}
-                          </span>
-                        </Col>
-                        <Col>
-                          <Button
-                            colors={['#f55', '#fff']}
-                            onClick={() => {
-                              const updatedResponsesWithWarning = [...checkedResponsesWithWarning];
-                              const ignoredResponse = updatedResponsesWithWarning.splice(index, 1)[0];
-                              setCheckedResponsesWithWarning(updatedResponsesWithWarning);
-                              const updatedResponsesWithNoWarning = [...checkedResponsesWithNoWarning, ignoredResponse];
-                              setCheckedResponsesWithNoWarnings(updatedResponsesWithNoWarning);
-                            }}
-                            size="sm"
-                          >
-                            Ignorer le warning
-                          </Button>
-                        </Col>
-                      </Row>
+                  {checkedResponsesWithWarnings?.map((response, index) => (
+                    (response?.warnings?.length > 0
+                      && (
+                        <Row gutters key={index}>
+                          <Col n="1">
+                            {response.index + 1}
+                          </Col>
+                          <Col n="3">
+                            <span>
+                              {response?.usualName}
+                            </span>
+                            {response?.id && (
+                              <Col>
+                                <Link target="_blank" href={`/structures/${response?.id}`}>
+                                  Vérifiez
+                                </Link>
+                              </Col>
+                            )}
+                          </Col>
+                          <Col n="5">
+                            <span>
+                              {response?.warnings?.map((warning) => warning.message).join(',')}
+                            </span>
+                          </Col>
+                          <Col>
+                            <Button
+                              colors={['#f55', '#fff']}
+                              onClick={async () => {
+                                const saveResponse = await onClickToSave(response);
+                                const ignoredResponse = checkedResponsesWithWarnings.splice(index, 1)[0];
+                                setCheckedResponsesWithWarnings(checkedResponsesWithWarnings);
+                                setCheckedResponsesWithNoWarnings([...checkedResponsesWithNoWarnings, ignoredResponse]);
+                                setResponses([...responses, saveResponse]);
+                              }}
+                              size="sm"
+                            >
+                              Ignorer le warning
+                            </Button>
+                          </Col>
+                        </Row>
+                      )
                     )
                   ))}
                 </Col>
@@ -395,7 +318,7 @@ export default function ImportPage({ data }) {
           </Col>
         </Row>
       )}
-      {!checkedResponsesWithWarning.length && (
+      {(!checkedResponsesWithWarnings.length) && (
         <FormFooter
           onSaveHandler={() => handleUploadClick(sanitize(form))}
         />
@@ -430,8 +353,8 @@ export default function ImportPage({ data }) {
                 </Col>
                 <Col n="1">
                   <Icon
-                    color={response?.status.toString()[0] === '2' ? 'var(--green-menthe-main-548)' : 'var(--orange-terre-battue-main-645)'}
-                    name={response?.status.toString()[0] === '2' ? 'ri-thumb-up-fill' : 'ri-thumb-down-fill'}
+                    color={response?.status?.toString()?.[0] === '2' ? 'var(--green-menthe-main-548)' : 'var(--orange-terre-battue-main-645)'}
+                    name={response?.status?.toString()?.[0] === '2' ? 'ri-thumb-up-fill' : 'ri-thumb-down-fill'}
                   />
                 </Col>
                 <Col n="3">
