@@ -1,53 +1,59 @@
-import { Icon, latLngBounds } from 'leaflet';
-import 'leaflet/dist/leaflet.css';
+import { useMemo } from 'react';
 import PropTypes from 'prop-types';
+import { divIcon, latLngBounds } from 'leaflet';
+import 'leaflet/dist/leaflet.css';
 import { MapContainer, Marker, TileLayer, Tooltip, useMap } from 'react-leaflet';
 
-export default function Map({ height, lat, lng, markers, width, zoom }) {
-  const defaultCenter = [lat, lng];
+const getIcon = (color = '#0078f3') => divIcon({
+  html: `
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="36" height="36">
+    <path fill="none" d="M0 0h24v24H0z"/>
+      <g fill=${color}>
+        <path d="M18.364 17.364L12 23.728l-6.364-6.364a9 9 0 1 1 12.728 0zM12 15a4 4 0 1 0 0-8 4 4 0 0 0 0 8zm0-2a2 2 0 1 1 0-4 2 2 0 0 1 0 4z"/>
+      </g>
+    </svg>
+  `,
+  className: '',
+  iconSize: [36, 36],
+  iconAnchor: [18, 36],
+});
 
-  const getIcon = (color = 'blue') => {
-    let iconUrl = 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png';
-    if (color === 'red') {
-      iconUrl = 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png';
-    }
-    const LeafIcon = Icon.extend({
-      options: {},
-    });
-    return new LeafIcon({
-      iconUrl,
-      iconSize: [50, 82],
-      iconAnchor: [25, 82],
-      shadowUrl:
-        'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
-    });
-  };
-
-  // Calculate bounds
-  function ChangeView({ allMarkers }) {
-    const map = useMap();
-    const markerBounds = latLngBounds([]);
-    if (allMarkers.length && allMarkers.length > 0) {
-      allMarkers.map((marker) => markerBounds.extend(marker.latLng));
-      if (markerBounds.isValid()) map.fitBounds(markerBounds);
-    }
+function SetMap({ markers }) {
+  const map = useMap();
+  if (markers.length) {
+    const markerBounds = markers && latLngBounds(markers.map((m) => m.latLng));
+    map.fitBounds(markerBounds, { padding: [50, 50] });
   }
+  if (map.getZoom() > 12) map.setZoom(12);
+  return null;
+}
+SetMap.defaultProps = {
+  markers: [],
+};
 
+SetMap.propTypes = {
+  markers: PropTypes.array,
+};
+
+export default function Map({ height, markers, onMarkerDragEnd, width }) {
+  const eventHandlers = useMemo(() => ({ dragend(e) { return onMarkerDragEnd(e); } }), [onMarkerDragEnd]);
+  const theme = (window.localStorage.getItem('prefers-color-scheme') === 'dark')
+    ? 'dark'
+    : 'sunny';
   return (
     <MapContainer
       attributionControl
-      center={defaultCenter}
+      center={[48.866667, 2.333333]}
       scrollWheelZoom={false}
       style={{ height, width }}
-      zoom={zoom}
+      zoom={6}
     >
-      <ChangeView allMarkers={markers} />
       <TileLayer
         attribution="<a href='https://www.jawg.io' target='_blank'>&copy; Jawg</a>"
-        url="https://tile.jawg.io/jawg-sunny/{z}/{x}/{y}.png?access-token=5V4ER9yrsLxoHQrAGQuYNu4yWqXNqKAM6iaX5D1LGpRNTBxvQL3enWXpxMQqTrY8"
+        url={`https://tile.jawg.io/jawg-${theme}/{z}/{x}/{y}.png?access-token=5V4ER9yrsLxoHQrAGQuYNu4yWqXNqKAM6iaX5D1LGpRNTBxvQL3enWXpxMQqTrY8`}
       />
-      {markers.map((marker) => (
-        <Marker icon={getIcon(marker?.color)} key={marker.latLng} position={marker.latLng} zIndexOffset={marker?.zIndexOffset || 0}>
+      {markers.map((marker, i) => (
+        <Marker zIndexOffset={marker?.zIndexOffset || 0} icon={getIcon(marker.color)} draggable={!!onMarkerDragEnd} eventHandlers={eventHandlers} key={i} position={marker.latLng}>
           <Tooltip>
             {marker?.label && (
               <>
@@ -59,24 +65,21 @@ export default function Map({ height, lat, lng, markers, width, zoom }) {
           </Tooltip>
         </Marker>
       ))}
+      <SetMap markers={markers} />
     </MapContainer>
   );
 }
 
 Map.defaultProps = {
   height: '300px',
-  lat: 0,
-  lng: 0,
-  markers: [{ address: 'Paris centre', color: 'blue', latLng: [48.866667, 2.333333], zIndexOffset: 0 }],
+  markers: [],
+  onMarkerDragEnd: null,
   width: '100%',
-  zoom: 12,
 };
 
 Map.propTypes = {
   height: PropTypes.string,
-  lat: PropTypes.number,
-  lng: PropTypes.number,
   markers: PropTypes.array,
+  onMarkerDragEnd: PropTypes.func,
   width: PropTypes.string,
-  zoom: PropTypes.number,
 };

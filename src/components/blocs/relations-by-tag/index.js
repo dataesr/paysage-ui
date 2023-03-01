@@ -9,7 +9,7 @@ import RelationsForm from '../../forms/relations';
 import useFetch from '../../../hooks/useFetch';
 import useUrl from '../../../hooks/useUrl';
 import useNotice from '../../../hooks/useNotice';
-import Map from '../../map/auto-bound-map';
+import Map from '../../map';
 import { deleteError, saveError, saveSuccess, deleteSuccess } from '../../../utils/notice-contents';
 import { exportToCsv, hasExport } from './utils/exports';
 import { getComparableNow } from '../../../utils/dates';

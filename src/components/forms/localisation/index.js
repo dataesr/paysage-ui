@@ -11,7 +11,7 @@ import PropTypes from 'prop-types';
 import { useCallback, useEffect, useState } from 'react';
 import DateInput from '../../date-input';
 import FormFooter from '../form-footer';
-import Map from '../../map/auto-bound-map';
+import Map from '../../map';
 import SearchBar from '../../search-bar';
 import useForm from '../../../hooks/useForm';
 import useAuth from '../../../hooks/useAuth';

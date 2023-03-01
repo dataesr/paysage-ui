@@ -39,7 +39,7 @@ export default function StructureImmobilierPage() {
         currentLocalisation?.coordinates?.lat,
         currentLocalisation?.coordinates?.lng,
       ],
-      color: 'red',
+      color: '#990000',
       zIndexOffset: 99,
     });
   }
@@ -48,7 +48,6 @@ export default function StructureImmobilierPage() {
       address: `${item?.adresse} ${item?.cp} ${item?.com_nom}`,
       label: item?.libelle_bat_ter,
       latLng: item?.latlong,
-      color: 'blue',
     });
   });
 

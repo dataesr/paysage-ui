@@ -9,7 +9,7 @@ import RelationsGroupForm from '../../forms/relations-group';
 import useFetch from '../../../hooks/useFetch';
 import useUrl from '../../../hooks/useUrl';
 import useNotice from '../../../hooks/useNotice';
-import Map from '../../map/auto-bound-map';
+import Map from '../../map';
 import RelationCard from '../../card/relation-card';
 import { deleteError, saveError, saveSuccess, deleteSuccess } from '../../../utils/notice-contents';
 import { getComparableNow } from '../../../utils/dates';

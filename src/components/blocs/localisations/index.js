@@ -5,7 +5,7 @@ import { Bloc, BlocActionButton, BlocContent, BlocModal, BlocTitle } from '../..
 import Button from '../../button';
 import CopyButton from '../../copy/copy-button';
 import LocalisationForm from '../../forms/localisation';
-import Map from '../../map/auto-bound-map';
+import Map from '../../map';
 import Modal from '../../modal';
 import useFetch from '../../../hooks/useFetch';
 import useEditMode from '../../../hooks/useEditMode';
@@ -55,7 +55,6 @@ export default function LocalisationsComponent() {
   };
 
   const renderAddress = (localisation) => {
-    // eslint-disable-next-line max-len
     let address = '';
     if (localisation.distributionStatement) { address += `${localisation.distributionStatement },\n`; }
     if (localisation.address) { address += `${localisation.address },\n`; }
