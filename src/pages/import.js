@@ -1,4 +1,4 @@
-import { Accordion, AccordionItem, Alert, Button, Col, Container, Icon, Link, Row, Select, TextInput } from '@dataesr/react-dsfr';
+import { Accordion, AccordionItem, Alert, Button, Col, Container, Link, Row, Select, TextInput } from '@dataesr/react-dsfr';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 
@@ -28,11 +28,11 @@ function sanitize(form) {
 }
 
 export default function ImportPage({ data }) {
-  const [checkedResponsesWithWarnings, setCheckedResponsesWithWarnings] = useState([]);
+  const [checkedResponsesWithErrors, setCheckedResponsesWithErrors] = useState([]);
   const [checkedResponsesWithNoWarnings, setCheckedResponsesWithNoWarnings] = useState([]);
+  const [checkedResponsesWithWarnings, setCheckedResponsesWithWarnings] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [parents, setParents] = useState([]);
-  const [queries, setQueries] = useState([]);
   const [responses, setResponses] = useState([]);
   const { form, updateForm } = useForm(data);
 
@@ -101,59 +101,57 @@ export default function ImportPage({ data }) {
           delete structure[key];
         }
       });
-
       return structure;
     });
-    setQueries(structuresJson);
 
-    const checkName = (name, index) => api.get(`/autocomplete?types=structures&query=${name}`)
-      .then((response) => {
-        const responsesWithNameToCheck = response.data.data.map((el) => el.name);
-        const idOfExistingStructure = response.data.data.find((el) => el.name === name)?.id;
-        if (responsesWithNameToCheck.includes(name)) {
-          return { name, index, warnings: [{ message: `${name} est probablement un doublon` }], id: idOfExistingStructure };
-        }
-        return { name, index, warnings: [], id: null };
-      });
+    const checkName = async (name, index) => {
+      // If error from api
+      if (name === undefined) { return { name, index, errors: [{ message: 'Le nom de la structure est invalide' }], warnings: [] }; }
+
+      const potentialDuplicates = await api.get(`/autocomplete?types=structures&query=${name}`);
+      const duplicatedStructureId = potentialDuplicates.data.data.find((el) => el.name === name)?.id;
+
+      if (duplicatedStructureId) {
+        return { errors: [], id: duplicatedStructureId, index, name, warnings: [{ message: `${name} est probablement un doublon` }] };
+      }
+      return { errors: [], id: undefined, index, name, warnings: [] };
+    };
     const namePromises = structuresJson.map((element, index) => checkName(element.usualName, index));
     const results = await Promise.all(namePromises);
-    const allResults = structuresJson.map((element, index) => {
+    const allResults = structuresJson.map((structure, index) => {
       const result = results.find((r) => r.index === index);
-      const tmp = { ...element, index };
-      if (result?.warnings?.length > 0) { tmp.warnings = result.warnings; }
-      return tmp;
+      return { ...structure, duplicatedStructureId: result?.id, errors: result?.errors, index, warnings: result?.warnings };
     });
-    const warnings = allResults.filter((el) => el.warnings && el.warnings.length > 0);
-    const noWarnings = allResults.filter((el) => !el.warnings);
-    setCheckedResponsesWithWarnings(warnings);
-    setCheckedResponsesWithNoWarnings(noWarnings);
+    setCheckedResponsesWithWarnings(allResults.filter((el) => el.warnings.length > 0));
+    setCheckedResponsesWithNoWarnings(allResults.filter((el) => el.warnings.length === 0 && el.errors.length === 0));
+    setCheckedResponsesWithErrors(allResults.filter((el) => el.errors.length > 0));
     setIsLoading(false);
   };
 
-  const onClickToSave = async (structure) => {
+  const saveStructure = async (structure) => {
     const saveResponse = await api.post('/structures', structure)
       .then((response) => response)
       .catch((error) => ({ status: error?.message, statusText: `${error?.error} : ${JSON.stringify(error?.details?.[0])}`, data: {} }));
-    return saveResponse;
+    return { ...saveResponse, index: structure?.index };
   };
 
   const handleUploadClick = async () => {
     setIsLoading(true);
-    setQueries(checkedResponsesWithNoWarnings);
-    const responsesPromises = await Promise.all(checkedResponsesWithNoWarnings.map((structure) => onClickToSave(structure)));
-    const parentsPromises = await Promise.all(responsesPromises.map((result, index) => {
-      const resourceId = checkedResponsesWithNoWarnings?.[index]?.parent;
-      const relatedObjectId = result?.data?.id;
-      if (resourceId && relatedObjectId) {
-        return api.post('/relations', { resourceId, relatedObjectId, relationTag: 'structure-interne' })
-          .then((response) => response)
-          .catch((error) => ({ status: error?.message, statusText: `${error?.error} : ${JSON.stringify(error?.details?.[0])}`, data: {} }));
-      }
-      return Promise.resolve(null);
-    }));
-    setParents(parentsPromises);
+    const responsesPromises = await Promise.all(checkedResponsesWithNoWarnings.map((structure) => saveStructure(structure)));
+    // const parentsPromises = await Promise.all(responsesPromises.map((result, index) => {
+    //   const resourceId = checkedResponsesWithNoWarnings?.[index]?.parent;
+    //   const relatedObjectId = result?.data?.id;
+    //   if (resourceId && relatedObjectId) {
+    //     return api.post('/relations', { resourceId, relatedObjectId, relationTag: 'structure-interne' })
+    //       .then((response) => response)
+    //       .catch((error) => ({ status: error?.message, statusText: `${error?.error} : ${JSON.stringify(error?.details?.[0])}`, data: {} }));
+    //   }
+    //   return Promise.resolve(null);
+    // }));
+    // setParents(parentsPromises);
     updateForm({ data: '' });
-    setResponses(responsesPromises);
+    setResponses([...responses, ...responsesPromises]);
+    setCheckedResponsesWithNoWarnings([]);
     setIsLoading(false);
   };
 
@@ -202,53 +200,58 @@ export default function ImportPage({ data }) {
         </Col>
       </Row>
       {isLoading && <Row className="fr-my-2w flex--space-around"><Spinner /></Row>}
-      {(checkedResponsesWithNoWarnings?.length) > 0 && (
+      {checkedResponsesWithErrors?.length > 0 && (
         <Row gutters>
           <Col n="12">
             <Col n="12">
               <Alert
-                description={`Il y a ${checkedResponsesWithNoWarnings?.length} vérification(s) avec succés`}
-                title="Succes"
-                type="success"
+                description={checkedResponsesWithErrors.lenght > 1 ? `Il y a ${checkedResponsesWithErrors?.length} erreurs` : 'Il y a une erreur'}
+                title="Erreur(s)"
+                type="error"
               />
             </Col>
             <Accordion>
               <AccordionItem
-                title="Voir toutes les vérifications avec succés"
+                initExpand={!(checkedResponsesWithErrors.length > 2)}
+                title={checkedResponsesWithErrors.lenght > 1 ? 'Voir les erreurs' : "Voir l'erreur"}
               >
                 <Col n="12">
                   <Row gutters key="headers">
                     <Col n="1">
                       Ligne
                     </Col>
-                    <Col n="3">
-                      Nom de la structure
+                    <Col n="5">
+                      Erreur
                     </Col>
                   </Row>
-                  {checkedResponsesWithNoWarnings?.sort((a, b) => a.index - b.index).map((response, index) => (
-                    <Row gutters key={index}>
-                      <Col n="1">
-                        {response.index + 1}
-                      </Col>
-                      <Col n="3">
-                        <span>
-                          {response?.usualName}
-                        </span>
-                      </Col>
-                    </Row>
+                  {checkedResponsesWithErrors?.map((response, index) => (
+                    (response?.errors?.length > 0
+                      && (
+                        <Row gutters key={index}>
+                          <Col n="1">
+                            {response.index + 2}
+                          </Col>
+                          <Col n="5">
+                            <span>
+                              {response?.errors?.map((error) => error.message).join(',')}
+                            </span>
+                          </Col>
+                        </Row>
+                      )
+                    )
                   ))}
                 </Col>
               </AccordionItem>
             </Accordion>
           </Col>
         </Row>
-      ) }
+      )}
       {checkedResponsesWithWarnings?.length > 0 && (
         <Row gutters>
           <Col n="12">
             <Col n="12">
               <Alert
-                description={`Il y a ${checkedResponsesWithWarnings?.length} warning`}
+                description={checkedResponsesWithWarnings.length > 1 ? `Il y a ${checkedResponsesWithWarnings?.length} warnings` : 'Il y a un warning'}
                 title="Warning"
                 type="warning"
               />
@@ -274,15 +277,15 @@ export default function ImportPage({ data }) {
                       && (
                         <Row gutters key={index}>
                           <Col n="1">
-                            {response.index + 1}
+                            {response.index + 2}
                           </Col>
                           <Col n="3">
                             <span>
                               {response?.usualName}
                             </span>
-                            {response?.id && (
+                            {response?.duplicatedStructureId && (
                               <Col>
-                                <Link target="_blank" href={`/structures/${response?.id}`}>
+                                <Link target="_blank" href={`/structures/${response?.duplicatedStructureId}`}>
                                   Vérifiez
                                 </Link>
                               </Col>
@@ -297,15 +300,14 @@ export default function ImportPage({ data }) {
                             <Button
                               colors={['#f55', '#fff']}
                               onClick={async () => {
-                                const saveResponse = await onClickToSave(response);
-                                const ignoredResponse = checkedResponsesWithWarnings.splice(index, 1)[0];
+                                const saveResponse = await saveStructure(response);
+                                checkedResponsesWithWarnings.splice(index, 1);
                                 setCheckedResponsesWithWarnings(checkedResponsesWithWarnings);
-                                setCheckedResponsesWithNoWarnings([...checkedResponsesWithNoWarnings, ignoredResponse]);
                                 setResponses([...responses, saveResponse]);
                               }}
                               size="sm"
                             >
-                              Ignorer le warning
+                              Forcer l'ajout de cet élément
                             </Button>
                           </Col>
                         </Row>
@@ -318,77 +320,113 @@ export default function ImportPage({ data }) {
           </Col>
         </Row>
       )}
-      {(!checkedResponsesWithWarnings.length) && (
-        <FormFooter
-          onSaveHandler={() => handleUploadClick(sanitize(form))}
-        />
-      ) }
-      {!!responses.length && (
-        <Row>
+      {(checkedResponsesWithNoWarnings?.length) > 0 && (
+        <Row gutters>
           <Col n="12">
-            <Row key="headers">
-              <Col n="1">
-                Ligne
-              </Col>
-              <Col n="1">
-                Status
-              </Col>
-              <Col n="3">
-                Acronyme - Nom
-              </Col>
-              <Col n="1">
-                Id
-              </Col>
-              <Col n="3">
-                Message
-              </Col>
-              <Col n="3">
-                Parent
-              </Col>
-            </Row>
-            {responses.map((response, index) => (
-              <Row key={index}>
-                <Col n="1">
-                  {index + 1}
-                </Col>
-                <Col n="1">
-                  <Icon
-                    color={response?.status?.toString()?.[0] === '2' ? 'var(--green-menthe-main-548)' : 'var(--orange-terre-battue-main-645)'}
-                    name={response?.status?.toString()?.[0] === '2' ? 'ri-thumb-up-fill' : 'ri-thumb-down-fill'}
+            <Col n="12">
+              <Alert
+                description={checkedResponsesWithNoWarnings.length > 1
+                  ? `Il y a ${checkedResponsesWithNoWarnings?.length} structures qui sont prêtes à être ajoutées` : 'Il y a une structure qui est prête à être ajoutée'}
+                title="Validation"
+                type="info"
+              />
+            </Col>
+            <Accordion>
+              <AccordionItem
+                title="Voir et valider l'import de ces structures"
+              >
+                <Col n="12">
+                  <Row gutters key="headers">
+                    <Col n="1">
+                      Ligne
+                    </Col>
+                    <Col n="3">
+                      Nom de la structure
+                    </Col>
+                  </Row>
+                  {checkedResponsesWithNoWarnings?.sort((a, b) => a.index - b.index).map((response, index) => (
+                    <Row gutters key={index}>
+                      <Col n="1">
+                        {response.index + 2}
+                      </Col>
+                      <Col n="3">
+                        <span>
+                          {response?.usualName}
+                        </span>
+                      </Col>
+                    </Row>
+                  ))}
+                  <FormFooter
+                    buttonLabel="Importer cette/ces structure(s)"
+                    onSaveHandler={() => handleUploadClick()}
                   />
                 </Col>
-                <Col n="3">
-                  {response?.data?.id ? (
-                    <Link href={`/structures/${response?.data?.id}`}>
-                      <span>
-                        {queries?.[index]?.acronymFr}
-                        {queries?.[index]?.acronymFr && ' - '}
-                        {queries?.[index]?.shortName}
-                        {queries?.[index]?.shortName && ' - '}
-                        {queries?.[index]?.usualName}
-                      </span>
-                    </Link>
-                  ) : (
-                    <span>
-                      {queries?.[index]?.acronymFr}
-                      {queries?.[index]?.acronymFr && ' - '}
-                      {queries?.[index]?.shortName}
-                      {queries?.[index]?.shortName && ' - '}
-                      {queries?.[index]?.usualName}
-                    </span>
-                  )}
-                </Col>
-                <Col n="1">
-                  {response?.data?.id}
-                </Col>
-                <Col n="3">
-                  {response?.statusText}
-                </Col>
-                <Col n="3">
-                  {parents?.[index]?.status || ' x '}
-                </Col>
-              </Row>
-            ))}
+              </AccordionItem>
+            </Accordion>
+
+          </Col>
+        </Row>
+      ) }
+      {!!responses.length && (
+        <Row gutters>
+          <Col n="12">
+            <Col n="12">
+              <Alert
+                description={responses?.length > 1 ? `Il y a ${responses?.length} structures qui ont été ajoutées` : 'Il y a une structure qui a été ajoutée'}
+                title="Feedback"
+                type="success"
+              />
+            </Col>
+            <Accordion>
+              <AccordionItem
+                title="Voir les structures qui ont été importées"
+              >
+                <Row gutters>
+                  <Col n="1">
+                    Ligne
+                  </Col>
+                  <Col n="3">
+                    Acronyme - Nom
+                  </Col>
+                  <Col n="1">
+                    Id
+                  </Col>
+                  <Col n="3">
+                    Message
+                  </Col>
+                  <Col n="3">
+                    Parent
+                  </Col>
+                </Row>
+                {responses.map((response, index) => (
+                  <Row gutters key={index}>
+                    <Col n="1">
+                      {response.index + 2}
+                    </Col>
+                    <Col n="3">
+                      <Link href={`/structures/${response?.data?.id}`}>
+                        <span>
+                          {response?.data?.acronymFr}
+                          {response?.data?.acronymFr && ' - '}
+                          {response?.data?.shortName}
+                          {response?.data?.shortName && ' - '}
+                          {response?.data.currentName?.usualName}
+                        </span>
+                      </Link>
+                    </Col>
+                    <Col n="1">
+                      {response?.data?.id}
+                    </Col>
+                    <Col n="3">
+                      Structure Validée
+                    </Col>
+                    <Col n="3">
+                      {parents?.[index]?.status || ' x '}
+                    </Col>
+                  </Row>
+                ))}
+              </AccordionItem>
+            </Accordion>
           </Col>
         </Row>
       )}
