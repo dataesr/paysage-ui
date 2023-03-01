@@ -10,6 +10,7 @@ export default function PersonPrizes() {
       resourceType="prizes"
       relatedObjectTypes={['projects']}
       Form={LaureateForm}
+      noFilters
       inverse
     />
   );

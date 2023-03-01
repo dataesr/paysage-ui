@@ -4,7 +4,7 @@ import { Col, Modal, ModalContent, ModalTitle, Row } from '@dataesr/react-dsfr';
 import api from '../../../utils/api';
 import RelationCard from '../../card/relation-card';
 import ExpendableListCards from '../../card/expendable-list-cards';
-import { Bloc, BlocActionButton, BlocContent, BlocModal, BlocTitle } from '../../bloc';
+import { Bloc, BlocActionButton, BlocContent, BlocFilter, BlocModal, BlocTitle } from '../../bloc';
 import RelationsForm from '../../forms/relations';
 import useFetch from '../../../hooks/useFetch';
 import useUrl from '../../../hooks/useUrl';
@@ -27,7 +27,19 @@ const getMarkers = (structures) => structures.map((element) => {
   });
 });
 
-export default function RelationsByTag({ blocName, tag, resourceType, relatedObjectTypes, inverse, noRelationType, Form, sort, max }) {
+const isFinished = (relation) => (relation?.active === false) || (relation?.endDate < getComparableNow());
+
+function spreadByStatus(data) {
+  const current = data?.filter((el) => (el.startDate < getComparableNow() || (!el.startDate && !el.endDate)) && !isFinished(el));
+  const inactive = data?.filter((el) => isFinished(el));
+  const forthcoming = data?.filter((el) => el.startDate > getComparableNow());
+  const counts = {
+    current: current?.length, inactive: inactive?.length, forthcoming: forthcoming?.length,
+  };
+  return { data: { current, inactive, forthcoming }, counts };
+}
+
+export default function RelationsByTag({ blocName, tag, resourceType, relatedObjectTypes, inverse, noRelationType, noFilters, Form, sort, max }) {
   const queryObject = inverse ? 'relatedObjectId' : 'resourceId';
   const { notice } = useNotice();
   const { id: resourceId } = useUrl();
@@ -36,6 +48,7 @@ export default function RelationsByTag({ blocName, tag, resourceType, relatedObj
   const [showModal, setShowModal] = useState(false);
   const [modalTitle, setModalTitle] = useState('');
   const [modalContent, setModalContent] = useState(null);
+  const [statusFilter, setStatusFilter] = useState('current');
 
   const onSaveElementHandler = async (body, id = null) => {
     const method = id ? 'patch' : 'post';
@@ -89,30 +102,21 @@ export default function RelationsByTag({ blocName, tag, resourceType, relatedObj
       .filter((element) => element?.currentLocalisation?.geometry?.coordinates);
     const associatedStructuresMarkers = getMarkers(associatedStructures);
 
-    const currentRelations = data.data
-      .filter((element) => (
-        (element.active === true)
-      || (element.endDate > getComparableNow())
-      || (element.startDate > getComparableNow())
-      || (element.startDate < getComparableNow() && element.endDate > getComparableNow())
-      || (element.startDate < getComparableNow() && !element.endDate && element.active !== false)
-      || (element.startDate === null && element.endDate === null && element.active !== false)
-      )).sort((a, b) => new Date(b.startDate) - new Date(a.startDate))
-      .sort((a, b) => ((a?.relationType?.priority || 99) - (b?.relationType?.priority || 99)));
+    const { data: spreaded } = spreadByStatus(data?.data);
 
-    const activesIds = currentRelations
-      .map((element) => element.id);
+    const displayedElements = spreaded[statusFilter] || [];
 
-    const inactives = data.data.filter((element) => (!activesIds.includes(element.id)));
-
-    const list = [...currentRelations, ...inactives].map((element) => (
-      <RelationCard
-        key={element.id}
-        inverse={inverse}
-        relation={element}
-        onEdit={() => onOpenModalHandler(element)}
-      />
-    ));
+    const list = displayedElements
+      .sort((a, b) => new Date(b.startDate) - new Date(a.startDate))
+      .sort((a, b) => ((a?.relationType?.priority || 99) - (b?.relationType?.priority || 99)))
+      .map((element) => (
+        <RelationCard
+          key={element.id}
+          inverse={inverse}
+          relation={element}
+          onEdit={() => onOpenModalHandler(element)}
+        />
+      ));
 
     const markers = [...relatedMarkers, ...associatedStructuresMarkers];
     if (markers.length) {
@@ -133,10 +137,13 @@ export default function RelationsByTag({ blocName, tag, resourceType, relatedObj
     );
   };
 
+  const { counts } = spreadByStatus(data?.data);
+
   return (
     <Bloc isLoading={isLoading} error={error} data={data} isRelation>
       <BlocTitle as="h3" look="h6">{blocName || tag}</BlocTitle>
       <BlocActionButton onClick={() => onOpenModalHandler()}>Ajouter un élément</BlocActionButton>
+      {(!noFilters) && <BlocFilter statusFilter={statusFilter} setStatusFilter={setStatusFilter} counts={counts} />}
       {hasExport({ tag, inverse }) && (
         <BlocActionButton
           icon="ri-download-line"
@@ -169,6 +176,7 @@ RelationsByTag.propTypes = {
   inverse: PropTypes.bool,
   max: PropTypes.number,
   noRelationType: PropTypes.bool,
+  noFilters: PropTypes.bool,
   relatedObjectTypes: PropTypes.arrayOf(PropTypes.string),
   resourceType: PropTypes.string,
   sort: PropTypes.string,
@@ -180,6 +188,7 @@ RelationsByTag.defaultProps = {
   Form: RelationsForm,
   inverse: false,
   noRelationType: false,
+  noFilters: false,
   max: null,
   relatedObjectTypes: ['persons', 'structures', 'prizes', 'terms', 'projects', 'categories'],
   resourceType: 'structures',

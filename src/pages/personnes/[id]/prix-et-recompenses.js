@@ -11,6 +11,7 @@ export default function PersonPrizes() {
       relatedObjectTypes={['persons']}
       Form={LaureateForm}
       inverse
+      noFilters
     />
   );
 }

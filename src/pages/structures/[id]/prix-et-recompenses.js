@@ -13,6 +13,7 @@ export default function StructurePrixEtRecompensesPage() {
         resourceType="prizes"
         relatedObjectTypes={['structures']}
         inverse
+        noFilters
         Form={LaureateForm}
       />
       <RelationsAssociated
@@ -25,6 +26,7 @@ export default function StructurePrixEtRecompensesPage() {
         resourceType="prizes"
         relatedObjectTypes={['structures']}
         inverse
+        noFilters
         Form={PrizeAttributionForm}
       />
     </>

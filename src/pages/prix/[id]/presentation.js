@@ -40,6 +40,7 @@ export default function PrizePresentationPage() {
         resourceType="prizes"
         relatedObjectTypes={['structures']}
         Form={PrizeAttributionForm}
+        noFilters
       />
       <RelationsByTag
         tag={LAUREAT}
@@ -49,6 +50,7 @@ export default function PrizePresentationPage() {
         // relatedObjectTypes={['persons', 'structures', 'projects']}
         relatedObjectTypes={['persons', 'structures']}
         Form={LaureateForm}
+        noFilters
       />
       <Row gutters>
         <Col n="12 md-6">
