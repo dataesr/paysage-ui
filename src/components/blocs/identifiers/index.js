@@ -79,50 +79,14 @@ export default function IdentifiersComponent() {
     case 'ALId':
       linkTo = `https://dgesip-annelis.adc.education.fr/etablissement/${el.value}`;
       break;
-    case 'idRef':
-      linkTo = `https://www.idref.fr/${el.value}`;
-      break;
-    case 'ORCID Id':
-      linkTo = `https://orcid.org/${el.value}`;
-      break;
-    case 'ROR':
-      linkTo = `https://ror.org/${el.value}`;
-      break;
-    case 'RNA':
-      linkTo = `https://entreprise.data.gouv.fr/etablissement/${el.value}`;
-      break;
-    case 'Siret':
-      linkTo = `https://annuaire-entreprises.data.gouv.fr/etablissement/${el.value.split(' ').join('')}`;
-      break;
-    case 'Siren':
-      linkTo = `https://annuaire-entreprises.data.gouv.fr/entreprise/${el.value.split(' ').join('')}`;
-      break;
-    case 'OC':
-      linkTo = `https://opencorporates.com/companies/${el.value}`;
-      break;
-    case 'RNSR':
-      linkTo = `https://appliweb.dgri.education.fr/rnsr/PresenteStruct.jsp?numNatStruct=${el.value}&PUBLIC=OK`;
-      break;
-    case 'Id unité CNRS':
-      linkTo = `https://web-ast.dsi.cnrs.fr/l3c/owa/structure.infos_admin?&p_lab=${el.value}&p_origine_appel=u`;
-      break;
     case 'CNRS - grafilabo':
       linkTo = `https://www2.cnrs.fr/graflabo/unite.php?cod_uni=${el.value}`;
-      break;
-    case 'RCR':
-      linkTo = `http://www.sudoc.abes.fr//DB=2.2/SET=1/TTL=3/CMD?ACT=SRCHA&IKT=8888&SRT=RLV&TRM=${el.value}`;
-      break;
-    case 'isni':
-      linkTo = `http://www.isni.org/${el.value.split(' ').join('')}`;
       break;
     case 'fundref':
       linkTo = `https://search.crossref.org/funding?q=${el.value}`;
       break;
-    case 'PIC':
-      linkTo = `https://ec.europa.eu/info/funding-tenders/opportunities/portal/screen/how-to-participate/org-details/${el.value}`;
-      break;
-    case 'PIA':
-      linkTo = `https://anr.fr/ProjetIA-${el.value}`;
+    case 'Id unité CNRS':
+      linkTo = `https://web-ast.dsi.cnrs.fr/l3c/owa/structure.infos_admin?&p_lab=${el.value}&p_origine_appel=u`;
       break;
     case 'Identifiant BnF':
       linkTo = `https://catalogue.bnf.fr/ark:/12148/cb${el.value}`;
@@ -130,11 +94,47 @@ export default function IdentifiersComponent() {
     case 'idHal':
       linkTo = `https://aurehal.archives-ouvertes.fr/structure/read/id/${el.value}`;
       break;
-    case 'WOS':
-      linkTo = `https://publons.com/researcher/${el.value}/`;
+    case 'idRef':
+      linkTo = `https://www.idref.fr/${el.value}`;
+      break;
+    case 'isni':
+      linkTo = `http://www.isni.org/${el.value.split(' ').join('')}`;
       break;
     case 'Numéro national de Thèse':
       linkTo = `http://www.theses.fr/${el.value}`;
+      break;
+    case 'OC':
+      linkTo = `https://opencorporates.com/companies/${el.value}`;
+      break;
+    case 'ORCID Id':
+      linkTo = `https://orcid.org/${el.value}`;
+      break;
+    case 'PIC':
+      linkTo = `https://ec.europa.eu/info/funding-tenders/opportunities/portal/screen/how-to-participate/org-details/${el.value}`;
+      break;
+    case 'PIA':
+      linkTo = `https://anr.fr/ProjetIA-${el.value}`;
+      break;
+    case 'RCR':
+      linkTo = `http://www.sudoc.abes.fr//DB=2.2/SET=1/TTL=3/CMD?ACT=SRCHA&IKT=8888&SRT=RLV&TRM=${el.value}`;
+      break;
+    case 'RNA':
+      linkTo = `https://entreprise.data.gouv.fr/etablissement/${el.value}`;
+      break;
+    case 'RNSR':
+      linkTo = `https://appliweb.dgri.education.fr/rnsr/PresenteStruct.jsp?numNatStruct=${el.value}&PUBLIC=OK`;
+      break;
+    case 'ROR':
+      linkTo = `https://ror.org/${el.value}`;
+      break;
+    case 'scopus':
+      linkTo = `https://www.scopus.com/authid/detail.uri?authorId=${el.value}`;
+      break;
+    case 'Siren':
+      linkTo = `https://annuaire-entreprises.data.gouv.fr/entreprise/${el.value.split(' ').join('')}`;
+      break;
+    case 'Siret':
+      linkTo = `https://annuaire-entreprises.data.gouv.fr/etablissement/${el.value.split(' ').join('')}`;
       break;
     case 'Univ-droit jurist ID':
       linkTo = `https://univ-droit.fr/universitaires/${el.value}`;
@@ -144,6 +144,9 @@ export default function IdentifiersComponent() {
       break;
     case 'Wikidata JSON':
       linkTo = `https://www.wikidata.org/wiki/Special:EntityData/${el.value}.json`;
+      break;
+    case 'WOS':
+      linkTo = `https://publons.com/researcher/${el.value}/`;
       break;
     default:
     }
