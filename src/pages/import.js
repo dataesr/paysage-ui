@@ -34,7 +34,7 @@ export default function ImportPage({ data }) {
   const [responsesErrors, setResponsesErrors] = useState([]);
 
   const [isLoading, setIsLoading] = useState(false);
-  // const [parents, setParents] = useState([]);
+  const [parents, setParents] = useState([]);
   const [responses, setResponses] = useState([]);
   const { form, updateForm } = useForm(data);
 
@@ -131,6 +131,13 @@ export default function ImportPage({ data }) {
       const saveResponse = await api.post('/structures', structure);
       const responseWithIndex = { ...saveResponse, index: structure.index };
       setFeedBack([...feedBack, responseWithIndex]);
+      const resourceId = structure.parent;
+      const relatedObjectId = saveResponse.data.id;
+      if (resourceId && relatedObjectId) {
+        const parentResponse = await api.post('/relations', { resourceId, relatedObjectId, relationTag: 'structure-interne' });
+        return { ...responseWithIndex, parent: parentResponse.data };
+      }
+      return responseWithIndex;
     } catch (error) {
       const responseWithIndex = {
         status: error?.message,
@@ -139,30 +146,31 @@ export default function ImportPage({ data }) {
         index: structure?.index,
       };
       setResponsesErrors((responseFromApi) => [...responseFromApi, responseWithIndex]);
+      return error;
     }
   };
 
   const handleUploadClick = async () => {
     setIsLoading(true);
-
-    const responsesPromises = await Promise.all(readyToImport.map((structure) => saveStructure(structure)));
-    // const parentsPromises = await Promise.all(responsesPromises.map((result, index) => {
-    //   const resourceId = readyToImport?.[index]?.parent;
-    //   const relatedObjectId = result?.data?.id;
-    //   if (resourceId && relatedObjectId) {
-    //     return api.post('/relations', { resourceId, relatedObjectId, relationTag: 'structure-interne' })
-    //       .then((response) => response)
-    //       .catch((error) => ({ status: error?.message, statusText: `${error?.error} : ${JSON.stringify(error?.details?.[0])}`, data: {} }));
-    //   }
-    //   return Promise.resolve(null);
-    // }));
-    // setParents(parentsPromises);
+    const responsesPromises = readyToImport.map((structure) => saveStructure(structure));
+    const newResponses = await Promise.all(responsesPromises);
+    setFeedBack([...newResponses.filter((el) => el.index)]);
+    const parentsPromises = await Promise.all(newResponses.map((result, index) => {
+      const resourceId = readyToImport?.[index]?.parent;
+      const relatedObjectId = result?.data?.id;
+      if (resourceId && relatedObjectId) {
+        return api.post('/relations', { resourceId, relatedObjectId, relationTag: 'structure-interne' })
+          .then((response) => response)
+          .catch((error) => ({ status: error?.message, statusText: `${error?.error} : ${JSON.stringify(error?.details?.[0])}`, data: {} }));
+      }
+      return Promise.resolve(null);
+    }));
+    setParents(parentsPromises);
     updateForm({ data: '' });
-    setResponses([...responses, ...responsesPromises, ...readyToImport, ...feedBack, ...responsesErrors]);
+    setResponses((oldResponses) => [...oldResponses, ...newResponses, ...readyToImport, ...feedBack, ...responsesErrors, ...parents]);
     setReadyToImport([]);
     setIsLoading(false);
   };
-
   return (
     <Container spacing="py-6w">
       <Row gutters>
@@ -336,7 +344,7 @@ export default function ImportPage({ data }) {
           <Col n="12">
             <Col n="12">
               <Alert
-                description={responses?.length > 1 ? `Il y a ${feedBack?.length} structures qui ont été ajoutées` : 'Il y a une structure qui a été ajoutée'}
+                description={feedBack?.length > 1 ? `Il y a ${feedBack?.length} structures qui ont été ajoutées` : 'Il y a une structure qui a été ajoutée'}
                 title="Feedback"
                 type="success"
               />
@@ -385,7 +393,7 @@ export default function ImportPage({ data }) {
                       Structure Validée
                     </Col>
                     <Col n="3">
-                      {response?.parent}
+                      {response?.parent?.resourceId}
                     </Col>
                   </Row>
                 ))}
