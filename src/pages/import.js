@@ -28,11 +28,13 @@ function sanitize(form) {
 }
 
 export default function ImportPage({ data }) {
-  const [checkedResponsesWithErrors, setCheckedResponsesWithErrors] = useState([]);
-  const [checkedResponsesWithNoWarnings, setCheckedResponsesWithNoWarnings] = useState([]);
-  const [checkedResponsesWithWarnings, setCheckedResponsesWithWarnings] = useState([]);
+  const [readyToImport, setReadyToImport] = useState([]);
+  const [warnings, setWarnings] = useState([]);
+  const [feedBack, setFeedBack] = useState([]);
+  const [responsesErrors, setResponsesErrors] = useState([]);
+
   const [isLoading, setIsLoading] = useState(false);
-  const [parents, setParents] = useState([]);
+  // const [parents, setParents] = useState([]);
   const [responses, setResponses] = useState([]);
   const { form, updateForm } = useForm(data);
 
@@ -105,41 +107,47 @@ export default function ImportPage({ data }) {
     });
 
     const checkName = async (name, index) => {
-      // If error from api
-      if (name === undefined) { return { name, index, errors: [{ message: 'Le nom de la structure est invalide' }], warnings: [] }; }
-
       const potentialDuplicates = await api.get(`/autocomplete?types=structures&query=${name}`);
       const duplicatedStructureId = potentialDuplicates.data.data.find((el) => el.name === name)?.id;
 
       if (duplicatedStructureId) {
-        return { errors: [], id: duplicatedStructureId, index, name, warnings: [{ message: `${name} est probablement un doublon` }] };
+        return { id: duplicatedStructureId, index, name, warnings: [{ message: `${name} est probablement un doublon` }] };
       }
-      return { errors: [], id: undefined, index, name, warnings: [] };
+      return { id: undefined, index, name, warnings: [] };
     };
     const namePromises = structuresJson.map((element, index) => checkName(element.usualName, index));
     const results = await Promise.all(namePromises);
     const allResults = structuresJson.map((structure, index) => {
       const result = results.find((r) => r.index === index);
-      return { ...structure, duplicatedStructureId: result?.id, errors: result?.errors, index, warnings: result?.warnings };
+      return { ...structure, duplicatedStructureId: result?.id, index, warnings: result?.warnings };
     });
-    setCheckedResponsesWithWarnings(allResults.filter((el) => el.warnings.length > 0));
-    setCheckedResponsesWithNoWarnings(allResults.filter((el) => el.warnings.length === 0 && el.errors.length === 0));
-    setCheckedResponsesWithErrors(allResults.filter((el) => el.errors.length > 0));
+    setWarnings(allResults.filter((el) => el.warnings.length > 0));
+    setReadyToImport(allResults.filter((el) => el.warnings.length === 0));
     setIsLoading(false);
   };
 
   const saveStructure = async (structure) => {
-    const saveResponse = await api.post('/structures', structure)
-      .then((response) => response)
-      .catch((error) => ({ status: error?.message, statusText: `${error?.error} : ${JSON.stringify(error?.details?.[0])}`, data: {} }));
-    return { ...saveResponse, index: structure?.index };
+    try {
+      const saveResponse = await api.post('/structures', structure);
+      const responseWithIndex = { ...saveResponse, index: structure.index };
+      setFeedBack([...feedBack, responseWithIndex]);
+    } catch (error) {
+      const responseWithIndex = {
+        status: error?.message,
+        statusText: `${error?.error} : ${JSON.stringify(error?.details?.[0])}`,
+        data: {},
+        index: structure?.index,
+      };
+      setResponsesErrors((responseFromApi) => [...responseFromApi, responseWithIndex]);
+    }
   };
 
   const handleUploadClick = async () => {
     setIsLoading(true);
-    const responsesPromises = await Promise.all(checkedResponsesWithNoWarnings.map((structure) => saveStructure(structure)));
+
+    const responsesPromises = await Promise.all(readyToImport.map((structure) => saveStructure(structure)));
     // const parentsPromises = await Promise.all(responsesPromises.map((result, index) => {
-    //   const resourceId = checkedResponsesWithNoWarnings?.[index]?.parent;
+    //   const resourceId = readyToImport?.[index]?.parent;
     //   const relatedObjectId = result?.data?.id;
     //   if (resourceId && relatedObjectId) {
     //     return api.post('/relations', { resourceId, relatedObjectId, relationTag: 'structure-interne' })
@@ -150,8 +158,8 @@ export default function ImportPage({ data }) {
     // }));
     // setParents(parentsPromises);
     updateForm({ data: '' });
-    setResponses([...responses, ...responsesPromises]);
-    setCheckedResponsesWithNoWarnings([]);
+    setResponses([...responses, ...responsesPromises, ...readyToImport, ...feedBack, ...responsesErrors]);
+    setReadyToImport([]);
     setIsLoading(false);
   };
 
@@ -200,58 +208,12 @@ export default function ImportPage({ data }) {
         </Col>
       </Row>
       {isLoading && <Row className="fr-my-2w flex--space-around"><Spinner /></Row>}
-      {checkedResponsesWithErrors?.length > 0 && (
+      {warnings?.length > 0 && (
         <Row gutters>
           <Col n="12">
             <Col n="12">
               <Alert
-                description={checkedResponsesWithErrors.lenght > 1 ? `Il y a ${checkedResponsesWithErrors?.length} erreurs` : 'Il y a une erreur'}
-                title="Erreur(s)"
-                type="error"
-              />
-            </Col>
-            <Accordion>
-              <AccordionItem
-                initExpand={!(checkedResponsesWithErrors.length > 2)}
-                title={checkedResponsesWithErrors.lenght > 1 ? 'Voir les erreurs' : "Voir l'erreur"}
-              >
-                <Col n="12">
-                  <Row gutters key="headers">
-                    <Col n="1">
-                      Ligne
-                    </Col>
-                    <Col n="5">
-                      Erreur
-                    </Col>
-                  </Row>
-                  {checkedResponsesWithErrors?.map((response, index) => (
-                    (response?.errors?.length > 0
-                      && (
-                        <Row gutters key={index}>
-                          <Col n="1">
-                            {response.index + 2}
-                          </Col>
-                          <Col n="5">
-                            <span>
-                              {response?.errors?.map((error) => error.message).join(',')}
-                            </span>
-                          </Col>
-                        </Row>
-                      )
-                    )
-                  ))}
-                </Col>
-              </AccordionItem>
-            </Accordion>
-          </Col>
-        </Row>
-      )}
-      {checkedResponsesWithWarnings?.length > 0 && (
-        <Row gutters>
-          <Col n="12">
-            <Col n="12">
-              <Alert
-                description={checkedResponsesWithWarnings.length > 1 ? `Il y a ${checkedResponsesWithWarnings?.length} warnings` : 'Il y a un warning'}
+                description={warnings.length > 1 ? `Il y a ${warnings?.length} warnings` : 'Il y a un warning'}
                 title="Warning"
                 type="warning"
               />
@@ -272,7 +234,7 @@ export default function ImportPage({ data }) {
                       Warnings
                     </Col>
                   </Row>
-                  {checkedResponsesWithWarnings?.map((response, index) => (
+                  {warnings?.map((response, index) => (
                     (response?.warnings?.length > 0
                       && (
                         <Row gutters key={index}>
@@ -300,10 +262,13 @@ export default function ImportPage({ data }) {
                             <Button
                               colors={['#f55', '#fff']}
                               onClick={async () => {
-                                const saveResponse = await saveStructure(response);
-                                checkedResponsesWithWarnings.splice(index, 1);
-                                setCheckedResponsesWithWarnings(checkedResponsesWithWarnings);
-                                setResponses([...responses, saveResponse]);
+                                try {
+                                  const saveResponse = await saveStructure(response);
+                                  warnings.splice(index, 1);
+                                  setResponses([...responses, saveResponse]);
+                                } catch (error) {
+                                  // console.error(error);
+                                }
                               }}
                               size="sm"
                             >
@@ -320,13 +285,13 @@ export default function ImportPage({ data }) {
           </Col>
         </Row>
       )}
-      {(checkedResponsesWithNoWarnings?.length) > 0 && (
+      {(readyToImport?.length) > 0 && (
         <Row gutters>
           <Col n="12">
             <Col n="12">
               <Alert
-                description={checkedResponsesWithNoWarnings.length > 1
-                  ? `Il y a ${checkedResponsesWithNoWarnings?.length} structures qui sont prêtes à être ajoutées` : 'Il y a une structure qui est prête à être ajoutée'}
+                description={readyToImport.length > 1
+                  ? `Il y a ${readyToImport?.length} structures qui sont prêtes à être ajoutées` : 'Il y a une structure qui est prête à être ajoutée'}
                 title="Validation"
                 type="info"
               />
@@ -344,7 +309,7 @@ export default function ImportPage({ data }) {
                       Nom de la structure
                     </Col>
                   </Row>
-                  {checkedResponsesWithNoWarnings?.sort((a, b) => a.index - b.index).map((response, index) => (
+                  {readyToImport?.sort((a, b) => a.index - b.index).map((response, index) => (
                     <Row gutters key={index}>
                       <Col n="1">
                         {response.index + 2}
@@ -363,16 +328,15 @@ export default function ImportPage({ data }) {
                 </Col>
               </AccordionItem>
             </Accordion>
-
           </Col>
         </Row>
       ) }
-      {!!responses.length && (
+      {!!feedBack.length && (
         <Row gutters>
           <Col n="12">
             <Col n="12">
               <Alert
-                description={responses?.length > 1 ? `Il y a ${responses?.length} structures qui ont été ajoutées` : 'Il y a une structure qui a été ajoutée'}
+                description={responses?.length > 1 ? `Il y a ${feedBack?.length} structures qui ont été ajoutées` : 'Il y a une structure qui a été ajoutée'}
                 title="Feedback"
                 type="success"
               />
@@ -398,7 +362,7 @@ export default function ImportPage({ data }) {
                     Parent
                   </Col>
                 </Row>
-                {responses.map((response, index) => (
+                {feedBack.sort((a, b) => a.index - b.index).map((response, index) => (
                   <Row gutters key={index}>
                     <Col n="1">
                       {response.index + 2}
@@ -410,7 +374,7 @@ export default function ImportPage({ data }) {
                           {response?.data?.acronymFr && ' - '}
                           {response?.data?.shortName}
                           {response?.data?.shortName && ' - '}
-                          {response?.data.currentName?.usualName}
+                          {response?.data?.currentName.usualName}
                         </span>
                       </Link>
                     </Col>
@@ -421,7 +385,62 @@ export default function ImportPage({ data }) {
                       Structure Validée
                     </Col>
                     <Col n="3">
-                      {parents?.[index]?.status || ' x '}
+                      {response?.parent}
+                    </Col>
+                  </Row>
+                ))}
+              </AccordionItem>
+            </Accordion>
+          </Col>
+        </Row>
+      )}
+      {!!responsesErrors.length && (
+        <Row gutters>
+          <Col n="12">
+            <Col n="12">
+              <Alert
+                description={responsesErrors?.length > 1 ? `Il y a ${responsesErrors?.length} imports qui ont été échoués` : 'Il y a un import qui a échoué'}
+                title="Erreur(s)"
+                type="error"
+              />
+            </Col>
+            <Accordion>
+              <AccordionItem
+                title="Voir les imports qui ont été échoués"
+              >
+                <Row gutters>
+                  <Col n="1">
+                    Ligne
+                  </Col>
+                  <Col n="3">
+                    Acronyme - Nom
+                  </Col>
+                  <Col n="3">
+                    Message
+                  </Col>
+                  <Col n="3">
+                    Statut
+                  </Col>
+                </Row>
+                {responsesErrors.map((response, index) => (
+                  <Row gutters key={index}>
+                    <Col n="1">
+                      {response.index + 2}
+                    </Col>
+                    <Col n="3">
+                      <span>
+                        {response?.data?.acronymFr}
+                        {response?.data?.acronymFr && ' - '}
+                        {response?.data?.shortName}
+                        {response?.data?.shortName && ' - '}
+                        {response?.data.currentName?.usualName}
+                      </span>
+                    </Col>
+                    <Col n="3">
+                      {response.statusText}
+                    </Col>
+                    <Col n="3">
+                      {response.status}
                     </Col>
                   </Row>
                 ))}
