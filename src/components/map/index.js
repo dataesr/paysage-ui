@@ -53,7 +53,8 @@ export default function Map({ height, markers, onMarkerDragEnd, width }) {
         url={`https://tile.jawg.io/jawg-${theme}/{z}/{x}/{y}.png?access-token=5V4ER9yrsLxoHQrAGQuYNu4yWqXNqKAM6iaX5D1LGpRNTBxvQL3enWXpxMQqTrY8`}
       />
       {markers.map((marker, i) => (
-        <Marker zIndexOffset={marker?.zIndexOffset || 0} icon={getIcon(marker.color)} draggable={!!onMarkerDragEnd} eventHandlers={eventHandlers} key={i} position={marker.latLng}>
+        /* zIndexOffset prevent markers from disappearing on scroll */
+        <Marker zIndexOffset={marker?.zIndexOffset || 10000} icon={getIcon(marker.color)} draggable={!!onMarkerDragEnd} eventHandlers={eventHandlers} key={i} position={marker.latLng}>
           <Tooltip>
             {marker?.label && (
               <>
