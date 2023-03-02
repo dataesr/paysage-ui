@@ -4,6 +4,8 @@ import { Row, Tag, TagGroup, Text } from '@dataesr/react-dsfr';
 import typeValidation from '../../utils/type-validation';
 
 export default function BlocFilter({ statusFilter, setStatusFilter, counts }) {
+  const totalCount = Object.values(counts).reduce((total, current) => current + total, 0);
+  if (!totalCount) return null;
   return (
     <>
       <Row alignItems="middle" spacing="mb-1v">
@@ -11,27 +13,23 @@ export default function BlocFilter({ statusFilter, setStatusFilter, counts }) {
       </Row>
       <Row>
         <TagGroup>
-          {(counts.current !== 0) && (
-            <Tag size="sm" className="no-span" selected={statusFilter === 'current'} onClick={() => setStatusFilter('current')}>
-              Relations actuelles (
-              {counts.current}
-              )
-            </Tag>
-          )}
-          {(counts.inactive !== 0) && (
-            <Tag disabled={(counts.inactive === 0)} size="sm" className="no-span" selected={statusFilter === 'inactive'} onClick={() => setStatusFilter('inactive')}>
-              Relations passées (
-              {counts.inactive}
-              )
-            </Tag>
-          )}
-          {(counts.forthcoming !== 0) && (
-            <Tag disabled={(counts.forthcoming === 0)} size="sm" className="no-span" selected={statusFilter === 'forthcoming'} onClick={() => setStatusFilter('forthcoming')}>
-              Relations futures (
-              {counts.forthcoming}
-              )
-            </Tag>
-          )}
+          <Tag size="sm" className="no-span" selected={statusFilter === 'current'} onClick={() => setStatusFilter('current')}>
+            Relations actuelles (
+            {counts.current}
+            )
+          </Tag>
+
+          <Tag size="sm" className="no-span" selected={statusFilter === 'inactive'} onClick={() => setStatusFilter('inactive')}>
+            Relations passées (
+            {counts.inactive}
+            )
+          </Tag>
+
+          <Tag size="sm" className="no-span" selected={statusFilter === 'forthcoming'} onClick={() => setStatusFilter('forthcoming')}>
+            Relations futures (
+            {counts.forthcoming}
+            )
+          </Tag>
         </TagGroup>
       </Row>
     </>

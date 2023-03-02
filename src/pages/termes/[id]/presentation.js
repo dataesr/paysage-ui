@@ -6,7 +6,7 @@ import useFetch from '../../../hooks/useFetch';
 import useUrl from '../../../hooks/useUrl';
 import KeyValueCard from '../../../components/card/key-value-card';
 import Wiki from '../../../components/blocs/wiki';
-import RelationsByTag from '../../../components/blocs/relations-by-tag';
+import { RelationsByTag } from '../../../components/blocs/relations';
 import { TERME_PARENT } from '../../../utils/relations-tags';
 import { PageSpinner } from '../../../components/spinner';
 import Error from '../../../components/errors';

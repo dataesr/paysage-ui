@@ -1,4 +1,4 @@
-import RelationsByTag from '../../../components/blocs/relations-by-tag';
+import { RelationsByTag } from '../../../components/blocs/relations';
 import { PROJET_CATEGORIE, PROJET_TERME } from '../../../utils/relations-tags';
 
 export default function ProjectCategories() {

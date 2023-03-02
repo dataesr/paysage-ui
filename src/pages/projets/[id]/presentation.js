@@ -3,7 +3,7 @@ import { useOutletContext } from 'react-router-dom';
 
 import Identifiers from '../../../components/blocs/identifiers';
 import Localisations from '../../../components/blocs/localisations';
-import RelationsByTag from '../../../components/blocs/relations-by-tag';
+import { RelationsByTag } from '../../../components/blocs/relations';
 import SocialMedias from '../../../components/blocs/social-medias';
 import Weblinks from '../../../components/blocs/weblinks';
 import Wiki from '../../../components/blocs/wiki';

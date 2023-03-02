@@ -3,7 +3,7 @@ import { Row, Title, Col } from '@dataesr/react-dsfr';
 import Identifiers from '../../../components/blocs/identifiers';
 import SocialMedias from '../../../components/blocs/social-medias';
 import Weblinks from '../../../components/blocs/weblinks';
-import RelationsByTag from '../../../components/blocs/relations-by-tag';
+import { RelationsByTag } from '../../../components/blocs/relations';
 import KeyValueCard from '../../../components/card/key-value-card';
 import { PageSpinner } from '../../../components/spinner';
 import useUrl from '../../../hooks/useUrl';

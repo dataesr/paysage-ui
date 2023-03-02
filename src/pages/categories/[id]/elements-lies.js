@@ -1,9 +1,7 @@
 import { Modal, ModalContent, ModalTitle } from '@dataesr/react-dsfr';
 import { useState } from 'react';
 import { Bloc, BlocActionButton, BlocContent, BlocModal, BlocTitle } from '../../../components/bloc';
-import RelationsByGroup from '../../../components/blocs/relations-by-group';
-import RelationsByTag from '../../../components/blocs/relations-by-tag';
-import RelationsParticipations from '../../../components/blocs/relations-participations';
+import { RelationsByGroup, RelationsByTag, RelationsParticipations } from '../../../components/blocs/relations';
 import RelationGroupForm from '../../../components/forms/relations-group';
 import useFetch from '../../../hooks/useFetch';
 import useNotice from '../../../hooks/useNotice';

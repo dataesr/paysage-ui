@@ -1,10 +1,10 @@
-import Relations from '../../../components/blocs/relations-by-tag';
+import { RelationsByTag } from '../../../components/blocs/relations';
 import LaureateForm from '../../../components/forms/laureate';
 import { LAUREAT } from '../../../utils/relations-tags';
 
 export default function PersonPrizes() {
   return (
-    <Relations
+    <RelationsByTag
       tag={LAUREAT}
       blocName="Prix et récompenses"
       resourceType="prizes"

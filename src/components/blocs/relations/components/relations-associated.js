@@ -1,10 +1,10 @@
 import PropTypes from 'prop-types';
-import RelationAssociatedCard from '../../card/relation-associated-card';
-import ExpendableListCards from '../../card/expendable-list-cards';
-import { Bloc, BlocActionButton, BlocContent, BlocTitle } from '../../bloc';
-import useFetch from '../../../hooks/useFetch';
-import useUrl from '../../../hooks/useUrl';
-import { exportToCsv } from '../relations-by-tag/utils/exports';
+import RelationAssociatedCard from '../../../card/relation-associated-card';
+import ExpendableListCards from '../../../card/expendable-list-cards';
+import { Bloc, BlocActionButton, BlocContent, BlocTitle } from '../../../bloc';
+import useFetch from '../../../../hooks/useFetch';
+import useUrl from '../../../../hooks/useUrl';
+import { exportToCsv } from '../utils/exports';
 
 export default function RelationsAssociated({ blocName, tag, sort }) {
   const { id: resourceId } = useUrl();

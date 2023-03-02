@@ -2,13 +2,11 @@ import { useState } from 'react';
 import { Modal, ModalTitle, ModalContent } from '@dataesr/react-dsfr';
 import useFetch from '../../../hooks/useFetch';
 import useUrl from '../../../hooks/useUrl';
-import RelationsByGroup from '../../../components/blocs/relations-by-group';
+import { RelationsByGroup, RelationsByTag, RelationsParticipations } from '../../../components/blocs/relations';
 import { Bloc, BlocTitle, BlocActionButton, BlocContent, BlocModal } from '../../../components/bloc';
 import RelationGroupForm from '../../../components/forms/relations-group';
 import api from '../../../utils/api';
 import useNotice from '../../../hooks/useNotice';
-import RelationsByTag from '../../../components/blocs/relations-by-tag';
-import RelationsParticipations from '../../../components/blocs/relations-participations';
 import SupervisorsForm from '../../../components/forms/supervisors';
 import { STRUCTURE_INTERNE, STRUCTURE_PREDECESSEUR, STRUCTURE_TUTELLE } from '../../../utils/relations-tags';
 

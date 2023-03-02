@@ -1,6 +1,6 @@
 import { Row, Title, Icon, Col } from '@dataesr/react-dsfr';
 import Identifiers from '../../../components/blocs/identifiers';
-import RelationsByTag from '../../../components/blocs/relations-by-tag';
+import { RelationsByTag } from '../../../components/blocs/relations';
 import Weblinks from '../../../components/blocs/weblinks';
 import LaureateForm from '../../../components/forms/laureate';
 import Wiki from '../../../components/blocs/wiki';

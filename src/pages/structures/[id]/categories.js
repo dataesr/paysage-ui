@@ -1,4 +1,4 @@
-import RelationsByTag from '../../../components/blocs/relations-by-tag';
+import { RelationsByTag } from '../../../components/blocs/relations';
 import { STRUCTURE_CATEGORIE, STRUCTURE_CATEGORIE_JURIDIQUE, STRUCTURE_TERME } from '../../../utils/relations-tags';
 
 export default function StructureCategoriesPage() {

@@ -1,19 +1,20 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Col, Modal, ModalContent, ModalTitle, Row } from '@dataesr/react-dsfr';
-import api from '../../../utils/api';
-import ExpendableListCards from '../../card/expendable-list-cards';
-import { Bloc, BlocActionButton, BlocContent, BlocModal, BlocTitle } from '../../bloc';
-import RelationsForm from '../../forms/relations';
-import RelationsGroupForm from '../../forms/relations-group';
-import useFetch from '../../../hooks/useFetch';
-import useUrl from '../../../hooks/useUrl';
-import useNotice from '../../../hooks/useNotice';
-import Map from '../../map';
-import RelationCard from '../../card/relation-card';
-import { deleteError, saveError, saveSuccess, deleteSuccess } from '../../../utils/notice-contents';
-import { getComparableNow } from '../../../utils/dates';
-import { exportToCsv, hasExport } from '../relations-by-tag/utils/exports';
+import api from '../../../../utils/api';
+import ExpendableListCards from '../../../card/expendable-list-cards';
+import { Bloc, BlocActionButton, BlocContent, BlocFilter, BlocModal, BlocTitle } from '../../../bloc';
+import RelationsForm from '../../../forms/relations';
+import RelationsGroupForm from '../../../forms/relations-group';
+import useFetch from '../../../../hooks/useFetch';
+import useUrl from '../../../../hooks/useUrl';
+import useNotice from '../../../../hooks/useNotice';
+import Map from '../../../map/auto-bound-map';
+import RelationCard from '../../../card/relation-card';
+import { deleteError, saveError, saveSuccess, deleteSuccess } from '../../../../utils/notice-contents';
+import { exportToCsv, hasExport } from '../utils/exports';
+import { spreadByStatus } from '../utils/status';
+import { getMarkers } from '../utils/maps';
 
 export default function RelationsByGroup({ group, reloader }) {
   const { id: groupId, name: groupName, accepts: groupAccepts } = group;
@@ -25,6 +26,9 @@ export default function RelationsByGroup({ group, reloader }) {
   const [showListModal, setShowListModal] = useState(false);
   const [modalTitle, setModalTitle] = useState('');
   const [modalContent, setModalContent] = useState(null);
+  const { data: spreadedByStatusRelations, counts, defaultFilter } = spreadByStatus(data?.data);
+  const [statusFilter, setStatusFilter] = useState(defaultFilter);
+  useEffect(() => setStatusFilter(defaultFilter), [defaultFilter]);
 
   const onSaveElementHandler = async (body, id = null) => {
     const method = id ? 'patch' : 'post';
@@ -68,42 +72,10 @@ export default function RelationsByGroup({ group, reloader }) {
     setShowModal(true);
   };
 
-  // TODO:
-  // What to do with relatedObject! Shared Model or Card adaptability ?
   const renderCards = () => {
-    if (!data && !data?.data?.length) return null;
-
-    const actives = data.data
-      .filter((element) => (
-        (element.active === true)
-      || (element.endDate > getComparableNow())
-      || (element.startDate > getComparableNow())
-      || (element.startDate < getComparableNow() && element.endDate > getComparableNow())
-      || (element.startDate < getComparableNow() && !element.endDate && element.active !== false)
-      || (element.startDate === null && element.endDate === null && element.active !== false)
-      )).sort((a, b) => new Date(b.startDate) - new Date(a.startDate));
-
-    const activesIds = actives.map((element) => element.id);
-
-    const inactives = data.data.filter((element) => (!activesIds.includes(element.id)));
-
-    const orderedList = [...actives, ...inactives];
-
-    const markers = orderedList
-      .filter((el) => el.relatedObject?.currentLocalisation?.geometry?.coordinates)
-      .map((element) => {
-        const { coordinates } = element.relatedObject.currentLocalisation.geometry;
-        const markersCoordinates = [...coordinates];
-        const reversed = markersCoordinates.reverse();
-        return ({
-          latLng: reversed,
-          address: `${element.relatedObject.currentName.usualName}
-         ${element.relatedObject.currentLocalisation?.address},
-         ${element.relatedObject.currentLocalisation?.postalCode},
-         ${element.relatedObject.currentLocalisation?.locality}`,
-        });
-      });
-    const list = orderedList.map((element) => (
+    const relations = spreadedByStatusRelations[statusFilter] || [];
+    const markers = getMarkers(relations);
+    const list = relations.map((element) => (
       <RelationCard
         relation={element}
         onEdit={() => onOpenModalHandler(element)}
@@ -128,7 +100,7 @@ export default function RelationsByGroup({ group, reloader }) {
 
   return (
 
-    <Bloc isLoading={isLoading} error={error} data={data} isRelation>
+    <Bloc isLoading={isLoading} error={error} data={data}>
       <BlocTitle as="h3" look="h6">{groupName}</BlocTitle>
       {reloader && <BlocActionButton icon="ri-edit-line" onClick={() => setShowListModal(true)}>Editer la liste</BlocActionButton>}
       <BlocActionButton onClick={() => onOpenModalHandler()}>Ajouter un élément</BlocActionButton>
@@ -141,6 +113,7 @@ export default function RelationsByGroup({ group, reloader }) {
           Télécharger la liste
         </BlocActionButton>
       )}
+      <BlocFilter statusFilter={statusFilter} setStatusFilter={setStatusFilter} counts={counts} />
       <BlocContent>{renderCards()}</BlocContent>
       <BlocModal>
         <Modal isOpen={showModal} size="lg" hide={() => setShowModal(false)}>

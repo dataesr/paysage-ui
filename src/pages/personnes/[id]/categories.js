@@ -1,4 +1,4 @@
-import RelationsByTag from '../../../components/blocs/relations-by-tag';
+import { RelationsByTag } from '../../../components/blocs/relations';
 import { PERSONNE_CATEGORIE, PERSONNE_TERME } from '../../../utils/relations-tags';
 
 export default function PersonCategories() {

@@ -1,5 +1,4 @@
-import RelationsAssociated from '../../../components/blocs/relations-associated';
-import RelationsByTag from '../../../components/blocs/relations-by-tag';
+import { RelationsAssociated, RelationsByTag } from '../../../components/blocs/relations';
 import LaureateForm from '../../../components/forms/laureate';
 import PrizeAttributionForm from '../../../components/forms/prize-attribution';
 import { LAUREAT, PRIX_PORTEUR } from '../../../utils/relations-tags';

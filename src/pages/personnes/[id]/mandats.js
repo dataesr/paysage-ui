@@ -1,4 +1,4 @@
-import RelationsByTag from '../../../components/blocs/relations-by-tag';
+import { RelationsByTag } from '../../../components/blocs/relations';
 import MandateForm from '../../../components/forms/mandate';
 import { GOUVERNANCE, STRUCTURE_REFERENT_MESR } from '../../../utils/relations-tags';
 

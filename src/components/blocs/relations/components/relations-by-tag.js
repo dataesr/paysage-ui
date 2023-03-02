@@ -1,43 +1,19 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Col, Modal, ModalContent, ModalTitle, Row } from '@dataesr/react-dsfr';
-import api from '../../../utils/api';
-import RelationCard from '../../card/relation-card';
-import ExpendableListCards from '../../card/expendable-list-cards';
-import { Bloc, BlocActionButton, BlocContent, BlocFilter, BlocModal, BlocTitle } from '../../bloc';
-import RelationsForm from '../../forms/relations';
-import useFetch from '../../../hooks/useFetch';
-import useUrl from '../../../hooks/useUrl';
-import useNotice from '../../../hooks/useNotice';
-import Map from '../../map';
-import { deleteError, saveError, saveSuccess, deleteSuccess } from '../../../utils/notice-contents';
-import { exportToCsv, hasExport } from './utils/exports';
-import { getComparableNow } from '../../../utils/dates';
-
-const getMarkers = (structures) => structures.map((element) => {
-  const { coordinates } = element.currentLocalisation.geometry;
-  const markersCoordinates = [...coordinates];
-  const reversed = markersCoordinates.reverse();
-  return ({
-    latLng: reversed,
-    address: `${element.displayName}
-         ${element.currentLocalisation?.address},
-         ${element.currentLocalisation?.postalCode},
-         ${element.currentLocalisation?.locality}`,
-  });
-});
-
-const isFinished = (relation) => (relation?.active === false) || (relation?.endDate < getComparableNow());
-
-function spreadByStatus(data) {
-  const current = data?.filter((el) => (el.startDate < getComparableNow() || (!el.startDate && !el.endDate)) && !isFinished(el));
-  const inactive = data?.filter((el) => isFinished(el));
-  const forthcoming = data?.filter((el) => el.startDate > getComparableNow());
-  const counts = {
-    current: current?.length, inactive: inactive?.length, forthcoming: forthcoming?.length,
-  };
-  return { data: { current, inactive, forthcoming }, counts };
-}
+import api from '../../../../utils/api';
+import RelationCard from '../../../card/relation-card';
+import ExpendableListCards from '../../../card/expendable-list-cards';
+import { Bloc, BlocActionButton, BlocContent, BlocFilter, BlocModal, BlocTitle } from '../../../bloc';
+import RelationsForm from '../../../forms/relations';
+import useFetch from '../../../../hooks/useFetch';
+import useUrl from '../../../../hooks/useUrl';
+import useNotice from '../../../../hooks/useNotice';
+import Map from '../../../map';
+import { deleteError, saveError, saveSuccess, deleteSuccess } from '../../../../utils/notice-contents';
+import { exportToCsv, hasExport } from '../utils/exports';
+import { spreadByStatus } from '../utils/status';
+import { getMarkers } from '../utils/maps';
 
 export default function RelationsByTag({ blocName, tag, resourceType, relatedObjectTypes, inverse, noRelationType, noFilters, Form, sort, max }) {
   const queryObject = inverse ? 'relatedObjectId' : 'resourceId';
@@ -48,7 +24,9 @@ export default function RelationsByTag({ blocName, tag, resourceType, relatedObj
   const [showModal, setShowModal] = useState(false);
   const [modalTitle, setModalTitle] = useState('');
   const [modalContent, setModalContent] = useState(null);
-  const [statusFilter, setStatusFilter] = useState('current');
+  const { data: spreadedByStatusRelations, counts, defaultFilter } = spreadByStatus(data?.data);
+  const [statusFilter, setStatusFilter] = useState(defaultFilter);
+  useEffect(() => setStatusFilter(defaultFilter), [defaultFilter]);
 
   const onSaveElementHandler = async (body, id = null) => {
     const method = id ? 'patch' : 'post';
@@ -87,26 +65,10 @@ export default function RelationsByTag({ blocName, tag, resourceType, relatedObj
   };
 
   const renderCards = () => {
-    const relatedKey = inverse ? 'resource' : 'relatedObject';
-    if (!data && !data?.data?.length) return null;
-    const relatedStructures = data.data
-      .filter((element) => (element[relatedKey]?.collection === 'structures'))
-      .filter((element) => element[relatedKey]?.currentLocalisation?.geometry?.coordinates)
-      .map((element) => element[[relatedKey]]);
-    const relatedMarkers = getMarkers(relatedStructures);
-    const associatedStructures = data.data
-      .map((element) => element.otherAssociatedObjects)
-      .filter((element) => (element?.length > 0))
-      .flat()
-      .filter((element) => element.collection === 'structures')
-      .filter((element) => element?.currentLocalisation?.geometry?.coordinates);
-    const associatedStructuresMarkers = getMarkers(associatedStructures);
+    const relations = spreadedByStatusRelations[statusFilter] || [];
+    const markers = getMarkers(relations, inverse);
 
-    const { data: spreaded } = spreadByStatus(data?.data);
-
-    const displayedElements = spreaded[statusFilter] || [];
-
-    const list = displayedElements
+    const list = relations
       .sort((a, b) => new Date(b.startDate) - new Date(a.startDate))
       .sort((a, b) => ((a?.relationType?.priority || 99) - (b?.relationType?.priority || 99)))
       .map((element) => (
@@ -118,7 +80,6 @@ export default function RelationsByTag({ blocName, tag, resourceType, relatedObj
         />
       ));
 
-    const markers = [...relatedMarkers, ...associatedStructuresMarkers];
     if (markers.length) {
       return (
         <Row gutters>
@@ -136,8 +97,6 @@ export default function RelationsByTag({ blocName, tag, resourceType, relatedObj
       <ExpendableListCards list={list} nCol="12 md-6" />
     );
   };
-
-  const { counts } = spreadByStatus(data?.data);
 
   return (
     <Bloc isLoading={isLoading} error={error} data={data} isRelation>
