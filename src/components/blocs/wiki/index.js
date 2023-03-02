@@ -15,7 +15,7 @@ const filterWikipediaSiteLinks = (sitelinks) => [...new Set([...WIKI_LANG_ORDER,
 
 export default function Wiki() {
   const { url, apiObject } = useUrl();
-  const { data: wikidata } = useFetch(`${url}/identifiers?filters[type]=Wikidata&filters`);
+  const { data: wikidata } = useFetch(`${url}/identifiers?filters[type]=wikidata&filters`);
   const [activity, setActivity] = useState(null);
   const [wikis, setWikis] = useState(null);
 
@@ -55,7 +55,7 @@ export default function Wiki() {
                 </p>
                 {wikidata?.data?.length > 1 ? (
                   <Alert
-                    description="Attention, plusieurs Wikidatas sont renseignés. Merci de privilégier le plus complet."
+                    description="Attention, plusieurs wikidatas sont renseignés. Merci de privilégier le plus complet."
                     small
                     type="error"
                   />

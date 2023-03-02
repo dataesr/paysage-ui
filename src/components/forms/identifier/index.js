@@ -16,14 +16,13 @@ import PaysageBlame from '../../paysage-blame';
 
 const regexpValidateIdentifiers = (type) => {
   const validator = {
-    idRef: [/^\d{8}[\dX]{1}$/, 'Identifiant incorrect'],
+    idref: [/^\d{8}[\dX]{1}$/, 'Un idRef doit commencer par 8 chiffres suivis d\'un chiffre ou d\'un "X"'],
     UAI: [/^[0-9]{7}[A-Z]{1}$/, "Doit commencer par 7 chiffres suivis d'une lettre majuscule"],
-    Wikidata: [/^Q[0-9]+$/, 'Doit commencer par "Q" et être suivi de 7 caractères'],
+    wikidata: [/^Q[0-9]{7}$/, 'Un wikidata doit commencer par "Q" et être suivi de 7 chiffres'],
     Siret: [/^\s*(?:\d\s*){14}$/, 'Doit contenir 14 chiffres'],
     ROR: [/^[a-z0-9]{9}$/, 'Doit contenir 9 caractères'],
     RNA: [/^W[0-9]{9}$/, 'Doit commencer par "W" suivi par 9 chiffres'],
     RNSR: [/^\d{9}[A-Z]{1}$/, "Doit commencer par 9 chiffres suivis d'une lettre majuscule"],
-
   };
   return validator[type] || [null, null];
 };

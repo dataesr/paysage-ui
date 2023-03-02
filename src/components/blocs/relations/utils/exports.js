@@ -100,9 +100,9 @@ function createCsvStructureRowFromRelation({ relation, inverse, listName }) {
     'Site web': (toExport?.websites?.length) ? (toExport?.websites.find((w) => w.language?.toLowerCase() === 'fr')?.url || toExport?.websites?.[0]?.url) : null,
     Téléphone: toExport.currentLocalisation?.phonenumber,
     'ID Paysage': toExport.id,
-    wikidata: toExport.identifiers?.filter((i) => (i.type === 'Wikidata'))
+    wikidata: toExport.identifiers?.filter((i) => (i.type === 'wikidata'))
       .sort((a, b) => a?.startDate?.localeCompare(b?.startDate)).map((i) => i.value).join('|'),
-    idref: toExport.identifiers?.filter((i) => (i.type === 'idRef'))
+    idref: toExport.identifiers?.filter((i) => (i.type === 'idref'))
       .sort((a, b) => a?.startDate?.localeCompare(b?.startDate)).map((i) => i.value).join('|'),
     uai: toExport.identifiers?.filter((i) => (i.type === 'UAI'))
       .sort((a, b) => a?.startDate?.localeCompare(b?.startDate)).map((i) => i.value).join('|'),
@@ -201,9 +201,9 @@ function createCsvLaureatesFromRelation({ relation, listName }) {
     Précision: `${relation.laureatePrecision ? relation.laureatePrecision : ''}`,
     'Libellé Lauréat': laureate.displayName,
     'Code Paysage Lauréat': laureate.id,
-    'idref lauréat': laureate.identifiers?.filter((i) => (i.type === 'idRef'))
+    'idref lauréat': laureate.identifiers?.filter((i) => (i.type === 'idref'))
       .sort((a, b) => a?.startDate?.localeCompare(b?.startDate)).map((i) => i.value).join('|'),
-    'Orcid lauréat': laureate.identifiers?.filter((i) => (i.type === 'ORCID'))
+    'Orcid lauréat': laureate.identifiers?.filter((i) => (i.type === 'orcid'))
       .sort((a, b) => a?.startDate?.localeCompare(b?.startDate)).map((i) => i.value).join('|'),
     'Libellé du prix': prize.displayName,
     'Libellé complément prix': prize.descriptionFr,
@@ -214,8 +214,8 @@ function createCsvLaureatesFromRelation({ relation, listName }) {
     'Affiliation lauréat associée à obtention -- code RNSR': otherAssociatedObjects
       .map((item) => item.identifiers?.length && item.identifiers.filter((i) => i.active).find((i) => (i.type === 'RNSR'))?.value)
       .join(';'),
-    'Affiliation lauréat associée à obtention -- code Wikidata': otherAssociatedObjects
-      .map((item) => item.identifiers?.length && item.identifiers.filter((i) => i.active).find((i) => (i.type === 'Wikidata'))?.value)
+    'Affiliation lauréat associée à obtention -- code wikidata': otherAssociatedObjects
+      .map((item) => item.identifiers?.length && item.identifiers.filter((i) => i.active).find((i) => (i.type === 'wikidata'))?.value)
       .join(';'),
     'Affiliation lauréat associée à obtention -- code SIREN': otherAssociatedObjects
       .map((item) => item.identifiers?.length && item.identifiers.filter((i) => i.active).find((i) => (i.type === 'Siret'))?.value)
@@ -260,15 +260,15 @@ function createCsvGovernanceFromRelation({ relation, short = false }) {
     'Lien du texte officiel de fin de fonction': relation.endDateOfficialText?.pageUrl,
     'Identifiant paysage de la structure': structure.id,
     'Identifiant paysage de la personne': person.id,
-    'idref de la personne': person.identifiers?.filter((i) => (i.type === 'idRef'))
+    'idref de la personne': person.identifiers?.filter((i) => (i.type === 'idref'))
       .sort((a, b) => a?.startDate?.localeCompare(b?.startDate)).map((i) => i.value).join('|'),
-    'Orcid de la personne': person.identifiers?.filter((i) => (i.type === 'ORCID Id'))
+    'Orcid de la personne': person.identifiers?.filter((i) => (i.type === 'orcid'))
       .sort((a, b) => a?.startDate?.localeCompare(b?.startDate)).map((i) => i.value).join('|'),
-    'wikidata de la personne': person.identifiers?.filter((i) => (i.type === 'Wikidata'))
+    'wikidata de la personne': person.identifiers?.filter((i) => (i.type === 'wikidata'))
       .sort((a, b) => a?.startDate?.localeCompare(b?.startDate)).map((i) => i.value).join('|'),
-    'wikidata de la structure': structure.identifiers?.filter((i) => (i.type === 'Wikidata'))
+    'wikidata de la structure': structure.identifiers?.filter((i) => (i.type === 'wikidata'))
       .sort((a, b) => a?.startDate?.localeCompare(b?.startDate)).map((i) => i.value).join('|'),
-    'idref de la structure': structure.identifiers?.filter((i) => (i.type === 'idRef'))
+    'idref de la structure': structure.identifiers?.filter((i) => (i.type === 'idref'))
       .sort((a, b) => a?.startDate?.localeCompare(b?.startDate)).map((i) => i.value).join('|'),
     'uai de la structure': structure.identifiers?.filter((i) => (i.type === 'UAI'))
       .sort((a, b) => a?.startDate?.localeCompare(b?.startDate)).map((i) => i.value).join('|'),
@@ -320,11 +320,11 @@ function createCsvPersonFromRelation({ relation, inverse }) {
     'Texte officiel de fin de fonction': relation.endDateOfficialText?.title,
     'Lien du texte officiel de fin de fonction': relation.endDateOfficialText?.pageUrl,
     'Identifiant paysage de la personne': person.id,
-    'idref de la personne': person.identifiers?.filter((i) => (i.type === 'idRef'))
+    'idref de la personne': person.identifiers?.filter((i) => (i.type === 'idref'))
       .sort((a, b) => a?.startDate?.localeCompare(b?.startDate)).map((i) => i.value).join('|'),
-    'Orcid de la personne': person.identifiers?.filter((i) => (i.type === 'ORCID Id'))
+    'Orcid de la personne': person.identifiers?.filter((i) => (i.type === 'orcid'))
       .sort((a, b) => a?.startDate?.localeCompare(b?.startDate)).map((i) => i.value).join('|'),
-    'wikidata de la personne': person.identifiers?.filter((i) => (i.type === 'Wikidata'))
+    'wikidata de la personne': person.identifiers?.filter((i) => (i.type === 'wikidata'))
       .sort((a, b) => a?.startDate?.localeCompare(b?.startDate)).map((i) => i.value).join('|'),
   };
 }

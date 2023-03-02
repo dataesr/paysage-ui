@@ -88,25 +88,25 @@ export default function IdentifiersComponent() {
     case 'Id unité CNRS':
       linkTo = `https://web-ast.dsi.cnrs.fr/l3c/owa/structure.infos_admin?&p_lab=${el.value}&p_origine_appel=u`;
       break;
-    case 'Identifiant BnF':
+    case 'bnf':
       linkTo = `https://catalogue.bnf.fr/ark:/12148/cb${el.value}`;
       break;
-    case 'idHal':
+    case 'idhal':
       linkTo = `https://aurehal.archives-ouvertes.fr/structure/read/id/${el.value}`;
       break;
-    case 'idRef':
+    case 'idref':
       linkTo = `https://www.idref.fr/${el.value}`;
       break;
     case 'isni':
       linkTo = `http://www.isni.org/${el.value.split(' ').join('')}`;
       break;
-    case 'Numéro national de Thèse':
+    case 'nnt':
       linkTo = `http://www.theses.fr/${el.value}`;
       break;
     case 'OC':
       linkTo = `https://opencorporates.com/companies/${el.value}`;
       break;
-    case 'ORCID Id':
+    case 'orcid':
       linkTo = `https://orcid.org/${el.value}`;
       break;
     case 'PIC':
@@ -136,16 +136,16 @@ export default function IdentifiersComponent() {
     case 'Siret':
       linkTo = `https://annuaire-entreprises.data.gouv.fr/etablissement/${el.value.split(' ').join('')}`;
       break;
-    case 'Univ-droit jurist ID':
+    case 'univ-droit':
       linkTo = `https://univ-droit.fr/universitaires/${el.value}`;
       break;
-    case 'Wikidata':
+    case 'wikidata':
       linkTo = `https://wikidata.org/wiki/${el.value}`;
       break;
     case 'Wikidata JSON':
       linkTo = `https://www.wikidata.org/wiki/Special:EntityData/${el.value}.json`;
       break;
-    case 'WOS':
+    case 'wos':
       linkTo = `https://publons.com/researcher/${el.value}/`;
       break;
     default:
@@ -191,7 +191,7 @@ export default function IdentifiersComponent() {
             />,
           );
         }
-        if (el.type === 'Wikidata') {
+        if (el.type === 'wikidata') {
           list.push(
             <KeyValueCard
               cardKey="Wikidata Fichier JSON"
