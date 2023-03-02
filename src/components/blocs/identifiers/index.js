@@ -79,6 +79,9 @@ export default function IdentifiersComponent() {
     case 'ALId':
       linkTo = `https://dgesip-annelis.adc.education.fr/etablissement/${el.value}`;
       break;
+    case 'bnf':
+      linkTo = `https://catalogue.bnf.fr/ark:/12148/cb${el.value}`;
+      break;
     case 'CNRS - grafilabo':
       linkTo = `https://www2.cnrs.fr/graflabo/unite.php?cod_uni=${el.value}`;
       break;
@@ -87,9 +90,6 @@ export default function IdentifiersComponent() {
       break;
     case 'Id unité CNRS':
       linkTo = `https://web-ast.dsi.cnrs.fr/l3c/owa/structure.infos_admin?&p_lab=${el.value}&p_origine_appel=u`;
-      break;
-    case 'bnf':
-      linkTo = `https://catalogue.bnf.fr/ark:/12148/cb${el.value}`;
       break;
     case 'idhal':
       linkTo = `https://aurehal.archives-ouvertes.fr/structure/read/id/${el.value}`;
