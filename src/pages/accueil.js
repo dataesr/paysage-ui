@@ -213,8 +213,9 @@ export default function HomePage() {
                         <KeyValueCard
                           cardKey={capitalize(objectMapping[k])}
                           cardValue={`${counts[k]}`}
-                          icon={icons[k]}
                           className={`card-${k} card--border-bottom`}
+                          icon={icons[k]}
+                          linkTo={`./rechercher/${objectMapping[k]}?query=&page=1`}
                           tooltip={`+ ${metrics[k]} sur les 7 derniers jours`}
                         />
                       </Col>
