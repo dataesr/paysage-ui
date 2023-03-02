@@ -3,7 +3,7 @@ import { Bloc, BlocContent, BlocTitle } from '../../bloc';
 import useFetch from '../../../hooks/useFetch';
 import useUrl from '../../../hooks/useUrl';
 import GoToCard from '../../card/go-to-card';
-import RelationsByTag from '../relations-by-tag';
+import { RelationsByTag } from '../relations';
 import { STRUCTURE_CATEGORIE } from '../../../utils/relations-tags';
 
 export default function RelationCurrent() {

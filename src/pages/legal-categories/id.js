@@ -6,7 +6,7 @@ import CopyBadgeButton from '../../components/copy/copy-badge-button';
 import useUrl from '../../hooks/useUrl';
 import { PageSpinner } from '../../components/spinner';
 import useFetch from '../../hooks/useFetch';
-import RelationsByTag from '../../components/blocs/relations-by-tag';
+import { RelationsByTag } from '../../components/blocs/relations';
 import { STRUCTURE_CATEGORIE_JURIDIQUE } from '../../utils/relations-tags';
 import Error from '../../components/errors';
 import usePageTitle from '../../hooks/usePageTitle';
