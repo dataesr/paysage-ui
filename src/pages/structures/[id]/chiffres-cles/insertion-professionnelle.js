@@ -14,7 +14,7 @@ export default function StructureInsertionProfessionnellePage() {
   const { id } = useUrl('keynumbers');
   const { url } = useUrl('identifiers');
   const { data, error, isLoading } = useFetch(url);
-  const uai = data?.data.filter((item) => item.type === 'UAI')?.[0];
+  const uai = data?.data.filter((item) => item.type === 'uai')?.[0];
 
   if (isLoading) return <Spinner size={48} />;
   if (error) return <>Erreur...</>;

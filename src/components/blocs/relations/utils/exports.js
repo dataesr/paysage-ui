@@ -104,22 +104,22 @@ function createCsvStructureRowFromRelation({ relation, inverse, listName }) {
       .sort((a, b) => a?.startDate?.localeCompare(b?.startDate)).map((i) => i.value).join('|'),
     idref: toExport.identifiers?.filter((i) => (i.type === 'idref'))
       .sort((a, b) => a?.startDate?.localeCompare(b?.startDate)).map((i) => i.value).join('|'),
-    uai: toExport.identifiers?.filter((i) => (i.type === 'UAI'))
+    uai: toExport.identifiers?.filter((i) => (i.type === 'uai'))
       .sort((a, b) => a?.startDate?.localeCompare(b?.startDate)).map((i) => i.value).join('|'),
-    siret: toExport.identifiers?.filter((i) => (i.type === 'Siret'))
+    siret: toExport.identifiers?.filter((i) => (i.type === 'siret'))
       .sort((a, b) => a?.startDate?.localeCompare(b?.startDate)).map((i) => i.value).join('|'),
-    grid: toExport.identifiers?.filter((i) => (i.type === 'GRID'))
+    grid: toExport.identifiers?.filter((i) => (i.type === 'grid'))
       .sort((a, b) => a?.startDate?.localeCompare(b?.startDate)).map((i) => i.value).join('|'),
-    ror: toExport.identifiers?.filter((i) => (i.type === 'ROR'))
+    ror: toExport.identifiers?.filter((i) => (i.type === 'ror'))
       .sort((a, b) => a?.startDate?.localeCompare(b?.startDate)).map((i) => i.value).join('|'),
-    'Identifiant Annelis': toExport.identifiers?.filter((i) => (i.type === 'id annelis'))
+    'Identifiant Annelis': toExport.identifiers?.filter((i) => (i.type === 'annelis'))
       .sort((a, b) => a?.startDate?.localeCompare(b?.startDate)).map((i) => i.value).join('|'),
-    'Identifiant établissement ESGBU': toExport.identifiers?.filter((i) => (i.type === 'EtId'))
+    'Identifiant établissement ESGBU': toExport.identifiers?.filter((i) => (i.type === 'etid'))
       .sort((a, b) => a?.startDate?.localeCompare(b?.startDate)).map((i) => i.value).join('|'),
-    'Identifiant SCD ESGBU': toExport.identifiers?.filter((i) => (i.type === 'ESGBU')).sort((a, b) => a?.startDate?.localeCompare(b?.startDate)).map((i) => i.value).join('|'),
-    'Identifiant bibliothèque ESGBU': toExport.identifiers?.filter((i) => (i.type === 'BibId'))
+    'Identifiant SCD ESGBU': toExport.identifiers?.filter((i) => (i.type === 'sdid')).sort((a, b) => a?.startDate?.localeCompare(b?.startDate)).map((i) => i.value).join('|'),
+    'Identifiant bibliothèque ESGBU': toExport.identifiers?.filter((i) => (i.type === 'bibid'))
       .sort((a, b) => a?.startDate?.localeCompare(b?.startDate)).map((i) => i.value).join('|'),
-    'Identifiant Ecole doctorale': toExport.identifiers?.filter((i) => (i.type === "Numéro d'ED"))
+    'Identifiant Ecole doctorale': toExport.identifiers?.filter((i) => (i.type === 'ed'))
       .sort((a, b) => a?.startDate?.localeCompare(b?.startDate)).map((i) => i.value).join('|'),
     'Email générique Direction': toExport?.emails.find((m) => m.emailTypeId === 'NVdq8NVdq8NVdq8')?.email,
     'Email générique DGS/SG': toExport?.emails.find((m) => m.emailTypeId === '4puTu4puTu4puTu')?.email,
@@ -212,16 +212,16 @@ function createCsvLaureatesFromRelation({ relation, listName }) {
     'Affiliation lauréat associée à obtention -- libellé': otherAssociatedObjects.map((item) => item.currentName?.usualName).join(';'),
     'Affiliation lauréat associée à obtention -- code paysage': otherAssociatedObjects.map((item) => item.id).join(';'),
     'Affiliation lauréat associée à obtention -- code RNSR': otherAssociatedObjects
-      .map((item) => item.identifiers?.length && item.identifiers.filter((i) => i.active).find((i) => (i.type === 'RNSR'))?.value)
+      .map((item) => item.identifiers?.length && item.identifiers.filter((i) => i.active).find((i) => (i.type === 'rnsr'))?.value)
       .join(';'),
     'Affiliation lauréat associée à obtention -- code wikidata': otherAssociatedObjects
       .map((item) => item.identifiers?.length && item.identifiers.filter((i) => i.active).find((i) => (i.type === 'wikidata'))?.value)
       .join(';'),
     'Affiliation lauréat associée à obtention -- code SIREN': otherAssociatedObjects
-      .map((item) => item.identifiers?.length && item.identifiers.filter((i) => i.active).find((i) => (i.type === 'Siret'))?.value)
+      .map((item) => item.identifiers?.length && item.identifiers.filter((i) => i.active).find((i) => (i.type === 'siret'))?.value)
       .join(';'),
     'Affiliation lauréat associée à obtention -- code ROR': otherAssociatedObjects
-      .map((item) => item.identifiers?.length && item.identifiers.filter((i) => i.active).find((i) => (i.type === 'ROR'))?.value)
+      .map((item) => item.identifiers?.length && item.identifiers.filter((i) => i.active).find((i) => (i.type === 'ror'))?.value)
       .join(';'),
   };
 }
@@ -270,23 +270,23 @@ function createCsvGovernanceFromRelation({ relation, short = false }) {
       .sort((a, b) => a?.startDate?.localeCompare(b?.startDate)).map((i) => i.value).join('|'),
     'idref de la structure': structure.identifiers?.filter((i) => (i.type === 'idref'))
       .sort((a, b) => a?.startDate?.localeCompare(b?.startDate)).map((i) => i.value).join('|'),
-    'uai de la structure': structure.identifiers?.filter((i) => (i.type === 'UAI'))
+    'uai de la structure': structure.identifiers?.filter((i) => (i.type === 'uai'))
       .sort((a, b) => a?.startDate?.localeCompare(b?.startDate)).map((i) => i.value).join('|'),
-    'siret de la structure': structure.identifiers?.filter((i) => (i.type === 'Siret'))
+    'siret de la structure': structure.identifiers?.filter((i) => (i.type === 'siret'))
       .sort((a, b) => a?.startDate?.localeCompare(b?.startDate)).map((i) => i.value).join('|'),
-    'grid de la structure': structure.identifiers?.filter((i) => (i.type === 'GRID'))
+    'grid de la structure': structure.identifiers?.filter((i) => (i.type === 'grid'))
       .sort((a, b) => a?.startDate?.localeCompare(b?.startDate)).map((i) => i.value).join('|'),
-    'ror de la structure': structure.identifiers?.filter((i) => (i.type === 'ROR'))
+    'ror de la structure': structure.identifiers?.filter((i) => (i.type === 'ror'))
       .sort((a, b) => a?.startDate?.localeCompare(b?.startDate)).map((i) => i.value).join('|'),
-    'Identifiant Annelis de la structure': structure.identifiers?.filter((i) => (i.type === 'id annelis'))
+    'Identifiant Annelis de la structure': structure.identifiers?.filter((i) => (i.type === 'annelis'))
       .sort((a, b) => a?.startDate?.localeCompare(b?.startDate)).map((i) => i.value).join('|'),
-    'Identifiant établissement ESGBU de la structure': structure.identifiers?.filter((i) => (i.type === 'EtId'))
+    'Identifiant établissement ESGBU de la structure': structure.identifiers?.filter((i) => (i.type === 'etid'))
       .sort((a, b) => a?.startDate?.localeCompare(b?.startDate)).map((i) => i.value).join('|'),
-    'Identifiant SCD ESGBU de la structure': structure.identifiers?.filter((i) => (i.type === 'ESGBU'))
+    'Identifiant SCD ESGBU de la structure': structure.identifiers?.filter((i) => (i.type === 'sdid'))
       .sort((a, b) => a?.startDate?.localeCompare(b?.startDate)).map((i) => i.value).join('|'),
-    'Identifiant bibliothèque ESGBU de la structure': structure.identifiers?.filter((i) => (i.type === 'BibId'))
+    'Identifiant bibliothèque ESGBU de la structure': structure.identifiers?.filter((i) => (i.type === 'bibid'))
       .sort((a, b) => a?.startDate?.localeCompare(b?.startDate)).map((i) => i.value).join('|'),
-    'Identifiant Ecole doctorale de la structure': structure.identifiers?.filter((i) => (i.type === "Numéro d'ED"))
+    'Identifiant Ecole doctorale de la structure': structure.identifiers?.filter((i) => (i.type === 'ed'))
       .sort((a, b) => a?.startDate?.localeCompare(b?.startDate)).map((i) => i.value).join('|'),
   };
   if (short) {

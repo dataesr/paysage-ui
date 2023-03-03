@@ -17,11 +17,11 @@ import PaysageBlame from '../../paysage-blame';
 const regexpValidateIdentifiers = (type) => {
   const validator = {
     idref: [/^\d{8}[\dX]{1}$/, 'Un idRef doit commencer par 8 chiffres suivis d\'un chiffre ou d\'un "X"'],
-    RNA: [/^W[0-9]{9}$/, 'Doit commencer par "W" suivi par 9 chiffres'],
-    RNSR: [/^\d{9}[A-Z]{1}$/, "Doit commencer par 9 chiffres suivis d'une lettre majuscule"],
-    ROR: [/^[a-z0-9]{9}$/, 'Doit contenir 9 caractères'],
-    Siret: [/^\s*(?:\d\s*){14}$/, 'Doit contenir 14 chiffres'],
-    UAI: [/^[0-9]{7}[A-Z]{1}$/, "Doit commencer par 7 chiffres suivis d'une lettre majuscule"],
+    rna: [/^W[0-9]{9}$/, 'Un RNA doit commencer par "W" suivi par 9 chiffres'],
+    rnsr: [/^\d{9}[A-Z]{1}$/, "Un RNSR doit commencer par 9 chiffres suivis d'une lettre majuscule"],
+    ror: [/^[a-z0-9]{9}$/, 'Un ROR doit contenir 9 caractères'],
+    siret: [/^\s*(?:\d\s*){14}$/, 'Un Siret doit contenir 14 chiffres'],
+    uai: [/^[0-9]{7}[A-Z]{1}$/, "Un UAI doit commencer par 7 chiffres suivis d'une lettre majuscule"],
     wikidata: [/^Q[0-9]{7}$/, 'Un wikidata doit commencer par "Q" et être suivi de 7 chiffres'],
   };
   return validator[type] || [null, null];
@@ -41,7 +41,7 @@ function sanitize(form) {
   const body = {};
   Object.keys(form).forEach((key) => { if (fields.includes(key)) { body[key] = form[key]; } });
   if (body.endDate && body.endDate < getComparableNow()) { body.active = false; }
-  if (body.type === 'Siret' && body?.value?.replaceAll(' ', '').trim().length === 14) { body.value = body?.value?.replaceAll(' ', '').trim(); }
+  if (body.type === 'siret' && body?.value?.replaceAll(' ', '').trim().length === 14) { body.value = body?.value?.replaceAll(' ', '').trim(); }
   return body;
 }
 

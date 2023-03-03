@@ -7,9 +7,9 @@ import BlocTitle from '../../bloc/bloc-title';
 import ExpendableListCards from '../../card/expendable-list-cards';
 
 const mapping = {
-  PiaWEB: 'Données PiaWEB',
   hceres: "Rapport d'évaluation HCERES",
   jorfsearch: 'Page JORFSearch',
+  PiaWEB: 'Données PiaWEB',
 };
 
 export default function WeblinksResources({ resourceId }) {
