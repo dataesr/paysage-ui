@@ -135,7 +135,9 @@ export default function ImportPage({ data }) {
       const relatedObjectId = saveResponse.data.id;
       if (resourceId && relatedObjectId) {
         const parentResponse = await api.post('/relations', { resourceId, relatedObjectId, relationTag: 'structure-interne' });
-        return { ...responseWithIndex, parent: parentResponse.data };
+        const responseWithParent = { ...responseWithIndex, parent: parentResponse.data };
+        setFeedBack([...feedBack, responseWithParent]);
+        return responseWithParent;
       }
       return responseWithIndex;
     } catch (error) {
@@ -154,7 +156,8 @@ export default function ImportPage({ data }) {
     setIsLoading(true);
     const responsesPromises = readyToImport.map((structure) => saveStructure(structure));
     const newResponses = await Promise.all(responsesPromises);
-    setFeedBack([...newResponses.filter((el) => el.index)]);
+    const allResponses = [...feedBack, ...newResponses.filter((el) => el.index)];
+    setFeedBack(allResponses);
     const parentsPromises = await Promise.all(newResponses.map((result, index) => {
       const resourceId = readyToImport?.[index]?.parent;
       const relatedObjectId = result?.data?.id;
@@ -167,7 +170,7 @@ export default function ImportPage({ data }) {
     }));
     setParents(parentsPromises);
     updateForm({ data: '' });
-    setResponses((oldResponses) => [...oldResponses, ...newResponses, ...readyToImport, ...feedBack, ...responsesErrors, ...parents]);
+    setResponses((oldResponses) => [...oldResponses, ...newResponses, ...readyToImport, ...allResponses, ...responsesErrors, ...parents]);
     setReadyToImport([]);
     setIsLoading(false);
   };
@@ -339,7 +342,7 @@ export default function ImportPage({ data }) {
           </Col>
         </Row>
       ) }
-      {!!feedBack.length && (
+      {feedBack.length && (
         <Row gutters>
           <Col n="12">
             <Col n="12">
@@ -382,7 +385,7 @@ export default function ImportPage({ data }) {
                           {response?.data?.acronymFr && ' - '}
                           {response?.data?.shortName}
                           {response?.data?.shortName && ' - '}
-                          {response?.data?.currentName.usualName}
+                          {response?.data?.currentName?.usualName}
                         </span>
                       </Link>
                     </Col>
