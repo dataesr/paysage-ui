@@ -156,6 +156,16 @@ const objectMapping = {
   projects: 'projets',
 };
 
+const objectMappingSearch = {
+  structures: 'structures',
+  categories: 'categories',
+  prizes: 'prix',
+  terms: 'termes',
+  officialtexts: 'textes-officiels',
+  persons: 'personnes',
+  projects: 'projets',
+};
+
 export default function HomePage() {
   const navigate = useNavigate();
   usePageTitle('Accueil');
@@ -215,7 +225,7 @@ export default function HomePage() {
                           cardValue={`${counts[k]}`}
                           className={`card-${k} card--border-bottom`}
                           icon={icons[k]}
-                          linkTo={`./rechercher/${objectMapping[k]}?query=&page=1`}
+                          linkTo={`./rechercher/${objectMappingSearch[k]}?query=&page=1`}
                           tooltip={`+ ${metrics[k]} sur les 7 derniers jours`}
                         />
                       </Col>
