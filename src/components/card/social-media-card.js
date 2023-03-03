@@ -6,10 +6,11 @@ import Button from '../button';
 import useEditMode from '../../hooks/useEditMode';
 
 // SVG Logo import //
-
+import academia from '../../assets/svg-logo/academia.svg';
 import dailymotion from '../../assets/svg-logo/dailymotion.svg';
 import flickr from '../../assets/svg-logo/flickr.svg';
 import pinterest from '../../assets/svg-logo/pinterest.svg';
+import researchgate from '../../assets/svg-logo/researchgate.svg';
 import scoopit from '../../assets/svg-logo/scoop-it.svg';
 import scribd from '../../assets/svg-logo/scribd.svg';
 import snapchat from '../../assets/svg-logo/snapchat.svg';
@@ -31,6 +32,9 @@ export default function SocialMediaCard({
     let svg = null;
 
     switch (iconType) {
+    case 'academia':
+      svg = academia;
+      break;
     case 'Dailymotion':
       svg = dailymotion;
       break;
@@ -59,6 +63,9 @@ export default function SocialMediaCard({
       break;
     case 'Pinterest':
       svg = pinterest;
+      break;
+    case 'researchgate':
+      svg = researchgate;
       break;
     case 'Scoopit':
       svg = scoopit;
