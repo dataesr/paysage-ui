@@ -112,6 +112,15 @@ export default function RelationTypesPage() {
                   ))}
                 </Text>
               </Row>
+              {item?.for?.includes('persons') && (
+                <Row>
+                  <Text as="span" bold className="fr-mb-2v">
+                    Groupe de gouvernance :
+                    {' '}
+                    {item.mandateTypeGroup}
+                  </Text>
+                </Row>
+              )}
               <Row>
                 <Text spacing="mt-2w mb-0" size="xs">
                   Créé le

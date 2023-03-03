@@ -15,7 +15,7 @@ function validate(body) {
   return validationErrors;
 }
 function sanitize(form) {
-  const fields = ['name', 'pluralName', 'maleName', 'feminineName', 'priority', 'otherNames', 'for'];
+  const fields = ['name', 'pluralName', 'maleName', 'feminineName', 'priority', 'otherNames', 'for', 'mandateTypeGroup'];
   const body = {};
   Object.keys(form).forEach((key) => { if (fields.includes(key)) { body[key] = form[key]; } });
   body.priority = parseInt(body.priority, 10);
@@ -97,6 +97,15 @@ export default function RelationTypesForm({ id, data, onSave, onDelete }) {
                 />
               ))}
             </CheckboxGroup>
+          </Col>
+          <Col n="12" spacing="pb-3w">
+            <TextInput
+              disabled={!form?.for?.includes('persons')}
+              label="Groupe de gouvernance"
+              hint="Groupe de gouvernance dans lequel appaîtra cette fonction. Uniquement pour les relations qui peuvent être associées aux personnes"
+              value={form?.for?.includes('persons') ? form.mandateTypeGroup : ''}
+              onChange={(e) => updateForm({ mandateTypeGroup: e.target.value })}
+            />
           </Col>
         </Row>
         <FormFooter
