@@ -12,12 +12,12 @@ export default function KeyValueCard({
   className,
   copy,
   icon,
+  inactive,
   linkTo,
   linkIn,
   onEdit,
   titleAsText,
   tooltip,
-  inactive,
 }) {
   const { editMode } = useEditMode();
 
@@ -59,14 +59,14 @@ export default function KeyValueCard({
           </div>
           {editMode && onEdit && (
             <Button
-              color="text"
-              size="md"
-              onClick={onEdit}
-              tertiary
               borderless
-              rounded
-              icon="ri-edit-line"
               className="edit-button"
+              color="text"
+              icon="ri-edit-line"
+              onClick={onEdit}
+              rounded
+              size="md"
+              tertiary
             />
           )}
         </div>
@@ -80,21 +80,21 @@ KeyValueCard.propTypes = {
   className: PropTypes.string,
   copy: PropTypes.bool,
   icon: PropTypes.string,
+  inactive: PropTypes.bool,
   linkIn: PropTypes.string,
   linkTo: PropTypes.string,
   onEdit: PropTypes.func,
   titleAsText: PropTypes.string,
   tooltip: PropTypes.string,
-  inactive: PropTypes.bool,
 };
 KeyValueCard.defaultProps = {
   className: '',
   copy: false,
   icon: null,
+  inactive: false,
   linkIn: null,
   linkTo: null,
   onEdit: null,
   titleAsText: false,
   tooltip: null,
-  inactive: false,
 };

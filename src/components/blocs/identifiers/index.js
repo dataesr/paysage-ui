@@ -76,76 +76,76 @@ export default function IdentifiersComponent() {
   const getLink = (el) => {
     let linkTo = '';
     switch (el.type) {
-    case 'ALId':
+    case 'annelis':
       linkTo = `https://dgesip-annelis.adc.education.fr/etablissement/${el.value}`;
       break;
-    case 'CNRS - grafilabo':
+    case 'bnf':
+      linkTo = `https://catalogue.bnf.fr/ark:/12148/cb${el.value}`;
+      break;
+    case 'cnrs-grafilabo':
       linkTo = `https://www2.cnrs.fr/graflabo/unite.php?cod_uni=${el.value}`;
+      break;
+    case 'cnrs-unit':
+      linkTo = `https://web-ast.dsi.cnrs.fr/l3c/owa/structure.infos_admin?&p_lab=${el.value}&p_origine_appel=u`;
       break;
     case 'fundref':
       linkTo = `https://search.crossref.org/funding?q=${el.value}`;
       break;
-    case 'Id unité CNRS':
-      linkTo = `https://web-ast.dsi.cnrs.fr/l3c/owa/structure.infos_admin?&p_lab=${el.value}&p_origine_appel=u`;
-      break;
-    case 'Identifiant BnF':
-      linkTo = `https://catalogue.bnf.fr/ark:/12148/cb${el.value}`;
-      break;
-    case 'idHal':
+    case 'idhal':
       linkTo = `https://aurehal.archives-ouvertes.fr/structure/read/id/${el.value}`;
       break;
-    case 'idRef':
+    case 'idref':
       linkTo = `https://www.idref.fr/${el.value}`;
       break;
     case 'isni':
       linkTo = `http://www.isni.org/${el.value.split(' ').join('')}`;
       break;
-    case 'Numéro national de Thèse':
+    case 'nnt':
       linkTo = `http://www.theses.fr/${el.value}`;
       break;
-    case 'OC':
+    case 'oc':
       linkTo = `https://opencorporates.com/companies/${el.value}`;
       break;
-    case 'ORCID Id':
+    case 'orcid':
       linkTo = `https://orcid.org/${el.value}`;
       break;
-    case 'PIC':
-      linkTo = `https://ec.europa.eu/info/funding-tenders/opportunities/portal/screen/how-to-participate/org-details/${el.value}`;
-      break;
-    case 'PIA':
+    case 'pia':
       linkTo = `https://anr.fr/ProjetIA-${el.value}`;
       break;
-    case 'RCR':
+    case 'pic':
+      linkTo = `https://ec.europa.eu/info/funding-tenders/opportunities/portal/screen/how-to-participate/org-details/${el.value}`;
+      break;
+    case 'rcr':
       linkTo = `http://www.sudoc.abes.fr//DB=2.2/SET=1/TTL=3/CMD?ACT=SRCHA&IKT=8888&SRT=RLV&TRM=${el.value}`;
       break;
-    case 'RNA':
+    case 'rna':
       linkTo = `https://entreprise.data.gouv.fr/etablissement/${el.value}`;
       break;
-    case 'RNSR':
+    case 'rnsr':
       linkTo = `https://appliweb.dgri.education.fr/rnsr/PresenteStruct.jsp?numNatStruct=${el.value}&PUBLIC=OK`;
       break;
-    case 'ROR':
+    case 'ror':
       linkTo = `https://ror.org/${el.value}`;
       break;
     case 'scopus':
       linkTo = `https://www.scopus.com/authid/detail.uri?authorId=${el.value}`;
       break;
-    case 'Siren':
+    case 'siren':
       linkTo = `https://annuaire-entreprises.data.gouv.fr/entreprise/${el.value.split(' ').join('')}`;
       break;
-    case 'Siret':
+    case 'siret':
       linkTo = `https://annuaire-entreprises.data.gouv.fr/etablissement/${el.value.split(' ').join('')}`;
       break;
-    case 'Univ-droit jurist ID':
+    case 'univ-droit':
       linkTo = `https://univ-droit.fr/universitaires/${el.value}`;
       break;
-    case 'Wikidata':
+    case 'wikidata':
       linkTo = `https://wikidata.org/wiki/${el.value}`;
       break;
-    case 'Wikidata JSON':
+    case 'wikidata_json':
       linkTo = `https://www.wikidata.org/wiki/Special:EntityData/${el.value}.json`;
       break;
-    case 'WOS':
+    case 'wos':
       linkTo = `https://publons.com/researcher/${el.value}/`;
       break;
     default:
@@ -176,7 +176,7 @@ export default function IdentifiersComponent() {
             inactive={inactive}
           />,
         );
-        if (el.type === 'Id unité CNRS') {
+        if (el.type === 'cnrs-unit') {
           list.push(
             <KeyValueCard
               cardKey="Voir dans GraFiLabo"
@@ -186,12 +186,12 @@ export default function IdentifiersComponent() {
               icon="ri-fingerprint-2-line"
               key={el.id}
               onEdit={() => onOpenModalHandler(el)}
-              linkTo={getLink({ ...el, type: 'CNRS - grafilabo' })}
+              linkTo={getLink({ ...el, type: 'cnrs-grafilabo' })}
               inactive={inactive}
             />,
           );
         }
-        if (el.type === 'Wikidata') {
+        if (el.type === 'wikidata') {
           list.push(
             <KeyValueCard
               cardKey="Wikidata Fichier JSON"
@@ -201,12 +201,12 @@ export default function IdentifiersComponent() {
               icon="ri-fingerprint-2-line"
               key={el.id}
               onEdit={() => onOpenModalHandler(el)}
-              linkTo={getLink({ ...el, type: 'Wikidata JSON' })}
+              linkTo={getLink({ ...el, type: 'wikidata_json' })}
               inactive={inactive}
             />,
           );
         }
-        if (el.type === 'Siret') {
+        if (el.type === 'siret') {
           const siren = el.value.substring(0, 9);
           list.push(
             <KeyValueCard
@@ -217,7 +217,7 @@ export default function IdentifiersComponent() {
               icon="ri-fingerprint-2-line"
               key={el.id}
               onEdit={() => onOpenModalHandler(el)}
-              linkTo={getLink({ ...el, type: 'Siren' })}
+              linkTo={getLink({ ...el, type: 'siren' })}
               inactive={inactive}
             />,
           );

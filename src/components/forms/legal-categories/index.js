@@ -106,7 +106,7 @@ export default function LegalCategoriesForm({ id, data, onSave, onDelete }) {
           </Col>
           <Col n="12" spacing="pb-3w">
             <TextInput
-              label="Identifiant Wikidata"
+              label="Identifiant wikidata"
               value={form.wikidataId}
               onChange={(e) => updateForm({ wikidataId: e.target.value })}
             />

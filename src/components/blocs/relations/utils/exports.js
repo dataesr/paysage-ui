@@ -100,26 +100,26 @@ function createCsvStructureRowFromRelation({ relation, inverse, listName }) {
     'Site web': (toExport?.websites?.length) ? (toExport?.websites.find((w) => w.language?.toLowerCase() === 'fr')?.url || toExport?.websites?.[0]?.url) : null,
     Téléphone: toExport.currentLocalisation?.phonenumber,
     'ID Paysage': toExport.id,
-    wikidata: toExport.identifiers?.filter((i) => (i.type === 'Wikidata'))
+    wikidata: toExport.identifiers?.filter((i) => (i.type === 'wikidata'))
       .sort((a, b) => a?.startDate?.localeCompare(b?.startDate)).map((i) => i.value).join('|'),
-    idref: toExport.identifiers?.filter((i) => (i.type === 'idRef'))
+    idref: toExport.identifiers?.filter((i) => (i.type === 'idref'))
       .sort((a, b) => a?.startDate?.localeCompare(b?.startDate)).map((i) => i.value).join('|'),
-    uai: toExport.identifiers?.filter((i) => (i.type === 'UAI'))
+    uai: toExport.identifiers?.filter((i) => (i.type === 'uai'))
       .sort((a, b) => a?.startDate?.localeCompare(b?.startDate)).map((i) => i.value).join('|'),
-    siret: toExport.identifiers?.filter((i) => (i.type === 'Siret'))
+    siret: toExport.identifiers?.filter((i) => (i.type === 'siret'))
       .sort((a, b) => a?.startDate?.localeCompare(b?.startDate)).map((i) => i.value).join('|'),
-    grid: toExport.identifiers?.filter((i) => (i.type === 'GRID'))
+    grid: toExport.identifiers?.filter((i) => (i.type === 'grid'))
       .sort((a, b) => a?.startDate?.localeCompare(b?.startDate)).map((i) => i.value).join('|'),
-    ror: toExport.identifiers?.filter((i) => (i.type === 'ROR'))
+    ror: toExport.identifiers?.filter((i) => (i.type === 'ror'))
       .sort((a, b) => a?.startDate?.localeCompare(b?.startDate)).map((i) => i.value).join('|'),
-    'Identifiant Annelis': toExport.identifiers?.filter((i) => (i.type === 'id annelis'))
+    'Identifiant Annelis': toExport.identifiers?.filter((i) => (i.type === 'annelis'))
       .sort((a, b) => a?.startDate?.localeCompare(b?.startDate)).map((i) => i.value).join('|'),
-    'Identifiant établissement ESGBU': toExport.identifiers?.filter((i) => (i.type === 'EtId'))
+    'Identifiant établissement ESGBU': toExport.identifiers?.filter((i) => (i.type === 'etid'))
       .sort((a, b) => a?.startDate?.localeCompare(b?.startDate)).map((i) => i.value).join('|'),
-    'Identifiant SCD ESGBU': toExport.identifiers?.filter((i) => (i.type === 'ESGBU')).sort((a, b) => a?.startDate?.localeCompare(b?.startDate)).map((i) => i.value).join('|'),
-    'Identifiant bibliothèque ESGBU': toExport.identifiers?.filter((i) => (i.type === 'BibId'))
+    'Identifiant SCD ESGBU': toExport.identifiers?.filter((i) => (i.type === 'sdid')).sort((a, b) => a?.startDate?.localeCompare(b?.startDate)).map((i) => i.value).join('|'),
+    'Identifiant bibliothèque ESGBU': toExport.identifiers?.filter((i) => (i.type === 'bibid'))
       .sort((a, b) => a?.startDate?.localeCompare(b?.startDate)).map((i) => i.value).join('|'),
-    'Identifiant Ecole doctorale': toExport.identifiers?.filter((i) => (i.type === "Numéro d'ED"))
+    'Identifiant Ecole doctorale': toExport.identifiers?.filter((i) => (i.type === 'ed'))
       .sort((a, b) => a?.startDate?.localeCompare(b?.startDate)).map((i) => i.value).join('|'),
     'Email générique Direction': toExport?.emails.find((m) => m.emailTypeId === 'NVdq8NVdq8NVdq8')?.email,
     'Email générique DGS/SG': toExport?.emails.find((m) => m.emailTypeId === '4puTu4puTu4puTu')?.email,
@@ -201,9 +201,9 @@ function createCsvLaureatesFromRelation({ relation, listName }) {
     Précision: `${relation.laureatePrecision ? relation.laureatePrecision : ''}`,
     'Libellé Lauréat': laureate.displayName,
     'Code Paysage Lauréat': laureate.id,
-    'idref lauréat': laureate.identifiers?.filter((i) => (i.type === 'idRef'))
+    'idref lauréat': laureate.identifiers?.filter((i) => (i.type === 'idref'))
       .sort((a, b) => a?.startDate?.localeCompare(b?.startDate)).map((i) => i.value).join('|'),
-    'Orcid lauréat': laureate.identifiers?.filter((i) => (i.type === 'ORCID'))
+    'Orcid lauréat': laureate.identifiers?.filter((i) => (i.type === 'orcid'))
       .sort((a, b) => a?.startDate?.localeCompare(b?.startDate)).map((i) => i.value).join('|'),
     'Libellé du prix': prize.displayName,
     'Libellé complément prix': prize.descriptionFr,
@@ -212,16 +212,16 @@ function createCsvLaureatesFromRelation({ relation, listName }) {
     'Affiliation lauréat associée à obtention -- libellé': otherAssociatedObjects.map((item) => item.currentName?.usualName).join(';'),
     'Affiliation lauréat associée à obtention -- code paysage': otherAssociatedObjects.map((item) => item.id).join(';'),
     'Affiliation lauréat associée à obtention -- code RNSR': otherAssociatedObjects
-      .map((item) => item.identifiers?.length && item.identifiers.filter((i) => i.active).find((i) => (i.type === 'RNSR'))?.value)
+      .map((item) => item.identifiers?.length && item.identifiers.filter((i) => i.active).find((i) => (i.type === 'rnsr'))?.value)
       .join(';'),
-    'Affiliation lauréat associée à obtention -- code Wikidata': otherAssociatedObjects
-      .map((item) => item.identifiers?.length && item.identifiers.filter((i) => i.active).find((i) => (i.type === 'Wikidata'))?.value)
+    'Affiliation lauréat associée à obtention -- code wikidata': otherAssociatedObjects
+      .map((item) => item.identifiers?.length && item.identifiers.filter((i) => i.active).find((i) => (i.type === 'wikidata'))?.value)
       .join(';'),
     'Affiliation lauréat associée à obtention -- code SIREN': otherAssociatedObjects
-      .map((item) => item.identifiers?.length && item.identifiers.filter((i) => i.active).find((i) => (i.type === 'Siret'))?.value)
+      .map((item) => item.identifiers?.length && item.identifiers.filter((i) => i.active).find((i) => (i.type === 'siret'))?.value)
       .join(';'),
     'Affiliation lauréat associée à obtention -- code ROR': otherAssociatedObjects
-      .map((item) => item.identifiers?.length && item.identifiers.filter((i) => i.active).find((i) => (i.type === 'ROR'))?.value)
+      .map((item) => item.identifiers?.length && item.identifiers.filter((i) => i.active).find((i) => (i.type === 'ror'))?.value)
       .join(';'),
   };
 }
@@ -260,33 +260,33 @@ function createCsvGovernanceFromRelation({ relation, short = false }) {
     'Lien du texte officiel de fin de fonction': relation.endDateOfficialText?.pageUrl,
     'Identifiant paysage de la structure': structure.id,
     'Identifiant paysage de la personne': person.id,
-    'idref de la personne': person.identifiers?.filter((i) => (i.type === 'idRef'))
+    'idref de la personne': person.identifiers?.filter((i) => (i.type === 'idref'))
       .sort((a, b) => a?.startDate?.localeCompare(b?.startDate)).map((i) => i.value).join('|'),
-    'Orcid de la personne': person.identifiers?.filter((i) => (i.type === 'ORCID Id'))
+    'Orcid de la personne': person.identifiers?.filter((i) => (i.type === 'orcid'))
       .sort((a, b) => a?.startDate?.localeCompare(b?.startDate)).map((i) => i.value).join('|'),
-    'wikidata de la personne': person.identifiers?.filter((i) => (i.type === 'Wikidata'))
+    'wikidata de la personne': person.identifiers?.filter((i) => (i.type === 'wikidata'))
       .sort((a, b) => a?.startDate?.localeCompare(b?.startDate)).map((i) => i.value).join('|'),
-    'wikidata de la structure': structure.identifiers?.filter((i) => (i.type === 'Wikidata'))
+    'wikidata de la structure': structure.identifiers?.filter((i) => (i.type === 'wikidata'))
       .sort((a, b) => a?.startDate?.localeCompare(b?.startDate)).map((i) => i.value).join('|'),
-    'idref de la structure': structure.identifiers?.filter((i) => (i.type === 'idRef'))
+    'idref de la structure': structure.identifiers?.filter((i) => (i.type === 'idref'))
       .sort((a, b) => a?.startDate?.localeCompare(b?.startDate)).map((i) => i.value).join('|'),
-    'uai de la structure': structure.identifiers?.filter((i) => (i.type === 'UAI'))
+    'uai de la structure': structure.identifiers?.filter((i) => (i.type === 'uai'))
       .sort((a, b) => a?.startDate?.localeCompare(b?.startDate)).map((i) => i.value).join('|'),
-    'siret de la structure': structure.identifiers?.filter((i) => (i.type === 'Siret'))
+    'siret de la structure': structure.identifiers?.filter((i) => (i.type === 'siret'))
       .sort((a, b) => a?.startDate?.localeCompare(b?.startDate)).map((i) => i.value).join('|'),
-    'grid de la structure': structure.identifiers?.filter((i) => (i.type === 'GRID'))
+    'grid de la structure': structure.identifiers?.filter((i) => (i.type === 'grid'))
       .sort((a, b) => a?.startDate?.localeCompare(b?.startDate)).map((i) => i.value).join('|'),
-    'ror de la structure': structure.identifiers?.filter((i) => (i.type === 'ROR'))
+    'ror de la structure': structure.identifiers?.filter((i) => (i.type === 'ror'))
       .sort((a, b) => a?.startDate?.localeCompare(b?.startDate)).map((i) => i.value).join('|'),
-    'Identifiant Annelis de la structure': structure.identifiers?.filter((i) => (i.type === 'id annelis'))
+    'Identifiant Annelis de la structure': structure.identifiers?.filter((i) => (i.type === 'annelis'))
       .sort((a, b) => a?.startDate?.localeCompare(b?.startDate)).map((i) => i.value).join('|'),
-    'Identifiant établissement ESGBU de la structure': structure.identifiers?.filter((i) => (i.type === 'EtId'))
+    'Identifiant établissement ESGBU de la structure': structure.identifiers?.filter((i) => (i.type === 'etid'))
       .sort((a, b) => a?.startDate?.localeCompare(b?.startDate)).map((i) => i.value).join('|'),
-    'Identifiant SCD ESGBU de la structure': structure.identifiers?.filter((i) => (i.type === 'ESGBU'))
+    'Identifiant SCD ESGBU de la structure': structure.identifiers?.filter((i) => (i.type === 'sdid'))
       .sort((a, b) => a?.startDate?.localeCompare(b?.startDate)).map((i) => i.value).join('|'),
-    'Identifiant bibliothèque ESGBU de la structure': structure.identifiers?.filter((i) => (i.type === 'BibId'))
+    'Identifiant bibliothèque ESGBU de la structure': structure.identifiers?.filter((i) => (i.type === 'bibid'))
       .sort((a, b) => a?.startDate?.localeCompare(b?.startDate)).map((i) => i.value).join('|'),
-    'Identifiant Ecole doctorale de la structure': structure.identifiers?.filter((i) => (i.type === "Numéro d'ED"))
+    'Identifiant Ecole doctorale de la structure': structure.identifiers?.filter((i) => (i.type === 'ed'))
       .sort((a, b) => a?.startDate?.localeCompare(b?.startDate)).map((i) => i.value).join('|'),
   };
   if (short) {
@@ -320,11 +320,11 @@ function createCsvPersonFromRelation({ relation, inverse }) {
     'Texte officiel de fin de fonction': relation.endDateOfficialText?.title,
     'Lien du texte officiel de fin de fonction': relation.endDateOfficialText?.pageUrl,
     'Identifiant paysage de la personne': person.id,
-    'idref de la personne': person.identifiers?.filter((i) => (i.type === 'idRef'))
+    'idref de la personne': person.identifiers?.filter((i) => (i.type === 'idref'))
       .sort((a, b) => a?.startDate?.localeCompare(b?.startDate)).map((i) => i.value).join('|'),
-    'Orcid de la personne': person.identifiers?.filter((i) => (i.type === 'ORCID Id'))
+    'Orcid de la personne': person.identifiers?.filter((i) => (i.type === 'orcid'))
       .sort((a, b) => a?.startDate?.localeCompare(b?.startDate)).map((i) => i.value).join('|'),
-    'wikidata de la personne': person.identifiers?.filter((i) => (i.type === 'Wikidata'))
+    'wikidata de la personne': person.identifiers?.filter((i) => (i.type === 'wikidata'))
       .sort((a, b) => a?.startDate?.localeCompare(b?.startDate)).map((i) => i.value).join('|'),
   };
 }

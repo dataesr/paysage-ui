@@ -13,6 +13,7 @@ import pinterest from '../../assets/svg-logo/pinterest.svg';
 import scoopit from '../../assets/svg-logo/scoop-it.svg';
 import scribd from '../../assets/svg-logo/scribd.svg';
 import snapchat from '../../assets/svg-logo/snapchat.svg';
+import soundcloud from '../../assets/svg-logo/soundcloud.svg';
 import tiktok from '../../assets/svg-logo/tiktok.svg';
 import tumblr from '../../assets/svg-logo/tumblr.svg';
 import vimeo from '../../assets/svg-logo/vimeo.svg';
@@ -67,6 +68,9 @@ export default function SocialMediaCard({
       break;
     case 'Snapchat':
       svg = snapchat;
+      break;
+    case 'soundcloud':
+      svg = soundcloud;
       break;
     case 'Tiktok':
       svg = tiktok;

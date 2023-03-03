@@ -12,7 +12,6 @@ import {
   HeaderNav,
   Logo,
   NavItem,
-  NavSubItem,
   Service,
   Tool,
   ToolItem,
@@ -170,14 +169,9 @@ export default function Header() {
           </>
           <NavItem
             title="Ressources"
+            asLink={<RouterLink to="/ressources" />}
             current={pathname.startsWith('/ressources')}
-          >
-            <NavSubItem
-              current={pathname.startsWith('/ressources-externes')}
-              title="Les ressources externes"
-              asLink={<RouterLink to="/ressources-externes" />}
-            />
-          </NavItem>
+          />
           {viewer?.id && ['admin'].includes(viewer?.role) && (
             <NavItem
               title="Administration"

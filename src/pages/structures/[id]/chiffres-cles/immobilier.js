@@ -40,7 +40,7 @@ export default function StructureImmobilierPage() {
         currentLocalisation?.coordinates?.lng,
       ],
       color: '#990000',
-      zIndexOffset: 99,
+      zIndexOffset: 10099,
     });
   }
   allData?.filter((item) => item?.latlong)?.forEach((item) => {
