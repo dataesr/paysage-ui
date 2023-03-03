@@ -28,13 +28,13 @@ function sanitize(form) {
 }
 
 export default function ImportPage({ data }) {
+  const [boutonVisible, setBoutonVisible] = useState(true);
   const [readyToImport, setReadyToImport] = useState([]);
   const [warnings, setWarnings] = useState([]);
   const [feedBack, setFeedBack] = useState([]);
   const [responsesErrors, setResponsesErrors] = useState([]);
 
   const [isLoading, setIsLoading] = useState(false);
-  const [parents, setParents] = useState([]);
   const [responses, setResponses] = useState([]);
   const { form, updateForm } = useForm(data);
 
@@ -130,7 +130,6 @@ export default function ImportPage({ data }) {
     try {
       const saveResponse = await api.post('/structures', structure);
       const responseWithIndex = { ...saveResponse, index: structure.index };
-      setFeedBack([...feedBack, responseWithIndex]);
       const resourceId = structure.parent;
       const relatedObjectId = saveResponse.data.id;
       if (resourceId && relatedObjectId) {
@@ -146,33 +145,37 @@ export default function ImportPage({ data }) {
         statusText: `${error?.error} : ${JSON.stringify(error?.details?.[0])}`,
         data: {},
         index: structure?.index,
+        usualName: structure.usualName,
       };
       setResponsesErrors((responseFromApi) => [...responseFromApi, responseWithIndex]);
       return error;
     }
   };
-
   const handleUploadClick = async () => {
     setIsLoading(true);
     const responsesPromises = readyToImport.map((structure) => saveStructure(structure));
     const newResponses = await Promise.all(responsesPromises);
-    const allResponses = [...feedBack, ...newResponses.filter((el) => el.index)];
+    const allResponses = [...feedBack, ...newResponses.filter((el) => el?.data?.id)];
     setFeedBack(allResponses);
-    const parentsPromises = await Promise.all(newResponses.map((result, index) => {
-      const resourceId = readyToImport?.[index]?.parent;
-      const relatedObjectId = result?.data?.id;
-      if (resourceId && relatedObjectId) {
-        return api.post('/relations', { resourceId, relatedObjectId, relationTag: 'structure-interne' })
-          .then((response) => response)
-          .catch((error) => ({ status: error?.message, statusText: `${error?.error} : ${JSON.stringify(error?.details?.[0])}`, data: {} }));
-      }
-      return Promise.resolve(null);
-    }));
-    setParents(parentsPromises);
     updateForm({ data: '' });
-    setResponses((oldResponses) => [...oldResponses, ...newResponses, ...readyToImport, ...allResponses, ...responsesErrors, ...parents]);
+    setResponses((oldResponses) => [...oldResponses, ...newResponses, ...readyToImport, ...allResponses, ...responsesErrors]);
     setReadyToImport([]);
     setIsLoading(false);
+  };
+  const handleClick = () => {
+    checkUploadOnClick(sanitize(form));
+    setBoutonVisible(false);
+  };
+
+  const handleResetClick = () => {
+    setFeedBack([]);
+    setResponsesErrors([]);
+    setResponses([]);
+    setReadyToImport([]);
+    setWarnings([]);
+    updateForm({ data: '' });
+    setIsLoading(false);
+    setBoutonVisible(true);
   };
   return (
     <Container spacing="py-6w">
@@ -202,7 +205,11 @@ export default function ImportPage({ data }) {
             />
             <Row>
               <Col>
-                <Button onClick={() => checkUploadOnClick(sanitize(form))}>Vérification</Button>
+                {boutonVisible && (
+                  <Button onClick={handleClick}>Vérification</Button>
+                )}
+                {' '}
+
               </Col>
               {form?.data?.length > 0 && (
                 <Col>
@@ -231,7 +238,7 @@ export default function ImportPage({ data }) {
             </Col>
             <Accordion>
               <AccordionItem
-                title="Voir tous les warnings"
+                title={warnings.length === 1 ? 'Voir le warning' : `Voir les ${warnings.length} warnings`}
               >
                 <Col n="12">
                   <Row gutters key="headers">
@@ -241,8 +248,11 @@ export default function ImportPage({ data }) {
                     <Col n="3">
                       Nom de la structure
                     </Col>
-                    <Col n="5">
+                    <Col n="3">
                       Warnings
+                    </Col>
+                    <Col n="2">
+                      Parents
                     </Col>
                   </Row>
                   {warnings?.map((response, index) => (
@@ -264,10 +274,13 @@ export default function ImportPage({ data }) {
                               </Col>
                             )}
                           </Col>
-                          <Col n="5">
+                          <Col n="3">
                             <span>
                               {response?.warnings?.map((warning) => warning.message).join(',')}
                             </span>
+                          </Col>
+                          <Col n="">
+                            {response?.parent}
                           </Col>
                           <Col>
                             <Button
@@ -309,7 +322,7 @@ export default function ImportPage({ data }) {
             </Col>
             <Accordion>
               <AccordionItem
-                title="Voir et valider l'import de ces structures"
+                title={readyToImport.length === 1 ? "Voir et valider l'import de cette structure" : `Voir et valider l'import des ${readyToImport.length} prêtes à être importées`}
               >
                 <Col n="12">
                   <Row gutters key="headers">
@@ -319,6 +332,9 @@ export default function ImportPage({ data }) {
                     <Col n="3">
                       Nom de la structure
                     </Col>
+                    <Col n="2">
+                      Parent
+                    </Col>
                   </Row>
                   {readyToImport?.sort((a, b) => a.index - b.index).map((response, index) => (
                     <Row gutters key={index}>
@@ -326,14 +342,15 @@ export default function ImportPage({ data }) {
                         {response.index + 2}
                       </Col>
                       <Col n="3">
-                        <span>
-                          {response?.usualName}
-                        </span>
+                        {response?.usualName}
+                      </Col>
+                      <Col n="3">
+                        {response?.parent}
                       </Col>
                     </Row>
                   ))}
                   <FormFooter
-                    buttonLabel="Importer cette/ces structure(s)"
+                    buttonLabel={readyToImport.length === 1 ? 'Importer cette structure' : `Importer ces ${readyToImport.length} structures`}
                     onSaveHandler={() => handleUploadClick()}
                   />
                 </Col>
@@ -342,12 +359,12 @@ export default function ImportPage({ data }) {
           </Col>
         </Row>
       ) }
-      {feedBack.length && (
+      {!!feedBack.length && (
         <Row gutters>
           <Col n="12">
             <Col n="12">
               <Alert
-                description={feedBack?.length > 1 ? `Il y a ${feedBack?.length} structures qui ont été ajoutées` : 'Il y a une structure qui a été ajoutée'}
+                description={feedBack?.length > 1 ? `Il y a ${feedBack?.length} structures qui ont été importées` : 'Il y a une structure qui a été importée'}
                 title="Feedback"
                 type="success"
               />
@@ -379,18 +396,18 @@ export default function ImportPage({ data }) {
                       {response.index + 2}
                     </Col>
                     <Col n="3">
-                      <Link href={`/structures/${response?.data?.id}`}>
-                        <span>
-                          {response?.data?.acronymFr}
-                          {response?.data?.acronymFr && ' - '}
-                          {response?.data?.shortName}
-                          {response?.data?.shortName && ' - '}
-                          {response?.data?.currentName?.usualName}
-                        </span>
-                      </Link>
+                      <span>
+                        {response?.data?.acronymFr}
+                        {response?.data?.acronymFr && ' - '}
+                        {response?.data?.shortName}
+                        {response?.data?.shortName && ' - '}
+                        {response?.data?.currentName?.usualName}
+                      </span>
                     </Col>
                     <Col n="1">
-                      {response?.data?.id}
+                      <Link href={`/structures/${response?.data?.id}`}>
+                        {response?.data?.id}
+                      </Link>
                     </Col>
                     <Col n="3">
                       Structure Validée
@@ -417,7 +434,7 @@ export default function ImportPage({ data }) {
             </Col>
             <Accordion>
               <AccordionItem
-                title="Voir les imports qui ont été échoués"
+                title={responsesErrors.length === 1 ? "Voir l'import qui a echoué" : `Voir les ${responsesErrors.length} qui ont échoués`}
               >
                 <Row gutters>
                   <Col n="1">
@@ -426,7 +443,7 @@ export default function ImportPage({ data }) {
                   <Col n="3">
                     Acronyme - Nom
                   </Col>
-                  <Col n="3">
+                  <Col n="5">
                     Message
                   </Col>
                   <Col n="3">
@@ -439,16 +456,12 @@ export default function ImportPage({ data }) {
                       {response.index + 2}
                     </Col>
                     <Col n="3">
-                      <span>
-                        {response?.data?.acronymFr}
-                        {response?.data?.acronymFr && ' - '}
-                        {response?.data?.shortName}
-                        {response?.data?.shortName && ' - '}
-                        {response?.data.currentName?.usualName}
-                      </span>
+                      {response?.usualName}
                     </Col>
-                    <Col n="3">
-                      {response.statusText}
+                    <Col n="5">
+                      {response.statusText.includes('usualName') ? "La structure que vous souhaitez ajouter n'a pas de nom" : null}
+                      {response.statusText.includes('should match pattern') ? 'Certains caractères ne sont pas acceptés' : null}
+                      {response.statusText.includes('does not exist') ? "L'objet à lier n'existe pas" : null}
                     </Col>
                     <Col n="3">
                       {response.status}
@@ -460,6 +473,7 @@ export default function ImportPage({ data }) {
           </Col>
         </Row>
       )}
+      {(!!feedBack.length) && <Button onClick={handleResetClick}>Refaire des imports</Button> }
     </Container>
   );
 }
