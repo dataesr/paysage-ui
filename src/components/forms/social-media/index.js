@@ -18,13 +18,14 @@ const regexpValidateSocialMedia = (type) => {
     Facebook: [/^(https:\/\/)?(www.)?facebook.com\/[A-Za-z0-9/:%_+.,#?!@&=-]+$/, 'https://www.facebook.com/<compte>'],
     Github: [/^(https:\/\/)?(www.)?github.com\/[A-Za-z0-9/:%_+.,#?!@&=-]+$/, 'https://github.com/<compte>?tab=repositories'],
     Instagram: [/^(https:\/\/)?(www.)?instagram.com\/[A-Za-z0-9/:%_+.,#?!@&=-]+$/, 'https://www.instagram.com/<compte>/'],
-    Twitter: [/^(https:\/\/)?(www.)?twitter.com\/[0-9A-Za-z_]{1,15}$/, 'https://twitter.com/<compte>'],
-    Youtube: [/^(https:\/\/)?(www.)?youtube.com\/[A-Za-z0-9/:%_+.,#?!@&=-]+$/, 'https://www.youtube.com/channel/<chaine>'],
     Linkedin: [/^(https:\/\/)?(www.)?(fr.)?linkedin.com\/.+[A-Za-z0-9/:%_+.,#?!@&=-]+$/, 'https://www.linkedin.com/<profil>'],
-    Twitch: [/^(https:\/\/)?(www.)?twitch\.tv\/([a-z0-9_]+)($|\?)/, 'https://twitch.tv/<chaine>'],
-    Tiktok: [/^(https:\/\/)?(www.)?tiktok\.com\/([A-Za-z0-9/:%_+.,#?!@&=-]+)($|\?)/, 'https://www.tiktok.com/@<compte>'],
     Pinterest: [/^(https:\/\/)?(www.)?pinterest.fr\/[A-Za-z0-9/:%_+.,#?!@&=-]+$/, 'https://www.pinterest.fr/<compte>/'],
+    soundcloud: [/^(https:\/\/)?(www.)?soundcloud.com\/[A-Za-z0-9/:%_+.,#?!@&=-]+$/, 'https://soundcloud.com/<compte>'],
+    Tiktok: [/^(https:\/\/)?(www.)?tiktok\.com\/([A-Za-z0-9/:%_+.,#?!@&=-]+)($|\?)/, 'https://www.tiktok.com/@<compte>'],
+    Twitch: [/^(https:\/\/)?(www.)?twitch\.tv\/([a-z0-9_]+)($|\?)/, 'https://twitch.tv/<chaine>'],
+    Twitter: [/^(https:\/\/)?(www.)?twitter.com\/[0-9A-Za-z_]{1,15}$/, 'https://twitter.com/<compte>'],
     Vimeo: [/^(https:\/\/)?(www.)?vimeo.com\/[A-Za-z0-9/:%_+.,#?!@&=-]+$/, 'https://vimeo.com/<compte>'],
+    Youtube: [/^(https:\/\/)?(www.)?youtube.com\/[A-Za-z0-9/:%_+.,#?!@&=-]+$/, 'https://www.youtube.com/channel/<chaine>'],
   };
   return validator[type] || [null, null];
 };
