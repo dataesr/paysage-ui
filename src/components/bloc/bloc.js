@@ -11,6 +11,7 @@ export default function Bloc({ children, data, error, isLoading, hideOnEmptyView
   const editActions = Children.toArray(children).filter((child) => (child.props.__TYPE === 'BlocActionButton' && child.props.edit));
   const viewActions = Children.toArray(children).filter((child) => (child.props.__TYPE === 'BlocActionButton' && !child.props.edit));
   const filters = Children.toArray(children).filter((child) => (child.props.__TYPE === 'BlocFilter'));
+  const gouvernanceFilters = Children.toArray(children).filter((child) => (child.props.__TYPE === 'BlocGouvernanceFilter'));
   const modals = Children.toArray(children).filter((child) => child.props.__TYPE === 'BlocModal');
   const blocContent = Children.toArray(children).find((child) => child.props.__TYPE === 'BlocContent');
   if (!editMode && !data?.totalCount && hideOnEmptyView) return null;
@@ -29,6 +30,7 @@ export default function Bloc({ children, data, error, isLoading, hideOnEmptyView
         </ButtonGroup>
       </Row>
       {(!isLoading && !error) && filters?.[0]}
+      {(!isLoading && !error) && gouvernanceFilters?.[0]}
 
       {isLoading && <Row className="fr-my-2w flex--space-around"><Spinner /></Row>}
       {error && <Highlight color="var(--page-border)">Une erreur s'est produite lors du chargement des données</Highlight>}
