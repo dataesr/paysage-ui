@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { Modal, ModalContent, ModalTitle } from '@dataesr/react-dsfr';
+import { Badge, Modal, ModalContent, ModalTitle, Row, Title } from '@dataesr/react-dsfr';
 import api from '../../../../utils/api';
 import RelationCard from '../../../card/relation-card';
 import ExpendableListCards from '../../../card/expendable-list-cards';
@@ -12,14 +12,21 @@ import useNotice from '../../../../hooks/useNotice';
 import { deleteError, saveError, saveSuccess, deleteSuccess } from '../../../../utils/notice-contents';
 import { exportToCsv, hasExport } from '../utils/exports';
 import { spreadByStatus } from '../utils/status';
-import BlocGouvernanceFilter from '../../../bloc/bloc-gouvernance-filter';
 
-function getByMandateTypeGroupCounts(data) {
+function getByMandateTypeGroups(data) {
   if (!data?.length) return {};
   const counts = data?.reduce((a, b) => {
     const group = b?.relationType?.mandateTypeGroup;
-    if (Object.keys(a)?.includes(group)) return { ...a, [group]: a[group] + 1 };
-    return { ...a, [group]: 1 };
+    if (Object.keys(a)?.includes(group)) {
+      return {
+        ...a,
+        [group]: {
+          count: (a[group].count || 0) + 1,
+          list: [...(a[group].list), b],
+        },
+      };
+    }
+    return { ...a, [group]: { count: 1, list: [b] } };
   }, {});
   return counts;
 }
@@ -35,10 +42,8 @@ export default function RelationsGouvernance({ blocName, tag, resourceType, rela
   const [modalContent, setModalContent] = useState(null);
   const { data: spreadedByStatusRelations, counts, defaultFilter } = spreadByStatus(data?.data);
   const [statusFilter, setStatusFilter] = useState(defaultFilter);
-  const [typeFilter, setTypeFilter] = useState(defaultFilter);
-  const mandateTypeGroupCounts = getByMandateTypeGroupCounts(spreadedByStatusRelations[statusFilter]);
+  const mandateTypeGroups = getByMandateTypeGroups(spreadedByStatusRelations[statusFilter]);
   useEffect(() => setStatusFilter(defaultFilter), [defaultFilter]);
-  useEffect(() => setTypeFilter(null), [statusFilter]);
 
   const onSaveElementHandler = async (body, id = null) => {
     const method = id ? 'patch' : 'post';
@@ -77,10 +82,7 @@ export default function RelationsGouvernance({ blocName, tag, resourceType, rela
   };
 
   const renderCards = () => {
-    const relations = spreadedByStatusRelations[statusFilter] || [];
-    const byTypeRelation = typeFilter ? relations.filter((rel) => rel?.relationType?.mandateTypeGroup === typeFilter) : relations;
-
-    const list = byTypeRelation
+    const renderlist = (rel) => (rel ? rel
       .sort((a, b) => new Date(b.startDate) - new Date(a.startDate))
       .sort((a, b) => ((a?.relationType?.priority || 99) - (b?.relationType?.priority || 99)))
       .map((element) => (
@@ -90,9 +92,21 @@ export default function RelationsGouvernance({ blocName, tag, resourceType, rela
           relation={element}
           onEdit={() => onOpenModalHandler(element)}
         />
-      ));
-
-    return <ExpendableListCards max={60} list={list} nCol="12 md-6" />;
+      )) : []);
+    const byTypeRelations = Object.entries(mandateTypeGroups).map(([name, { count, list }]) => ({ name, count, list: renderlist(list) }));
+    return byTypeRelations.map((group) => (
+      <>
+        <Row className="flex--nowrap fr-mt-3w">
+          <div className="flex--grow">
+            <Row className="flex flex--start">
+              <Title as="h6" look="h6">{group.name}</Title>
+              <Badge className="fr-ml-1v" type="info" text={group.count} />
+            </Row>
+          </div>
+        </Row>
+        <ExpendableListCards max={60} list={group.list} nCol="12 md-6" />
+      </>
+    ));
   };
 
   return (
@@ -100,7 +114,6 @@ export default function RelationsGouvernance({ blocName, tag, resourceType, rela
       <BlocTitle as="h3" look="h6">{blocName || tag}</BlocTitle>
       <BlocActionButton onClick={() => onOpenModalHandler()}>Ajouter un élément</BlocActionButton>
       {(!noFilters) && <BlocFilter statusFilter={statusFilter} setStatusFilter={setStatusFilter} counts={counts} />}
-      <BlocGouvernanceFilter counts={mandateTypeGroupCounts} currentFilter={typeFilter} setFilter={setTypeFilter} />
       {hasExport({ tag, inverse }) && (
         <BlocActionButton
           icon="ri-download-line"
