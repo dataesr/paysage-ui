@@ -110,7 +110,7 @@ export default function Routes() {
               <Route path="nomenclatures/types-de-mail" element={<AdminNomenclaturesPage route="/email-types" title="Types d'email" />} />
             </Route>
           </Route>
-          <Route element={<ProtectedRoute roles={['admin', 'users']} />}>
+          <Route element={<ProtectedRoute roles={['admin', 'user']} />}>
             <Route path="/structures/ajouter" element={<StructureAddPage />} />
             <Route path="/categories/ajouter" element={<CategoriesAddPage />} />
             <Route path="/personnes/ajouter" element={<PersonAddPage />} />
