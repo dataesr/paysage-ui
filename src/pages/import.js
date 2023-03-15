@@ -18,6 +18,13 @@ import { Spinner } from '../components/spinner';
 import api from '../utils/api';
 import FormFooter from '../components/forms/form-footer';
 import useForm from '../hooks/useForm';
+import {
+  cleanStructureData,
+  cleanSocialMediasData,
+  cleanStructureNameData,
+  cleanIdentifiersData,
+  cleanWeblinks,
+} from '../components/import/utils';
 
 const LINE_SEPARATOR = '\n';
 const TSV_SEPARATOR = '\t';
@@ -86,7 +93,10 @@ export default function ImportPage({ data }) {
               objectItem['Statut [O = Ouvert, F = Fermé, P = Potentiel]']
             ],
           // categories: objectItem[JSON.stringify('Code de la/des catégories {rechercher le code, séparation ;}')]?.split(';'),
-          categories: objectItem['Code de la/des catégories {rechercher le code, séparation ;}']?.split(';'),
+          categories:
+            objectItem[
+              'Code de la/des catégories {rechercher le code, séparation ;}'
+            ]?.split(';'),
           legalCategory:
             objectItem['Code du statut juridique {rechercher le code}'],
           cityId: objectItem['Code commune {rechercher le code}'],
@@ -163,12 +173,17 @@ export default function ImportPage({ data }) {
 
       const newWarnings = [];
 
+      const findMultipleImport = structuresJson.filter((el) => el.usualName === name).length > 1;
+
       if (duplicatedSiret) {
         newWarnings.push({ message: `Le siret ${siret} existe déjà` });
       }
 
       if (duplicatedStructureId) {
         newWarnings.push({ message: `${name} est probablement un doublon` });
+      }
+      if (findMultipleImport) {
+        newWarnings.push({ message: `${name} est présent plusieurs fois dans le tableau d'import` });
       }
 
       return {
@@ -195,36 +210,59 @@ export default function ImportPage({ data }) {
     setIsLoading(false);
   };
 
-  const cleanData = (newData) => {
-    const cleanedStructures = { ...newData };
-    if (newData.twitter) { delete cleanedStructures.twitter; }
-    if (newData.linkedIn) { delete cleanedStructures.linkedIn; }
-    if (newData.categories) { delete cleanedStructures.categories; }
-    if (newData.parent) { delete cleanedStructures.parent; }
-
-    return cleanedStructures;
-  };
-
   const saveStructure = async (structure) => {
     try {
-      const saveResponse = await api.post('/structures', cleanData(structure));
+      const saveResponse = await api.post(
+        '/structures',
+        cleanStructureData(structure),
+      );
       const responseWithIndex = { ...saveResponse, index: structure.index };
       const newStructureId = saveResponse.data.id;
       const promises = [];
 
-      if (structure.twitter) {
-        const twitterResponse = await api.post(`/structures/${newStructureId}/social-medias`, {
-          type: 'Twitter',
-          account: structure.twitter,
-        });
-        responseWithIndex.twitter = twitterResponse.data;
+      const structureSocialMedia = cleanSocialMediasData(structure);
+      const promisesSocialMedias = Object.keys(structureSocialMedia).map(
+        (key) => api.post(`/structures/${newStructureId}/social-medias`, {
+          type: key,
+          account: structureSocialMedia[key],
+        }),
+      );
+      if (promisesSocialMedias.length > 0) {
+        const socialMediasResponses = await Promise.all(promisesSocialMedias);
+        // Je dois probablement utiliser cette variable plus tard ?
       }
-      if (structure.linkedIn) {
-        const twitterResponse = await api.post(`/structures/${newStructureId}/social-medias`, {
-          type: 'Linkedin',
-          account: structure.linkedIn,
+
+      const structureWeblinks = cleanWeblinks(structure);
+      const promisesWeblinks = Object.keys(structureWeblinks).map((key) => {
+        const weblink = structureWeblinks[key];
+        return api.post(`/structures/${newStructureId}/weblinks`, weblink);
+      });
+      if (promisesWeblinks.length) {
+        const weblinksResponses = await Promise.all(promisesWeblinks);
+        // Je dois probablement utiliser cette variable plus tard ?
+      }
+
+      const { usualName, ...otherProperties } = cleanStructureNameData(structure);
+      const newStructureName = { ...otherProperties };
+      const nameResponse = await api.post(`/structures/${newStructureId}/names`, {
+        ...newStructureName,
+        usualName,
+      });
+        // Je dois probablement utiliser cette variable plus tard
+
+      const structureIdentifiers = cleanIdentifiersData(structure);
+      const promisesStructureIdentifiers = Object.keys(
+        structureIdentifiers,
+      ).map((key) => {
+        const value = structureIdentifiers[key];
+        return api.post(`/structures/${newStructureId}/identifiers`, {
+          type: key,
+          value,
         });
-        responseWithIndex.linkedIn = twitterResponse.data;
+      });
+      if (promisesStructureIdentifiers.length > 0) {
+        const identifiersResponses = await Promise.all(promisesStructureIdentifiers);
+        // Je dois probablement utiliser cette variable plus tard ?
       }
 
       if (structure.parent && newStructureId) {
@@ -235,19 +273,27 @@ export default function ImportPage({ data }) {
         });
         promises.push(parentPromise);
       }
-      if (structure.categories && structure.categories.length > 0 && newStructureId) {
+
+      if (
+        structure.categories
+        && structure.categories.length > 0
+        && newStructureId
+      ) {
         const categoryPromises = [];
         structure.categories.forEach((categoryId) => {
           if (categoryId !== '') {
-            categoryPromises.push(api.post('/relations', {
-              resourceId: newStructureId,
-              relatedObjectId: categoryId,
-              relationTag: 'structure-categorie',
-            }));
+            categoryPromises.push(
+              api.post('/relations', {
+                resourceId: newStructureId,
+                relatedObjectId: categoryId,
+                relationTag: 'structure-categorie',
+              }),
+            );
           }
         });
         promises.push(...categoryPromises);
       }
+
       if (promises.length > 0) {
         const Responses = await Promise.all(promises);
         Responses.forEach((response) => {
@@ -323,6 +369,7 @@ export default function ImportPage({ data }) {
             />
             <p>
               Récupérer le
+              {' '}
               <Link href="/models/AjoutEnMasseStructure.xlsx">
                 fichier modèle
               </Link>
@@ -389,16 +436,14 @@ export default function ImportPage({ data }) {
                 <Col n="12">
                   <Row gutters key="headers">
                     <Col n="1">Ligne</Col>
-                    <Col n="2">Nom de la structure</Col>
-                    <Col n="3">Warnings</Col>
-                    <Col n="2">Siret</Col>
-                    <Col n="2">Twitter</Col>
+                    <Col n="3">Nom de la structure</Col>
+                    <Col n="4">Warnings</Col>
                   </Row>
                   {warnings?.map(
                     (response, index) => response?.newWarnings?.length > 0 && (
                       <Row gutters key={index}>
                         <Col n="1">{response.index + 2}</Col>
-                        <Col n="2">
+                        <Col n="3">
                           <span>{response?.usualName}</span>
                           {response?.duplicatedStructureId && (
                             <Col>
@@ -411,7 +456,7 @@ export default function ImportPage({ data }) {
                             </Col>
                           )}
                         </Col>
-                        <Col n="3">
+                        <Col n="4">
                           <span>
                             {response?.newWarnings?.map((warning, i) => {
                               const isLast = i === response.newWarnings.length - 1;
@@ -431,9 +476,6 @@ export default function ImportPage({ data }) {
                             })}
                           </span>
                         </Col>
-                        <Col n="2">{response?.siret}</Col>
-                        <Col n="2">{response?.twitter?.replace('https://', '')}</Col>
-
                         <Col>
                           <Button
                             colors={['#f55', '#fff']}
@@ -501,10 +543,18 @@ export default function ImportPage({ data }) {
                         <Col n="1">{response.index + 2}</Col>
                         <Col n="2">{response?.usualName}</Col>
                         <Col n="1">{response?.structureStatus}</Col>
-                        {response?.siret ? <Col n="2">{response?.siret}</Col>
-                          : <Col n="2">{' '}</Col>}
-                        {response?.twitter ? <Col n="2">{response?.twitter.replace('https://', '')}</Col>
-                          : <Col n="2">{' '}</Col> }
+                        {response?.siret ? (
+                          <Col n="2">{response?.siret}</Col>
+                        ) : (
+                          <Col n="2"> </Col>
+                        )}
+                        {response?.twitter ? (
+                          <Col n="2">
+                            {response?.twitter.replace('https://', '')}
+                          </Col>
+                        ) : (
+                          <Col n="2"> </Col>
+                        )}
                         {response?.parent ? (
                           <Col n="1">
                             <Link
@@ -514,7 +564,9 @@ export default function ImportPage({ data }) {
                               {response?.parent}
                             </Link>
                           </Col>
-                        ) : <Col n="1">{' '}</Col>}
+                        ) : (
+                          <Col n="1"> </Col>
+                        )}
                         {response?.categories[0] ? (
                           <Col n="1">
                             <Link
@@ -524,7 +576,9 @@ export default function ImportPage({ data }) {
                               {response?.categories[0]}
                             </Link>
                           </Col>
-                        ) : <Col n="1">{' '}</Col> }
+                        ) : (
+                          <Col n="1"> </Col>
+                        )}
                       </Row>
                     ))}
                   <FormFooter
@@ -580,7 +634,10 @@ export default function ImportPage({ data }) {
                         </span>
                       </Col>
                       <Col n="2">
-                        <Link target="_blank" href={`/structures/${response?.data?.id}`}>
+                        <Link
+                          target="_blank"
+                          href={`/structures/${response?.data?.id}`}
+                        >
                           {response?.data?.id}
                         </Link>
                       </Col>
@@ -594,20 +651,27 @@ export default function ImportPage({ data }) {
                             {response['structure-interne']?.resourceId}
                           </Link>
                         </Col>
-                      ) : <Col n="1">{' '}</Col>}
+                      ) : (
+                        <Col n="1"> </Col>
+                      )}
                       {response['structure-categorie'] ? (
                         <Col n="3">
                           <Link
                             target="_blank"
                             href={`/categories/${response['structure-categorie']?.relatedObject?.id}`}
                           >
-                            {response['structure-categorie']?.relatedObject?.usualNameFr}
+                            {
+                              response['structure-categorie']?.relatedObject
+                                ?.usualNameFr
+                            }
                             (
                             {response['structure-categorie']?.relatedObject?.id}
                             )
                           </Link>
                         </Col>
-                      ) : <Col n="3">{' '}</Col>}
+                      ) : (
+                        <Col n="3"> </Col>
+                      )}
                     </Row>
                   ))}
               </AccordionItem>
