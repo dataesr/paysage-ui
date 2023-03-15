@@ -48,8 +48,6 @@ export function cleanSocialMediasData(structure) {
 
 export function cleanWeblinks(structure) {
   const cleanedWeblinks = {};
-  const acceptedKeys = ['website'];
-
   if (structure.websiteFr) {
     const url = structure.websiteFr.trim();
     if (url !== '') {
@@ -59,7 +57,6 @@ export function cleanWeblinks(structure) {
       };
     }
   }
-
   return cleanedWeblinks;
 }
 
