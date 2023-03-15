@@ -46,6 +46,34 @@ export function cleanSocialMediasData(structure) {
   return cleanedSocialMedias;
 }
 
+export function cleanStructureLocalisation(structure) {
+  const cleanedStructureLocalisations = {};
+  const acceptedKeys = [
+    'cityId',
+    'city',
+    'distributionStatement',
+    'address',
+    'postOfficeBoxNumber',
+    'postalCode',
+    'locality',
+    'place',
+    'country',
+    'phonenumber',
+    'coordinates',
+    'active',
+    'startDate',
+    'endDate',
+    'iso3',
+  ];
+  Object.keys(structure).forEach((key) => {
+    const index = acceptedKeys.findIndex((acceptedKey) => acceptedKey.toLowerCase() === key.toLowerCase());
+    if (index !== -1) {
+      cleanedStructureLocalisations[acceptedKeys[index]] = structure[key];
+    }
+  });
+  return cleanedStructureLocalisations;
+}
+
 export function cleanWeblinks(structure) {
   const cleanedWeblinks = {};
   if (structure.websiteFr) {

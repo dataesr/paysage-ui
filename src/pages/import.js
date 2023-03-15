@@ -24,6 +24,7 @@ import {
   cleanStructureNameData,
   cleanIdentifiersData,
   cleanWeblinks,
+  cleanStructureLocalisation,
 } from '../components/import/utils';
 
 const LINE_SEPARATOR = '\n';
@@ -268,6 +269,15 @@ export default function ImportPage({ data }) {
         const identifiersResponses = await Promise.all(promisesStructureIdentifiers);
         // Je dois probablement utiliser cette variable plus tard ?
       }
+
+      const { country, ...otherLocProperties } = cleanStructureLocalisation(structure);
+      const newStructureLocalisation = { ...otherLocProperties };
+      // eslint-disable-next-line
+      const structureLocalisationResponse = await api.post(`/structures/${newStructureId}/localisations`, {
+        ...newStructureLocalisation,
+        country,
+      });
+      // Je dois probablement utiliser cette variable plus tard
 
       if (structure.parent && newStructureId) {
         const parentPromise = api.post('/relations', {
