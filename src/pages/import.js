@@ -228,6 +228,7 @@ export default function ImportPage({ data }) {
         }),
       );
       if (promisesSocialMedias.length > 0) {
+        // eslint-disable-next-line
         const socialMediasResponses = await Promise.all(promisesSocialMedias);
         // Je dois probablement utiliser cette variable plus tard ?
       }
@@ -238,17 +239,19 @@ export default function ImportPage({ data }) {
         return api.post(`/structures/${newStructureId}/weblinks`, weblink);
       });
       if (promisesWeblinks.length) {
+        // eslint-disable-next-line
         const weblinksResponses = await Promise.all(promisesWeblinks);
         // Je dois probablement utiliser cette variable plus tard ?
       }
 
       const { usualName, ...otherProperties } = cleanStructureNameData(structure);
       const newStructureName = { ...otherProperties };
+      // eslint-disable-next-line
       const nameResponse = await api.post(`/structures/${newStructureId}/names`, {
         ...newStructureName,
         usualName,
       });
-        // Je dois probablement utiliser cette variable plus tard
+      // Je dois probablement utiliser cette variable plus tard
 
       const structureIdentifiers = cleanIdentifiersData(structure);
       const promisesStructureIdentifiers = Object.keys(
@@ -261,6 +264,7 @@ export default function ImportPage({ data }) {
         });
       });
       if (promisesStructureIdentifiers.length > 0) {
+        // eslint-disable-next-line
         const identifiersResponses = await Promise.all(promisesStructureIdentifiers);
         // Je dois probablement utiliser cette variable plus tard ?
       }
