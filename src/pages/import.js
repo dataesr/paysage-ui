@@ -93,7 +93,6 @@ export default function ImportPage({ data }) {
             statusMapping[
               objectItem['Statut [O = Ouvert, F = Fermé, P = Potentiel]']
             ],
-          // categories: objectItem[JSON.stringify('Code de la/des catégories {rechercher le code, séparation ;}')]?.split(';'),
           categories:
             objectItem[
               'Code de la/des catégories {rechercher le code, séparation ;}'
@@ -307,6 +306,20 @@ export default function ImportPage({ data }) {
         });
         promises.push(...categoryPromises);
       }
+      if (structure.legalCategory && newStructureId) {
+        const legalCategoryPromises = [];
+
+        if (typeof structure.legalCategory === 'string' && structure.legalCategory !== '') {
+          legalCategoryPromises.push(
+            api.post('/relations', {
+              resourceId: newStructureId,
+              relatedObjectId: structure.legalCategory,
+              relationTag: 'structure-categorie-juridique',
+            }),
+          );
+        }
+        promises.push(...legalCategoryPromises);
+      }
 
       if (promises.length > 0) {
         const Responses = await Promise.all(promises);
@@ -410,7 +423,7 @@ export default function ImportPage({ data }) {
                 <Col>
                   <Button
                     colors={['#f55', '#fff']}
-                    onClick={() => updateForm({ data: '' })}
+                    onClick={() => updateForm({ data: '' }, setBoutonVisible(true))}
                   >
                     Effacer
                   </Button>
@@ -420,11 +433,6 @@ export default function ImportPage({ data }) {
           </form>
         </Col>
       </Row>
-      {isLoading && (
-        <Row className="fr-my-2w flex--space-around">
-          <Spinner />
-        </Row>
-      )}
       {warnings?.length > 0 && (
         <Row gutters>
           <Col n="12">
@@ -451,7 +459,7 @@ export default function ImportPage({ data }) {
                   <Row gutters key="headers">
                     <Col n="1">Ligne</Col>
                     <Col n="3">Nom de la structure</Col>
-                    <Col n="4">Warnings</Col>
+                    <Col n="6">Warnings</Col>
                   </Row>
                   {warnings?.map(
                     (response, index) => response?.newWarnings?.length > 0 && (
@@ -470,7 +478,7 @@ export default function ImportPage({ data }) {
                             </Col>
                           )}
                         </Col>
-                        <Col n="4">
+                        <Col n="6">
                           <span>
                             {response?.newWarnings?.map((warning, i) => {
                               const isLast = i === response.newWarnings.length - 1;
@@ -495,18 +503,24 @@ export default function ImportPage({ data }) {
                             colors={['#f55', '#fff']}
                             onClick={async () => {
                               try {
-                                const saveResponse = await saveStructure(
-                                  response,
-                                );
+                                setIsLoading({ ...isLoading, [index]: true });
+                                const saveResponse = await saveStructure(response);
                                 warnings.splice(index, 1);
                                 setResponses([...responses, saveResponse]);
                               } catch (error) {
                                 // console.error(error);
+                              } finally {
+                                setIsLoading({ ...isLoading, [index]: false });
                               }
                             }}
                             size="sm"
                           >
                             Forcer l'ajout de cet élément
+                            {isLoading[index] && (
+                              <Row className="fr-my-2w flex--space-around">
+                                <Spinner />
+                              </Row>
+                            )}
                           </Button>
                         </Col>
                       </Row>
@@ -601,8 +615,14 @@ export default function ImportPage({ data }) {
                         ? 'Importer cette structure'
                         : `Importer ces ${readyToImport.length} structures`
                     }
-                    onSaveHandler={() => handleUploadClick()}
-                  />
+                    onSaveHandler={handleUploadClick}
+                  >
+                    {isLoading ? ( // afficher le loader si l'état local est true
+                      <Row className="fr-my-2w flex--space-around">
+                        <Spinner />
+                      </Row>
+                    ) : null}
+                  </FormFooter>
                 </Col>
               </AccordionItem>
             </Accordion>
@@ -627,18 +647,18 @@ export default function ImportPage({ data }) {
               <AccordionItem title="Voir les structures qui ont été importées">
                 <Row gutters>
                   <Col n="1">Ligne</Col>
-                  <Col n="3">Acronyme - Nom</Col>
+                  <Col n="2">Acronyme - Nom</Col>
                   <Col n="2">Id Paysage</Col>
-                  <Col n="1">Message</Col>
                   <Col n="1">Parent</Col>
                   <Col n="3">Catégorie</Col>
+                  <Col n="3">Catégorie J</Col>
                 </Row>
                 {feedBack
                   .sort((a, b) => a.index - b.index)
                   .map((response, index) => (
                     <Row gutters key={index}>
                       <Col n="1">{response.index + 2}</Col>
-                      <Col n="3">
+                      <Col n="2">
                         <span>
                           {response?.data?.acronymFr}
                           {response?.data?.acronymFr && ' - '}
@@ -655,7 +675,6 @@ export default function ImportPage({ data }) {
                           {response?.data?.id}
                         </Link>
                       </Col>
-                      <Col n="1">Structure ajoutée</Col>
                       {response['structure-interne'] ? (
                         <Col n="1">
                           <Link
@@ -681,6 +700,21 @@ export default function ImportPage({ data }) {
                             (
                             {response['structure-categorie']?.relatedObject?.id}
                             )
+                          </Link>
+                        </Col>
+                      ) : (
+                        <Col n="3"> </Col>
+                      )}
+                      {response['structure-categorie-juridique'] ? (
+                        <Col n="3">
+                          <Link
+                            target="_blank"
+                            href={`/legal-categories/${response['structure-categorie-juridique']?.relatedObject?.id}`}
+                          >
+                            {
+                              response['structure-categorie-juridique']?.relatedObject
+                                ?.longNameFr
+                            }
                           </Link>
                         </Col>
                       ) : (
@@ -721,32 +755,37 @@ export default function ImportPage({ data }) {
                   <Col n="5">Message</Col>
                   <Col n="3">Statut</Col>
                 </Row>
-                {responsesErrors.map((response, index) => (
-                  <Row gutters key={index}>
-                    <Col n="1">{response.index + 2}</Col>
-                    <Col n="3">{response?.usualName}</Col>
-                    <Col n="5">
-                      {response?.statusText?.includes('usualName')
-                        ? "La structure que vous souhaitez ajouter n'a pas de nom"
-                        : null}
-                      {response?.statusText?.includes('should match pattern')
-                        ? 'Certains caractères ne sont pas acceptés'
-                        : null}
-                      {response?.statusText?.includes('does not exist')
-                        ? "L'objet à lier n'existe pas"
-                        : null}
-                    </Col>
-                    <Col n="3">{response.status}</Col>
-                  </Row>
-                ))}
+                {responsesErrors.sort((a, b) => a.index - b.index)
+                  .map((response, index) => (
+                    <Row gutters key={index}>
+                      <Col n="1">{response.index + 2}</Col>
+                      <Col n="3">{response?.usualName}</Col>
+                      <Col n="5">
+                        {response?.statusText?.includes('usualName')
+                          ? "La structure que vous souhaitez ajouter n'a pas de nom"
+                          : null}
+                        {response?.statusText?.includes('should match pattern')
+                          ? "Un des champs renseignés n'est pas valide, vérifiez vos informations"
+                          : null}
+                        {response?.statusText?.includes('does not exist')
+                          ? "L'objet à lier n'existe pas"
+                          : null}
+                      </Col>
+                      <Col n="3">{response.status}</Col>
+                    </Row>
+                  ))}
               </AccordionItem>
             </Accordion>
           </Col>
         </Row>
       )}
-      {!!feedBack.length && (
-        <Button onClick={handleResetClick}>Refaire des imports</Button>
-      )}
+      <Row gutters>
+        {!!feedBack.length > 0 || !!warnings.length > 0 || !!readyToImport.length > 0 || !!responsesErrors.length > 0 ? (
+          <Col>
+            <Button onClick={handleResetClick}>Reinitialiser les imports</Button>
+          </Col>
+        ) : null}
+      </Row>
     </Container>
   );
 }
