@@ -6,7 +6,7 @@ export default function StructureGouvernancePage() {
   return (
     <RelationsGouvernance
       tag={GOUVERNANCE}
-      blocName="Gouvernance"
+      blocName="Gouvernance, administration et référents"
       resourceType="structures"
       relatedObjectTypes={['persons']}
       Form={MandateForm}

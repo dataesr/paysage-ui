@@ -13,6 +13,8 @@ import { deleteError, saveError, saveSuccess, deleteSuccess } from '../../../../
 import { exportToCsv, hasExport } from '../utils/exports';
 import { spreadByStatus } from '../utils/status';
 
+const GROUP_ORDER = ['Direction', 'Vice-présidence', 'Référents thématique', 'Autres fonctions'];
+
 function getByMandateTypeGroups(data) {
   if (!data?.length) return {};
   const counts = data?.reduce((a, b) => {
@@ -94,19 +96,21 @@ export default function RelationsGouvernance({ blocName, tag, resourceType, rela
         />
       )) : []);
     const byTypeRelations = Object.entries(mandateTypeGroups).map(([name, { count, list }]) => ({ name, count, list: renderlist(list) }));
-    return byTypeRelations.map((group) => (
-      <>
-        <Row className="flex--nowrap fr-mt-3w">
-          <div className="flex--grow">
-            <Row className="flex flex--start">
-              <Title as="h6" look="h6">{group.name}</Title>
-              <Badge className="fr-ml-1v" type="info" text={group.count} />
-            </Row>
-          </div>
-        </Row>
-        <ExpendableListCards max={60} list={group.list} nCol="12 md-6" />
-      </>
-    ));
+    return byTypeRelations
+      .sort((a, b) => GROUP_ORDER.indexOf(a.name) - GROUP_ORDER.indexOf(b.name))
+      .map((group) => (
+        <>
+          <Row className="flex--nowrap fr-mt-3w">
+            <div className="flex--grow">
+              <Row className="flex flex--start">
+                <Title as="h6" look="h6">{group.name}</Title>
+                <Badge className="fr-ml-1v" type="info" text={group.count} />
+              </Row>
+            </div>
+          </Row>
+          <ExpendableListCards max={60} list={group.list} nCol="12 md-6" />
+        </>
+      ));
   };
 
   return (
