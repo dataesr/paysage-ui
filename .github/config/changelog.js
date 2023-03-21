@@ -2,7 +2,7 @@ module.exports = {
   types: [
     { types: ['feat', 'feature'], label: '🎉 Nouvelle fonctionalité' },
     { types: ['fix', 'bugfix'], label: '🐛 Réparation de bug' },
-    { types: ['improvements', 'enhancement'], label: '🔨 Amélioration' },
+    { types: ['improvements', 'enhancement', 'imp'], label: '🔨 Amélioration' },
     { types: ['build', 'ci'], label: '🏗️ Déploiement' },
     { types: ['refactor'], label: '🪚 Réamenagement de code' },
     { types: ['perf'], label: '🏎️ Amélioration de performance' },
