@@ -13,7 +13,18 @@ import { deleteError, saveError, saveSuccess, deleteSuccess } from '../../../../
 import { exportToCsv, hasExport } from '../utils/exports';
 import { spreadByStatus } from '../utils/status';
 
-const GROUP_ORDER = ['Direction', 'Vice-présidence', 'Référents thématique', 'Autres fonctions'];
+const GROUP_ORDER = [
+  'Équipe de direction',
+  'Gouvernance',
+  'Cabinet',
+  'Administration',
+  'Composition des conseils',
+  "Représentants de l'Etat",
+  'Élus',
+  'Référents thématiques',
+  'Autres fonctions',
+  'Référents MESR et rectorat',
+];
 
 function getByMandateTypeGroups(data) {
   if (!data?.length) return {};
