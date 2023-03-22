@@ -11,7 +11,7 @@ import usePageTitle from '../hooks/usePageTitle';
 export default function SignIn() {
   usePageTitle('Se connecter');
   const navigate = useNavigate();
-  const { requestSignInEmail, signin } = useAuth();
+  const { signin } = useAuth();
   const [step, setStep] = useState(1);
   const [otp, setOtp] = useState('');
   const [email, setEmail] = useState('');
@@ -22,22 +22,17 @@ export default function SignIn() {
   const validateOtp = () => OTP_REGEXP.test(otp);
   const validatePassword = () => PASSWORD_REGEXP.test(password);
 
-  const requestOtp = async (e) => {
-    e.preventDefault();
-    if (validateEmail(email) && (validatePassword(password) === true)) {
-      const response = await requestSignInEmail({ email, password });
-      if (response?.message?.startsWith('Un nouveau code')) {
-        setError('');
-        setStep(2);
-      } else {
-        setError(response?.error || response?.message);
-      }
-    } else { setError('Mauvaise combinaison utilisateur/mot de passe'); }
-  };
   const handleSignIn = async (e) => {
     e.preventDefault();
-    const response = await signin({ email, password, otp });
-    if (response.ok) { navigate('/'); } else { setError(response?.data?.error); }
+    if (!(validateEmail(email) && (validatePassword(password) === true))) {
+      return setError('Mauvaise combinaison utilisateur/mot de passe');
+    }
+    const body = { email, password };
+    if (otp) body.otp = otp;
+    const response = await signin(body);
+    if (response.status === 200) { return navigate('/'); }
+    if (response.status === 202) { setError(''); return setStep(2); }
+    return setError(response?.data?.error);
   };
 
   return (
@@ -65,7 +60,7 @@ export default function SignIn() {
                 <Row justifyContent="center">
                   <Col>
                     {(error) && <Alert description={error} type="error" />}
-                    <form onSubmit={requestOtp}>
+                    <form onSubmit={handleSignIn}>
                       <TextInput
                         required
                         label="Adresse email"
