@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { Checkbox, CheckboxGroup, Col, Container, Row, TextInput } from '@dataesr/react-dsfr';
+import { Checkbox, CheckboxGroup, Col, Container, Row, Select, TextInput } from '@dataesr/react-dsfr';
 import { useState } from 'react';
 import TagInput from '../../tag-input';
 import useForm from '../../../hooks/useForm';
@@ -28,6 +28,21 @@ const objectNameMapper = [
   { name: 'Projets', object: 'projects' },
   { name: 'Termes', object: 'terms' },
   { name: 'Catégories', object: 'categories' },
+];
+
+// When adding a new group, please set the bloc order by modifying
+// the file '/src/components/blocs/relations/components/relations-gouvernance.js'
+const GROUP_OPTIONS = [
+  { value: 'Équipe de direction', label: 'Équipe de direction' },
+  { value: 'Gouvernance', label: 'Gouvernance' },
+  { value: 'Cabinet', label: 'Cabinet' },
+  { value: 'Administration', label: 'Administration' },
+  { value: 'Composition des conseils', label: 'Composition des conseils' },
+  { value: "Représentants de l'Etat", label: "Représentants de l'Etat" },
+  { value: 'Élus', label: 'Élus' },
+  { value: 'Référents thématiques', label: 'Référents thématiques' },
+  { value: 'Autres fonctions', label: 'Autres fonctions' },
+  { value: 'Référents MESR et rectorat', label: 'Référents MESR et rectorat' },
 ];
 
 export default function RelationTypesForm({ id, data, onSave, onDelete }) {
@@ -99,12 +114,13 @@ export default function RelationTypesForm({ id, data, onSave, onDelete }) {
             </CheckboxGroup>
           </Col>
           <Col n="12" spacing="pb-3w">
-            <TextInput
+            <Select
               disabled={!form?.for?.includes('persons')}
               label="Groupe de gouvernance"
               hint="Groupe de gouvernance dans lequel appaîtra cette fonction. Uniquement pour les relations qui peuvent être associées aux personnes"
-              value={form?.for?.includes('persons') ? form.mandateTypeGroup : ''}
+              selected={form?.for?.includes('persons') ? form.mandateTypeGroup : ''}
               onChange={(e) => updateForm({ mandateTypeGroup: e.target.value })}
+              options={GROUP_OPTIONS}
             />
           </Col>
         </Row>
