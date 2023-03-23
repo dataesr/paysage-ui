@@ -341,7 +341,7 @@ export default function AdminUsersPage() {
   const groupOptions = [{ value: null, label: 'Sélectionner un groupe' }, ...groupes];
 
   const filteredUsers = query
-    ? data?.data?.filter((item) => normalize(`${item?.firstName} ${item?.lastName}`).includes(normalize(debouncedQuery)))
+    ? data?.data?.filter((item) => normalize(`${item?.firstName} ${item?.lastName} ${item.email} ${item.role}`).includes(normalize(debouncedQuery)))
     : data?.data;
 
   return (
