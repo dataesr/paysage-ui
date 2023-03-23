@@ -29,6 +29,12 @@ import PaysageBlame from '../../components/paysage-blame';
 import { normalize } from '../../utils/strings';
 import useDebounce from '../../hooks/useDebounce';
 
+const getSearchableUser = (user) => {
+  const { firstName, lastName, email, role, groups } = user;
+  const groupes = groups?.map((g) => `${g.name} ${g.acronym}`)?.filter((g) => g)?.join(' ');
+  return normalize([firstName, lastName, email, role, groupes].filter((elem) => elem).join(' '));
+};
+
 function User({
   handleSwitchDeleteUser,
   handleEditUser,
@@ -341,7 +347,7 @@ export default function AdminUsersPage() {
   const groupOptions = [{ value: null, label: 'Sélectionner un groupe' }, ...groupes];
 
   const filteredUsers = query
-    ? data?.data?.filter((item) => normalize(`${item?.firstName} ${item?.lastName} ${item.email} ${item.role}`).includes(normalize(debouncedQuery)))
+    ? data?.data?.filter((item) => getSearchableUser(item).includes(normalize(debouncedQuery)))
     : data?.data;
 
   return (
