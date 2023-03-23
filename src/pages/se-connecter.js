@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
-import {
-  Container, Row, Col, TextInput, Text, Link, Title, ButtonGroup, Stepper, Alert,
-} from '@dataesr/react-dsfr';
+import { Container, Row, Col, TextInput, Text, Link, Title, ButtonGroup, Alert } from '@dataesr/react-dsfr';
+
 import Button from '../components/button';
 import useAuth from '../hooks/useAuth';
 import { MAIL_REGEXP, PASSWORD_REGEXP, OTP_REGEXP } from '../utils/auth';
@@ -37,31 +36,20 @@ export default function SignIn() {
 
   return (
     <Container spacing="my-6w">
-      <Row justifyContent="center">
-        <Col n="xs-12 sm-10 md-8 lg-6">
-          <Title as="h1" look="h3">Se connecter à Paysage</Title>
-        </Col>
-      </Row>
       <Container fluid>
         <Row justifyContent="center">
           <Col n="xs-12 sm-10 md-8 lg-6">
-            <Container fluid className="fr-background-alt" spacing="px-4w px-md-12w py-4w">
-              <Row justifyContent="center">
-                <Col>
-                  <Stepper
-                    currentStep={step}
-                    steps={2}
-                    currentTitle={(step === 1) ? 'Identifiants de connexion' : 'Validation du code reçu par email'}
-                    nextStepTitle={(step === 1) ? 'Validation du code reçu par email' : ''}
-                  />
-                </Col>
-              </Row>
+            <Container fluid className="fr-background-alt" spacing="px-4w px-md-12w pb-4w pt-6w">
               { (step === 1) && (
                 <Row justifyContent="center">
+                  <Col n="12">
+                    <Title as="h1" look="h5">Se connecter à Paysage</Title>
+                  </Col>
                   <Col>
                     {(error) && <Alert description={error} type="error" />}
                     <form onSubmit={handleSignIn}>
                       <TextInput
+                        autoFocus
                         required
                         label="Adresse email"
                         value={email}
@@ -106,11 +94,26 @@ export default function SignIn() {
               )}
               { (step === 2) && (
                 <Row justifyContent="center">
+                  <Col n="12">
+                    <Title as="h1" look="h5">Validation de l'adresse email</Title>
+                  </Col>
+                  <Col n="12">
+                    <Text size="sm">
+                      <i>
+                        Un code vous a été envoyé par email à l'adresse
+                        {' '}
+                        {email}
+                        .
+                        Saisissez ce code afin de confirmer la validité de votre adresse email.
+                      </i>
+                    </Text>
+                  </Col>
                   <Col>
                     {(error) && <Alert description={error} type="error" />}
                     <form onSubmit={handleSignIn}>
                       <TextInput
                         required
+                        autoFocus
                         label="Saisissez le code à 6 chiffres reçu par email"
                         value={otp}
                         onChange={(e) => setOtp(e.target.value.trim())}
