@@ -16,6 +16,7 @@ import {
   Title,
   TagGroup,
   Tag,
+  TextInput,
 } from '@dataesr/react-dsfr';
 import { Link as RouterLink } from 'react-router-dom';
 import Avatar from '../../components/avatar';
@@ -24,7 +25,9 @@ import useToast from '../../hooks/useToast';
 import api from '../../utils/api';
 import Button from '../../components/button';
 
-import { toString } from '../../utils/dates';
+import PaysageBlame from '../../components/paysage-blame';
+import { normalize } from '../../utils/strings';
+import useDebounce from '../../hooks/useDebounce';
 
 function User({
   handleSwitchDeleteUser,
@@ -91,7 +94,7 @@ function User({
             Groupes :
           </Text>
           {(groups?.length === 0) && (
-            <Text>
+            <Text size="sm" as="span">
               <i>Aucun groupe n'a été défini pour cet utilisateur.</i>
             </Text>
           )}
@@ -99,20 +102,6 @@ function User({
             <TagGroup>
               {groups.map((group) => (<Tag key={group.id}>{group.acronym || group.name}</Tag>))}
             </TagGroup>
-          )}
-          <Text spacing="mt-2w mb-0" size="xs">
-            Créé le
-            {' '}
-            {toString(createdAt)}
-          </Text>
-          {updatedAt && (
-            <Text size="xs">
-              Modifié le
-              {' '}
-              {toString(updatedAt)}
-              {' par '}
-              {`${updatedBy.firstName} ${updatedBy.lastName}`}
-            </Text>
           )}
         </div>
         <div>
@@ -143,6 +132,7 @@ function User({
       <Modal isOpen={isEditModalOpen} size="lg" hide={() => setIsEditModalOpen(false)}>
         <ModalContent>
           <Container fluid>
+            <PaysageBlame createdAt={createdAt} updatedAt={updatedAt} updatedBy={updatedBy} />
             <Row>
               <Col n="12">
                 <Title as="h2" look="h6">{`Modifier le rôle de ${firstName} ${lastName}`}</Title>
@@ -301,6 +291,8 @@ export default function AdminUsersPage() {
   const { toast } = useToast();
   const { data, isLoading, error, reload } = useFetch('/admin/users?sort=-createdAt&limit=500');
   const { data: groups } = useFetch('/groups?limit=500');
+  const [query, setQuery] = useState('');
+  const debouncedQuery = useDebounce(query, 500);
 
   const toastError = () => toast({
     toastType: 'error',
@@ -348,6 +340,10 @@ export default function AdminUsersPage() {
   const groupes = groups?.data?.map((group) => ({ value: group.id, label: group.acronym || group.name })) || [];
   const groupOptions = [{ value: null, label: 'Sélectionner un groupe' }, ...groupes];
 
+  const filteredUsers = query
+    ? data?.data?.filter((item) => normalize(`${item?.firstName} ${item?.lastName}`).includes(normalize(debouncedQuery)))
+    : data?.data;
+
   return (
     <Container>
       <Row>
@@ -357,16 +353,21 @@ export default function AdminUsersPage() {
           <BreadcrumbItem>Utilisateurs</BreadcrumbItem>
         </Breadcrumb>
       </Row>
-      <Row spacing="mb-3w">
-        <Row alignItems="top">
-          <Title className="fr-pr-1v" as="h2" look="h3">Utilisateurs</Title>
-          {(data?.totalCount) && <Badge type="info" text={data?.totalCount} />}
-        </Row>
+      <Row spacing="mb-3w" alignItems="top">
+        <Col n="12 md-8">
+          <Title className="fr-pr-1v" as="h2" look="h3">
+            Utilisateurs
+            {(data?.totalCount) && <Badge className="fr-ml-1w" type="info" text={data?.totalCount} />}
+          </Title>
+        </Col>
+        <Col n="12 md-4">
+          <TextInput placeholder="Filtrer les utilisateurs" className="fr-ml-auto" value={query} onChange={(e) => setQuery(e.target.value)} size="sm" />
+        </Col>
       </Row>
       <Row>
         {(error) && <div>Erreur</div>}
         {(isLoading) && <div>Chargement</div>}
-        {(data) && data.data?.map((item) => (
+        {(filteredUsers?.length > 0) && filteredUsers.map((item) => (
           <User
             key={item.id}
             handleEditUser={handleEditUser}
