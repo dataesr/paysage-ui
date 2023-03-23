@@ -32,6 +32,7 @@ function User({
   handleActivateUser,
   handleAddToGroup,
   handleDeleteFromGroup,
+  handleAskForValidation,
   groupOptions,
   id,
   email,
@@ -44,6 +45,7 @@ function User({
   position,
   groups,
   isDeleted,
+  isOtpRequired,
   createdAt,
   updatedAt,
   updatedBy,
@@ -67,9 +69,11 @@ function User({
         <div className="flex--grow fr-pl-2w">
           <Text as="span" spacing="my-1v" bold size="lg">
             {`${firstName} ${lastName} `}
-            {isDeleted && <Badge className="fr-mx-1w" isSmall type="error" text="Supprimé" />}
-            {(!confirmed) && <Badge isSmall type="success" text="Nouveau" />}
-            {(confirmed && !isDeleted) && <Badge className="fr-mx-1w" isSmall type="info" text={role} />}
+            {isDeleted && <Badge className="fr-mx-1v" hasIcon isSmall type="error" text="Supprimé" />}
+            {(!confirmed && !isDeleted) && <Badge className="fr-mx-1v" hasIcon isSmall type="success" text="Nouveau" />}
+            {(confirmed && !isDeleted) && <Badge className="fr-mx-1v" hasIcon isSmall type="info" text={role} />}
+            {(confirmed && !isDeleted && !isOtpRequired) && <Badge className="fr-mx-1v" hasIcon isSmall type="success" text="email confirmé" />}
+            {(confirmed && !isDeleted && isOtpRequired) && <Badge className="fr-mx-1v" hasIcon isSmall type="warning" text="email non confirmé" />}
           </Text>
           <Text spacing="m-0" size="sm">
             <Icon size="1x" name="ri-mail-fill" />
@@ -86,6 +90,11 @@ function User({
           <Text spacing="mt-2w mb-0" bold>
             Groupes :
           </Text>
+          {(groups?.length === 0) && (
+            <Text>
+              <i>Aucun groupe n'a été défini pour cet utilisateur.</i>
+            </Text>
+          )}
           {(groups?.length > 0) && (
             <TagGroup>
               {groups.map((group) => (<Tag key={group.id}>{group.acronym || group.name}</Tag>))}
@@ -208,6 +217,22 @@ function User({
                 </ButtonGroup>
               </Col>
             </Row>
+            {!isOtpRequired && (
+              <>
+                <hr />
+                <Title as="h2" look="h6">Demander une nouvelle validation de l'email</Title>
+                <Text>Un nouveau code de confirmation sera demandé pour que l'utilisateur puisse continuer a utiliser l'application.</Text>
+                <ButtonGroup isInlineFrom="md">
+                  <Button
+                    secondary
+                    icon="ri-delete-bin-2-line"
+                    onClick={() => handleAskForValidation(id)}
+                  >
+                    Demander une validation
+                  </Button>
+                </ButtonGroup>
+              </>
+            )}
             <hr />
             <Title as="h2" look="h6">{`Désactiver le compte de ${firstName} ${lastName}`}</Title>
             <Text>En désactivant un utilisateur, il sera marqué comme supprimé et ne pourra plus se connecter à Paysage.</Text>
@@ -248,6 +273,7 @@ User.propTypes = {
   handleDeleteFromGroup: PropTypes.func.isRequired,
   handleActivateUser: PropTypes.func.isRequired,
   handleSwitchDeleteUser: PropTypes.func.isRequired,
+  handleAskForValidation: PropTypes.func.isRequired,
   groupOptions: PropTypes.array,
   id: PropTypes.string.isRequired,
   email: PropTypes.string.isRequired,
@@ -259,6 +285,7 @@ User.propTypes = {
   service: PropTypes.string,
   position: PropTypes.string,
   isDeleted: PropTypes.bool.isRequired,
+  isOtpRequired: PropTypes.bool.isRequired,
   groups: PropTypes.array,
   createdAt: PropTypes.string.isRequired,
   updatedAt: PropTypes.string.isRequired,
@@ -293,6 +320,13 @@ export default function AdminUsersPage() {
     const response = await api.patch(`/admin/users/${userId}`, { isDeleted }).catch(() => { toastError(); });
     if (!response.ok) return toastError();
     toast({ toastType: 'success', title: 'Utilisateur désactivé avec succès' });
+    return reload();
+  };
+
+  const handleAskForValidation = async (userId) => {
+    const response = await api.patch(`/admin/users/${userId}`, { isOtpRequired: true }).catch(() => { toastError(); });
+    if (!response.ok) return toastError();
+    toast({ toastType: 'success', title: "L'utilisateur devra valider son email lors de sa prochaine connexion" });
     return reload();
   };
 
@@ -338,6 +372,7 @@ export default function AdminUsersPage() {
             handleEditUser={handleEditUser}
             handleActivateUser={handleActivateUser}
             handleSwitchDeleteUser={handleSwitchDeleteUser}
+            handleAskForValidation={handleAskForValidation}
             handleAddToGroup={handleAddToGroup}
             handleDeleteFromGroup={handleDeleteFromGroup}
             groupOptions={groupOptions}
