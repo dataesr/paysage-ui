@@ -16,6 +16,7 @@ import {
   Title,
   TagGroup,
   Tag,
+  TextInput,
 } from '@dataesr/react-dsfr';
 import { Link as RouterLink } from 'react-router-dom';
 import Avatar from '../../components/avatar';
@@ -24,7 +25,15 @@ import useToast from '../../hooks/useToast';
 import api from '../../utils/api';
 import Button from '../../components/button';
 
-import { toString } from '../../utils/dates';
+import PaysageBlame from '../../components/paysage-blame';
+import { normalize } from '../../utils/strings';
+import useDebounce from '../../hooks/useDebounce';
+
+const getSearchableUser = (user) => {
+  const { firstName, lastName, email, role, groups } = user;
+  const groupes = groups?.map((g) => `${g.name} ${g.acronym}`)?.filter((g) => g)?.join(' ');
+  return normalize([firstName, lastName, email, role, groupes].filter((elem) => elem).join(' '));
+};
 
 function User({
   handleSwitchDeleteUser,
@@ -32,6 +41,7 @@ function User({
   handleActivateUser,
   handleAddToGroup,
   handleDeleteFromGroup,
+  handleAskForValidation,
   groupOptions,
   id,
   email,
@@ -44,6 +54,7 @@ function User({
   position,
   groups,
   isDeleted,
+  isOtpRequired,
   createdAt,
   updatedAt,
   updatedBy,
@@ -67,9 +78,11 @@ function User({
         <div className="flex--grow fr-pl-2w">
           <Text as="span" spacing="my-1v" bold size="lg">
             {`${firstName} ${lastName} `}
-            {isDeleted && <Badge className="fr-mx-1w" isSmall type="error" text="Supprimé" />}
-            {(!confirmed) && <Badge isSmall type="success" text="Nouveau" />}
-            {(confirmed && !isDeleted) && <Badge className="fr-mx-1w" isSmall type="info" text={role} />}
+            {isDeleted && <Badge className="fr-mx-1v" hasIcon isSmall type="error" text="Supprimé" />}
+            {(!confirmed && !isDeleted) && <Badge className="fr-mx-1v" hasIcon isSmall type="success" text="Nouveau" />}
+            {(confirmed && !isDeleted) && <Badge className="fr-mx-1v" hasIcon isSmall type="info" text={role} />}
+            {(confirmed && !isDeleted && !isOtpRequired) && <Badge className="fr-mx-1v" hasIcon isSmall type="success" text="email confirmé" />}
+            {(confirmed && !isDeleted && isOtpRequired) && <Badge className="fr-mx-1v" hasIcon isSmall type="warning" text="email non confirmé" />}
           </Text>
           <Text spacing="m-0" size="sm">
             <Icon size="1x" name="ri-mail-fill" />
@@ -86,24 +99,15 @@ function User({
           <Text spacing="mt-2w mb-0" bold>
             Groupes :
           </Text>
+          {(groups?.length === 0) && (
+            <Text size="sm" as="span">
+              <i>Aucun groupe n'a été défini pour cet utilisateur.</i>
+            </Text>
+          )}
           {(groups?.length > 0) && (
             <TagGroup>
               {groups.map((group) => (<Tag key={group.id}>{group.acronym || group.name}</Tag>))}
             </TagGroup>
-          )}
-          <Text spacing="mt-2w mb-0" size="xs">
-            Créé le
-            {' '}
-            {toString(createdAt)}
-          </Text>
-          {updatedAt && (
-            <Text size="xs">
-              Modifié le
-              {' '}
-              {toString(updatedAt)}
-              {' par '}
-              {`${updatedBy.firstName} ${updatedBy.lastName}`}
-            </Text>
           )}
         </div>
         <div>
@@ -134,6 +138,7 @@ function User({
       <Modal isOpen={isEditModalOpen} size="lg" hide={() => setIsEditModalOpen(false)}>
         <ModalContent>
           <Container fluid>
+            <PaysageBlame createdAt={createdAt} updatedAt={updatedAt} updatedBy={updatedBy} />
             <Row>
               <Col n="12">
                 <Title as="h2" look="h6">{`Modifier le rôle de ${firstName} ${lastName}`}</Title>
@@ -208,6 +213,22 @@ function User({
                 </ButtonGroup>
               </Col>
             </Row>
+            {!isOtpRequired && (
+              <>
+                <hr />
+                <Title as="h2" look="h6">Demander une nouvelle validation de l'email</Title>
+                <Text>Un nouveau code de confirmation sera demandé pour que l'utilisateur puisse continuer a utiliser l'application.</Text>
+                <ButtonGroup isInlineFrom="md">
+                  <Button
+                    secondary
+                    icon="ri-delete-bin-2-line"
+                    onClick={() => handleAskForValidation(id)}
+                  >
+                    Demander une validation
+                  </Button>
+                </ButtonGroup>
+              </>
+            )}
             <hr />
             <Title as="h2" look="h6">{`Désactiver le compte de ${firstName} ${lastName}`}</Title>
             <Text>En désactivant un utilisateur, il sera marqué comme supprimé et ne pourra plus se connecter à Paysage.</Text>
@@ -248,6 +269,7 @@ User.propTypes = {
   handleDeleteFromGroup: PropTypes.func.isRequired,
   handleActivateUser: PropTypes.func.isRequired,
   handleSwitchDeleteUser: PropTypes.func.isRequired,
+  handleAskForValidation: PropTypes.func.isRequired,
   groupOptions: PropTypes.array,
   id: PropTypes.string.isRequired,
   email: PropTypes.string.isRequired,
@@ -259,6 +281,7 @@ User.propTypes = {
   service: PropTypes.string,
   position: PropTypes.string,
   isDeleted: PropTypes.bool.isRequired,
+  isOtpRequired: PropTypes.bool.isRequired,
   groups: PropTypes.array,
   createdAt: PropTypes.string.isRequired,
   updatedAt: PropTypes.string.isRequired,
@@ -274,6 +297,8 @@ export default function AdminUsersPage() {
   const { toast } = useToast();
   const { data, isLoading, error, reload } = useFetch('/admin/users?sort=-createdAt&limit=500');
   const { data: groups } = useFetch('/groups?limit=500');
+  const [query, setQuery] = useState('');
+  const debouncedQuery = useDebounce(query, 500);
 
   const toastError = () => toast({
     toastType: 'error',
@@ -296,6 +321,13 @@ export default function AdminUsersPage() {
     return reload();
   };
 
+  const handleAskForValidation = async (userId) => {
+    const response = await api.patch(`/admin/users/${userId}`, { isOtpRequired: true }).catch(() => { toastError(); });
+    if (!response.ok) return toastError();
+    toast({ toastType: 'success', title: "L'utilisateur devra valider son email lors de sa prochaine connexion" });
+    return reload();
+  };
+
   const handleActivateUser = async (userId) => {
     const response = await api.put(`/admin/users/${userId}/confirm`).catch(() => { toastError(); });
     if (!response.ok) return toastError();
@@ -314,6 +346,10 @@ export default function AdminUsersPage() {
   const groupes = groups?.data?.map((group) => ({ value: group.id, label: group.acronym || group.name })) || [];
   const groupOptions = [{ value: null, label: 'Sélectionner un groupe' }, ...groupes];
 
+  const filteredUsers = query
+    ? data?.data?.filter((item) => getSearchableUser(item).includes(normalize(debouncedQuery)))
+    : data?.data;
+
   return (
     <Container>
       <Row>
@@ -323,21 +359,27 @@ export default function AdminUsersPage() {
           <BreadcrumbItem>Utilisateurs</BreadcrumbItem>
         </Breadcrumb>
       </Row>
-      <Row spacing="mb-3w">
-        <Row alignItems="top">
-          <Title className="fr-pr-1v" as="h2" look="h3">Utilisateurs</Title>
-          {(data?.totalCount) && <Badge type="info" text={data?.totalCount} />}
-        </Row>
+      <Row spacing="mb-3w" alignItems="top">
+        <Col n="12 md-8">
+          <Title className="fr-pr-1v" as="h2" look="h3">
+            Utilisateurs
+            {(data?.totalCount) && <Badge className="fr-ml-1w" type="info" text={data?.totalCount} />}
+          </Title>
+        </Col>
+        <Col n="12 md-4">
+          <TextInput placeholder="Filtrer les utilisateurs" className="fr-ml-auto" value={query} onChange={(e) => setQuery(e.target.value)} size="sm" />
+        </Col>
       </Row>
       <Row>
         {(error) && <div>Erreur</div>}
         {(isLoading) && <div>Chargement</div>}
-        {(data) && data.data?.map((item) => (
+        {(filteredUsers?.length > 0) && filteredUsers.map((item) => (
           <User
             key={item.id}
             handleEditUser={handleEditUser}
             handleActivateUser={handleActivateUser}
             handleSwitchDeleteUser={handleSwitchDeleteUser}
+            handleAskForValidation={handleAskForValidation}
             handleAddToGroup={handleAddToGroup}
             handleDeleteFromGroup={handleDeleteFromGroup}
             groupOptions={groupOptions}

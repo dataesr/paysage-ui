@@ -1,7 +1,4 @@
 import {
-  Accordion,
-  AccordionItem,
-  Alert,
   Button,
   Col,
   Container,
@@ -12,20 +9,16 @@ import {
 } from '@dataesr/react-dsfr';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
+import { Spinner } from '../components/spinner';
 
 import { capitalize } from '../utils/strings';
-import { Spinner } from '../components/spinner';
 import api from '../utils/api';
-import FormFooter from '../components/forms/form-footer';
 import useForm from '../hooks/useForm';
-import {
-  cleanStructureData,
-  cleanSocialMediasData,
-  cleanStructureNameData,
-  cleanIdentifiersData,
-  cleanWeblinks,
-  cleanStructureLocalisation,
-} from '../components/import/utils';
+import WarningsDisplay from '../components/import/display-warnings';
+import ErrorsDisplay from '../components/import/display-errors';
+import FeedbackDisplay from '../components/import/display-feedback';
+import ReadyToImport from '../components/import/display-ready-to-import';
+import checkName from '../components/import/validate-structure-imput';
 
 const LINE_SEPARATOR = '\n';
 const TSV_SEPARATOR = '\t';
@@ -56,7 +49,6 @@ export default function ImportPage({ data }) {
   const [responsesErrors, setResponsesErrors] = useState([]);
 
   const [isLoading, setIsLoading] = useState(false);
-  const [responses, setResponses] = useState([]);
   const { form, updateForm } = useForm(data);
 
   const checkUploadOnClick = async () => {
@@ -93,10 +85,7 @@ export default function ImportPage({ data }) {
             statusMapping[
               objectItem['Statut [O = Ouvert, F = Fermé, P = Potentiel]']
             ],
-          categories:
-            objectItem[
-              'Code de la/des catégories {rechercher le code, séparation ;}'
-            ]?.split(';'),
+          categories: objectItem['Code de la/des catégories {rechercher le code, séparation ;}']?.split(';').filter((category) => category !== ''),
           legalCategory:
             objectItem['Code du statut juridique {rechercher le code}'],
           cityId: objectItem['Code commune {rechercher le code}'],
@@ -149,57 +138,12 @@ export default function ImportPage({ data }) {
         return structure;
       });
 
-    const checkName = async (name, siret, index) => {
-      if (!name || name === undefined) {
-        return {
-          id: null,
-          index,
-          name,
-          newWarnings: [{ message: "Le nom n'est pas renseigné" }],
-        };
-      }
-      const potentialDuplicates = await api.get(
-        `/autocomplete?types=structures&query=${name}`,
-      );
-      const duplicatedStructureId = potentialDuplicates.data.data.find(
-        (el) => el.name === name,
-      )?.id;
-      const potentialDuplicatedSiret = await api.get(
-        `/autocomplete?types=structures&query=${siret}`,
-      );
-      const duplicatedSiret = potentialDuplicatedSiret.data.data.find(
-        (el) => el.identifiers,
-      );
-
-      const newWarnings = [];
-
-      const findMultipleImport = structuresJson.filter((el) => el.usualName === name).length > 1;
-
-      if (duplicatedSiret) {
-        newWarnings.push({ message: `Le siret ${siret} existe déjà` });
-      }
-
-      if (duplicatedStructureId) {
-        newWarnings.push({ message: `${name} est probablement un doublon` });
-      }
-      if (findMultipleImport) {
-        newWarnings.push({ message: `${name} est présent plusieurs fois dans le tableau d'import` });
-      }
-
-      return {
-        id: duplicatedStructureId,
-        index,
-        name,
-        newWarnings,
-        siret: duplicatedSiret,
-      };
-    };
-    const namePromises = structuresJson.map((element, index) => checkName(element.usualName, element.siret, index));
+    const namePromises = structuresJson.map((element, index) => checkName(element.usualName, element.siret, index, structuresJson));
     const results = await Promise.all(namePromises);
     const allResults = structuresJson.map((structure, index) => {
       const result = results.find((r) => r.index === index);
       return {
-        ...structure,
+        structure,
         duplicatedStructureId: result?.id,
         index,
         newWarnings: result?.newWarnings,
@@ -209,74 +153,13 @@ export default function ImportPage({ data }) {
     setReadyToImport(allResults.filter((el) => el?.newWarnings?.length === 0));
     setIsLoading(false);
   };
-
-  const saveStructure = async (structure) => {
+  const saveStructure = async (structure, index) => {
     try {
-      const saveResponse = await api.post(
-        '/structures',
-        cleanStructureData(structure),
-      );
-      const responseWithIndex = { ...saveResponse, index: structure.index };
+      const saveResponse = await api.post('/structures', structure);
+      const responseWithIndex = { ...saveResponse, index };
+
       const newStructureId = saveResponse.data.id;
       const promises = [];
-
-      const structureSocialMedia = cleanSocialMediasData(structure);
-      const promisesSocialMedias = Object.keys(structureSocialMedia).map(
-        (key) => api.post(`/structures/${newStructureId}/social-medias`, {
-          type: key,
-          account: structureSocialMedia[key],
-        }),
-      );
-      if (promisesSocialMedias.length > 0) {
-        // eslint-disable-next-line
-        const socialMediasResponses = await Promise.all(promisesSocialMedias);
-        // Je dois probablement utiliser cette variable plus tard ?
-      }
-
-      const structureWeblinks = cleanWeblinks(structure);
-      const promisesWeblinks = Object.keys(structureWeblinks).map((key) => {
-        const weblink = structureWeblinks[key];
-        return api.post(`/structures/${newStructureId}/weblinks`, weblink);
-      });
-      if (promisesWeblinks.length) {
-        // eslint-disable-next-line
-        const weblinksResponses = await Promise.all(promisesWeblinks);
-        // Je dois probablement utiliser cette variable plus tard ?
-      }
-
-      const { usualName, ...otherProperties } = cleanStructureNameData(structure);
-      const newStructureName = { ...otherProperties };
-      // eslint-disable-next-line
-      const nameResponse = await api.post(`/structures/${newStructureId}/names`, {
-        ...newStructureName,
-        usualName,
-      });
-      // Je dois probablement utiliser cette variable plus tard
-
-      const structureIdentifiers = cleanIdentifiersData(structure);
-      const promisesStructureIdentifiers = Object.keys(
-        structureIdentifiers,
-      ).map((key) => {
-        const value = structureIdentifiers[key];
-        return api.post(`/structures/${newStructureId}/identifiers`, {
-          type: key,
-          value,
-        });
-      });
-      if (promisesStructureIdentifiers.length > 0) {
-        // eslint-disable-next-line
-        const identifiersResponses = await Promise.all(promisesStructureIdentifiers);
-        // Je dois probablement utiliser cette variable plus tard ?
-      }
-
-      const { country, ...otherLocProperties } = cleanStructureLocalisation(structure);
-      const newStructureLocalisation = { ...otherLocProperties };
-      // eslint-disable-next-line
-      const structureLocalisationResponse = await api.post(`/structures/${newStructureId}/localisations`, {
-        ...newStructureLocalisation,
-        country,
-      });
-      // Je dois probablement utiliser cette variable plus tard
 
       if (structure.parent && newStructureId) {
         const parentPromise = api.post('/relations', {
@@ -286,7 +169,6 @@ export default function ImportPage({ data }) {
         });
         promises.push(parentPromise);
       }
-
       if (
         structure.categories
         && structure.categories.length > 0
@@ -294,7 +176,7 @@ export default function ImportPage({ data }) {
       ) {
         const categoryPromises = [];
         structure.categories.forEach((categoryId) => {
-          if (categoryId !== '') {
+          if (categoryId && categoryId.trim() !== '') {
             categoryPromises.push(
               api.post('/relations', {
                 resourceId: newStructureId,
@@ -306,9 +188,9 @@ export default function ImportPage({ data }) {
         });
         promises.push(...categoryPromises);
       }
+
       if (structure.legalCategory && newStructureId) {
         const legalCategoryPromises = [];
-
         if (typeof structure.legalCategory === 'string' && structure.legalCategory !== '') {
           legalCategoryPromises.push(
             api.post('/relations', {
@@ -334,8 +216,8 @@ export default function ImportPage({ data }) {
         status: error?.message,
         statusText: `${error?.error} : ${JSON.stringify(error?.details?.[0])}`,
         data: {},
-        index: structure?.index,
-        usualName: structure.usualName,
+        index,
+        usualName: structure?.usualName,
       };
       setResponsesErrors((responseFromApi) => [
         ...responseFromApi,
@@ -344,9 +226,17 @@ export default function ImportPage({ data }) {
       return error;
     }
   };
+
+  const handleForceImport = async (structure, index) => {
+    setIsLoading(true);
+    await saveStructure(structure, index);
+    setWarnings(warnings.filter((warning, i) => i !== index));
+    setIsLoading(false);
+  };
+
   const handleUploadClick = async () => {
     setIsLoading(true);
-    const responsesPromises = readyToImport.map((structure) => saveStructure(structure));
+    const responsesPromises = readyToImport.map(({ structure, index }) => saveStructure(structure, index));
     const newResponses = await Promise.all(responsesPromises);
     const allResponses = [
       ...feedBack,
@@ -354,13 +244,6 @@ export default function ImportPage({ data }) {
     ];
     setFeedBack(allResponses);
     updateForm({ data: '' });
-    setResponses((oldResponses) => [
-      ...oldResponses,
-      ...newResponses,
-      ...readyToImport,
-      ...allResponses,
-      ...responsesErrors,
-    ]);
     setReadyToImport([]);
     setIsLoading(false);
   };
@@ -372,7 +255,6 @@ export default function ImportPage({ data }) {
   const handleResetClick = () => {
     setFeedBack([]);
     setResponsesErrors([]);
-    setResponses([]);
     setReadyToImport([]);
     setWarnings([]);
     updateForm({ data: '' });
@@ -433,352 +315,25 @@ export default function ImportPage({ data }) {
           </form>
         </Col>
       </Row>
-      {warnings?.length > 0 && (
-        <Row gutters>
-          <Col n="12">
-            <Col n="12">
-              <Alert
-                description={
-                  warnings.length > 1
-                    ? `Il y a ${warnings?.length} warnings`
-                    : 'Il y a un warning'
-                }
-                title="Warning"
-                type="warning"
-              />
-            </Col>
-            <Accordion>
-              <AccordionItem
-                title={
-                  warnings.length === 1
-                    ? 'Voir le warning'
-                    : `Voir les ${warnings.length} warnings`
-                }
-              >
-                <Col n="12">
-                  <Row gutters key="headers">
-                    <Col n="1">Ligne</Col>
-                    <Col n="3">Nom de la structure</Col>
-                    <Col n="6">Warnings</Col>
-                  </Row>
-                  {warnings?.map(
-                    (response, index) => response?.newWarnings?.length > 0 && (
-                      <Row gutters key={index}>
-                        <Col n="1">{response.index + 2}</Col>
-                        <Col n="3">
-                          <span>{response?.usualName}</span>
-                          {response?.duplicatedStructureId && (
-                            <Col>
-                              <Link
-                                target="_blank"
-                                href={`/structures/${response?.duplicatedStructureId}`}
-                              >
-                                Vérifiez
-                              </Link>
-                            </Col>
-                          )}
-                        </Col>
-                        <Col n="6">
-                          <span>
-                            {response?.newWarnings?.map((warning, i) => {
-                              const isLast = i === response.newWarnings.length - 1;
-                              const hasMultipleWarnings = response.newWarnings.length > 1;
-                              const separator = !isLast && (hasMultipleWarnings ? ', ' : ' ');
-                              const conjunction = i === response.newWarnings.length - 2
-                                  && hasMultipleWarnings
-                                ? ' et '
-                                : '';
-                              return (
-                                <>
-                                  {warning?.message}
-                                  {separator}
-                                  {conjunction}
-                                </>
-                              );
-                            })}
-                          </span>
-                        </Col>
-                        <Col>
-                          <Button
-                            colors={['#f55', '#fff']}
-                            onClick={async () => {
-                              try {
-                                setIsLoading({ ...isLoading, [index]: true });
-                                const saveResponse = await saveStructure(response);
-                                warnings.splice(index, 1);
-                                setResponses([...responses, saveResponse]);
-                              } catch (error) {
-                                // console.error(error);
-                              } finally {
-                                setIsLoading({ ...isLoading, [index]: false });
-                              }
-                            }}
-                            size="sm"
-                          >
-                            Forcer l'ajout de cet élément
-                            {isLoading[index] && (
-                              <Row className="fr-my-2w flex--space-around">
-                                <Spinner />
-                              </Row>
-                            )}
-                          </Button>
-                        </Col>
-                      </Row>
-                    ),
-                  )}
-                </Col>
-              </AccordionItem>
-            </Accordion>
-          </Col>
+      {isLoading && (
+        <Row className="fr-my-2w flex--space-around">
+          <Spinner />
         </Row>
+      ) }
+
+      {(!!warnings.length
+      && <WarningsDisplay warnings={warnings} handleForceImport={handleForceImport} isLoading={isLoading} />
       )}
-      {readyToImport?.length > 0 && (
-        <Row gutters>
-          <Col n="12">
-            <Col n="12">
-              <Alert
-                description={
-                  readyToImport.length > 1
-                    ? `Il y a ${readyToImport?.length} structures qui sont prêtes à être ajoutées`
-                    : 'Il y a une structure qui est prête à être ajoutée'
-                }
-                title="Validation"
-                type="info"
-              />
-            </Col>
-            <Accordion>
-              <AccordionItem
-                title={
-                  readyToImport.length === 1
-                    ? "Voir et valider l'import de cette structure"
-                    : `Voir et valider l'import des ${readyToImport.length} prêtes à être importées`
-                }
-              >
-                <Col n="12">
-                  <Row gutters key="headers">
-                    <Col n="1">Ligne</Col>
-                    <Col n="2">Nom de la structure</Col>
-                    <Col n="1">Statut</Col>
-                    <Col n="2">Siret</Col>
-                    <Col n="2">Twitter</Col>
-                    <Col n="1">Parent</Col>
-                    <Col n="1">Catégorie</Col>
-                  </Row>
-                  {readyToImport
-                    ?.sort((a, b) => a.index - b.index)
-                    .map((response, index) => (
-                      <Row gutters key={index}>
-                        <Col n="1">{response.index + 2}</Col>
-                        <Col n="2">{response?.usualName}</Col>
-                        <Col n="1">{response?.structureStatus}</Col>
-                        {response?.siret ? (
-                          <Col n="2">{response?.siret}</Col>
-                        ) : (
-                          <Col n="2"> </Col>
-                        )}
-                        {response?.twitter ? (
-                          <Col n="2">
-                            {response?.twitter.replace('https://', '')}
-                          </Col>
-                        ) : (
-                          <Col n="2"> </Col>
-                        )}
-                        {response?.parent ? (
-                          <Col n="1">
-                            <Link
-                              target="_blank"
-                              href={`/structures/${response?.parent}`}
-                            >
-                              {response?.parent}
-                            </Link>
-                          </Col>
-                        ) : (
-                          <Col n="1"> </Col>
-                        )}
-                        {response?.categories[0] ? (
-                          <Col n="1">
-                            <Link
-                              target="_blank"
-                              href={`/categories/${response?.categories[0]}`}
-                            >
-                              {response?.categories[0]}
-                            </Link>
-                          </Col>
-                        ) : (
-                          <Col n="1"> </Col>
-                        )}
-                      </Row>
-                    ))}
-                  <FormFooter
-                    buttonLabel={
-                      readyToImport.length === 1
-                        ? 'Importer cette structure'
-                        : `Importer ces ${readyToImport.length} structures`
-                    }
-                    onSaveHandler={handleUploadClick}
-                  >
-                    {isLoading ? ( // afficher le loader si l'état local est true
-                      <Row className="fr-my-2w flex--space-around">
-                        <Spinner />
-                      </Row>
-                    ) : null}
-                  </FormFooter>
-                </Col>
-              </AccordionItem>
-            </Accordion>
-          </Col>
-        </Row>
+      {readyToImport?.length > 0
+      && (
+        <ReadyToImport readyToImport={readyToImport} handleUploadClick={handleUploadClick} />
       )}
-      {!!feedBack.length && (
-        <Row gutters>
-          <Col n="12">
-            <Col n="12">
-              <Alert
-                description={
-                  feedBack?.length > 1
-                    ? `Il y a ${feedBack?.length} structures qui ont été importées`
-                    : 'Il y a une structure qui a été importée'
-                }
-                title="Feedback"
-                type="success"
-              />
-            </Col>
-            <Accordion>
-              <AccordionItem title="Voir les structures qui ont été importées">
-                <Row gutters>
-                  <Col n="1">Ligne</Col>
-                  <Col n="2">Acronyme - Nom</Col>
-                  <Col n="2">Id Paysage</Col>
-                  <Col n="1">Parent</Col>
-                  <Col n="3">Catégorie</Col>
-                  <Col n="3">Catégorie J</Col>
-                </Row>
-                {feedBack
-                  .sort((a, b) => a.index - b.index)
-                  .map((response, index) => (
-                    <Row gutters key={index}>
-                      <Col n="1">{response.index + 2}</Col>
-                      <Col n="2">
-                        <span>
-                          {response?.data?.acronymFr}
-                          {response?.data?.acronymFr && ' - '}
-                          {response?.data?.shortName}
-                          {response?.data?.shortName && ' - '}
-                          {response?.data?.currentName?.usualName}
-                        </span>
-                      </Col>
-                      <Col n="2">
-                        <Link
-                          target="_blank"
-                          href={`/structures/${response?.data?.id}`}
-                        >
-                          {response?.data?.id}
-                        </Link>
-                      </Col>
-                      {response['structure-interne'] ? (
-                        <Col n="1">
-                          <Link
-                            target="_blank"
-                            href={`/structures/${response['structure-interne']?.resourceId}`}
-                          >
-                            {response['structure-interne']?.resourceId}
-                          </Link>
-                        </Col>
-                      ) : (
-                        <Col n="1"> </Col>
-                      )}
-                      {response['structure-categorie'] ? (
-                        <Col n="3">
-                          <Link
-                            target="_blank"
-                            href={`/categories/${response['structure-categorie']?.relatedObject?.id}`}
-                          >
-                            {
-                              response['structure-categorie']?.relatedObject
-                                ?.usualNameFr
-                            }
-                            (
-                            {response['structure-categorie']?.relatedObject?.id}
-                            )
-                          </Link>
-                        </Col>
-                      ) : (
-                        <Col n="3"> </Col>
-                      )}
-                      {response['structure-categorie-juridique'] ? (
-                        <Col n="3">
-                          <Link
-                            target="_blank"
-                            href={`/legal-categories/${response['structure-categorie-juridique']?.relatedObject?.id}`}
-                          >
-                            {
-                              response['structure-categorie-juridique']?.relatedObject
-                                ?.longNameFr
-                            }
-                          </Link>
-                        </Col>
-                      ) : (
-                        <Col n="3"> </Col>
-                      )}
-                    </Row>
-                  ))}
-              </AccordionItem>
-            </Accordion>
-          </Col>
-        </Row>
+      {!!feedBack.length
+      && (
+        <FeedbackDisplay feedBack={feedBack} />
       )}
-      {!!responsesErrors.length && (
-        <Row gutters>
-          <Col n="12">
-            <Col n="12">
-              <Alert
-                description={
-                  responsesErrors?.length > 1
-                    ? `Il y a ${responsesErrors?.length} imports qui ont été échoués`
-                    : 'Il y a un import qui a échoué'
-                }
-                title="Erreur(s)"
-                type="error"
-              />
-            </Col>
-            <Accordion>
-              <AccordionItem
-                title={
-                  responsesErrors.length === 1
-                    ? "Voir l'import qui a echoué"
-                    : `Voir les ${responsesErrors.length} qui ont échoués`
-                }
-              >
-                <Row gutters>
-                  <Col n="1">Ligne</Col>
-                  <Col n="3">Acronyme - Nom</Col>
-                  <Col n="5">Message</Col>
-                  <Col n="3">Statut</Col>
-                </Row>
-                {responsesErrors.sort((a, b) => a.index - b.index)
-                  .map((response, index) => (
-                    <Row gutters key={index}>
-                      <Col n="1">{response.index + 2}</Col>
-                      <Col n="3">{response?.usualName}</Col>
-                      <Col n="5">
-                        {response?.statusText?.includes('usualName')
-                          ? "La structure que vous souhaitez ajouter n'a pas de nom"
-                          : null}
-                        {response?.statusText?.includes('should match pattern')
-                          ? "Un des champs renseignés n'est pas valide, vérifiez vos informations"
-                          : null}
-                        {response?.statusText?.includes('does not exist')
-                          ? "L'objet à lier n'existe pas"
-                          : null}
-                      </Col>
-                      <Col n="3">{response.status}</Col>
-                    </Row>
-                  ))}
-              </AccordionItem>
-            </Accordion>
-          </Col>
-        </Row>
-      )}
+      <ErrorsDisplay responsesErrors={responsesErrors} />
+
       <Row gutters>
         {!!feedBack.length > 0 || !!warnings.length > 0 || !!readyToImport.length > 0 || !!responsesErrors.length > 0 ? (
           <Col>

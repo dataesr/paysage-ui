@@ -56,16 +56,6 @@ export function AuthContextProvider({ children }) {
     return () => clearInterval(refresher);
   }, [fetchViewer]);
 
-  const requestSignInEmail = useCallback(async ({ email, password }) => {
-    const url = `${process.env.REACT_APP_API_URL}/signin`;
-    const body = JSON.stringify({ email, password });
-    const headers = { 'X-Paysage-OTP-Method': 'email', 'Content-Type': 'application/json' };
-    return fetch(url, { method: 'POST', body, headers })
-      .then((response) => response.json())
-      .then((data) => data)
-      .catch(() => ({ error: unexpectedError }));
-  }, []);
-
   const requestPasswordChangeEmail = useCallback(async ({ email }) => {
     const url = `${process.env.REACT_APP_API_URL}/recovery/password`;
     const body = JSON.stringify({ email });
@@ -89,13 +79,14 @@ export function AuthContextProvider({ children }) {
   const signin = useCallback(async ({ email, password, otp }) => {
     const url = `${process.env.REACT_APP_API_URL}/signin`;
     const body = JSON.stringify({ email, password });
-    const headers = { 'X-Paysage-OTP': otp, 'Content-Type': 'application/json' };
+    const headers = { 'Content-Type': 'application/json' };
+    if (otp) headers['X-Paysage-OTP'] = otp;
     const response = await fetch(url, { method: 'POST', body, headers })
       .catch(() => ({ error: unexpectedError }));
     const data = await response.json()
       .catch(() => ({ error: unexpectedError }));
     response.data = data;
-    if (response.ok) {
+    if (response.status === 200) {
       localStorage.setItem('__paysage_access__', data.accessToken);
       localStorage.setItem('__paysage_refresh__', data.refreshToken);
       const { data: user } = await api.get('/me');
@@ -132,9 +123,8 @@ export function AuthContextProvider({ children }) {
     signin,
     signout,
     changePassword,
-    requestSignInEmail,
     requestPasswordChangeEmail,
-  }), [viewer, isLoading, isPending, signout, signin, signup, changePassword, requestPasswordChangeEmail, requestSignInEmail]);
+  }), [viewer, isLoading, isPending, signout, signin, signup, changePassword, requestPasswordChangeEmail]);
   return (
     <AuthContext.Provider value={value}>
       {children}
