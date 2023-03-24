@@ -6,7 +6,7 @@ export function isFinished(relation) {
 }
 
 export function spreadByStatus(data) {
-  const current = data?.filter((el) => (el.startDate < getComparableNow() || (!el.startDate && !el.endDate)) && !isFinished(el));
+  const current = data?.filter((el) => (el.startDate <= getComparableNow() || (!el.startDate && !el.endDate)) && !isFinished(el));
   const inactive = data?.filter((el) => isFinished(el));
   const forthcoming = data?.filter((el) => el.startDate > getComparableNow());
   const counts = {
