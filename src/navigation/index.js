@@ -1,9 +1,9 @@
-import { Navigate, Routes as RouterRoutes, Route } from 'react-router-dom';
+import { Navigate, Route, Routes as RouterRoutes } from 'react-router-dom';
 
 import Layout from '../layout';
 import HomePage from '../pages/accueil';
 import HelpPage from '../pages/aide';
-import { ContributePage, PersonAddPage, ProjectAddPage, StructureAddPage, OfficialTextAddPage } from '../pages/contribuer';
+import { ContributePage, OfficialTextAddPage, PersonAddPage, ProjectAddPage, StructureAddPage } from '../pages/contribuer';
 import SignUp from '../pages/creer-un-compte';
 import ImportPage from '../pages/import';
 import Passwordless from '../pages/mot-de-passe-oublie';
@@ -16,70 +16,38 @@ import Redirect from './redirect';
 import ProtectedRoute from './protected-route';
 import VisitorRoute from './visitor-route';
 
-import {
-  StructureBudgetPage,
-  StructureByIdPage,
-  StructureCategoriesPage,
-  StructureElementsLiesPage,
-  StructureEtudiantsPage,
-  StructureExportPage,
-  StructureGouvernancePage,
-  StructureImmobilierPage,
-  StructureInsertionProfessionnellePage,
-  StructureOffreDeFormationPage,
-  StructurePresentationPage,
-  StructureProjetsPage,
-  StructurePrixEtRecompensesPage,
-  StructureRHPage,
-} from '../pages/structures/[id]';
+import { StructureBudgetPage, StructureByIdPage, StructureCategoriesPage, StructureElementsLiesPage, StructureEtudiantsPage, StructureExportPage, StructureGouvernancePage, StructureImmobilierPage, StructureInsertionProfessionnellePage, StructureOffreDeFormationPage, StructurePresentationPage, StructurePrixEtRecompensesPage, StructureProjetsPage, StructureRHPage } from '../pages/structures/[id]';
 
-import {
-  PersonByIdPage,
-  PersonCategories,
-  PersonExportPage,
-  PersonMandats,
-  PersonPresentationPage,
-  PersonPrizes,
-  PersonProjets,
-  PersonsRelatedElements,
-} from '../pages/personnes/[id]';
+import { PersonByIdPage, PersonCategories, PersonExportPage, PersonMandats, PersonPresentationPage, PersonPrizes, PersonProjets, PersonsRelatedElements } from '../pages/personnes/[id]';
 
 import TermsAddPage from '../pages/termes/ajouter';
-import { TermByIdPage, TermPresentationPage, TermExportPage, TermRelatedElements } from '../pages/termes/[id]';
+import { TermByIdPage, TermExportPage, TermPresentationPage, TermRelatedElements } from '../pages/termes/[id]';
 
-import {
-  ProjectByIdPage,
-  ProjectPresentationPage,
-  ProjectCategories,
-  ProjectPrizes,
-  ProjectExportPage,
-} from '../pages/projets/[id]';
+import { ProjectByIdPage, ProjectCategories, ProjectExportPage, ProjectPresentationPage, ProjectPrizes } from '../pages/projets/[id]';
 
 import CategoriesAddPage from '../pages/categories/ajouter';
-import { CategoryByIdPage, CategoryPresentationPage, CategoriesExportPage, CategoryRelatedElements } from '../pages/categories/[id]';
+import { CategoriesExportPage, CategoryByIdPage, CategoryPresentationPage, CategoryRelatedElements } from '../pages/categories/[id]';
 
-import { AccountPage, ProfilePage, PreferencesPage, SecurityPage } from '../pages/mon-compte';
-import {
-  AdminPage, AdminDashboardPage, AdminUsersPage, AdminNomenclaturesPage,
-  AdminLegalCategoriesPage, AdminRelationTypesPage, AdminGroupsPage, AdminApiKeysPage,
-} from '../pages/admin';
+import { AdminApiKeysPage, AdminDashboardPage, AdminGroupsPage, AdminJournalPage, AdminLegalCategoriesPage, AdminNomenclaturesPage, AdminPage, AdminRelationTypesPage, AdminUsersPage } from '../pages/admin';
+import { AccountPage, PreferencesPage, ProfilePage, SecurityPage } from '../pages/mon-compte';
 
-import '../styles/index.scss';
-import SearchPage from '../pages/rechercher';
-import ContactPage from '../pages/nous-contacter';
-import ProjetEtEquipe from '../pages/projet-et-equipe';
-import AgendaOutlet from '../components/blocs/evenements';
-import DocumentsOutlet from '../components/blocs/documents';
 import ActualitesOutlet from '../components/blocs/actualites';
-import OfficialTextsOutlet from '../components/blocs/textes-officiels';
+import DocumentsOutlet from '../components/blocs/documents';
+import AgendaOutlet from '../components/blocs/evenements';
 import JournalOutlet from '../components/blocs/modification-journal';
+import OfficialTextsOutlet from '../components/blocs/textes-officiels';
+import LegalCategoriesByIdPage from '../pages/legal-categories/id';
+import ContactPage from '../pages/nous-contacter';
 import PrizeAddPage from '../pages/prix/ajouter';
 import { PrizeByIdPage, PrizeCategories, PrizeExportPage, PrizePresentationPage } from '../pages/prix/[id]';
+import ProjetEtEquipe from '../pages/projet-et-equipe';
+import SearchPage from '../pages/rechercher';
 import SupervisingMinistersByIdPage from '../pages/supervising-ministers/id';
-import LegalCategoriesByIdPage from '../pages/legal-categories/id';
+import '../styles/index.scss';
 
-import ScrollToTopOnPathnameChange from './scroll-top-on-pathname-change';
+import Jobs from '../pages/admin/jobs';
 import MatomoReport from './matomo-report';
+import ScrollToTopOnPathnameChange from './scroll-top-on-pathname-change';
 
 export default function Routes() {
   return (
@@ -99,11 +67,13 @@ export default function Routes() {
             <Route path="/admin" element={<AdminPage />}>
               <Route path="" element={<Navigate to="dashboard" replace />} />
               <Route path="dashboard" element={<AdminDashboardPage />} />
+              <Route path="journal" element={<AdminJournalPage />} />
               <Route path="utilisateurs" element={<AdminUsersPage />} />
               <Route path="groupes" element={<AdminGroupsPage />} />
               <Route path="apikeys" element={<AdminApiKeysPage />} />
               <Route path="categories-juridiques" element={<AdminLegalCategoriesPage />} />
               <Route path="types-de-relation" element={<AdminRelationTypesPage />} />
+              <Route path="taches" element={<Jobs />} />
               <Route path="nomenclatures" element={<Navigate to="nomenclatures/types-de-document" replace />} />
               <Route path="nomenclatures/types-de-document" element={<AdminNomenclaturesPage route="/document-types" title="Types de documents" />} />
               <Route path="nomenclatures/ministres-de-tutelle" element={<AdminNomenclaturesPage route="/supervising-ministers" title="Ministres de tutelle" />} />

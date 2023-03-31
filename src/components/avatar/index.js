@@ -12,7 +12,7 @@ export default function Avatar({ src, name, size, ...rest }) {
     <span className={`${styles['avatar-box']}`} style={{ width: size, height: size }} {...rest}>
       {
         (!src || error)
-          ? (<span><Text bold as="span" spacing="m-0" size="lg">{(name) ? name.slice(0, 2).toUpperCase() : ''}</Text></span>)
+          ? (<span><Text bold as="span" spacing="m-0" size="xs">{(name) ? name.slice(0, 2).toUpperCase() : ''}</Text></span>)
           : (
             <img
               alt="avatar"

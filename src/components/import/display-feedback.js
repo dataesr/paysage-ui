@@ -1,6 +1,6 @@
-import React from 'react';
-import { Row, Col, Alert, Accordion, AccordionItem, Link } from '@dataesr/react-dsfr';
+import { Accordion, AccordionItem, Alert, Col, Link, Row } from '@dataesr/react-dsfr';
 import PropTypes from 'prop-types';
+import React from 'react';
 
 function FeedbackDisplay({ feedBack }) {
   return (!!feedBack.length && (
