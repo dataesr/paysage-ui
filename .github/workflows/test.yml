@@ -1,8 +1,12 @@
 name: Tests
 
-on: push
+on:
+  push:
+    branches:
+      - staging
+      
 env:
-  DEPLOYMENT_URL: https://docs.paysage.dataesr.ovh/docs/paysage-ui
+  DEPLOYMENT_URL: https://paysage.staging.dataesr.ovh/
   MM_NOTIFICATION_CHANNEL: 'paysage-bot'
 
 jobs:
@@ -11,7 +15,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Install dependencies
-        run: npm install
+        run: npm ci --silent
       - name: Run tests
         run: npm test
 
