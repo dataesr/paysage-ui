@@ -35,11 +35,16 @@ export function reverseDate(d) {
   }
 }
 
+export function fromApproximativeDate(d) {
+  if (d?.length === 4) return `${d.toString()}-01-01`;
+  if (d?.length === 7) return `${d.toString()}-01`;
+  return d;
+}
+
 export function getComparableNow() {
   const now = new Date();
   return now.toISOString().split('T')[0];
 }
-// const numberToReplace = date.charAt(date.length - 2) + date.charAt(date.length - 1);
 
 export function formatDescriptionDatesForMandateAndPrizes({ startDate = null, endDate = null, endDatePrevisional = null, active = null }) {
   if (!startDate && !endDate && !endDatePrevisional && !active) { return null; }

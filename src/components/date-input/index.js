@@ -5,12 +5,7 @@ import {
 } from '@dataesr/react-dsfr';
 import PropTypes from 'prop-types';
 import { forwardRef, useState } from 'react';
-
-const fromApproximativeDate = (d) => {
-  if (d?.length === 4) return `${d.toString()}-01-01`;
-  if (d?.length === 7) return `${d.toString()}-01`;
-  return d;
-};
+import { fromApproximativeDate } from '../../utils/dates';
 
 const getCurrentDate = () => new Date().toISOString().split('T')[0];
 
