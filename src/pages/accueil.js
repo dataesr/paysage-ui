@@ -1,18 +1,18 @@
-import PropTypes from 'prop-types';
 import { Col, Container, Icon, Row, Tile, Title } from '@dataesr/react-dsfr';
+import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import KeyValueCard from '../components/card/key-value-card';
 import SearchBar from '../components/search-bar';
+import useDebounce from '../hooks/useDebounce';
+import usePageTitle from '../hooks/usePageTitle';
 import useSearch from '../hooks/useSearch';
 import api from '../utils/api';
 import { SEARCH_TYPES } from '../utils/constants';
 import { toString } from '../utils/dates';
 import { getRelatedObjectName } from '../utils/parse-related-element';
-import useDebounce from '../hooks/useDebounce';
 import { CATEGORIE_PARENT } from '../utils/relations-tags';
-import KeyValueCard from '../components/card/key-value-card';
 import { capitalize } from '../utils/strings';
-import usePageTitle from '../hooks/usePageTitle';
 
 const MAX_LAST_CREATIONS_CARDS = 12;
 const DATE7 = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();

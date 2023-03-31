@@ -1,24 +1,30 @@
-import { Link as RouterLink } from 'react-router-dom';
-import {
-  Breadcrumb, BreadcrumbItem, Col, Container, Row, Text,
-  Title, Modal, ModalTitle, ModalContent, Badge, Tag,
-} from '@dataesr/react-dsfr';
+import { Badge, Breadcrumb, BreadcrumbItem, Col, Container, Modal, ModalContent, ModalTitle, Row, Tag, Text, TextInput, Title } from '@dataesr/react-dsfr';
 import { useState } from 'react';
-import useFetch from '../../hooks/useFetch';
-import api from '../../utils/api';
-import { toString } from '../../utils/dates';
+import { Link as RouterLink } from 'react-router-dom';
 import Button from '../../components/button';
 import RelationTypesForm from '../../components/forms/relation-types';
+import useDebounce from '../../hooks/useDebounce';
+import useFetch from '../../hooks/useFetch';
 import useNotice from '../../hooks/useNotice';
-import { deleteError, saveError, saveSuccess, deleteSuccess } from '../../utils/notice-contents';
+import api from '../../utils/api';
+import { toString } from '../../utils/dates';
+import { deleteError, deleteSuccess, saveError, saveSuccess } from '../../utils/notice-contents';
+import { normalize } from '../../utils/strings';
+
+function getSearchableRelationType(relationType) {
+  const { name, maleName, feminineName, mandateTypeGroup, otherNames = [], for: relationFor = [] } = relationType;
+  return normalize([name, maleName, feminineName, mandateTypeGroup, ...otherNames, ...relationFor].filter((elem) => elem).join(' '));
+}
 
 export default function RelationTypesPage() {
   const route = '/relation-types';
-  const { data, isLoading, error, reload } = useFetch(`${route}?limit=500&sort=name`);
+  const { data, isLoading, error, reload } = useFetch(`${route}?limit=500&sort=priority`);
   const [isOpen, setIsOpen] = useState();
   const [modalTitle, setModalTitle] = useState('');
   const [modalContent, setModalContent] = useState(null);
   const { notice } = useNotice();
+  const [query, setQuery] = useState('');
+  const debouncedQuery = useDebounce(query, 500);
 
   const handleSave = async (body, itemId) => {
     const method = itemId ? 'patch' : 'post';
@@ -58,6 +64,9 @@ export default function RelationTypesPage() {
 
   if (error) return <div>Erreur</div>;
   if (isLoading) return <div>Chargement</div>;
+  const filteredData = query
+    ? data?.data?.filter((item) => getSearchableRelationType(item).includes(normalize(debouncedQuery)))
+    : data?.data;
   return (
     <Container fluid>
       <Row>
@@ -74,10 +83,14 @@ export default function RelationTypesPage() {
           <Title className="fr-pr-1v" as="h2" look="h3">Types de relations</Title>
           <Badge type="info" text={data?.totalCount} />
         </Row>
-        <Button secondary size="sm" icon="ri-add-line" onClick={() => handleModalToggle()}>Ajouter</Button>
+        <Button color="success" className="fr-ml-1w" size="sm" icon="ri-add-line" onClick={() => handleModalToggle()}>Nouveau</Button>
       </Row>
       <hr />
-      {data.data?.map((item) => (
+      <Row>
+        <TextInput placeholder="Filtrer" value={query} onChange={(e) => setQuery(e.target.value)} size="sm" />
+      </Row>
+      <hr />
+      {filteredData?.map((item) => (
         <Container fluid key={item.id}>
           <Row className="flex--space-between">
             <Col className="flex--grow fr-pl-2w">

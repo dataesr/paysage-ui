@@ -1,14 +1,14 @@
+import { Badge, Breadcrumb, BreadcrumbItem, Col, Container, Modal, ModalContent, ModalTitle, Row, Tag, Text, Title } from '@dataesr/react-dsfr';
 import PropTypes from 'prop-types';
-import { Link as RouterLink } from 'react-router-dom';
-import { Breadcrumb, BreadcrumbItem, Col, Container, Row, Text, Title, Modal, ModalTitle, ModalContent, Badge, Tag } from '@dataesr/react-dsfr';
 import { useState } from 'react';
+import { Link as RouterLink } from 'react-router-dom';
+import Button from '../../components/button';
+import NomenclatureForm from '../../components/forms/nomenclatures';
 import useFetch from '../../hooks/useFetch';
 import useNotice from '../../hooks/useNotice';
 import api from '../../utils/api';
 import { toString } from '../../utils/dates';
-import Button from '../../components/button';
-import NomenclatureForm from '../../components/forms/nomenclatures';
-import { deleteError, saveError, saveSuccess, deleteSuccess } from '../../utils/notice-contents';
+import { deleteError, deleteSuccess, saveError, saveSuccess } from '../../utils/notice-contents';
 
 export default function NomenclaturesPage({ route, title }) {
   const { data, isLoading, error, reload } = useFetch(`${route}?limit=500`);
@@ -71,7 +71,7 @@ export default function NomenclaturesPage({ route, title }) {
           <Title className="fr-pr-1v" as="h2" look="h3">{title}</Title>
           <Badge type="info" text={data?.totalCount} />
         </Row>
-        <Button secondary size="sm" icon="ri-add-line" onClick={() => handleModalToggle()}>Ajouter</Button>
+        <Button color="success" size="sm" icon="ri-add-line" onClick={() => handleModalToggle()}>Ajouter</Button>
       </Row>
       <hr />
       {data.data?.map((item) => (
