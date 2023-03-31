@@ -1,10 +1,9 @@
 name: Tests
 
 on: push
-
 env:
-  DEPLOYMENT_URL: https://ui.example.com
-  MM_NOTIFICATION_CHANNEL: 'ui-bot'
+  DEPLOYMENT_URL: https://docs.paysage.dataesr.ovh/docs/paysage-ui
+  MM_NOTIFICATION_CHANNEL: 'paysage-bot'
 
 jobs:
   tests:
