@@ -64,7 +64,7 @@ export default function GroupsPage() {
             {group.otherNames.length ? group.otherNames.map((name) => <Tag key="name" as="span">{name}</Tag>) : <Text as="span">Aucun alias pour le moment</Text>}
           </div>
           <div>
-            <Button size="sm" secondary icon="ri-edit-line" onClick={() => handleModalToggle(group)}>Editer</Button>
+            <Button size="sm" color="success" icon="ri-edit-line" onClick={() => handleModalToggle(group)}>Editer</Button>
           </div>
         </Row>
         <hr />
