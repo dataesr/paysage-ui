@@ -42,7 +42,11 @@ export default function Dashboard() {
               </Title>
               <Highlight colorFamily="yellow-tournesol" size="sm" className="fr-ml-0 fr-my-1w">
                 <i>
-                  Liste limitée aux 15 utilisateurs les plus actifs au cours de la période
+                  Liste limitée aux 15 utilisateurs les plus actifs au cours des
+                  {' '}
+                  {days}
+                  {' '}
+                  derniers jours
                 </i>
               </Highlight>
             </>
@@ -65,11 +69,15 @@ export default function Dashboard() {
             <>
               <Title as="h2" look="h5" className="fr-mb-2w">
                 <Icon name="ri-user-line" />
-                Top 15 des creations d'objets
+                Top 15 des créations d'objets
               </Title>
               <Highlight colorFamily="yellow-tournesol" size="sm" className="fr-ml-0 fr-my-1w">
                 <i>
-                  Chaque bar représente le nombre d'objet de ce type crées au cours de la période
+                  Chaque barre représente le nombre d'objets de ce type crées au cours des
+                  {' '}
+                  {days}
+                  {' '}
+                  derniers jours
                 </i>
               </Highlight>
             </>
