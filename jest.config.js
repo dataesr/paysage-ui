@@ -4,4 +4,5 @@ module.exports = {
   },
   moduleFileExtensions: ['js', 'json', 'jsx', 'ts', 'tsx', 'node'],
   transformIgnorePatterns: ['/node_modules/', '\\.scss$'],
+  testEnvironment: 'jsdom',
 };

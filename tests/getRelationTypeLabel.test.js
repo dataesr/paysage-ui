@@ -5,4 +5,5 @@ test('if should return feminineName if gender is "Femme", maleName if "Homme" an
   expect(getRelationTypeLabel('Homme')).toBe('maleName');
   expect(getRelationTypeLabel()).toBe('name');
   expect(getRelationTypeLabel(null)).toBe('name');
+  expect(getRelationTypeLabel(undefined)).toBe('name');
 });
