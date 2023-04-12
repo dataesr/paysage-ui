@@ -9,6 +9,7 @@ import useEditMode from '../../hooks/useEditMode';
 import academia from '../../assets/svg-logo/academia.svg';
 import dailymotion from '../../assets/svg-logo/dailymotion.svg';
 import flickr from '../../assets/svg-logo/flickr.svg';
+import franceCulture from '../../assets/svg-logo/france-culture.svg';
 import pinterest from '../../assets/svg-logo/pinterest.svg';
 import researchgate from '../../assets/svg-logo/researchgate.svg';
 import scoopit from '../../assets/svg-logo/scoop-it.svg';
@@ -44,6 +45,9 @@ export default function SocialMediaCard({
       break;
     case 'Flickr':
       svg = flickr;
+      break;
+    case 'France Culture':
+      svg = franceCulture;
       break;
     case 'Instagram':
       iconColor = 'var(--instagram-icon-color)';
