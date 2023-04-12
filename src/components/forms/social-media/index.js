@@ -11,6 +11,7 @@ import FormFooter from '../form-footer';
 import useForm from '../../../hooks/useForm';
 import useEnums from '../../../hooks/useEnums';
 import PaysageBlame from '../../paysage-blame';
+import { capitalize } from '../../../utils/strings';
 
 const regexpValidateSocialMedia = (type) => {
   const validator = {
@@ -75,7 +76,7 @@ export default function SocialMediaForm({ id, data, onDelete, onSave }) {
           <Col n="12">
             <Select
               label="Type"
-              options={socialMedias}
+              options={socialMedias.map((social) => ({ ...social, label: capitalize(social.label) }))}
               selected={form.type}
               onChange={(e) => updateForm({ type: e.target.value })}
               tabIndex={0}
