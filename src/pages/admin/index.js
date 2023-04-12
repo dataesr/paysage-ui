@@ -5,6 +5,7 @@ import AdminApiKeysPage from './api-keys';
 import AdminLegalCategoriesPage from './categories-juridiques';
 import AdminDashboardPage from './dashboard';
 import AdminGroupsPage from './groupes';
+import AdminJobsPage from './jobs';
 import AdminJournalPage from './journal';
 import AdminNomenclaturesPage from './nomenclatures';
 import AdminRelationTypesPage from './relation-types';
@@ -80,5 +81,5 @@ function AdminPage() {
 
 export {
   AdminDashboardPage, AdminPage, AdminUsersPage, AdminNomenclaturesPage, AdminJournalPage,
-  AdminLegalCategoriesPage, AdminRelationTypesPage, AdminGroupsPage, AdminApiKeysPage,
+  AdminLegalCategoriesPage, AdminRelationTypesPage, AdminGroupsPage, AdminApiKeysPage, AdminJobsPage,
 };

@@ -1,10 +1,10 @@
-import { Col, Container, Icon, Row } from '@dataesr/react-dsfr';
+import { Col, Container, Icon, Link, Row } from '@dataesr/react-dsfr';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 import Button from '../../button';
 
 export default function Analysis({ type, rows, handleForceImport }) {
-  const [displayList, setDisplayList] = useState(true);
+  const [displayList, setDisplayList] = useState(false);
   if (!rows.length) return null;
   return (
     <Container fluid className="fr-my-3w">
@@ -44,7 +44,7 @@ export default function Analysis({ type, rows, handleForceImport }) {
                     <th scope="col">Index</th>
                     <th scope="col">Nom</th>
                     <th scope="col" className="fr-mr-auto">Description</th>
-                    {(type === 'warning') && (<th scope="col">Action</th>)}
+                    {(type !== 'error') && (<th scope="col">Action</th>)}
                   </tr>
                 </thead>
                 <tbody>
@@ -54,32 +54,46 @@ export default function Analysis({ type, rows, handleForceImport }) {
                         <td>{row.index}</td>
                         <td>{row.displayName}</td>
                         <td>
-                          <ul style={{ listStyle: 'armenian' }}>
-                            {(row?.warning && row.warning.length) && row.warning.map((item) => (
+                          <ul>
+                            {(row?.warning && row.warning.length > 0) && row.warning.map((item) => (
                               <li>
-                                <Icon size="1x" name="ri-error-warning-line" />
+                                <Icon size="1x" name="ri-error-warning-line" color="var(--background-action-high-error)" />
+                                {item?.message}
+                                {item?.href && ' '}
+                                {item?.href && <Link target="_blank" href={item.href}>Vérifier</Link>}
+                              </li>
+                            ))}
+                            {(row?.error && row.error.length > 0) && row.error.map((item) => (
+                              <li>
+                                <Icon size="1x" name="ri-error-warning-line" color="var(--background-action-high-error)" />
                                 {item?.message}
                               </li>
                             ))}
-                            {(row?.error && row.error.length) && row.error.map((item) => (
-                              <li>
-                                <Icon size="1x" name="ri-error-warning-line" />
-                                {item?.message}
-                              </li>
-                            ))}
-                            {(!row?.error?.length && !row?.warning?.length) && (<li>L'objet est prêt à l'importation</li>)}
+                            {(!row?.error?.length && !row?.warning?.length > 0) && (<li>L'objet est prêt à l'importation</li>)}
                           </ul>
                         </td>
-                        {(type === 'warning') && (
+                        {(type !== 'error') && (
                           <td>
-                            <Button
-                              secondary
-                              color="error"
-                              onClick={() => handleForceImport(row.index)}
-                              size="sm"
-                            >
-                              Forcer l'ajout
-                            </Button>
+                            {((row?.warning && row.warning.length > 0) && type === 'success') && (
+                              <Button
+                                secondary
+                                color="error"
+                                onClick={() => handleForceImport(row.index)}
+                                size="sm"
+                              >
+                                Retirer
+                              </Button>
+                            )}
+                            {(type === 'warning') && (
+                              <Button
+                                secondary
+                                color="error"
+                                onClick={() => handleForceImport(row.index)}
+                                size="sm"
+                              >
+                                Forcer
+                              </Button>
+                            )}
                           </td>
                         )}
                       </tr>
@@ -88,7 +102,6 @@ export default function Analysis({ type, rows, handleForceImport }) {
                 </tbody>
               </table>
             </div>
-
           </Col>
         )}
       </Row>

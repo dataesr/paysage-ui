@@ -1,4 +1,5 @@
 import { Alert, Button, ButtonGroup, Link, Text, TextInput } from '@dataesr/react-dsfr';
+import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { MODELS } from '../config';
 
@@ -38,3 +39,13 @@ export default function FormStep({ type, onInputValidation, fileError }) {
     </>
   );
 }
+
+FormStep.propTypes = {
+  type: PropTypes.oneOf(['structures', 'personnes', 'gouvernance', 'lauréats']).isRequired,
+  onInputValidation: PropTypes.func.isRequired,
+  fileError: PropTypes.bool,
+};
+
+FormStep.defaultProps = {
+  fileError: false,
+};

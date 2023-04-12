@@ -60,6 +60,7 @@ import {
   AdminRelationTypesPage,
   AdminUsersPage,
 } from '../pages/admin';
+
 import { AccountPage, PreferencesPage, ProfilePage, SecurityPage } from '../pages/mon-compte';
 
 import ActualitesOutlet from '../components/blocs/actualites';

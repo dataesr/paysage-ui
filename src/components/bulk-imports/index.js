@@ -1,10 +1,12 @@
 import { Col, Container, Row, Stepper, Text } from '@dataesr/react-dsfr';
+import PropTypes from 'prop-types';
 import { useEffect, useMemo, useState } from 'react';
 import { PageSpinner } from '../spinner';
 import AnalyseStep from './components/analyse-step';
 import FormStep from './components/form-step';
 import ReportStep from './components/report-step';
-import { fakeAnalysis, fakeResults } from './mock';
+import analyse from './lib/analysers';
+import { fakeResults } from './mock';
 
 const steps = ['Ajouter des données', 'Analyse des données', "Rapport d'analyse", 'Import des données', "Rapport d'importation"];
 
@@ -35,14 +37,18 @@ export default function BulkImport({ type }) {
     setResults(undefined);
   };
 
-  const onInputValidation = (userInput) => {
+  const onInputValidation = async (userInput) => {
     setInput(userInput);
     setIsAnalysing(true);
-    setTimeout(() => {
-      setAnalysis(fakeAnalysis);
-      setIsAnalysing(false);
-      setIsAnalysed(true);
-    }, 2000);
+    analyse(userInput, type)
+      .then((analysed) => {
+        setAnalysis(analysed);
+      })
+      .catch(() => setFileError(true))
+      .finally(() => {
+        setIsAnalysed(true);
+        setIsAnalysing(false);
+      });
   };
 
   const onAnalysisValidation = () => {
@@ -55,7 +61,7 @@ export default function BulkImport({ type }) {
 
   const forceWarning = (index) => {
     const updated = analysis.map((i) => {
-      if (i.index === index) return { ...i, status: 'success' };
+      if (i.index === index) return { ...i, status: i.status === 'warning' ? 'success' : 'warning' };
       return i;
     });
     setAnalysis(updated);
@@ -114,3 +120,7 @@ export default function BulkImport({ type }) {
     </Container>
   );
 }
+
+BulkImport.propTypes = {
+  type: PropTypes.oneOf(['structures', 'personnes', 'gouvernance', 'lauréats']).isRequired,
+};
