@@ -1,26 +1,16 @@
 import { Col, Container, Row, SideMenu, SideMenuItem, SideMenuLink } from '@dataesr/react-dsfr';
-<<<<<<< HEAD
 import { Outlet, Link as RouterLink, useLocation } from 'react-router-dom';
-=======
-import { Link as RouterLink, Outlet, useLocation } from 'react-router-dom';
->>>>>>> c2f37a4 (feat(administration): Detailed journal rows and admin dashboard)
-
 import usePageTitle from '../../hooks/usePageTitle';
 import AdminApiKeysPage from './api-keys';
 import AdminLegalCategoriesPage from './categories-juridiques';
 import AdminDashboardPage from './dashboard';
 import AdminGroupsPage from './groupes';
-<<<<<<< HEAD
-=======
 import AdminJournalPage from './journal';
->>>>>>> c2f37a4 (feat(administration): Detailed journal rows and admin dashboard)
 import AdminNomenclaturesPage from './nomenclatures';
 import AdminRelationTypesPage from './relation-types';
 import AdminUsersPage from './users';
 
 function AdminPage() {
-  const { path } = useLocation();
-  const page = path.pop('/');
   usePageTitle('Administration du site');
   const { pathname } = useLocation();
   const page = pathname.split('/').pop();
@@ -44,11 +34,7 @@ function AdminPage() {
             <SideMenuLink className={(page === 'apikeys') && 'sidemenu__item--active'} asLink={<RouterLink to="/admin/apikeys" replace />}>
               Clés API
             </SideMenuLink>
-<<<<<<< HEAD
             <SideMenuItem title="Nomenclatures">
-=======
-            <SideMenuItem expandedDefault title="Nomenclatures">
->>>>>>> c2f37a4 (feat(administration): Detailed journal rows and admin dashboard)
               <SideMenuLink className={(page === 'categories-juridiques') && 'sidemenu__item--active'} asLink={<RouterLink to="/admin/categories-juridiques" replace />}>
                 Catégories juridiques
               </SideMenuLink>
@@ -65,7 +51,6 @@ function AdminPage() {
                 Types de relation
               </SideMenuLink>
             </SideMenuItem>
-<<<<<<< HEAD
             <SideMenuItem title="Imports en masse">
               <SideMenuLink className={(page === 'structures') && 'sidemenu__item--active'} asLink={<RouterLink to="/admin/imports/structures" replace />}>
                 Structures
@@ -80,8 +65,6 @@ function AdminPage() {
                 Lauréats
               </SideMenuLink>
             </SideMenuItem>
-=======
->>>>>>> c2f37a4 (feat(administration): Detailed journal rows and admin dashboard)
             <SideMenuLink className={(page === 'taches') && 'sidemenu__item--active'} asLink={<RouterLink to="/admin/taches" replace />}>
               Tâches du systeme
             </SideMenuLink>
