@@ -16,7 +16,10 @@ import Redirect from './redirect';
 import ProtectedRoute from './protected-route';
 import VisitorRoute from './visitor-route';
 
-import { StructureBudgetPage, StructureByIdPage, StructureCategoriesPage, StructureElementsLiesPage, StructureEtudiantsPage, StructureExportPage, StructureGouvernancePage, StructureImmobilierPage, StructureInsertionProfessionnellePage, StructureOffreDeFormationPage, StructurePresentationPage, StructurePrixEtRecompensesPage, StructureProjetsPage, StructureRHPage } from '../pages/structures/[id]';
+import { StructureBudgetPage, StructureByIdPage, StructureCategoriesPage, StructureElementsLiesPage,
+  StructureEtudiantsPage, StructureExportPage, StructureGouvernancePage, StructureImmobilierPage,
+  StructureInsertionProfessionnellePage, StructureOffreDeFormationPage, StructurePresentationPage,
+  StructurePrixEtRecompensesPage, StructureProjetsPage, StructureRHPage } from '../pages/structures/[id]';
 
 import { PersonByIdPage, PersonCategories, PersonExportPage, PersonMandats, PersonPresentationPage, PersonPrizes, PersonProjets, PersonsRelatedElements } from '../pages/personnes/[id]';
 
@@ -28,7 +31,9 @@ import { ProjectByIdPage, ProjectCategories, ProjectExportPage, ProjectPresentat
 import CategoriesAddPage from '../pages/categories/ajouter';
 import { CategoriesExportPage, CategoryByIdPage, CategoryPresentationPage, CategoryRelatedElements } from '../pages/categories/[id]';
 
-import { AdminApiKeysPage, AdminDashboardPage, AdminGroupsPage, AdminJournalPage, AdminLegalCategoriesPage, AdminNomenclaturesPage, AdminPage, AdminRelationTypesPage, AdminUsersPage } from '../pages/admin';
+import { AdminApiKeysPage, AdminDashboardPage, AdminGroupsPage, AdminJournalPage,
+  AdminLegalCategoriesPage, AdminNomenclaturesPage, AdminPage, AdminRelationTypesPage,
+  AdminUsersPage } from '../pages/admin';
 import { AccountPage, PreferencesPage, ProfilePage, SecurityPage } from '../pages/mon-compte';
 
 import ActualitesOutlet from '../components/blocs/actualites';
