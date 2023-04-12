@@ -19,6 +19,7 @@ import soundcloud from '../../assets/svg-logo/soundcloud.svg';
 import tiktok from '../../assets/svg-logo/tiktok.svg';
 import tumblr from '../../assets/svg-logo/tumblr.svg';
 import vimeo from '../../assets/svg-logo/vimeo.svg';
+import { capitalize } from '../../utils/strings';
 
 export default function SocialMediaCard({
   account,
@@ -119,7 +120,7 @@ export default function SocialMediaCard({
             {renderIcon(mediaName)}
             <span className="fr-text fr-text--sm fr-text--bold fr-m-0 flex-col">
               <a className="fr-mb-0 fr-text fr-text--sm" href={account} target="_blank" rel="noreferrer">
-                {mediaName}
+                {capitalize(mediaName)}
               </a>
               <span className="only-print">
                 {account}
