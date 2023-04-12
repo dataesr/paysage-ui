@@ -1,19 +1,11 @@
 import { Col, Container, Row, SideMenu, SideMenuItem, SideMenuLink } from '@dataesr/react-dsfr';
-<<<<<<< HEAD
 import { Outlet, Link as RouterLink, useLocation } from 'react-router-dom';
-=======
-import { Link as RouterLink, Outlet, useLocation } from 'react-router-dom';
-
->>>>>>> origin
 import usePageTitle from '../../hooks/usePageTitle';
 import AdminApiKeysPage from './api-keys';
 import AdminLegalCategoriesPage from './categories-juridiques';
 import AdminDashboardPage from './dashboard';
 import AdminGroupsPage from './groupes';
-<<<<<<< HEAD
 import AdminJobsPage from './jobs';
-=======
->>>>>>> origin
 import AdminJournalPage from './journal';
 import AdminNomenclaturesPage from './nomenclatures';
 import AdminRelationTypesPage from './relation-types';
