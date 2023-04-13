@@ -1,34 +1,35 @@
-import { useEffect, useState } from 'react';
-import { Link as RouterLink, useNavigate, Outlet } from 'react-router-dom';
 import {
   Badge,
   BadgeGroup, Breadcrumb, BreadcrumbItem, ButtonGroup, Checkbox,
   CheckboxGroup, Col, Container, Icon, Modal, ModalContent, ModalFooter,
   ModalTitle, Row, SideMenu, SideMenuLink, Title,
 } from '@dataesr/react-dsfr';
-import useFetch from '../../../hooks/useFetch';
-import useForm from '../../../hooks/useForm';
-import useEditMode from '../../../hooks/useEditMode';
+import { useEffect, useState } from 'react';
+import { Outlet, Link as RouterLink, useNavigate } from 'react-router-dom';
 import Button from '../../../components/button';
 import CopyBadgeButton from '../../../components/copy/copy-badge-button';
 import { DropdownButton, DropdownButtonItem } from '../../../components/dropdown-button';
 import PersonForm from '../../../components/forms/person';
-import useUrl from '../../../hooks/useUrl';
 import { PageSpinner } from '../../../components/spinner';
-import api from '../../../utils/api';
+import useEditMode from '../../../hooks/useEditMode';
+import useFetch from '../../../hooks/useFetch';
+import useForm from '../../../hooks/useForm';
 import useNotice from '../../../hooks/useNotice';
+import useUrl from '../../../hooks/useUrl';
+import api from '../../../utils/api';
 
-import PersonPresentationPage from './presentation';
-import PersonMandats from './mandats';
+import Error from '../../../components/errors';
+import DeleteForm from '../../../components/forms/delete';
+import useAuth from '../../../hooks/useAuth';
+import usePageTitle from '../../../hooks/usePageTitle';
+import { saveError, saveSuccess } from '../../../utils/notice-contents';
 import PersonCategories from './categories';
-import PersonProjets from './projets';
-import PersonPrizes from './prix-et-recompenses';
 import PersonsRelatedElements from './elements-lies';
 import PersonExportPage from './exporter';
-import { saveError, saveSuccess } from '../../../utils/notice-contents';
-import useAuth from '../../../hooks/useAuth';
-import Error from '../../../components/errors';
-import usePageTitle from '../../../hooks/usePageTitle';
+import PersonMandats from './mandats';
+import PersonPresentationPage from './presentation';
+import PersonPrizes from './prix-et-recompenses';
+import PersonProjets from './projets';
 
 function PersonByIdPage() {
   const { viewer } = useAuth();
@@ -51,6 +52,7 @@ function PersonByIdPage() {
     elements: true,
   });
   const [isFormModalOpen, setIsFormModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   useEffect(() => { reset(); }, [reset]);
   usePageTitle(`Personnes · ${`${data?.firstName} ${data?.lastName}`.trim()}`);
@@ -60,6 +62,21 @@ function PersonByIdPage() {
       .then(() => { reload(); notice(saveSuccess); })
       .catch(() => { notice(saveError); });
     return setIsFormModalOpen(false);
+  };
+
+  const onDeleteHandler = async (redirectionId) => {
+    const deletePerson = async () => api.delete(url)
+      .then(() => {
+        notice(saveSuccess);
+        navigate('/');
+      })
+      .catch(() => notice(saveError));
+    if (redirectionId) {
+      return api.put(`/persons/${redirectionId}/alternative-ids/${id}`)
+        .then(async () => deletePerson())
+        .catch(() => notice(saveError));
+    }
+    return deletePerson();
   };
 
   if (isLoading) return <PageSpinner />;
@@ -151,6 +168,20 @@ function PersonByIdPage() {
                       </ModalContent>
                     </Modal>
                   </DropdownButtonItem>
+                  {(viewer.role === 'admin') && (
+                    <DropdownButtonItem onClick={() => setIsDeleteModalOpen(true)}>
+                      Supprimer la personne
+                      <Icon iconPosition="right" size="xl" name="ri-delete-bin-line" color="var(--background-action-high-error)" />
+                      <Modal size="lg" isOpen={isDeleteModalOpen} hide={() => setIsDeleteModalOpen(false)}>
+                        <ModalTitle>
+                          Supprimer la personne
+                        </ModalTitle>
+                        <ModalContent>
+                          <DeleteForm onDelete={onDeleteHandler} />
+                        </ModalContent>
+                      </Modal>
+                    </DropdownButtonItem>
+                  )}
                 </DropdownButton>
               )}
               <Button
