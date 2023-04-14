@@ -102,10 +102,12 @@ function StructureByIdPage() {
   };
 
   const onDeleteHandler = async (redirectionId) => {
+    const redirectionUrl = redirectionId ? `/structures/${redirectionId}` : '/';
     const deleteStructure = async () => api.delete(url)
       .then(() => {
         notice(saveSuccess);
-        navigate('/');
+        navigate(redirectionUrl);
+        setIsDeleteModalOpen(false);
       })
       .catch(() => notice(saveError));
     if (redirectionId) {
@@ -238,12 +240,12 @@ function StructureByIdPage() {
                     <DropdownButtonItem onClick={() => setIsDeleteModalOpen(true)}>
                       Supprimer la structure
                       <Icon iconPosition="right" size="xl" name="ri-delete-bin-line" color="var(--background-action-high-error)" />
-                      <Modal size="lg" isOpen={isDeleteModalOpen} hide={() => setIsDeleteModalOpen(false)}>
+                      <Modal isOpen={isDeleteModalOpen} hide={() => setIsDeleteModalOpen(false)}>
                         <ModalTitle>
                           Supprimer la structure
                         </ModalTitle>
                         <ModalContent>
-                          <StructureDeleteForm onDelete={onDeleteHandler} />
+                          <StructureDeleteForm onDelete={onDeleteHandler} type="structures" />
                         </ModalContent>
                       </Modal>
                     </DropdownButtonItem>

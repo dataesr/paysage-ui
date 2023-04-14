@@ -65,10 +65,11 @@ function PersonByIdPage() {
   };
 
   const onDeleteHandler = async (redirectionId) => {
+    const redirectionUrl = redirectionId ? `/personnes/${redirectionId}` : '/';
     const deletePerson = async () => api.delete(url)
       .then(() => {
         notice(saveSuccess);
-        navigate('/');
+        navigate(redirectionUrl);
       })
       .catch(() => notice(saveError));
     if (redirectionId) {
@@ -172,12 +173,12 @@ function PersonByIdPage() {
                     <DropdownButtonItem onClick={() => setIsDeleteModalOpen(true)}>
                       Supprimer la personne
                       <Icon iconPosition="right" size="xl" name="ri-delete-bin-line" color="var(--background-action-high-error)" />
-                      <Modal size="lg" isOpen={isDeleteModalOpen} hide={() => setIsDeleteModalOpen(false)}>
+                      <Modal isOpen={isDeleteModalOpen} hide={() => setIsDeleteModalOpen(false)}>
                         <ModalTitle>
                           Supprimer la personne
                         </ModalTitle>
                         <ModalContent>
-                          <DeleteForm onDelete={onDeleteHandler} />
+                          <DeleteForm onDelete={onDeleteHandler} type="persons" />
                         </ModalContent>
                       </Modal>
                     </DropdownButtonItem>
