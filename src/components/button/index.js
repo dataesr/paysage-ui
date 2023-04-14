@@ -1,9 +1,10 @@
-import { forwardRef } from 'react';
-import PropTypes from 'prop-types';
-import classNames from 'classnames';
 import { Icon } from '@dataesr/react-dsfr';
+import classNames from 'classnames';
+import PropTypes from 'prop-types';
+import { forwardRef } from 'react';
 
 import './button.scss';
+import Loader from './loader';
 
 const iconSize = {
   sm: '1x',
@@ -25,6 +26,7 @@ const Button = forwardRef((props, ref) => {
     borderless,
     rounded,
     color,
+    isLoading,
     ...remainingProps
   } = props;
   const _className = classNames(`fr-btn--${size} fr-btn`, className, {
@@ -37,6 +39,7 @@ const Button = forwardRef((props, ref) => {
     'fr-btn--tertiary': tertiary && !borderless,
     'fr-btn--tertiary-no-outline': borderless,
     'btn-icon--rounded': !children && icon && rounded,
+    'btn--loading': isLoading,
   });
 
   const _button = (
@@ -47,7 +50,8 @@ const Button = forwardRef((props, ref) => {
       disabled={disabled}
       {...remainingProps}
     >
-      {children}
+      <span>{children}</span>
+      {isLoading && <Loader />}
     </button>
   );
   return icon ? (
@@ -66,6 +70,7 @@ const Button = forwardRef((props, ref) => {
 
 Button.defaultProps = {
   size: 'md',
+  isLoading: false,
   secondary: false,
   disabled: false,
   iconPosition: 'left',
@@ -80,6 +85,7 @@ Button.defaultProps = {
 };
 
 Button.propTypes = {
+  isLoading: PropTypes.bool,
   secondary: PropTypes.bool,
   borderless: PropTypes.bool,
   tertiary: PropTypes.bool,

@@ -1,10 +1,10 @@
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { Breadcrumb, BreadcrumbItem, Col, Container, Row, Title } from '@dataesr/react-dsfr';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import PersonForm from '../../components/forms/person';
-import api from '../../utils/api';
 import useNotice from '../../hooks/useNotice';
-import { saveError, saveSuccess } from '../../utils/notice-contents';
 import usePageTitle from '../../hooks/usePageTitle';
+import api from '../../utils/api';
+import { saveError, saveSuccess } from '../../utils/notice-contents';
 
 export default function PersonAddPage() {
   const navigate = useNavigate();

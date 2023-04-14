@@ -77,7 +77,13 @@ export default function DeleteForm({ currentObjectId, onDelete, type }) {
           </Col>
           <Col n="12">
             <ButtonGroup>
-              <Button color="error" onClick={() => onDelete(form.id)}>
+              <Button
+                color="error"
+                onClick={(e) => {
+                  e.target.disabled = true;
+                  onDelete(form.id);
+                }}
+              >
                 Supprimer
                 {' '}
                 {form.id ? 'avec ' : 'sans '}

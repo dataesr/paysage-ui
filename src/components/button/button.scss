@@ -2,6 +2,11 @@
   SPAN {
     pointer-events: none;
   }
+  position: relative;
+}
+
+.btn--loading > :not(.lds-ellipsis--wrapper) {
+  opacity: 0;
 }
 // BUTTON SUCCESS
 .btn-success.fr-btn.btn-primary {
