@@ -245,7 +245,7 @@ function StructureByIdPage() {
                           Supprimer la structure
                         </ModalTitle>
                         <ModalContent>
-                          <StructureDeleteForm onDelete={onDeleteHandler} type="structures" />
+                          <StructureDeleteForm onDelete={onDeleteHandler} type="structures" currentObjectId={id} />
                         </ModalContent>
                       </Modal>
                     </DropdownButtonItem>

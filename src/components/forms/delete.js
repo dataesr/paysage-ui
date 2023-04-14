@@ -12,7 +12,7 @@ import api from '../../utils/api';
 import Button from '../button';
 import SearchBar from '../search-bar';
 
-export default function DeleteForm({ onDelete, type }) {
+export default function DeleteForm({ currentObjectId, onDelete, type }) {
   const { form, updateForm } = useForm({ name: null, id: null });
   const [query, setQuery] = useState('');
   const [options, setOptions] = useState([]);
@@ -43,7 +43,7 @@ export default function DeleteForm({ onDelete, type }) {
     } else {
       setOptions([]);
     }
-  }, [query, type]);
+  }, [query, type, currentObjectId]);
 
   return (
     <form>
@@ -66,7 +66,7 @@ export default function DeleteForm({ onDelete, type }) {
                 updateForm({ relatedObjectId: null });
                 setQuery(e.target.value);
               }}
-              options={options}
+              options={options?.filter((el) => el.id !== currentObjectId)}
               onSelect={handleRelatedObjectSelect}
               onDeleteScope={handleRelatedObjectUnselect}
               isSearching={isLoading}
@@ -95,4 +95,5 @@ export default function DeleteForm({ onDelete, type }) {
 DeleteForm.propTypes = {
   onDelete: PropTypes.func.isRequired,
   type: PropTypes.oneOf(['structures', 'persons']).isRequired,
+  currentObjectId: PropTypes.string.isRequired,
 };

@@ -70,6 +70,7 @@ function PersonByIdPage() {
       .then(() => {
         notice(saveSuccess);
         navigate(redirectionUrl);
+        setIsDeleteModalOpen(false);
       })
       .catch(() => notice(saveError));
     if (redirectionId) {
@@ -178,7 +179,7 @@ function PersonByIdPage() {
                           Supprimer la personne
                         </ModalTitle>
                         <ModalContent>
-                          <DeleteForm onDelete={onDeleteHandler} type="persons" />
+                          <DeleteForm onDelete={onDeleteHandler} type="persons" currentObjectId={id} />
                         </ModalContent>
                       </Modal>
                     </DropdownButtonItem>
