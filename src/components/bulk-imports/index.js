@@ -20,12 +20,13 @@ export default function BulkImport({ type }) {
   const [results, setResults] = useState();
 
   const step = useMemo(() => {
+    if (fileError) return 1;
     if (isAnalysing) return 2;
+    if (isAnalysed) return 3;
     if (isImporting) return 4;
     if (results) return 5;
-    if (isAnalysed) return 3;
     return 1;
-  }, [results, isAnalysing, isAnalysed, isImporting]);
+  }, [results, isAnalysing, isAnalysed, isImporting, fileError]);
 
   const onReset = () => {
     setInput(undefined);

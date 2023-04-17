@@ -40,13 +40,13 @@ async function nameChecker({ usualName }) {
   }
   return [];
 }
-function requiredChecker({ usualName, structureStatus, categories, legalCategory }) {
+function requiredChecker({ usualName, iso3, structureStatus, categories, legalCategory }) {
   const errors = [];
   if (!usualName) errors.push({ message: 'Le nom usuel est obligatoire' });
   if (!structureStatus) errors.push({ message: "Le status ['O', 'F', 'P'] est obligatoire" });
   if (categories.length === 0) errors.push({ message: 'Vous devez renseigner au moins une catégorie' });
   if (!legalCategory) errors.push({ message: 'Vous devez renseigner la catégorie juridique' });
-  // if (!iso3) errors.push({ message: 'Le code iso3 est obligatoire' });
+  if (!iso3) errors.push({ message: 'Le code iso3 est obligatoire' });
   // if (!country) errors.push({ message: 'Le pays est obligatoire' });
   return errors;
 }
