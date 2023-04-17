@@ -1,5 +1,4 @@
-import parseTSV from '../utils/tsv-parser';
-import zip from '../utils/zip';
+import { parseTSV, zip } from '../utils';
 import checker from './checker';
 import headersMapping from './headers-mapping';
 
@@ -24,9 +23,9 @@ export default async function parseStructureTSV(inputString) {
   const { headers, rows } = parseTSV(inputString);
   const orderedApiHeaders = headers.map((header) => headersMapping[header]);
   const bodyList = rows.map((row) => zip(orderedApiHeaders, row, structureParsingFunctions));
-  const result = await Promise.all(bodyList.map(async (element, index) => {
+  const result = await Promise.all(bodyList.map(async (body, index) => {
     const { warning, error, status } = await checker(bodyList, index);
-    return { index: index + 2, body: element, displayName: element.usualName, warning, error, status };
+    return { index: index + 2, body, displayName: body.usualName, warning, error, status };
   }));
   return result;
 }

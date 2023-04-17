@@ -14,9 +14,9 @@ export default function Analysis({ type, rows, handleForceImport }) {
             <div className="fr-container">
               <div className="fr-notice__body">
                 <p className="fr-notice__title">
-                  {type === 'warning' && `${rows?.length} ${type}${(rows.length > 1) ? 's' : ''}`}
+                  {type === 'warning' && `${rows?.length} warning${(rows.length > 1) ? 's' : ''}`}
                   {type === 'error' && `${rows?.length} erreur${(rows.length > 1) ? 's' : ''}`}
-                  {type === 'success' && `${rows?.length} object${(rows.length > 1) ? 's' : ''} prêt${(rows.length > 1) ? 's' : ''} à l'importation`}
+                  {type === 'success' && `${rows?.length} objet${(rows.length > 1) ? 's' : ''} prêt${(rows.length > 1) ? 's' : ''} à l'importation`}
                 </p>
                 <Button
                   size="sm"
@@ -56,7 +56,7 @@ export default function Analysis({ type, rows, handleForceImport }) {
                         <td>
                           <ul>
                             {(row?.warning && row.warning.length > 0) && row.warning.map((item) => (
-                              <li>
+                              <li key={item.index}>
                                 <Icon size="1x" name="ri-error-warning-line" color="var(--background-action-high-error)" />
                                 {item?.message}
                                 {item?.href && ' '}
@@ -64,12 +64,12 @@ export default function Analysis({ type, rows, handleForceImport }) {
                               </li>
                             ))}
                             {(row?.error && row.error.length > 0) && row.error.map((item) => (
-                              <li>
+                              <li key={item.index}>
                                 <Icon size="1x" name="ri-error-warning-line" color="var(--background-action-high-error)" />
                                 {item?.message}
                               </li>
                             ))}
-                            {(!row?.error?.length && !row?.warning?.length > 0) && (<li>L'objet est prêt à l'importation</li>)}
+                            {((row?.error?.length === 0) && (row?.warning?.length === 0)) && (<li>L'objet est prêt à l'importation</li>)}
                           </ul>
                         </td>
                         {(type !== 'error') && (
@@ -117,5 +117,5 @@ Analysis.propTypes = {
 
 Analysis.defaultProps = {
   rows: [],
-  handleForceImport: PropTypes.func,
+  handleForceImport: null,
 };

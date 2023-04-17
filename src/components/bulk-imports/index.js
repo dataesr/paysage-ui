@@ -60,9 +60,9 @@ export default function BulkImport({ type }) {
   };
 
   const forceWarning = (index) => {
-    const updated = analysis.map((i) => {
-      if (i.index === index) return { ...i, status: i.status === 'warning' ? 'success' : 'warning' };
-      return i;
+    const updated = analysis.map((elem) => {
+      if (elem.index === index) return { ...elem, status: elem.status === 'warning' ? 'success' : 'warning' };
+      return elem;
     });
     setAnalysis(updated);
   };
@@ -111,11 +111,7 @@ export default function BulkImport({ type }) {
         </Row>
       )}
       {(step === 5) && (
-        <ReportStep
-          type={type}
-          input={input}
-          setInput={setInput}
-        />
+        <ReportStep type={type} />
       )}
     </Container>
   );

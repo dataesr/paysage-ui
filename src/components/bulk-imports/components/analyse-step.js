@@ -9,7 +9,7 @@ export default function AnalyseStep({ analysis, forceWarning, onAnalysisValidati
   const warning = analysis.filter((row) => row.status === 'warning');
   return (
     <>
-      <Analysis type="error" rows={error} handleForceImport={forceWarning} />
+      <Analysis type="error" rows={error} />
       <Analysis type="warning" rows={warning} handleForceImport={forceWarning} />
       <Analysis type="success" rows={success} handleForceImport={forceWarning} />
       {(success.length > 0) && (

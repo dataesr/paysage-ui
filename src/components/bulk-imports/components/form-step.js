@@ -1,7 +1,13 @@
 import { Alert, Button, ButtonGroup, Link, Text, TextInput } from '@dataesr/react-dsfr';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
-import { MODELS } from '../config';
+
+const MODELS = {
+  structures: '/models/AjoutEnMasseStructure.xlsx',
+  personnes: '/models/AjoutEnMasseStructure.xlsx',
+  gouvernance: '/models/AjoutEnMasseGouvernance.xlsx',
+  lauréats: '/models/AjoutEnMasseStructure.xlsx',
+};
 
 export default function FormStep({ type, onInputValidation, fileError }) {
   const [input, setInput] = useState('');
@@ -32,7 +38,7 @@ export default function FormStep({ type, onInputValidation, fileError }) {
       </ButtonGroup>
       {fileError && (
         <Alert
-          description="Le fichier contient des erreurs de format. Veuillez vérifiez votre fichier. Si le problème persiste, concactez un développeur."
+          description="Le fichier contient des erreurs de format. Veuillez vérifiez votre fichier. Si le problème persiste, contactez un développeur."
           type="error"
         />
       )}
