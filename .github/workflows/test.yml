@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - staging
+      - feature/bulk-import
       
 env:
   DEPLOYMENT_URL: https://paysage.staging.dataesr.ovh/
