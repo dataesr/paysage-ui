@@ -2,7 +2,7 @@ export default {
   Prénom: 'firstName',
   Nom: 'lastName',
   'Genre [F = Femme, H = Homme, A = Autre]': 'gender',
-  'Date de naissance': 'birthDate',
+  'Date de naissance {1990-05-21}': 'birthDate',
   'Identifiant Orcid': 'orcid',
   Activité: 'activity',
   'Identifiant Wikidata [Q1234]': 'wikidata',
