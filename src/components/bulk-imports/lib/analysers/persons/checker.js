@@ -5,7 +5,7 @@ async function nameChecker({ firstName, lastName }) {
   const fullName = `${firstName || ''} ${lastName || ''}`.trim();
   if (!fullName) return [];
   const { data } = await api.get(`/autocomplete?types=persons&query=${fullName}`);
-  const duplicate = data?.data.find((el) => normalize(el.name.replace('\t', '')) === normalize(fullName));
+  const duplicate = data?.data.find((el) => normalize(el.name) === normalize(fullName));
   if (duplicate) {
     return [{
       message: `Le nom ${fullName} existe déjà`,
