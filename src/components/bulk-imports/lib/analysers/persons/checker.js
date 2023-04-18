@@ -18,7 +18,7 @@ async function nameChecker({ firstName, lastName }) {
 function requiredChecker({ firstName, lastName, gender }) {
   const errors = [];
   if (!lastName) errors.push({ message: 'Le nom est obligatoire' });
-  if (!firstName) errors.push({ message: 'Le nom est obligatoire' });
+  if (!firstName) errors.push({ message: 'Le prénom est obligatoire' });
   if (!gender) errors.push({ message: 'Le genre de la personne est obligatoire' });
   return errors;
 }
