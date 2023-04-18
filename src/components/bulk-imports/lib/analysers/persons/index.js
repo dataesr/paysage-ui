@@ -16,6 +16,7 @@ const publicSearchMapping = {
 const personParsingFunctions = {
   otherNames: (str) => { str?.split(';'); },
   personGender: (str) => (['F', 'H', 'A'].includes(str) ? genderMapping[str] : null),
+  categories: (str) => (str ? str.split(';').filter((category) => category.trim()) : []),
   publicSearchPerson: (str) => (['O', 'N'].includes(str) ? publicSearchMapping[str] : null),
 };
 

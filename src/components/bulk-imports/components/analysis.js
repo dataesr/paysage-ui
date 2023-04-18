@@ -57,7 +57,7 @@ export default function Analysis({ type, rows, handleForceImport }) {
                           <ul>
                             {(row?.warning && row.warning.length > 0) && row.warning.map((item) => (
                               <li key={item.index}>
-                                <Icon size="1x" name="ri-error-warning-line" color="var(--background-action-high-error)" />
+                                <Icon size="1x" name="ri-alert-line" color="var(--background-action-high-warning)" />
                                 {item?.message}
                                 {item?.href && ' '}
                                 {item?.href && <Link target="_blank" href={item.href}>Vérifier</Link>}
