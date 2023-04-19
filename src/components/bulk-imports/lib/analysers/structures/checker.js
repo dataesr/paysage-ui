@@ -41,6 +41,17 @@ async function nameChecker({ usualName }) {
   return [];
 }
 
+function websiteChecker({ websiteFr, websiteEn }) {
+  const urlRegex = /^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/i;
+  if (websiteFr && !urlRegex.test(websiteFr)) {
+    return [{ message: `L'URL ${websiteFr} n'est pas valide` }];
+  }
+  if (websiteEn && !urlRegex.test(websiteEn)) {
+    return [{ message: `L'URL ${websiteEn} n'est pas valide` }];
+  }
+  return [];
+}
+
 async function categoriesChecker({ categories }) {
   if (!categories || categories.length === 0) return [{ message: 'Vous devez renseigner au moins une catégorie' }];
   const categoriesWarning = [];
@@ -87,7 +98,8 @@ export default async function checker(docs, index) {
     const nameDuplicateWarnings = await nameChecker(doc);
     const requiredErrors = requiredChecker(doc);
     const categoriesErrors = await categoriesChecker(doc);
-    const warning = [...siretDuplicateWarnings, ...nameDuplicateWarnings];
+    const websiteChecked = await websiteChecker(doc);
+    const warning = [...siretDuplicateWarnings, ...nameDuplicateWarnings, ...websiteChecked];
     const error = [...requiredErrors, ...categoriesErrors];
     let status = 'success';
     if (warning.length) { status = 'warning'; }
