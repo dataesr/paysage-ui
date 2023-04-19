@@ -6,36 +6,36 @@ import AnalyseStep from './components/analyse-step';
 import FormStep from './components/form-step';
 import ReportStep from './components/report-step';
 import analyse from './lib/analysers';
-import { fakeResults } from './mock';
+import bulkImport from './lib/importers';
 
 const steps = ['Ajouter des données', 'Analyse des données', "Rapport d'analyse", 'Import des données', "Rapport d'importation"];
 
 export default function BulkImport({ type }) {
   const [input, setInput] = useState();
-  const [analysis, setAnalysis] = useState();
+  const [state, setState] = useState();
   const [isAnalysing, setIsAnalysing] = useState();
   const [isAnalysed, setIsAnalysed] = useState();
   const [fileError, setFileError] = useState();
   const [isImporting, setIsImporting] = useState();
-  const [results, setResults] = useState();
+  const [isImported, setIsImported] = useState();
 
   const step = useMemo(() => {
     if (fileError) return 1;
     if (isAnalysing) return 2;
+    if (isAnalysed && isImporting) return 4;
+    if (isAnalysed && isImported) return 5;
     if (isAnalysed) return 3;
-    if (isImporting) return 4;
-    if (results) return 5;
     return 1;
-  }, [results, isAnalysing, isAnalysed, isImporting, fileError]);
+  }, [isImported, isAnalysing, isAnalysed, isImporting, fileError]);
 
   const onReset = () => {
     setInput(undefined);
-    setAnalysis(undefined);
+    setState(undefined);
     setIsAnalysing(undefined);
     setIsAnalysed(undefined);
     setFileError(undefined);
     setIsImporting(undefined);
-    setResults(undefined);
+    setIsImported(undefined);
   };
 
   const onInputValidation = async (userInput) => {
@@ -43,7 +43,7 @@ export default function BulkImport({ type }) {
     setIsAnalysing(true);
     analyse(userInput, type)
       .then((analysed) => {
-        setAnalysis(analysed);
+        setState(analysed);
       })
       .catch(() => setFileError(true))
       .finally(() => {
@@ -54,18 +54,23 @@ export default function BulkImport({ type }) {
 
   const onAnalysisValidation = () => {
     setIsImporting(true);
-    setTimeout(() => {
-      setResults(fakeResults);
-      setIsImporting(false);
-    }, 2000);
+    bulkImport(state, type)
+      .then((bulkResult) => {
+        setState(bulkResult);
+      })
+      .catch(() => setFileError(true))
+      .finally(() => {
+        setIsImporting(false);
+        setIsImported(true);
+      });
   };
 
   const forceWarning = (index) => {
-    const updated = analysis.map((elem) => {
+    const updated = state.map((elem) => {
       if (elem.index === index) return { ...elem, status: elem.status === 'warning' ? 'success' : 'warning' };
       return elem;
     });
-    setAnalysis(updated);
+    setState(updated);
   };
 
   useEffect(() => onReset(), [type]);
@@ -99,7 +104,7 @@ export default function BulkImport({ type }) {
       {(step === 3) && (
         <AnalyseStep
           type={type}
-          analysis={analysis}
+          state={state}
           forceWarning={forceWarning}
           onAnalysisValidation={onAnalysisValidation}
           onReset={onReset}
@@ -112,7 +117,11 @@ export default function BulkImport({ type }) {
         </Row>
       )}
       {(step === 5) && (
-        <ReportStep type={type} />
+        <ReportStep
+          type={type}
+          state={state}
+          onReset={onReset}
+        />
       )}
     </Container>
   );

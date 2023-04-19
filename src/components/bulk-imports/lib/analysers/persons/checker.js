@@ -70,19 +70,22 @@ async function categoriesChecker({ categories }) {
 }
 
 export default async function checker(docs, index) {
-  const doc = docs[index];
-  const nameDuplicateWarnings = await nameChecker(doc);
-  // const idDuplicateWarnings = await idChecker(['orcid', 'wikidata', 'idref'], doc);
-  const orcidDuplicate = await idChecker('orcid', doc.orcid);
-  const wikidataDuplicate = await idChecker('wikidata', doc.wikidata);
-  const idrefDuplicate = await idChecker('idref', doc.idref);
-  const websiteChecked = await websiteChecker(doc);
-  const categoriesChecked = await categoriesChecker(doc);
-  const requiredErrors = requiredChecker(doc);
-  const warning = [...nameDuplicateWarnings, ...orcidDuplicate, ...wikidataDuplicate, ...idrefDuplicate, ...websiteChecked];
-  const error = [...requiredErrors, ...categoriesChecked];
-  let status = 'success';
-  if (warning.length) { status = 'warning'; }
-  if (error.length) { status = 'error'; }
-  return { warning, error, status };
+  try {
+    const doc = docs[index];
+    const nameDuplicateWarnings = await nameChecker(doc);
+    const orcidDuplicate = await idChecker('orcid', doc.orcid);
+    const wikidataDuplicate = await idChecker('wikidata', doc.wikidata);
+    const idrefDuplicate = await idChecker('idref', doc.idref);
+    const websiteChecked = await websiteChecker(doc);
+    const categoriesChecked = await categoriesChecker(doc);
+    const requiredErrors = requiredChecker(doc);
+    const warning = [...nameDuplicateWarnings, ...orcidDuplicate, ...wikidataDuplicate, ...idrefDuplicate, ...websiteChecked];
+    const error = [...requiredErrors, ...categoriesChecked];
+    let status = 'success';
+    if (warning.length) { status = 'warning'; }
+    if (error.length) { status = 'error'; }
+    return { warning, error, status };
+  } catch (e) {
+    return { error: [{ message: "Une erreur s'est produite lors de la vérification, vérifiez la ligne" }], status: 'error' };
+  }
 }

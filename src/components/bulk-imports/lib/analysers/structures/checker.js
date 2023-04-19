@@ -40,14 +40,37 @@ async function nameChecker({ usualName }) {
   }
   return [];
 }
-function requiredChecker({ usualName, iso3, structureStatus, categories, legalCategory }) {
+
+async function categoriesChecker({ categories }) {
+  if (!categories || categories.length === 0) return [{ message: 'Vous devez renseigner au moins une catégorie' }];
+  const categoriesWarning = [];
+  const wrongFormattedCategories = categories.filter((category) => category?.length !== 5);
+  if (wrongFormattedCategories.length > 0) {
+    const wrongFormattedCategoryLabels = wrongFormattedCategories.join('; ');
+    categoriesWarning.push({ message: `Les catégories suivantes ne sont pas correctement renseignées : ${wrongFormattedCategoryLabels}` });
+    return categoriesWarning;
+  }
+  if (categories) {
+    const requests = categories.map(async (category) => api.get(`/autocomplete?types=categories&query=${category}`));
+    const apiData = await Promise.all(requests);
+    const apiCategories = apiData?.map((el) => el.data.data?.[0]?.id);
+    categories.forEach((category) => {
+      if (!apiCategories.includes(category)) {
+        categoriesWarning.push({ message: `La catégorie ${category} n'existe pas` });
+      }
+    });
+  }
+  return categoriesWarning;
+}
+
+function requiredChecker({ usualName, country, iso3, structureStatus, categories, legalCategory }) {
   const errors = [];
   if (!usualName) errors.push({ message: 'Le nom usuel est obligatoire' });
   if (!structureStatus) errors.push({ message: "Le status ['O', 'F', 'P'] est obligatoire" });
   if (categories.length === 0) errors.push({ message: 'Vous devez renseigner au moins une catégorie' });
   if (!legalCategory) errors.push({ message: 'Vous devez renseigner la catégorie juridique' });
   if (!iso3) errors.push({ message: 'Le code iso3 est obligatoire' });
-  // if (!country) errors.push({ message: 'Le pays est obligatoire' });
+  if (!country) errors.push({ message: 'Le pays est obligatoire' });
   return errors;
 }
 
@@ -58,14 +81,19 @@ function requiredChecker({ usualName, iso3, structureStatus, categories, legalCa
 // }
 
 export default async function checker(docs, index) {
-  const doc = docs[index];
-  const siretDuplicateWarnings = await siretChecker(doc);
-  const nameDuplicateWarnings = await nameChecker(doc);
-  const requiredErrors = requiredChecker(doc);
-  const warning = [...siretDuplicateWarnings, ...nameDuplicateWarnings];
-  const error = [...requiredErrors];
-  let status = 'success';
-  if (warning.length) { status = 'warning'; }
-  if (error.length) { status = 'error'; }
-  return { warning, error, status };
+  try {
+    const doc = docs[index];
+    const siretDuplicateWarnings = await siretChecker(doc);
+    const nameDuplicateWarnings = await nameChecker(doc);
+    const requiredErrors = requiredChecker(doc);
+    const categoriesErrors = await categoriesChecker(doc);
+    const warning = [...siretDuplicateWarnings, ...nameDuplicateWarnings];
+    const error = [...requiredErrors, ...categoriesErrors];
+    let status = 'success';
+    if (warning.length) { status = 'warning'; }
+    if (error.length) { status = 'error'; }
+    return { warning, error, status };
+  } catch (e) {
+    return { error: [{ message: "Une erreur s'est produite lors de la vérification, vérifiez la ligne" }], status: 'error' };
+  }
 }

@@ -3,10 +3,10 @@ import PropTypes from 'prop-types';
 import Button from '../../button';
 import Analysis from './analysis';
 
-export default function AnalyseStep({ analysis, forceWarning, onAnalysisValidation, onReset }) {
-  const success = analysis.filter((row) => row.status === 'success');
-  const error = analysis.filter((row) => row.status === 'error');
-  const warning = analysis.filter((row) => row.status === 'warning');
+export default function AnalyseStep({ state, forceWarning, onAnalysisValidation, onReset }) {
+  const success = state.filter((row) => row.status === 'success');
+  const error = state.filter((row) => row.status === 'error');
+  const warning = state.filter((row) => row.status === 'warning');
   return (
     <>
       <Analysis type="error" rows={error} />
@@ -36,7 +36,7 @@ export default function AnalyseStep({ analysis, forceWarning, onAnalysisValidati
 }
 
 AnalyseStep.propTypes = {
-  analysis: PropTypes.array.isRequired,
+  state: PropTypes.array.isRequired,
   forceWarning: PropTypes.func.isRequired,
   onAnalysisValidation: PropTypes.func.isRequired,
   onReset: PropTypes.func.isRequired,
