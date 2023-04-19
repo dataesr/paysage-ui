@@ -8,16 +8,9 @@ const genderMapping = {
   A: 'Autre',
 };
 
-const publicSearchMapping = {
-  O: 'Oui',
-  N: 'Non',
-};
-
 const personParsingFunctions = {
   otherNames: (str) => { str?.split(';'); },
-  personGender: (str) => (['F', 'H', 'A'].includes(str) ? genderMapping[str] : null),
-  categories: (str) => (str ? str.split(';').filter((category) => category.trim()) : []),
-  publicSearchPerson: (str) => (['O', 'N'].includes(str) ? publicSearchMapping[str] : null),
+  gender: (str) => (['F', 'H', 'A'].includes(str) ? genderMapping[str] : null),
 };
 
 export default async function parsePersonTSV(inputString) {
