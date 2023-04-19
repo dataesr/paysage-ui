@@ -24,7 +24,7 @@ function requiredChecker({ firstName, lastName, gender }) {
 }
 
 function genderChecker({ gender }) {
-  if (gender && gender !== 'H' && gender !== 'F' && gender !== 'A') {
+  if (gender && gender !== 'Homme' && gender !== 'Femme' && gender !== 'Autre') {
     return [{ message: `Le genre "${gender}" n'existe pas dans l'API` }];
   }
   return [];
@@ -65,8 +65,8 @@ export default async function checker(docs, index) {
     const websiteChecked = await websiteChecker(doc);
     const genderChecked = await genderChecker(doc);
     const requiredErrors = requiredChecker(doc);
-    const warning = [...nameDuplicateWarnings, ...orcidDuplicate, ...wikidataDuplicate, ...idrefDuplicate, ...websiteChecked, ...genderChecked];
-    const error = [...requiredErrors];
+    const warning = [...nameDuplicateWarnings, ...orcidDuplicate, ...wikidataDuplicate, ...idrefDuplicate, ...websiteChecked];
+    const error = [...requiredErrors, ...genderChecked];
     let status = 'success';
     if (warning.length) { status = 'warning'; }
     if (error.length) { status = 'error'; }
