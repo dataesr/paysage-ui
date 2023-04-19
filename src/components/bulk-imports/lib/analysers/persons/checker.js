@@ -23,6 +23,13 @@ function requiredChecker({ firstName, lastName, gender }) {
   return errors;
 }
 
+function genderChecker({ gender }) {
+  if (gender && gender !== 'H' && gender !== 'F' && gender !== 'A') {
+    return [{ message: `Le genre "${gender}" n'existe pas dans l'API` }];
+  }
+  return [];
+}
+
 function websiteChecker({ websiteFr, websiteEn }) {
   const urlRegex = /^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/i;
   if (websiteFr && !urlRegex.test(websiteFr)) {
@@ -56,8 +63,9 @@ export default async function checker(docs, index) {
     const wikidataDuplicate = await idChecker('wikidata', doc.wikidata);
     const idrefDuplicate = await idChecker('idref', doc.idref);
     const websiteChecked = await websiteChecker(doc);
+    const genderChecked = await genderChecker(doc);
     const requiredErrors = requiredChecker(doc);
-    const warning = [...nameDuplicateWarnings, ...orcidDuplicate, ...wikidataDuplicate, ...idrefDuplicate, ...websiteChecked];
+    const warning = [...nameDuplicateWarnings, ...orcidDuplicate, ...wikidataDuplicate, ...idrefDuplicate, ...websiteChecked, ...genderChecked];
     const error = [...requiredErrors];
     let status = 'success';
     if (warning.length) { status = 'warning'; }
