@@ -1,15 +1,35 @@
-import { useRef, useState } from 'react';
-import PropTypes from 'prop-types';
 import { ButtonGroup, Col, Row, Text } from '@dataesr/react-dsfr';
 import classNames from 'classnames';
-import Button from '../../button';
+import PropTypes from 'prop-types';
+import { useState } from 'react';
 import useViewport from '../../../hooks/useViewport';
+import Button from '../../button';
 
 export default function FormFooter({ id, onDeleteHandler, onSaveHandler, buttonLabel }) {
   const { mobile } = useViewport();
   const [confirm, setConfirm] = useState(false);
-  const submitButtonRef = useRef();
-  const deleteButtonRef = useRef();
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+
+  const onDelete = (e) => {
+    e.target.disabled = true;
+    if (isDeleting) return;
+    setIsDeleting(true);
+    setTimeout(() => {
+      onDeleteHandler(id);
+      setIsDeleting(false);
+    }, 500);
+  };
+
+  const onSave = (e) => {
+    e.target.disabled = true;
+    if (isSaving) return;
+    setIsSaving(true);
+    setTimeout(() => {
+      onSaveHandler(e);
+      setIsSaving(false);
+    }, 500);
+  };
 
   const classnames = classNames('flex--space-between', { 'flex--col-reverse': mobile });
   return (
@@ -29,11 +49,9 @@ export default function FormFooter({ id, onDeleteHandler, onSaveHandler, buttonL
                 Annuler
               </Button>
               <Button
-                ref={deleteButtonRef}
-                onClick={() => {
-                  deleteButtonRef?.current.setAttribute('disabled', true);
-                  onDeleteHandler(id);
-                }}
+                onClick={onDelete}
+                isLoading={isDeleting}
+                disabled={isDeleting}
                 color="error"
                 icon="ri-chat-delete-line"
               >
@@ -58,15 +76,10 @@ export default function FormFooter({ id, onDeleteHandler, onSaveHandler, buttonL
                 </Button>
               ) : <div />}
               <Button
-                ref={submitButtonRef}
                 icon="ri-save-line"
-                onClick={(e) => {
-                  submitButtonRef?.current?.setAttribute('disabled', true);
-                  onSaveHandler(e);
-                  setTimeout(() => {
-                    submitButtonRef?.current?.removeAttribute('disabled');
-                  }, 3000);
-                }}
+                onClick={onSave}
+                isLoading={isSaving}
+                disabled={isSaving}
               >
                 {buttonLabel}
               </Button>

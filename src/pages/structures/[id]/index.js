@@ -3,19 +3,31 @@ import {
   CheckboxGroup, Col, Container, Icon, Modal, ModalContent, ModalFooter,
   ModalTitle, Row, SideMenu, SideMenuItem, SideMenuLink, Title,
 } from '@dataesr/react-dsfr';
-import { useEffect, useState, useCallback } from 'react';
-import { Link as RouterLink, useNavigate, Outlet, useParams } from 'react-router-dom';
+import { useCallback, useEffect, useState } from 'react';
+import { Outlet, Link as RouterLink, useNavigate, useParams } from 'react-router-dom';
 
 import Button from '../../../components/button';
 import CopyBadgeButton from '../../../components/copy/copy-badge-button';
 import { DropdownButton, DropdownButtonItem } from '../../../components/dropdown-button';
+import Error from '../../../components/errors';
+import StructureDeleteForm from '../../../components/forms/delete';
+import StructureDescriptionForm from '../../../components/forms/structures/descriptions';
+import StructureHistoryForm from '../../../components/forms/structures/historique';
+import StructureMottoForm from '../../../components/forms/structures/motto';
+import StructureStatusForm from '../../../components/forms/structures/status';
 import { PageSpinner } from '../../../components/spinner';
+import useAuth from '../../../hooks/useAuth';
 import useEditMode from '../../../hooks/useEditMode';
 import useFetch from '../../../hooks/useFetch';
 import useForm from '../../../hooks/useForm';
-import useShortcuts from '../../../hooks/useShortcuts';
 import useNotice from '../../../hooks/useNotice';
+import usePageTitle from '../../../hooks/usePageTitle';
+import useShortcuts from '../../../hooks/useShortcuts';
 import useUrl from '../../../hooks/useUrl';
+import api from '../../../utils/api';
+import { getComparableNow } from '../../../utils/dates';
+import { saveError, saveSuccess } from '../../../utils/notice-contents';
+import { getName } from '../../../utils/structures';
 import StructureCategoriesPage from './categories';
 import StructureBudgetPage from './chiffres-cles/budget';
 import StructureEtudiantsPage from './chiffres-cles/etudiants';
@@ -29,17 +41,6 @@ import StructureGouvernancePage from './gouvernance';
 import StructurePresentationPage from './presentation';
 import StructurePrixEtRecompensesPage from './prix-et-recompenses';
 import StructureProjetsPage from './projets';
-import useAuth from '../../../hooks/useAuth';
-import { saveError, saveSuccess } from '../../../utils/notice-contents';
-import StructureDescriptionForm from '../../../components/forms/structures/descriptions';
-import StructureStatusForm from '../../../components/forms/structures/status';
-import StructureMottoForm from '../../../components/forms/structures/motto';
-import StructureHistoryForm from '../../../components/forms/structures/historique';
-import api from '../../../utils/api';
-import { getName } from '../../../utils/structures';
-import Error from '../../../components/errors';
-import usePageTitle from '../../../hooks/usePageTitle';
-import { getComparableNow } from '../../../utils/dates';
 
 function StructureByIdPage() {
   const { viewer } = useAuth();
@@ -80,6 +81,7 @@ function StructureByIdPage() {
   const [isDescriptionModalOpen, setIsDescriptionModalOpen] = useState(false);
   const [isMottoModalOpen, setIsMottoModalOpen] = useState(false);
   const [isHistoryModalOpen, setIsHistoryModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   useEffect(() => { reset(); }, [reset]);
   usePageTitle(`Structures · ${data?.currentName.usualName}`);
@@ -96,6 +98,24 @@ function StructureByIdPage() {
     setIsDescriptionModalOpen(false);
     setIsMottoModalOpen(false);
     setIsHistoryModalOpen(false);
+    setIsDeleteModalOpen(false);
+  };
+
+  const onDeleteHandler = async (redirectionId) => {
+    const redirectionUrl = redirectionId ? `/structures/${redirectionId}` : '/';
+    const deleteStructure = async () => api.delete(url)
+      .then(() => {
+        notice(saveSuccess);
+        navigate(redirectionUrl);
+        setIsDeleteModalOpen(false);
+      })
+      .catch(() => notice(saveError));
+    if (redirectionId) {
+      return api.put(`/structures/${redirectionId}/alternative-ids/${id}`)
+        .then(async () => deleteStructure())
+        .catch(() => notice(saveError));
+    }
+    return deleteStructure();
   };
 
   if (isLoading) return <PageSpinner />;
@@ -216,6 +236,20 @@ function StructureByIdPage() {
                     Ajouter/Modifier l'historique
                     <Icon iconPosition="right" size="xl" name="ri-edit-line" color="var(--border-action-high-blue-france)" />
                   </DropdownButtonItem>
+                  {(viewer.role === 'admin') && (
+                    <DropdownButtonItem onClick={() => setIsDeleteModalOpen(true)}>
+                      Supprimer la structure
+                      <Icon iconPosition="right" size="xl" name="ri-delete-bin-line" color="var(--background-action-high-error)" />
+                      <Modal isOpen={isDeleteModalOpen} hide={() => setIsDeleteModalOpen(false)}>
+                        <ModalTitle>
+                          Supprimer la structure
+                        </ModalTitle>
+                        <ModalContent>
+                          <StructureDeleteForm onDelete={onDeleteHandler} type="structures" currentObjectId={id} />
+                        </ModalContent>
+                      </Modal>
+                    </DropdownButtonItem>
+                  )}
                 </DropdownButton>
               )}
               <Button

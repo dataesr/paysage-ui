@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import {
   Col,
   Container,
@@ -6,18 +5,19 @@ import {
   Select,
   TextInput,
 } from '@dataesr/react-dsfr';
+import PropTypes from 'prop-types';
 import { useState } from 'react';
 import useForm from '../../../hooks/useForm';
 import DateInput from '../../date-input';
+import PaysageBlame from '../../paysage-blame';
 import TagInput from '../../tag-input';
 import FormFooter from '../form-footer';
-import PaysageBlame from '../../paysage-blame';
 
 function validate(body) {
   const validationErrors = {};
   if (!body.firstName) { validationErrors.firstName = 'Le prénom est obligatoire.'; }
   if (!body.lastName) { validationErrors.lastName = 'Le nom est obligatoire.'; }
-  if (!body.gender) { validationErrors.type = 'Le genre est obligatoire.'; }
+  if (!body.gender) { validationErrors.gender = 'Le genre est obligatoire.'; }
   return validationErrors;
 }
 
