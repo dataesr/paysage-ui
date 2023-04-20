@@ -1,35 +1,40 @@
-import { useEffect, useState } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
 import {
   Badge,
   BadgeGroup, Breadcrumb, BreadcrumbItem, ButtonGroup,
-  Col, Container, Icon, Link, Modal, ModalContent, ModalTitle, Row, Title, Text,
+  Col, Container, Icon, Link, Modal, ModalContent, ModalTitle, Row,
+  Text,
+  Title,
 } from '@dataesr/react-dsfr';
-import useEditMode from '../../hooks/useEditMode';
+import { useEffect, useState } from 'react';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import Logo from '../../assets/svg-logo/favicon-32x32.png';
+import { Bloc, BlocContent, BlocTitle } from '../../components/bloc';
 import Button from '../../components/button';
+import RelatedObjectCard from '../../components/card/related-object-card';
 import CopyBadgeButton from '../../components/copy/copy-badge-button';
 import { DropdownButton, DropdownButtonItem } from '../../components/dropdown-button';
-import useUrl from '../../hooks/useUrl';
-import { PageSpinner } from '../../components/spinner';
-import api from '../../utils/api';
-import useNotice from '../../hooks/useNotice';
-import OfficialTextForm from '../../components/forms/official-text';
-import { saveError, saveSuccess } from '../../utils/notice-contents';
-import useFetch from '../../hooks/useFetch';
-import RelatedObjectCard from '../../components/card/related-object-card';
-import { Bloc, BlocContent, BlocTitle } from '../../components/bloc';
 import Error from '../../components/errors';
-import usePageTitle from '../../hooks/usePageTitle';
+import DeleteForm from '../../components/forms/delete';
+import OfficialTextForm from '../../components/forms/official-text';
+import { PageSpinner } from '../../components/spinner';
 import useAuth from '../../hooks/useAuth';
-import Logo from '../../assets/svg-logo/favicon-32x32.png';
+import useEditMode from '../../hooks/useEditMode';
+import useFetch from '../../hooks/useFetch';
+import useNotice from '../../hooks/useNotice';
+import usePageTitle from '../../hooks/usePageTitle';
+import useUrl from '../../hooks/useUrl';
+import api from '../../utils/api';
+import { saveError, saveSuccess } from '../../utils/notice-contents';
 
 export default function OfficialTextByIdPage() {
-  const { url } = useUrl();
+  const { url, id } = useUrl();
   const { viewer } = useAuth();
+  const navigate = useNavigate();
   const { data, isLoading, error, reload } = useFetch(url);
   const { notice } = useNotice();
   const { editMode, reset, toggle } = useEditMode();
   const [isFormModalOpen, setIsFormModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   usePageTitle(`Texte officiels · ${data?.title}`);
 
   useEffect(() => { reset(); }, [reset]);
@@ -49,25 +54,22 @@ export default function OfficialTextByIdPage() {
     );
   };
 
-  // const renderIcon = (iconType) => {
-  //   let rxIcon = '';
-
-  //   switch (iconType) {
-  //   default:
-  //     rxIcon = Logo;
-  //     break;
-  //   }
-
-  //   return (
-  //     <div className="fr-card__content">
-  //       <Icon
-  //         className="fr-mb-1w fr-pt-1w"
-  //         name={rxIcon}
-  //         size="3x"
-  //       />
-  //     </div>
-  //   );
-  // };
+  const onDeleteHandler = async (redirectionId) => {
+    const redirectionUrl = redirectionId ? `/textes-officiels/${redirectionId}` : '/';
+    const deleteObject = async () => api.delete(url)
+      .then(() => {
+        notice(saveSuccess);
+        navigate(redirectionUrl);
+        setIsDeleteModalOpen(false);
+      })
+      .catch(() => notice(saveError));
+    if (redirectionId) {
+      return api.put(`/official-texts/${redirectionId}/alternative-ids/${id}`)
+        .then(async () => deleteObject())
+        .catch(() => notice(saveError));
+    }
+    return deleteObject();
+  };
 
   if (isLoading) return <PageSpinner />;
   if (error) return <Error status={error} />;
@@ -102,6 +104,20 @@ export default function OfficialTextByIdPage() {
                       </ModalContent>
                     </Modal>
                   </DropdownButtonItem>
+                  {(viewer.role === 'admin') && (
+                    <DropdownButtonItem onClick={() => setIsDeleteModalOpen(true)}>
+                      Supprimer le texte officiel
+                      <Icon iconPosition="right" size="xl" name="ri-delete-bin-line" color="var(--background-action-high-error)" />
+                      <Modal isOpen={isDeleteModalOpen} hide={() => setIsDeleteModalOpen(false)}>
+                        <ModalTitle>
+                          Supprimer le texte officiel
+                        </ModalTitle>
+                        <ModalContent>
+                          <DeleteForm onDelete={onDeleteHandler} type="official-texts" currentObjectId={id} />
+                        </ModalContent>
+                      </Modal>
+                    </DropdownButtonItem>
+                  )}
                 </DropdownButton>
               )}
               {(viewer.role !== 'reader') && (
