@@ -17,6 +17,7 @@ const structureParsingFunctions = {
     const [lat, lng] = str.split(',');
     return { lat: Number(lat.trim()), lng: Number(lng.trim()) };
   },
+  iso3: (str) => str?.toUpperCase(),
 };
 
 export default async function parseStructureTSV(inputString) {
