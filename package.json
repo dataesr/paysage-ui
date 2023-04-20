@@ -31,7 +31,7 @@
     "prettier": "prettier --write **/*.js",
     "start": "PORT=3001 react-scripts start",
     "stylelint": "stylelint --fix **/*.scss",
-    "test": "react-scripts test"
+    "test": "npx jest"
   },
   "eslintConfig": {
     "extends": [
