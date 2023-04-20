@@ -1,4 +1,5 @@
 import api from '../../../../../utils/api';
+import { regexpValidateIdentifiers } from '../../../../../utils/regexpForIdentifiers';
 import { normalize } from '../../../../../utils/strings';
 
 async function nameChecker({ firstName, lastName }) {
@@ -41,8 +42,22 @@ function websiteChecker({ websiteFr, websiteEn }) {
   return [];
 }
 
-async function idChecker(keyName, keyValue) {
-  if (!keyValue) return [];
+async function idFormatChecker(keyName, keyValue) {
+  if (!keyValue && !keyName) return [];
+  const [regexp, errorMessage] = regexpValidateIdentifiers(keyName);
+  if (!regexp) {
+    return [];
+  }
+  if (!regexp.test(keyValue)) {
+    return [{
+      message: errorMessage,
+    }];
+  }
+  return [];
+}
+
+async function duplicateIdChecker(keyName, keyValue) {
+  if (!keyValue && !keyName) return [];
   const { data } = await api.get(`/autocomplete?types=persons&query=${keyValue}`);
   const duplicate = data?.data.find((el) => el?.identifiers.includes(keyValue));
   if (duplicate) {
@@ -59,14 +74,17 @@ export default async function checker(docs, index) {
     const doc = docs[index];
     const nameDuplicateWarnings = await nameChecker(doc);
     // const idDuplicateWarnings = await idChecker(['orcid', 'wikidata', 'idref'], doc);
-    const orcidDuplicate = await idChecker('orcid', doc.orcid);
-    const wikidataDuplicate = await idChecker('wikidata', doc.wikidata);
-    const idrefDuplicate = await idChecker('idref', doc.idref);
+    const orcidDuplicate = await duplicateIdChecker('orcid', doc.orcid);
+    const wikidataDuplicate = await duplicateIdChecker('wikidata', doc.wikidata);
+    const idrefDuplicate = await duplicateIdChecker('idref', doc.idref);
+    const orcidFormat = await idFormatChecker('orcid', doc.orcid);
+    const wikidataFormat = await idFormatChecker('wikidata', doc.wikidata);
+    const idrefFormat = await idFormatChecker('idref', doc.idref);
     const websiteChecked = await websiteChecker(doc);
     const genderChecked = await genderChecker(doc);
     const requiredErrors = requiredChecker(doc);
     const warning = [...nameDuplicateWarnings, ...orcidDuplicate, ...wikidataDuplicate, ...idrefDuplicate, ...websiteChecked];
-    const error = [...requiredErrors, ...genderChecked];
+    const error = [...requiredErrors, ...genderChecked, ...orcidFormat, ...wikidataFormat, ...idrefFormat];
     let status = 'success';
     if (warning.length) { status = 'warning'; }
     if (error.length) { status = 'error'; }
