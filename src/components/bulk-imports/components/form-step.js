@@ -3,10 +3,8 @@ import PropTypes from 'prop-types';
 import { useState } from 'react';
 
 const MODELS = {
-  structures: '/models/AjoutEnMasseStructure.xlsx',
-  personnes: '/models/AjoutEnMasseStructure.xlsx',
-  gouvernance: '/models/AjoutEnMasseGouvernance.xlsx',
-  lauréats: '/models/AjoutEnMasseStructure.xlsx',
+  structures: '/models/BulkImportStructures.xlsx',
+  personnes: '/models/BulkImportPersons.xlsx',
 };
 
 export default function FormStep({ type, onInputValidation, fileError }) {
