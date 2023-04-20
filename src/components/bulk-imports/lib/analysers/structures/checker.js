@@ -1,14 +1,29 @@
 import api from '../../../../../utils/api';
+import { regexpValidateIdentifiers } from '../../../../../utils/regexpForIdentifiers';
 import { normalize } from '../../../../../utils/strings';
 
-async function siretChecker({ siret }) {
-  if (!siret) return [];
-  const { data } = await api.get(`/autocomplete?types=structures&query=${siret}`);
-  const duplicate = data?.data.find((el) => el?.identifiers.includes(siret));
+async function duplicateIdChecker(keyName, keyValue) {
+  if (!keyValue || !keyName) return [];
+  const { data } = await api.get(`/autocomplete?types=structures&query=${keyValue}`);
+  const duplicate = data?.data.find((el) => el?.identifiers.includes(keyValue));
   if (duplicate) {
     return [{
-      message: `Le siret ${siret} existe déjà pour la structure ${duplicate.name}`,
+      message: `L'id ${keyName} (${keyValue}) existe déjà sur cette structure : ${duplicate.name}`,
       href: `/structures/${duplicate.id}`,
+    }];
+  }
+  return [];
+}
+
+async function idFormatChecker(keyName, keyValue) {
+  if (!keyName) return [];
+  const [regexp, errorMessage] = regexpValidateIdentifiers(keyName);
+  if (!regexp) {
+    return [];
+  }
+  if ((keyName && keyValue) && !regexp.test(keyValue)) {
+    return [{
+      message: errorMessage,
     }];
   }
   return [];
@@ -74,6 +89,18 @@ async function categoriesChecker({ categories }) {
   return categoriesWarning;
 }
 
+async function legalCategoriesChecker({ legalCategory }) {
+  const legalCategoriesWarning = [];
+  if (legalCategory) {
+    const response = await api.get(`/autocomplete?types=legalcategories&query=${legalCategory}`);
+    const apiCategory = response.data.data?.[0]?.id;
+    if (!apiCategory) {
+      legalCategoriesWarning.push({ message: `La catégorie juridique ${legalCategory} n'existe pas` });
+    }
+  }
+  return legalCategoriesWarning;
+}
+
 function requiredChecker({ usualName, country, iso3, structureStatus, categories, legalCategory }) {
   const errors = [];
   if (!usualName) errors.push({ message: 'Le nom usuel est obligatoire' });
@@ -94,13 +121,27 @@ function requiredChecker({ usualName, country, iso3, structureStatus, categories
 export default async function checker(docs, index) {
   try {
     const doc = docs[index];
-    const siretDuplicateWarnings = await siretChecker(doc);
+    const categoriesErrors = await categoriesChecker(doc);
     const nameDuplicateWarnings = await nameChecker(doc);
     const requiredErrors = requiredChecker(doc);
-    const categoriesErrors = await categoriesChecker(doc);
+    const edDuplicate = await duplicateIdChecker('ed', doc.ed);
+    const idrefDuplicate = await duplicateIdChecker('idref', doc.idref);
+    const siretDuplicate = await duplicateIdChecker('siret', doc.siret);
+    const rnsrDuplicate = await duplicateIdChecker('rnsr', doc.rnsr);
+    const rorDuplicate = await duplicateIdChecker('ror', doc.ror);
+    const uaiDuplicate = await duplicateIdChecker('uai', doc.uai);
+    const wikidataDuplicate = await duplicateIdChecker('wikidata', doc.wikidata);
+    const edFormat = await idFormatChecker('ed', doc.ed);
+    const idrefFormat = await idFormatChecker('idref', doc.idref);
+    const siretFormat = await idFormatChecker('siret', doc.siret);
+    const rnsrFormat = await idFormatChecker('rnsr', doc.rnsr);
+    const rorFormat = await idFormatChecker('ror', doc.ror);
+    const uaiFormat = await idFormatChecker('uai', doc.uai);
+    const wikidataFormat = await idFormatChecker('wikidata', doc.wikidata);
+    const legalCategoryCheck = await legalCategoriesChecker(doc);
     const websiteChecked = await websiteChecker(doc);
-    const warning = [...siretDuplicateWarnings, ...nameDuplicateWarnings, ...websiteChecked];
-    const error = [...requiredErrors, ...categoriesErrors];
+    const warning = [...idrefDuplicate, ...siretDuplicate, ...edDuplicate, ...rnsrDuplicate, ...uaiDuplicate, ...rorDuplicate, ...wikidataDuplicate, ...nameDuplicateWarnings, ...websiteChecked];
+    const error = [...requiredErrors, ...legalCategoryCheck, ...categoriesErrors, ...edFormat, ...idrefFormat, ...siretFormat, ...rnsrFormat, ...rorFormat, ...uaiFormat, ...wikidataFormat];
     let status = 'success';
     if (warning.length) { status = 'warning'; }
     if (error.length) { status = 'error'; }
