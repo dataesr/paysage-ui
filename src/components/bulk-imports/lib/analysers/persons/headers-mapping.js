@@ -1,0 +1,15 @@
+export default {
+  Prénom: 'firstName',
+  Nom: 'lastName',
+  'Genre [F = Femme, H = Homme, A = Autre]': 'gender',
+  'Autres dénominations possibles séparées par des ;': 'otherNames',
+  Activité: 'activity',
+  'Identifiant Orcid': 'orcid',
+  'Identifiant Wikidata [Q1234]': 'wikidata',
+  'Identifiant IdRef [123456789]': 'idref',
+  'Site internet en français': 'websiteFr',
+  'Site internet en anglais': 'websiteEn',
+  'Compte researchgate [https://researchgate.com/XXX]': 'researchgate',
+  'Compte twitter [https://twitter.com/XXX]': 'twitter',
+  'Compte linkedIn [https://www.linkedin.com/in/XXX-XXX-123456/]': 'linkedIn',
+};

@@ -61,3 +61,29 @@
 .fr-link--close:before {
   display: none !important;
 }
+
+.fr-hr-or {
+  color: var(--text-mention-grey);
+  display: flex;
+  align-items: center;
+  text-align: center;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.fr-hr-or::before,
+.fr-hr-or::after {
+  content: '';
+  flex: 1;
+  border-bottom: 1px solid var(--text-mention-grey);
+}
+
+.fr-hr-or:not(:empty)::before {
+  margin-right: 1em;
+  margin-left: 1em;
+}
+
+.fr-hr-or:not(:empty)::after {
+  margin-left: 1em;
+  margin-right: 1em;
+}
