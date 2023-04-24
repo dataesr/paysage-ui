@@ -112,11 +112,74 @@ function requiredChecker({ usualName, country, iso3, structureStatus, categories
   return errors;
 }
 
-// function rowsChecker(docs, index) {
-//   const { usualName, siret } = docs[index];
-//   const duplicateSiretIndex = docs.filter((el) => el.siret === siret).length > 1;
-//   return errors;
-// }
+function rowsChecker(rows, index) {
+  const warnings = [];
+  const rowsWithoutIndex = rows.filter((r, i) => (i !== index));
+
+  const isDuplicateUsualName = rowsWithoutIndex
+    .map((row) => row.usualName)
+    .filter((name) => name)
+    .includes(rows[index].usualName);
+  if (isDuplicateUsualName) {
+    warnings.push({ message: `Le nom ${rows[index].usualName} que vous souhaitez ajouter existe déjà dans votre fichier d'import.` });
+  }
+  const isDuplicateSiret = rowsWithoutIndex
+    .map((row) => row.siret)
+    .filter((id) => id)
+    .includes(rows[index].siret);
+  if (isDuplicateSiret) {
+    warnings.push({ message: `Le SIRET ${rows[index].siret} que vous souhaitez ajouter existe déjà dans votre fichier d"import.'` });
+  }
+
+  const isDuplicateIdref = rowsWithoutIndex
+    .map((row) => row.idref)
+    .filter((id) => id)
+    .includes(rows[index].idref);
+  if (isDuplicateIdref) {
+    warnings.push({ message: `L'identifiant idref ${rows[index].idref} que vous souhaitez ajouter existe déjà dans votre fichier d"import.'` });
+  }
+
+  const isDuplicateEd = rowsWithoutIndex
+    .map((row) => row.ed)
+    .filter((id) => id)
+    .includes(rows[index].ed);
+  if (isDuplicateEd) {
+    warnings.push({ message: `L'identifiant ed ${rows[index].ed} que vous souhaitez ajouter existe déjà dans votre fichier d"import.'` });
+  }
+
+  const isDuplicateRnsr = rowsWithoutIndex
+    .map((row) => row.rnsr)
+    .filter((id) => id)
+    .includes(rows[index].rnsr);
+  if (isDuplicateRnsr) {
+    warnings.push({ message: `L'identifiant rnsr ${rows[index].rnsr} que vous souhaitez ajouter existe déjà dans votre fichier d"import.'` });
+  }
+
+  const isDuplicateRor = rowsWithoutIndex
+    .map((row) => row.ror)
+    .filter((id) => id)
+    .includes(rows[index].ror);
+  if (isDuplicateRor) {
+    warnings.push({ message: `L'identifiant ror ${rows[index].ror} que vous souhaitez ajouter existe déjà dans votre fichier d"import.'` });
+  }
+
+  const isDuplicateWikidata = rowsWithoutIndex
+    .map((row) => row.wikidata)
+    .filter((id) => id)
+    .includes(rows[index].wikidata);
+  if (isDuplicateWikidata) {
+    warnings.push({ message: `L'identifiant wikidata ${rows[index].wikidata} que vous souhaitez ajouter existe déjà dans votre fichier d"import.'` });
+  }
+
+  const isDuplicateUai = rowsWithoutIndex
+    .map((row) => row.uai)
+    .filter((id) => id)
+    .includes(rows[index].uai);
+  if (isDuplicateUai) {
+    warnings.push({ message: `L'identifiant uai ${rows[index].uai} que vous souhaitez ajouter existe déjà dans votre fichier d"import.'` });
+  }
+  return warnings;
+}
 
 export default async function checker(docs, index) {
   try {
@@ -140,7 +203,9 @@ export default async function checker(docs, index) {
     const wikidataFormat = await idFormatChecker('wikidata', doc.wikidata);
     const legalCategoryCheck = await legalCategoriesChecker(doc);
     const websiteChecked = await websiteChecker(doc);
-    const warning = [...idrefDuplicate, ...siretDuplicate, ...edDuplicate, ...rnsrDuplicate, ...uaiDuplicate, ...rorDuplicate, ...wikidataDuplicate, ...nameDuplicateWarnings, ...websiteChecked];
+    const duplicateChecker = await rowsChecker(docs, index);
+    const warning = [...idrefDuplicate, ...duplicateChecker,
+      ...siretDuplicate, ...edDuplicate, ...rnsrDuplicate, ...uaiDuplicate, ...rorDuplicate, ...wikidataDuplicate, ...nameDuplicateWarnings, ...websiteChecked];
     const error = [...requiredErrors, ...legalCategoryCheck, ...categoriesErrors, ...edFormat, ...idrefFormat, ...siretFormat, ...rnsrFormat, ...rorFormat, ...uaiFormat, ...wikidataFormat];
     let status = 'success';
     if (warning.length) { status = 'warning'; }
