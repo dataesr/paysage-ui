@@ -10,6 +10,7 @@ import {
   CardHeader,
 } from '@dataesr/react-dsfr';
 import usePageTitle from '../hooks/usePageTitle';
+import bso from '../assets/logo-bso.png';
 
 export default function RessourcesPage() {
   usePageTitle('Ressources');
@@ -106,6 +107,28 @@ export default function RessourcesPage() {
             <CardDescription as="div">
               Découvrez les jeux de données ouvertes relatives à l'enseignement
               supérieur et à la recherche.
+            </CardDescription>
+          </Card>
+        </Col>
+        <Col n="12 sm-6 md-4" spacing="p-3w">
+          <Card
+            asLink={(
+              <a className="flex flex--baseline" href="https://barometredelascienceouverte.esr.gouv.fr/" target="_blank" rel="noreferrer">
+                Baromètre français de la Science Ouverte
+              </a>
+            )}
+            isGrey
+            hasBorder={false}
+          >
+            <CardHeader>
+              <CardImage
+                src={bso}
+                alt="logo"
+              />
+            </CardHeader>
+            <CardTitle />
+            <CardDescription as="div">
+              Mesurer l'évolution de la science ouverte en France à partir de données fiables, ouvertes et maîtrisées.
             </CardDescription>
           </Card>
         </Col>
