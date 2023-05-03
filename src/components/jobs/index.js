@@ -91,7 +91,7 @@ export default function Runs() {
         </p>
       </Row>
       <Row className="fr-mb-3w">
-        {activity?.length
+        {(activity?.length > 0)
           ? <ScatterPlot data={activity} />
           : (
             <Col className="fr-pt-3w">
