@@ -8,7 +8,7 @@ export default function Info({ label, value, isCode = false }) {
       </p>
       {(isCode)
         ? <pre className="fr-m-0 fr-text--sm fr-text--bold fr-card__detail fr-pb-1w job-code">{JSON.stringify(value, null, 2)}</pre>
-        : value}
+        : <p className="fr-m-0 fr-text--sm fr-text--bold fr-card__detail fr-pb-1w">{value}</p>}
     </>
   );
 }

@@ -36,12 +36,12 @@ export default function SelectedJob({ job, deleteJob, createJob }) {
               </div>
             )}
           />
-          <hr />
+          <hr className="fr-my-2w fr-mx-1v" />
           <Info label="Nom de la tâche" value={job.name} />
           <Info label="Id de la tâche" value={job._id} />
           <Info label="Status" value={<Badge isSmall type={badgeType} text={badgeLabel} />} />
           {(job.status === 'failed') && <Info label="Raison de l'échec" value={job.failReason} isCode />}
-          <hr />
+          <hr className="fr-my-2w fr-mx-1v" />
           {(job.status === 'scheduled') && <Info label="Date de la prochaine exécution" value={job.nextRunAt} />}
           {(job.status === 'running') && <Info label="Début de la tâche" value={job.lastRunAt} />}
           {(['success', 'failed'].includes(job.status)) && (
@@ -51,9 +51,9 @@ export default function SelectedJob({ job, deleteJob, createJob }) {
               <Info label="Durée de la tâche" value={timeBetween(new Date(job.lastRunAt), new Date(job.lastFinishedAt))} />
             </>
           )}
-          <hr />
+          <hr className="fr-my-2w fr-mx-3v" />
           <Info label="Paramètres d'exécution" value={job.data} isCode />
-          <hr />
+          <hr className="fr-my-1w fr-mx-1v" />
           {(job.status !== 'scheduled') && <Info label="Résultat de la tâche" value={job.result} isCode />}
         </div>
       </div>
