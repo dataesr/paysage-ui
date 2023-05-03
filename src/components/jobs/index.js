@@ -1,8 +1,8 @@
-import { Breadcrumb, BreadcrumbItem, Col, Container, Highlight, Row } from '@dataesr/react-dsfr';
+import { Breadcrumb, BreadcrumbItem, Button, Col, Container, Modal, ModalContent, ModalTitle, Row, Select, Title } from '@dataesr/react-dsfr';
 import { useMemo, useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import { Spinner } from '../spinner';
-import ScatterPlot from './components/scatterplot';
+import CreateTaskForm from './components/create-task-form';
 import useJobs from './hooks/useJobs';
 import './styles/jobs.scss';
 
@@ -42,7 +42,7 @@ export default function Runs() {
           </Breadcrumb>
         </Col>
       </Row>
-      {/* <Row className="flex flex--baseline">
+      <Row className="flex flex--baseline">
         <Title as="h1" look="h5" className="flex--grow">
           Tâches du système
         </Title>
@@ -79,13 +79,13 @@ export default function Runs() {
             onChange={(e) => { setStatus(e.target.value); setPage(1); }}
           />
         </Col>
-      </Row> */}
+      </Row>
       <Row className="fr-mt-3w">
         <p className="fr-m-0 fr-text--md fr-text--bold fr-pb-1w">
           Activité des 7 derniers jours
         </p>
       </Row>
-      <Row className="fr-mb-3w">
+      {/* <Row className="fr-mb-3w">
         {(activity?.length > 0)
           ? <ScatterPlot data={activity} />
           : (
@@ -95,7 +95,7 @@ export default function Runs() {
               </Highlight>
             </Col>
           )}
-      </Row>
+      </Row> */}
       {(totalCount) && (
         <Row>
           <p className="fr-m-0 fr-text--md fr-text--bold fr-pb-2w">

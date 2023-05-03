@@ -1,5 +1,5 @@
-import Jobs from '../../components/jobs';
+import Runs from '../../components/jobs';
 
 export default function JobsPage() {
-  return <Jobs />;
+  return <Runs />;
 }
