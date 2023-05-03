@@ -1,13 +1,11 @@
-import { Breadcrumb, BreadcrumbItem, Col, Container, Highlight, Modal, ModalContent, ModalTitle, Pagination, Row, Select, Title } from '@dataesr/react-dsfr';
+import { Breadcrumb, BreadcrumbItem, Col, Container, Modal, ModalContent, ModalTitle, Row, Select, Title } from '@dataesr/react-dsfr';
 import { useMemo, useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import Button from '../button';
 import Error from '../errors';
 import { Spinner } from '../spinner';
 import CreateTaskForm from './components/create-task-form';
-import JobList from './components/job-list';
 // import ScatterPlot from './components/scatterplot';
-import SelectedJob from './components/selected-job';
 import useJobs from './hooks/useJobs';
 import './styles/jobs.scss';
 
@@ -108,7 +106,7 @@ export default function Runs() {
         </Row>
       )}
       {(error) && <Error />}
-      <Row gutters>
+      {/* <Row gutters>
         <Col n="7">
           {(!error && totalCount === 0) && (
             <Highlight colorFamily="green-emeraude">
@@ -129,7 +127,7 @@ export default function Runs() {
             <SelectedJob job={selected} createJob={createJob} deleteJob={deleteJob} />
           </Col>
         )}
-      </Row>
+      </Row> */}
     </Container>
   );
 }
