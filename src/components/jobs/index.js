@@ -26,11 +26,11 @@ export default function Runs() {
     return `/jobs?skip=${skip}&limit=${pageSize}${nameFilter}${statusFilter}`;
   }, [name, status, page]);
   const { createJob, deleteJob, isLoading, error, jobs, totalCount, aggregations, selected, setSelected } = useJobs(url);
-  const { byStatus = [], activity = [], byName = [], definitions = [] } = aggregations || {};
-  const statusesOptions = (byStatus.length > 0)
+  const { byStatus, activity, byName, definitions } = aggregations || {};
+  const statusesOptions = (byStatus?.length > 0)
     ? byStatus.reduce((acc, cur) => [...acc, { value: cur._id, label: `${getStatusLabel(cur._id)} (${cur.count})` }], [{ value: 'all', label: 'Tous les status' }])
     : [{ value: 'all', label: 'Toutes les tâches' }];
-  const namesOptions = (byName.length > 0)
+  const namesOptions = (byName?.length > 0)
     ? byName.reduce((acc, cur) => [...acc, { value: cur._id, label: `${cur._id} (${cur.count})` }], [{ value: 'all', label: 'Toutes les tâches' }])
     : [{ value: 'all', label: 'Toutes les tâches' }];
   return (
