@@ -1,9 +1,7 @@
-import { Breadcrumb, BreadcrumbItem, Col, Container, Highlight, Modal, ModalContent, ModalTitle, Row, Select, Title } from '@dataesr/react-dsfr';
+import { Breadcrumb, BreadcrumbItem, Col, Container, Highlight, Row } from '@dataesr/react-dsfr';
 import { useMemo, useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
-import Button from '../button';
 import { Spinner } from '../spinner';
-import CreateTaskForm from './components/create-task-form';
 import ScatterPlot from './components/scatterplot';
 import useJobs from './hooks/useJobs';
 import './styles/jobs.scss';
@@ -44,9 +42,9 @@ export default function Runs() {
           </Breadcrumb>
         </Col>
       </Row>
-      <Row className="flex flex--baseline">
+      {/* <Row className="flex flex--baseline">
         <Title as="h1" look="h5" className="flex--grow">
-          Tâches du systeme
+          Tâches du système
         </Title>
         <Button color="success" size="sm" icon="ri-add-line" onClick={() => setIsNewModalOpen(true)}>
           Nouvelle tâche
@@ -81,7 +79,7 @@ export default function Runs() {
             onChange={(e) => { setStatus(e.target.value); setPage(1); }}
           />
         </Col>
-      </Row>
+      </Row> */}
       <Row className="fr-mt-3w">
         <p className="fr-m-0 fr-text--md fr-text--bold fr-pb-1w">
           Activité des 7 derniers jours
