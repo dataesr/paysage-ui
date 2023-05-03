@@ -1,11 +1,13 @@
-import { Breadcrumb, BreadcrumbItem, Col, Container, Modal, ModalContent, ModalTitle, Row, Select, Title } from '@dataesr/react-dsfr';
+import { Breadcrumb, BreadcrumbItem, Col, Container, Highlight, Modal, ModalContent, ModalTitle, Pagination, Row, Select, Title } from '@dataesr/react-dsfr';
 import { useMemo, useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import Button from '../button';
 import Error from '../errors';
 import { Spinner } from '../spinner';
 import CreateTaskForm from './components/create-task-form';
-// import ScatterPlot from './components/scatterplot';
+import JobList from './components/job-list';
+import ScatterPlot from './components/scatterplot';
+import SelectedJob from './components/selected-job';
 import useJobs from './hooks/useJobs';
 import './styles/jobs.scss';
 
@@ -28,8 +30,12 @@ export default function Runs() {
   }, [name, status, page]);
   const { createJob, deleteJob, isLoading, error, jobs, totalCount, aggregations, selected, setSelected } = useJobs(url);
   const { byStatus = [], activity = [], byName = [], definitions = [] } = aggregations || {};
-  const statusesOptions = byStatus.reduce((acc, cur) => [...acc, { value: cur._id, label: `${getStatusLabel(cur._id)} (${cur.count})` }], [{ value: 'all', label: 'Tous les status' }]);
-  const namesOptions = byName.reduce((acc, cur) => [...acc, { value: cur._id, label: `${cur._id} (${cur.count})` }], [{ value: 'all', label: 'Toutes les tâches' }]);
+  const statusesOptions = (byStatus.length > 0)
+    ? byStatus.reduce((acc, cur) => [...acc, { value: cur._id, label: `${getStatusLabel(cur._id)} (${cur.count})` }], [{ value: 'all', label: 'Tous les status' }])
+    : [{ value: 'all', label: 'Toutes les tâches' }];
+  const namesOptions = (byName.length > 0)
+    ? byName.reduce((acc, cur) => [...acc, { value: cur._id, label: `${cur._id} (${cur.count})` }], [{ value: 'all', label: 'Toutes les tâches' }])
+    : [{ value: 'all', label: 'Toutes les tâches' }];
   return (
     <Container fluid className="fr-mb-5w">
       <Row>
@@ -66,7 +72,7 @@ export default function Runs() {
             options={namesOptions}
             name="name"
             selected={name}
-            onChange={(e) => { setName(e.target.value); setStatus('all'); setSelected(null); setPage(1); }}
+            onChange={(e) => { setName(e.target.value); setStatus('all'); setPage(1); }}
           />
         </Col>
         <Col n="12 md-6">
@@ -75,7 +81,7 @@ export default function Runs() {
             options={statusesOptions}
             selected={status}
             name="status"
-            onChange={(e) => { setStatus(e.target.value); setSelected(null); setPage(1); }}
+            onChange={(e) => { setStatus(e.target.value); setPage(1); }}
           />
         </Col>
       </Row>
@@ -84,7 +90,7 @@ export default function Runs() {
           Activité des 7 derniers jours
         </p>
       </Row>
-      {/* <Row className="fr-mb-3w">
+      <Row className="fr-mb-3w">
         {activity?.length
           ? <ScatterPlot data={activity} />
           : (
@@ -94,7 +100,7 @@ export default function Runs() {
               </Highlight>
             </Col>
           )}
-      </Row> */}
+      </Row>
       {(totalCount) && (
         <Row>
           <p className="fr-m-0 fr-text--md fr-text--bold fr-pb-2w">
@@ -106,7 +112,7 @@ export default function Runs() {
         </Row>
       )}
       {(error) && <Error />}
-      {/* <Row gutters>
+      <Row gutters>
         <Col n="7">
           {(!error && totalCount === 0) && (
             <Highlight colorFamily="green-emeraude">
@@ -127,7 +133,7 @@ export default function Runs() {
             <SelectedJob job={selected} createJob={createJob} deleteJob={deleteJob} />
           </Col>
         )}
-      </Row> */}
+      </Row>
     </Container>
   );
 }
