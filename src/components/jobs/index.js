@@ -6,7 +6,7 @@ import Error from '../errors';
 import { Spinner } from '../spinner';
 import CreateTaskForm from './components/create-task-form';
 import JobList from './components/job-list';
-import ScatterPlot from './components/scatterplot';
+// import ScatterPlot from './components/scatterplot';
 import SelectedJob from './components/selected-job';
 import useJobs from './hooks/useJobs';
 import './styles/jobs.scss';
@@ -86,7 +86,7 @@ export default function Runs() {
           Activité des 7 derniers jours
         </p>
       </Row>
-      <Row className="fr-mb-3w">
+      {/* <Row className="fr-mb-3w">
         {activity?.length
           ? <ScatterPlot data={activity} />
           : (
@@ -96,7 +96,7 @@ export default function Runs() {
               </Highlight>
             </Col>
           )}
-      </Row>
+      </Row> */}
       {(totalCount) && (
         <Row>
           <p className="fr-m-0 fr-text--md fr-text--bold fr-pb-2w">
