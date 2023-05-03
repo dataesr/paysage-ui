@@ -1,10 +1,12 @@
-import { Breadcrumb, BreadcrumbItem, Button, Col, Container, Highlight, Modal, ModalContent, ModalTitle, Pagination, Row, Select, Title } from '@dataesr/react-dsfr';
+import { Breadcrumb, BreadcrumbItem, Col, Container, Highlight, Modal, ModalContent, ModalTitle, Pagination, Row, Select, Title } from '@dataesr/react-dsfr';
 import { useMemo, useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
+import Button from '../button';
 import Error from '../errors';
 import { Spinner } from '../spinner';
 import CreateTaskForm from './components/create-task-form';
 import JobList from './components/job-list';
+import ScatterPlot from './components/scatterplot';
 import SelectedJob from './components/selected-job';
 import useJobs from './hooks/useJobs';
 import './styles/jobs.scss';
@@ -88,8 +90,8 @@ export default function Runs() {
           Activité des 7 derniers jours
         </p>
       </Row>
-      {/* <Row className="fr-mb-3w">
-        {(activity?.length > 0)
+      <Row className="fr-mb-3w">
+        {(activity && activity?.length > 0)
           ? <ScatterPlot data={activity} />
           : (
             <Col className="fr-pt-3w">
@@ -98,7 +100,7 @@ export default function Runs() {
               </Highlight>
             </Col>
           )}
-      </Row> */}
+      </Row>
       {(totalCount) && (
         <Row>
           <p className="fr-m-0 fr-text--md fr-text--bold fr-pb-2w">

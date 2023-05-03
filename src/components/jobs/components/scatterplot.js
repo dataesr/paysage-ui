@@ -1,5 +1,5 @@
 import Highcharts from 'highcharts';
-import { HighchartsReact } from 'highcharts-react-official';
+import HighchartsReact from 'highcharts-react-official';
 import PropTypes from 'prop-types';
 
 const series = [{
@@ -104,11 +104,11 @@ const options = {
 export default function ScatterPlot({ data }) {
   if (!data?.length) return null;
   const fillfulledSeries = series.map((s) => {
-    const temp = data.map((elm) => {
+    const serieData = data.map((elm) => {
       if (elm.status !== s.id) return null;
       return { x: elm.date, y: elm.duration, name: elm.name };
     }).filter((elm) => elm);
-    return { ...s, data: temp };
+    return { ...s, data: serieData };
   });
   options.series = fillfulledSeries;
   return (
