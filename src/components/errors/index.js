@@ -35,7 +35,7 @@ function Error404() {
 export default function Error({ status }) {
   return (
     <Container>
-      <Row gutters alignItems="center" justifyContent="middle" spacing="my-7w mt-md-12w mb-md-10w">
+      <Row gutters alignItems="center" justifyContent="center" spacing="my-7w mt-md-12w mb-md-10w">
         <Col spacing="py-0" n="12 md-6">
           {['400', '404', '403', '401'].includes(status) ? <Error404 /> : <Error500 />}
           <ButtonGroup isInlineFrom="sm">
