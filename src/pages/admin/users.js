@@ -178,7 +178,7 @@ function User({
                       <Row>
                         <Text bold spacing="mb-1w">{`Groupes de ${firstName} ${lastName}`}</Text>
                       </Row>
-                      <Row spacing="pb-3w" justifyContent="middle">
+                      <Row spacing="pb-3w" justifyContent="center">
                         {groups?.map((group) => (
                           <>
                             <Text spacing="mb-0 mr-1w">
