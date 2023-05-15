@@ -225,7 +225,7 @@ export default function HomePage() {
                           cardValue={`${counts[k]}`}
                           className={`card-${k} card--border-bottom`}
                           icon={icons[k]}
-                          linkTo={`./rechercher/${objectMappingSearch[k]}?query=&page=1`}
+                          linkIn={`./rechercher/${objectMappingSearch[k]}?query=&page=1`}
                           tooltip={`+ ${metrics[k]} sur les 7 derniers jours`}
                         />
                       </Col>
