@@ -39,6 +39,7 @@ export const WEBLINKS_TYPES = [
   'jorfsearch',
   'TalentCNRS',
   'TheConversation',
+  'BSO',
   '',
 ];
 
