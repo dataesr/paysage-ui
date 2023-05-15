@@ -43,7 +43,7 @@ function websiteChecker({ websiteFr, websiteEn }) {
 }
 
 async function idFormatChecker(keyName, keyValue) {
-  if (!keyValue && !keyName) return [];
+  if (!keyValue) return [];
   const [regexp, errorMessage] = regexpValidateIdentifiers(keyName);
   if (!regexp) {
     return [];
@@ -83,8 +83,8 @@ export default async function checker(docs, index) {
     const websiteChecked = await websiteChecker(doc);
     const genderChecked = await genderChecker(doc);
     const requiredErrors = requiredChecker(doc);
-    const warning = [...nameDuplicateWarnings, ...orcidDuplicate, ...wikidataDuplicate, ...idrefDuplicate, ...websiteChecked];
-    const error = [...requiredErrors, ...genderChecked, ...orcidFormat, ...wikidataFormat, ...idrefFormat];
+    const warning = [...nameDuplicateWarnings, ...wikidataFormat, ...orcidDuplicate, ...wikidataDuplicate, ...idrefDuplicate, ...websiteChecked];
+    const error = [...requiredErrors, ...genderChecked, ...orcidFormat, ...idrefFormat];
     let status = 'success';
     if (warning.length) { status = 'warning'; }
     if (error.length) { status = 'error'; }

@@ -20,7 +20,7 @@ export default function FormStep({ type, onInputValidation, fileError }) {
           </Link>
           , le remplir (une ligne correspond à un élément), copier puis
           coller dans le champ ci-dessous les cellules correspondant aux
-          éléments à ajouter.
+          éléments à ajouter. La première ligne doit correspondre à l'en-tête de chaque colonne. Veuillez utiliser Ctrl + 'a' pour copier votre tableau d'imports.
         </i>
       </Text>
       <TextInput
