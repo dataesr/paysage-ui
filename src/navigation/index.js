@@ -96,6 +96,8 @@ export default function Routes() {
             <Route path="/se-connecter" element={<SignIn />} />
             <Route path="/creer-un-compte" element={<SignUp />} />
             <Route path="/mot-de-passe-oublie" element={<Passwordless />} />
+            <Route path="/cgu" element={<CGU />} />
+            <Route path="/mentions-legales" element={<MentionsLegales />} />
           </Route>
 
           <Route element={<ProtectedRoute roles={['admin']} />}>
@@ -133,8 +135,6 @@ export default function Routes() {
             <Route path="/" element={<HomePage />} />
             <Route path="/nous-contacter" element={<ContactPage />} />
             <Route path="/aide" element={<HelpPage />} />
-            <Route path="/cgu" element={<CGU />} />
-            <Route path="/mentions-legales" element={<MentionsLegales />} />
             <Route path="/projet-et-equipe" element={<ProjetEtEquipe />} />
             <Route path="/ressources" element={<RessourcesExternesPage />} />
             <Route path="/mon-compte" element={<AccountPage />}>
