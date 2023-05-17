@@ -430,6 +430,47 @@ export default function CGU() {
             Les personnes qui estimeraient faire partie du périmètre couvert par l’application disposent
             d’un droit d’accès, de rectification et de suppression.
           </Text>
+          <Title as="h2">Accès aux données et exercice des droits d’accès, de rectification, de limitation et d’opposition</Title>
+          <Text>
+            Vous pouvez accéder aux données vous concernant et exercer vos droits d’accès, de rectification, de limitation, d’opposition que vous
+            tenez des articles 15, 16, 18, et 21 du RGPD à l’adresse suivante : paysage@enseignementsup-recherche.gouv.fr
+          </Text>
+          <Text>
+            De la même manière, vous pouvez exercer les droits prévus à l’article 85 de la loi n° 78-17 du 6 janvier 1978 relative à l’informatique, aux fichiers et aux libertés.
+          </Text>
+          <Text>
+            Pour toute question concernant le traitement de vos données à caractère personnel, vous pouvez contacter le délégué à la protection des données
+            du ministère de l’Enseignement supérieur et de la Recherche :
+          </Text>
+          <ul className="ul-styled">
+            <Text as="li">à l’adresse électronique suivante : dpd@education.gouv.fr</Text>
+            <Text as="li">via le formulaire de saisine en ligne : https://www.enseignementsup-recherche.gouv.fr/fr/nous-contacter-49937#dpd</Text>
+            <Text as="li">
+              ou par courrier adressé à :
+              <br />
+              <i>
+                Ministère de l'Enseignement supérieur et de la Recherche
+                <br />
+                Délégué à la protection des données (DPD)
+                <br />
+                1, rue Descartes
+                <br />
+                75231 Paris Cedex 5
+              </i>
+            </Text>
+
+          </ul>
+          <Text>
+            Si vous estimez, même après avoir introduit une réclamation auprès du ministère de l’Enseignement supérieur et de la Recherche,
+            que vos droits en matière de protection des données à caractère personnel ne sont pas respectés, vous avez la possibilité
+            d’introduire une réclamation auprès de la CNIL à l’adresse suivante : 3 Place de Fontenoy – TSA 80715 – 75334 Paris Cedex 07.
+          </Text>
+          <Text>
+            Dans le cadre de l’exercice de vos droits, vous devez justifier de votre identité par tout moyen.
+            En cas de doute sur votre identité, les services chargés du droit d’accès et le délégué à la protection des données se réservent
+            le droit de vous demander les informations supplémentaires qui leur apparaissent nécessaires,
+            y compris la photocopie d’un titre d’identité portant votre signature.
+          </Text>
         </Col>
 
       </Row>
