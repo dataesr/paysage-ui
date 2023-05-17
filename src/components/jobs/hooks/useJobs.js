@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import useNotice from '../../../hooks/useNotice';
 import api from '../../../utils/api';
 
-export default function useJobs(url, headers, refreshInterval = 60000) {
+export default function useJobs(url, refreshInterval = 60000) {
   const { notice } = useNotice();
   const [totalCount, setTotalCount] = useState(null);
   const [aggregations, setAggregations] = useState(null);
@@ -42,7 +42,7 @@ export default function useJobs(url, headers, refreshInterval = 60000) {
     const abortController = new AbortController();
 
     const fetchData = () => api
-      .get(url, headers, { signal: abortController.signal })
+      .get(url, {}, { signal: abortController.signal })
       .then((response) => {
         const { totalCount: total, data: jobList, aggregations: aggregates } = response.data;
         setJobs(jobList);
@@ -62,7 +62,7 @@ export default function useJobs(url, headers, refreshInterval = 60000) {
       fetchData();
     }
     return () => abortController.abort();
-  }, [url, headers, reloads]);
+  }, [url, reloads]);
 
   useEffect(() => {
     const refresher = setInterval(() => reload(), refreshInterval);

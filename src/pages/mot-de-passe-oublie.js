@@ -56,10 +56,15 @@ export default function Passwordless() {
     const response = await changePassword({ email, password, otp });
     if (!response?.error) return setStep(4);
     const codeInvalide = /Code invalide/i;
+    const samePwd = /Vous devez modifier votre mot de passe/i;
     if (codeInvalide.test(response.error)) {
       setOtpError(response.error);
       setOtpErrorDisplay(true);
       return setStep(2);
+    }
+    if (samePwd.test(response.error)) {
+      setChangePasswordError(response.error);
+      return setPasswordErrorDisplay('error');
     }
     return setChangePasswordError("Une erreur s'est produite");
   };

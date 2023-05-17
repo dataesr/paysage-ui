@@ -56,8 +56,11 @@ export default function Footer({ switchTheme }) {
           <FooterLink asLink={<RouterLink to="/nous-contacter" />}>
             Nous contacter
           </FooterLink>
-          <FooterLink href="#">
+          <FooterLink asLink={<RouterLink to="/mentions-legales" />}>
             Mentions légales
+          </FooterLink>
+          <FooterLink asLink={<RouterLink to="/cgu" />}>
+            Conditions générales d'utilisation
           </FooterLink>
           <FooterLink asLink={<Link href="https://github.com/orgs/dataesr/repositories?q=paysage&type=&language=&sort=" target="_blank" />}>
             Github
