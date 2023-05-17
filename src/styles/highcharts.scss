@@ -71,3 +71,23 @@
 //     --highcharts-highlight-color-20: #ccd3ff;
 //     --highcharts-highlight-color-10: #e6e9ff;
 // }
+
+.highcharts-background {
+  fill: var(--background-default-grey);
+}
+
+.highcharts-xaxis-labels text,
+.highcharts-yaxis-labels text {
+  // stroke: var(--text-default-grey) !important;
+  fill: var(--text-default-grey) !important;
+}
+
+.highcharts-legend-item text {
+  fill: var(--text-default-grey) !important;
+}
+
+.highcharts-title,
+.highcharts-subtitle {
+  fill: var(--text-default-grey) !important;
+  font-family: var(--font-family) !important;
+}

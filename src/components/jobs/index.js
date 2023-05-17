@@ -12,6 +12,7 @@ import useJobs from './hooks/useJobs';
 import './styles/jobs.scss';
 
 const pageSize = 10;
+const refreshInterval = 30000;
 
 function getStatusLabel(status) {
   return { success: 'Succès', failed: 'Echec', scheduled: 'Prévu', running: 'En cours' }[status];
@@ -28,7 +29,7 @@ export default function Runs() {
     const nameFilter = (name !== 'all') ? `&filters[name]=${name}` : '';
     return `/jobs?skip=${skip}&limit=${pageSize}${nameFilter}${statusFilter}`;
   }, [name, status, page]);
-  const { createJob, deleteJob, isLoading, error, jobs, totalCount, aggregations, selected, setSelected } = useJobs(url);
+  const { createJob, deleteJob, isLoading, error, jobs, totalCount, aggregations, selected, setSelected } = useJobs(url, refreshInterval);
   const { byStatus, activity, byName, definitions } = aggregations || {};
   const statusesOptions = (byStatus?.length > 0)
     ? byStatus.reduce((acc, cur) => [...acc, { value: cur._id, label: `${getStatusLabel(cur._id)} (${cur.count})` }], [{ value: 'all', label: 'Tous les status' }])
@@ -108,7 +109,7 @@ export default function Runs() {
             {' '}
             résultats
           </p>
-          {(isLoading) && <Spinner size="24px" />}
+          {(isLoading) && <Spinner size={24} />}
         </Row>
       )}
       {(error) && <Error />}
