@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
-  ButtonGroup, Container, Row, Col, TextInput, Text, Title, Icon, Stepper, Highlight,
+  ButtonGroup, Container, Row, Col, TextInput, Text, Title, Icon, Stepper, Highlight, Modal, ModalContent, ModalTitle, ModalFooter,
 } from '@dataesr/react-dsfr';
 import useAuth from '../hooks/useAuth';
 import useToast from '../hooks/useToast';
@@ -9,6 +9,7 @@ import Button from '../components/button';
 import PasswordHint from '../components/password-hint';
 import { MAIL_REGEXP, PASSWORD_REGEXP, getPasswordValidationInfo, DOMAINS_REGEXP } from '../utils/auth';
 import usePageTitle from '../hooks/usePageTitle';
+import CGU from './cgu';
 
 export default function SignUp() {
   usePageTitle('Créer un compte');
@@ -30,6 +31,8 @@ export default function SignUp() {
   const [emailError, setEmailError] = useState('');
   const [emailErrorDisplay, setEmailErrorDisplay] = useState(false);
 
+  const [isCGUOpen, setIsCGUOpen] = useState(false);
+
   const [password, setPassword] = useState('');
   const [passwordValidation, setPasswordValidation] = useState(getPasswordValidationInfo(password));
   const [passwordErrorDisplay, setPasswordErrorDisplay] = useState('info');
@@ -38,6 +41,7 @@ export default function SignUp() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsCGUOpen(false);
     if (firstNameError || lastNameError) {
       setFirstNameErrorDisplay(true);
       setLastNameErrorDisplay('true');
@@ -189,7 +193,7 @@ export default function SignUp() {
                   <hr />
                   <Row justifyContent="center">
                     <Col>
-                      <form onSubmit={handleSubmit}>
+                      <form>
                         <TextInput
                           required
                           label="Prénom"
@@ -216,10 +220,20 @@ export default function SignUp() {
                               <Button secondary icon="ri-arrow-drop-left-line" onClick={() => setStep(step - 1)}>
                                 Précédent
                               </Button>
-                              <Button submit>
+                              <Button onClick={() => setIsCGUOpen(true)}>
                                 Créer un compte
                               </Button>
                             </ButtonGroup>
+                            <Modal size="xl" isOpen={isCGUOpen} hide={() => setIsCGUOpen(false)}>
+                              <ModalTitle>Condition générales d'utilisation</ModalTitle>
+                              <ModalContent><CGU isModal /></ModalContent>
+                              <ModalFooter>
+                                <ButtonGroup>
+                                  <Button secondary onClick={() => setIsCGUOpen(false)}>Refuser</Button>
+                                  <Button onClick={handleSubmit}>Accepter</Button>
+                                </ButtonGroup>
+                              </ModalFooter>
+                            </Modal>
                           </Col>
                         </Row>
                       </form>

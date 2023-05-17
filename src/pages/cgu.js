@@ -1,20 +1,25 @@
 import { Breadcrumb, BreadcrumbItem, Col, Container, Row, Text, Title } from '@dataesr/react-dsfr';
+import PropTypes from 'prop-types';
 import { Link as RouterLink } from 'react-router-dom';
 
-export default function CGU() {
+export default function CGU({ isModal }) {
+  const look = isModal ? 'h4' : 'h1';
+  const large = isModal ? '12' : '"12 md-8"';
   return (
     <Container className="fr-my-5w">
       <Row>
-        <Col n="12">
-          <Breadcrumb>
-            <BreadcrumbItem asLink={<RouterLink to="/" />}>
-              Accueil
-            </BreadcrumbItem>
-            <BreadcrumbItem>Conditions générales d’utilisation</BreadcrumbItem>
-          </Breadcrumb>
-        </Col>
-        <Col n="12 md-8">
-          <Title as="h1">Conditions générales d’utilisation</Title>
+        {!isModal && (
+          <Col n="12">
+            <Breadcrumb>
+              <BreadcrumbItem asLink={<RouterLink to="/" />}>
+                Accueil
+              </BreadcrumbItem>
+              <BreadcrumbItem>Conditions générales d’utilisation</BreadcrumbItem>
+            </Breadcrumb>
+          </Col>
+        )}
+        <Col n={large}>
+          {!isModal && <Title as="h1">Conditions générales d’utilisation</Title>}
           <Text>
             Paysage est une plateforme collaborative de partage de connaissances
             destinée aux agents du ministère en charge de l’enseignement supérieur et de la recherche, du ministère en charge
@@ -101,7 +106,7 @@ export default function CGU() {
             des contenus ou d’actualiser, d’enrichir et de corriger les informations
             définies comme pouvant être modifiées par un utilisateur.
           </Text>
-          <Title as="h2">Objet</Title>
+          <Title as="h2" lokk={look}>Objet</Title>
           <Text>
             La Plateforme permet :
           </Text>
@@ -119,7 +124,7 @@ export default function CGU() {
               l’intégration des contributions des utilisateurs pour corriger, enrichir et actualiser certaines données proposées dans l’application.
             </Text>
           </ul>
-          <Title as="h2">Fonctionnalités</Title>
+          <Title as="h2" lokk={look}>Fonctionnalités</Title>
           <Text>
             L’utilisation de la Plateforme est réservée aux agents de l’administration centrale
             et de leurs services déconcentrés en charge de l’enseignement supérieur et de la
@@ -192,7 +197,7 @@ export default function CGU() {
             signalant/modifiant des erreurs ou omissions ainsi que les contenus n’ayant
             pas vocation à y figurer (illicites ou contraires aux CGU) aux administrateurs.
           </Text>
-          <Title as="h2">Code de conduite et responsabilités des utilisateurs</Title>
+          <Title as="h2" lokk={look}>Code de conduite et responsabilités des utilisateurs</Title>
           <Title as="h3" look="h6">Règles générales</Title>
           <Text>
             L’utilisation de la Plateforme est réservée aux agents de l’administration centrale
@@ -235,7 +240,7 @@ export default function CGU() {
             utilisateurs est interdite. L’équipe en charge de l’application suspendra sans
             avertissement les comptes des utilisateurs qui dérogeraient à ce principe.
           </Text>
-          <Title as="h2">Engagements et responsabilités de l’équipe Paysage</Title>
+          <Title as="h2" lokk={look}>Engagements et responsabilités de l’équipe Paysage</Title>
           <Text>
             L’équipe Paysage s’efforce de garantir la disponibilité de la plateforme 99,5 %
             du temps mensuel, apprécié au terme de chaque mois. Elle s’attache à la sécurité
@@ -266,7 +271,7 @@ export default function CGU() {
             tout autre motif jugé nécessaire. Dans ce cas, l’équipe Paysage s’efforce
             d’informer ses utilisateurs.
           </Text>
-          <Title as="h2">Licence et code source</Title>
+          <Title as="h2" lokk={look}>Licence et code source</Title>
           <Text>
             Sauf exception les données de Paysage sont couverte par la licence ouverte (voir :
             {' '}
@@ -280,13 +285,13 @@ export default function CGU() {
             {' '}
             sous licence MIT.
           </Text>
-          <Title as="h2">Évolution des conditions d’utilisation</Title>
+          <Title as="h2" lokk={look}>Évolution des conditions d’utilisation</Title>
           <Text>
             Les termes des présentes conditions d’utilisation peuvent être amendés à tout
             moment, sans préavis, en fonction des modifications apportées à la plateforme,
             de l’évolution de la législation ou pour tout autre motif jugé nécessaire.
           </Text>
-          <Title as="h2">Vie privée et données personnelles</Title>
+          <Title as="h2" lokk={look}>Vie privée et données personnelles</Title>
           <Text>
             Le site « paysage.enseignementsup-recherche.gouv.fr » constitue un traitement
             de données à caractère personnel mis en œuvre par le ministère en charge de
@@ -430,7 +435,7 @@ export default function CGU() {
             Les personnes qui estimeraient faire partie du périmètre couvert par l’application disposent
             d’un droit d’accès, de rectification et de suppression.
           </Text>
-          <Title as="h2">Accès aux données et exercice des droits d’accès, de rectification, de limitation et d’opposition</Title>
+          <Title as="h2" lokk={look}>Accès aux données et exercice des droits d’accès, de rectification, de limitation et d’opposition</Title>
           <Text>
             Vous pouvez accéder aux données vous concernant et exercer vos droits d’accès, de rectification, de limitation, d’opposition que vous
             tenez des articles 15, 16, 18, et 21 du RGPD à l’adresse suivante : paysage@enseignementsup-recherche.gouv.fr
@@ -477,3 +482,10 @@ export default function CGU() {
     </Container>
   );
 }
+
+CGU.propTypes = {
+  isModal: PropTypes.bool,
+};
+CGU.defaultProps = {
+  isModal: false,
+};
