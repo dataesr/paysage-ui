@@ -133,12 +133,6 @@ function requiredChecker({ usualName, country, iso3, structureStatus, categories
   return errors;
 }
 
-// function rowsChecker(docs, index) {
-//   const { usualName, siret } = docs[index];
-//   const duplicateSiretIndex = docs.filter((el) => el.siret === siret).length > 1;
-//   return errors;
-// }
-
 export default async function checker(docs, index) {
   try {
     const doc = docs[index];
