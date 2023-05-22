@@ -26,7 +26,7 @@ Spinner.defaultProps = {
 
 function OverlaySpinner({ text, size }) {
   return (
-    <Row alignItems="center" justifyContent="center" className="spinner-overlay">
+    <Row alignItems="middle" justifyContent="center" className="spinner-overlay">
       <Spinner size={size} />
       {text && <Text size="lead" bold>{text}</Text>}
     </Row>
