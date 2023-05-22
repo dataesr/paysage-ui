@@ -45,32 +45,32 @@ export default function Footer({ switchTheme }) {
           <Link target="_blank" href="https://data.gouv.fr">data.gouv.fr</Link>
         </FooterBodyItem>
       </FooterBody>
-      <FooterBottom>
+      {viewer?.id && (
+        <FooterBottom>
+          <FooterLink asLink={<RouterLink to="/aide" />}>
+            Aide
+          </FooterLink>
+          <FooterLink asLink={<RouterLink to="/projet-et-equipe" />}>
+            L'équipe et son projet
+          </FooterLink>
+          <FooterLink asLink={<RouterLink to="/nous-contacter" />}>
+            Nous contacter
+          </FooterLink>
+          <FooterLink asLink={<Link href="https://github.com/orgs/dataesr/repositories?q=paysage&type=&language=&sort=" target="_blank" />}>
+            Github
+          </FooterLink>
+          <FooterLink target="_blank" href={`https://github.com/dataesr/paysage-ui/releases/tag/v${process.env.REACT_APP_VERSION}`}>
+            {`Version de l'application v${process.env.REACT_APP_VERSION}`}
+          </FooterLink>
+        </FooterBottom>
+      )}
+      <FooterBottom className="fr-mt-0">
         <FooterLink asLink={<RouterLink to="/mentions-legales" />}>
           Mentions légales
         </FooterLink>
         <FooterLink asLink={<RouterLink to="/cgu" />}>
           Conditions générales d'utilisation
         </FooterLink>
-        {viewer?.id && (
-          <>
-            <FooterLink asLink={<RouterLink to="/aide" />}>
-              Aide
-            </FooterLink>
-            <FooterLink asLink={<RouterLink to="/projet-et-equipe" />}>
-              L'équipe et son projet
-            </FooterLink>
-            <FooterLink asLink={<RouterLink to="/nous-contacter" />}>
-              Nous contacter
-            </FooterLink>
-            <FooterLink asLink={<Link href="https://github.com/orgs/dataesr/repositories?q=paysage&type=&language=&sort=" target="_blank" />}>
-              Github
-            </FooterLink>
-            <FooterLink target="_blank" href={`https://github.com/dataesr/paysage-ui/releases/tag/v${process.env.REACT_APP_VERSION}`}>
-              {`Version de l'application v${process.env.REACT_APP_VERSION}`}
-            </FooterLink>
-          </>
-        )}
         <FooterLink>
           <button
             onClick={() => setIsOpen(true)}

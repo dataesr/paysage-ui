@@ -92,12 +92,12 @@ export default function Routes() {
       <RouterRoutes>
         <Route element={<Layout />}>
           <Route path="*" element={<NotFound />} />
+          <Route path="/cgu" element={<CGU />} />
+          <Route path="/mentions-legales" element={<MentionsLegales />} />
           <Route element={<VisitorRoute />}>
             <Route path="/se-connecter" element={<SignIn />} />
             <Route path="/creer-un-compte" element={<SignUp />} />
             <Route path="/mot-de-passe-oublie" element={<Passwordless />} />
-            <Route path="/cgu" element={<CGU />} />
-            <Route path="/mentions-legales" element={<MentionsLegales />} />
           </Route>
 
           <Route element={<ProtectedRoute roles={['admin']} />}>
