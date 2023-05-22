@@ -74,7 +74,7 @@ function IdentifiersStep({ globalForm, updateGlobalForm, setStep }) {
         <Col n="12 md-6" spacing="pb-3w">
           <TextInput
             label="Identifiant wikidata"
-            hint="wikidata"
+            hint="Wikidata"
             value={form.wikidata}
             onChange={(e) => updateForm({ wikidata: e.target.value })}
             message={(showErrors && errors.wikidata) ? errors.wikidata : null}
