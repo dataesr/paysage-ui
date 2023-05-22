@@ -71,7 +71,7 @@ export default function SecurityPage() {
                   <br />
                   <PasswordHint display={(errors?.newPassword?.length === true) ? 'success' : passwordErrorDisplay} hint="8 caractères minimum" />
                   <PasswordHint display={(errors?.newPassword?.uppercase === true) ? 'success' : passwordErrorDisplay} hint="1 majuscule minimum" />
-                  <PasswordHint display={(errors?.newPassword?.lowercase === true) ? 'success' : passwordErrorDisplay} hint="1 miniscule minimum" />
+                  <PasswordHint display={(errors?.newPassword?.lowercase === true) ? 'success' : passwordErrorDisplay} hint="1 minuscule minimum" />
                   <PasswordHint
                     display={(errors?.newPassword?.special === true) ? 'success' : passwordErrorDisplay}
                     hint={'1 caractère spécial minimum parmi !"#$%&\'()`*+,-./:;<=>?@[]^_{|}~'}

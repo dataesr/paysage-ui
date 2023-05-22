@@ -220,7 +220,7 @@ export default function Passwordless() {
                               <br />
                               <PasswordHint display={(passwordValidation.length === true) ? 'success' : passwordErrorDisplay} hint="8 caractères minimum" />
                               <PasswordHint display={(passwordValidation.uppercase === true) ? 'success' : passwordErrorDisplay} hint="1 majuscule minimum" />
-                              <PasswordHint display={(passwordValidation.lowercase === true) ? 'success' : passwordErrorDisplay} hint="1 miniscule minimum" />
+                              <PasswordHint display={(passwordValidation.lowercase === true) ? 'success' : passwordErrorDisplay} hint="1 minuscule minimum" />
                               <PasswordHint
                                 display={(passwordValidation.special === true) ? 'success' : passwordErrorDisplay}
                                 hint={'1 caractère spécial minimum parmi !"#$%&\'()`*+,-./:;<=>?@[]^_{|}~'}
