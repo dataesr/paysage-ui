@@ -56,6 +56,7 @@ export default function Dashboard() {
                 chart: { type: 'bar' },
                 credits: { enabled: false },
                 legend: { enabled: false },
+                accessibility: { enabled: false },
                 series: [
                   { data: topUsers.map((item) => item.totalOperations), name: "Nombre d'opérations" },
                 ],
