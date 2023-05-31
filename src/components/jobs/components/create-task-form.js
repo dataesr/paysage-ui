@@ -42,7 +42,7 @@ export default function CreateTaskForm({ definitions, onCancel, onCreate }) {
             <Select
               required
               label="Choisissez un tâche"
-              options={[{ label: 'Séléctionnez...', value: '', disabled: true, hidden: true }, ...definitions.map((def) => ({ label: def, value: def }))]}
+              options={[{ label: 'Sélectionnez...', value: '', disabled: true, hidden: true }, ...definitions.map((def) => ({ label: def, value: def }))]}
               selected={form.name}
               onChange={(e) => updateForm({ name: e.target.value })}
               message={(showErrors && errors.name) ? errors.name : undefined}
@@ -52,8 +52,8 @@ export default function CreateTaskForm({ definitions, onCancel, onCreate }) {
           <Col n="12">
             <TextInput
               textarea
-              label="Indiquez des paramêtres pour cette tâche"
-              hint="Les paramêtres de la tâche doivent être au format json"
+              label="Indiquez des paramètres pour cette tâche"
+              hint="Les paramètres de la tâche doivent être au format json"
               value={form.data || ''}
               onChange={(e) => updateForm({ data: e.target.value })}
               message={(showErrors && errors.data) ? errors.data : null}
@@ -78,7 +78,7 @@ export default function CreateTaskForm({ definitions, onCancel, onCreate }) {
                 label="De manière répétée"
                 value="every"
                 checked={form.type === 'every'}
-                hint="Cette tâche sera répétée à un interval régulier définie par une expression cron"
+                hint="Cette tâche sera répétée à un interval régulier défini par une expression cron"
               />
             </RadioGroup>
           </Col>
@@ -113,6 +113,7 @@ CreateTaskForm.propTypes = {
   onCancel: PropTypes.func,
   onCreate: PropTypes.func,
 };
+
 CreateTaskForm.defaultProps = {
   onCancel: null,
   onCreate: null,
