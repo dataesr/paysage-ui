@@ -17,6 +17,7 @@ import useEditMode from '../../../hooks/useEditMode';
 import CurrentLegals from '../../../components/blocs/current-legal';
 import CurrentLogos from '../../../components/blocs/current-logo';
 import CurrentSupervisors from '../../../components/blocs/current-supervisors';
+import CategoriesGeographique from '../../../components/blocs/geographical-categories';
 
 export default function StructurePresentationPage() {
   const data = useOutletContext();
@@ -50,6 +51,8 @@ export default function StructurePresentationPage() {
       <Row gutters className="flex--wrap-reverse">
         <Col n="12 xl-6">
           <HistoriqueEtDates />
+          <br />
+          <CategoriesGeographique />
         </Col>
         <Col n="12 xl-6">
           <Localisations />

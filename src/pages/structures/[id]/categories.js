@@ -1,4 +1,5 @@
 import { RelationsByTag } from '../../../components/blocs/relations';
+import RelationGeo from '../../../components/blocs/relations/components/relations-geo';
 import { STRUCTURE_CATEGORIE, STRUCTURE_CATEGORIE_JURIDIQUE, STRUCTURE_TERME } from '../../../utils/relations-tags';
 
 export default function StructureCategoriesPage() {
@@ -18,6 +19,9 @@ export default function StructureCategoriesPage() {
         relatedObjectTypes={['categories']}
         noRelationType
         sort="relatedObject.priority"
+      />
+      <RelationGeo
+        blocName="Catégories géographique"
       />
       <RelationsByTag
         tag={STRUCTURE_TERME}
