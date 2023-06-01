@@ -21,7 +21,7 @@ export default function StructureCategoriesPage() {
         sort="relatedObject.priority"
       />
       <RelationGeo
-        blocName="Catégories géographique"
+        blocName="Catégories géographiques"
       />
       <RelationsByTag
         tag={STRUCTURE_TERME}
