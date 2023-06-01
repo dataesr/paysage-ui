@@ -15,7 +15,7 @@ export default function CurrentLegals() {
   if (currentGeoCategories.length === 0) {
     return (
       <Col n="12">
-        <KeyValueCard className="card-geographical-categories" cardKey="Catégorie géographique" icon="ri-global-line" size="1x" cardValue="non renseigné" />
+        <KeyValueCard className="card-geographical-categories" cardKey="Catégorie géographique" icon="ri-global-line" size="1x" />
       </Col>
     );
   }
