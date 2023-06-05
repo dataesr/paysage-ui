@@ -61,7 +61,7 @@ function AdminPage() {
               </SideMenuLink>
             </SideMenuItem>
             <SideMenuLink className={(page === 'taches') && 'sidemenu__item--active'} asLink={<RouterLink to="/admin/taches" replace />}>
-              Tâches du systeme
+              Tâches du système
             </SideMenuLink>
           </SideMenu>
         </Col>
