@@ -38,6 +38,8 @@ import { PersonByIdPage, PersonCategories, PersonExportPage, PersonMandats, Pers
 import { TermByIdPage, TermExportPage, TermPresentationPage, TermRelatedElements } from '../pages/termes/[id]';
 import TermsAddPage from '../pages/termes/ajouter';
 
+import { GeographicalCategoriesByIdPage, GeographicalCategoriesPresentationPage, GeographicalCategoriesRelatedElements } from '../pages/categories-geographiques/[id]';
+
 import {
   ProjectByIdPage,
   ProjectCategories,
@@ -212,6 +214,13 @@ export default function Routes() {
               <Route path="documents" element={<DocumentsOutlet />} />
               <Route path="textes-officiels" element={<OfficialTextsOutlet />} />
               <Route path="journal" element={<JournalOutlet />} />
+            </Route>
+
+            <Route path="/geographical-categories/:id" element={<Redirect />} />
+            <Route path="/categories-geographiques/:id" element={<GeographicalCategoriesByIdPage />}>
+              <Route path="" element={<Navigate to="presentation" replace />} />
+              <Route path="presentation" element={<GeographicalCategoriesPresentationPage />} />
+              <Route path="elements-lies" element={<GeographicalCategoriesRelatedElements />} />
             </Route>
 
             <Route path="/prix/:id/exporter" element={<PrizeExportPage />} />
