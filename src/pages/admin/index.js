@@ -51,6 +51,9 @@ function AdminPage() {
               <SideMenuLink className={(page === 'types-de-relation') && 'sidemenu__item--active'} asLink={<RouterLink to="/admin/types-de-relation" replace />}>
                 Types de relation
               </SideMenuLink>
+              <SideMenuLink className={(page === 'types-de-relation') && 'sidemenu__item--active'} asLink={<RouterLink to="/admin/types-de-relation" replace />}>
+                Exception géographiques
+              </SideMenuLink>
             </SideMenuItem>
             <SideMenuItem title="Imports en masse">
               <SideMenuLink className={(page === 'structures') && 'sidemenu__item--active'} asLink={<RouterLink to="/admin/imports/structures" replace />}>

@@ -14,7 +14,7 @@ export default function GeographicalCategoryPresentationPage() {
   if (error) return <Error status={error} />;
   return (
     <>
-      <Title as="h2" look="h3">{data?.nameFr}</Title>
+      {/* <Title as="h2" look="h3">{data?.nameFr}</Title> */}
       <Row spacing="mb-5w" gutters>
         <Col n="6">
           <KeyValueCard
