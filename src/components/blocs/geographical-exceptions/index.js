@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { Tag, TagGroup } from '@dataesr/react-dsfr';
 import PropTypes from 'prop-types';
 
-export default function GeographicalTags({ data }) {
+export default function GeographicalExceptionsTags({ data }) {
   const navigate = useNavigate();
 
   if (!data) return null;
@@ -28,10 +28,10 @@ export default function GeographicalTags({ data }) {
   );
 }
 
-GeographicalTags.propTypes = {
+GeographicalExceptionsTags.propTypes = {
   data: PropTypes.array,
 };
 
-GeographicalTags.defaultProps = {
+GeographicalExceptionsTags.defaultProps = {
   data: [],
 };
