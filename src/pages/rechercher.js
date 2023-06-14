@@ -15,6 +15,7 @@ const icons = {
   structures: 'ri-building-line',
   persons: 'ri-user-3-line',
   categories: 'ri-price-tag-3-line',
+  geographicalCategories: 'ri-arrow-up-circle-fill',
   terms: 'ri-hashtag',
   prizes: 'ri-award-line',
   projects: 'ri-booklet-line',
@@ -198,6 +199,18 @@ export default function SearchPage() {
                   Catégories
                 </Text>
                 <Badge type={(type === 'categories') ? 'info' : 'new'} text={counts.categories || '0'} />
+              </Row>
+            </SideMenuLink>
+            <SideMenuLink className={(type === 'geographical-categories') ? 'sidemenu__item--active' : ''} asLink={<RouterLink to={`geographical-categories?query=${query}&page=1`} replace />}>
+              <Row alignItems="top">
+                <Text spacing="pr-2v" bold>
+                  <Icon name="ri-global-line" size="1x" />
+                  Catégories
+                  {' '}
+                  <Badge type={(type === 'geographical-categories') ? 'info' : 'new'} text={counts['geographical-categories'] || '0'} />
+                  géographiques
+                </Text>
+                {console.log(counts)}
               </Row>
             </SideMenuLink>
             {/* TODO: Restore projects */}
