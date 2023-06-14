@@ -145,14 +145,14 @@ export default function LocalisationsComponent() {
                       {currentLocalisation?.country ? renderAddress(currentLocalisation) : null}
                     </Col>
                   </Row>
-                  {exceptionalGeoCategoriesData.data.data.length >= 1 ? (
+                  {exceptionalGeoCategoriesData?.data?.data?.length >= 1 ? (
                     <div>
                       <p className="fr-card__detail">
                         Exception Géographique
                       </p>
-                      <GeographicalExceptionsTags data={exceptionalGeoCategoriesData.data.data} />
+                      <GeographicalExceptionsTags data={exceptionalGeoCategoriesData?.data?.data} />
                     </div>
-                  ) : <GeographicalTags data={currentLocalisation.geoCategories} /> }
+                  ) : <GeographicalTags data={currentLocalisation?.geoCategories} /> }
                 </Tab>
               )}
               {data.totalCount > 1 && (
