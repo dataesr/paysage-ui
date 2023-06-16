@@ -12,6 +12,7 @@ import { toString } from '../../utils/dates';
 const objectTypes = {
   categories: 'ri-price-tag-3-line',
   'official-texts': 'ri-git-repository-line',
+  'geographical-categories': 'ri-global-line',
   persons: 'ri-user-3-line',
   prizes: 'ri-award-line',
   projects: 'ri-booklet-fill',
