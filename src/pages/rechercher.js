@@ -210,7 +210,6 @@ export default function SearchPage() {
                   <Badge type={(type === 'geographical-categories') ? 'info' : 'new'} text={counts['geographical-categories'] || '0'} />
                   géographiques
                 </Text>
-                {console.log(counts)}
               </Row>
             </SideMenuLink>
             {/* TODO: Restore projects */}
