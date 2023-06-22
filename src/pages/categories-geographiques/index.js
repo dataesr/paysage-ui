@@ -7,15 +7,15 @@ import {
   SideMenu, SideMenuLink,
   Title,
 } from '@dataesr/react-dsfr';
-import useFetch from '../../../hooks/useFetch';
-import CopyBadgeButton from '../../../components/copy/copy-badge-button';
-import useUrl from '../../../hooks/useUrl';
-import { PageSpinner } from '../../../components/spinner';
+import useFetch from '../../hooks/useFetch';
+import CopyBadgeButton from '../../components/copy/copy-badge-button';
+import useUrl from '../../hooks/useUrl';
+import { PageSpinner } from '../../components/spinner';
 
-import GeographicalCategoriesPresentationPage from './presentation';
-import GeographicalCategoriesRelatedElements from './elements-lies';
-import Error from '../../../components/errors';
-import usePageTitle from '../../../hooks/usePageTitle';
+import GeographicalCategoriesPresentationPage from './[id]/presentation';
+import GeographicalCategoriesRelatedElements from './[id]/elements-lies';
+import Error from '../../components/errors';
+import usePageTitle from '../../hooks/usePageTitle';
 
 function GeographicalCategoriesByIdPage() {
   const { url } = useUrl();

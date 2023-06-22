@@ -38,7 +38,7 @@ import { PersonByIdPage, PersonCategories, PersonExportPage, PersonMandats, Pers
 import { TermByIdPage, TermExportPage, TermPresentationPage, TermRelatedElements } from '../pages/termes/[id]';
 import TermsAddPage from '../pages/termes/ajouter';
 
-import { GeographicalCategoriesByIdPage, GeographicalCategoriesPresentationPage, GeographicalCategoriesRelatedElements } from '../pages/categories-geographiques/[id]';
+import { GeographicalCategoriesByIdPage, GeographicalCategoriesPresentationPage, GeographicalCategoriesRelatedElements } from '../pages/categories-geographiques';
 
 import {
   ProjectByIdPage,

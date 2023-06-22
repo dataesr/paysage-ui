@@ -106,7 +106,7 @@ export default function GeographicalExceptionPage() {
         <Container fluid key={item.id}>
           <Row className="flex--space-between">
             <Col className="flex--grow fr-pl-2w">
-              <Row><Text spacing="my-1v" bold size="lg">{item.geographiCalcategory.nameFr}</Text></Row>
+              <Row><Text spacing="my-1v" bold size="lg">{item?.geographiCalcategory?.nameFr}</Text></Row>
               <Row>
                 <Text as="span" className="fr-mb-2v">
                   Liée à :

@@ -7,19 +7,27 @@ import GeoRelationCard from '../../../card/geo-relation-card';
 
 export default function RelationGeo({ blocName }) {
   const { id: resourceId } = useUrl();
-  const url = `/structures/${resourceId}/geographical-categories`;
+  const url = `/structures/${resourceId}/localisations`;
   const { data, isLoading, error } = useFetch(url);
 
   const geographicalCategoriesData = data?.data;
 
   const renderCards = () => {
-    const list = geographicalCategoriesData?.map((element) => (
-      <GeoRelationCard element={element} />
+    const uniqueCategories = [];
+
+    geographicalCategoriesData?.forEach((element) => {
+      element.geoCategories.forEach((category) => {
+        if (!uniqueCategories.some((c) => c.id === category.id)) {
+          uniqueCategories.push(category);
+        }
+      });
+    });
+
+    const list = uniqueCategories.map((category) => (
+      <GeoRelationCard key={category.id} element={category} />
     ));
 
-    return (
-      <ExpendableListCards list={list} nCol="12 md-6" />
-    );
+    return <ExpendableListCards list={list} nCol="12 md-6" />;
   };
 
   return (

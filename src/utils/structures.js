@@ -7,6 +7,8 @@ export function getName(item) {
       {item?.usualName}
       {item?.name}
       {item?.nameFr}
+      {item?.currentName?.usualName}
+      {item?.resource?.currentName?.usualName}
     </>
   );
 }

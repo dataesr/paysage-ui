@@ -10,30 +10,37 @@ import Map from '../../../components/map';
 export default function GeographicalCategoryPresentationPage() {
   const { url } = useUrl();
   const { data, isLoading, error } = useFetch(url);
+  const isTitleAsText = true;
+
   if (isLoading) return <PageSpinner />;
   if (error) return <Error status={error} />;
+
+  const polygonCoordinates = data?.geometry;
+
   return (
     <>
-      {/* <Title as="h2" look="h3">{data?.nameFr}</Title> */}
       <Row spacing="mb-5w" gutters>
         <Col n="6">
           <KeyValueCard
-            titleAsText
+            titleAsText={isTitleAsText.toString()}
             className="card-terms"
             cardKey="Description"
-            cardValue={data?.descriptionFr || data?.descriptionEn}
+            cardValue={data?.descriptionFr || data?.descriptionEn || ''}
             icon="ri-align-left"
           />
         </Col>
         <Col n="6">
-          <Map />
+          <Map
+            height="300px"
+            polygonCoordinates={polygonCoordinates}
+          />
         </Col>
       </Row>
       {data?.wikidata && (
         <>
           <Title as="h3" look="h4">Présence sur le web</Title>
           <Row spacing="mb-5w">
-            <Wiki />
+            <Wiki geographicalCategoryWiki={data.wikidata} />
           </Row>
         </>
       )}

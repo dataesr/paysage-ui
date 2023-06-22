@@ -14,16 +14,12 @@ import api from '../../../utils/api';
 import { formatDescriptionDates } from '../../../utils/dates';
 import { deleteError, deleteSuccess, saveError, saveSuccess } from '../../../utils/notice-contents';
 import GeographicalTags from '../geographical-categories';
-import GeographicalExceptionsTags from '../geographical-exceptions';
 
 export default function LocalisationsComponent() {
   const { editMode } = useEditMode();
   const { notice } = useNotice();
   const { url, apiObject } = useUrl('localisations');
   const { data, isLoading, error, reload } = useFetch(url);
-
-  const exceptionalGeoCategoriesUrl = useUrl('geographical-exceptions');
-  const exceptionalGeoCategoriesData = useFetch(exceptionalGeoCategoriesUrl.url);
 
   const [showModal, setShowModal] = useState(false);
   const [modalTitle, setModalTitle] = useState('');
@@ -145,14 +141,7 @@ export default function LocalisationsComponent() {
                       {currentLocalisation?.country ? renderAddress(currentLocalisation) : null}
                     </Col>
                   </Row>
-                  {exceptionalGeoCategoriesData?.data?.data?.length >= 1 ? (
-                    <div>
-                      <p className="fr-card__detail">
-                        Exception Géographique
-                      </p>
-                      <GeographicalExceptionsTags data={exceptionalGeoCategoriesData?.data?.data} />
-                    </div>
-                  ) : <GeographicalTags data={currentLocalisation?.geoCategories} /> }
+                  <GeographicalTags data={currentLocalisation?.geoCategories} />
                 </Tab>
               )}
               {data.totalCount > 1 && (
