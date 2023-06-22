@@ -71,48 +71,48 @@ async function duplicateIdChecker(keyName, keyValue) {
 
 function rowsChecker(rows, index) {
   const warnings = [];
-  const rowsWithoutIndex = rows.filter((r, i) => (i !== index));
+  const rowsWithoutIndex = rows.filter((r, i) => i !== index);
 
-  const isDuplicateName = rowsWithoutIndex
-    .map((row) => `${row?.firstName || ''} ${row?.lastName || ''}`.trim())
-    .filter((name) => name)
-    .includes(`${rows[index]?.firstName || ''} ${rows[index]?.lastName || ''}`.trim());
-  const name = `${rows[index]?.firstName || ''} ${rows[index]?.lastName || ''}`.trim();
-  if (isDuplicateName) {
-    warnings.push({ message: `Le nom ${name} que vous souhaitez ajouter existe déjà dans votre fichier d'import.` });
+  const { firstName } = rows[index];
+
+  const duplicateFirstNames = rowsWithoutIndex
+    .map((row) => row.firstName)
+    .filter((name) => name === firstName);
+
+  if (duplicateFirstNames.length > 0) {
+    warnings.push({
+      message: `Le nom ${firstName} que vous souhaitez ajouter existe déjà ${duplicateFirstNames.length} fois dans votre fichier d'import.`,
+    });
+  }
+  const { lastName } = rows[index];
+
+  const duplicateLastNames = rowsWithoutIndex
+    .map((row) => row.lastName)
+    .filter((name) => name === lastName);
+
+  if (duplicateLastNames.length > 0) {
+    warnings.push({
+      message: `Le nom ${lastName} que vous souhaitez ajouter existe déjà ${duplicateLastNames.length} fois dans votre fichier d'import.`,
+    });
   }
 
-  const isDuplicateWikidata = rowsWithoutIndex
-    .map((row) => row.wikidata)
-    .filter((id) => id)
-    .includes(rows[index].wikidata);
-  if (isDuplicateWikidata) {
-    warnings.push({ message: `L'identifiant Wikidata ${rows[index].wikidata} que vous souhaitez ajouter existe déjà dans votre fichier d"import.'` });
-  }
+  const checkDuplicates = (property, propertyName) => {
+    const duplicateValues = rowsWithoutIndex
+      .map((row) => row[property])
+      .filter((value) => value)
+      .filter((value, i, arr) => arr.indexOf(value) !== i);
 
-  const isDuplicateOrcid = rowsWithoutIndex
-    .map((row) => row.orcid)
-    .filter((id) => id)
-    .includes(rows[index].orcid);
-  if (isDuplicateOrcid) {
-    warnings.push({ message: `L'identifiant orcid ${rows[index].orcid} que vous souhaitez ajouter existe déjà dans votre fichier d"import.'` });
-  }
+    if (duplicateValues.length > 0) {
+      warnings.push({
+        message: `L'identifiant ${propertyName} ${rows[index][property]} que vous souhaitez ajouter existe déjà ${duplicateValues.length} fois dans votre fichier d'import.`,
+      });
+    }
+  };
 
-  const isDuplicateIdref = rowsWithoutIndex
-    .map((row) => row.idref)
-    .filter((id) => id)
-    .includes(rows[index].idref);
-  if (isDuplicateIdref) {
-    warnings.push({ message: `L'identifiant idref ${rows[index].idref} que vous souhaitez ajouter existe déjà dans votre fichier d"import.'` });
-  }
-
-  const isDuplicateResearchgate = rowsWithoutIndex
-    .map((row) => row.researchgate)
-    .filter((id) => id)
-    .includes(rows[index].researchgate);
-  if (isDuplicateResearchgate) {
-    warnings.push({ message: `L'identifiant researchgate ${rows[index].researchgate} que vous souhaitez ajouter existe déjà dans votre fichier d"import.'` });
-  }
+  checkDuplicates('orcid', 'ORCID');
+  checkDuplicates('idref', 'IDREF');
+  checkDuplicates('wikidata', 'Wikidata');
+  checkDuplicates('researchgate', 'ResearchGate');
 
   return warnings;
 }
