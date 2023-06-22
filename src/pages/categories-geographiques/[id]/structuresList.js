@@ -1,4 +1,4 @@
-import { Badge, Col, Icon, Row, Tile } from '@dataesr/react-dsfr';
+import { Badge, Col, Icon, Tile } from '@dataesr/react-dsfr';
 import PropTypes from 'prop-types';
 import { Link as RouterLink } from 'react-router-dom';
 import { getName } from '../../../utils/structures';
@@ -24,24 +24,22 @@ export function StructuresList({ data }) {
   }
 
   const list = data.map((item) => (
-    <Row gutters>
-      <Col n="12" as="li" key={item.id}>
-        <Tile horizontal color="var(--structures-color)">
-          <div className="fr-tile__body">
-            <p className="fr-tile__title">
-              <RouterLink className="fr-tile__link fr-link--md" to={`/structures/${item.id}`}>
-                <Icon name="ri-building-line" size="1x" color="var(--structures-color)" />
-                {getName(item)}
-              </RouterLink>
-            </p>
-            {item.structureStatus === 'inactive' ? (
-              <Badge isSmall colorFamily="brown-opera" text="Inactive" spacing="mb-0" />
-            ) : null}
-            <p className="fr-tile__desc">{getDescription(item)}</p>
-          </div>
-        </Tile>
-      </Col>
-    </Row>
+    <Col className="fr-card fr-card--xs fr-card--grey fr-card--no-border">
+      <Tile horizontal color="var(--structures-color)">
+        <div className="fr-tile__body">
+          <p className="fr-tile__title">
+            <RouterLink className="fr-tile__link fr-link--md" to={`/structures/${item.id}`}>
+              <Icon name="ri-building-line" size="1x" color="var(--structures-color)" />
+              {getName(item)}
+            </RouterLink>
+          </p>
+          {item.structureStatus === 'inactive' ? (
+            <Badge isSmall colorFamily="brown-opera" text="Inactive" spacing="mb-0" />
+          ) : null}
+          <p className="fr-tile__desc">{getDescription(item)}</p>
+        </div>
+      </Tile>
+    </Col>
   ));
 
   return <ExpendableListCards list={list} nCol="12 md-6" />;
@@ -53,24 +51,23 @@ export function ExceptionStructuresList({ exceptionGps }) {
   }
 
   const list = exceptionGps.map((item) => (
-    <Row gutters>
-      <Col n="12" as="li" key={item.id}>
-        <Tile horizontal color="var(--structures-color)">
-          <div className="fr-tile__body">
-            <p className="fr-tile__title">
-              <RouterLink className="fr-tile__link fr-link--md" to={`/structures/${item.resource.id}`}>
-                <Icon name="ri-building-line" size="1x" color="var(--structures-color)" />
-                {getName(item)}
-              </RouterLink>
-            </p>
-            {item?.resource?.structureStatus === 'inactive' ? (
-              <Badge isSmall colorFamily="brown-opera" text="Inactive" spacing="mb-0" />
-            ) : null}
-            <p className="fr-tile__desc">{getDescription(item)}</p>
-          </div>
-        </Tile>
-      </Col>
-    </Row>
+    <Col n="12" as="li" key={item.id}>
+      <Tile horizontal color="var(--structures-color)">
+        <div className="fr-tile__body">
+          <p className="fr-tile__title">
+            <RouterLink className="fr-tile__link fr-link--md" to={`/structures/${item.resource.id}`}>
+              <Icon name="ri-building-line" size="1x" color="var(--structures-color)" />
+              {getName(item)}
+            </RouterLink>
+          </p>
+          {item?.resource?.structureStatus === 'inactive' ? (
+            <Badge isSmall colorFamily="brown-opera" text="Inactive" spacing="mb-0" />
+          ) : null}
+          <p className="fr-tile__desc">{getDescription(item)}</p>
+        </div>
+      </Tile>
+    </Col>
+
   ));
 
   return <ExpendableListCards list={list} nCol="12 md-6" />;

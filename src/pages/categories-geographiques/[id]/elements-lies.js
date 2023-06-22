@@ -9,7 +9,6 @@ import { ExceptionStructuresList, StructuresList } from './structuresList';
 export default function GeographicalCategoryRelatedElements() {
   const { url, id } = useUrl();
   const { data } = useFetch(url);
-
   const {
     data: dataStructures,
     isLoading: structuresLoading,
@@ -58,9 +57,11 @@ export default function GeographicalCategoryRelatedElements() {
             />
           </Col>
         </Row>
-        <StructuresList
-          data={dataStructures.data}
-        />
+        <Row gutters>
+          <StructuresList
+            data={dataStructures.data}
+          />
+        </Row>
         <Row className="fr-mt-3w">
           <Col>
             <Title as="h2" look="h4">
