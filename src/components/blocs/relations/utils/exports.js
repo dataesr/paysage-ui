@@ -86,7 +86,7 @@ function createCsvStructureRowFromRelation({ relation, inverse, listName }) {
     'Status de la structure': toExport.structureStatus,
     'Date de création': toExport?.creationDate,
     'Date de fermeture': toExport?.closureDate,
-    Géolocalisation: toExport.currentLocalisation?.geometry?.coordinates?.toString(),
+    Géolocalisation: toExport.currentLocalisation?.geometry?.coordinates?.reverse()?.toString(),
     'Mention de distribution': toExport.currentLocalisation?.distributionStatement,
     Adresse: toExport.currentLocalisation?.address,
     'Lieu-dit': toExport.currentLocalisation?.place,
