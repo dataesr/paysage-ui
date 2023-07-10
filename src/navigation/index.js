@@ -19,7 +19,6 @@ import {
   StructureBudgetPage,
   StructureByIdPage,
   StructureCategoriesPage,
-  StructureCategoriesGeographiquesPage,
   StructureElementsLiesPage,
   StructureEtudiantsPage,
   StructureExportPage,
@@ -157,7 +156,6 @@ export default function Routes() {
               <Route path="actualites" element={<ActualitesOutlet />} />
               <Route path="evenements" element={<AgendaOutlet />} />
               <Route path="categories" element={<StructureCategoriesPage />} />
-              <Route path="categories-geographiques" element={<StructureCategoriesGeographiquesPage />} />
               <Route path="documents" element={<DocumentsOutlet />} />
               <Route path="textes-officiels" element={<OfficialTextsOutlet />} />
               <Route path="gouvernance-et-referents" element={<StructureGouvernancePage />} />

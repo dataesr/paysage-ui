@@ -29,7 +29,6 @@ import { getComparableNow } from '../../../utils/dates';
 import { saveError, saveSuccess } from '../../../utils/notice-contents';
 import { getName } from '../../../utils/structures';
 import StructureCategoriesPage from './categories';
-import StructureCategoriesGeographiquesPage from './categories-geographiques';
 import StructureBudgetPage from './chiffres-cles/budget';
 import StructureEtudiantsPage from './chiffres-cles/etudiants';
 import StructureImmobilierPage from './chiffres-cles/immobilier';
@@ -59,7 +58,6 @@ function StructureByIdPage() {
     chiffres: true,
     elements: true,
     evenements: true,
-    geography: true,
     gouvernance: true,
     oeil: true,
     prix: true,
@@ -177,10 +175,6 @@ function StructureByIdPage() {
             <SideMenuLink asLink={<RouterLink to="categories" replace />}>
               <Icon name="ri-price-tag-3-line" size="1x" />
               Catégories et termes
-            </SideMenuLink>
-            <SideMenuLink asLink={<RouterLink to="categories-geographiques" replace />}>
-              <Icon name="ri-global-line" size="1x" />
-              Catégories géographiques
             </SideMenuLink>
             <SideMenuLink asLink={<RouterLink to="textes-officiels" replace />}>
               <Icon name="ri-git-repository-line" size="1x" />
@@ -337,11 +331,6 @@ function StructureByIdPage() {
                     label="Catégories et termes"
                   />
                   <Checkbox
-                    checked={form.geography}
-                    onChange={(e) => updateForm({ geography: e.target.checked })}
-                    label="Catégories géographiques"
-                  />
-                  <Checkbox
                     checked={form.textes}
                     onChange={(e) => updateForm({ textes: e.target.checked })}
                     label="Textes officiels"
@@ -424,7 +413,6 @@ export {
   StructureBudgetPage,
   StructureByIdPage,
   StructureCategoriesPage,
-  StructureCategoriesGeographiquesPage,
   StructureElementsLiesPage,
   StructureEtudiantsPage,
   StructureExportPage,
