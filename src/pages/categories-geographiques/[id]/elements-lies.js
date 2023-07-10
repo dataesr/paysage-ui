@@ -47,12 +47,14 @@ export default function GeographicalCategoryRelatedElements() {
           <Col>
             <Map
               markers={
-                dataStructures.data.map((item) => ({
-                  label: item.currentName.usualName,
-                  latLng: item.currentLocalisation?.geometry?.coordinates?.toReversed(),
-                  address: `{${item.currentLocalisation?.address || ''},
-                ${item.currentLocalisation?.postalCode || ''} ${item.currentLocalisation?.locality || ''}, ${item.currentLocalisation?.country}}`,
-                }))
+                dataStructures.data
+                  .filter((item) => (item?.currentLocalisation?.geometry?.coordinates || []).length === 2)
+                  .map((item) => ({
+                    label: item.currentName.usualName,
+                    latLng: [item.currentLocalisation.geometry.coordinates[1], item.currentLocalisation.geometry.coordinates[0]],
+                    address: `{${item.currentLocalisation?.address || ''},
+                      ${item.currentLocalisation?.postalCode || ''} ${item.currentLocalisation?.locality || ''}, ${item.currentLocalisation?.country}}`,
+                  }))
               }
             />
           </Col>
@@ -72,12 +74,14 @@ export default function GeographicalCategoryRelatedElements() {
               <Col>
                 <Map
                   markers={
-                    exceptionGps.map((item) => ({
-                      label: item.resource.currentName.displayName,
-                      latLng: item.resource.currentLocalisation?.geometry?.coordinates?.toReversed(),
-                      address: `${item.currentLocalisation?.address || ''},
-                ${item.currentLocalisation?.postalCode || ''} ${item.currentLocalisation?.locality || ''}, ${item.currentLocalisation?.country}`,
-                    }))
+                    exceptionGps
+                      .filter((item) => (item?.currentLocalisation?.geometry?.coordinates || []).length === 2)
+                      .map((item) => ({
+                        label: item.resource.currentName.displayName,
+                        latLng: [item.currentLocalisation.geometry.coordinates[1], item.currentLocalisation.geometry.coordinates[0]],
+                        address: `${item.currentLocalisation?.address || ''},
+                          ${item.currentLocalisation?.postalCode || ''} ${item.currentLocalisation?.locality || ''}, ${item.currentLocalisation?.country}`,
+                      }))
                   }
                 />
               </Col>
