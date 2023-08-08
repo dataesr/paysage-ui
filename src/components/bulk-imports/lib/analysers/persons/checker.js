@@ -9,7 +9,7 @@ async function nameChecker({ firstName, lastName }) {
   const duplicate = data?.data.find((el) => normalize(el.name.replace('\t', '').trim()) === normalize(fullName));
   if (duplicate) {
     return [{
-      message: `Le nom ${fullName} existe déjà`,
+      message: `Le nom ${fullName} existe déjà dans la base de donnée`,
       href: `/persons/${duplicate.id}`,
     }];
   }
@@ -89,12 +89,59 @@ async function duplicateIdChecker(keyName, keyValue) {
   return [];
 }
 
+function rowsChecker(rows, index) {
+  const warnings = [];
+  const rowsWithoutIndex = rows.filter((r, i) => i !== index);
+
+  const { firstName } = rows[index];
+
+  const duplicateFirstNames = rowsWithoutIndex
+    .map((row) => row.firstName)
+    .filter((name) => name === firstName);
+
+  if (duplicateFirstNames.length > 0) {
+    warnings.push({
+      message: `Le nom ${firstName} que vous souhaitez ajouter existe déjà ${duplicateFirstNames.length} fois dans votre fichier d'import.`,
+    });
+  }
+  const { lastName } = rows[index];
+
+  const duplicateLastNames = rowsWithoutIndex
+    .map((row) => row.lastName)
+    .filter((name) => name === lastName);
+
+  if (duplicateLastNames.length > 0) {
+    warnings.push({
+      message: `Le nom ${lastName} que vous souhaitez ajouter existe déjà ${duplicateLastNames.length} fois dans votre fichier d'import.`,
+    });
+  }
+
+  const checkDuplicates = (property, propertyName) => {
+    const duplicateValues = rowsWithoutIndex
+      .map((row) => row[property])
+      .filter((value) => value)
+      .filter((value, i, arr) => arr.indexOf(value) !== i);
+
+    if (duplicateValues.length > 0) {
+      warnings.push({
+        message: `L'identifiant ${propertyName} ${rows[index][property]} que vous souhaitez ajouter existe déjà ${duplicateValues.length} fois dans votre fichier d'import.`,
+      });
+    }
+  };
+
+  checkDuplicates('orcid', 'ORCID');
+  checkDuplicates('idref', 'IDREF');
+  checkDuplicates('wikidata', 'Wikidata');
+  checkDuplicates('researchgate', 'ResearchGate');
+
+  return warnings;
+}
+
 export default async function checker(docs, index) {
   try {
     const doc = docs[index];
     const isDuplicatedInImportFile = await duplicateInImportFile(docs);
     const nameDuplicateWarnings = await nameChecker(doc);
-    // const idDuplicateWarnings = await idChecker(['orcid', 'wikidata', 'idref'], doc);
     const orcidDuplicate = await duplicateIdChecker('orcid', doc.orcid);
     const wikidataDuplicate = await duplicateIdChecker('wikidata', doc.wikidata);
     const idrefDuplicate = await duplicateIdChecker('idref', doc.idref);
@@ -104,8 +151,9 @@ export default async function checker(docs, index) {
     const websiteChecked = await websiteChecker(doc);
     const genderChecked = await genderChecker(doc);
     const requiredErrors = requiredChecker(doc);
-    const warning = [...nameDuplicateWarnings, ...isDuplicatedInImportFile, ...wikidataFormat, ...orcidDuplicate, ...wikidataDuplicate, ...idrefDuplicate, ...websiteChecked];
-    const error = [...requiredErrors, ...genderChecked, ...orcidFormat, ...idrefFormat];
+    const duplicateChecker = await rowsChecker(docs, index);
+    const warning = [...nameDuplicateWarnings, ...duplicateChecker, ...isDuplicatedInImportFile, ...wikidataFormat, ...orcidDuplicate, ...wikidataDuplicate, ...idrefDuplicate, ...websiteChecked];
+    const error = [...requiredErrors, ...genderChecked, ...orcidFormat, ...wikidataFormat, ...idrefFormat];
     let status = 'success';
     if (warning.length) { status = 'warning'; }
     if (error.length) { status = 'error'; }
