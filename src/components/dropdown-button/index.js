@@ -1,6 +1,6 @@
-import { useCallback, useEffect, useId, useRef, useState } from 'react';
-import PropTypes from 'prop-types';
 import { Link } from '@dataesr/react-dsfr';
+import PropTypes from 'prop-types';
+import { useCallback, useEffect, useId, useRef, useState } from 'react';
 import Button from '../button';
 import styles from './styles.module.scss';
 

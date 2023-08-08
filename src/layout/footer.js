@@ -56,34 +56,39 @@ export default function Footer({ switchTheme }) {
           <FooterLink asLink={<RouterLink to="/nous-contacter" />}>
             Nous contacter
           </FooterLink>
-          <FooterLink href="#">
-            Mentions légales
-          </FooterLink>
           <FooterLink asLink={<Link href="https://github.com/orgs/dataesr/repositories?q=paysage&type=&language=&sort=" target="_blank" />}>
             Github
           </FooterLink>
           <FooterLink target="_blank" href={`https://github.com/dataesr/paysage-ui/releases/tag/v${process.env.REACT_APP_VERSION}`}>
             {`Version de l'application v${process.env.REACT_APP_VERSION}`}
           </FooterLink>
-          <FooterLink>
-            <button
-              onClick={() => setIsOpen(true)}
-              type="button"
-              className="fr-footer__bottom-link fr-fi-theme-fill fr-link--icon-left"
-              aria-controls="fr-theme-modal"
-              data-fr-opened={isOpen}
-            >
-              Paramètres d'affichage
-            </button>
-          </FooterLink>
-          <FooterCopy to="/">
-            <Text size="sm">
-              Sauf mention contraire, tous les contenus de ce site sont sous
-              <Link target="_blank" href="https://github.com/etalab/licence-ouverte/blob/master/LO.md"> licence étalab2.0</Link>
-            </Text>
-          </FooterCopy>
         </FooterBottom>
       )}
+      <FooterBottom className="fr-mt-0">
+        <FooterLink asLink={<RouterLink to="/mentions-legales" />}>
+          Mentions légales
+        </FooterLink>
+        <FooterLink asLink={<RouterLink to="/cgu" />}>
+          Conditions générales d'utilisation
+        </FooterLink>
+        <FooterLink>
+          <button
+            onClick={() => setIsOpen(true)}
+            type="button"
+            className="fr-footer__bottom-link fr-fi-theme-fill fr-link--icon-left"
+            aria-controls="fr-theme-modal"
+            data-fr-opened={isOpen}
+          >
+            Paramètres d'affichage
+          </button>
+        </FooterLink>
+        <FooterCopy to="/">
+          <Text size="sm">
+            Sauf mention contraire, tous les contenus de ce site sont sous
+            <Link target="_blank" href="https://github.com/etalab/licence-ouverte/blob/master/LO.md"> licence étalab2.0</Link>
+          </Text>
+        </FooterCopy>
+      </FooterBottom>
     </FooterWrapper>
   );
 }

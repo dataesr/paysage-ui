@@ -80,6 +80,8 @@ import '../styles/index.scss';
 import BulkImport from '../components/bulk-imports';
 import MatomoReport from './matomo-report';
 import ScrollToTopOnPathnameChange from './scroll-top-on-pathname-change';
+import CGU from '../pages/cgu';
+import MentionsLegales from '../pages/mentions-legales';
 
 export default function Routes() {
   return (
@@ -89,6 +91,8 @@ export default function Routes() {
       <RouterRoutes>
         <Route element={<Layout />}>
           <Route path="*" element={<NotFound />} />
+          <Route path="/cgu" element={<CGU />} />
+          <Route path="/mentions-legales" element={<MentionsLegales />} />
           <Route element={<VisitorRoute />}>
             <Route path="/se-connecter" element={<SignIn />} />
             <Route path="/creer-un-compte" element={<SignUp />} />

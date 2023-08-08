@@ -84,7 +84,7 @@ export default function ProjetEtEquipe() {
             Très vite le besoin s'est exprimé de proposer une gestion du workflow et de concentrer au même endroit les différentes informations et documents relatifs aux actuels et futurs regroupements et leur composition pour un meilleur partage de ces informations auprès des différents services en charge du suivi de ces expérimentations.
           </Text>
           <Text>
-            Ce besoin étant générique, à la demande de différents services du MESRI, l'application s'est progressivement étendue à d’autres structures suivies par le ministère ou composant le paysage de l’ESR en France et même de par le monde. Paysage couvre ainsi plus de 10&nbsp;000 structure (décembre 2022).
+            Ce besoin étant générique, à la demande de différents services du MESR, l'application s'est progressivement étendue à d’autres structures suivies par le ministère ou composant le paysage de l’ESR en France et même de par le monde. Paysage couvre ainsi plus de 10&nbsp;000 structure (décembre 2022).
           </Text>
           <Text>
             Paysage s'appuie sur les expertises des départements métiers pour proposer des outils adaptés pour faciliter leur quotidien et directement intégrés dans l'application. Les informations sont ainsi centralisées au même endroit, partagées avec le plus grand nombre.

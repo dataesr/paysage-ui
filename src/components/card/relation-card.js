@@ -14,8 +14,7 @@ export default function RelationCard({ relation, inverse, onEdit }) {
   const toPrintRelation = inverse ? relation.resource : relation.relatedObject;
   const isComming = relation.startDate > getComparableNow();
   const interimMandate = relation.mandateTemporary ? ' par intérim ' : '';
-  const isFinished = ((relation.current !== undefined)
-  && !relation.current) || (relation.active === false) || (relation.endDate < getComparableNow());
+  const isFinished = ((relation.current !== undefined) && !relation.current) || (relation.active === false) || (relation.endDate < getComparableNow());
 
   const renderPriceDate = relation.startDate ? ` obtenu en ${relation.startDate?.split('-')?.[0]}` : ' Date inconnue';
 

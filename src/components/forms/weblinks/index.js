@@ -33,6 +33,7 @@ const regexpValidateWebSite = {
   CanalU: /^(https:\/\/)?(www.)?canal-u.tv\/chaines\/[\w\-_]*(.fr)?$/,
   ServicePublic: /^(https:\/\/)?lannuaire.service-public.fr\/(gouvernement|institutions-juridictions|autorites-independantes)\/[A-Za-z0-9/:%+.,#?!@&=-]+$/,
   LeMonde: /(^https:\/\/)?(www.)?lemonde.fr\/[a-z]+(-[a-z]+)*\/$/,
+  'Lieux inspirants': /(^https:\/\/)?inspiration\.dgesip\.fr\/Espaces\/Etablissement\/\w{5}\/$/,
   TheConversation: /(^https:\/\/)?(www.)?theconversation.com\/profiles\/[a-z-]{1,}-[0-9]{1,}$/,
   TalentCNRS: /(^https:\/\/)?(www.)?cnrs\.fr\/fr\/personne\/[a-z-]+(-0)?$/,
   IUF: /(^https:\/\/)?(www.)?iufrance\.fr\/les-membres-de-liuf\/membre\/[1-9]\d*([a-z-]*)?\.html$/,

@@ -95,6 +95,6 @@ KeyValueCard.defaultProps = {
   linkIn: null,
   linkTo: null,
   onEdit: null,
-  titleAsText: false,
+  titleAsText: null,
   tooltip: null,
 };

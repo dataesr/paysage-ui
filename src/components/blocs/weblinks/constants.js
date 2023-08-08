@@ -28,7 +28,7 @@ export const WEBLINKS_TYPES = [
   'CanalU',
   'ServicePublic',
   'PiaWEB',
-  // 'Sujet d\'actualités sue le site web du journal Le Monde'
+  // 'Sujet d\'actualités sur le site web du journal Le Monde'
   'EdCF',
   'OE1',
   'OE2',
@@ -39,6 +39,8 @@ export const WEBLINKS_TYPES = [
   'jorfsearch',
   'TalentCNRS',
   'TheConversation',
+  'Lieux inspirants',
+  'BSO',
   '',
 ];
 
