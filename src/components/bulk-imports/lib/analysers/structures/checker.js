@@ -72,27 +72,6 @@ function websiteChecker({ websiteFr, websiteEn }) {
   return [];
 }
 
-function duplicateInImportFile(docs) {
-  const allValues = {};
-  const errors = [];
-
-  for (let i = 0; i < docs.length; i += 1) {
-    const el = docs[i];
-    const entries = Object.entries(el);
-    for (let j = 0; j < entries.length; j += 1) {
-      const [key, value] = entries[j];
-      if (key !== 'structureStatus' && key !== 'legalCategory' && key !== 'cityId'
-       && key !== 'iso3' && key !== 'country' && key !== 'category' && value && allValues[key] && allValues[key].includes(value)) {
-        errors.push({ message: `La valeur "${value}" pour la clé "${key}" existe déjà dans votre fichier d'import` });
-      } else {
-        allValues[key] = allValues[key] || [];
-        allValues[key].push(value);
-      }
-    }
-  }
-  return errors;
-}
-
 async function categoriesChecker({ categories }) {
   if (!categories || categories.length === 0) return [{ message: 'Vous devez renseigner au moins une catégorie' }];
   const categoriesWarning = [];
@@ -184,7 +163,6 @@ export default async function checker(docs, index) {
     const doc = docs[index];
     const categoriesErrors = await categoriesChecker(doc);
     const nameDuplicateWarnings = await nameChecker(doc);
-    const isDuplicatedInImportFile = await duplicateInImportFile(docs);
     const requiredErrors = requiredChecker(doc);
     const edDuplicate = await duplicateIdChecker('ed', doc.ed);
     const idrefDuplicate = await duplicateIdChecker('idref', doc.idref);
@@ -203,7 +181,8 @@ export default async function checker(docs, index) {
     const legalCategoryCheck = await legalCategoriesChecker(doc);
     const websiteChecked = await websiteChecker(doc);
     const duplicateChecker = await rowsChecker(docs, index);
-    const warning = [...idrefDuplicate, ...duplicateChecker, ...isDuplicatedInImportFile,
+
+    const warning = [...idrefDuplicate, ...duplicateChecker,
       ...siretDuplicate, ...edDuplicate, ...rnsrDuplicate, ...uaiDuplicate, ...rorDuplicate, ...wikidataDuplicate, ...nameDuplicateWarnings, ...websiteChecked];
     const error = [...requiredErrors, ...legalCategoryCheck, ...categoriesErrors, ...edFormat, ...idrefFormat, ...siretFormat, ...rnsrFormat, ...rorFormat, ...uaiFormat, ...wikidataFormat];
     let status = 'success';
