@@ -40,7 +40,7 @@ function duplicateInImportFile(docs) {
     const entries = Object.entries(el);
     for (let j = 0; j < entries.length; j += 1) {
       const [key, value] = entries[j];
-      if (key !== 'gender' && key !== 'activity' && value && allValues[key] && allValues[key].includes(value)) {
+      if (key !== 'firstName' && key !== 'gender' && key !== 'activity' && value && allValues[key] && allValues[key].includes(value)) {
         errors.push({ message: `La valeur "${value}" pour la clé "${key}" existe déjà dans votre fichier d'import` });
       } else {
         allValues[key] = allValues[key] || [];
