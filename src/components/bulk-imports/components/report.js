@@ -1,11 +1,33 @@
-import { Col, Container, Icon, Link, Row } from '@dataesr/react-dsfr';
+import { Button, Col, Container, Icon, Link, Row } from '@dataesr/react-dsfr';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
-import Button from '../../button';
 
 export default function Report({ type, rows }) {
   const [displayList, setDisplayList] = useState(true);
+
   if (!rows.length) return null;
+  const convertRowsToCSV = (dataRows) => {
+    const csvRows = [];
+    csvRows.push(['Nom', 'Nouvel Id Paysage']);
+
+    dataRows.forEach((row) => {
+      csvRows.push([row.displayName, row.imports.href.substring(row.imports.href.length - 5)]);
+    });
+    return csvRows.map((row) => row.join(',')).join('\n');
+  };
+
+  const handleExportCSV = () => {
+    const csvContent = convertRowsToCSV(rows);
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+
+    const link = document.createElement('a');
+    link.href = window.URL.createObjectURL(blob);
+    link.download = 'report.csv';
+    link.click();
+
+    window.URL.revokeObjectURL(link.href);
+  };
+
   return (
     <Container fluid className="fr-my-3w">
       <Row>
@@ -74,6 +96,11 @@ export default function Report({ type, rows }) {
                 </tbody>
               </table>
             </div>
+            <Button
+              onClick={handleExportCSV}
+            >
+              Exporter la liste en CSV
+            </Button>
           </Col>
         )}
       </Row>
