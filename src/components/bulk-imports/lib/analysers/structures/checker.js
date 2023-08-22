@@ -181,7 +181,7 @@ export default async function checker(docs, index) {
     const legalCategoryCheck = await legalCategoriesChecker(doc);
     const websiteChecked = await websiteChecker(doc);
     const duplicateChecker = await rowsChecker(docs, index);
-    const warning = [...idrefDuplicate, ...duplicateChecker, ...isDuplicatedInImportFile,
+    const warning = [...idrefDuplicate, ...duplicateChecker,
       ...siretDuplicate, ...edDuplicate, ...rnsrDuplicate, ...uaiDuplicate, ...rorDuplicate, ...wikidataDuplicate, ...nameDuplicateWarnings, ...websiteChecked];
     const error = [...requiredErrors, ...legalCategoryCheck, ...categoriesErrors, ...edFormat, ...idrefFormat, ...siretFormat, ...rnsrFormat, ...rorFormat, ...uaiFormat, ...wikidataFormat];
     let status = 'success';
