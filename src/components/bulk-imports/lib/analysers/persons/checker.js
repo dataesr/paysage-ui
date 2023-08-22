@@ -31,26 +31,6 @@ function genderChecker({ gender }) {
   return [];
 }
 
-function duplicateInImportFile(docs) {
-  const allValues = {};
-  const errors = [];
-
-  for (let i = 0; i < docs.length; i += 1) {
-    const el = docs[i];
-    const entries = Object.entries(el);
-    for (let j = 0; j < entries.length; j += 1) {
-      const [key, value] = entries[j];
-      if (key !== 'firstName' && key !== 'gender' && key !== 'activity' && value && allValues[key] && allValues[key].includes(value)) {
-        errors.push({ message: `La valeur "${value}" pour la clé "${key}" existe déjà dans votre fichier d'import` });
-      } else {
-        allValues[key] = allValues[key] || [];
-        allValues[key].push(value);
-      }
-    }
-  }
-  return errors;
-}
-
 function websiteChecker({ websiteFr, websiteEn }) {
   const urlRegex = /^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/i;
   if (websiteFr && !urlRegex.test(websiteFr)) {
@@ -63,7 +43,7 @@ function websiteChecker({ websiteFr, websiteEn }) {
 }
 
 async function idFormatChecker(keyName, keyValue) {
-  if (!keyValue && !keyName) return [];
+  if (!keyValue || !keyName) return [];
   const [regexp, errorMessage] = regexpValidateIdentifiers(keyName);
   if (!regexp) {
     return [];
