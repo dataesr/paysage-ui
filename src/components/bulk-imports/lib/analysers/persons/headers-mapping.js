@@ -1,4 +1,4 @@
-export default {
+export const personsHeadersMapping = {
   Prénom: 'firstName',
   Nom: 'lastName',
   'Genre [F = Femme, H = Homme, A = Autre]': 'gender',
