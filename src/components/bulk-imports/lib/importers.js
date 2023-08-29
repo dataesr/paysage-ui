@@ -27,6 +27,8 @@ export default async function bulkImport(analysis, type) {
     return bulk(analysis, '/structures');
   case 'personnes':
     return bulk(analysis, '/persons');
+  case 'gouvernance':
+    return bulk(analysis, '/relations');
   default:
     throw new Error('Not implemented');
   }
