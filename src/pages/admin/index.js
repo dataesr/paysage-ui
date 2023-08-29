@@ -59,6 +59,9 @@ function AdminPage() {
               <SideMenuLink className={(page === 'personnes') && 'sidemenu__item--active'} asLink={<RouterLink to="/admin/imports/personnes" replace />}>
                 Personnes
               </SideMenuLink>
+              <SideMenuLink className={(page === 'gouvernance') && 'sidemenu__item--active'} asLink={<RouterLink to="/admin/imports/gouvernance" replace />}>
+                Gouvernance
+              </SideMenuLink>
             </SideMenuItem>
             <SideMenuLink className={(page === 'taches') && 'sidemenu__item--active'} asLink={<RouterLink to="/admin/taches" replace />}>
               Tâches du système
