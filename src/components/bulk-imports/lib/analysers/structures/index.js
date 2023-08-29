@@ -1,6 +1,6 @@
 import { parseTSV, zip } from '../utils';
 import checker from './checker';
-import headersMapping from './headers-mapping';
+import { structuresHeadersMapping } from './headers-mapping';
 
 const statusMapping = {
   O: 'active',
@@ -22,11 +22,12 @@ const structureParsingFunctions = {
 
 export default async function parseStructureTSV(inputString) {
   const { headers, rows } = parseTSV(inputString);
-  const orderedApiHeaders = headers.map((header) => headersMapping[header]);
+  const type = 'structures';
+  const orderedApiHeaders = headers.map((header) => structuresHeadersMapping[header]);
   const bodyList = rows.map((row) => zip(orderedApiHeaders, row, structureParsingFunctions));
   const result = await Promise.all(bodyList.map(async (body, index) => {
     const { warning, error, status } = await checker(bodyList, index);
-    return { index: index + 2, body, displayName: body.usualName, warning, error, status };
+    return { index: index + 2, body, displayName: body.usualName, type, warning, error, status };
   }));
   return result;
 }
