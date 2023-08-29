@@ -1,4 +1,4 @@
-export default {
+export const structuresHeadersMapping = {
   'Nom usuel en français': 'usualName',
   'Nom court en français': 'shortName',
   'Sigle en français': 'acronymFr',
