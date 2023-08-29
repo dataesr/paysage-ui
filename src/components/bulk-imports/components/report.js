@@ -1,19 +1,41 @@
 import { Button, Col, Container, Icon, Link, Row } from '@dataesr/react-dsfr';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
+import { personsHeadersMapping } from '../lib/analysers/persons/headers-mapping';
 
 export default function Report({ type, rows }) {
   const [displayList, setDisplayList] = useState(true);
-
   if (!rows.length) return null;
+
   const convertRowsToCSV = (dataRows) => {
     const csvRows = [];
-    csvRows.push(['Nom', 'Nouvel Id Paysage']);
+    const headerRow = Object.keys(personsHeadersMapping);
+    headerRow.push('nouvel Id Paysage', 'statuts');
+
+    const quotedHeaderRow = headerRow.map((header) => `"${header}"`).join(',');
+    csvRows.push(quotedHeaderRow);
 
     dataRows.forEach((row) => {
-      csvRows.push([row.displayName, row.imports.href.substring(row.imports.href.length - 5)]);
+      const warningMessages = row.warning ? row.warning.map((warning) => warning.message).join('; ') : '';
+      const nouvelIdPaysage = row.imports.href.substring(row.imports.href.length - 5);
+
+      const rowData = headerRow.map((header) => {
+        let value;
+        if (header === 'nouvel Id Paysage') {
+          value = nouvelIdPaysage;
+        } else if (header === 'statuts') {
+          value = warningMessages;
+        } else {
+          value = row.body[personsHeadersMapping[header]];
+        }
+
+        return value?.includes(',') ? `"${value}"` : value;
+      });
+
+      csvRows.push(rowData.join(','));
     });
-    return csvRows.map((row) => row.join(',')).join('\n');
+
+    return csvRows.join('\n');
   };
 
   const handleExportCSV = () => {
