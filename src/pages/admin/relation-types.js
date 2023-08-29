@@ -10,6 +10,7 @@ import api from '../../utils/api';
 import { toString } from '../../utils/dates';
 import { deleteError, deleteSuccess, saveError, saveSuccess } from '../../utils/notice-contents';
 import { normalize } from '../../utils/strings';
+import CopyButton from '../../components/copy/copy-button';
 
 function getSearchableRelationType(relationType) {
   const { name, maleName, feminineName, mandateTypeGroup, otherNames = [], for: relationFor = [] } = relationType;
@@ -131,6 +132,19 @@ export default function RelationTypesPage() {
                     Groupe de gouvernance :
                     {' '}
                     {item.mandateTypeGroup}
+                  </Text>
+                </Row>
+              )}
+              {item?.id && (
+                <Row>
+                  <Text as="span" bold className="fr-mb-2v">
+                    ID :
+                    {' '}
+                    {item.id}
+                    <CopyButton
+                      copyText={item.id}
+                      size="sm"
+                    />
                   </Text>
                 </Row>
               )}
