@@ -5,6 +5,9 @@ import { useState } from 'react';
 const MODELS = {
   structures: '/models/BulkImportStructures.xlsx',
   personnes: '/models/BulkImportPersons.xlsx',
+  prix: '/models/BulkImportPrizes.xslx',
+  laureats: '/models/BulkImportLaureats.xslx',
+  gouvernance: '/models/BulkImportGouvernance.xslx',
 };
 
 export default function FormStep({ type, onInputValidation, fileError }) {
@@ -95,7 +98,7 @@ export default function FormStep({ type, onInputValidation, fileError }) {
 }
 
 FormStep.propTypes = {
-  type: PropTypes.oneOf(['structures', 'personnes', 'gouvernance', 'lauréats']).isRequired,
+  type: PropTypes.oneOf(['structures', 'personnes', 'gouvernance', 'prix', 'laureats']).isRequired,
   onInputValidation: PropTypes.func.isRequired,
   fileError: PropTypes.bool,
 };

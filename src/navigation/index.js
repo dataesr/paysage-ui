@@ -116,8 +116,9 @@ export default function Routes() {
               <Route path="nomenclatures/types-de-mail" element={<AdminNomenclaturesPage route="/email-types" title="Types d'email" />} />
               <Route path="imports/structures" element={<BulkImport type="structures" />} />
               <Route path="imports/personnes" element={<BulkImport type="personnes" />} />
-              <Route path="imports/laureats" element={<BulkImport type="lauréats" />} />
+              <Route path="imports/laureats" element={<BulkImport type="laureats" />} />
               <Route path="imports/gouvernance" element={<BulkImport type="gouvernance" />} />
+              <Route path="imports/prix" element={<BulkImport type="prix" />} />
             </Route>
           </Route>
           <Route element={<ProtectedRoute roles={['admin', 'user']} />}>

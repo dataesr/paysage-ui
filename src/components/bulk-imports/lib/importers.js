@@ -29,6 +29,10 @@ export default async function bulkImport(analysis, type) {
     return bulk(analysis, '/persons');
   case 'gouvernance':
     return bulk(analysis, '/relations');
+  case 'laureats':
+    return bulk(analysis, '/relations');
+  case 'prix':
+    return bulk(analysis, '/prizes');
   default:
     throw new Error('Not implemented');
   }

@@ -2,14 +2,29 @@ import { Button, Col, Container, Icon, Link, Row } from '@dataesr/react-dsfr';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { personsHeadersMapping } from '../lib/analysers/persons/headers-mapping';
+import { structuresHeadersMapping } from '../lib/analysers/structures/headers-mapping';
+import { prizesHeadersMapping } from '../lib/analysers/prizes/headers-mapping';
+import { laureatHeadersMapping } from '../lib/analysers/laureats/headers-mapping';
+import { gouvernanceHeadersMapping } from '../lib/analysers/gouvernance/headers-mapping';
 
 export default function Report({ type, rows }) {
   const [displayList, setDisplayList] = useState(true);
   if (!rows.length) return null;
 
+  const typeOfImport = rows.map((el) => el.type)[0];
+  const MODELS = {
+    structures: structuresHeadersMapping,
+    persons: personsHeadersMapping,
+    price: prizesHeadersMapping,
+    laureats: laureatHeadersMapping,
+    gouvernance: gouvernanceHeadersMapping,
+  };
+
   const convertRowsToCSV = (dataRows) => {
     const csvRows = [];
-    const headerRow = Object.keys(personsHeadersMapping);
+    const currentModel = MODELS[typeOfImport];
+    if (!currentModel) return csvRows;
+    const headerRow = Object.keys(currentModel);
     headerRow.push('nouvel Id Paysage', 'statuts');
 
     const quotedHeaderRow = headerRow.map((header) => `"${header}"`).join(',');
@@ -20,16 +35,22 @@ export default function Report({ type, rows }) {
       const nouvelIdPaysage = row.imports.href.substring(row.imports.href.length - 5);
 
       const rowData = headerRow.map((header) => {
-        let value;
+        let value = '';
         if (header === 'nouvel Id Paysage') {
           value = nouvelIdPaysage;
         } else if (header === 'statuts') {
           value = warningMessages;
         } else {
-          value = row.body[personsHeadersMapping[header]];
-        }
+          const fieldKey = currentModel[header];
+          const fieldValues = row.body[fieldKey];
 
-        return value?.includes(',') ? `"${value}"` : value;
+          if (typeof fieldValues === 'object' && fieldValues !== null) {
+            value = fieldValues.filter(Boolean).join('; ');
+          } else if (fieldValues !== undefined) {
+            value = fieldValues;
+          }
+        }
+        return `"${value}"`;
       });
 
       csvRows.push(rowData.join(','));

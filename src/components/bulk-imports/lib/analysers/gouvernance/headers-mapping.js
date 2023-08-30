@@ -1,0 +1,16 @@
+export const gouvernanceHeadersMapping = {
+  'Code de la structure {rechercher le code}': 'resourceId',
+  'Code de la personne {rechercher le code}': 'relatedObjectId',
+  'Code de la fonction/responsabilité {rechercher le code}': 'relationTypeId',
+  'Raison du mandat [E = election, N = nomination]': 'mandateReason',
+  'En intérim {O = Oui, N = Non}': 'mandateTemporary',
+  'Position du mandat [1 = 1er mandat, 2 = 2 ème mandat, 3 = 3 ème mandat ou vide]': 'mandatePosition',
+  'Adresse mail associée au mandat': 'mandateEmail',
+  'Adresse mail nominative': 'personalEmail',
+  'Numéro de téléphone': 'mandatePhonenumber',
+  'Mandat Actif [O = oui, N = non]': 'active',
+  'Date de début {2020-07-02}': 'startDate',
+  'Date de fin {2020-07-02}': 'endDate',
+  'Date de fin prévisionnelle {2020-07-02}': 'endDatePrevisional',
+  'Date de fin inconnue mais passée [O = oui, N = non]': 'active',
+};
