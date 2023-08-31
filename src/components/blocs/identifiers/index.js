@@ -88,8 +88,23 @@ export default function IdentifiersComponent() {
     case 'cnrs-unit':
       linkTo = `https://web-ast.dsi.cnrs.fr/l3c/owa/structure.infos_admin?&p_lab=${el.value}&p_origine_appel=u`;
       break;
+    case 'crunchbase':
+      linkTo = `https://www.crunchbase.com/organization/${el.value}`;
+      break;
+    case 'crossrefFunderId':
+      linkTo = `https://search.crossref.org/funding?q=${el.value}`;
+      break;
+    case 'euTransparency':
+      linkTo = `https://ec.europa.eu/transparencyregister/public/consultation/displaylobbyist.do?id=${el.value}&isListLobbyistView=true&locale=fr#fr`;
+      break;
+    case 'dealroom':
+      linkTo = `https://app.dealroom.co/companies/${el.value}`;
+      break;
     case 'fundref':
       linkTo = `https://search.crossref.org/funding?q=${el.value}`;
+      break;
+    case 'hatvp':
+      linkTo = `https://www.hatvp.fr/fiche-organisation/?organisation=${el.value}`;
       break;
     case 'idhal':
       linkTo = `https://aurehal.archives-ouvertes.fr/structure/read/id/${el.value}`;
