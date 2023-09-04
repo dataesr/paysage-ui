@@ -6,9 +6,9 @@ import HelperForStructures from '../lib/helpers/helper';
 const MODELS = {
   structures: '/models/BulkImportStructures.xlsx',
   personnes: '/models/BulkImportPersons.xlsx',
-  prix: '/models/BulkImportPrizes.xslx',
-  laureats: '/models/BulkImportLaureats.xslx',
-  gouvernance: '/models/BulkImportGouvernance.xslx',
+  prix: '/models/BulkImportPrizes.xlsx',
+  laureats: '/models/BulkImportLaureats.xlsx',
+  gouvernance: '/models/BulkImportGouvernance.xlsx',
 };
 
 export default function FormStep({ type, onInputValidation, fileError }) {

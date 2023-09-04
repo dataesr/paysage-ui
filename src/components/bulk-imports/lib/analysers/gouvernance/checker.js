@@ -30,7 +30,7 @@ async function relationTypeChecker(relationTypeId) {
     const response = await api.get(`https://api.paysage.staging.dataesr.ovh/relation-types/${relationTypeId}`);
     const apiCategory = response.data.data?.[0]?.id;
     if (!apiCategory) {
-      personWarning.push({ message: `Le prix ${relationTypeId} n'existe pas` });
+      personWarning.push({ message: `Le code de la fonction/responsabilité ${relationTypeId} n'existe pas` });
     }
   }
   return personWarning;
@@ -42,6 +42,14 @@ async function mandatePositionChecker(mandatePosition) {
     mandatePositionWarning.push({ message: 'Veuillez saisir 1,2,3 ou laisse un vide' });
   }
   return mandatePositionWarning;
+}
+
+async function mandateTemporaryChecker(mandateTemporary) {
+  const mandateTemporaryWarning = [];
+  if (mandateTemporary !== 'O' || mandateTemporary !== 'N') {
+    mandateTemporaryWarning.push({ message: 'Veuillez saisir O ou N' });
+  }
+  return mandateTemporaryWarning;
 }
 
 async function phoneNumberChecker(mandatePhonenumber) {
@@ -60,9 +68,9 @@ export default async function checker(docs, index) {
     const personCheck = await personChecker(doc?.relatedObjectId);
     const relationTypeCheck = await relationTypeChecker(doc?.relationTypeId);
     const mandatePositionCheck = await mandatePositionChecker(doc?.mandatePosition);
+    const mandateTemporaryCheck = await mandateTemporaryChecker(doc?.mandateTemporary);
     const phoneNumberCheck = await phoneNumberChecker(doc?.mandatePhonenumber);
-
-    const warning = [...mandatePositionCheck, ...phoneNumberCheck];
+    const warning = [...mandatePositionCheck, ...phoneNumberCheck, ...mandateTemporaryCheck];
     const error = [...prizeCheck, ...personCheck, ...relationTypeCheck];
     let status = 'success';
     if (warning.length) { status = 'warning'; }

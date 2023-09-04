@@ -10,7 +10,7 @@ export default function HelperForStructures({ type }) {
       onClick={() => setIsModalOpen(true)}
       size="sm"
     >
-      Voir les conditions d'import en masse
+      Conditions et conseils d'utilisation de l'import en masse
       <Icon iconPosition="right" size="xl" name="ri-information-line" color="var(--border-action-high-blue-france)" />
       <Modal size="lg" isOpen={isModalOpen} hide={() => setIsModalOpen(false)}>
         <ModalContent>
@@ -26,7 +26,7 @@ export default function HelperForStructures({ type }) {
                     </li>
                     <li style={{ marginBottom: '10px' }}>
                       <span style={{ marginRight: '10px', fontSize: '20px' }}>✓</span>
-                      Vérifiez que les catégories existent avant de soumettre l'import
+                      Vérifiez que les catégories existent
                     </li>
                     <li style={{ marginBottom: '10px' }}>
                       <span style={{ marginRight: '10px', fontSize: '20px' }}>✓</span>
@@ -38,7 +38,7 @@ export default function HelperForStructures({ type }) {
                     </li>
                     <li style={{ marginBottom: '10px' }}>
                       <span style={{ marginRight: '10px', fontSize: '20px' }}>✓</span>
-                      L'iso3 est obligatoire
+                      L'iso3 est obligatoire, exemple : FRA
                     </li>
                     <li style={{ marginBottom: '10px' }}>
                       <span style={{ marginRight: '10px', fontSize: '20px' }}>✓</span>
@@ -46,7 +46,7 @@ export default function HelperForStructures({ type }) {
                     </li>
                     <li style={{ marginBottom: '10px' }}>
                       <span style={{ marginRight: '10px', fontSize: '20px' }}>✓</span>
-                      S'il y a plusieurs dénominations/catégories, elles doivent être séparées par des ";"
+                      Si elles sont multiples, séparez les id des catégories par des ";", sans espace
                     </li>
                   </>
                 )}
@@ -71,7 +71,7 @@ export default function HelperForStructures({ type }) {
                     </li>
                     <li style={{ marginBottom: '10px' }}>
                       <span style={{ marginRight: '10px', fontSize: '20px' }}>✓</span>
-                      Verifiez que les identifiants soient corrects (nombre de charactères etc...)
+                      Vérifiez que les identifiants aient le bon nombre de caractères
                     </li>
                   </>
                 )}
@@ -89,6 +89,10 @@ export default function HelperForStructures({ type }) {
                     <li style={{ marginBottom: '10px' }}>
                       <span style={{ marginRight: '10px', fontSize: '20px' }}>✓</span>
                       Vérifiez que les personnes que vous souhaitez lier aux prix existent
+                    </li>
+                    <li style={{ marginBottom: '10px' }}>
+                      <span style={{ marginRight: '10px', fontSize: '20px' }}>✓</span>
+                      Le format des dates doit être le même que dans la première ligne
                     </li>
                     <li style={{ marginBottom: '10px' }}>
                       <span style={{ marginRight: '10px', fontSize: '20px' }}>✓</span>
@@ -117,6 +121,10 @@ export default function HelperForStructures({ type }) {
                     </li>
                     <li style={{ marginBottom: '10px' }}>
                       <span style={{ marginRight: '10px', fontSize: '20px' }}>✓</span>
+                      Le format des dates doit être le même que dans la première ligne
+                    </li>
+                    <li style={{ marginBottom: '10px' }}>
+                      <span style={{ marginRight: '10px', fontSize: '20px' }}>✓</span>
                       Pour une election, renseigner E, pour une nomination N, sans guillemets. De même pour "En intérim" et Mandat actif
                     </li>
                   </>
@@ -135,6 +143,10 @@ export default function HelperForStructures({ type }) {
                     <li style={{ marginBottom: '10px' }}>
                       <span style={{ marginRight: '10px', fontSize: '20px' }}>✓</span>
                       Vérifiez que l'identifiant Wikidata est correcte
+                    </li>
+                    <li style={{ marginBottom: '10px' }}>
+                      <span style={{ marginRight: '10px', fontSize: '20px' }}>✓</span>
+                      Le format des dates doit être le même que dans la première ligne
                     </li>
                     <li style={{ marginBottom: '10px' }}>
                       <span style={{ marginRight: '10px', fontSize: '20px' }}>✓</span>
