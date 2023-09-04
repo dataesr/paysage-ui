@@ -30,8 +30,8 @@ export default async function checker(docs, index) {
     const prizeCheck = await prizeChecker(doc?.resourceId);
     const personCheck = await personChecker(doc?.relatedObjectId);
 
-    const warning = [...prizeCheck, ...personCheck];
-    const error = [];
+    const warning = [];
+    const error = [...prizeCheck, ...personCheck];
     let status = 'success';
     if (warning.length) { status = 'warning'; }
     if (error.length) { status = 'error'; }
