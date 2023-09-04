@@ -1,5 +1,13 @@
 import api from '../../../../../utils/api';
 
+function requiredChecker({ resourceId, relationTypeId, relatedObjectId }) {
+  const errors = [];
+  if (!resourceId) errors.push({ message: 'Le nom du prix est obligatoire' });
+  if (!relationTypeId) errors.push({ message: 'Le code de la fonction est obligatoire' });
+  if (!relatedObjectId) errors.push({ message: "L'id de la personne est obligatoire" });
+  return errors;
+}
+
 async function structureChecker(structureId) {
   const priceWarning = [];
   if (structureId) {
@@ -50,15 +58,18 @@ async function relationTypeChecker(relationTypeId) {
 
 async function mandatePositionChecker(mandatePosition) {
   const mandatePositionWarning = [];
-  if (mandatePosition !== '1' && mandatePosition !== '2' && mandatePosition !== '3+' && mandatePosition.length !== 0) {
+  const validValues = ['1', '2', '3+', ''];
+
+  if (mandatePosition && !validValues.includes(mandatePosition)) {
     mandatePositionWarning.push({ message: 'Veuillez saisir 1, 2, 3 ou laisser vide' });
   }
+
   return mandatePositionWarning;
 }
 
 async function phoneNumberChecker(mandatePhonenumber) {
   const phoneNumberWarning = [];
-  if (mandatePhonenumber.length !== 10) {
+  if (mandatePhonenumber?.length !== 10) {
     phoneNumberWarning.push({ message: "Le numéro de téléphone n'est pas valide" });
   }
   return phoneNumberWarning;
@@ -72,14 +83,14 @@ export default async function checker(docs, index) {
     const relationTypeCheck = await relationTypeChecker(doc?.relationTypeId);
     const mandatePositionCheck = await mandatePositionChecker(doc?.mandatePosition);
     const phoneNumberCheck = await phoneNumberChecker(doc?.mandatePhonenumber);
+    const requiredErrors = requiredChecker(doc);
     const warning = [...mandatePositionCheck, ...phoneNumberCheck];
-    const error = [...prizeCheck, ...personCheck, ...relationTypeCheck];
+    const error = [...prizeCheck, ...personCheck, ...relationTypeCheck, ...requiredErrors];
     let status = 'success';
     if (warning.length) { status = 'warning'; }
     if (error.length) { status = 'error'; }
     return { warning, error, status };
   } catch (e) {
-    // console.log(e);
     return { error: [{ message: "Une erreur s'est produite lors de la vérification, vérifiez la ligne" }], status: 'error' };
   }
 }

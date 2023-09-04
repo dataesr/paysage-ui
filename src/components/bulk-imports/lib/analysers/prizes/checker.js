@@ -24,6 +24,12 @@ async function personChecker(personId) {
   return personWarning;
 }
 
+function requiredChecker({ nameFr }) {
+  const errors = [];
+  if (!nameFr) errors.push({ message: 'Le nom du prix est obligatoire' });
+  return errors;
+}
+
 function websiteChecker({ websiteFr, websiteEn }) {
   const urlRegex = /^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/i;
   if (websiteFr && !urlRegex.test(websiteFr)) {
@@ -35,43 +41,22 @@ function websiteChecker({ websiteFr, websiteEn }) {
   return [];
 }
 
-async function categoriesChecker({ categories }) {
-  if (!categories || categories.length === 0) return [];
-  const categoriesWarning = [];
-  const wrongFormattedCategories = categories.filter((category) => category?.length !== 5);
-  if (wrongFormattedCategories.length > 0) {
-    const wrongFormattedCategoryLabels = wrongFormattedCategories.join('; ');
-    categoriesWarning.push({ message: `Les catégories suivantes ne sont pas correctement renseignées : ${wrongFormattedCategoryLabels}` });
-    return categoriesWarning;
-  }
-  if (categories) {
-    const requests = categories.map(async (category) => api.get(`/autocomplete?types=categories&query=${category}`));
-    const apiData = await Promise.all(requests);
-    const apiCategories = apiData?.map((el) => el.data.data?.[0]?.id);
-    categories.forEach((category) => {
-      if (!apiCategories.includes(category)) {
-        categoriesWarning.push({ message: `La catégorie ${category} n'existe pas` });
-      }
-    });
-  }
-  return categoriesWarning;
-}
-
 export default async function checker(docs, index) {
   try {
     const doc = docs[index];
     const prizeCheck = await prizeChecker(doc?.resourceId);
     const personCheck = await personChecker(doc?.relatedObjectId);
     const websiteChecked = await websiteChecker(doc);
-    const categoriesErrors = await categoriesChecker(doc);
+    const requiredErrors = requiredChecker(doc);
 
     const warning = [...websiteChecked];
-    const error = [...prizeCheck, ...personCheck, ...categoriesErrors];
+    const error = [...prizeCheck, ...personCheck, ...requiredErrors];
     let status = 'success';
     if (warning.length) { status = 'warning'; }
     if (error.length) { status = 'error'; }
     return { warning, error, status };
   } catch (e) {
+    // console.log(e);
     return { error: [{ message: "Une erreur s'est produite lors de la vérification, vérifiez la ligne" }], status: 'error' };
   }
 }

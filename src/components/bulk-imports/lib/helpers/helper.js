@@ -50,7 +50,7 @@ export default function HelperForStructures({ type }) {
                     </li>
                   </>
                 )}
-              {type === 'persons'
+              {type === 'personnes'
                 && (
                   <>
                     <li style={{ marginBottom: '10px' }}>
