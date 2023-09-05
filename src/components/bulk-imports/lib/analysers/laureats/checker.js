@@ -7,25 +7,25 @@ function requiredChecker({ resourceId, relatedObjectId }) {
   return errors;
 }
 
-async function prizeChecker(priceId) {
+async function prizeChecker(resourceId) {
   const priceWarning = [];
-  if (priceId) {
-    const response = await api.get(`/autocomplete?types=prize&query=${priceId}`);
+  if (resourceId) {
+    const response = await api.get(`/autocomplete?types=prize&query=${resourceId}`);
     const apiCategory = response.data.data?.[0]?.id;
     if (!apiCategory) {
-      priceWarning.push({ message: `Le prix ${priceId} n'existe pas` });
+      priceWarning.push({ message: `Le prix ${resourceId} n'existe pas` });
     }
   }
   return priceWarning;
 }
 
-async function personChecker(personId) {
+async function personChecker(relatedObjectId) {
   const personWarning = [];
-  if (personId) {
-    const response = await api.get(`/autocomplete?types=person&query=${personId}`);
+  if (relatedObjectId) {
+    const response = await api.get(`/autocomplete?types=person&query=${relatedObjectId}`);
     const apiPerson = response.data.data?.[0]?.id;
     if (!apiPerson) {
-      personWarning.push({ message: `La personne à l'id : ${personId} n'existe pas` });
+      personWarning.push({ message: `La personne à l'id : ${relatedObjectId} n'existe pas` });
     }
   }
   return personWarning;

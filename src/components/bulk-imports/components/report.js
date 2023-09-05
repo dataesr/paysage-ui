@@ -62,7 +62,6 @@ export default function Report({ type, rows }) {
   const handleExportCSV = () => {
     const csvContent = convertRowsToCSV(rows);
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-
     const link = document.createElement('a');
     link.href = window.URL.createObjectURL(blob);
     link.download = 'report.csv';
