@@ -62,7 +62,8 @@ export default function LocalisationsComponent() {
     if (localisation.postOfficeBoxNumber) { address += `${localisation.postOfficeBoxNumber },\n`; }
     if (localisation.postalCode) { address += `${localisation.postalCode },\n`; }
     if (localisation.city) { address += `${localisation.city },\n`; }
-    if (localisation.country) { address += `${localisation.country}\n`; }
+    if (localisation.country) { address += `${localisation.country},\n`; }
+    if (localisation.phonenumber) { address += `${localisation.phonenumber}\n`; }
 
     return (
       <div className={`fr-card fr-card--xs fr-card--horizontal fr-card--grey fr-card--no-border card-${apiObject}`}>

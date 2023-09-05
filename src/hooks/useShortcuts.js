@@ -6,14 +6,14 @@ export default function useShortcuts(shortcutKeys, callback) {
 
   const keyupListener = useCallback((e) => {
     const { key } = e;
-    const testKey = key.toLowerCase();
+    const testKey = key?.toLowerCase();
     if (pressedKeys.includes(testKey)) setPressedKeys(pressedKeys.filter((k) => k !== testKey));
   }, [pressedKeys]);
 
   const keydownListener = useCallback((e) => {
     const { key, repeat } = e;
     if (repeat) return;
-    const testKey = key.toLowerCase();
+    const testKey = key?.toLowerCase();
     if (pressedKeys.includes(testKey)) return;
     if (!pressedKeys[testKey]) {
       const nextKeys = [...pressedKeys, testKey];
