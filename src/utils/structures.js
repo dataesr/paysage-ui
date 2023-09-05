@@ -1,4 +1,7 @@
 export function getName(item) {
+  const isNameEnDifferent = item?.nameEn && item.nameEn !== item.usualName;
+  const isOfficialDifferent = item?.officialName && (item.officialName !== item.nameEn && item.officialName !== item.usualName);
+
   return (
     <>
       {item?.shortName ? `${item.shortName} - ` : ''}
@@ -6,8 +9,8 @@ export function getName(item) {
       {!item?.shortName && item?.acronym ? `${item.acronym} - ` : ''}
       {item?.usualName}
       {item?.name}
-      {item?.nameEn ? ` - ${item.nameEn}` : ''}
-      {item?.officialName ? ` - ${item.officialName}` : ''}
+      {isNameEnDifferent ? ` - ${item.nameEn}` : ''}
+      {isOfficialDifferent ? ` - ${item.officialName}` : ''}
     </>
   );
 }
