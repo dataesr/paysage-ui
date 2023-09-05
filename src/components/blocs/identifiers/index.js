@@ -91,9 +91,6 @@ export default function IdentifiersComponent() {
     case 'crunchbase':
       linkTo = `https://www.crunchbase.com/organization/${el.value}`;
       break;
-    case 'crossrefFunderId':
-      linkTo = `https://search.crossref.org/funding?q=${el.value}`;
-      break;
     case 'euTransparency':
       linkTo = `https://ec.europa.eu/transparencyregister/public/consultation/displaylobbyist.do?id=${el.value}&isListLobbyistView=true&locale=fr#fr`;
       break;
