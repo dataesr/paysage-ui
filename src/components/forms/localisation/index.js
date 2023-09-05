@@ -31,7 +31,15 @@ function sanitize(form) {
     'iso3', 'locality', 'phonenumber', 'place', 'postalCode', 'postOfficeBoxNumber', 'startDate',
   ];
   const body = {};
-  Object.keys(form).forEach((key) => { if (fields.includes(key)) { body[key] = form[key]; } });
+  Object.keys(form).forEach((key) => {
+    if (fields.includes(key)) {
+      if (key === 'phonenumber' && typeof form[key] === 'string') {
+        body[key] = form[key].replace(/\s/g, '').replace(/[-.]/g, '');
+      } else {
+        body[key] = form[key];
+      }
+    }
+  });
   body.coordinates = {
     lat: parseFloat(body.coordinates?.lat || 0),
     lng: parseFloat(body.coordinates?.lng || 0),
