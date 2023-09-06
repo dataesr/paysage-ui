@@ -62,7 +62,7 @@ export default function LocalisationsComponent() {
     if (localisation.place) { address += `${localisation.place },\n`; }
     if (localisation.postOfficeBoxNumber) { address += `${localisation.postOfficeBoxNumber },\n`; }
     if (localisation.postalCode) { address += `${localisation.postalCode },\n`; }
-    if (localisation.city) { address += `${localisation.city },\n`; }
+    if (localisation.locality) { address += `${localisation.locality },\n`; }
     if (localisation.country) { address += `${localisation.country},\n`; }
 
     return (
