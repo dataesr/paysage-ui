@@ -141,7 +141,7 @@ export default function Report({ type, rows }) {
             <Button
               onClick={handleExportCSV}
             >
-              Exporter la liste en CSV
+              Exporter la liste des imports en CSV
             </Button>
           </Col>
         )}

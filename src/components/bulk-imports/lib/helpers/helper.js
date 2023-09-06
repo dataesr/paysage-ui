@@ -48,6 +48,12 @@ export default function HelperForStructures({ type }) {
                       <span style={{ marginRight: '10px', fontSize: '20px' }}>✓</span>
                       Si elles sont multiples, séparez les id des catégories par des ";", sans espace
                     </li>
+                    <li style={{ marginBottom: '10px' }}>
+                      <span style={{ marginRight: '10px', fontSize: '20px' }}>✓</span>
+                      Après validation des imports, vous pourrez exporter les objets importés en fichier CSV.
+                      Si un warning a été forcé, la dernière colonne du fichier comportera la/les raisons du/des warning(s)
+                      {' '}
+                    </li>
                   </>
                 )}
               {type === 'personnes'
@@ -72,6 +78,12 @@ export default function HelperForStructures({ type }) {
                     <li style={{ marginBottom: '10px' }}>
                       <span style={{ marginRight: '10px', fontSize: '20px' }}>✓</span>
                       Vérifiez que les identifiants aient le bon nombre de caractères
+                    </li>
+                    <li style={{ marginBottom: '10px' }}>
+                      <span style={{ marginRight: '10px', fontSize: '20px' }}>✓</span>
+                      Après validation des imports, vous pourrez exporter les objets importés en fichier CSV.
+                      Si un warning a été forcé, la dernière colonne du fichier comportera la/les raisons du/des warning(s)
+                      {' '}
                     </li>
                   </>
                 )}
@@ -98,6 +110,12 @@ export default function HelperForStructures({ type }) {
                       <span style={{ marginRight: '10px', fontSize: '20px' }}>✓</span>
                       Séparez les id des structures par des ";", sans espace
                     </li>
+                    <li style={{ marginBottom: '10px' }}>
+                      <span style={{ marginRight: '10px', fontSize: '20px' }}>✓</span>
+                      Après validation des imports, vous pourrez exporter les objets importés en fichier CSV.
+                      Si un warning a été forcé, la dernière colonne du fichier comportera la/les raisons du/des warning(s)
+                      {' '}
+                    </li>
                   </>
                 )}
               {type === 'gouvernance'
@@ -117,7 +135,7 @@ export default function HelperForStructures({ type }) {
                     </li>
                     <li style={{ marginBottom: '10px' }}>
                       <span style={{ marginRight: '10px', fontSize: '20px' }}>✓</span>
-                      Vérifiez que les fonctions/responsabilités existent. Vous le trouverez dans la partie administration, type de relation
+                      Vérifiez que les fonctions/responsabilités existent. Vous les trouverez dans la partie administration, type de relation
                     </li>
                     <li style={{ marginBottom: '10px' }}>
                       <span style={{ marginRight: '10px', fontSize: '20px' }}>✓</span>
@@ -126,6 +144,12 @@ export default function HelperForStructures({ type }) {
                     <li style={{ marginBottom: '10px' }}>
                       <span style={{ marginRight: '10px', fontSize: '20px' }}>✓</span>
                       Pour une election, renseigner E, pour une nomination N, sans guillemets. De même pour "En intérim" et Mandat actif
+                    </li>
+                    <li style={{ marginBottom: '10px' }}>
+                      <span style={{ marginRight: '10px', fontSize: '20px' }}>✓</span>
+                      Après validation des imports, vous pourrez exporter les objets importés en fichier CSV.
+                      Si un warning a été forcé, la dernière colonne du fichier comportera la/les raisons du/des warning(s)
+                      {' '}
                     </li>
                   </>
                 )}
@@ -151,6 +175,12 @@ export default function HelperForStructures({ type }) {
                     <li style={{ marginBottom: '10px' }}>
                       <span style={{ marginRight: '10px', fontSize: '20px' }}>✓</span>
                       Les structures décernant le prix ainsi que les différentes catégories doivent être séparé par des ";", sans espace
+                    </li>
+                    <li style={{ marginBottom: '10px' }}>
+                      <span style={{ marginRight: '10px', fontSize: '20px' }}>✓</span>
+                      Après validation des imports, vous pourrez exporter les objets importés en fichier CSV.
+                      Si un warning a été forcé, la dernière colonne du fichier comportera la/les raisons du/des warning(s)
+                      {' '}
                     </li>
                   </>
                 )}
