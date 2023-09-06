@@ -13,7 +13,7 @@ function HistoryCard({ creationDate, creationReason, closureDate, closureReason,
     : `L'établissement fermera en ${formatDescriptionDates(closureDate)?.replace('depuis le', '').replace('depuis', ' ')}`;
   const displayStatus = ((closureDate && closureDate.length > 10 && closureDate > getComparableNow(closureDate))
     ? displayStatusIfCompactDate
-    : `L'établissement est fermé ${closureDate.length <= 10 ? '' : 'depuis le'} ${formatDescriptionDates(closureDate)}`);
+    : `L'établissement est fermé ${closureDate?.length <= 10 ? '' : 'depuis le'} ${formatDescriptionDates(closureDate)}`);
 
   const createReason = (creationReason && !['Non renseigné', 'autre', 'Création'].includes(creationReason)) && ` par ${creationReason.toLowerCase() }`;
   const closeReason = (closureReason && !['Non renseigné', 'autre', 'Création'].includes(closureReason)) && ` par ${closureReason.toLowerCase() }`;
