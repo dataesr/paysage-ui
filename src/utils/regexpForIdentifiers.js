@@ -1,5 +1,7 @@
 export function regexpValidateIdentifiers(type) {
   const validator = {
+    euTransparency: [/^\d{12}-\d{2}$/, 'Un identifiant EU Transparency doit contenir 12 caractères suivi d"un ' - ' et de 2 charactères'],
+    hatvp: [/^H\d{9}$/, 'Un identifiant HATVP doit contenir 10 caractères'],
     idref: [/^\d{8}[\dX]{1}$/, 'Un idRef doit commencer par 8 chiffres suivis d\'un chiffre ou d\'un "X"'],
     rna: [/^W[0-9]{9}$/, 'Un RNA doit commencer par "W" suivi par 9 chiffres'],
     rnsr: [/^\d{9}[A-Z]{1}$/, "Un RNSR doit commencer par 9 chiffres suivis d'une lettre majuscule"],

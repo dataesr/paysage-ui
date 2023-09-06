@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Col, Icon, ModalContent, ModalTitle, Row, Tab, Tabs } from '@dataesr/react-dsfr';
+import { Col, Icon, ModalContent, ModalTitle, Row, Tab, Tabs, Text } from '@dataesr/react-dsfr';
 
 import { Bloc, BlocActionButton, BlocContent, BlocModal, BlocTitle } from '../../bloc';
 import Button from '../../button';
@@ -56,13 +56,14 @@ export default function LocalisationsComponent() {
 
   const renderAddress = (localisation) => {
     let address = '';
+    const phoneNumberWithoutSpaces = localisation?.phonenumber?.replace(/\s/g, '');
     if (localisation.distributionStatement) { address += `${localisation.distributionStatement },\n`; }
     if (localisation.address) { address += `${localisation.address },\n`; }
     if (localisation.place) { address += `${localisation.place },\n`; }
     if (localisation.postOfficeBoxNumber) { address += `${localisation.postOfficeBoxNumber },\n`; }
     if (localisation.postalCode) { address += `${localisation.postalCode },\n`; }
-    if (localisation.city) { address += `${localisation.city },\n`; }
-    if (localisation.country) { address += `${localisation.country}\n`; }
+    if (localisation.locality) { address += `${localisation.locality },\n`; }
+    if (localisation.country) { address += `${localisation.country},\n`; }
 
     return (
       <div className={`fr-card fr-card--xs fr-card--horizontal fr-card--grey fr-card--no-border card-${apiObject}`}>
@@ -85,6 +86,18 @@ export default function LocalisationsComponent() {
                 {localisation.current ? 'actuelle' : 'historique'}
               </p>
             </div>
+            {localisation.phonenumber && (
+              <Text className="fr-card__title">
+                <Icon name="ri-phone-line" size="xl" />
+                <span className="fr-pr-1w">
+                  {phoneNumberWithoutSpaces}
+                </span>
+                <CopyButton
+                  copyText={{ phoneNumberWithoutSpaces }}
+                  size="sm"
+                />
+              </Text>
+            )}
             <div className="fr-card__end fr-mt-0 fr-pt-0">
               <p className="fr-card__detail">
                 {formatDescriptionDates(localisation.startDate || null, localisation.endDate || null)}
