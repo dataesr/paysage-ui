@@ -55,6 +55,8 @@ function User({
   groups,
   isDeleted,
   isOtpRequired,
+  lastLogin,
+  lastVisit,
   createdAt,
   updatedAt,
   updatedBy,
@@ -94,6 +96,28 @@ function User({
               {service}
               {(service && position) && ' — '}
               {position}
+            </Text>
+          )}
+          {(lastLogin || lastVisit) && (
+            <Text spacing="m-0" size="sm">
+              <Icon size="1x" name="ri-heart-pulse-line" />
+              {lastLogin && (
+                <span>
+                  Dernière connexion le
+                  {' '}
+                  {new Date(lastLogin).toLocaleDateString('fr-FR', { year: 'numeric', month: 'long', day: 'numeric' })}
+                </span>
+              )}
+              {lastVisit && (
+                <>
+                  {lastLogin && <br />}
+                  <span>
+                    Dernière visite le
+                    {' '}
+                    {new Date(lastVisit).toLocaleDateString('fr-FR', { year: 'numeric', month: 'long', day: 'numeric' })}
+                  </span>
+                </>
+              )}
             </Text>
           )}
           <Text spacing="mt-2w mb-0" bold>
@@ -283,6 +307,8 @@ User.propTypes = {
   isDeleted: PropTypes.bool.isRequired,
   isOtpRequired: PropTypes.bool.isRequired,
   groups: PropTypes.array,
+  lastLogin: PropTypes.string.isRequired,
+  lastVisit: PropTypes.string.isRequired,
   createdAt: PropTypes.string.isRequired,
   updatedAt: PropTypes.string.isRequired,
   updatedBy: PropTypes.shape({
