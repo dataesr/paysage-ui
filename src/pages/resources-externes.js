@@ -11,6 +11,7 @@ import {
 } from '@dataesr/react-dsfr';
 import usePageTitle from '../hooks/usePageTitle';
 import bso from '../assets/logo-bso.png';
+import curieXploreLogo from '../assets/logo-curiexplore.svg';
 
 export default function RessourcesPage() {
   usePageTitle('Ressources');
@@ -26,7 +27,7 @@ export default function RessourcesPage() {
           >
             <CardHeader>
               <CardImage
-                src="https://curiexplore.enseignementsup-recherche.gouv.fr/static/media/logo-curiexplore.94b2a1be.svg"
+                src={curieXploreLogo}
                 alt="curieXplore logo"
               />
             </CardHeader>
