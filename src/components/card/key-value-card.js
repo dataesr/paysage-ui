@@ -47,12 +47,14 @@ export default function KeyValueCard({
               )}
               {!linkTo && !linkIn && cardKey}
               {tooltip && (
-                <Icon
-                  name="ri-information-fill"
-                  size="1x"
-                  iconPosition="right"
-                  title={tooltip}
-                />
+                <p style={{ cursor: 'help' }}>
+                  <Icon
+                    name="ri-information-fill"
+                    size="1x"
+                    iconPosition="right"
+                    title={tooltip}
+                  />
+                </p>
               )}
               {inactive && <Badge isSmall text="inactif" />}
             </p>

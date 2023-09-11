@@ -226,7 +226,7 @@ export default function HomePage() {
                           className={`card-${k} card--border-bottom`}
                           icon={icons[k]}
                           linkIn={`./rechercher/${objectMappingSearch[k]}?query=&page=1`}
-                          tooltip={`+ ${metrics[k]} sur les 7 derniers jours`}
+                          tooltip={metrics[k] !== undefined ? `+ ${metrics[k]} sur les 7 derniers jours` : ''}
                         />
                       </Col>
                     ))}
