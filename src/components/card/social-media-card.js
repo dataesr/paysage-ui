@@ -19,7 +19,6 @@ import soundcloud from '../../assets/svg-logo/soundcloud.svg';
 import tiktok from '../../assets/svg-logo/tiktok.svg';
 import tumblr from '../../assets/svg-logo/tumblr.svg';
 import vimeo from '../../assets/svg-logo/vimeo.svg';
-import x from '../../assets/svg-logo/x-logo.svg';
 import { capitalize } from '../../utils/strings';
 
 export default function SocialMediaCard({
@@ -92,7 +91,8 @@ export default function SocialMediaCard({
       svg = tumblr;
       break;
     case 'Twitter':
-      svg = x;
+      iconColor = 'var(--twitter-icon-color)';
+      rxIcon = 'ri-twitter-fill';
       break;
     case 'Twitch':
       iconColor = 'var(--twitch-icon-color)';
