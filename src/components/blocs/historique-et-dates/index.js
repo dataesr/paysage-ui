@@ -8,10 +8,10 @@ import { STRUCTURE_PREDECESSEUR } from '../../../utils/relations-tags';
 import styles from './styles.module.scss';
 
 function HistoryCard({ creationDate, creationReason, closureDate, closureReason, creationOfficialText, closureOfficialText, predecessors, successors }) {
-  const displayStatusIfCompactDate = closureDate?.length === 10
+  const displayStatusIfCompactDate = closureDate?.length === 10 && closureDate > getComparableNow()
     ? `L'établissement fermera le ${formatDescriptionDates(closureDate)?.replace('depuis le', '')}`
     : `L'établissement fermera en ${formatDescriptionDates(closureDate)?.replace('depuis le', '').replace('depuis', ' ')}`;
-  const displayStatus = ((closureDate && closureDate.length > 10 && closureDate > getComparableNow(closureDate))
+  const displayStatus = ((closureDate && closureDate > getComparableNow())
     ? displayStatusIfCompactDate
     : `L'établissement est fermé ${closureDate?.length <= 10 ? '' : 'depuis le'} ${formatDescriptionDates(closureDate)}`);
 
