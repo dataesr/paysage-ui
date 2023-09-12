@@ -69,6 +69,9 @@ async function mandatePositionChecker(mandatePosition) {
 
 async function phoneNumberChecker(mandatePhonenumber) {
   const phoneNumberWarning = [];
+  if (!mandatePhonenumber) {
+    return [];
+  }
   if (mandatePhonenumber?.length !== 10) {
     phoneNumberWarning.push({ message: "Le numéro de téléphone n'est pas valide" });
   }
