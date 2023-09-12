@@ -1,3 +1,4 @@
+import * as XLSX from 'xlsx';
 import { Button, Col, Container, Icon, Link, Row } from '@dataesr/react-dsfr';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
@@ -12,6 +13,7 @@ export default function Report({ type, rows }) {
   if (!rows.length) return null;
 
   const typeOfImport = rows.map((el) => el.type)[0];
+
   const MODELS = {
     structures: structuresHeadersMapping,
     persons: personsHeadersMapping,
@@ -20,15 +22,15 @@ export default function Report({ type, rows }) {
     gouvernance: gouvernanceHeadersMapping,
   };
 
-  const convertRowsToCSV = (dataRows) => {
-    const csvRows = [];
+  const convertRowsToXLSXData = (dataRows) => {
+    const xlsxData = [];
     const currentModel = MODELS[typeOfImport];
-    if (!currentModel) return csvRows;
+    if (!currentModel) return null;
+
     const headerRow = Object.keys(currentModel);
     headerRow.push('nouvel Id Paysage', 'statuts');
 
-    const quotedHeaderRow = headerRow.map((header) => `"${header}"`).join(',');
-    csvRows.push(quotedHeaderRow);
+    xlsxData.push(headerRow);
 
     dataRows.forEach((row) => {
       const warningMessages = row.warning ? row.warning.map((warning) => warning.message).join('; ') : '';
@@ -50,25 +52,42 @@ export default function Report({ type, rows }) {
             value = fieldValues;
           }
         }
-        return `"${value}"`;
+        return value;
       });
 
-      csvRows.push(rowData.join(','));
+      xlsxData.push(rowData);
     });
 
-    return csvRows.join('\n');
+    return xlsxData;
   };
 
-  const handleExportCSV = () => {
-    const csvContent = convertRowsToCSV(rows);
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    const link = document.createElement('a');
-    link.href = window.URL.createObjectURL(blob);
-    link.download = 'report.csv';
-    link.click();
+  function downloadXLSXFile(data, fileName) {
+    const blob = new Blob([data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = fileName;
+    document.body.appendChild(a);
+    a.click();
+    window.URL.revokeObjectURL(url);
+  }
 
-    window.URL.revokeObjectURL(link.href);
-  };
+  function createXLSXFile(sheetsObject) {
+    const wb = XLSX.utils.book_new();
+    Object.entries(sheetsObject).forEach(([k, v]) => {
+      const ws = XLSX.utils.json_to_sheet(v, { skipHeader: 1 });
+      XLSX.utils.book_append_sheet(wb, ws, k);
+    });
+    return XLSX.write(wb, { bookType: 'xlsx', type: 'buffer' });
+  }
+
+  function exportToXLSX(xlsxData) {
+    const sheetsObject = {
+      xlsxData,
+    };
+    const xlsx = createXLSXFile(sheetsObject);
+    return downloadXLSXFile(xlsx, 'report.xlsx');
+  }
 
   return (
     <Container fluid className="fr-my-3w">
@@ -127,7 +146,8 @@ export default function Report({ type, rows }) {
                               <li>
                                 L'objet à été importé avec succes
                                 {row.imports?.href && ' '}
-                                {row.imports?.href && <Link target="_blank" href={row.imports.href}>Voir</Link>}
+                                {row.imports?.href && !row.imports?.href.includes('/relations')
+                                && <Link target="_blank" href={row.imports.href}>Voir</Link> }
                               </li>
                             )}
                           </ul>
@@ -138,11 +158,19 @@ export default function Report({ type, rows }) {
                 </tbody>
               </table>
             </div>
-            <Button
-              onClick={handleExportCSV}
-            >
-              Exporter la liste des imports en CSV
-            </Button>
+            {rows.map((el) => el.type === 'persons' || el.type === 'structures') && (
+              <Button
+                onClick={() => {
+                  const xlsxData = convertRowsToXLSXData(rows);
+                  if (xlsxData) {
+                    exportToXLSX(xlsxData);
+                  }
+                }}
+              >
+                Exporter la liste des imports en XLSX
+              </Button>
+            )}
+
           </Col>
         )}
       </Row>
