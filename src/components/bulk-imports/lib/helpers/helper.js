@@ -50,7 +50,7 @@ export default function HelperForStructures({ type }) {
                     </li>
                     <li style={{ marginBottom: '10px' }}>
                       <span style={{ marginRight: '10px', fontSize: '20px' }}>✓</span>
-                      Après validation des imports, vous pourrez exporter les objets importés en fichier CSV.
+                      Après validation des imports, vous pourrez exporter les objets importés en fichier XLSX.
                       Si un warning a été forcé, la dernière colonne du fichier comportera la/les raisons du/des warning(s)
                       {' '}
                     </li>
@@ -81,7 +81,7 @@ export default function HelperForStructures({ type }) {
                     </li>
                     <li style={{ marginBottom: '10px' }}>
                       <span style={{ marginRight: '10px', fontSize: '20px' }}>✓</span>
-                      Après validation des imports, vous pourrez exporter les objets importés en fichier CSV.
+                      Après validation des imports, vous pourrez exporter les objets importés en fichier XLSX.
                       Si un warning a été forcé, la dernière colonne du fichier comportera la/les raisons du/des warning(s)
                       {' '}
                     </li>
@@ -112,7 +112,7 @@ export default function HelperForStructures({ type }) {
                     </li>
                     <li style={{ marginBottom: '10px' }}>
                       <span style={{ marginRight: '10px', fontSize: '20px' }}>✓</span>
-                      Après validation des imports, vous pourrez exporter les objets importés en fichier CSV.
+                      Après validation des imports, vous pourrez exporter les objets importés en fichier XLSX.
                       Si un warning a été forcé, la dernière colonne du fichier comportera la/les raisons du/des warning(s)
                       {' '}
                     </li>
@@ -147,7 +147,7 @@ export default function HelperForStructures({ type }) {
                     </li>
                     <li style={{ marginBottom: '10px' }}>
                       <span style={{ marginRight: '10px', fontSize: '20px' }}>✓</span>
-                      Après validation des imports, vous pourrez exporter les objets importés en fichier CSV.
+                      Après validation des imports, vous pourrez exporter les objets importés en fichier XLSX.
                       Si un warning a été forcé, la dernière colonne du fichier comportera la/les raisons du/des warning(s)
                       {' '}
                     </li>
@@ -178,7 +178,7 @@ export default function HelperForStructures({ type }) {
                     </li>
                     <li style={{ marginBottom: '10px' }}>
                       <span style={{ marginRight: '10px', fontSize: '20px' }}>✓</span>
-                      Après validation des imports, vous pourrez exporter les objets importés en fichier CSV.
+                      Après validation des imports, vous pourrez exporter les objets importés en fichier XLSX.
                       Si un warning a été forcé, la dernière colonne du fichier comportera la/les raisons du/des warning(s)
                       {' '}
                     </li>
