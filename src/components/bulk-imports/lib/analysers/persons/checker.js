@@ -73,17 +73,6 @@ function rowsChecker(rows, index) {
   const warnings = [];
   const rowsWithoutIndex = rows.filter((r, i) => i !== index);
 
-  const { firstName } = rows[index];
-
-  const duplicateFirstNames = rowsWithoutIndex
-    .map((row) => row.firstName)
-    .filter((name) => name === firstName);
-
-  if (duplicateFirstNames.length > 0) {
-    warnings.push({
-      message: `Le nom ${firstName} que vous souhaitez ajouter existe déjà ${duplicateFirstNames.length} fois dans votre fichier d'import.`,
-    });
-  }
   const { lastName } = rows[index];
 
   const duplicateLastNames = rowsWithoutIndex
