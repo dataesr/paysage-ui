@@ -127,6 +127,9 @@ export default function IdentifiersComponent() {
     case 'pic':
       linkTo = `https://ec.europa.eu/info/funding-tenders/opportunities/portal/screen/how-to-participate/org-details/${el.value}`;
       break;
+    case 'researchgate':
+      linkTo = `https://www.researchgate.net/profile/${el.value}`;
+      break;
     case 'rcr':
       linkTo = `http://www.sudoc.abes.fr//DB=2.2/SET=1/TTL=3/CMD?ACT=SRCHA&IKT=8888&SRT=RLV&TRM=${el.value}`;
       break;
