@@ -74,6 +74,8 @@ export const ENUMS_LABELS_MAPPER = {
   orcid: 'ORCID id',
   orgref: 'ORGREF id',
   pia: 'ANR - id projet PIA',
+  'piaweb-organization': 'Id structure PiaWeb',
+  'piaweb-project': 'Id projet PiaWeb',
   pic: 'PIC id',
   PSUP: 'Lib formation Parcoursup',
   PSUP2: 'Lib formation en apprentissage Parcoursup',
