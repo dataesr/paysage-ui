@@ -42,7 +42,6 @@ export default function IdentifierForm({ id, data, onDelete, onSave, options }) 
     const body = sanitize(form);
     return onSave(body, id);
   };
-
   return (
     <form>
       <Container fluid>
