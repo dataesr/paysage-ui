@@ -3,6 +3,7 @@ import {
   Col,
   Container,
   Icon,
+  Link,
   Row,
   Select,
   Tag,
@@ -18,13 +19,14 @@ import FormFooter from '../../../forms/form-footer';
 import SearchBar from '../../../search-bar';
 import PaysageBlame from '../../../paysage-blame';
 
-function validator(body) {
+function validator(body, jorfTextError) {
   const ret = {};
   if (!body.nature) ret.nature = 'La nature du texte officiel est obligatoire';
   if (!body.type) ret.type = 'Le type du texte officiel est obligatoire';
   if (!body.title) ret.title = 'Le titre du texte officiel est obligatoire';
   if (!body.pageUrl) ret.pageUrl = "L'URL de destination du texte officiel est obligatoire";
   if (!body.publicationDate) ret.publicationDate = 'La date de publication du texte officiel est obligatoire';
+  if (jorfTextError.length > 0) ret.jorftext = jorfTextError;
   return ret;
 }
 function sanitize(form) {
@@ -40,13 +42,35 @@ export default function OfficialTextForm({ id, data, onSave, onDelete }) {
   const [query, setQuery] = useState('');
   const [options, setOptions] = useState('');
   const [isSearching, setIsSearching] = useState(false);
-  const { form, updateForm, errors } = useForm(data, validator);
+  const [jorfTextError, setJorfTextError] = useState('');
+  const { form, updateForm, errors } = useForm(data, (body) => validator(body, jorfTextError));
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const relatesTo = form.relatedObjects?.length ? form.relatedObjects.map((element) => element.id) : [];
     if (form.currentObjectId) relatesTo.push(form.currentObjectId);
     const { relatedObjects, currentObjectId, ...rest } = form;
-    if (Object.keys(errors).length !== 0) return setShowErrors(true);
+    if (Object.keys(errors).length !== 0) { setShowErrors(true); }
+    try {
+      const response = await api.get(`/official-texts?filters[jorftext]=${form.jorftext}`);
+      if (response.data.totalCount > 0) {
+        setJorfTextError(
+          <>
+            {form.jorftext}
+            {' '}
+            existe déjà dans la base de données Paysage
+            {response.data.data.map((el) => (
+              <Link target="_blank" href={`/textes-officiels/${el.id}`}>
+                {el.title}
+              </Link>
+            ))}
+          </>,
+        ); setShowErrors(true);
+        return null;
+      }
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error(error);
+    }
     const body = sanitize({ ...rest, relatesTo });
     return onSave(body, id);
   };
@@ -57,8 +81,11 @@ export default function OfficialTextForm({ id, data, onSave, onDelete }) {
     if (field) {
       const element = document.getElementsByName(field);
       if (element?.length) element[0].scrollIntoView({ block: 'start', inline: 'nearest', behavior: 'smooth' });
+    } else if (jorfTextError) {
+      const jorfTextElement = document.getElementsByName('jorftext');
+      if (jorfTextElement?.length) jorfTextElement[0].scrollIntoView({ block: 'start', inline: 'nearest', behavior: 'smooth' });
     }
-  }, [showErrors, errors]);
+  }, [showErrors, errors, jorfTextError]);
 
   useEffect(() => {
     const getAutocompleteResult = async () => {
@@ -139,6 +166,8 @@ export default function OfficialTextForm({ id, data, onSave, onDelete }) {
             name="jorftext"
             value={form.jorftext}
             onChange={(e) => updateForm({ jorftext: e.target.value })}
+            message={(showErrors && jorfTextError) ? jorfTextError : null}
+            messageType={(showErrors && jorfTextError) ? 'error' : ''}
           />
         </Col>
         <Col n="12 md-6">
