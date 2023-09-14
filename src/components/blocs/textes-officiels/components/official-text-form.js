@@ -52,7 +52,10 @@ export default function OfficialTextForm({ id, data, onSave, onDelete }) {
     if (Object.keys(errors).length !== 0) { setShowErrors(true); }
     try {
       const response = await api.get(`/official-texts?filters[jorftext]=${form.jorftext}`);
-      if (response.data.totalCount > 0) {
+      if (
+        form.jorftext && response.data.totalCount > 0
+        && !response.data.data.some((el) => el.relatedObjects.some((obj) => obj.id === currentObjectId))
+      ) {
         setJorfTextError(
           <>
             {form.jorftext}
