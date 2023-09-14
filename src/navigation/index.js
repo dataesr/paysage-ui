@@ -82,6 +82,7 @@ import MatomoReport from './matomo-report';
 import ScrollToTopOnPathnameChange from './scroll-top-on-pathname-change';
 import CGU from '../pages/cgu';
 import MentionsLegales from '../pages/mentions-legales';
+import Annuaire from '../pages/annuaire';
 
 export default function Routes() {
   return (
@@ -145,6 +146,7 @@ export default function Routes() {
             </Route>
 
             <Route path="/rechercher/*" element={<SearchPage />} />
+            <Route path="/annuaire" element={<Annuaire />} />
 
             <Route path="/structures/:id/exporter" element={<StructureExportPage />} />
             <Route path="/structures/:id" element={<StructureByIdPage />}>

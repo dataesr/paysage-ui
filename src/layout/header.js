@@ -172,6 +172,13 @@ export default function Header() {
             asLink={<RouterLink to="/ressources" />}
             current={pathname.startsWith('/ressources')}
           />
+          {(viewer.role !== 'reader') && (
+            <NavItem
+              title="Annuaire"
+              asLink={<RouterLink to="/annuaire" />}
+              current={pathname.startsWith('/annuaire')}
+            />
+          )}
           {viewer?.id && ['admin'].includes(viewer?.role) && (
             <NavItem
               title="Administration"
