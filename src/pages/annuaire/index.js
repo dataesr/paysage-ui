@@ -5,7 +5,7 @@ import usePageTitle from '../../hooks/usePageTitle';
 import useFetch from '../../hooks/useFetch';
 import Button from '../../components/button';
 
-const addSelectDefaultOption = (options) => [{ label: 'Séléctionner', value: '' }, ...options];
+const addSelectDefaultOption = (options) => [{ label: 'Sélectionner', value: '' }, ...options];
 
 const columns = [
   { name: 'person', label: 'Personne', sortable: true, render: ({ personId, person }) => <a href={`/personnes/${personId}`}>{person}</a> },
