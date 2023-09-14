@@ -8,7 +8,7 @@ import SearchBar from '../../../search-bar';
 
 function validate(body) {
   const validationErrors = {};
-  if (!body.userId) { validationErrors.userId = "L'utilisateur doit être séléctionné"; }
+  if (!body.userId) { validationErrors.userId = "L'utilisateur doit être sélectionné"; }
   if (!body.role) { validationErrors.role = 'Le rôle est obligatoire.'; }
   if (!body.name) { validationErrors.type = 'Le nom de la clé est obligatoire'; }
   return validationErrors;
