@@ -71,9 +71,9 @@ const columns = [
     name: 'endDate',
     label: 'Date de fin',
     sortable: true,
-    render: ({ endDate, previsionalEndDate }) => formatDate(endDate) || formatDate(previsionalEndDate) || <ND />,
-    cellClassRender: ({ endDate, previsionalEndDate }) => {
-      const date = endDate || previsionalEndDate;
+    render: ({ endDate, endDatePrevisional }) => formatDate(endDate) || formatDate(endDatePrevisional) || <ND />,
+    cellClassRender: ({ endDate, endDatePrevisional }) => {
+      const date = endDate || endDatePrevisional;
       if (!date) return null;
       return ((date >= now() && date <= addMonths(6)) ? 'notice-error' : null);
     },
