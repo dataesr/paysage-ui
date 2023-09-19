@@ -53,7 +53,7 @@ export default function Filters() {
         <SearchableSelect
           hint="Séléction multiple possible"
           multiple
-          label="Fonctions"
+          label="Fonction"
           options={relationTypesOptions}
           onChange={(v) => addFilter('relationType', v)}
           tabIndex={0}
@@ -98,7 +98,7 @@ export default function Filters() {
       <Col n="12 md-6">
         <SearchableSelect
           hint="Séléction multiple possible"
-          label="Etablissement"
+          label="Établissement"
           options={structuresOptions}
           onChange={(v) => addFilter('structure', v)}
           tabIndex={0}
