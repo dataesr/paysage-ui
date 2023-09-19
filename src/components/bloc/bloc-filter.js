@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Row, Tag, TagGroup, Text } from '@dataesr/react-dsfr';
 import typeValidation from '../../utils/type-validation';
 
-export default function BlocFilter({ statusFilter, setStatusFilter, counts }) {
+export default function BlocFilter({ statusFilter, setStatusFilter, counts, label }) {
   const totalCount = Object.values(counts).reduce((total, current) => current + total, 0);
   if (!totalCount) return null;
   return (
@@ -14,19 +14,24 @@ export default function BlocFilter({ statusFilter, setStatusFilter, counts }) {
       <Row>
         <TagGroup>
           <Tag size="sm" className="no-span" selected={statusFilter === 'current'} onClick={() => setStatusFilter('current')}>
-            Relations actuelles (
+            {label}
+            {' '}
+            actuelles (
             {counts.current}
             )
           </Tag>
 
           <Tag size="sm" className="no-span" selected={statusFilter === 'inactive'} onClick={() => setStatusFilter('inactive')}>
-            Relations passées (
+            {label}
+            {' '}
+            passées (
             {counts.inactive}
             )
           </Tag>
-
           <Tag size="sm" className="no-span" selected={statusFilter === 'forthcoming'} onClick={() => setStatusFilter('forthcoming')}>
-            Relations futures (
+            {label}
+            {' '}
+            futures (
             {counts.forthcoming}
             )
           </Tag>
@@ -41,8 +46,10 @@ BlocFilter.propTypes = {
   statusFilter: PropTypes.string.isRequired,
   setStatusFilter: PropTypes.func.isRequired,
   counts: PropTypes.shape.isRequired,
+  label: PropTypes.string,
 };
 
 BlocFilter.defaultProps = {
   __TYPE: 'BlocFilter',
+  label: 'Relations',
 };
