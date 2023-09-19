@@ -26,7 +26,7 @@ export default function Filters() {
   }
 
   return (
-    <Row gutters alignItems="top">
+    <Row className="fr-mb-2w" gutters alignItems="top">
       <Col n="12 md-6">
         <SearchableSelect
           hint="Séléction multiple possible"
