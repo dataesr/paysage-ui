@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Link, Row, Table, Text } from '@dataesr/react-dsfr';
@@ -25,25 +26,43 @@ function now() {
 }
 
 function ND() {
-  return <i className="fr-card__detail">ND</i>;
+  return <i className="fr-card__detail">NR</i>;
 }
 
-// eslint-disable-next-line react/prop-types
 function Mailto({ email }) {
-  return <a href={`mailto:${email}`}>{email}</a>;
+  return (
+    <a style={{ wordBreak: 'break-all', wordSpacing: '-.4ch' }} href={`mailto:${email}`}>
+      {/* eslint-disable-next-line react/prop-types */}
+      {email?.split('@').map((part, i) => (
+        <>
+          {i === 1 ? '@' : null}
+          {part}
+          <br />
+        </>
+      ))}
+    </a>
+  );
 }
+Mailto.propTypes = {
+  email: PropTypes.string,
+};
+Mailto.defaultProps = {
+  email: '',
+};
 
 function formatDate(date) {
   if (!date) return null;
+  if (date.length === 4) return date;
   try {
     const d = new Date(date);
+    if (date.length === 7) return d.toLocaleDateString('fr-FR', { year: 'numeric', month: 'short' });
     return d.toLocaleDateString('fr-FR', { year: 'numeric', month: 'short', day: 'numeric' });
   } catch {
-    return null;
+    return date;
   }
 }
 
-const columns = [
+const otherColumns = [
   {
     name: 'person',
     label: 'Personne',
@@ -52,11 +71,13 @@ const columns = [
   },
   {
     name: 'relationType',
-    label: 'Type de mandat',
+    label: 'Titre',
+    sortable: true,
+    render: ({ relationType, mandateTemporary }) => `${relationType}${mandateTemporary ? ' par interim' : ''}`,
   },
   {
     name: 'structure',
-    label: "Dénomination de l'établissement",
+    label: 'Structure',
     sortable: true,
     render: ({ structureId, structureName }) => <Link href={`/structures/${structureId}/gouvernance-et-referents`}>{structureName}</Link>,
   },
@@ -78,6 +99,9 @@ const columns = [
       return ((date >= now() && date <= addMonths(6)) ? 'notice-error' : null);
     },
   },
+];
+const currentColumns = [
+  ...otherColumns,
   {
     name: 'email',
     label: 'Email',
@@ -98,7 +122,7 @@ const columns = [
 ];
 
 export default function Results() {
-  const [searchParams] = useSearchParams();
+  const [searchParams] = useSearchParams({ limit: 1000 });
   const { data } = useFetch(`/annuaire?${searchParams.toString()}`);
   const { data: spreadedByStatusRelations, counts, defaultFilter } = spreadByStatus(data?.data);
   const [statusFilter, setStatusFilter] = useState(defaultFilter);
@@ -122,9 +146,9 @@ export default function Results() {
           ? (
             <div>
               <Button
-                icon="ri-file-excel-2-line"
-                tertiary
-                borderless
+                icon="ri-download-line"
+                size="sm"
+                secondary
                 onClick={async () => exportToCsv({
                   data: await api.get(`/annuaire/export?${searchParams.toString()}`, {}).then((res) => res.data),
                   fileName: 'annuaire',
@@ -138,12 +162,13 @@ export default function Results() {
           )
           : null}
       </Row>
-      <BlocFilter statusFilter={statusFilter} setStatusFilter={setStatusFilter} counts={counts} />
+      <BlocFilter statusFilter={statusFilter} setStatusFilter={setStatusFilter} counts={counts} label="Fonctions" />
       <Row>
         <Table
+          fixedLayout
           rowKey={(x) => x.id}
           data={spreadedByStatusRelations[statusFilter] || []}
-          columns={columns}
+          columns={statusFilter === 'current' ? currentColumns : otherColumns}
           pagination
           paginationPosition="center"
           perPage={10}

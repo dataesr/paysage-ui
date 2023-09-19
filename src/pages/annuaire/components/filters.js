@@ -30,6 +30,28 @@ export default function Filters() {
       <Col n="12 md-6">
         <SearchableSelect
           hint="Séléction multiple possible"
+          label="Groupe de fonction"
+          options={mandateTypeGroupOptions}
+          onChange={(v) => addFilter('mandateTypeGroup', v)}
+          tabIndex={0}
+          className="fr-mb-1v"
+          placeholder="Rechercher des groupes de fonctions..."
+        />
+        <Row alignItems="bottom">
+          <Text className="fr-mb-0 fr-mr-1w" as="span" bold size="sm">Raccourcis :</Text>
+          <BadgeGroup>
+            <ActionBadge className="fr-mb-0" isSmall colorFamily="purple-glycine" onClick={() => addFilter('mandateTypeGroup', 'Équipe de direction')}>
+              Équipe de direction
+            </ActionBadge>
+            <ActionBadge className="fr-mb-0" isSmall colorFamily="purple-glycine" onClick={() => addFilter('catmandateTypeGroupegory', 'Cabinet')}>
+              Cabinet
+            </ActionBadge>
+          </BadgeGroup>
+        </Row>
+      </Col>
+      <Col n="12 md-6">
+        <SearchableSelect
+          hint="Séléction multiple possible"
           multiple
           label="Fonctions"
           options={relationTypesOptions}
@@ -46,28 +68,6 @@ export default function Filters() {
             </ActionBadge>
             <ActionBadge className="fr-mb-0" isSmall colorFamily="purple-glycine" onClick={() => addFilter('relationType', 'Directrice générale/directeur général des services')}>
               Directeur général des services
-            </ActionBadge>
-          </BadgeGroup>
-        </Row>
-      </Col>
-      <Col n="12 md-6">
-        <SearchableSelect
-          hint="Séléction multiple possible"
-          label="Groupe de fonction"
-          options={mandateTypeGroupOptions}
-          onChange={(v) => addFilter('mandateTypeGroup', v)}
-          tabIndex={0}
-          className="fr-mb-1v"
-          placeholder="Rechercher des groupes de fonctions..."
-        />
-        <Row alignItems="bottom">
-          <Text className="fr-mb-0 fr-mr-1w" as="span" bold size="sm">Raccourcis :</Text>
-          <BadgeGroup>
-            <ActionBadge className="fr-mb-0" isSmall colorFamily="purple-glycine" onClick={() => addFilter('mandateTypeGroup', 'Équipe de direction')}>
-              Équipe de direction
-            </ActionBadge>
-            <ActionBadge className="fr-mb-0" isSmall colorFamily="purple-glycine" onClick={() => addFilter('catmandateTypeGroupegory', 'Cabinet')}>
-              Cabinet
             </ActionBadge>
           </BadgeGroup>
         </Row>
