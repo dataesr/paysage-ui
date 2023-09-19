@@ -73,7 +73,10 @@ const otherColumns = [
     name: 'relationType',
     label: 'Titre',
     sortable: true,
-    render: ({ relationType, mandateTemporary }) => `${relationType}${mandateTemporary ? ' par interim' : ''}`,
+    render: ({ relationType, mandateTemporary, mandatePrecision }) => {
+      if (mandatePrecision) return mandatePrecision;
+      return `${relationType}${mandateTemporary ? ' par interim' : ''}`;
+    },
   },
   {
     name: 'structure',
