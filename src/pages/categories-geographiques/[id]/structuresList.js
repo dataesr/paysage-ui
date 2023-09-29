@@ -1,6 +1,7 @@
-import { Badge, Col, Icon, Tile } from '@dataesr/react-dsfr';
+import { Badge, Col, Icon, Row, Tile, TextInput } from '@dataesr/react-dsfr';
 import PropTypes from 'prop-types';
 import { Link as RouterLink } from 'react-router-dom';
+import { useState } from 'react';
 import { getName } from '../../../utils/structures';
 import { formatDescriptionDates } from '../../../utils/dates';
 import { capitalize } from '../../../utils/strings';
@@ -19,30 +20,45 @@ const getDescription = (item) => {
   return capitalize(description.trim());
 };
 export function StructuresList({ data }) {
-  if (!data) {
+  const [filter, setFilter] = useState('');
+  if (!data && !data?.data) {
     return null;
   }
 
-  const list = data.map((item) => (
-    <Col className="fr-card fr-card--xs fr-card--grey fr-card--no-border">
-      <Tile horizontal color="var(--structures-color)">
-        <div className="fr-tile__body">
-          <p className="fr-tile__title">
-            <RouterLink className="fr-tile__link fr-link--md" to={`/structures/${item.id}`}>
-              <Icon name="ri-building-line" size="1x" color="var(--structures-color)" />
-              {getName(item)}
-            </RouterLink>
-          </p>
-          {item.structureStatus === 'inactive' ? (
-            <Badge isSmall colorFamily="brown-opera" text="Inactive" spacing="mb-0" />
-          ) : null}
-          <p className="fr-tile__desc">{getDescription(item)}</p>
-        </div>
-      </Tile>
-    </Col>
-  ));
+  const list = data
+    .filter((item) => item.currentName.usualName.toLowerCase().indexOf(filter.toLowerCase()) > -1)
+    .map((item) => (
+      <Row gutters>
+        <Col n="12" as="li" key={item.id}>
+          <Tile horizontal color="var(--structures-color)">
+            <div className="fr-tile__body">
+              <p className="fr-tile__title">
+                <RouterLink className="fr-tile__link fr-link--md" to={`/structures/${item.id}`}>
+                  <Icon name="ri-building-line" size="1x" color="var(--structures-color)" />
+                  {getName(item)}
+                </RouterLink>
+              </p>
+              {item.structureStatus === 'inactive' ? (
+                <Badge isSmall colorFamily="brown-opera" text="Inactive" spacing="mb-0" />
+              ) : null}
+              <p className="fr-tile__desc">{getDescription(item)}</p>
+            </div>
+          </Tile>
+        </Col>
+      </Row>
+    ));
 
-  return <ExpendableListCards list={list} nCol="12 md-6" />;
+  return (
+    <>
+      <TextInput
+        label="Filtre sur le nom de la structure"
+        name="nameFilter"
+        onChange={(e) => setFilter(e.target.value)}
+        value={filter}
+      />
+      <ExpendableListCards list={list} max="12" nCol="12 md-4" />
+    </>
+  );
 }
 
 export function ExceptionStructuresList({ exceptionGps }) {

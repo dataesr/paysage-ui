@@ -14,6 +14,8 @@ export default function GeographicalCategoryRelatedElements() {
     isLoading: structuresLoading,
   } = useFetch(`${url}/structures`);
 
+  console.log('dataStructures', dataStructures);
+
   const exceptionGps = [];
   const exception = useFetch('/geographical-exceptions');
 
@@ -86,9 +88,7 @@ export default function GeographicalCategoryRelatedElements() {
                 />
               </Col>
             </Row>
-            <ExceptionStructuresList
-              exceptionGps={exceptionGps}
-            />
+            <ExceptionStructuresList exceptionGps={exceptionGps} />
           </Col>
         </Row>
       </>
@@ -97,10 +97,10 @@ export default function GeographicalCategoryRelatedElements() {
 
   return (
     <Container>
-      <Title as="h2" look="h4">
+      {/* <Title as="h2" look="h4">
         Catégorie parente
       </Title>
-      {data?.closestParent && <Tag color="blue-ecume" className="fr-mb-3w" />}
+      {data?.closestParent && <Tag color="blue-ecume" className="fr-mb-3w" />} */}
       {structuresContent}
     </Container>
   );
