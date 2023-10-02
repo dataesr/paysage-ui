@@ -31,6 +31,26 @@ function genderChecker({ gender }) {
   return [];
 }
 
+function duplicateInImportFile(docs) {
+  const allValues = {};
+  const errors = [];
+
+  for (let i = 0; i < docs.length; i += 1) {
+    const el = docs[i];
+    const entries = Object.entries(el);
+    for (let j = 0; j < entries.length; j += 1) {
+      const [key, value] = entries[j];
+      if (key !== 'gender' && key !== 'activity' && value && allValues[key] && allValues[key].includes(value)) {
+        errors.push({ message: `La valeur "${value}" pour la clé "${key}" existe déjà dans votre fichier d'import` });
+      } else {
+        allValues[key] = allValues[key] || [];
+        allValues[key].push(value);
+      }
+    }
+  }
+  return errors;
+}
+
 function websiteChecker({ websiteFr, websiteEn }) {
   const urlRegex = /^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/i;
   if (websiteFr && !urlRegex.test(websiteFr)) {
@@ -109,6 +129,7 @@ function rowsChecker(rows, index) {
 export default async function checker(docs, index) {
   try {
     const doc = docs[index];
+    const isDuplicatedInImportFile = await duplicateInImportFile(docs);
     const nameDuplicateWarnings = await nameChecker(doc);
     const orcidDuplicate = await duplicateIdChecker('orcid', doc.orcid);
     const wikidataDuplicate = await duplicateIdChecker('wikidata', doc.wikidata);

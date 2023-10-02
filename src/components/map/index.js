@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { divIcon, latLngBounds } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import { MapContainer, Marker, TileLayer, Tooltip, useMap } from 'react-leaflet';
+import { MapContainer, Marker, TileLayer, Tooltip, useMap, GeoJSON } from 'react-leaflet';
 
 const getIcon = (color = '#0078f3') => divIcon({
   html: `
@@ -20,6 +20,7 @@ const getIcon = (color = '#0078f3') => divIcon({
 
 function SetMap({ markers }) {
   const map = useMap();
+
   if (markers.length) {
     const markerBounds = markers && latLngBounds(markers.map((m) => m.latLng));
     map.fitBounds(markerBounds, { padding: [50, 50] });
@@ -35,11 +36,9 @@ SetMap.propTypes = {
   markers: PropTypes.array,
 };
 
-export default function Map({ height, markers, onMarkerDragEnd, width }) {
+export default function Map({ height, markers, polygonCoordinates, onMarkerDragEnd, width }) {
   const eventHandlers = useMemo(() => ({ dragend(e) { return onMarkerDragEnd(e); } }), [onMarkerDragEnd]);
-  const theme = (window.localStorage.getItem('prefers-color-scheme') === 'dark')
-    ? 'dark'
-    : 'sunny';
+  const theme = window.localStorage.getItem('prefers-color-scheme') === 'dark' ? 'dark' : 'sunny';
   return (
     <MapContainer
       attributionControl
@@ -50,23 +49,34 @@ export default function Map({ height, markers, onMarkerDragEnd, width }) {
     >
       <TileLayer
         attribution="<a href='https://www.jawg.io' target='_blank'>&copy; Jawg</a>"
-        url={`https://tile.jawg.io/jawg-${theme}/{z}/{x}/{y}.png?access-token=5V4ER9yrsLxoHQrAGQuYNu4yWqXNqKAM6iaX5D1LGpRNTBxvQL3enWXpxMQqTrY8`}
+        url={`https://tile.jawg.io/jawg-${theme}/{z}/{x}/{y}.png?lang=fr&access-token=5V4ER9yrsLxoHQrAGQuYNu4yWqXNqKAM6iaX5D1LGpRNTBxvQL3enWXpxMQqTrY8`}
       />
-      {markers.map((marker, i) => (
-        /* zIndexOffset prevent markers from disappearing on scroll */
-        <Marker zIndexOffset={marker?.zIndexOffset || 10000} icon={getIcon(marker.color)} draggable={!!onMarkerDragEnd} eventHandlers={eventHandlers} key={i} position={marker.latLng}>
-          <Tooltip>
-            {marker?.label && (
-              <>
-                {marker.label}
-                <br />
-              </>
-            )}
-            {marker.address}
-          </Tooltip>
-        </Marker>
-      ))}
-      <SetMap markers={markers} />
+      {polygonCoordinates?.type && polygonCoordinates?.coordinates && (
+        <GeoJSON style={{ color: 'var(--blue-ecume-main-400)' }} data={polygonCoordinates} />
+      )}
+      {markers
+        .filter((marker) => marker && marker.latLng)
+        .map((marker, i) => (
+          <Marker
+            zIndexOffset={marker?.zIndexOffset || 10000}
+            icon={getIcon(marker.color)}
+            draggable={!!onMarkerDragEnd}
+            eventHandlers={eventHandlers}
+            key={i}
+            position={marker.latLng}
+          >
+            <Tooltip>
+              {marker?.label && (
+                <>
+                  {marker.label}
+                  <br />
+                </>
+              )}
+              {marker.address}
+            </Tooltip>
+          </Marker>
+        ))}
+      <SetMap markers={markers} polygon={polygonCoordinates} />
     </MapContainer>
   );
 }
@@ -75,12 +85,17 @@ Map.defaultProps = {
   height: '300px',
   markers: [],
   onMarkerDragEnd: null,
+  polygonCoordinates: {},
   width: '100%',
 };
 
 Map.propTypes = {
   height: PropTypes.string,
   markers: PropTypes.array,
+  polygonCoordinates: PropTypes.shape({
+    type: PropTypes.string,
+    coordinates: PropTypes.array,
+  }),
   onMarkerDragEnd: PropTypes.func,
   width: PropTypes.string,
 };

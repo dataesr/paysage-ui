@@ -21,6 +21,7 @@ export default function RelationsByTag({ blocName, tag, resourceType, relatedObj
   const { id: resourceId } = useUrl();
   const url = `/relations?filters[relationTag]=${tag}&filters[${queryObject}]=${resourceId}&limit=2000&sort=${sort}`;
   const { data, isLoading, error, reload } = useFetch(url);
+
   const [showModal, setShowModal] = useState(false);
   const [modalTitle, setModalTitle] = useState('');
   const [modalContent, setModalContent] = useState(null);
@@ -70,7 +71,7 @@ export default function RelationsByTag({ blocName, tag, resourceType, relatedObj
 
     const list = relations
       .sort((a, b) => new Date(b.startDate) - new Date(a.startDate))
-      .sort((a, b) => ((a?.relationType?.priority || 99) - (b?.relationType?.priority || 99)))
+      .sort((a, b) => (a?.relationType?.priority || 99) - (b?.relationType?.priority || 99))
       .map((element) => (
         <RelationCard
           key={element.id}
@@ -118,7 +119,9 @@ export default function RelationsByTag({ blocName, tag, resourceType, relatedObj
           Télécharger la liste
         </BlocActionButton>
       )}
-      <BlocContent>{renderCards()}</BlocContent>
+      <BlocContent>
+        {renderCards()}
+      </BlocContent>
       <BlocModal>
         <Modal isOpen={showModal} size="lg" hide={() => setShowModal(false)}>
           <ModalTitle>{modalTitle}</ModalTitle>
@@ -149,7 +152,7 @@ RelationsByTag.defaultProps = {
   noRelationType: false,
   noFilters: false,
   max: null,
-  relatedObjectTypes: ['persons', 'structures', 'prizes', 'terms', 'projects', 'categories'],
+  relatedObjectTypes: ['persons', 'structures', 'prizes', 'terms', 'projects', 'categories', 'geographical-categories'],
   resourceType: 'structures',
   sort: '-startDate',
 };

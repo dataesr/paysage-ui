@@ -29,15 +29,13 @@ function HistoryCard({ creationDate, creationReason, closureDate, closureReason,
                 Créé
                 {(creationDate.split('-').length !== 3) ? ` en ${toString(creationDate)}` : ` le ${toString(creationDate)}`}
                 {createReason}
-                <br />
+                {' '}
                 {creationOfficialText?.id && (
-                  <span className="fr-card__detail">
-                    <a className={`fr-mb-0 fr-text--xs fr-text--regular ${styles['align-after']}`} href={creationOfficialText?.pageUrl} target="_blank" rel="noreferrer">
-                      {creationOfficialText?.nature}
-                      {' '}
-                      {creationOfficialText?.publicationDate && `du ${toString(creationOfficialText.publicationDate)}`}
-                    </a>
-                  </span>
+                  <a className={`fr-mb-0 fr-text--xs fr-text--regular ${styles['align-after']}`} href={creationOfficialText?.pageUrl} target="_blank" rel="noreferrer">
+                    {creationOfficialText?.nature}
+                    {' '}
+                    {creationOfficialText?.publicationDate && `du ${toString(creationOfficialText.publicationDate)}`}
+                  </a>
                 )}
               </p>
             )}
@@ -59,15 +57,13 @@ function HistoryCard({ creationDate, creationReason, closureDate, closureReason,
             <p className="fr-text fr-mb-1v">
               {closureDate ? displayStatus : null}
               {closeReason}
-              <br />
+              {' '}
               {closureOfficialText?.id && (
-                <span className="fr-card__detail">
-                  <a className={`fr-mb-0 fr-text--xs fr-text--regular ${styles['align-after']}`} href={closureOfficialText?.pageUrl} target="_blank" rel="noreferrer">
-                    {closureOfficialText?.nature}
-                    {' '}
-                    {closureOfficialText?.publicationDate && `du ${toString(closureOfficialText.publicationDate)}`}
-                  </a>
-                </span>
+                <a className={`fr-mb-0 fr-text--xs fr-text--regular ${styles['align-after']}`} href={closureOfficialText?.pageUrl} target="_blank" rel="noreferrer">
+                  {closureOfficialText?.nature}
+                  {' '}
+                  {closureOfficialText?.publicationDate && `du ${toString(closureOfficialText.publicationDate)}`}
+                </a>
               )}
             </p>
             <div>

@@ -37,6 +37,8 @@ import { PersonByIdPage, PersonCategories, PersonExportPage, PersonMandats, Pers
 import { TermByIdPage, TermExportPage, TermPresentationPage, TermRelatedElements } from '../pages/termes/[id]';
 import TermsAddPage from '../pages/termes/ajouter';
 
+import { GeographicalCategoriesByIdPage, GeographicalCategoriesPresentationPage, GeographicalCategoriesRelatedElements } from '../pages/categories-geographiques';
+
 import {
   ProjectByIdPage,
   ProjectCategories,
@@ -59,6 +61,7 @@ import {
   AdminPage,
   AdminRelationTypesPage,
   AdminUsersPage,
+  AdminGeographicalCategoriesPage,
 } from '../pages/admin';
 
 import { AccountPage, PreferencesPage, ProfilePage, SecurityPage } from '../pages/mon-compte';
@@ -115,6 +118,7 @@ export default function Routes() {
               <Route path="nomenclatures/types-de-document" element={<AdminNomenclaturesPage route="/document-types" title="Types de documents" />} />
               <Route path="nomenclatures/ministres-de-tutelle" element={<AdminNomenclaturesPage route="/supervising-ministers" title="Ministres de tutelle" />} />
               <Route path="nomenclatures/types-de-mail" element={<AdminNomenclaturesPage route="/email-types" title="Types d'email" />} />
+              <Route path="exceptions-geographiques" element={<AdminGeographicalCategoriesPage route="/geographical-exceptions" title="Exception géographiques" />} />
               <Route path="imports/structures" element={<BulkImport type="structures" />} />
               <Route path="imports/personnes" element={<BulkImport type="personnes" />} />
               <Route path="imports/laureats" element={<BulkImport type="laureats" />} />
@@ -213,6 +217,13 @@ export default function Routes() {
               <Route path="documents" element={<DocumentsOutlet />} />
               <Route path="textes-officiels" element={<OfficialTextsOutlet />} />
               <Route path="journal" element={<JournalOutlet />} />
+            </Route>
+
+            <Route path="/geographical-categories/:id" element={<Redirect />} />
+            <Route path="/categories-geographiques/:id" element={<GeographicalCategoriesByIdPage />}>
+              <Route path="" element={<Navigate to="presentation" replace />} />
+              <Route path="presentation" element={<GeographicalCategoriesPresentationPage />} />
+              <Route path="elements-lies" element={<GeographicalCategoriesRelatedElements />} />
             </Route>
 
             <Route path="/prix/:id/exporter" element={<PrizeExportPage />} />

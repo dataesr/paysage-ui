@@ -17,6 +17,8 @@ function getRoute(apiObject) {
     return 'categories-juridiques';
   case 'supervising-ministers':
     return 'ministres-de-tutelle';
+  case 'geographical-categories':
+    return 'categories-geographiques';
 
   default:
     return apiObject;

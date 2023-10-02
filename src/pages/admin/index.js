@@ -3,6 +3,7 @@ import { Outlet, Link as RouterLink, useLocation } from 'react-router-dom';
 import usePageTitle from '../../hooks/usePageTitle';
 import AdminApiKeysPage from './api-keys';
 import AdminLegalCategoriesPage from './categories-juridiques';
+import AdminGeographicalCategoriesPage from './exceptions-geographiques';
 import AdminDashboardPage from './dashboard';
 import AdminGroupsPage from './groupes';
 import AdminJobsPage from './jobs';
@@ -52,6 +53,9 @@ function AdminPage() {
                 Types de relation
               </SideMenuLink>
             </SideMenuItem>
+            <SideMenuLink className={(page === 'exceptions-geographiques') && 'sidemenu__item--active'} asLink={<RouterLink to="/admin/exceptions-geographiques" replace />}>
+              Exceptions géographiques
+            </SideMenuLink>
             <SideMenuItem title="Imports en masse">
               <SideMenuLink className={(page === 'structures') && 'sidemenu__item--active'} asLink={<RouterLink to="/admin/imports/structures" replace />}>
                 Structures
@@ -85,4 +89,5 @@ function AdminPage() {
 export {
   AdminDashboardPage, AdminPage, AdminUsersPage, AdminNomenclaturesPage, AdminJournalPage,
   AdminLegalCategoriesPage, AdminRelationTypesPage, AdminGroupsPage, AdminApiKeysPage, AdminJobsPage,
+  AdminGeographicalCategoriesPage,
 };

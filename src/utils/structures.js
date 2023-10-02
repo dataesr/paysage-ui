@@ -6,6 +6,9 @@ export function getName(item) {
       {!item?.shortName && item?.acronym ? `${item.acronym} - ` : ''}
       {item?.usualName}
       {item?.name}
+      {item?.nameFr}
+      {item?.currentName?.usualName}
+      {item?.resource?.currentName?.usualName}
     </>
   );
 }

@@ -47,11 +47,11 @@ export default function StructurePresentationPage() {
           </Col>
         )}
       </Row>
-      <Row gutters className="flex--wrap-reverse">
-        <Col n="12 xl-6">
-          <HistoriqueEtDates />
-        </Col>
-        <Col n="12 xl-6">
+      <Col>
+        <HistoriqueEtDates />
+      </Col>
+      <Row>
+        <Col>
           <Localisations />
         </Col>
       </Row>

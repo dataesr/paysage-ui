@@ -29,6 +29,9 @@
 .categories-title {
   color: var(--categories-color) !important;
 }
+.geographical-categories-title {
+  color: var(--geographical-categories-color) !important;
+}
 .legal-categories-title {
   color: var(--legal-categories-color) !important;
 }
@@ -53,6 +56,9 @@
 }
 .categories-border {
   border-left: .25rem solid var(--categories-color) !important;
+}
+.geographical-categories-border {
+  border-left: .25rem solid var(--geographical-categories-color) !important;
 }
 .legal-categories-border {
   border-left: .25rem solid var(--legal-categories-color) !important;
