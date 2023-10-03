@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Container, Col, Checkbox, Row, SearchableSelect } from '@dataesr/react-dsfr';
+import { Container, Col, Checkbox, Row, SearchableSelect, TextInput } from '@dataesr/react-dsfr';
 import PropTypes from 'prop-types';
 import useForm from '../../../hooks/useForm';
 import DateInput from '../../date-input';
@@ -13,6 +13,7 @@ import PaysageBlame from '../../paysage-blame';
 function sanitize(form) {
   const fields = [
     'active',
+    'comment',
     'endDate',
     'endDateOfficialTextId',
     'inactive',
@@ -358,6 +359,16 @@ export default function RelationForm({
               onSelect={handleEndDateOfficialTextSelect}
               onDeleteScope={handleEndDateOfficialTextOptionsUnselect}
               isSearching={isSearchingEndDateOfficialText}
+            />
+          </Col>
+        </Row>
+        <Row>
+          <Col n="12">
+            <TextInput
+              textarea
+              label="Commentaires"
+              value={form.comment}
+              onChange={(e) => updateForm({ comment: e.target.value })}
             />
           </Col>
         </Row>
