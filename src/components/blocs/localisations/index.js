@@ -14,7 +14,7 @@ import useUrl from '../../../hooks/useUrl';
 import api from '../../../utils/api';
 import { formatDescriptionDates } from '../../../utils/dates';
 import { deleteError, deleteSuccess, saveError, saveSuccess } from '../../../utils/notice-contents';
-import GeographicalTags from '../geographical-categories';
+import GeographicalTags from '../geographical-tags';
 
 export default function LocalisationsComponent() {
   const { editMode } = useEditMode();
@@ -122,7 +122,7 @@ export default function LocalisationsComponent() {
   const currentLocalisation = data.data.find((item) => item.current === true);
   const inactives = data.data.filter((el) => (el.current === false)).sort((a, b) => a.startDate - b.startDate);
   const actives = data.data.filter((el) => (el.current !== false));
-  const orderedList = [...actives, ...inactives];
+  const orderedList = [...actives, ...inactives].filter((address) => !address.current);
 
   return (
     <Bloc isLoading={isLoading} error={error} data={data}>
@@ -169,7 +169,7 @@ export default function LocalisationsComponent() {
                   className={`fr-card fr-card--grey fr-card--no-border card-${apiObject}`}
                   label="Historique des adresses"
                 >
-                  <div style={{ height: '260px', overflowY: 'scroll' }}>
+                  <Row style={{ overflowY: 'scroll' }}>
                     <style>
                       {`
               ::-webkit-scrollbar {
@@ -188,10 +188,10 @@ export default function LocalisationsComponent() {
               `}
                     </style>
 
-                    {orderedList.length > 0 && (
-                      <p style={{ textAlign: 'center', color: 'gray' }}>
+                    {orderedList.length > 1 && (
+                      <Text style={{ textAlign: 'center', color: 'gray' }}>
                         Défiler pour voir plus de contenu
-                      </p>
+                      </Text>
                     )}
                     {orderedList.map((item) => (
                       <>
@@ -201,7 +201,7 @@ export default function LocalisationsComponent() {
                         <GeographicalTags data={item.geoCategories} />
                       </>
                     ))}
-                  </div>
+                  </Row>
                 </Tab>
               )}
             </Tabs>
