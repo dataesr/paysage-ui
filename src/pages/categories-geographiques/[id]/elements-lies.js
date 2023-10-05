@@ -1,4 +1,4 @@
-import { Badge, Col, Container, Row, Tag, Title } from '@dataesr/react-dsfr';
+import { Badge, Col, Container, Row, Title } from '@dataesr/react-dsfr';
 import useFetch from '../../../hooks/useFetch';
 import useUrl from '../../../hooks/useUrl';
 
@@ -8,13 +8,10 @@ import { ExceptionStructuresList, StructuresList } from './structuresList';
 
 export default function GeographicalCategoryRelatedElements() {
   const { url, id } = useUrl();
-  const { data } = useFetch(url);
   const {
     data: dataStructures,
     isLoading: structuresLoading,
   } = useFetch(`${url}/structures`);
-
-  console.log('dataStructures', dataStructures);
 
   const exceptionGps = [];
   const exception = useFetch('/geographical-exceptions');
