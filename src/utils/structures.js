@@ -20,7 +20,7 @@ export function getOtherNames(item) {
   return (
     <>
       {isNameEnDifferent ? `${item.nameEn}` : ''}
-      {isOfficialDifferent ? ` - ${item.officialName}` : ''}
+      {isOfficialDifferent ? ` ${item.officialName}` : ''}
     </>
   );
 }
