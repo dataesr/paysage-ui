@@ -65,7 +65,7 @@ export default function LocalisationsComponent() {
     if (localisation.postOfficeBoxNumber) { address += `${localisation.postOfficeBoxNumber},\n`; }
     if (localisation.postalCode) { address += `${localisation.postalCode},\n`; }
     if (localisation.locality) { address += `${localisation.locality},\n`; }
-    if (localisation.country) { address += `${localisation.country},\n`; }
+    if (localisation.country) { address += `${localisation.country}\n`; }
 
     return (
       <div className="fr-card fr-card--grey fr-card--no-border">
@@ -86,14 +86,6 @@ export default function LocalisationsComponent() {
               {' '}
               {localisation.current ? 'actuelle' : 'historique'}
             </p>
-            <div className="fr-card__start">
-              <p className="fr-card__detail fr-text--sm fr-mb-0">
-                <Icon name="ri-map-pin-fill" size="1x" />
-                Adresse
-                {' '}
-                {localisation.current ? 'actuelle' : 'historique'}
-              </p>
-            </div>
             {localisation.phonenumber && (
               <Text className="fr-card__title">
                 <Icon name="ri-phone-line" size="xl" />
@@ -210,13 +202,11 @@ export default function LocalisationsComponent() {
                       </>
                     ))}
                   </div>
-
                 </Tab>
               )}
             </Tabs>
           </Col>
         </Row>
-
       </BlocContent>
       <BlocModal>
         <Modal isOpen={showModal} size="lg" hide={() => setShowModal(false)}>
