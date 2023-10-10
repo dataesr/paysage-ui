@@ -142,12 +142,33 @@ export default function Report({ type, rows }) {
                                 {item?.message}
                               </li>
                             ))}
-                            {(row?.imports?.status === 'imported') && (
+                            {(row?.imports?.status === 'imported' && row?.type !== 'laureats') && (
                               <li>
-                                L'objet à été importé avec succes
+                                L'objet a été importé avec succes
                                 {row.imports?.href && ' '}
                                 {row.imports?.href && !row.imports?.href.includes('/relations')
                                 && <Link target="_blank" href={row.imports.href}>Voir</Link> }
+                              </li>
+                            )}
+                            {row.imports?.href && row.type === 'laureats' && (
+                              <li>
+                                La relation entre
+                                <Link
+                                  target="_blank"
+                                  href={`/personnes/${row.body.relatedObjectId}`}
+                                >
+                                  {' '}
+                                  {row.laureatName.join()}
+                                </Link>
+                                et
+                                {' '}
+                                <Link
+                                  target="_blank"
+                                  href={`/prix/${row.body.resourceId}`}
+                                >
+                                  {row.priceName}
+                                </Link>
+                                a bien été effectuée
                               </li>
                             )}
                           </ul>
@@ -170,7 +191,6 @@ export default function Report({ type, rows }) {
                 Exporter la liste des imports en XLSX
               </Button>
             )}
-
           </Col>
         )}
       </Row>
