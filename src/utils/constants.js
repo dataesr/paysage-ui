@@ -124,10 +124,10 @@ export const STRUCTURES_CLOSURE_REASONS = [
 export const SEARCH_TYPES = 'categories%2Cofficial%2Dtexts%2Cpersons%2Cprizes%2Cstructures%2Cterms%2Cgeographical-categories';
 
 export const GEOGRAPHICAL_CATEGORIES_LABELS_MAPPER = {
-  academy: 'académie',
-  city: 'ville',
-  country: 'pays',
-  department: 'département',
-  region: 'région',
-  urbanUnity: 'unité urbaine',
+  academy: 'Académie',
+  city: 'Ville',
+  country: 'Pays',
+  department: 'Département',
+  region: 'Région',
+  urbanUnity: 'Unité urbaine',
 };
