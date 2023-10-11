@@ -161,7 +161,7 @@ export default function LocalisationsComponent() {
                       {currentLocalisation?.country ? renderAddress(currentLocalisation) : null}
                     </Col>
                   </Row>
-                  <GeographicalTags data={currentLocalisation?.geoCategories} />
+                  {/* <GeographicalTags data={currentLocalisation?.geoCategories} /> */}
                 </Tab>
               )}
               {data.totalCount > 1 && (
@@ -198,7 +198,7 @@ export default function LocalisationsComponent() {
                         <Col n="12" key={`HistoriqueLocalisation${item.id}`}>
                           {renderAddress(item)}
                         </Col>
-                        <GeographicalTags data={item.geoCategories} />
+                        {/* <GeographicalTags data={item.geoCategories} /> */}
                       </>
                     ))}
                   </Row>
@@ -207,6 +207,15 @@ export default function LocalisationsComponent() {
             </Tabs>
           </Col>
         </Row>
+        {data && (
+          <Row className="fr-mt-3w">
+            <Col>
+              <BlocTitle as="h3" look="h6">Catégories géographiques de l'adresse actuelle</BlocTitle>
+              <GeographicalTags data={currentLocalisation?.geoCategories} />
+            </Col>
+          </Row>
+        )}
+
       </BlocContent>
       <BlocModal>
         <Modal isOpen={showModal} size="lg" hide={() => setShowModal(false)}>

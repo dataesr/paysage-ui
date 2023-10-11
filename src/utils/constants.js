@@ -127,7 +127,7 @@ export const GEOGRAPHICAL_CATEGORIES_LABELS_MAPPER = {
   academy: 'académie',
   city: 'ville',
   country: 'pays',
-  department: 'department',
+  department: 'département',
   region: 'région',
   urbanUnity: 'unité urbaine',
 };

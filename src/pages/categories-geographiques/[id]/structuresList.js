@@ -56,7 +56,26 @@ export function StructuresList({ data }) {
         onChange={(e) => setFilter(e.target.value)}
         value={filter}
       />
-      <ExpendableListCards list={list} max="12" nCol="12 md-4" />
+      <div style={{ height: '700px', overflowY: 'scroll' }}>
+        <style>
+          {`
+              ::-webkit-scrollbar {
+                width: 8px;
+              }
+              ::-webkit-scrollbar-vertical {
+                width: 8px;
+              }
+              ::-webkit-scrollbar-thumb:vertical {
+                background-color: gray;
+              }
+              
+              ::-webkit-scrollbar-track:vertical {
+                background-color: transparent;
+              }
+              `}
+        </style>
+        <ExpendableListCards list={list} max={5} nCol="12 md-12" />
+      </div>
     </>
   );
 }
@@ -86,11 +105,15 @@ export function ExceptionStructuresList({ exceptionGps }) {
 
   ));
 
-  return <ExpendableListCards list={list} nCol="12 md-6" />;
+  return <ExpendableListCards list={list} nCol="12 md-4" />;
 }
 
+StructuresList.defaultProps = {
+  data: [],
+};
+
 StructuresList.propTypes = {
-  data: PropTypes.arrayOf(PropTypes.shape()).isRequired,
+  data: PropTypes.arrayOf(PropTypes.shape()),
 };
 
 ExceptionStructuresList.propTypes = {

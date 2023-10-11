@@ -3,6 +3,8 @@ import {
   Badge, BadgeGroup,
   Breadcrumb, BreadcrumbItem,
   Col, Container, Row,
+  // Icon,
+  // SideMenu, SideMenuLink,
   Title,
 } from '@dataesr/react-dsfr';
 import useFetch from '../../hooks/useFetch';
@@ -14,26 +16,7 @@ import GeographicalCategoriesPresentationPage from './[id]/presentation';
 import GeographicalCategoriesRelatedElements from './[id]/elements-lies';
 import Error from '../../components/errors';
 import usePageTitle from '../../hooks/usePageTitle';
-
-function getLevelLabel(level) {
-  switch (level) {
-  case 'academy':
-    return '(académie)';
-  case 'city':
-    return '(ville)';
-  case 'country':
-    return '(pays)';
-  case 'department':
-    return '(département)';
-  case 'region':
-    return '(région)';
-  case 'urbanUnity':
-    return '(unité urbaine)';
-
-  default:
-    return '';
-  }
-}
+import { GEOGRAPHICAL_CATEGORIES_LABELS_MAPPER } from '../../utils/constants';
 
 function GeographicalCategoriesByIdPage() {
   const { url } = useUrl();
@@ -79,7 +62,7 @@ function GeographicalCategoriesByIdPage() {
           </Row>
           <Row>
             <Title as="h2">
-              {`${data.nameFr} ${getLevelLabel(data.level)}`}
+              {`${data.nameFr} (${GEOGRAPHICAL_CATEGORIES_LABELS_MAPPER[data.level]})`}
               <BadgeGroup className="fr-pt-1w">
                 <Badge text="Catégorie géographique" colorFamily="blue-ecume" />
                 <CopyBadgeButton
