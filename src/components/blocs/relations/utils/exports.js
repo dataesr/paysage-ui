@@ -1,3 +1,4 @@
+/* eslint-disable indent */
 import * as XLSX from 'xlsx';
 import { getComparableNow } from '../../../../utils/dates';
 import getRelationTypeLabel from '../../../../utils/get-relation-type-key';
