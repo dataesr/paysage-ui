@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { Tag, TagGroup } from '@dataesr/react-dsfr';
 import PropTypes from 'prop-types';
+import { GEOGRAPHICAL_CATEGORIES_LABELS_MAPPER } from '../../../utils/constants';
 
 export default function GeographicalTags({ data }) {
   const navigate = useNavigate();
@@ -10,18 +11,17 @@ export default function GeographicalTags({ data }) {
   if (data.length === 0) {
     return null;
   }
-
   return (
     <TagGroup>
-      {data.map((category) => (
+      {data.map((categoryGeo) => (
         <Tag
           size="md"
           iconPosition="right"
           icon="ri-arrow-right-line"
-          onClick={() => navigate(`/categories-geographiques/${category.id}`)}
-          key={category.id}
+          onClick={() => navigate(`/categories-geographiques/${categoryGeo.id}`)}
+          key={categoryGeo.id}
         >
-          {category.nameFr}
+          {`${GEOGRAPHICAL_CATEGORIES_LABELS_MAPPER[categoryGeo.level]} : ${categoryGeo.nameFr}`}
         </Tag>
       ))}
     </TagGroup>

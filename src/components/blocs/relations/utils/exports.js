@@ -6,23 +6,23 @@ const isFinished = (relation) => ((relation.current !== undefined) && !relation.
 
 const getCivility = (gender) => {
   switch (gender) {
-  case 'Homme':
-    return 'Monsieur';
-  case 'Femme':
-    return 'Madame';
-  default:
-    return null;
+    case 'Homme':
+      return 'Monsieur';
+    case 'Femme':
+      return 'Madame';
+    default:
+      return null;
   }
 };
 
 const getCivilityArticle = (gender) => {
   switch (gender) {
-  case 'Homme':
-    return 'le ';
-  case 'Femme':
-    return 'la ';
-  default:
-    return null;
+    case 'Homme':
+      return 'le ';
+    case 'Femme':
+      return 'la ';
+    default:
+      return null;
   }
 };
 
@@ -65,7 +65,7 @@ function downloadCsvFile(csv, filename) {
 function createCsvStructureRowFromRelation({ relation, inverse, listName }) {
   const toExport = inverse ? relation.resource : relation.relatedObject;
   return {
-    Libellé: toExport.displayName,
+    Libellé: toExport?.displayName,
     Type: listName,
     'Status de la liaison': isFinished(relation) ? 'Terminée' : 'En cours',
     'Date de début': relation.startDate,
@@ -76,7 +76,7 @@ function createCsvStructureRowFromRelation({ relation, inverse, listName }) {
     'Lien du texte officiel de début de liaison': relation.startDateOfficialText?.pageUrl,
     'Texte officiel de fin de liaison': relation.endDateOfficialText?.title,
     'Lien du texte officiel de fin de liaison': relation.endDateOfficialText?.pageUrl,
-    "Nom d'usage": toExport.displayName,
+    "Nom d'usage": toExport?.displayName,
     Acronyme: toExport?.currentName?.acronymFr,
     'Nom officiel': toExport?.currentName?.officialName,
     'Nom court': toExport?.currentName?.shortName,
@@ -125,7 +125,6 @@ function createCsvStructureRowFromRelation({ relation, inverse, listName }) {
     'Email générique DGS/SG': toExport?.emails.find((m) => m.emailTypeId === '4puTu4puTu4puTu')?.email,
   };
 }
-
 function createCategoryTermRowFromRelation({ relation, inverse, listName }) {
   const toExport = inverse ? relation.resource : relation.relatedObject;
   const currentObject = inverse ? relation.relatedObject : relation.resource;
@@ -225,7 +224,6 @@ function createCsvLaureatesFromRelation({ relation, listName }) {
       .join(';'),
   };
 }
-
 function createCsvGovernanceFromRelation({ relation, short = false }) {
   const person = relation.relatedObject;
   const structure = relation.resource;
@@ -328,7 +326,6 @@ function createCsvPersonFromRelation({ relation, inverse }) {
       .sort((a, b) => a?.startDate?.localeCompare(b?.startDate)).map((i) => i.value).join('|'),
   };
 }
-
 function createCsvPrizeFromRelation({ relation, inverse }) {
   const prize = inverse ? relation.resource : relation.relatedObject;
   const relatedObject = inverse ? relation.relatedObject : relation.resource;
@@ -347,6 +344,32 @@ function createCsvPrizeFromRelation({ relation, inverse }) {
     'Lien du texte officiel de début de fonction': relation.startDateOfficialText?.pageUrl,
     'Texte officiel de fin de fonction': relation.endDateOfficialText?.title,
     'Lien du texte officiel de fin de fonction': relation.endDateOfficialText?.pageUrl,
+  };
+}
+function createCsvStructureRow({ structure }) {
+  return {
+    id: structure?.id,
+    statut: structure?.structureStatus,
+    'Nom officiel': structure?.currentName?.officialName,
+    'Nom usuel': structure?.currentName?.usualName,
+    'Nom court': structure?.currentName?.shortName,
+    'Acronyme fr': structure?.currentName?.acronymFr,
+    'Acronyme en': structure?.currentName?.acronymEn,
+    'description fr': structure?.descriptionFr,
+    'description en': structure?.descriptionFr,
+    'Date de création': structure?.creationDate,
+    'Date de fermeture': structure?.closureDate,
+    Géolocalisation: structure.currentLocalisation?.geometry?.coordinates?.toString(),
+    'Mention de distribution': structure.currentLocalisation?.distributionStatement,
+    Adresse: structure.currentLocalisation?.address,
+    'Lieu-dit': structure.currentLocalisation?.place,
+    'Numéro de boite postale': structure.currentLocalisation?.postOfficeBoxNumber,
+    'Code postal': structure.currentLocalisation?.postalCode,
+    Localité: structure.currentLocalisation?.locality,
+    Commune: structure.currentLocalisation?.city,
+    'Code commune': structure.currentLocalisation?.cityId,
+    Pays: structure.currentLocalisation?.country,
+    'Code Pays': structure.currentLocalisation?.iso3,
   };
 }
 
@@ -417,4 +440,10 @@ export function exportToCsv({ data, fileName, listName, tag, inverse = false }) 
 }
 export function hasExport({ tag, inverse = false }) {
   return !!(inverse ? inverseMapping[tag] : regularMapping[tag]);
+}
+
+export function exportGeographicalCategoriesStructuresToCsv({ data, fileName }) {
+  const sheetsObject = data?.map((structure) => createCsvStructureRow({ structure }));
+  const xlsx = createXLSXFile({ sheetsObject });
+  return downloadCsvFile(xlsx, fileName);
 }

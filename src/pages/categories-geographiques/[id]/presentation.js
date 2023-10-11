@@ -5,15 +5,16 @@ import KeyValueCard from '../../../components/card/key-value-card';
 import Wiki from '../../../components/blocs/wiki';
 import { PageSpinner } from '../../../components/spinner';
 import Error from '../../../components/errors';
-import Map from '../../../components/map';
+import Map from '../../../components/map/geographical-categories-map';
 import {
-  // ExceptionStructuresList,
+  ExceptionStructuresList,
   StructuresList,
 } from './structuresList';
-import { Bloc, BlocContent, BlocTitle } from '../../../components/bloc';
+import { Bloc, BlocActionButton, BlocContent, BlocTitle } from '../../../components/bloc';
+import { exportGeographicalCategoriesStructuresToCsv } from '../../../components/blocs/relations/utils/exports';
 
 export default function GeographicalCategoryPresentationPage() {
-  const { url } = useUrl();
+  const { url, id } = useUrl();
   const { data, isLoading, error } = useFetch(url);
 
   const {
@@ -23,6 +24,26 @@ export default function GeographicalCategoryPresentationPage() {
 
   const isTitleAsText = true;
 
+  const exceptionGps = [];
+  const exception = useFetch('/geographical-exceptions');
+
+  if (exception?.data?.data) {
+    const geographicalCategoryIds = exception.data.data.map((item) => item.geographicalCategoryId);
+    if (geographicalCategoryIds.includes(id)) {
+      const item = exception.data.data.find((el) => el.geographicalCategoryId === id);
+      if (
+        item.resource
+        && item.resource.currentLocalisation
+        && item.resource.currentLocalisation.geometry
+        && item.resource.currentLocalisation.geometry.coordinates
+      ) {
+        exceptionGps.push({
+          ...item,
+        });
+      }
+    }
+  }
+
   if (isLoading) return <PageSpinner />;
   if (error) return <Error status={error} />;
 
@@ -31,6 +52,7 @@ export default function GeographicalCategoryPresentationPage() {
   let markers = [];
   if (!structuresLoading && dataStructures?.data?.length > 0) {
     markers = dataStructures.data.map((item) => ({
+      idStructure: item.id,
       label: item.currentName.usualName,
       latLng: item.currentLocalisation?.geometry?.coordinates?.toReversed(),
       address: `{${item.currentLocalisation?.address || ''},
@@ -58,19 +80,63 @@ export default function GeographicalCategoryPresentationPage() {
         )
       }
 
-      <Row>
-        <Col n="12">
+      <Row gutters>
+        <Col n="6">
           <Map
-            polygonCoordinates={polygonCoordinates}
+            height="800px"
             markers={markers}
+            polygonCoordinates={polygonCoordinates}
           />
         </Col>
+        <Col n="6">
+          <Row>
+            <Col>
+              <Title as="h2" look="h4">
+                Structures associées
+                <Badge
+                  className="fr-ml-1w fr-mr-1w"
+                  colorFamily="yellow-tournesol"
+                  text={dataStructures?.totalCount || '...'}
+                />
+              </Title>
+            </Col>
+            <Col className="text-right">
+              <BlocActionButton
+                edit={false}
+                icon="ri-download-line"
+                onClick={() => exportGeographicalCategoriesStructuresToCsv({
+                  data: dataStructures?.data,
+                  fileName: `structure_${data?.nameFr}`,
+                })}
+              >
+                Télécharger la liste
+              </BlocActionButton>
+            </Col>
+
+          </Row>
+          <StructuresList data={dataStructures?.data} />
+        </Col>
       </Row>
-      <Title as="h2" look="h4" className="fr-mt-3w">
-        Structures associées
-        <Badge text={dataStructures?.totalCount || '...'} colorFamily="yellow-tournesol" />
-      </Title>
-      <StructuresList data={dataStructures?.data} />
+      {
+        exceptionGps?.length > 0 && (
+          <Row className="fr-mt-3w">
+            <Col>
+              <Title as="h2" look="h4">
+                Autres structures associées en dehors du territoire
+                <Badge
+                  className="fr-ml-1w"
+                  colorFamily="yellow-tournesol"
+                  text={exceptionGps.length}
+                />
+              </Title>
+              <Col>
+                <ExceptionStructuresList exceptionGps={exceptionGps} />
+              </Col>
+            </Col>
+          </Row>
+
+        )
+      }
 
       {identifiers.length > 0 && (
         <Bloc data={identifiers}>
