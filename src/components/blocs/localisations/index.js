@@ -105,12 +105,6 @@ export default function LocalisationsComponent() {
             </div>
             {editMode && <Button color="text" size="md" onClick={() => handleModalToggle(localisation)} tertiary borderless rounded icon="ri-edit-line" className="edit-button" />}
           </div>
-          <div className="fr-card__end fr-mt-0 fr-pt-0">
-            <p className="fr-card__detail">
-              {formatDescriptionDates(localisation.startDate || null, localisation.endDate || null)}
-            </p>
-          </div>
-          {editMode && <Button color="text" size="md" onClick={() => handleModalToggle(localisation)} tertiary borderless rounded icon="ri-edit-line" className="edit-button" />}
         </div>
       </div>
     );

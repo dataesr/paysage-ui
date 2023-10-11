@@ -47,10 +47,12 @@ export default function StructurePresentationPage() {
           </Col>
         )}
       </Row>
-      <Col>
-        <HistoriqueEtDates />
-      </Col>
-      <Row>
+      <Row gutters spacing="mb-5w">
+        <Col>
+          <HistoriqueEtDates />
+        </Col>
+      </Row>
+      <Row gutters>
         <Col>
           <Localisations />
         </Col>
