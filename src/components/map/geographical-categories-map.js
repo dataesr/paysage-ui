@@ -62,7 +62,7 @@ export default function Map({ height, markers, polygonCoordinates, width }) {
             key={i}
             position={marker.latLng}
             eventHandlers={{
-              click: (e) => {
+              click: () => {
                 navigate(`/structures/${marker.idStructure}`);
               },
             }}
