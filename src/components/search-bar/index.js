@@ -7,6 +7,7 @@ import styles from './styles.module.scss';
 import { Spinner } from '../spinner';
 import { capitalize } from '../../utils/strings';
 import { getName } from '../../utils/structures';
+import { GEOGRAPHICAL_CATEGORIES_LABELS_MAPPER } from '../../utils/constants';
 import { toString } from '../../utils/dates';
 
 const objectTypes = {
@@ -172,13 +173,20 @@ const SearchBar = forwardRef((props, ref) => {
                     tabIndex={-1}
                     className={styles.btn}
                     // style={{ backgroundColor: `${(option.structureStatus === 'inactive') ? 'var(--background-contrast-warning)' : 'inherit' }` }}
-                    style={{ color: `${(option.structureStatus === 'inactive') ? 'var(--text-mention-grey' : 'inherit' }` }}
+                    style={{ color: `${(option.structureStatus === 'inactive') ? 'var(--text-mention-grey' : 'inherit'}` }}
                     type="button"
                     onMouseDown={() => { onSelect(option); }}
                   >
                     {option.type && <Icon size="xl" color={`var(--${option.type}-color)`} name={objectTypes[option.type]} />}
                     <Text className={styles.content}>
                       {getName(option)}
+                      {
+                        option.level && (
+                          <i>
+                            {` (${GEOGRAPHICAL_CATEGORIES_LABELS_MAPPER[option.level]})`}
+                          </i>
+                        )
+                      }
                       <br />
                       {option.category && option?.structureStatus === 'active' && (
                         <i>
