@@ -79,6 +79,18 @@ export default function LocalisationsComponent() {
               size="sm"
             />
           </p>
+          {localisation.phonenumber && (
+            <Text className="fr-card__title">
+              <Icon name="ri-phone-line" size="xl" />
+              <span className="fr-pr-1w">
+                {phoneNumberWithoutSpaces}
+              </span>
+              <CopyButton
+                copyText={{ phoneNumberWithoutSpaces }}
+                size="sm"
+              />
+            </Text>
+          )}
           <div className="fr-card__start">
             <p className="fr-card__detail fr-text--sm fr-mb-0">
               <Icon name="ri-map-pin-fill" size="1x" />
@@ -86,18 +98,6 @@ export default function LocalisationsComponent() {
               {' '}
               {localisation.current ? 'actuelle' : 'historique'}
             </p>
-            {localisation.phonenumber && (
-              <Text className="fr-card__title">
-                <Icon name="ri-phone-line" size="xl" />
-                <span className="fr-pr-1w">
-                  {phoneNumberWithoutSpaces}
-                </span>
-                <CopyButton
-                  copyText={{ phoneNumberWithoutSpaces }}
-                  size="sm"
-                />
-              </Text>
-            )}
             <div className="fr-card__end fr-mt-0 fr-pt-0">
               <p className="fr-card__detail">
                 {formatDescriptionDates(localisation.startDate || null, localisation.endDate || null)}
