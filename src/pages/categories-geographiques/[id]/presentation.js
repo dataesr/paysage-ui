@@ -12,6 +12,7 @@ import {
 } from './structuresList';
 import { Bloc, BlocActionButton, BlocContent, BlocTitle } from '../../../components/bloc';
 import { exportGeographicalCategoriesStructuresToCsv } from '../../../components/blocs/relations/utils/exports';
+import GeographicalTags from '../../../components/blocs/geographical-tags';
 
 export default function GeographicalCategoryPresentationPage() {
   const { url, id } = useUrl();
@@ -75,6 +76,17 @@ export default function GeographicalCategoryPresentationPage() {
                 cardValue={data?.descriptionFr || data?.descriptionEn || ''}
                 icon="ri-align-left"
               />
+            </Col>
+          </Row>
+        )
+      }
+
+      {
+        data?.parent && (
+          <Row className="fr-mb-3w">
+            <Col>
+              <BlocTitle as="h3" look="h6">Catégorie géographique parente</BlocTitle>
+              <GeographicalTags data={[data?.parent]} />
             </Col>
           </Row>
         )
