@@ -96,7 +96,7 @@ export default function GeographicalCategoryPresentationPage() {
                 <Badge
                   className="fr-ml-1w fr-mr-1w"
                   colorFamily="yellow-tournesol"
-                  text={dataStructures?.totalCount || '...'}
+                  text={dataStructures?.totalCount.toString() || '0'}
                 />
               </Title>
             </Col>
@@ -126,7 +126,7 @@ export default function GeographicalCategoryPresentationPage() {
                 <Badge
                   className="fr-ml-1w"
                   colorFamily="yellow-tournesol"
-                  text={exceptionGps.length}
+                  text={exceptionGps.length.toString() || '0'}
                 />
               </Title>
               <Col>
