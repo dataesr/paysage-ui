@@ -49,7 +49,6 @@ async function relationTypeChecker(relationTypeId) {
         }
       }
     } catch (error) {
-      // console.log(error);
       personWarning.push({ message: 'Une erreur s\'est produite lors de la requête à l\'API' });
     }
   }

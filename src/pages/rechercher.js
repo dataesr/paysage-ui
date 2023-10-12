@@ -61,7 +61,6 @@ const getDescription = (item) => {
 };
 
 function SearchResults({ data }) {
-  console.log(data);
   if (data && data.length) {
     return (
       <Row as="ul" gutters>

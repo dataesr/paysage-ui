@@ -56,7 +56,6 @@ export default async function checker(docs, index) {
     if (error.length) { status = 'error'; }
     return { warning, error, status };
   } catch (e) {
-    // console.log(e);
     return { error: [{ message: "Une erreur s'est produite lors de la vérification, vérifiez la ligne" }], status: 'error' };
   }
 }
