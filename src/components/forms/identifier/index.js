@@ -30,6 +30,13 @@ function sanitize(form) {
   Object.keys(form).forEach((key) => { if (fields.includes(key)) { body[key] = form[key]; } });
   if (body.endDate && body.endDate < getComparableNow()) { body.active = false; }
   if (body.type === 'siret' && body?.value?.replaceAll(' ', '').trim().length === 14) { body.value = body?.value?.replaceAll(' ', '').trim(); }
+  if (body?.type === 'researchgate') {
+    const profil = body?.value?.split('profile/');
+    if (profil.length === 2) {
+      const profilId = profil[1];
+      body.value = profilId;
+    }
+  }
   return body;
 }
 
