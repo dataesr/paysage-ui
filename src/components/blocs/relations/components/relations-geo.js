@@ -23,6 +23,9 @@ export default function RelationGeo({ blocName }) {
       });
     });
 
+    const sortedLevels = ['country', 'region', 'department', 'city', 'academy', 'urbanUnity'];
+    uniqueCategories?.sort((a, b) => sortedLevels.indexOf(a?.level) - sortedLevels.indexOf(b?.level));
+
     const list = uniqueCategories.map((category) => (
       <GeoRelationCard key={category.id} element={category} />
     ));

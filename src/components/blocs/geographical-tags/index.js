@@ -6,6 +6,9 @@ import { GEOGRAPHICAL_CATEGORIES_LABELS_MAPPER } from '../../../utils/constants'
 export default function GeographicalTags({ data }) {
   const navigate = useNavigate();
 
+  const sortedLevels = ['country', 'region', 'department', 'city', 'academy', 'urbanUnity'];
+  data?.sort((a, b) => sortedLevels.indexOf(a?.level) - sortedLevels.indexOf(b?.level));
+
   if (!data) return null;
 
   if (data.length === 0) {
