@@ -1,4 +1,5 @@
 import api from '../../../../../utils/api';
+import { regexpValidateIdentifiers } from '../../../../../utils/regexpForIdentifiers';
 
 function requiredChecker({ usualNameFr }) {
   const errors = [];
@@ -8,7 +9,9 @@ function requiredChecker({ usualNameFr }) {
 
 async function nameChecker({ usualNameFr }) {
   if (!usualNameFr) return [];
-  const { data } = await api.get(`/autocomplete?types=terms&query=${usualNameFr}`);
+
+  const encodedUsualName = encodeURIComponent(usualNameFr);
+  const { data } = await api.get(`/autocomplete?types=terms&query=${encodedUsualName}`);
   const duplicate = data?.data.find((el) => el.name === usualNameFr);
   if (duplicate) {
     return [{
@@ -41,7 +44,20 @@ async function rncpChecker({ usualNameFr, rncp }) {
       message: `L'identifiant ${rncp} existe déjà dans la base de données`,
     }];
   }
+  return [];
+}
 
+async function idFormatChecker(keyName, keyValue) {
+  if (!keyValue || !keyName) return [];
+  const [regexp, errorMessage] = regexpValidateIdentifiers(keyName);
+  if (!regexp) {
+    return [];
+  }
+  if (!regexp.test(keyValue)) {
+    return [{
+      message: errorMessage,
+    }];
+  }
   return [];
 }
 
@@ -64,8 +80,10 @@ export default async function checker(docs, index) {
     const nameCheck = await nameChecker(doc);
     const wikiCheck = await wikidataChecker(doc);
     const rncpCheck = await rncpChecker(doc);
+    const wikidataFormatCheck = await idFormatChecker('wikidata', doc.wikidata);
+    const rncpFormatCheck = await idFormatChecker('rncp', doc.rncp);
     const warning = [...websiteChecked, ...nameCheck, ...wikiCheck, ...rncpCheck];
-    const error = [...requiredErrors];
+    const error = [...requiredErrors, ...wikidataFormatCheck, ...rncpFormatCheck];
     let status = 'success';
     if (warning.length) { status = 'warning'; }
     if (error.length) { status = 'error'; }

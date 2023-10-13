@@ -6,6 +6,7 @@ export function regexpValidateIdentifiers(type) {
     rna: [/^W[0-9]{9}$/, 'Un RNA doit commencer par "W" suivi par 9 chiffres'],
     rnsr: [/^\d{9}[A-Z]{1}$/, "Un RNSR doit commencer par 9 chiffres suivis d'une lettre majuscule"],
     ror: [/^[a-z0-9]{9}$/, 'Un ROR doit contenir 9 caractères'],
+    rncp: [/^RNCP\d{1,10}$/, "Format invalide. Veuillez utiliser 'RNCP' suivi d'au moins 1 et au plus 10 chiffres."],
     siret: [/^\s*(?:\d\s*){14}$/, 'Un Siret doit contenir 14 chiffres'],
     researchgate: [/researchgate/, 'Renseigner l\'url de votre profil "researchgate".'],
     'piaweb-organization': [/^\d{1,10}$/, 'Un PIA ne contient que des chiffres'],
