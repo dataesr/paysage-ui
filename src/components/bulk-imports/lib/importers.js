@@ -33,7 +33,7 @@ export default async function bulkImport(analysis, type) {
     return bulk(analysis, '/relations');
   case 'prix':
     return bulk(analysis, '/prizes');
-  case 'terms':
+  case 'termes':
     return bulk(analysis, '/terms');
   default:
     throw new Error('Not implemented');

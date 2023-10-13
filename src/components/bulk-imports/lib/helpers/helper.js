@@ -153,7 +153,7 @@ export default function HelperForStructures({ type }) {
                     </li>
                   </>
                 )}
-              {type === 'terms'
+              {type === 'termes'
                 && (
                   <>
                     <li style={{ marginBottom: '10px' }}>
@@ -209,5 +209,5 @@ export default function HelperForStructures({ type }) {
   );
 }
 HelperForStructures.propTypes = {
-  type: PropTypes.oneOf(['structures', 'personnes', 'gouvernance', 'prix', 'laureats']).isRequired,
+  type: PropTypes.oneOf(['structures', 'personnes', 'gouvernance', 'prix', 'laureats', 'termes']).isRequired,
 };

@@ -9,7 +9,7 @@ const MODELS = {
   prix: '/models/BulkImportPrizes.xlsx',
   laureats: '/models/BulkImportLaureats.xlsx',
   gouvernance: '/models/BulkImportGouvernance.xlsx',
-  terms: '/models/BulkImportTerms.xlsx',
+  termes: '/models/BulkImportTerms.xlsx',
 };
 
 export default function FormStep({ type, onInputValidation, fileError }) {
@@ -52,7 +52,7 @@ export default function FormStep({ type, onInputValidation, fileError }) {
 }
 
 FormStep.propTypes = {
-  type: PropTypes.oneOf(['structures', 'personnes', 'gouvernance', 'prix', 'laureats', 'terms']).isRequired,
+  type: PropTypes.oneOf(['structures', 'personnes', 'gouvernance', 'prix', 'laureats', 'termes']).isRequired,
   onInputValidation: PropTypes.func.isRequired,
   fileError: PropTypes.bool,
 };

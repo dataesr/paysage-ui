@@ -38,7 +38,7 @@ export default async function analyse(str, type) {
       return analyses;
     }
     throw new Error('File Error');
-  case 'terms':
+  case 'termes':
     analyses = await parseTermsTSV(str);
     if (analyses.length > 0) {
       return analyses;
