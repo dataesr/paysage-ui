@@ -153,6 +153,21 @@ export default function HelperForStructures({ type }) {
                     </li>
                   </>
                 )}
+              {type === 'terms'
+                && (
+                  <>
+                    <li style={{ marginBottom: '10px' }}>
+                      <span style={{ color: 'purple', marginRight: '10px', fontSize: '20px' }}>✓</span>
+                      Les champs en violet sont obligatoires dans le fichier xlsx
+                    </li>
+                    <li style={{ marginBottom: '10px' }}>
+                      <span style={{ marginRight: '10px', fontSize: '20px' }}>✓</span>
+                      Après validation des imports, vous pourrez exporter les objets importés en fichier XLSX.
+                      Si un warning a été forcé, la dernière colonne du fichier comportera la/les raisons du/des warning(s)
+                      {' '}
+                    </li>
+                  </>
+                )}
               {type === 'prix'
                 && (
                   <>

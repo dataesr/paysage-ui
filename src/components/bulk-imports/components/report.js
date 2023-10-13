@@ -7,6 +7,7 @@ import { structuresHeadersMapping } from '../lib/analysers/structures/headers-ma
 import { prizesHeadersMapping } from '../lib/analysers/prizes/headers-mapping';
 import { laureatHeadersMapping } from '../lib/analysers/laureats/headers-mapping';
 import { gouvernanceHeadersMapping } from '../lib/analysers/gouvernance/headers-mapping';
+import { termsHeadersMapping } from '../lib/analysers/terms/headers-mapping';
 
 export default function Report({ type, rows }) {
   const [displayList, setDisplayList] = useState(true);
@@ -20,6 +21,8 @@ export default function Report({ type, rows }) {
     price: prizesHeadersMapping,
     laureats: laureatHeadersMapping,
     gouvernance: gouvernanceHeadersMapping,
+    terms: termsHeadersMapping,
+
   };
 
   const convertRowsToXLSXData = (dataRows) => {

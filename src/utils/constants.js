@@ -86,6 +86,7 @@ export const ENUMS_LABELS_MAPPER = {
   rna: 'RNA id',
   rnsr: 'RNSR id',
   ror: 'ROR id',
+  rncp: 'Titre Rncp',
   rtoad: 'RTOAD id',
   scopus: 'Scopus id',
   sdid: 'ESGBU - id service documentaire',

@@ -128,5 +128,5 @@ export default function BulkImport({ type }) {
 }
 
 BulkImport.propTypes = {
-  type: PropTypes.oneOf(['structures', 'personnes', 'gouvernance', 'lauréats', 'prix']).isRequired,
+  type: PropTypes.oneOf(['structures', 'personnes', 'gouvernance', 'lauréats', 'prix', 'termes']).isRequired,
 };
