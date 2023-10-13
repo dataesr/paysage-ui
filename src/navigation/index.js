@@ -123,7 +123,7 @@ export default function Routes() {
               <Route path="imports/personnes" element={<BulkImport type="personnes" />} />
               <Route path="imports/laureats" element={<BulkImport type="laureats" />} />
               <Route path="imports/gouvernance" element={<BulkImport type="gouvernance" />} />
-              <Route path="imports/terms" element={<BulkImport type="terms" />} />
+              <Route path="imports/terms" element={<BulkImport type="termes" />} />
               <Route path="imports/prix" element={<BulkImport type="prix" />} />
             </Route>
           </Route>

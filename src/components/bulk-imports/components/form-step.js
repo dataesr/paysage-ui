@@ -10,7 +10,6 @@ const MODELS = {
   laureats: '/models/BulkImportLaureats.xlsx',
   gouvernance: '/models/BulkImportGouvernance.xlsx',
   terms: '/models/BulkImportTerms.xlsx',
-
 };
 
 export default function FormStep({ type, onInputValidation, fileError }) {
