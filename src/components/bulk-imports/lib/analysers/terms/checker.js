@@ -23,13 +23,12 @@ async function wikidataChecker({ usualNameFr, wikidata }) {
   if (!wikidata) return [];
 
   const { data } = await api.get(`/autocomplete?types=terms&query=${usualNameFr}`);
-  const wikidataDuplicate = data.data.map((el) => el.identifiers.find((id) => id === wikidata));
-
-  if (wikidataDuplicate) {
+  if (data.data.some((el) => el.identifiers.map((id) => id.includes(wikidata)))) {
     return [{
-      message: `L'identifiant ${wikidata} existe déjà dans la base de donnée`,
+      message: `L'identifiant ${wikidata} existe déjà dans la base de données`,
     }];
   }
+
   return [];
 }
 
@@ -37,13 +36,12 @@ async function rncpChecker({ usualNameFr, rncp }) {
   if (!rncp) return [];
 
   const { data } = await api.get(`/autocomplete?types=terms&query=${usualNameFr}`);
-  const rncpDuplicate = data.data.map((el) => el.identifiers.find((id) => id === rncp));
-
-  if (rncpDuplicate) {
+  if (data.data.some((el) => el.identifiers.map((id) => id.includes(rncp)))) {
     return [{
-      message: `Le titre RNCP ${rncp} existe déjà dans la base de donnée`,
+      message: `L'identifiant ${rncp} existe déjà dans la base de données`,
     }];
   }
+
   return [];
 }
 
