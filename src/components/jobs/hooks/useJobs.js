@@ -16,7 +16,7 @@ export default function useJobs(url, refreshInterval = 60000) {
 
   const createJob = useCallback((body) => api.post('/jobs', body)
     .then((r) => {
-      notice({ content: 'Tâche crée', autoDismissAfter: 6000, type: 'success' });
+      notice({ content: 'Tâche créée', autoDismissAfter: 6000, type: 'success' });
       reload();
       setSelected(r?.data?._id);
       return r;
