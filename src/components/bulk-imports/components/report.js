@@ -147,7 +147,7 @@ export default function Report({ type, rows }) {
                             ))}
                             {(row?.imports?.status === 'imported' && row?.type !== 'laureats') && (
                               <li>
-                                L'objet a été importé avec succes
+                                L'objet a été importé avec succès
                                 {row.imports?.href && ' '}
                                 {row.imports?.href && !row.imports?.href.includes('/relations')
                                 && <Link target="_blank" href={row.imports.href}>Voir</Link> }
