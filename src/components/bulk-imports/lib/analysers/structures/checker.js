@@ -132,29 +132,29 @@ function rowsChecker(rows, index) {
       message: `Le nom ${usualName} que vous souhaitez ajouter existe déjà ${duplicateNames.length} fois dans votre fichier d'import.`,
     });
   }
+  return warnings;
+}
 
-  const checkDuplicates = (property, propertyName) => {
-    const duplicateValues = rowsWithoutIndex
-      .map((row) => row[property])
-      .filter((value) => value)
-      .filter((value, i, arr) => arr.indexOf(value) !== i);
+function checkDuplicateIdentifiers(rows, index) {
+  const warnings = [];
+  const rowsWithoutIndex = rows.filter((r, i) => i !== index);
+  const identifiers = ['idref', 'wikidata', 'ror', 'uai', 'siret', 'ed'];
+  identifiers.forEach((identifier) => {
+    const { [identifier]: currentIdentifierValue } = rows[index];
+    if (currentIdentifierValue === null || currentIdentifierValue === undefined) {
+      return;
+    }
 
-    if (duplicateValues.length > 0) {
+    const duplicateIdentifiers = rowsWithoutIndex
+      .map((row) => row[identifier])
+      .filter((value) => value === currentIdentifierValue);
+
+    if (duplicateIdentifiers.length > 0) {
       warnings.push({
-        message: `L'identifiant ${propertyName} ${rows[index][property]} que vous souhaitez ajouter existe déjà ${duplicateValues.length} fois dans votre fichier d'import.`,
+        message: `L'identifiant ${identifier.toUpperCase()} ${currentIdentifierValue} que vous souhaitez ajouter existe déjà ${duplicateIdentifiers.length} fois dans votre fichier d'import.`,
       });
     }
-  };
-
-  checkDuplicates('siret', 'SIRET');
-  checkDuplicates('ror', 'ROR');
-  checkDuplicates('orcid', 'ORCID');
-  checkDuplicates('idref', 'IDREF');
-  checkDuplicates('rnsr', 'RNSR');
-  checkDuplicates('ed', 'ED');
-  checkDuplicates('wikidata', 'Wikidata');
-  checkDuplicates('researchgate', 'ResearchGate');
-
+  });
   return warnings;
 }
 
@@ -172,6 +172,7 @@ export default async function checker(docs, index) {
     const uaiDuplicate = await duplicateIdChecker('uai', doc.uai);
     const wikidataDuplicate = await duplicateIdChecker('wikidata', doc.wikidata);
     const edFormat = await idFormatChecker('ed', doc.ed);
+    const identifiersDuplicateInFile = await checkDuplicateIdentifiers(docs, index);
     const idrefFormat = await idFormatChecker('idref', doc.idref);
     const siretFormat = await idFormatChecker('siret', doc.siret);
     const rnsrFormat = await idFormatChecker('rnsr', doc.rnsr);
@@ -182,7 +183,7 @@ export default async function checker(docs, index) {
     const websiteChecked = await websiteChecker(doc);
     const duplicateChecker = await rowsChecker(docs, index);
     const warning = [...idrefDuplicate, ...duplicateChecker,
-      ...siretDuplicate, ...edDuplicate, ...rnsrDuplicate, ...uaiDuplicate, ...rorDuplicate, ...wikidataDuplicate, ...nameDuplicateWarnings, ...websiteChecked];
+      ...siretDuplicate, ...edDuplicate, ...rnsrDuplicate, ...uaiDuplicate, ...rorDuplicate, ...wikidataDuplicate, ...nameDuplicateWarnings, ...websiteChecked, ...identifiersDuplicateInFile];
     const error = [...requiredErrors, ...legalCategoryCheck, ...categoriesErrors, ...edFormat, ...idrefFormat, ...siretFormat, ...rnsrFormat, ...rorFormat, ...uaiFormat, ...wikidataFormat];
     let status = 'success';
     if (warning.length) { status = 'warning'; }

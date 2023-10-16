@@ -82,8 +82,8 @@ export default async function checker(docs, index) {
     const rncpCheck = await rncpChecker(doc);
     const wikidataFormatCheck = await idFormatChecker('wikidata', doc.wikidata);
     const rncpFormatCheck = await idFormatChecker('rncp', doc.rncp);
-    const warning = [...websiteChecked, ...nameCheck, ...wikiCheck, ...rncpCheck];
-    const error = [...requiredErrors, ...wikidataFormatCheck, ...rncpFormatCheck];
+    const warning = [...websiteChecked, ...nameCheck, ...wikiCheck, ...rncpCheck, ...rncpFormatCheck, ...wikidataFormatCheck];
+    const error = [...requiredErrors];
     let status = 'success';
     if (warning.length) { status = 'warning'; }
     if (error.length) { status = 'error'; }
