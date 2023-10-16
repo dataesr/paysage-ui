@@ -29,7 +29,7 @@ export default function Filters() {
     <Row className="fr-mb-2w" gutters alignItems="top">
       <Col n="12 md-6">
         <SearchableSelect
-          hint="Séléction multiple possible"
+          hint="Sélection multiple possible"
           label="Groupe de fonction"
           options={mandateTypeGroupOptions}
           onChange={(v) => addFilter('mandateTypeGroup', v)}
@@ -51,7 +51,7 @@ export default function Filters() {
       </Col>
       <Col n="12 md-6">
         <SearchableSelect
-          hint="Séléction multiple possible"
+          hint="Sélection multiple possible"
           multiple
           label="Fonction"
           options={relationTypesOptions}
@@ -63,10 +63,10 @@ export default function Filters() {
         <Row alignItems="bottom">
           <Text className="fr-mb-0 fr-mr-1w" as="span" bold size="sm">Raccourcis :</Text>
           <BadgeGroup>
-            <ActionBadge className="fr-mb-0" isSmall colorFamily="purple-glycine" onClick={() => addFilter('relationType', 'Présidente/Président')}>
+            <ActionBadge className="fr-mb-0" isSmall colorFamily="purple-glycine" onClick={() => addFilter('relationType', 'Présidente / Président')}>
               Président
             </ActionBadge>
-            <ActionBadge className="fr-mb-0" isSmall colorFamily="purple-glycine" onClick={() => addFilter('relationType', 'Directrice générale/directeur général des services')}>
+            <ActionBadge className="fr-mb-0" isSmall colorFamily="purple-glycine" onClick={() => addFilter('relationType', 'Directrice générale / Directeur général des services')}>
               Directeur général des services
             </ActionBadge>
           </BadgeGroup>
@@ -74,7 +74,7 @@ export default function Filters() {
       </Col>
       <Col n="12 md-6">
         <SearchableSelect
-          hint="Séléction multiple possible"
+          hint="Sélection multiple possible"
           label="Catégorie de l'établissement"
           options={categoriesOptions}
           selected=""
@@ -97,7 +97,7 @@ export default function Filters() {
       </Col>
       <Col n="12 md-6">
         <SearchableSelect
-          hint="Séléction multiple possible"
+          hint="Sélection multiple possible"
           label="Établissement"
           options={structuresOptions}
           onChange={(v) => addFilter('structure', v)}

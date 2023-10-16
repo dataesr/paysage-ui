@@ -3,6 +3,7 @@ import parseStructureTSV from './structures';
 import parsePriceTSV from './prizes';
 import parseLaureatsTSV from './laureats';
 import parseGouvernanceTSV from './gouvernance';
+import parseTermsTSV from './terms';
 
 export default async function analyse(str, type) {
   let analyses;
@@ -33,6 +34,12 @@ export default async function analyse(str, type) {
     throw new Error('File Error');
   case 'gouvernance':
     analyses = await parseGouvernanceTSV(str);
+    if (analyses.length > 0) {
+      return analyses;
+    }
+    throw new Error('File Error');
+  case 'termes':
+    analyses = await parseTermsTSV(str);
     if (analyses.length > 0) {
       return analyses;
     }

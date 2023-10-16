@@ -7,6 +7,7 @@ import { structuresHeadersMapping } from '../lib/analysers/structures/headers-ma
 import { prizesHeadersMapping } from '../lib/analysers/prizes/headers-mapping';
 import { laureatHeadersMapping } from '../lib/analysers/laureats/headers-mapping';
 import { gouvernanceHeadersMapping } from '../lib/analysers/gouvernance/headers-mapping';
+import { termsHeadersMapping } from '../lib/analysers/terms/headers-mapping';
 
 export default function Report({ type, rows }) {
   const [displayList, setDisplayList] = useState(true);
@@ -20,6 +21,8 @@ export default function Report({ type, rows }) {
     price: prizesHeadersMapping,
     laureats: laureatHeadersMapping,
     gouvernance: gouvernanceHeadersMapping,
+    terms: termsHeadersMapping,
+
   };
 
   const convertRowsToXLSXData = (dataRows) => {
@@ -142,12 +145,33 @@ export default function Report({ type, rows }) {
                                 {item?.message}
                               </li>
                             ))}
-                            {(row?.imports?.status === 'imported') && (
+                            {(row?.imports?.status === 'imported' && row?.type !== 'laureats') && (
                               <li>
-                                L'objet à été importé avec succes
+                                L'objet a été importé avec succès
                                 {row.imports?.href && ' '}
                                 {row.imports?.href && !row.imports?.href.includes('/relations')
                                 && <Link target="_blank" href={row.imports.href}>Voir</Link> }
+                              </li>
+                            )}
+                            {row.imports?.href && row.type === 'laureats' && (
+                              <li>
+                                La relation entre
+                                <Link
+                                  target="_blank"
+                                  href={`/personnes/${row.body.relatedObjectId}`}
+                                >
+                                  {' '}
+                                  {row.laureatName.join()}
+                                </Link>
+                                et
+                                {' '}
+                                <Link
+                                  target="_blank"
+                                  href={`/prix/${row.body.resourceId}`}
+                                >
+                                  {row.priceName}
+                                </Link>
+                                a bien été effectuée
                               </li>
                             )}
                           </ul>
@@ -170,7 +194,6 @@ export default function Report({ type, rows }) {
                 Exporter la liste des imports en XLSX
               </Button>
             )}
-
           </Col>
         )}
       </Row>

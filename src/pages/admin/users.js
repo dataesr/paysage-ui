@@ -321,8 +321,8 @@ User.propTypes = {
 
 export default function AdminUsersPage() {
   const { toast } = useToast();
-  const { data, isLoading, error, reload } = useFetch('/admin/users?sort=-createdAt&limit=500');
-  const { data: groups } = useFetch('/groups?limit=500');
+  const { data, isLoading, error, reload } = useFetch('/admin/users?sort=-createdAt&limit=2000');
+  const { data: groups } = useFetch('/groups?limit=2000');
   const [query, setQuery] = useState('');
   const debouncedQuery = useDebounce(query, 500);
 

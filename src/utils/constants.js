@@ -86,6 +86,7 @@ export const ENUMS_LABELS_MAPPER = {
   rna: 'RNA id',
   rnsr: 'RNSR id',
   ror: 'ROR id',
+  rncp: 'Numéro fiche RNCP',
   rtoad: 'RTOAD id',
   scopus: 'Scopus id',
   sdid: 'ESGBU - id service documentaire',
@@ -121,4 +122,13 @@ export const STRUCTURES_CLOSURE_REASONS = [
 
 // TODO: Restore projects
 // export const SEARCH_TYPES = 'categories%2Cofficial%2Dtexts%2Cpersons%2Cprizes%2Cprojects%2Cstructures%2Cterms';
-export const SEARCH_TYPES = 'categories%2Cofficial%2Dtexts%2Cpersons%2Cprizes%2Cstructures%2Cterms';
+export const SEARCH_TYPES = 'categories%2Cofficial%2Dtexts%2Cpersons%2Cprizes%2Cstructures%2Cterms%2Cgeographical-categories';
+
+export const GEOGRAPHICAL_CATEGORIES_LABELS_MAPPER = {
+  academy: 'Académie',
+  city: 'Ville',
+  country: 'Pays',
+  department: 'Département',
+  region: 'Région',
+  urbanUnity: 'Unité urbaine',
+};

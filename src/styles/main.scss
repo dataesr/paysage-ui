@@ -10,10 +10,12 @@ HR {
 
 .ul-styled {
   list-style-type: disc !important;
-  > li {
+
+  >li {
     list-style: inherit;
     margin-bottom: 0;
   }
+
   padding-left: 1rem !important;
   margin-bottom: 1rem;
 }
@@ -23,9 +25,11 @@ HR {
 .text-right {
   text-align: right;
 }
+
 .text-center {
   text-align: center;
 }
+
 .italic {
   font-style: italic;
 }
@@ -33,12 +37,13 @@ HR {
 .fr-background-alt {
   background-color: var(--background-alt-grey);
 }
+
 .fullwidth {
   width: 100%;
 }
 
 .sidemenu__item--active {
-   A:before {
+  A:before {
     --idle: transparent;
     --hover: var(--border-active-blue-france-hover);
     --active: var(--border-active-blue-france-active);
@@ -50,7 +55,10 @@ HR {
     top: .75rem;
     width: 2px;
   }
-  .fr-text--md {color: var(--text-active-blue-france); }
+
+  .fr-text--md {
+    color: var(--text-active-blue-france);
+  }
 }
 
 .show-bt-on-over:hover {
@@ -81,24 +89,24 @@ HR {
   border-color: var(--border-color);
 }
 
-.leaflet-control-zoom {
-  position: static;
-  z-index: 1 !important;
-  A {
-    background-image: none !important;
-  }
-}
-.leaflet-pane {
-  position: static;
-  z-index: 40 !important;
-}
-.leaflet-container {
-  position: relative;
-  z-index: 1 !important;
-}
-.leaflet-tooltip-pane {
-  position: relative;
-}
+// .leaflet-control-zoom {
+//   position: static;
+//   z-index: 1 !important;
+//   A {
+//     background-image: none !important;
+//   }
+// }
+// .leaflet-pane {
+//   position: static;
+//   z-index: 40 !important;
+// }
+// .leaflet-container {
+//   position: relative;
+//   z-index: 1 !important;
+// }
+// .leaflet-tooltip-pane {
+//   position: relative;
+// }
 
 .leaflet-control {
   -webkit-print-color-adjust: exact;
@@ -111,13 +119,14 @@ HR {
   right: .25rem;
 }
 
-$objects: structures, persons, prizes, terms, projects, categories, legal-categories, supervising-ministers, official-texts, officialtexts;
+$objects: structures, persons, prizes, terms, projects, geographical-categories, categories, legal-categories, supervising-ministers, official-texts, officialtexts;
 $sides: left, bottom, right, top;
 
 @each $object in $objects {
   .card-#{$object} {
     --primaryColor: var(--#{$object}-color);
     border-left: .25rem solid var(--primaryColor);
+
     .fr-card__start {
       .fr-card__detail {
         color: var(--primaryColor) !important;
@@ -125,6 +134,7 @@ $sides: left, bottom, right, top;
     }
   }
 }
+
 @each $side in $sides {
   .card--border-#{$side} {
     border-left: 0 !important;
@@ -151,11 +161,11 @@ $sides: left, bottom, right, top;
   margin-top: .25rem;
 }
 
-.stick + * {
+.stick+* {
   margin-bottom: 1.5rem;
 }
 
 .fr-card__img img {
-    object-fit: inherit !important;
-    padding: 16px;
+  object-fit: inherit !important;
+  padding: 16px;
 }

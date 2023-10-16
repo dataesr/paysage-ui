@@ -1,13 +1,14 @@
 const URLTypesMapper = [
   ['categories', 'categories'],
+  ['categories-geographiques', 'geographical-categories'],
   ['categories-juridiques', 'legal-categories'],
+  ['ministres-de-tutelle', 'supervising-ministers'],
   ['personnes', 'persons'],
   ['prix', 'prizes'],
   ['projets', 'projects'],
   ['structures', 'structures'],
   ['termes', 'terms'],
   ['textes-officiels', 'official-texts'],
-  ['ministres-de-tutelle', 'supervising-ministers'],
   ['utilisateurs', 'users'],
 ];
 

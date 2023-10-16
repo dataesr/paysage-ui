@@ -85,24 +85,29 @@ function rowsChecker(rows, index) {
     });
   }
 
-  const checkDuplicates = (property, propertyName) => {
-    const duplicateValues = rowsWithoutIndex
-      .map((row) => row[property])
-      .filter((value) => value)
-      .filter((value, i, arr) => arr.indexOf(value) !== i);
+  return warnings;
+}
 
-    if (duplicateValues.length > 0) {
+function checkDuplicateIdentifiers(rows, index) {
+  const warnings = [];
+  const rowsWithoutIndex = rows.filter((r, i) => i !== index);
+  const identifiers = ['orcid', 'researchgate', 'idref', 'wikidata'];
+  identifiers.forEach((identifier) => {
+    const { [identifier]: currentIdentifierValue } = rows[index];
+    if (currentIdentifierValue === null || currentIdentifierValue === undefined) {
+      return;
+    }
+
+    const duplicateIdentifiers = rowsWithoutIndex
+      .map((row) => row[identifier])
+      .filter((value) => value === currentIdentifierValue);
+
+    if (duplicateIdentifiers.length > 0) {
       warnings.push({
-        message: `L'identifiant ${propertyName} ${rows[index][property]} que vous souhaitez ajouter existe déjà ${duplicateValues.length} fois dans votre fichier d'import.`,
+        message: `L'identifiant ${identifier.toUpperCase()} ${currentIdentifierValue} que vous souhaitez ajouter existe déjà ${duplicateIdentifiers.length} fois dans votre fichier d'import.`,
       });
     }
-  };
-
-  checkDuplicates('orcid', 'ORCID');
-  checkDuplicates('idref', 'IDREF');
-  checkDuplicates('wikidata', 'Wikidata');
-  checkDuplicates('researchgate', 'ResearchGate');
-
+  });
   return warnings;
 }
 
@@ -111,6 +116,7 @@ export default async function checker(docs, index) {
     const doc = docs[index];
     const nameDuplicateWarnings = await nameChecker(doc);
     const orcidDuplicate = await duplicateIdChecker('orcid', doc.orcid);
+    const identifiersDuplicateInFile = await checkDuplicateIdentifiers(docs, index);
     const wikidataDuplicate = await duplicateIdChecker('wikidata', doc.wikidata);
     const idrefDuplicate = await duplicateIdChecker('idref', doc.idref);
     const orcidFormat = await idFormatChecker('orcid', doc.orcid);
@@ -120,7 +126,7 @@ export default async function checker(docs, index) {
     const genderChecked = await genderChecker(doc);
     const requiredErrors = requiredChecker(doc);
     const duplicateChecker = await rowsChecker(docs, index);
-    const warning = [...nameDuplicateWarnings, ...duplicateChecker, ...orcidDuplicate, ...wikidataDuplicate, ...idrefDuplicate, ...websiteChecked];
+    const warning = [...nameDuplicateWarnings, ...identifiersDuplicateInFile, ...duplicateChecker, ...orcidDuplicate, ...wikidataDuplicate, ...idrefDuplicate, ...websiteChecked];
     const error = [...requiredErrors, ...genderChecked, ...orcidFormat, ...wikidataFormat, ...idrefFormat];
     let status = 'success';
     if (warning.length) { status = 'warning'; }

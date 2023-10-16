@@ -1,3 +1,4 @@
+/* eslint-disable indent */
 import { Badge, Breadcrumb, BreadcrumbItem, Col, Container, Icon, Pagination, Row, SideMenu, SideMenuLink, Text, Tile, Title } from '@dataesr/react-dsfr';
 import PropTypes from 'prop-types';
 import { Link as RouterLink, useLocation, useSearchParams } from 'react-router-dom';
@@ -8,13 +9,14 @@ import { formatDescriptionDates } from '../utils/dates';
 import { capitalize } from '../utils/strings';
 import { getName } from '../utils/structures';
 import { getTypeFromUrl, getUrlFromType } from '../utils/types-url-mapper';
-import { SEARCH_TYPES } from '../utils/constants';
+import { SEARCH_TYPES, GEOGRAPHICAL_CATEGORIES_LABELS_MAPPER } from '../utils/constants';
 import usePageTitle from '../hooks/usePageTitle';
 
 const icons = {
   structures: 'ri-building-line',
   persons: 'ri-user-3-line',
   categories: 'ri-price-tag-3-line',
+  'geographical-categories': 'ri-global-line',
   terms: 'ri-hashtag',
   prizes: 'ri-award-line',
   projects: 'ri-booklet-line',
@@ -24,33 +26,36 @@ const icons = {
 const getDescription = (item) => {
   let description = '';
   switch (item?.type) {
-  case 'structures':
-    // Structures : Nom usuel + sigle ou nom court > Catégorie principale > Localisation > Date de création
-    description += item?.category ? item.category : '';
-    if (item?.city) {
-      description += (item?.city && item?.city.length > 0) ? ` à ${item.city[0]}` : '';
-    } else {
-      description += (item?.locality && item?.locality.length > 0) ? ` à ${item.locality[0]}` : '';
-    }
-    description += item?.creationDate ? ` ${formatDescriptionDates(item?.creationDate)}` : '';
-    break;
-  case 'persons':
-    if (item.activity) { description += item.activity; }
-    // Personnes : Prénom, nom > dernier mandat renseigné ou activité récupérée de wikidata > structure associée au mandat
-    break;
-  case 'categories':
-  case 'terms':
-    // Catégories & termes : Nom usuel
-    break;
-  case 'official-texts':
-    // Textes officiels : Libellé du texte officiel > structures associées
-    break;
-  case 'projects':
-    // Projet : Nom usuel + sigle ou nom court du projet > Catégorie principale > Localisation > Date de début
-    description += item?.category ? item.category : '';
-    description += item?.startDate ? ` ${formatDescriptionDates(item?.startDate)}` : '';
-    break;
-  default:
+    case 'structures':
+      // Structures : Nom usuel + sigle ou nom court > Catégorie principale > Localisation > Date de création
+      description += item?.category ? item.category : '';
+      if (item?.city) {
+        description += (item?.city && item?.city.length > 0) ? ` à ${item.city[0]}` : '';
+      } else {
+        description += (item?.locality && item?.locality.length > 0) ? ` à ${item.locality[0]}` : '';
+      }
+      description += item?.creationDate ? ` ${formatDescriptionDates(item?.creationDate)}` : '';
+      break;
+    case 'persons':
+      if (item.activity) { description += item.activity; }
+      // Personnes : Prénom, nom > dernier mandat renseigné ou activité récupérée de wikidata > structure associée au mandat
+      break;
+    case 'categories':
+    case 'terms':
+      // Catégories & termes : Nom usuel
+      break;
+    case 'official-texts':
+      // Textes officiels : Libellé du texte officiel > structures associées
+      break;
+    case 'projects':
+      // Projet : Nom usuel + sigle ou nom court du projet > Catégorie principale > Localisation > Date de début
+      description += item?.category ? item.category : '';
+      description += item?.startDate ? ` ${formatDescriptionDates(item?.startDate)}` : '';
+      break;
+    case 'geographical-categories':
+      if (item.level) { description += GEOGRAPHICAL_CATEGORIES_LABELS_MAPPER[item.level]; }
+      break;
+    default:
   }
   return capitalize(description.trim());
 };
@@ -76,7 +81,7 @@ function SearchResults({ data }) {
                     text="Inactive"
                     spacing="mb-0"
                   />
-                ) }
+                )}
                 <p className="fr-tile__desc">
                   {getDescription(item)}
                 </p>
@@ -198,6 +203,17 @@ export default function SearchPage() {
                   Catégories
                 </Text>
                 <Badge type={(type === 'categories') ? 'info' : 'new'} text={counts.categories || '0'} />
+              </Row>
+            </SideMenuLink>
+            <SideMenuLink className={(type === 'geographical-categories') ? 'sidemenu__item--active' : ''} asLink={<RouterLink to={`geographical-categories?query=${query}&page=1`} replace />}>
+              <Row alignItems="top">
+                <Text spacing="pr-2v" bold>
+                  <Icon name="ri-global-line" size="1x" />
+                  Catégories
+                  {' '}
+                  <Badge type={(type === 'geographical-categories') ? 'info' : 'new'} text={counts['geographical-categories'] || '0'} />
+                  géographiques
+                </Text>
               </Row>
             </SideMenuLink>
             {/* TODO: Restore projects */}

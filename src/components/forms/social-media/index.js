@@ -15,14 +15,14 @@ import { capitalize } from '../../../utils/strings';
 
 const regexpValidateSocialMedia = (type) => {
   const validator = {
-    academia: [/academia/, 'Doit contenir "academia" dans l\'url.'],
+    academia: [/academia/, 'avec "academia" dans l\'url.'],
     Dailymotion: [/^(https:\/\/)?(www.)?dailymotion.com\/[A-Za-z0-9/:%_+.,#?!@&=-]+$/, 'https://www.dailymotion.com/<compte>'],
     Facebook: [/^(https:\/\/)?(www.)?facebook.com\/[A-Za-z0-9/:%_+.,#?!@&=-]+$/, 'https://www.facebook.com/<compte>'],
     Github: [/^(https:\/\/)?(www.)?github.com\/[A-Za-z0-9/:%_+.,#?!@&=-]+$/, 'https://github.com/<compte>?tab=repositories'],
     Instagram: [/^(https:\/\/)?(www.)?instagram.com\/[A-Za-z0-9/:%_+.,#?!@&=-]+$/, 'https://www.instagram.com/<compte>/'],
     Linkedin: [/^(https:\/\/)?(www.)?(fr.)?linkedin.com\/.+[A-Za-z0-9/:%_+.,#?!@&=-]+$/, 'https://www.linkedin.com/<profil>'],
     Pinterest: [/^(https:\/\/)?(www.)?pinterest.fr\/[A-Za-z0-9/:%_+.,#?!@&=-]+$/, 'https://www.pinterest.fr/<compte>/'],
-    researchgate: [/researchgate/, 'Doit contenir "researchgate" dans l\'url.'],
+    researchgate: [/researchgate/, 'avec "researchgate" dans l\'url.'],
     soundcloud: [/^(https:\/\/)?(www.)?soundcloud.com\/[A-Za-z0-9/:%_+.,#?!@&=-]+$/, 'https://soundcloud.com/<compte>'],
     Tiktok: [/^(https:\/\/)?(www.)?tiktok\.com\/([A-Za-z0-9/:%_+.,#?!@&=-]+)($|\?)/, 'https://www.tiktok.com/@<compte>'],
     Twitch: [/^(https:\/\/)?(www.)?twitch\.tv\/([a-z0-9_]+)($|\?)/, 'https://twitch.tv/<chaine>'],
