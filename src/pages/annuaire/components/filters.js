@@ -29,7 +29,7 @@ export default function Filters() {
     <Row className="fr-mb-2w" gutters alignItems="top">
       <Col n="12 md-6">
         <SearchableSelect
-          hint="Séléction multiple possible"
+          hint="Sélection multiple possible"
           label="Groupe de fonction"
           options={mandateTypeGroupOptions}
           onChange={(v) => addFilter('mandateTypeGroup', v)}
@@ -51,7 +51,7 @@ export default function Filters() {
       </Col>
       <Col n="12 md-6">
         <SearchableSelect
-          hint="Séléction multiple possible"
+          hint="Sélection multiple possible"
           multiple
           label="Fonction"
           options={relationTypesOptions}
@@ -74,7 +74,7 @@ export default function Filters() {
       </Col>
       <Col n="12 md-6">
         <SearchableSelect
-          hint="Séléction multiple possible"
+          hint="Sélection multiple possible"
           label="Catégorie de l'établissement"
           options={categoriesOptions}
           selected=""
@@ -97,7 +97,7 @@ export default function Filters() {
       </Col>
       <Col n="12 md-6">
         <SearchableSelect
-          hint="Séléction multiple possible"
+          hint="Sélection multiple possible"
           label="Établissement"
           options={structuresOptions}
           onChange={(v) => addFilter('structure', v)}
