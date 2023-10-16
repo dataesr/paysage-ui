@@ -63,10 +63,10 @@ export default function Filters() {
         <Row alignItems="bottom">
           <Text className="fr-mb-0 fr-mr-1w" as="span" bold size="sm">Raccourcis :</Text>
           <BadgeGroup>
-            <ActionBadge className="fr-mb-0" isSmall colorFamily="purple-glycine" onClick={() => addFilter('relationType', 'Présidente/Président')}>
+            <ActionBadge className="fr-mb-0" isSmall colorFamily="purple-glycine" onClick={() => addFilter('relationType', 'Présidente / Président')}>
               Président
             </ActionBadge>
-            <ActionBadge className="fr-mb-0" isSmall colorFamily="purple-glycine" onClick={() => addFilter('relationType', 'Directrice générale/directeur général des services')}>
+            <ActionBadge className="fr-mb-0" isSmall colorFamily="purple-glycine" onClick={() => addFilter('relationType', 'Directrice générale / Directeur général des services')}>
               Directeur général des services
             </ActionBadge>
           </BadgeGroup>
