@@ -25,18 +25,18 @@ export default function RelationCard({ relation, inverse, onEdit }) {
           <p className="fr-card__desc">
             {relation.mandatePrecision ? (
               <Text as="span" bold>
-                {relation?.mandatePrecision }
+                {relation?.mandatePrecision}
               </Text>
             ) : (
               <Text as="span" bold>
                 {relation.relationType?.[getRelationTypeLabelKey(relation?.relatedObject?.gender)] || relation.relationType?.name}
                 {interimMandate}
               </Text>
-            ) }
+            )}
             {relation?.laureatePrecision && ` ${relation?.laureatePrecision}`}
             {(relation?.resource.collection === 'prizes')
               ? renderPriceDate
-              : formatDescriptionDatesForMandateAndPrizes(relation) }
+              : formatDescriptionDatesForMandateAndPrizes(relation)}
           </p>
           {(relation.otherAssociatedObjects?.length > 0) && (
             <div className="fr-card__desc">
@@ -71,14 +71,14 @@ export default function RelationCard({ relation, inverse, onEdit }) {
                 <Link className="fr-card__detail" href={relation.startDateOfficialText?.pageUrl} target="_blank">
                   {relation.startDateOfficialText?.nature}
                   {' '}
-                  {relation.startDateOfficialText?.publicationDate && `du ${toString(relation.startDateOfficialText.publicationDate)}` }
+                  {relation.startDateOfficialText?.publicationDate && `du ${toString(relation.startDateOfficialText.publicationDate)}`}
                 </Link>
               )}
               {relation.endDateOfficialText?.id && (
                 <Link className="fr-card__detail" href={relation.endDateOfficialText?.pageUrl} target="_blank">
                   {relation.endDateOfficialText?.nature}
                   {' '}
-                  {relation.endDateOfficialText?.publicationDate && `du ${toString(relation.endDateOfficialText.publicationDate)}` }
+                  {relation.endDateOfficialText?.publicationDate && `du ${toString(relation.endDateOfficialText.publicationDate)}`}
                 </Link>
               )}
             </div>
@@ -112,6 +112,13 @@ export default function RelationCard({ relation, inverse, onEdit }) {
                 </div>
               )}
             </>
+          )}
+          {relation.comment && (
+            <div className={`fr-card__end ${styles['card-end']}`}>
+              <i>
+                {relation.comment}
+              </i>
+            </div>
           )}
           {(editMode && onEdit) && <Button size="md" onClick={onEdit} tertiary borderless rounded icon="ri-edit-line" className={styles['edit-button']} />}
         </div>
