@@ -52,10 +52,10 @@ export default function NamesComponent({ visible }) {
     );
     setShowModal(true);
   };
-
   const renderCards = () => {
     if (!data) return null;
-    const list = data.data.map((item) => (
+    const sortedData = data.data.sort((a, b) => new Date(b?.startDate) - new Date(a?.startDate));
+    const list = sortedData.map((item) => (
       <div className="fr-card fr-card--xs fr-card--horizontal fr-card--grey fr-card--no-border">
         <div className="fr-card__body">
           <div className="fr-card__content">
@@ -88,6 +88,7 @@ export default function NamesComponent({ visible }) {
     ));
     return <ExpendableListCards list={list} />;
   };
+
   if (!visible) return null;
   return (
     <Bloc isLoading={isLoading} error={error} data={data}>
