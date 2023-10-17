@@ -3,7 +3,7 @@ import { regexpValidateIdentifiers } from '../../../../../utils/regexpForIdentif
 
 function requiredChecker({ usualNameFr }) {
   const errors = [];
-  if (!usualNameFr) errors.push({ message: 'Le nom du terms est obligatoire' });
+  if (!usualNameFr) errors.push({ message: 'Le nom du terme est obligatoire' });
   return errors;
 }
 
@@ -12,10 +12,11 @@ async function nameChecker({ usualNameFr }) {
 
   const encodedUsualName = encodeURIComponent(usualNameFr);
   const { data } = await api.get(`/autocomplete?types=terms&query=${encodedUsualName}`);
+
   const duplicate = data?.data.find((el) => el.name === usualNameFr);
   if (duplicate) {
     return [{
-      message: `Le terme ${usualNameFr} existe déjà dans la base de donnée`,
+      message: `Le terme ${usualNameFr} existe déjà dans la base de donnée (${duplicate.id})`,
       href: `/terms/${duplicate.id}`,
     }];
   }

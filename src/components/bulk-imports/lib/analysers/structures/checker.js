@@ -53,7 +53,7 @@ async function nameChecker({ usualName }) {
 
   if (duplicate) {
     return [{
-      message: `Le nom ${usualName} est déjà utilisé pour une structure`,
+      message: `Le nom ${usualName} est déjà utilisé pour une structure (${duplicate.id})`,
       href: `/structures/${duplicate.id}`,
     }];
   }
