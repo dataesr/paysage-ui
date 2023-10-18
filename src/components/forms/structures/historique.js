@@ -127,9 +127,9 @@ export default function StructureHistoryForm({ data, onSave }) {
           </Col>
         </Row>
         <Row className="fr-pt-2w">
-          <Col>
+          <Col n="12" className="fr-pb-2w">
             <DateInput
-              value={form?.creationDate}
+              value={form?.creationDate || ''}
               label="Date de début"
               onDateChange={(value) => updateForm({ creationDate: value })}
               isRequired
@@ -172,9 +172,9 @@ export default function StructureHistoryForm({ data, onSave }) {
           </Col>
         </Row>
         <Row className="fr-pt-2w">
-          <Col>
+          <Col n="12" className="fr-pb-2w">
             <DateInput
-              value={form?.closureDate}
+              value={form?.closureDate || ''}
               label="Date de fermeture"
               onDateChange={(value) => updateForm({ closureDate: value })}
             />
