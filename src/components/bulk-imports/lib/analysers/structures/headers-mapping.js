@@ -32,4 +32,5 @@ export const structuresHeadersMapping = {
   'Code iso3 du pays {rechercher le code ISO}': 'iso3',
   'Date de création {2020-07-02}': 'creationDate',
   'Date de fermeture {2020-07-02}': 'closureDate',
+  Parent: 'parentId',
 };
