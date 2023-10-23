@@ -3,28 +3,21 @@ import PropTypes from 'prop-types';
 import { Link as RouterLink } from 'react-router-dom';
 import { useState } from 'react';
 import { getName } from '../../../utils/structures';
-import { formatDescriptionDates } from '../../../utils/dates';
-import { capitalize } from '../../../utils/strings';
 import ExpendableListCards from '../../../components/card/expendable-list-cards';
 
 const getDescription = (item) => {
-  let description = '';
-  description += item?.category ? item.category : '';
-  if (item?.city) {
-    description += item.city.length > 0 ? ` à ${item.city[0]}` : '';
-  } else {
-    description += item?.locality && item.locality.length > 0 ? ` à ${item.locality[0]}` : '';
-  }
-  description += item?.creationDate ? ` ${formatDescriptionDates(item?.creationDate)}` : '';
-
-  return capitalize(description.trim());
+  const filteredCategories = item.categories
+    .filter((el) => el.priority >= 1 && el.priority <= 70)
+    .map((el) => el.usualNameFr)
+    .join(' - ');
+  return filteredCategories;
 };
+
 export function StructuresList({ data }) {
   const [filter, setFilter] = useState('');
   if (!data && !data?.data) {
     return null;
   }
-
   const list = data
     .filter((item) => item.currentName.usualName.toLowerCase().indexOf(filter.toLowerCase()) > -1)
     .map((item) => (
@@ -38,9 +31,6 @@ export function StructuresList({ data }) {
                   {getName(item)}
                 </RouterLink>
               </p>
-              {item.structureStatus === 'inactive' ? (
-                <Badge isSmall colorFamily="brown-opera" text="Inactive" spacing="mb-0" />
-              ) : null}
               <p className="fr-tile__desc">{getDescription(item)}</p>
             </div>
           </Tile>
