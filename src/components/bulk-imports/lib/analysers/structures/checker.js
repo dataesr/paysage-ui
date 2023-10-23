@@ -94,6 +94,24 @@ async function categoriesChecker({ categories }) {
   return categoriesWarning;
 }
 
+async function parentChecker({ parentId }) {
+  const parentWarning = [];
+  if (!parentId) { return []; }
+  if (parentId?.length !== 5) {
+    parentWarning.push({ message: `Le parent n'est pas correctement renseigné : ${parentId}` });
+    return parentWarning;
+  }
+  if (parentId) {
+    const requests = [api.get(`/autocomplete?types=structure&query=${parentId}`)];
+    const apiData = await Promise.all(requests);
+    const apiCategories = apiData?.map((el) => el.data.data?.[0]?.id);
+    if (!apiCategories) {
+      parentWarning.push({ message: `La structure parente ${parentId} n'existe pas` });
+    }
+  }
+  return parentWarning;
+}
+
 async function legalCategoriesChecker({ legalCategory }) {
   const legalCategoriesWarning = [];
   if (legalCategory) {
@@ -162,6 +180,7 @@ export default async function checker(docs, index) {
   try {
     const doc = docs[index];
     const categoriesErrors = await categoriesChecker(doc);
+    const parentErrors = await parentChecker(doc);
     const nameDuplicateWarnings = await nameChecker(doc);
     const requiredErrors = requiredChecker(doc);
     const edDuplicate = await duplicateIdChecker('ed', doc.ed);
@@ -184,7 +203,8 @@ export default async function checker(docs, index) {
     const duplicateChecker = await rowsChecker(docs, index);
     const warning = [...idrefDuplicate, ...duplicateChecker,
       ...siretDuplicate, ...edDuplicate, ...rnsrDuplicate, ...uaiDuplicate, ...rorDuplicate, ...wikidataDuplicate, ...nameDuplicateWarnings, ...websiteChecked, ...identifiersDuplicateInFile];
-    const error = [...requiredErrors, ...legalCategoryCheck, ...categoriesErrors, ...edFormat, ...idrefFormat, ...siretFormat, ...rnsrFormat, ...rorFormat, ...uaiFormat, ...wikidataFormat];
+    const error = [...requiredErrors, ...parentErrors,
+      ...legalCategoryCheck, ...categoriesErrors, ...edFormat, ...idrefFormat, ...siretFormat, ...rnsrFormat, ...rorFormat, ...uaiFormat, ...wikidataFormat];
     let status = 'success';
     if (warning.length) { status = 'warning'; }
     if (error.length) { status = 'error'; }
