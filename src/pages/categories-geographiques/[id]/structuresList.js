@@ -7,10 +7,14 @@ import ExpendableListCards from '../../../components/card/expendable-list-cards'
 
 const getDescription = (item) => {
   const filteredCategories = item.categories
-    .filter((el) => el.priority >= 1 && el.priority <= 70)
-    .map((el) => el.usualNameFr)
-    .join(' - ');
-  return filteredCategories;
+    .filter((el) => el.priority >= 1 && el.priority <= 99)
+    .sort((a, b) => a.priority - b.priority)
+    .map((el) => el.usualNameFr);
+
+  if (filteredCategories.length > 0) {
+    return filteredCategories[0];
+  }
+  return [];
 };
 
 export function StructuresList({ data }) {
