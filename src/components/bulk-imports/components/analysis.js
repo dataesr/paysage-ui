@@ -48,7 +48,7 @@ export default function Analysis({ type, rows, handleForceImport }) {
           const fieldKey = currentModel[header];
           const fieldValues = row.body[fieldKey];
 
-          if (typeof fieldValues === 'object' && fieldValues !== null) {
+          if (Array.isArray(fieldValues)) {
             value = fieldValues.filter(Boolean).join('; ');
           } else if (fieldValues !== undefined) {
             value = fieldValues;
