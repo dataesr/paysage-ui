@@ -70,6 +70,7 @@ export const ENUMS_LABELS_MAPPER = {
   ISO2: 'Code ISO 2',
   ISO3: 'Code ISO 3',
   nnt: 'Numéro National de Thèse',
+  googleScholar: 'GoogleScholar',
   oc: 'OpenCorporate id',
   orcid: 'ORCID id',
   orgref: 'ORGREF id',
