@@ -7,7 +7,7 @@ import { Spinner } from '../components/spinner';
 import useSearch from '../hooks/useSearch';
 import { formatDescriptionDates } from '../utils/dates';
 import { capitalize } from '../utils/strings';
-import { getName } from '../utils/structures';
+import { getPrizeName } from '../utils/structures';
 import { getTypeFromUrl, getUrlFromType } from '../utils/types-url-mapper';
 import { SEARCH_TYPES, GEOGRAPHICAL_CATEGORIES_LABELS_MAPPER } from '../utils/constants';
 import usePageTitle from '../hooks/usePageTitle';
@@ -71,7 +71,7 @@ function SearchResults({ data }) {
                 <p className="fr-tile__title">
                   <RouterLink className="fr-tile__link fr-link--md" to={`/${getUrlFromType(item.type)}/${item.id}`}>
                     <Icon name={icons[item.type]} size="1x" color={`var(--${item.type}-color)`} />
-                    {getName(item)}
+                    {getPrizeName(item)}
                   </RouterLink>
                 </p>
                 {item.structureStatus === 'inactive' && (
