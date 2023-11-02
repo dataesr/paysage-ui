@@ -94,9 +94,7 @@ export default function LocalisationsComponent() {
           <div className="fr-card__start">
             <p className="fr-card__detail fr-text--sm fr-mb-0">
               <Icon name="ri-map-pin-fill" size="1x" />
-              Adresse
-              {' '}
-              {localisation.current ? 'actuelle' : 'historique'}
+              {localisation.current ? 'Dernière adresse connue' : 'Adresse historique'}
             </p>
             <div className="fr-card__end fr-mt-0 fr-pt-0">
               <p className="fr-card__detail">
@@ -155,7 +153,6 @@ export default function LocalisationsComponent() {
                       {currentLocalisation?.country ? renderAddress(currentLocalisation) : null}
                     </Col>
                   </Row>
-                  {/* <GeographicalTags data={currentLocalisation?.geoCategories} /> */}
                 </Tab>
               )}
               {data.totalCount > 1 && (
@@ -166,20 +163,20 @@ export default function LocalisationsComponent() {
                   <Row style={{ overflowY: 'scroll' }}>
                     <style>
                       {`
-              ::-webkit-scrollbar {
-                width: 8px;
-              }
-              ::-webkit-scrollbar-vertical {
-                width: 8px;
-              }
-              ::-webkit-scrollbar-thumb:vertical {
-                background-color: gray;
-              }
-              
-              ::-webkit-scrollbar-track:vertical {
-                background-color: transparent;
-              }
-              `}
+                        ::-webkit-scrollbar {
+                          width: 8px;
+                        }
+                        ::-webkit-scrollbar-vertical {
+                          width: 8px;
+                        }
+                        ::-webkit-scrollbar-thumb:vertical {
+                          background-color: gray;
+                        }
+                        
+                        ::-webkit-scrollbar-track:vertical {
+                          background-color: transparent;
+                        }
+                      `}
                     </style>
 
                     {orderedList.length > 1 && (
@@ -188,12 +185,9 @@ export default function LocalisationsComponent() {
                       </Text>
                     )}
                     {orderedList.map((item) => (
-                      <>
-                        <Col n="12" key={`HistoriqueLocalisation${item.id}`}>
-                          {renderAddress(item)}
-                        </Col>
-                        {/* <GeographicalTags data={item.geoCategories} /> */}
-                      </>
+                      <Col n="12" key={`HistoriqueLocalisation${item.id}`}>
+                        {renderAddress(item)}
+                      </Col>
                     ))}
                   </Row>
                 </Tab>

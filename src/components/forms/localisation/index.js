@@ -6,6 +6,7 @@ import {
   Title,
   RadioGroup,
   Radio,
+  Checkbox,
 } from '@dataesr/react-dsfr';
 import PropTypes from 'prop-types';
 import { useCallback, useEffect, useState } from 'react';
@@ -27,7 +28,7 @@ function validate(body) {
 
 function sanitize(form) {
   const fields = [
-    'address', 'city', 'cityId', 'coordinates', 'country', 'distributionStatement', 'endDate',
+    'active', 'address', 'city', 'current', 'cityId', 'coordinates', 'country', 'distributionStatement', 'endDate',
     'iso3', 'locality', 'phonenumber', 'place', 'postalCode', 'postOfficeBoxNumber', 'startDate',
   ];
   const body = {};
@@ -300,6 +301,11 @@ export default function LocalisationForm({ id, data, onDelete, onSave }) {
               value={form.endDate}
               label="Date de fin"
               onDateChange={(value) => updateForm({ endDate: value })}
+            />
+            <Checkbox
+              label="Date de fin inconnue mais passée"
+              onChange={() => updateForm({ active: false })}
+              checked={form.active === false}
             />
           </Col>
         </Row>
