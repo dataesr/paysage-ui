@@ -100,6 +100,13 @@ export default function IdentifiersComponent() {
     case 'fundref':
       linkTo = `https://search.crossref.org/funding?q=${el.value}`;
       break;
+    case 'googleScholar':
+      if (el.value.length === 12) {
+        linkTo = `https://scholar.google.co.jp/citations?hl=en&user=${el.value}`;
+      } else {
+        linkTo = `https://scholar.google.co.jp/citations?view_op=view_org&hl=en&org=${el.value}`;
+      }
+      break;
     case 'hatvp':
       linkTo = `https://www.hatvp.fr/fiche-organisation/?organisation=${el.value}`;
       break;
