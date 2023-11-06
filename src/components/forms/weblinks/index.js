@@ -65,7 +65,9 @@ function sanitize(form) {
   if (body.type !== 'website') {
     body.language = null;
   }
-  if (!form.url.includes('https://')) { body.url = `https://${body.url}`; }
+  if (!body.url.startsWith('http://') && !body.url.startsWith('https://')) {
+    body.url = `http://${body.url}`;
+  }
   return body;
 }
 
