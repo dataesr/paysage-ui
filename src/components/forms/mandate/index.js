@@ -19,6 +19,7 @@ import api from '../../../utils/api';
 import useFetch from '../../../hooks/useFetch';
 import { parseRelatedElement } from '../../../utils/parse-related-element';
 import PaysageBlame from '../../paysage-blame';
+import validateEmail from '../../../utils/mail-validation';
 
 function sanitize(form) {
   const fields = ['active', 'resourceId', 'relatedObjectId', 'relationTypeId', 'relationTag',
@@ -43,11 +44,17 @@ export default function MandateForm({ id, resourceType, relatedObjectTypes, data
     if (!body?.relatedObjectId && !inverse) {
       errors.relatedObjectId = 'Vous devez sélectionner un objet à lier';
     }
-    // if (!body?.relationTypeId) {
-    //   errors.relatedObjectId = 'Le type est obligatoire';
-    // }
+    if (!body?.relationTypeId && body.relationTypeId !== 'Appartient à la liste') {
+      errors.relationTypeId = 'Le type est obligatoire';
+    }
     if (!body?.resourceId && inverse) {
       errors.relatedObjectId = 'Vous devez sélectionner un objet à lier';
+    }
+    if (body?.mandateEmail && !validateEmail(body.mandateEmail)) {
+      errors.mandateEmail = "L'adresse mail n'est pas valide";
+    }
+    if (body?.personalEmail && !validateEmail(body.personalEmail)) {
+      errors.personalEmail = "L'adresse mail n'est pas valide";
     }
     return errors;
   };
