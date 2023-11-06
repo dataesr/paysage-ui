@@ -303,7 +303,7 @@ export default function LocalisationForm({ id, data, onDelete, onSave }) {
               onDateChange={(value) => updateForm({ endDate: value })}
             />
           </Col>
-          <Col n="12">
+          <Col n="12" spacing="pb-3w">
             <Checkbox
               label="Date de fin inconnue mais passée"
               onChange={(e) => updateForm({ active: !e.target.checked })}

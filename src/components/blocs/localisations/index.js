@@ -71,13 +71,13 @@ export default function LocalisationsComponent() {
       <div className="fr-card fr-card--grey fr-card--no-border">
         <div className="fr-card__content ">
           <p className="fr-card__title">
-            <span className="fr-pr-1w">
+            <Text className="fr-pr-1w">
               {address}
-            </span>
-            <CopyButton
-              copyText={address}
-              size="sm"
-            />
+              <CopyButton
+                copyText={address}
+                size="sm"
+              />
+            </Text>
           </p>
           {localisation.phonenumber && (
             <Text className="fr-card__title">
@@ -124,34 +124,41 @@ export default function LocalisationsComponent() {
       </BlocActionButton>
       <BlocContent>
         <Row gutters>
-          {currentLocalisation?.coordinates?.lat && currentLocalisation?.coordinates?.lng && (
-            <Col n="6">
-              <Map
-                lat={currentLocalisation?.coordinates?.lat}
-                lng={currentLocalisation?.coordinates?.lng}
-                markers={[
-                  {
-                    address: `{${currentLocalisation?.address || ''}, ${currentLocalisation?.postalCode || ''} ${currentLocalisation?.locality || ''}, ${currentLocalisation?.country}}`,
-                    latLng: [
-                      currentLocalisation?.coordinates?.lat,
-                      currentLocalisation?.coordinates?.lng,
-                    ],
-                  },
-                ]}
-              />
-            </Col>
-          )}
-          <Col n="6">
+          <Col n="12">
             <Tabs>
               {data && (
                 <Tab
                   className={`fr-card fr-card--xs fr-card--horizontal fr-card--grey fr-card--no-border card-${apiObject}`}
                   label="Adresse actuelle"
                 >
-                  <Row>
-                    <Col>
-                      {currentLocalisation?.country ? renderAddress(currentLocalisation) : null}
+                  <Row gutters>
+                    <Col n="6">
+                      <Map
+                        lat={currentLocalisation?.coordinates?.lat}
+                        lng={currentLocalisation?.coordinates?.lng}
+                        markers={[
+                          {
+                            address: `{${currentLocalisation?.address || ''}, ${currentLocalisation?.postalCode || ''} ${currentLocalisation?.locality || ''}, ${currentLocalisation?.country}}`,
+                            latLng: [
+                              currentLocalisation?.coordinates?.lat,
+                              currentLocalisation?.coordinates?.lng,
+                            ],
+                          },
+                        ]}
+                      />
                     </Col>
+                    <Col n="6">
+                      {currentLocalisation?.country
+                        ? renderAddress(currentLocalisation) : null}
+                    </Col>
+                    {data && (
+                      <Row className="fr-mt-3w">
+                        <Col>
+                          <BlocTitle as="h3" look="h6">Catégories géographiques de l'adresse actuelle</BlocTitle>
+                          <GeographicalTags data={currentLocalisation?.geoCategories} />
+                        </Col>
+                      </Row>
+                    )}
                   </Row>
                 </Tab>
               )}
@@ -195,15 +202,6 @@ export default function LocalisationsComponent() {
             </Tabs>
           </Col>
         </Row>
-        {data && (
-          <Row className="fr-mt-3w">
-            <Col>
-              <BlocTitle as="h3" look="h6">Catégories géographiques de l'adresse actuelle</BlocTitle>
-              <GeographicalTags data={currentLocalisation?.geoCategories} />
-            </Col>
-          </Row>
-        )}
-
       </BlocContent>
       <BlocModal>
         <Modal isOpen={showModal} size="lg" hide={() => setShowModal(false)}>
