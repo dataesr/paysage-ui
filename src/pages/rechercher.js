@@ -27,7 +27,6 @@ const getDescription = (item) => {
   let description = '';
   switch (item?.type) {
     case 'structures':
-      // Structures : Nom usuel + sigle ou nom court > Catégorie principale > Localisation > Date de création
       description += item?.category ? item.category : '';
       if (item?.city) {
         description += (item?.city && item?.city.length > 0) ? ` à ${item.city[0]}` : '';
@@ -38,22 +37,24 @@ const getDescription = (item) => {
       break;
     case 'persons':
       if (item.activity) { description += item.activity; }
-      // Personnes : Prénom, nom > dernier mandat renseigné ou activité récupérée de wikidata > structure associée au mandat
       break;
     case 'categories':
     case 'terms':
-      // Catégories & termes : Nom usuel
       break;
     case 'official-texts':
-      // Textes officiels : Libellé du texte officiel > structures associées
       break;
     case 'projects':
-      // Projet : Nom usuel + sigle ou nom court du projet > Catégorie principale > Localisation > Date de début
       description += item?.category ? item.category : '';
       description += item?.startDate ? ` ${formatDescriptionDates(item?.startDate)}` : '';
       break;
     case 'geographical-categories':
-      if (item.level) { description += GEOGRAPHICAL_CATEGORIES_LABELS_MAPPER[item.level]; }
+      if (item.level) {
+        if (GEOGRAPHICAL_CATEGORIES_LABELS_MAPPER[item.level] === 'Unité urbaine') {
+          description += `${GEOGRAPHICAL_CATEGORIES_LABELS_MAPPER[item.level]} (${item.originalId})`;
+        } else {
+          description += `${GEOGRAPHICAL_CATEGORIES_LABELS_MAPPER[item.level]}`;
+        }
+      }
       break;
     default:
   }
