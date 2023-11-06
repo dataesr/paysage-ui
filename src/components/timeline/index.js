@@ -10,16 +10,37 @@ export function TimelineItem({ date, children }) {
   };
   const event = new Date(date).toLocaleString('fr-FR', options);
   const [day, month, year] = event.split(' ');
-  return (
-    <div className={`${styles['timeline-item']}`}>
-      <div className={styles['timeline-date']}>
-        {(isApproximate && day === '1') ? null : <span className="fr-h3 fr-mb-0">{day}</span>}
-        {(isApproximate && month === '1') ? null : <span className="fr-text--sm fr-mb-0">{month}</span>}
+
+  let dateContent = null;
+
+  if (isApproximate) {
+    if (date.length === 7) {
+      if (month !== '1') {
+        dateContent = <span className="fr-text--sm fr-mb-0">{month}</span>;
+      }
+      dateContent = (
+        <>
+          {dateContent}
+          <span className="fr-text--sm fr-mb-0">{year}</span>
+        </>
+      );
+    } else {
+      dateContent = <span className="fr-text--sm fr-mb-0">{year}</span>;
+    }
+  } else {
+    dateContent = (
+      <>
+        <span className="fr-h3 fr-mb-0">{day}</span>
+        <span className="fr-text--sm fr-mb-0">{month}</span>
         <span className="fr-text--sm fr-mb-0">{year}</span>
-      </div>
-      <div className={styles['timeline-content']}>
-        {children}
-      </div>
+      </>
+    );
+  }
+
+  return (
+    <div className={styles['timeline-item']}>
+      <div className={styles['timeline-date']}>{dateContent}</div>
+      <div className={styles['timeline-content']}>{children}</div>
     </div>
   );
 }
