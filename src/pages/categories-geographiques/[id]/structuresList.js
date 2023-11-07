@@ -43,7 +43,7 @@ export function StructuresList({ data }) {
   return (
     <Row>
       <Col>
-        <div style={{ height: '700px', overflowY: 'scroll' }}>
+        <div style={{ height: '400px', overflowY: 'scroll' }}>
           <style>
             {`
               ::-webkit-scrollbar {
@@ -74,7 +74,7 @@ export function ExceptionStructuresList({ exceptionGps }) {
   }
 
   const list = exceptionGps.map((item) => (
-    <Row>
+    <Row gutters>
       <Col n="12" as="li" key={item.id}>
         <Tile horizontal color="var(--structures-color)">
           <div className="fr-tile__body">

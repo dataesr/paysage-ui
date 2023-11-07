@@ -17,15 +17,14 @@ import GeographicalCategoriesRelatedElements from './[id]/elements-lies';
 import Error from '../../components/errors';
 import usePageTitle from '../../hooks/usePageTitle';
 import { GEOGRAPHICAL_CATEGORIES_LABELS_MAPPER } from '../../utils/constants';
-import Wiki from '../../components/blocs/wiki';
-import { Bloc, BlocContent, BlocTitle } from '../../components/bloc';
+import KeyValueCard from '../../components/card/key-value-card';
+import getLink from '../../utils/get-links';
 
 function GeographicalCategoriesByIdPage() {
   const { url } = useUrl();
   const { data, isLoading, error } = useFetch(url);
   usePageTitle(`Catégorie géographique · ${data?.nameFr}`);
-  const identifiers = [];
-
+  const wikidata = data?.wikidata || [];
   if (isLoading) return <PageSpinner />;
   if (error) return <Error status={error} />;
 
@@ -78,26 +77,19 @@ function GeographicalCategoriesByIdPage() {
             </Row>
             <Outlet />
           </Col>
+          <Title as="h3" look="h4">Présence sur le web</Title>
+          <Row gutters>
+            <Col n="12 md-3">
+              <KeyValueCard
+                cardKey="Wikidata"
+                cardValue={wikidata}
+                copy
+                icon="ri-fingerprint-2-line"
+                linkTo={getLink({ value: wikidata, type: 'wikidata' })}
+              />
+            </Col>
+          </Row>
         </Col>
-        {identifiers.length > 0 && (
-          <Bloc data={identifiers}>
-            <BlocTitle as="h3" look="h4">
-              Identifiants
-            </BlocTitle>
-            <BlocContent>
-              Contenue a modifier asap
-            </BlocContent>
-          </Bloc>
-
-        )}
-        {data?.wikidata && (
-          <>
-            <Title as="h3" look="h4">Présence sur le web</Title>
-            <Row spacing="mb-5w">
-              <Wiki geographicalCategoryWiki={data.wikidata} />
-            </Row>
-          </>
-        )}
       </Row>
     </Container>
   );

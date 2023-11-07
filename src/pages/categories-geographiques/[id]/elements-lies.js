@@ -6,6 +6,9 @@ import useUrl from '../../../hooks/useUrl';
 import Map from '../../../components/map';
 import { PageSpinner } from '../../../components/spinner';
 import { ExceptionStructuresList, StructuresList } from './structuresList';
+import { exportGeographicalCategoriesStructuresToCsv } from '../../../components/blocs/relations/utils/exports';
+
+import { BlocActionButton } from '../../../components/bloc';
 
 export default function GeographicalCategoryRelatedElements() {
   const { url, id } = useUrl();
@@ -64,12 +67,22 @@ export default function GeographicalCategoryRelatedElements() {
             <Map markers={filteredMarkers} />
           </Col>
         </Row>
-        <Row gutters>
+        <Row alignItems="middle" spacing="mb-1v">
+          <Col className="text-right">
+            <BlocActionButton
+              edit={false}
+              icon="ri-download-line"
+              onClick={() => exportGeographicalCategoriesStructuresToCsv({
+                data: filteredCardsData,
+                fileName: 'structure',
+              })}
+            >
+              Télécharger la liste
+            </BlocActionButton>
+          </Col>
           <Col n="12">
             <StructuresList data={filteredCardsData} />
           </Col>
-        </Row>
-        <Row className="fr-mt-3w">
           <Col>
             <Title as="h2" look="h4">
               Autres structures associées en dehors du territoire
@@ -97,14 +110,16 @@ export default function GeographicalCategoryRelatedElements() {
   }
 
   return (
-    <Col>
-      <TextInput
-        label="Filtre sur le nom de la structure"
-        name="nameFilter"
-        onChange={handleFilterChange}
-        value={filter}
-      />
-      {structuresContent}
-    </Col>
+    <Row alignItems="middle" spacing="mb-1v">
+      <Col>
+        <TextInput
+          label="Filtre sur le nom de la structure"
+          name="nameFilter"
+          onChange={handleFilterChange}
+          value={filter}
+        />
+        {structuresContent}
+      </Col>
+    </Row>
   );
 }

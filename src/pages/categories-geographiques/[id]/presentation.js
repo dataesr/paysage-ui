@@ -111,10 +111,8 @@ export default function GeographicalCategoryPresentationPage() {
               </Col>
             </Col>
           </Row>
-
         )
       }
-
     </>
   );
 }
