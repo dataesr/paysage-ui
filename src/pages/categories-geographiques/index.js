@@ -77,18 +77,22 @@ function GeographicalCategoriesByIdPage() {
             </Row>
             <Outlet />
           </Col>
-          <Title as="h3" look="h4">Présence sur le web</Title>
-          <Row gutters>
-            <Col n="12 md-3">
-              <KeyValueCard
-                cardKey="Wikidata"
-                cardValue={wikidata}
-                copy
-                icon="ri-fingerprint-2-line"
-                linkTo={getLink({ value: wikidata, type: 'wikidata' })}
-              />
-            </Col>
-          </Row>
+          {wikidata.length > 0 && (
+            <>
+              <Title as="h3" look="h4">Présence sur le web</Title>
+              <Row gutters>
+                <Col n="12 md-3">
+                  <KeyValueCard
+                    cardKey="Wikidata"
+                    cardValue={wikidata}
+                    copy
+                    icon="ri-fingerprint-2-line"
+                    linkTo={getLink({ value: wikidata, type: 'wikidata' })}
+                  />
+                </Col>
+              </Row>
+            </>
+          )}
         </Col>
       </Row>
     </Container>
