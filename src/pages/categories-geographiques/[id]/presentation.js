@@ -2,16 +2,13 @@ import { Badge, Col, Row, Title } from '@dataesr/react-dsfr';
 import useFetch from '../../../hooks/useFetch';
 import useUrl from '../../../hooks/useUrl';
 import KeyValueCard from '../../../components/card/key-value-card';
-import Wiki from '../../../components/blocs/wiki';
 import { PageSpinner } from '../../../components/spinner';
 import Error from '../../../components/errors';
 import Map from '../../../components/map/geographical-categories-map';
 import {
   ExceptionStructuresList,
-  StructuresList,
 } from './structuresList';
-import { Bloc, BlocActionButton, BlocContent, BlocTitle } from '../../../components/bloc';
-import { exportGeographicalCategoriesStructuresToCsv } from '../../../components/blocs/relations/utils/exports';
+import { BlocTitle } from '../../../components/bloc';
 import GeographicalTags from '../../../components/blocs/geographical-tags';
 
 export default function GeographicalCategoryPresentationPage() {
@@ -61,8 +58,6 @@ export default function GeographicalCategoryPresentationPage() {
     }));
   }
 
-  const identifiers = [];
-
   return (
     <>
       {
@@ -80,7 +75,6 @@ export default function GeographicalCategoryPresentationPage() {
           </Row>
         )
       }
-
       {
         data?.parent && (
           <Row className="fr-mb-3w">
@@ -91,42 +85,13 @@ export default function GeographicalCategoryPresentationPage() {
           </Row>
         )
       }
-
       <Row gutters>
-        <Col n="6">
+        <Col n="12">
           <Map
             height="800px"
             markers={markers}
             polygonCoordinates={polygonCoordinates}
           />
-        </Col>
-        <Col n="6">
-          <Row>
-            <Col>
-              <Title as="h2" look="h4">
-                Structures associées
-                <Badge
-                  className="fr-ml-1w fr-mr-1w"
-                  colorFamily="yellow-tournesol"
-                  text={dataStructures?.totalCount.toString() || '0'}
-                />
-              </Title>
-            </Col>
-            <Col className="text-right">
-              <BlocActionButton
-                edit={false}
-                icon="ri-download-line"
-                onClick={() => exportGeographicalCategoriesStructuresToCsv({
-                  data: dataStructures?.data,
-                  fileName: `structure_${data?.nameFr}`,
-                })}
-              >
-                Télécharger la liste
-              </BlocActionButton>
-            </Col>
-
-          </Row>
-          <StructuresList data={dataStructures?.data} />
         </Col>
       </Row>
       {
@@ -150,26 +115,6 @@ export default function GeographicalCategoryPresentationPage() {
         )
       }
 
-      {identifiers.length > 0 && (
-        <Bloc data={identifiers}>
-          <BlocTitle as="h3" look="h4">
-            Identifiants
-          </BlocTitle>
-          <BlocContent>
-            bloc content
-          </BlocContent>
-        </Bloc>
-
-      )}
-
-      {data?.wikidata && (
-        <>
-          <Title as="h3" look="h4">Présence sur le web</Title>
-          <Row spacing="mb-5w">
-            <Wiki geographicalCategoryWiki={data.wikidata} />
-          </Row>
-        </>
-      )}
     </>
   );
 }

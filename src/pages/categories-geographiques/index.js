@@ -2,9 +2,9 @@ import { Link as RouterLink, Outlet } from 'react-router-dom';
 import {
   Badge, BadgeGroup,
   Breadcrumb, BreadcrumbItem,
-  Col, Container, Row,
-  // Icon,
-  // SideMenu, SideMenuLink,
+  Col, Container, Icon, Row,
+  SideMenu,
+  SideMenuLink,
   Title,
 } from '@dataesr/react-dsfr';
 import useFetch from '../../hooks/useFetch';
@@ -17,11 +17,14 @@ import GeographicalCategoriesRelatedElements from './[id]/elements-lies';
 import Error from '../../components/errors';
 import usePageTitle from '../../hooks/usePageTitle';
 import { GEOGRAPHICAL_CATEGORIES_LABELS_MAPPER } from '../../utils/constants';
+import Wiki from '../../components/blocs/wiki';
+import { Bloc, BlocContent, BlocTitle } from '../../components/bloc';
 
 function GeographicalCategoriesByIdPage() {
   const { url } = useUrl();
   const { data, isLoading, error } = useFetch(url);
   usePageTitle(`Catégorie géographique · ${data?.nameFr}`);
+  const identifiers = [];
 
   if (isLoading) return <PageSpinner />;
   if (error) return <Error status={error} />;
@@ -29,7 +32,7 @@ function GeographicalCategoriesByIdPage() {
   return (
     <Container spacing="pb-6w">
       <Row>
-        {/* <Col n="12 md-3">
+        <Col n="12 md-3">
           <SideMenu buttonLabel="Navigation">
             <SideMenuLink asLink={<RouterLink to="presentation" replace />}>
               <Icon name="ri-eye-2-line" size="1x" />
@@ -45,8 +48,7 @@ function GeographicalCategoriesByIdPage() {
             </SideMenuLink>
           </SideMenu>
         </Col>
-        <Col n="12 md-9"> */}
-        <Col n="12 md-12">
+        <Col n="12 md-9">
           <Row className="flex--space-between flex--wrap stick">
             <Breadcrumb>
               <BreadcrumbItem asLink={<RouterLink to="/" />}>
@@ -60,21 +62,42 @@ function GeographicalCategoriesByIdPage() {
               <BreadcrumbItem>{data.usualNameFr}</BreadcrumbItem>
             </Breadcrumb>
           </Row>
-          <Row>
-            <Title as="h2">
-              {`${data.nameFr} (${GEOGRAPHICAL_CATEGORIES_LABELS_MAPPER[data.level]})`}
-              <BadgeGroup className="fr-pt-1w">
-                <Badge text="Catégorie géographique" colorFamily="blue-ecume" />
-                <CopyBadgeButton
-                  colorFamily="yellow-tournesol"
-                  text={data.id}
-                  lowercase
-                />
-              </BadgeGroup>
-            </Title>
-          </Row>
-          <Outlet />
+          <Col n="12 md-12">
+            <Row>
+              <Title as="h2">
+                {`${data.nameFr} (${GEOGRAPHICAL_CATEGORIES_LABELS_MAPPER[data.level]})`}
+                <BadgeGroup className="fr-pt-1w">
+                  <Badge text="Catégorie géographique" colorFamily="blue-ecume" />
+                  <CopyBadgeButton
+                    colorFamily="yellow-tournesol"
+                    text={data.id}
+                    lowercase
+                  />
+                </BadgeGroup>
+              </Title>
+            </Row>
+            <Outlet />
+          </Col>
         </Col>
+        {identifiers.length > 0 && (
+          <Bloc data={identifiers}>
+            <BlocTitle as="h3" look="h4">
+              Identifiants
+            </BlocTitle>
+            <BlocContent>
+              Contenue a modifier asap
+            </BlocContent>
+          </Bloc>
+
+        )}
+        {data?.wikidata && (
+          <>
+            <Title as="h3" look="h4">Présence sur le web</Title>
+            <Row spacing="mb-5w">
+              <Wiki geographicalCategoryWiki={data.wikidata} />
+            </Row>
+          </>
+        )}
       </Row>
     </Container>
   );
