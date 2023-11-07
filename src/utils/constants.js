@@ -5,6 +5,8 @@ export const ENUMS_LABELS_MAPPER = {
   websiteGovernance: 'Page gouvernance',
   websiteGeneralServices: 'Page services généraux',
   websiteCommunication: 'Service communication',
+  websiteRechercheData: 'Recherche data gouv',
+  websiteDataWarehouse: 'Entrepôt de données institutionnel',
   // Page avec le lien vers l'organigramme
   websiteSocialReport: 'Page bilan social',
   websiteActivityReport: 'Page rapport d\'activité',
