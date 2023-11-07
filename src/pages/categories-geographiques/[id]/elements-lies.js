@@ -61,14 +61,7 @@ export default function GeographicalCategoryRelatedElements() {
         <Title as="h2" look="h4">
           Structures associées
           <Badge text={filteredMarkers.length} colorFamily="yellow-tournesol" />
-        </Title>
-        <Row gutters className="fr-mb-3w">
-          <Col>
-            <Map markers={filteredMarkers} />
-          </Col>
-        </Row>
-        <Row alignItems="middle" spacing="mb-1v">
-          <Col className="text-right">
+          <Col spacing="mb-1v" className="text-right">
             <BlocActionButton
               edit={false}
               icon="ri-download-line"
@@ -80,9 +73,18 @@ export default function GeographicalCategoryRelatedElements() {
               Télécharger la liste
             </BlocActionButton>
           </Col>
-          <Col n="12">
-            <StructuresList data={filteredCardsData} />
+        </Title>
+        <Row gutters className="fr-mb-3w">
+          <Col>
+            <Map markers={filteredMarkers} />
           </Col>
+        </Row>
+        <Row alignItems="middle" spacing="mb-1v">
+          <Row gutters>
+            <Col n="12">
+              <StructuresList data={filteredCardsData} />
+            </Col>
+          </Row>
           <Col>
             <Title as="h2" look="h4">
               Autres structures associées en dehors du territoire
@@ -110,7 +112,7 @@ export default function GeographicalCategoryRelatedElements() {
   }
 
   return (
-    <Row alignItems="middle" spacing="mb-1v">
+    <Row spacing="mb-1v">
       <Col>
         <TextInput
           label="Filtre sur le nom de la structure"

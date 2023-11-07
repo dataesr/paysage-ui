@@ -1,4 +1,5 @@
-import { Badge, Col, Row, Title } from '@dataesr/react-dsfr';
+import { Badge, Col, Icon, Row, Title } from '@dataesr/react-dsfr';
+import { useEffect, useState } from 'react';
 import useFetch from '../../../hooks/useFetch';
 import useUrl from '../../../hooks/useUrl';
 import KeyValueCard from '../../../components/card/key-value-card';
@@ -8,19 +9,43 @@ import Map from '../../../components/map/geographical-categories-map';
 import {
   ExceptionStructuresList,
 } from './structuresList';
-import { BlocTitle } from '../../../components/bloc';
-import GeographicalTags from '../../../components/blocs/geographical-tags';
+import getLink from '../../../utils/get-links';
 
 export default function GeographicalCategoryPresentationPage() {
   const { url, id } = useUrl();
   const { data, isLoading, error } = useFetch(url);
 
+  const wikidata = data?.wikidata;
   const {
     data: dataStructures,
     isLoading: structuresLoading,
   } = useFetch(`${url}/structures`);
 
-  const isTitleAsText = true;
+  const [wikiInfo, setWikiInfo] = useState(null);
+
+  useEffect(() => {
+    const fetchWikipediaInfo = async () => {
+      if (wikidata) {
+        const wikidataId = wikidata;
+        try {
+          const response = await fetch(`https://www.wikidata.org/w/api.php?format=json&origin=*&action=wbgetentities&ids=${wikidataId}`);
+          const result = await response.json();
+          const frenchDescription = result.entities[wikidataId]?.descriptions?.fr?.value;
+          if (frenchDescription) {
+            setWikiInfo({
+              description: frenchDescription,
+            });
+          } else {
+            // console.error('La description en français est introuvable.');
+          }
+        } catch (err) {
+          // console.error('Erreur lors de la récupération des données de Wikipédia', err);
+        }
+      }
+    };
+
+    fetchWikipediaInfo();
+  }, [wikidata]);
 
   const exceptionGps = [];
   const exception = useFetch('/geographical-exceptions');
@@ -60,40 +85,51 @@ export default function GeographicalCategoryPresentationPage() {
 
   return (
     <>
-      {
-        (data?.descriptionFr || data?.descriptionEn) && (
-          <Row spacing="mb-5w" gutters>
-            <Col n="12">
-              <KeyValueCard
-                titleAsText={isTitleAsText.toString()}
-                className="card-terms"
-                cardKey="Description"
-                cardValue={data?.descriptionFr || data?.descriptionEn || ''}
-                icon="ri-align-left"
-              />
-            </Col>
-          </Row>
-        )
-      }
-      {
-        data?.parent && (
-          <Row className="fr-mb-3w">
-            <Col>
-              <BlocTitle as="h3" look="h6">Catégorie géographique parente</BlocTitle>
-              <GeographicalTags data={[data?.parent]} />
-            </Col>
-          </Row>
-        )
-      }
-      <Row gutters>
-        <Col n="12">
-          <Map
-            height="800px"
-            markers={markers}
-            polygonCoordinates={polygonCoordinates}
-          />
+      <Row spacing="mb-3w">
+        <Col n="12 md-6 mt-2">
+          {wikiInfo && (
+            <div className="fr-card fr-card--xs fr-card--horizontal fr-card--grey fr-card--no-border card-geographical-categories">
+              <div className="fr-card__body">
+                <div className="fr-card__content">
+                  <div className="fr-card__start">
+                    <p className="fr-card__detail fr-text--sm fr-mb-2">
+                      <Icon name="ri-global-line" size="1x" />
+                      Dans Wikipédia
+                      {}
+                    </p>
+                    <p>{wikiInfo.description}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
         </Col>
       </Row>
+      <Col n="12">
+        <Map
+          height="800px"
+          markers={markers}
+          polygonCoordinates={polygonCoordinates}
+        />
+      </Col>
+      {wikidata && (
+        <>
+          <Row className="fr-mt-3w">
+            <Title as="h2" look="h4">
+              Identifiants
+            </Title>
+          </Row>
+          <Col n="12 md-3 ">
+            <KeyValueCard
+              cardKey="Wikidata"
+              cardValue={wikidata}
+              copy
+              icon="ri-fingerprint-2-line"
+              linkTo={getLink({ value: wikidata, type: 'wikidata' })}
+            />
+          </Col>
+        </>
+      )}
       {
         exceptionGps?.length > 0 && (
           <Row className="fr-mt-3w">
@@ -110,6 +146,7 @@ export default function GeographicalCategoryPresentationPage() {
                 <ExceptionStructuresList exceptionGps={exceptionGps} />
               </Col>
             </Col>
+
           </Row>
         )
       }

@@ -17,14 +17,11 @@ import GeographicalCategoriesRelatedElements from './[id]/elements-lies';
 import Error from '../../components/errors';
 import usePageTitle from '../../hooks/usePageTitle';
 import { GEOGRAPHICAL_CATEGORIES_LABELS_MAPPER } from '../../utils/constants';
-import KeyValueCard from '../../components/card/key-value-card';
-import getLink from '../../utils/get-links';
 
 function GeographicalCategoriesByIdPage() {
   const { url } = useUrl();
   const { data, isLoading, error } = useFetch(url);
   usePageTitle(`Catégorie géographique · ${data?.nameFr}`);
-  const wikidata = data?.wikidata || [];
   if (isLoading) return <PageSpinner />;
   if (error) return <Error status={error} />;
 
@@ -77,22 +74,6 @@ function GeographicalCategoriesByIdPage() {
             </Row>
             <Outlet />
           </Col>
-          {wikidata.length > 0 && (
-            <>
-              <Title as="h3" look="h4">Présence sur le web</Title>
-              <Row gutters>
-                <Col n="12 md-3">
-                  <KeyValueCard
-                    cardKey="Wikidata"
-                    cardValue={wikidata}
-                    copy
-                    icon="ri-fingerprint-2-line"
-                    linkTo={getLink({ value: wikidata, type: 'wikidata' })}
-                  />
-                </Col>
-              </Row>
-            </>
-          )}
         </Col>
       </Row>
     </Container>
