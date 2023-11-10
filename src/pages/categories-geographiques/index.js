@@ -38,10 +38,11 @@ function GeographicalCategoriesByIdPage() {
               <Icon name="ri-links-line" size="1x" />
               Eléments liés
             </SideMenuLink>
-            <SideMenuLink asLink={<RouterLink to="elements-lies" replace />}>
+            {/* Waiting for data/ information */}
+            {/* <SideMenuLink asLink={<RouterLink to="elements-lies" replace />}>
               <Icon name="ri-bar-chart-box-line" size="1x" />
               Statistiques
-            </SideMenuLink>
+            </SideMenuLink> */}
           </SideMenu>
         </Col>
         <Col n="12 md-9">

@@ -1,15 +1,98 @@
-import { Badge, Col, Icon, Row, Title } from '@dataesr/react-dsfr';
+import { Badge, Col, Icon, Row, Tag, Title } from '@dataesr/react-dsfr';
 import { useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
 import useFetch from '../../../hooks/useFetch';
 import useUrl from '../../../hooks/useUrl';
 import KeyValueCard from '../../../components/card/key-value-card';
 import { PageSpinner } from '../../../components/spinner';
 import Error from '../../../components/errors';
 import Map from '../../../components/map/geographical-categories-map';
-import {
-  ExceptionStructuresList,
-} from './structuresList';
+import { ExceptionStructuresList } from './structuresList';
 import getLink from '../../../utils/get-links';
+import TagList from '../../../components/tag-list';
+import { capitalize } from '../../../utils/strings';
+
+function WikipediaLinks({ wikiInfo, allowedLanguages }) {
+  return (
+    <div className="fr-card fr-card--xs fr-card--horizontal fr-card--grey fr-card--no-border card-geographical-categories">
+      <div className="fr-card__body">
+        <div className="fr-card__content">
+          <div className="fr-card__start">
+            <p className="fr-card__detail fr-text--sm fr-mb-2">
+              <Icon name="ri-global-line" size="1x" />
+              Dans Wikipédia
+            </p>
+            <p>{capitalize(wikiInfo.description)}</p>
+            <TagList>
+              {Object.keys(wikiInfo.itemName).map((lang) => {
+                if (allowedLanguages.includes(lang)) {
+                  const langInfo = wikiInfo.itemName[lang];
+                  if (langInfo.value) {
+                    const wikipediaUrl = `https://${lang}.wikipedia.org/wiki/${encodeURIComponent(langInfo.value)}`;
+                    return (
+                      <Tag
+                        iconPosition="right"
+                        icon="ri-external-link-line"
+                        onClick={() => {
+                          window.open(wikipediaUrl, '_blank');
+                        }}
+                        key={lang}
+                      >
+                        {lang.toLocaleUpperCase()}
+                      </Tag>
+                    );
+                  }
+                }
+                return null;
+              })}
+            </TagList>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function Identifiers({ wikidata }) {
+  return (
+    <>
+      <Row className="fr-mt-3w">
+        <Title as="h2" look="h4">
+          Identifiants
+        </Title>
+      </Row>
+      <Col n="12 md-3 ">
+        <KeyValueCard
+          cardKey="Wikidata"
+          cardValue={wikidata}
+          copy
+          icon="ri-fingerprint-2-line"
+          linkTo={getLink({ value: wikidata, type: 'wikidata' })}
+        />
+      </Col>
+    </>
+  );
+}
+
+function ExternalStructures({ exceptionGps }) {
+  return (
+    <Row className="fr-mt-3w">
+      <Col>
+        <Title as="h2" look="h4">
+          Autres structures associées en dehors du territoire
+          <Badge
+            className="fr-ml-1w"
+            colorFamily="yellow-tournesol"
+            text={exceptionGps.length.toString() || '0'}
+          />
+        </Title>
+        <Col>
+          <ExceptionStructuresList exceptionGps={exceptionGps} />
+        </Col>
+      </Col>
+    </Row>
+  );
+}
 
 export default function GeographicalCategoryPresentationPage() {
   const { url, id } = useUrl();
@@ -31,21 +114,27 @@ export default function GeographicalCategoryPresentationPage() {
           const response = await fetch(`https://www.wikidata.org/w/api.php?format=json&origin=*&action=wbgetentities&ids=${wikidataId}`);
           const result = await response.json();
           const frenchDescription = result.entities[wikidataId]?.descriptions?.fr?.value;
+          const itemName = result.entities[wikidataId]?.labels;
           if (frenchDescription) {
             setWikiInfo({
               description: frenchDescription,
+              itemName,
             });
           } else {
-            // console.error('La description en français est introuvable.');
+            // eslint-disable-next-line no-console
+            console.error('La description en français est introuvable.');
           }
         } catch (err) {
-          // console.error('Erreur lors de la récupération des données de Wikipédia', err);
+          // eslint-disable-next-line no-console
+          console.error('Erreur lors de la récupération des données de Wikipédia', err);
         }
       }
     };
 
     fetchWikipediaInfo();
   }, [wikidata]);
+
+  const allowedLanguages = ['fr', 'en', 'es', 'de', 'ru', 'zh', 'it'];
 
   const exceptionGps = [];
   const exception = useFetch('/geographical-exceptions');
@@ -86,23 +175,8 @@ export default function GeographicalCategoryPresentationPage() {
   return (
     <>
       <Row spacing="mb-3w">
-        <Col n="12 md-6 mt-2">
-          {wikiInfo && (
-            <div className="fr-card fr-card--xs fr-card--horizontal fr-card--grey fr-card--no-border card-geographical-categories">
-              <div className="fr-card__body">
-                <div className="fr-card__content">
-                  <div className="fr-card__start">
-                    <p className="fr-card__detail fr-text--sm fr-mb-2">
-                      <Icon name="ri-global-line" size="1x" />
-                      Dans Wikipédia
-                      {}
-                    </p>
-                    <p>{wikiInfo.description}</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
+        <Col n="12 ">
+          {wikiInfo && <WikipediaLinks wikiInfo={wikiInfo} allowedLanguages={allowedLanguages} />}
         </Col>
       </Row>
       <Col n="12">
@@ -112,44 +186,25 @@ export default function GeographicalCategoryPresentationPage() {
           polygonCoordinates={polygonCoordinates}
         />
       </Col>
-      {wikidata && (
-        <>
-          <Row className="fr-mt-3w">
-            <Title as="h2" look="h4">
-              Identifiants
-            </Title>
-          </Row>
-          <Col n="12 md-3 ">
-            <KeyValueCard
-              cardKey="Wikidata"
-              cardValue={wikidata}
-              copy
-              icon="ri-fingerprint-2-line"
-              linkTo={getLink({ value: wikidata, type: 'wikidata' })}
-            />
-          </Col>
-        </>
-      )}
-      {
-        exceptionGps?.length > 0 && (
-          <Row className="fr-mt-3w">
-            <Col>
-              <Title as="h2" look="h4">
-                Autres structures associées en dehors du territoire
-                <Badge
-                  className="fr-ml-1w"
-                  colorFamily="yellow-tournesol"
-                  text={exceptionGps.length.toString() || '0'}
-                />
-              </Title>
-              <Col>
-                <ExceptionStructuresList exceptionGps={exceptionGps} />
-              </Col>
-            </Col>
-
-          </Row>
-        )
-      }
+      {wikidata && <Identifiers wikidata={wikidata} />}
+      {exceptionGps.length > 0 && <ExternalStructures exceptionGps={exceptionGps} />}
     </>
   );
 }
+
+WikipediaLinks.propTypes = {
+  wikiInfo: PropTypes.isRequired,
+  allowedLanguages: PropTypes.isRequired,
+};
+
+Identifiers.propTypes = {
+  wikidata: PropTypes.isRequired,
+};
+
+ExternalStructures.propTypes = {
+  exceptionGps: PropTypes.array,
+};
+
+ExternalStructures.defaultProps = {
+  exceptionGps: PropTypes.array,
+};

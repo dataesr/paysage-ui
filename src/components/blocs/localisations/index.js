@@ -57,36 +57,44 @@ export default function LocalisationsComponent() {
   };
 
   const renderAddress = (localisation) => {
-    let address = '';
-    const phoneNumberWithoutSpaces = localisation?.phonenumber?.replace(/\s/g, '');
-    if (localisation.distributionStatement) { address += `${localisation.distributionStatement},\n`; }
-    if (localisation.address) { address += `${localisation.address},\n`; }
-    if (localisation.place) { address += `${localisation.place},\n`; }
-    if (localisation.postOfficeBoxNumber) { address += `${localisation.postOfficeBoxNumber},\n`; }
-    if (localisation.postalCode) { address += `${localisation.postalCode},\n`; }
-    if (localisation.locality) { address += `${localisation.locality},\n`; }
-    if (localisation.country) { address += `${localisation.country}\n`; }
+    const elements = [
+      localisation.distributionStatement,
+      localisation.address,
+      localisation.place,
+      localisation.postOfficeBoxNumber,
+      localisation.postalCode,
+      localisation.locality,
+      localisation.country,
+    ];
+
+    const addressText = elements
+      .filter((element) => element)
+      .map((element) => element.split(' ').join('\n'))
+      .filter((element) => element)
+      .join(', ');
 
     return (
       <div className="fr-card fr-card--grey fr-card--no-border">
         <div className="fr-card__content ">
           <p className="fr-card__title">
-            <Text className="fr-pr-1w">
-              {address}
-              <CopyButton
-                copyText={address}
-                size="sm"
-              />
-            </Text>
+            {addressText && (
+              <span className="fr-pr-1w">
+                {addressText}
+                <CopyButton
+                  copyText={addressText}
+                  size="sm"
+                />
+              </span>
+            )}
           </p>
           {localisation.phonenumber && (
             <Text className="fr-card__title">
               <Icon name="ri-phone-line" size="xl" />
               <span className="fr-pr-1w">
-                {phoneNumberWithoutSpaces}
+                {localisation.phonenumber.replace(/\s/g, '')}
               </span>
               <CopyButton
-                copyText={{ phoneNumberWithoutSpaces }}
+                copyText={localisation.phonenumber.replace(/\s/g, '')}
                 size="sm"
               />
             </Text>
@@ -132,7 +140,7 @@ export default function LocalisationsComponent() {
                   label="Adresse actuelle"
                 >
                   <Row gutters>
-                    <Col n="6">
+                    <Col n="8">
                       <Map
                         lat={currentLocalisation?.coordinates?.lat}
                         lng={currentLocalisation?.coordinates?.lng}
@@ -147,7 +155,7 @@ export default function LocalisationsComponent() {
                         ]}
                       />
                     </Col>
-                    <Col n="6">
+                    <Col n="4">
                       {currentLocalisation?.country
                         ? renderAddress(currentLocalisation) : null}
                     </Col>
@@ -186,7 +194,7 @@ export default function LocalisationsComponent() {
                       `}
                     </style>
 
-                    {orderedList.length > 1 && (
+                    {orderedList.length > 2 && (
                       <Text style={{ textAlign: 'center', color: 'gray' }}>
                         Défiler pour voir plus de contenu
                       </Text>
