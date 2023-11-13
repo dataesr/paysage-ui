@@ -1,4 +1,4 @@
-import { Badge, Col, Icon, Row, Tag, Title } from '@dataesr/react-dsfr';
+import { Badge, Col, Icon, Link, Row, Tag, Title } from '@dataesr/react-dsfr';
 import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import useFetch from '../../../hooks/useFetch';
@@ -11,6 +11,7 @@ import { ExceptionStructuresList } from './structuresList';
 import getLink from '../../../utils/get-links';
 import TagList from '../../../components/tag-list';
 import { capitalize } from '../../../utils/strings';
+import { GEOGRAPHICAL_CATEGORIES_LABELS_MAPPER } from '../../../utils/constants';
 
 function WikipediaLinks({ wikiInfo, allowedLanguages }) {
   return (
@@ -179,6 +180,21 @@ export default function GeographicalCategoryPresentationPage() {
           {wikiInfo && <WikipediaLinks wikiInfo={wikiInfo} allowedLanguages={allowedLanguages} />}
         </Col>
       </Row>
+      {data.parent && (
+        <Row spacing="mb-3w">
+          <Col n="4">
+            <Link href={`/categories-geographiques/${data?.parent?.id}/presentation`}>
+              <KeyValueCard
+                titleAsText
+                className="card-geographical-categories"
+                cardKey="Categorie géographique parente"
+                cardValue={`${data?.parent?.nameFr} (${capitalize(GEOGRAPHICAL_CATEGORIES_LABELS_MAPPER[data.parent.level])})`}
+                icon="ri-align-left"
+              />
+            </Link>
+          </Col>
+        </Row>
+      )}
       <Col n="12">
         <Map
           height="800px"
