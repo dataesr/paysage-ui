@@ -147,7 +147,7 @@ export default function LocalisationsComponent() {
                         lng={currentLocalisation?.coordinates?.lng}
                         markers={[
                           {
-                            address: `{${currentLocalisation?.address || ''}, ${currentLocalisation?.postalCode || ''} ${currentLocalisation?.locality || ''}, ${currentLocalisation?.country}}`,
+                            address: `${currentLocalisation?.address || ''}, ${currentLocalisation?.postalCode || ''} ${currentLocalisation?.locality || ''}, ${currentLocalisation?.country}`,
                             latLng: [
                               currentLocalisation?.coordinates?.lat,
                               currentLocalisation?.coordinates?.lng,
