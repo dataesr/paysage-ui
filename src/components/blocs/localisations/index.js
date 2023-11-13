@@ -15,6 +15,7 @@ import api from '../../../utils/api';
 import { formatDescriptionDates } from '../../../utils/dates';
 import { deleteError, deleteSuccess, saveError, saveSuccess } from '../../../utils/notice-contents';
 import GeographicalTags from '../geographical-tags';
+import { Spinner } from '../../spinner';
 
 export default function LocalisationsComponent() {
   const { editMode } = useEditMode();
@@ -117,7 +118,7 @@ export default function LocalisationsComponent() {
   };
 
   if (error) return <div>Erreur</div>;
-  if (isLoading) return <div>Chargement</div>;
+  if (isLoading) return <Spinner />;
 
   const currentLocalisation = data.data.find((item) => item.current === true);
   const inactives = data.data.filter((el) => (el.current === false)).sort((a, b) => a.startDate - b.startDate);

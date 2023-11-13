@@ -18,6 +18,7 @@ import { toString } from '../../utils/dates';
 import { deleteError, deleteSuccess, saveError, saveSuccess } from '../../utils/notice-contents';
 import { normalize } from '../../utils/strings';
 import useDebounce from '../../hooks/useDebounce';
+import { Spinner } from '../../components/spinner';
 
 function getSearchableExceptions(exceptions) {
   const { nameFr, id } = exceptions.geographiCalcategory;
@@ -72,9 +73,8 @@ export default function GeographicalExceptionPage() {
   };
 
   if (error) return <div>Erreur</div>;
-  if (isLoading) return <div>Chargement</div>;
+  if (isLoading) return <Spinner />;
 
-  // const filteredData = data.data;
   const filteredData = query
     ? data?.data?.filter((item) => getSearchableExceptions(item).includes(normalize(debouncedQuery)))
     : data?.data;
