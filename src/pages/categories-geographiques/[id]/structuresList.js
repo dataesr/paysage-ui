@@ -4,6 +4,7 @@ import { Link as RouterLink } from 'react-router-dom';
 import { useState } from 'react';
 import { getName } from '../../../utils/structures';
 import ExpendableListCards from '../../../components/card/expendable-list-cards';
+import styles from '../../../components/card/styles.module.scss';
 
 const getDescription = (item) => {
   const filteredCategories = item.categories
@@ -25,19 +26,21 @@ export function StructuresList({ data }) {
   const list = data
     .filter((item) => item.currentName.usualName.toLowerCase().indexOf(filter.toLowerCase()) > -1)
     .map((item) => (
-      <Col n="12" as="li" key={item.id}>
-        <Tile horizontal color="var(--structures-color)">
-          <div className="fr-tile__body">
-            <p className="fr-tile__title">
-              <RouterLink className="fr-tile__link fr-link--md" to={`/structures/${item.id}`}>
-                <Icon name="ri-building-line" size="1x" color="var(--structures-color)" />
+      <div className="fr-card fr-card--xs fr-card--grey fr-card--no-border">
+        <div className={`fr-card__body  ${styles['geographical-categories-border']} `}>
+          <div className="fr-card__content">
+            <p className={`fr-card__title ${styles['geographical-categories-title']}`}>
+              <RouterLink className="fr-text--lg" to={`/structures/${item.id}`}>
                 {getName(item)}
+                <Icon iconPosition="right" name="ri-arrow-right-line" />
               </RouterLink>
             </p>
-            <p className="fr-tile__desc">{getDescription(item)}</p>
+            <div className={`fr-card__end ${styles['card-end']}`}>
+              <i>{getDescription(item)}</i>
+            </div>
           </div>
-        </Tile>
-      </Col>
+        </div>
+      </div>
     ));
 
   return (
@@ -61,7 +64,7 @@ export function StructuresList({ data }) {
               }
               `}
           </style>
-          <ExpendableListCards list={list} max={5} nCol="12 md-6" />
+          <ExpendableListCards list={list} max={6} nCol="12 md-6" />
         </div>
       </Col>
     </Row>

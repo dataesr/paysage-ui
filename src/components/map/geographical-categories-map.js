@@ -104,7 +104,7 @@ export default function Map({ height, markers, polygonCoordinates, width }) {
                 </strong>
               )}
               <i>
-                {marker.address.replace(/{|}/g, '')}
+                {marker?.address?.startsWith('{,') ? null : marker?.address.replace(/{|}/g, '')}
               </i>
             </Tooltip>
           </Marker>

@@ -1,4 +1,4 @@
-import { Badge, Col, Icon, Link, Row, Tag, Title } from '@dataesr/react-dsfr';
+import { Badge, Col, Container, Icon, Link, Row, Tag, Title } from '@dataesr/react-dsfr';
 import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import useFetch from '../../../hooks/useFetch';
@@ -14,6 +14,15 @@ import { capitalize } from '../../../utils/strings';
 import { GEOGRAPHICAL_CATEGORIES_LABELS_MAPPER } from '../../../utils/constants';
 
 function WikipediaLinks({ wikiInfo, allowedLanguages }) {
+  const sortedLanguages = Object.keys(wikiInfo.itemName).sort((a, b) => {
+    if (allowedLanguages.includes(a) && !allowedLanguages.includes(b)) {
+      return -1;
+    } if (!allowedLanguages.includes(a) && allowedLanguages.includes(b)) {
+      return 1;
+    }
+    return allowedLanguages.indexOf(a) - allowedLanguages.indexOf(b);
+  });
+
   return (
     <div className="fr-card fr-card--xs fr-card--horizontal fr-card--grey fr-card--no-border card-geographical-categories">
       <div className="fr-card__body">
@@ -25,24 +34,22 @@ function WikipediaLinks({ wikiInfo, allowedLanguages }) {
             </p>
             <p>{capitalize(wikiInfo.description)}</p>
             <TagList>
-              {Object.keys(wikiInfo.itemName).map((lang) => {
-                if (allowedLanguages.includes(lang)) {
-                  const langInfo = wikiInfo.itemName[lang];
-                  if (langInfo.value) {
-                    const wikipediaUrl = `https://${lang}.wikipedia.org/wiki/${encodeURIComponent(langInfo.value)}`;
-                    return (
-                      <Tag
-                        iconPosition="right"
-                        icon="ri-external-link-line"
-                        onClick={() => {
-                          window.open(wikipediaUrl, '_blank');
-                        }}
-                        key={lang}
-                      >
-                        {lang.toLocaleUpperCase()}
-                      </Tag>
-                    );
-                  }
+              {sortedLanguages.map((lang) => {
+                const langInfo = wikiInfo.itemName[lang];
+                if (langInfo.value) {
+                  const wikipediaUrl = `https://${lang}.wikipedia.org/wiki/${encodeURIComponent(langInfo.value)}`;
+                  return (
+                    <Tag
+                      iconPosition="right"
+                      icon="ri-external-link-line"
+                      onClick={() => {
+                        window.open(wikipediaUrl, '_blank');
+                      }}
+                      key={lang}
+                    >
+                      {lang.toLocaleUpperCase()}
+                    </Tag>
+                  );
                 }
                 return null;
               })}
@@ -54,27 +61,27 @@ function WikipediaLinks({ wikiInfo, allowedLanguages }) {
   );
 }
 
-function Identifiers({ wikidata }) {
+function IdentifierCard({ identifierType, identifierValue }) {
+  let cardKeyLabel = capitalize(identifierType);
+  if (identifierType === 'originalId') {
+    cardKeyLabel = 'Code géographique';
+  }
+
   return (
-    <>
-      <Row className="fr-mt-3w">
-        <Title as="h2" look="h4">
-          Identifiants
-        </Title>
-      </Row>
-      <Col n="12 md-3 ">
+    <Row gutters>
+      <Col n="12 md-3">
         <KeyValueCard
-          cardKey="Wikidata"
-          cardValue={wikidata}
+          cardKey={cardKeyLabel}
+          cardValue={identifierValue}
           copy
+          className="card-geographical-categories"
           icon="ri-fingerprint-2-line"
-          linkTo={getLink({ value: wikidata, type: 'wikidata' })}
+          linkTo={getLink({ value: identifierValue, type: identifierType })}
         />
       </Col>
-    </>
+    </Row>
   );
 }
-
 function ExternalStructures({ exceptionGps }) {
   return (
     <Row className="fr-mt-3w">
@@ -98,7 +105,7 @@ function ExternalStructures({ exceptionGps }) {
 export default function GeographicalCategoryPresentationPage() {
   const { url, id } = useUrl();
   const { data, isLoading, error } = useFetch(url);
-
+  const originalId = data?.originalId;
   const wikidata = data?.wikidata;
   const {
     data: dataStructures,
@@ -174,7 +181,7 @@ export default function GeographicalCategoryPresentationPage() {
   }
 
   return (
-    <>
+    <Container fluid>
       <Row spacing="mb-3w">
         <Col n="12 ">
           {wikiInfo && <WikipediaLinks wikiInfo={wikiInfo} allowedLanguages={allowedLanguages} />}
@@ -187,7 +194,7 @@ export default function GeographicalCategoryPresentationPage() {
               <KeyValueCard
                 titleAsText
                 className="card-geographical-categories"
-                cardKey="Categorie géographique parente"
+                cardKey="Catégorie géographique parente"
                 cardValue={`${data?.parent?.nameFr} (${capitalize(GEOGRAPHICAL_CATEGORIES_LABELS_MAPPER[data.parent.level])})`}
                 icon="ri-align-left"
               />
@@ -202,9 +209,18 @@ export default function GeographicalCategoryPresentationPage() {
           polygonCoordinates={polygonCoordinates}
         />
       </Col>
-      {wikidata && <Identifiers wikidata={wikidata} />}
-      {exceptionGps.length > 0 && <ExternalStructures exceptionGps={exceptionGps} />}
-    </>
+      <Row>
+        <Col>
+          <Title as="h2" look="h4">
+            Identifiants
+          </Title>
+          {wikidata && <IdentifierCard identifierType="wikidata" identifierValue={wikidata} />}
+          {originalId && <IdentifierCard identifierType="originalId" identifierValue={originalId} />}
+          {exceptionGps.length > 0 && <ExternalStructures exceptionGps={exceptionGps} />}
+        </Col>
+      </Row>
+
+    </Container>
   );
 }
 
@@ -213,8 +229,9 @@ WikipediaLinks.propTypes = {
   allowedLanguages: PropTypes.isRequired,
 };
 
-Identifiers.propTypes = {
-  wikidata: PropTypes.isRequired,
+IdentifierCard.propTypes = {
+  identifierType: PropTypes.isRequired,
+  identifierValue: PropTypes.isRequired,
 };
 
 ExternalStructures.propTypes = {

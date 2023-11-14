@@ -142,19 +142,21 @@ export default function LocalisationsComponent() {
                 >
                   <Row gutters>
                     <Col n="8">
-                      <Map
-                        lat={currentLocalisation?.coordinates?.lat}
-                        lng={currentLocalisation?.coordinates?.lng}
-                        markers={[
-                          {
-                            address: `${currentLocalisation?.address || ''}, ${currentLocalisation?.postalCode || ''} ${currentLocalisation?.locality || ''}, ${currentLocalisation?.country}`,
-                            latLng: [
-                              currentLocalisation?.coordinates?.lat,
-                              currentLocalisation?.coordinates?.lng,
-                            ],
-                          },
-                        ]}
-                      />
+                      {currentLocalisation.coordinates && (
+                        <Map
+                          lat={currentLocalisation?.coordinates?.lat}
+                          lng={currentLocalisation?.coordinates?.lng}
+                          markers={[
+                            {
+                              address: `${currentLocalisation?.address || ''}, ${currentLocalisation?.postalCode || ''} ${currentLocalisation?.locality || ''}, ${currentLocalisation?.country}`,
+                              latLng: [
+                                currentLocalisation?.coordinates?.lat,
+                                currentLocalisation?.coordinates?.lng,
+                              ],
+                            },
+                          ]}
+                        />
+                      )}
                     </Col>
                     <Col n="4">
                       {currentLocalisation?.country
