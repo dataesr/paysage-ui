@@ -27,9 +27,9 @@ export function StructuresList({ data }) {
     .filter((item) => item.currentName.usualName.toLowerCase().indexOf(filter.toLowerCase()) > -1)
     .map((item) => (
       <div className="fr-card fr-card--xs fr-card--grey fr-card--no-border">
-        <div className={`fr-card__body  ${styles['geographical-categories-border']} `}>
+        <div className={`fr-card__body  ${styles['structures-border']} `}>
           <div className="fr-card__content">
-            <p className={`fr-card__title ${styles['geographical-categories-title']}`}>
+            <p className={`fr-card__title ${styles['structures-title']}`}>
               <RouterLink className="fr-text--lg" to={`/structures/${item.id}`}>
                 {getName(item)}
                 <Icon iconPosition="right" name="ri-arrow-right-line" />
