@@ -222,11 +222,11 @@ export default function HomePage() {
                       <Col key={k} n="4 sm-4 md-4">
                         <KeyValueCard
                           cardKey={capitalize(objectMapping[k])}
-                          cardValue={`${counts[k]}`}
+                          cardValue={counts[k].toLocaleString()}
                           className={`card-${k} card--border-bottom`}
                           icon={icons[k]}
                           linkIn={`./rechercher/${objectMappingSearch[k]}?query=&page=1`}
-                          tooltip={metrics[k] !== undefined ? `+ ${metrics[k]} sur les 7 derniers jours` : ''}
+                          tooltip={`+ ${metrics[k] !== undefined ? metrics[k] : ''} sur les 7 derniers jours`}
                         />
                       </Col>
                     ))}

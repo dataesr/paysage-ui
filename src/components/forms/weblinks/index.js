@@ -42,6 +42,7 @@ const regexpValidateWebSite = {
   OE2: /(^https:\/\/)?(www.)?openedition.org\/catalogue-journals\?limit=30/,
   OE3: /(^https:\/\/)?(www.)?openedition.org\/\d{1,8}$/,
   hceres: /^https:\/\/www.hceres.fr\/fr\//i,
+  websiteRechercheData: /^https:\/\/entrepot\.recherche\.data\.gouv\.fr\/dataverse\//,
 };
 
 function validate(body) {
@@ -65,7 +66,9 @@ function sanitize(form) {
   if (body.type !== 'website') {
     body.language = null;
   }
-  if (!form.url.includes('https://')) { body.url = `https://${body.url}`; }
+  if (!body.url.startsWith('http://') && !body.url.startsWith('https://')) {
+    body.url = `http://${body.url}`;
+  }
   return body;
 }
 

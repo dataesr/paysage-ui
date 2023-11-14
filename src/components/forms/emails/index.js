@@ -11,11 +11,14 @@ import FormFooter from '../form-footer';
 import useFetch from '../../../hooks/useFetch';
 import useForm from '../../../hooks/useForm';
 import PaysageBlame from '../../paysage-blame';
+import validateEmail from '../../../utils/mail-validation';
 
 function validate(body) {
   const validationErrors = {};
   if (!body.emailTypeId) { validationErrors.emailTypeId = 'Le type est obligatoire'; }
   if (!body.email) { validationErrors.email = 'Un email est obligatoire.'; }
+  if (!validateEmail(body.email) && body.email) { validationErrors.email = "L'adresse mail n'est pas valide."; }
+
   return validationErrors;
 }
 
@@ -68,8 +71,8 @@ export default function EmailForm({ id, data, onDelete, onSave }) {
               label="Email"
               value={form.email || ''}
               onChange={(e) => updateForm({ email: e.target.value })}
-              message={(showErrors && errors.documentTypeId) ? errors.documentTypeId : null}
-              messageType={(showErrors && errors.documentTypeId) ? 'error' : ''}
+              message={(showErrors && errors.email) ? errors.email : null}
+              messageType={(showErrors && errors.email) ? 'error' : ''}
             />
           </Col>
         </Row>

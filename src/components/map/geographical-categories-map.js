@@ -1,15 +1,16 @@
 import PropTypes from 'prop-types';
-import { divIcon, latLngBounds } from 'leaflet';
+import { divIcon, latLngBounds, LatLng } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { MapContainer, Marker, TileLayer, Tooltip, useMap, GeoJSON } from 'react-leaflet';
 import { useNavigate } from 'react-router-dom';
 
 const getIcon = (color = '#0078f3') => divIcon({
   html: `
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="36" height="36">
-    <path fill="none" d="M0 0h24v24H0z"/>
-      <g fill=${color}>
-        <path d="M18.364 17.364L12 23.728l-6.364-6.364a9 9 0 1 1 12.728 0zM12 15a4 4 0 1 0 0-8 4 4 0 0 0 0 8zm0-2a2 2 0 1 1 0-4 2 2 0 0 1 0 4z"/>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="25" height="30">
+      <path fill="none" d="M0 0h24v24H0z"/>
+      <g fill=${color} stroke=#000 stroke-width="1" fill-opacity="0.5">
+        <path d="M18.364 17.364L12 23.728l-6.364-6.364a9 9 0 1 1 12.728 0"/>
+        <circle cx="12" cy="13" r="1"/>
       </g>
     </svg>
   `,
@@ -39,13 +40,41 @@ SetMap.propTypes = {
 export default function Map({ height, markers, polygonCoordinates, width }) {
   const theme = window.localStorage.getItem('prefers-color-scheme') === 'dark' ? 'dark' : 'sunny';
   const navigate = useNavigate();
+  let center = [48.866667, 2.333333];
+
+  if (polygonCoordinates && polygonCoordinates.coordinates && polygonCoordinates.coordinates.length) {
+    const multiPolygon = polygonCoordinates.coordinates[0];
+    let latSum = 0;
+    let lngSum = 0;
+    let pointCount = 0;
+
+    multiPolygon.forEach((polygon) => {
+      polygon.forEach((coordPair) => {
+        if (!Number.isNaN(coordPair[0]) && !Number.isNaN(coordPair[1])) {
+          latSum += coordPair[1];
+          lngSum += coordPair[0];
+          pointCount += 1;
+        }
+      });
+    });
+
+    if (pointCount > 0) {
+      const latCenter = latSum / pointCount;
+      const lngCenter = lngSum / pointCount;
+      if (!Number.isNaN(latCenter) && !Number.isNaN(lngCenter)) {
+        center = new LatLng(latCenter, lngCenter);
+      }
+    }
+  }
+
+  const zoomLevel = markers.length ? 6 : 10;
 
   return (
     <MapContainer
-      center={[48.866667, 2.333333]}
+      center={center}
       scrollWheelZoom={false}
       style={{ height, width }}
-      zoom={6}
+      zoom={zoomLevel}
     >
       <TileLayer
         attribution="<a href='https://www.jawg.io' target='_blank'>&copy; Jawg</a>"
@@ -74,7 +103,9 @@ export default function Map({ height, markers, polygonCoordinates, width }) {
                   <br />
                 </strong>
               )}
-              {marker.address}
+              <i>
+                {marker?.address?.startsWith('{,') ? null : marker?.address.replace(/{|}/g, '')}
+              </i>
             </Tooltip>
           </Marker>
         ))}

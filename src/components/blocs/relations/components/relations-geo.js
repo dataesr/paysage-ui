@@ -16,16 +16,17 @@ export default function RelationGeo({ blocName }) {
     const uniqueCategories = [];
 
     geographicalCategoriesData?.forEach((element) => {
-      element.geoCategories.forEach((category) => {
-        if (!uniqueCategories.some((c) => c.id === category.id)) {
-          uniqueCategories.push(category);
-        }
-      });
+      if (element?.current === true) {
+        element.geoCategories.forEach((category) => {
+          if (!uniqueCategories.some((c) => c.id === category.id)) {
+            uniqueCategories.push(category);
+          }
+        });
+      }
     });
 
     const sortedLevels = ['country', 'region', 'department', 'city', 'academy', 'urbanUnity'];
     uniqueCategories?.sort((a, b) => sortedLevels.indexOf(a?.level) - sortedLevels.indexOf(b?.level));
-
     const list = uniqueCategories.map((category) => (
       <GeoRelationCard key={category.id} element={category} />
     ));

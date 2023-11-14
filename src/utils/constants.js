@@ -5,6 +5,8 @@ export const ENUMS_LABELS_MAPPER = {
   websiteGovernance: 'Page gouvernance',
   websiteGeneralServices: 'Page services généraux',
   websiteCommunication: 'Service communication',
+  websiteRechercheData: 'Recherche data gouv',
+  websiteDataWarehouse: 'Entrepôt de données institutionnel',
   // Page avec le lien vers l'organigramme
   websiteSocialReport: 'Page bilan social',
   websiteActivityReport: 'Page rapport d\'activité',
@@ -70,6 +72,7 @@ export const ENUMS_LABELS_MAPPER = {
   ISO2: 'Code ISO 2',
   ISO3: 'Code ISO 3',
   nnt: 'Numéro National de Thèse',
+  googleScholar: 'GoogleScholar',
   oc: 'OpenCorporate id',
   orcid: 'ORCID id',
   orgref: 'ORGREF id',

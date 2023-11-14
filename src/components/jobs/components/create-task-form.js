@@ -41,7 +41,7 @@ export default function CreateTaskForm({ definitions, onCancel, onCreate }) {
           <Col n="12">
             <Select
               required
-              label="Choisissez un tâche"
+              label="Choisissez une tâche"
               options={[{ label: 'Sélectionnez...', value: '', disabled: true, hidden: true }, ...definitions.map((def) => ({ label: def, value: def }))]}
               selected={form.name}
               onChange={(e) => updateForm({ name: e.target.value })}

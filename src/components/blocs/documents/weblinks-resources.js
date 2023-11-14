@@ -10,6 +10,8 @@ const mapping = {
   hceres: "Rapport d'évaluation HCERES",
   jorfsearch: 'Page JORFSearch',
   PiaWEB: 'Données PiaWEB',
+  RechercheDataGouv: 'Recherche data gouv',
+  DataWarehouse: 'Entrepôt de données institutionnel',
 };
 
 export default function WeblinksResources({ resourceId }) {

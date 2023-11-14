@@ -37,6 +37,8 @@ export const WEBLINKS_TYPES = [
   'EducPros',
   'IUF',
   'jorfsearch',
+  'websiteRechercheData',
+  'websiteDataWarehouse',
   'TalentCNRS',
   'TheConversation',
   'Lieux inspirants',

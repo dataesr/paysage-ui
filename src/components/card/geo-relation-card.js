@@ -3,6 +3,7 @@ import { Icon } from '@dataesr/react-dsfr';
 
 import { Link as RouterLink } from 'react-router-dom';
 import styles from './styles.module.scss';
+import { GEOGRAPHICAL_CATEGORIES_LABELS_MAPPER } from '../../utils/constants';
 
 export default function GeoRelationCard({ element }) {
   return (
@@ -12,12 +13,14 @@ export default function GeoRelationCard({ element }) {
           <p className={`fr-card__title ${styles[`${'geographical-categories'}-title`]}`}>
             <RouterLink to={`/geographical-categories/${element?.id}`} className="fr-text--xl">
               {element?.nameFr}
+              {element.level ? ` (${GEOGRAPHICAL_CATEGORIES_LABELS_MAPPER[element.level]})` : ''}
               <Icon iconPosition="right" name="ri-arrow-right-line" />
             </RouterLink>
           </p>
         </div>
       </div>
     </div>
+
   );
 }
 

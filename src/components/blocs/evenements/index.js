@@ -5,7 +5,6 @@ import TagList from '../../tag-list';
 import useEditMode from '../../../hooks/useEditMode';
 import useFetch from '../../../hooks/useFetch';
 import useNotice from '../../../hooks/useNotice';
-import { getComparableNow } from '../../../utils/dates';
 
 import api from '../../../utils/api';
 import { saveError, saveSuccess, deleteError, deleteSuccess } from '../../../utils/notice-contents';
@@ -67,15 +66,6 @@ export default function AgendaOutlet() {
             <Row className="flex--space-between">
               <BadgeGroup>
                 <Badge text={event.type} />
-                {event.eventDate < getComparableNow() ? (
-                  <div className="fr-card__start ">
-                    <Badge text="terminé" colorFamily="brown-opera" />
-                  </div>
-                ) : (
-                  <div>
-                    <Badge text="A venir" type="info" />
-                  </div>
-                ) }
               </BadgeGroup>
               {editMode && <Button onClick={() => onOpenModalHandler(event)} size="sm" icon="ri-edit-line" title="Editer l'évènement" tertiary borderless rounded />}
             </Row>

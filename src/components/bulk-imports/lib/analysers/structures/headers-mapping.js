@@ -28,8 +28,9 @@ export const structuresHeadersMapping = {
   'Code postal :': 'postalCode',
   "Localité d'acheminement :": 'locality',
   'Coordonnées GPS [-12.34,5.6789]': 'coordinates',
-  'Nom du pays en français {rechercher le libellé ou le code ISO}': 'country',
+  'Nom du pays en français {rechercher le libellé}': 'country',
   'Code iso3 du pays {rechercher le code ISO}': 'iso3',
   'Date de création {2020-07-02}': 'creationDate',
   'Date de fermeture {2020-07-02}': 'closureDate',
+  Parent: 'parentId',
 };

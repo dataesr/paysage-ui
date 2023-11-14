@@ -6,10 +6,11 @@ import { MapContainer, Marker, TileLayer, Tooltip, useMap } from 'react-leaflet'
 
 const getIcon = (color = '#0078f3') => divIcon({
   html: `
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="36" height="36">
-    <path fill="none" d="M0 0h24v24H0z"/>
-      <g fill=${color}>
-        <path d="M18.364 17.364L12 23.728l-6.364-6.364a9 9 0 1 1 12.728 0zM12 15a4 4 0 1 0 0-8 4 4 0 0 0 0 8zm0-2a2 2 0 1 1 0-4 2 2 0 0 1 0 4z"/>
+       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="25" height="30">
+      <path fill="none" d="M0 0h24v24H0z"/>
+      <g fill=${color} stroke=#000 stroke-width="1" fill-opacity="0.5">
+        <path d="M18.364 17.364L12 23.728l-6.364-6.364a9 9 0 1 1 12.728 0"/>
+        <circle cx="12" cy="13" r="1"/>
       </g>
     </svg>
   `,
@@ -53,16 +54,18 @@ export default function Map({ height, markers, onMarkerDragEnd, width }) {
         url={`https://tile.jawg.io/jawg-${theme}/{z}/{x}/{y}.png?access-token=5V4ER9yrsLxoHQrAGQuYNu4yWqXNqKAM6iaX5D1LGpRNTBxvQL3enWXpxMQqTrY8`}
       />
       {markers.map((marker, i) => (
-        /* zIndexOffset prevent markers from disappearing on scroll */
         <Marker zIndexOffset={marker?.zIndexOffset || 10000} icon={getIcon(marker.color)} draggable={!!onMarkerDragEnd} eventHandlers={eventHandlers} key={i} position={marker.latLng}>
           <Tooltip>
             {marker?.label && (
-              <>
+              <strong>
                 {marker.label}
                 <br />
-              </>
+              </strong>
             )}
-            {marker.address}
+            <i>
+              {marker?.address?.startsWith('{,') ? null : marker?.address?.replace(/{|}/g, '')}
+            </i>
+
           </Tooltip>
         </Marker>
       ))}

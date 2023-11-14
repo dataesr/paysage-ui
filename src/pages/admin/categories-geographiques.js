@@ -10,6 +10,7 @@ import api from '../../utils/api';
 import { toString } from '../../utils/dates';
 import { deleteError, deleteSuccess, saveError, saveSuccess } from '../../utils/notice-contents';
 import { normalize } from '../../utils/strings';
+import { Spinner } from '../../components/spinner';
 
 function getSearchableRelationType(relationType) {
   const { name, maleName, feminineName, mandateTypeGroup, otherNames = [], for: relationFor = [] } = relationType;
@@ -63,7 +64,7 @@ export default function RelationTypesPage() {
   };
 
   if (error) return <div>Erreur</div>;
-  if (isLoading) return <div>Chargement</div>;
+  if (isLoading) return <Spinner />;
   const filteredData = query
     ? data?.data?.filter((item) => getSearchableRelationType(item).includes(normalize(debouncedQuery)))
     : data?.data;

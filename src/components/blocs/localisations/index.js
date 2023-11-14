@@ -15,6 +15,7 @@ import api from '../../../utils/api';
 import { formatDescriptionDates } from '../../../utils/dates';
 import { deleteError, deleteSuccess, saveError, saveSuccess } from '../../../utils/notice-contents';
 import GeographicalTags from '../geographical-tags';
+import { PageSpinner } from '../../spinner';
 
 export default function LocalisationsComponent() {
   const { editMode } = useEditMode();
@@ -57,36 +58,44 @@ export default function LocalisationsComponent() {
   };
 
   const renderAddress = (localisation) => {
-    let address = '';
-    const phoneNumberWithoutSpaces = localisation?.phonenumber?.replace(/\s/g, '');
-    if (localisation.distributionStatement) { address += `${localisation.distributionStatement},\n`; }
-    if (localisation.address) { address += `${localisation.address},\n`; }
-    if (localisation.place) { address += `${localisation.place},\n`; }
-    if (localisation.postOfficeBoxNumber) { address += `${localisation.postOfficeBoxNumber},\n`; }
-    if (localisation.postalCode) { address += `${localisation.postalCode},\n`; }
-    if (localisation.locality) { address += `${localisation.locality},\n`; }
-    if (localisation.country) { address += `${localisation.country}\n`; }
+    const elements = [
+      localisation.distributionStatement,
+      localisation.address,
+      localisation.place,
+      localisation.postOfficeBoxNumber,
+      localisation.postalCode,
+      localisation.locality,
+      localisation.country,
+    ];
+
+    const addressText = elements
+      .filter((element) => element)
+      .map((element) => element.split(' ').join('\n'))
+      .filter((element) => element)
+      .join(', ');
 
     return (
       <div className="fr-card fr-card--grey fr-card--no-border">
         <div className="fr-card__content ">
           <p className="fr-card__title">
-            <span className="fr-pr-1w">
-              {address}
-            </span>
-            <CopyButton
-              copyText={address}
-              size="sm"
-            />
+            {addressText && (
+              <span className="fr-pr-1w">
+                {addressText}
+                <CopyButton
+                  copyText={addressText}
+                  size="sm"
+                />
+              </span>
+            )}
           </p>
           {localisation.phonenumber && (
             <Text className="fr-card__title">
               <Icon name="ri-phone-line" size="xl" />
               <span className="fr-pr-1w">
-                {phoneNumberWithoutSpaces}
+                {localisation.phonenumber.replace(/\s/g, '')}
               </span>
               <CopyButton
-                copyText={{ phoneNumberWithoutSpaces }}
+                copyText={localisation.phonenumber.replace(/\s/g, '')}
                 size="sm"
               />
             </Text>
@@ -94,9 +103,7 @@ export default function LocalisationsComponent() {
           <div className="fr-card__start">
             <p className="fr-card__detail fr-text--sm fr-mb-0">
               <Icon name="ri-map-pin-fill" size="1x" />
-              Adresse
-              {' '}
-              {localisation.current ? 'actuelle' : 'historique'}
+              {localisation.current ? 'Dernière adresse connue' : 'Adresse historique'}
             </p>
             <div className="fr-card__end fr-mt-0 fr-pt-0">
               <p className="fr-card__detail">
@@ -111,7 +118,15 @@ export default function LocalisationsComponent() {
   };
 
   if (error) return <div>Erreur</div>;
-  if (isLoading) return <div>Chargement</div>;
+  if (isLoading) {
+    return (
+      <Row className="flex--space-between">
+        <Col>
+          <PageSpinner />
+        </Col>
+      </Row>
+    );
+  }
 
   const currentLocalisation = data.data.find((item) => item.current === true);
   const inactives = data.data.filter((el) => (el.current === false)).sort((a, b) => a.startDate - b.startDate);
@@ -126,36 +141,44 @@ export default function LocalisationsComponent() {
       </BlocActionButton>
       <BlocContent>
         <Row gutters>
-          {currentLocalisation?.coordinates?.lat && currentLocalisation?.coordinates?.lng && (
-            <Col n="6">
-              <Map
-                lat={currentLocalisation?.coordinates?.lat}
-                lng={currentLocalisation?.coordinates?.lng}
-                markers={[
-                  {
-                    address: `{${currentLocalisation?.address || ''}, ${currentLocalisation?.postalCode || ''} ${currentLocalisation?.locality || ''}, ${currentLocalisation?.country}}`,
-                    latLng: [
-                      currentLocalisation?.coordinates?.lat,
-                      currentLocalisation?.coordinates?.lng,
-                    ],
-                  },
-                ]}
-              />
-            </Col>
-          )}
-          <Col n="6">
+          <Col n="12">
             <Tabs>
               {data && (
                 <Tab
                   className={`fr-card fr-card--xs fr-card--horizontal fr-card--grey fr-card--no-border card-${apiObject}`}
                   label="Adresse actuelle"
                 >
-                  <Row>
-                    <Col>
-                      {currentLocalisation?.country ? renderAddress(currentLocalisation) : null}
+                  <Row gutters>
+                    <Col n="8">
+                      {currentLocalisation.coordinates && (
+                        <Map
+                          lat={currentLocalisation?.coordinates?.lat}
+                          lng={currentLocalisation?.coordinates?.lng}
+                          markers={[
+                            {
+                              address: `${currentLocalisation?.address || ''}, ${currentLocalisation?.postalCode || ''} ${currentLocalisation?.locality || ''}, ${currentLocalisation?.country}`,
+                              latLng: [
+                                currentLocalisation?.coordinates?.lat,
+                                currentLocalisation?.coordinates?.lng,
+                              ],
+                            },
+                          ]}
+                        />
+                      )}
                     </Col>
+                    <Col n="4">
+                      {currentLocalisation?.country
+                        ? renderAddress(currentLocalisation) : null}
+                    </Col>
+                    {data && (
+                      <Row className="fr-mt-3w">
+                        <Col>
+                          <BlocTitle as="h3" look="h6">Catégories géographiques de l'adresse actuelle</BlocTitle>
+                          <GeographicalTags data={currentLocalisation?.geoCategories} />
+                        </Col>
+                      </Row>
+                    )}
                   </Row>
-                  {/* <GeographicalTags data={currentLocalisation?.geoCategories} /> */}
                 </Tab>
               )}
               {data.totalCount > 1 && (
@@ -166,34 +189,31 @@ export default function LocalisationsComponent() {
                   <Row style={{ overflowY: 'scroll' }}>
                     <style>
                       {`
-              ::-webkit-scrollbar {
-                width: 8px;
-              }
-              ::-webkit-scrollbar-vertical {
-                width: 8px;
-              }
-              ::-webkit-scrollbar-thumb:vertical {
-                background-color: gray;
-              }
-              
-              ::-webkit-scrollbar-track:vertical {
-                background-color: transparent;
-              }
-              `}
+                        ::-webkit-scrollbar {
+                          width: 8px;
+                        }
+                        ::-webkit-scrollbar-vertical {
+                          width: 8px;
+                        }
+                        ::-webkit-scrollbar-thumb:vertical {
+                          background-color: gray;
+                        }
+                        
+                        ::-webkit-scrollbar-track:vertical {
+                          background-color: transparent;
+                        }
+                      `}
                     </style>
 
-                    {orderedList.length > 1 && (
+                    {orderedList.length > 2 && (
                       <Text style={{ textAlign: 'center', color: 'gray' }}>
                         Défiler pour voir plus de contenu
                       </Text>
                     )}
                     {orderedList.map((item) => (
-                      <>
-                        <Col n="12" key={`HistoriqueLocalisation${item.id}`}>
-                          {renderAddress(item)}
-                        </Col>
-                        {/* <GeographicalTags data={item.geoCategories} /> */}
-                      </>
+                      <Col n="12" key={`HistoriqueLocalisation${item.id}`}>
+                        {renderAddress(item)}
+                      </Col>
                     ))}
                   </Row>
                 </Tab>
@@ -201,15 +221,6 @@ export default function LocalisationsComponent() {
             </Tabs>
           </Col>
         </Row>
-        {data && (
-          <Row className="fr-mt-3w">
-            <Col>
-              <BlocTitle as="h3" look="h6">Catégories géographiques de l'adresse actuelle</BlocTitle>
-              <GeographicalTags data={currentLocalisation?.geoCategories} />
-            </Col>
-          </Row>
-        )}
-
       </BlocContent>
       <BlocModal>
         <Modal isOpen={showModal} size="lg" hide={() => setShowModal(false)}>

@@ -29,10 +29,10 @@ const DateInput = forwardRef((props, ref) => {
       date = tmp;
       break;
     case 2:
-      date = fromApproximativeDate(tmp).substring(0, 7);
+      date = fromApproximativeDate(tmp)?.substring(0, 7);
       break;
     case 3:
-      date = fromApproximativeDate(tmp).substring(0, 4);
+      date = fromApproximativeDate(tmp)?.substring(0, 4);
       break;
     default:
       date = undefined;
