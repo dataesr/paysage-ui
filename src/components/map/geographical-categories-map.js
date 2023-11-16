@@ -81,7 +81,9 @@ export default function Map({ height, markers, polygonCoordinates, width }) {
         url={`https://tile.jawg.io/jawg-${theme}/{z}/{x}/{y}.png?lang=fr&access-token=5V4ER9yrsLxoHQrAGQuYNu4yWqXNqKAM6iaX5D1LGpRNTBxvQL3enWXpxMQqTrY8`}
       />
 
-      <GeoJSON style={{ color: 'var(--blue-ecume-main-400)' }} data={polygonCoordinates} />
+      {polygonCoordinates && polygonCoordinates.coordinates && polygonCoordinates.coordinates.length > 0 && (
+        <GeoJSON style={{ color: 'var(--blue-ecume-main-400)' }} data={polygonCoordinates} />
+      )}
 
       {markers
         .filter((marker) => marker && marker.latLng)
