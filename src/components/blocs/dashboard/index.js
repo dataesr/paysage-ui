@@ -74,7 +74,7 @@ export default function Dashboard() {
               </Title>
               <Highlight colorFamily="yellow-tournesol" size="sm" className="fr-ml-0 fr-my-1w">
                 <i>
-                  Chaque barre représente le nombre d'objets de ce type crées au cours des
+                  Chaque barre représente le nombre d'objets de ce type créés au cours des
                   {' '}
                   {days}
                   {' '}
