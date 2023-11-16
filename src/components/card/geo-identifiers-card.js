@@ -1,5 +1,5 @@
 import React from 'react';
-import { Col, Row } from '@dataesr/react-dsfr';
+import { Badge, Col, Row, Title } from '@dataesr/react-dsfr';
 import PropTypes from 'prop-types';
 import KeyValueCard from './key-value-card';
 
@@ -17,19 +17,27 @@ export default function IdentifierCard({ wikidata, originalId }) {
   }
 
   return (
-    <Row gutters>
-      {data.map(({ cardKey, cardValue }, index) => (
-        <Col key={index} n="12 md-3">
-          <KeyValueCard
-            cardKey={cardKey}
-            cardValue={cardValue}
-            copy
-            className="card-geographical-categories"
-            icon="ri-fingerprint-2-line"
-          />
-        </Col>
-      ))}
-    </Row>
+    <>
+      <Title as="h2" look="h4">
+        Identifiants
+        <Badge text={data.length} colorFamily="yellow-tournesol" />
+      </Title>
+      <Row gutters>
+        {data.map(({ cardKey, cardValue }, index) => (
+          <Col key={index} n="12 md-3">
+            <KeyValueCard
+              cardKey={cardKey}
+              cardValue={cardValue}
+              copy
+              className="card-geographical-categories"
+              icon="ri-fingerprint-2-line"
+            />
+          </Col>
+        ))}
+      </Row>
+
+    </>
+
   );
 }
 

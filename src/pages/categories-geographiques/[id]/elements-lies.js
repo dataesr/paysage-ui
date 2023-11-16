@@ -20,7 +20,7 @@ export default function GeographicalCategoryRelatedElements() {
   const [filter, setFilter] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('');
   const [searchParams, setSearchParams] = useSearchParams();
-  const [categoriesToShow, setCategoriesToShow] = useState(7);
+  const [categoriesToShow, setCategoriesToShow] = useState(5);
 
   useEffect(() => {
     const query = searchParams.get('query');

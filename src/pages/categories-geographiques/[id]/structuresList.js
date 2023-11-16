@@ -42,30 +42,10 @@ export function StructuresList({ data }) {
         </div>
       </div>
     ));
-
   return (
     <Row>
       <Col>
-        <div style={{ height: '400px', overflowY: 'scroll' }}>
-          <style>
-            {`
-              ::-webkit-scrollbar {
-                width: 8px;
-              }
-              ::-webkit-scrollbar-vertical {
-                width: 8px;
-              }
-              ::-webkit-scrollbar-thumb:vertical {
-                background-color: gray;
-              }
-              
-              ::-webkit-scrollbar-track:vertical {
-                background-color: transparent;
-              }
-              `}
-          </style>
-          <ExpendableListCards list={list} max={6} nCol="12 md-6" />
-        </div>
+        <ExpendableListCards list={list} max={6} nCol="12 md-6" />
       </Col>
     </Row>
   );

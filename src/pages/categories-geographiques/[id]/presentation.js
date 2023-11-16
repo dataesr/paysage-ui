@@ -7,13 +7,14 @@ import KeyValueCard from '../../../components/card/key-value-card';
 import { PageSpinner } from '../../../components/spinner';
 import Error from '../../../components/errors';
 import Map from '../../../components/map/geographical-categories-map';
-import { ExceptionStructuresList } from './structuresList';
+import { ExceptionStructuresList, StructuresList } from './structuresList';
 import { capitalize } from '../../../utils/strings';
 import { GEOGRAPHICAL_CATEGORIES_LABELS_MAPPER } from '../../../utils/constants';
 import GroupsCard from '../../../components/card/groups-card';
 import IdentifierCard from '../../../components/card/geo-identifiers-card';
 
 import WikipediaLinks from '../../../components/card/wiki-card-geographical';
+import GoToCard from '../../../components/card/go-to-card';
 
 function ExternalStructures({ exceptionGps }) {
   return (
@@ -115,12 +116,12 @@ export default function GeographicalCategoryPresentationPage() {
 
   return (
     <Container fluid>
-      <Row spacing="mb-3w" gutters>
+      <Row spacing="mb-3w">
         <Col>
-          <GroupsCard groups={data.groups} />
+          <GroupsCard groups={data?.groups} />
         </Col>
       </Row>
-      <Row spacing="mb-3w">
+      <Row spacing="mb-3w mt-3w">
         <Col n="12 ">
           {wikiInfo && <WikipediaLinks wikiInfo={wikiInfo} allowedLanguages={allowedLanguages} />}
         </Col>
@@ -147,6 +148,22 @@ export default function GeographicalCategoryPresentationPage() {
           polygonCoordinates={polygonCoordinates}
         />
       </Col>
+      <Row spacing="mt-5w">
+        <Title as="h2" look="h4">
+          Structures associées
+          <Badge text={dataStructures?.totalCount} colorFamily="yellow-tournesol" />
+        </Title>
+        <Row spacing="mb-3w">
+          <Col n="12">
+            <StructuresList data={dataStructures?.data} />
+          </Col>
+        </Row>
+        {dataStructures?.totalCount > 0 && (
+          <Col n="12 md-6">
+            <GoToCard to={`/categories-geographiques/${id}/elements-lies`} title="Aller vers tous les éléments liés" />
+          </Col>
+        )}
+      </Row>
       <Row spacing="mt-5w" gutters>
         <Col>
           <IdentifierCard wikidata={wikidata} originalId={originalId} />
