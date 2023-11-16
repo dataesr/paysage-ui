@@ -150,7 +150,7 @@ export default function LocalisationsComponent() {
                 >
                   <Row gutters>
                     <Col n="8">
-                      {currentLocalisation.coordinates && (
+                      {currentLocalisation?.coordinates && (
                         <Map
                           lat={currentLocalisation?.coordinates?.lat}
                           lng={currentLocalisation?.coordinates?.lng}
