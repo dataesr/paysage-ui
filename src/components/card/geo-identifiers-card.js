@@ -4,10 +4,17 @@ import PropTypes from 'prop-types';
 import KeyValueCard from './key-value-card';
 
 export default function IdentifierCard({ wikidata, originalId }) {
-  const data = [
-    { cardKey: 'Wikidata', cardValue: wikidata },
-    { cardKey: 'OriginalID', cardValue: originalId },
-  ];
+  const data = [];
+  if (wikidata) {
+    data.push({ cardKey: 'Wikidata', cardValue: wikidata });
+  }
+  if (originalId) {
+    data.push({ cardKey: 'Code géographique', cardValue: originalId });
+  }
+
+  if (data.length === 0) {
+    return null;
+  }
 
   return (
     <Row gutters>
