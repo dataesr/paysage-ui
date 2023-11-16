@@ -4,7 +4,7 @@ import { useSearchParams } from 'react-router-dom';
 import useFetch from '../../../hooks/useFetch';
 import useUrl from '../../../hooks/useUrl';
 
-import Map from '../../../components/map';
+import Map from '../../../components/map/geographical-categories-map';
 import { PageSpinner } from '../../../components/spinner';
 import { ExceptionStructuresList, StructuresList } from './structuresList';
 import { exportGeographicalCategoriesStructuresToCsv } from '../../../components/blocs/relations/utils/exports';
@@ -42,10 +42,11 @@ export default function GeographicalCategoryRelatedElements() {
     .filter((item) => item.currentName.usualName.toLowerCase().includes(filter.toLowerCase()))
     .filter((item) => !categoryFilter || item.category?.usualNameFr === categoryFilter)
     .map((item) => ({
+      idStructure: item.id,
       label: item.currentName.usualName,
-      latLng: [item.currentLocalisation.geometry.coordinates[1], item.currentLocalisation.geometry.coordinates[0]],
+      latLng: item.currentLocalisation?.geometry?.coordinates?.toReversed(),
       address: `{${item.currentLocalisation?.address || ''},
-          ${item.currentLocalLocalisation?.postalCode || ''} ${item.currentLocalisation?.locality || ''}, ${item.currentLocalisation?.country}}`,
+                ${item.currentLocalisation?.postalCode || ''} ${item.currentLocalisation?.locality || ''}, ${item.currentLocalisation?.country}}`,
     }));
 
   const categoriesWithUniversity = dataStructures?.data

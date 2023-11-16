@@ -1,4 +1,4 @@
-import { Badge, Col, Container, Icon, Link, Row, Tag, Title } from '@dataesr/react-dsfr';
+import { Badge, Col, Container, Link, Row, Title } from '@dataesr/react-dsfr';
 import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import useFetch from '../../../hooks/useFetch';
@@ -8,80 +8,13 @@ import { PageSpinner } from '../../../components/spinner';
 import Error from '../../../components/errors';
 import Map from '../../../components/map/geographical-categories-map';
 import { ExceptionStructuresList } from './structuresList';
-import getLink from '../../../utils/get-links';
-import TagList from '../../../components/tag-list';
 import { capitalize } from '../../../utils/strings';
 import { GEOGRAPHICAL_CATEGORIES_LABELS_MAPPER } from '../../../utils/constants';
+import GroupsCard from '../../../components/card/groups-card';
+import IdentifierCard from '../../../components/card/geo-identifiers-card';
 
-function WikipediaLinks({ wikiInfo, allowedLanguages }) {
-  const sortedLanguages = Object.keys(wikiInfo.itemName).sort((a, b) => {
-    if (allowedLanguages.includes(a) && !allowedLanguages.includes(b)) {
-      return -1;
-    } if (!allowedLanguages.includes(a) && allowedLanguages.includes(b)) {
-      return 1;
-    }
-    return allowedLanguages.indexOf(a) - allowedLanguages.indexOf(b);
-  });
+import WikipediaLinks from '../../../components/card/wiki-card-geographical';
 
-  return (
-    <div className="fr-card fr-card--xs fr-card--horizontal fr-card--grey fr-card--no-border card-geographical-categories">
-      <div className="fr-card__body">
-        <div className="fr-card__content">
-          <div className="fr-card__start">
-            <p className="fr-card__detail fr-text--sm fr-mb-2">
-              <Icon name="ri-global-line" size="1x" />
-              Dans Wikipédia
-            </p>
-            <p>{capitalize(wikiInfo.description)}</p>
-            <TagList>
-              {sortedLanguages.map((lang) => {
-                const langInfo = wikiInfo.itemName[lang];
-                if (langInfo.value) {
-                  const wikipediaUrl = `https://${lang}.wikipedia.org/wiki/${encodeURIComponent(langInfo.value)}`;
-                  return (
-                    <Tag
-                      iconPosition="right"
-                      icon="ri-external-link-line"
-                      onClick={() => {
-                        window.open(wikipediaUrl, '_blank');
-                      }}
-                      key={lang}
-                    >
-                      {lang.toLocaleUpperCase()}
-                    </Tag>
-                  );
-                }
-                return null;
-              })}
-            </TagList>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function IdentifierCard({ identifierType, identifierValue }) {
-  let cardKeyLabel = capitalize(identifierType);
-  if (identifierType === 'originalId') {
-    cardKeyLabel = 'Code géographique';
-  }
-
-  return (
-    <Row gutters>
-      <Col n="12 md-3">
-        <KeyValueCard
-          cardKey={cardKeyLabel}
-          cardValue={identifierValue}
-          copy
-          className="card-geographical-categories"
-          icon="ri-fingerprint-2-line"
-          linkTo={getLink({ value: identifierValue, type: identifierType })}
-        />
-      </Col>
-    </Row>
-  );
-}
 function ExternalStructures({ exceptionGps }) {
   return (
     <Row className="fr-mt-3w">
@@ -182,6 +115,11 @@ export default function GeographicalCategoryPresentationPage() {
 
   return (
     <Container fluid>
+      <Row spacing="mb-3w" gutters>
+        <Col>
+          <GroupsCard groups={data.groups} />
+        </Col>
+      </Row>
       <Row spacing="mb-3w">
         <Col n="12 ">
           {wikiInfo && <WikipediaLinks wikiInfo={wikiInfo} allowedLanguages={allowedLanguages} />}
@@ -209,17 +147,12 @@ export default function GeographicalCategoryPresentationPage() {
           polygonCoordinates={polygonCoordinates}
         />
       </Col>
-      <Row>
+      <Row spacing="mt-5w" gutters>
         <Col>
-          <Title as="h2" look="h4">
-            Identifiants
-          </Title>
-          {wikidata && <IdentifierCard identifierType="wikidata" identifierValue={wikidata} />}
-          {originalId && <IdentifierCard identifierType="originalId" identifierValue={originalId} />}
-          {exceptionGps.length > 0 && <ExternalStructures exceptionGps={exceptionGps} />}
+          <IdentifierCard wikidata={wikidata} originalId={originalId} />
         </Col>
       </Row>
-
+      {exceptionGps.length > 0 && <ExternalStructures exceptionGps={exceptionGps} />}
     </Container>
   );
 }
@@ -227,11 +160,6 @@ export default function GeographicalCategoryPresentationPage() {
 WikipediaLinks.propTypes = {
   wikiInfo: PropTypes.isRequired,
   allowedLanguages: PropTypes.isRequired,
-};
-
-IdentifierCard.propTypes = {
-  identifierType: PropTypes.isRequired,
-  identifierValue: PropTypes.isRequired,
 };
 
 ExternalStructures.propTypes = {
