@@ -24,7 +24,7 @@ export default function IdentifierCard({ wikidata, originalId }) {
       </Title>
       <Row gutters>
         {data.map(({ cardKey, cardValue }, index) => (
-          <Col key={index} n="12 md-3">
+          <Col key={index} n="12 md-4">
             <KeyValueCard
               cardKey={cardKey}
               cardValue={cardValue}
