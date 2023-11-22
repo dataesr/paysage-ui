@@ -149,7 +149,7 @@ export default function LocalisationsComponent() {
                   label="Adresse actuelle"
                 >
                   <Row gutters>
-                    <Col n="8">
+                    <Col n="7">
                       {currentLocalisation?.coordinates && (
                         <Map
                           lat={currentLocalisation?.coordinates?.lat}
@@ -166,7 +166,7 @@ export default function LocalisationsComponent() {
                         />
                       )}
                     </Col>
-                    <Col n="4">
+                    <Col n="3">
                       {currentLocalisation?.country
                         ? renderAddress(currentLocalisation) : null}
                     </Col>
