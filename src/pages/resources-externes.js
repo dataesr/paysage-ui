@@ -17,7 +17,7 @@ export default function RessourcesPage() {
   usePageTitle('Ressources');
   return (
     <Container spacing="mt-5w">
-      <Title as="h2">Les ressources externes</Title>
+      <Title as="h1">Les ressources externes</Title>
       <Row>
         <Col n="12 sm-6 md-4" spacing="p-3w">
           <Card

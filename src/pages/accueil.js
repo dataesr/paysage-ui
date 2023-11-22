@@ -190,7 +190,7 @@ export default function HomePage() {
           <Container fluid className="search-bg" spacing="py-5w mb-4w">
             <Container>
               <Row>
-                <Title as="h2">
+                <Title as="h1">
                   Paysage de l'ESR
                 </Title>
               </Row>
@@ -212,7 +212,7 @@ export default function HomePage() {
               {(counts && Object.keys(counts)?.length > 0) && (
                 <>
                   <Row>
-                    <Title as="h3" look="h5" spacing="mb-0">
+                    <Title as="h2" look="h5" spacing="mb-0">
                       <Icon name="ri-dashboard-3-line" size="1x" />
                       Métriques
                     </Title>

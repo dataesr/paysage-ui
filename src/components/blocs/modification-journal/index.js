@@ -18,7 +18,7 @@ export default function ModificationJournal() {
   const { data, error, isLoading } = useFetch(url);
   return (
     <Bloc isLoading={isLoading} error={error} data={data}>
-      <BlocTitle as="h2" look="h6">Journal des modifications</BlocTitle>
+      <BlocTitle as="h1" look="h3">Journal des modifications</BlocTitle>
       <BlocContent>
         <Row gutters>
           <Col n="12">

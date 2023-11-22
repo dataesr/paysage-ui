@@ -33,7 +33,7 @@ export default function ApiKeys() {
   const apiKeys = data?.data?.map((item) => ({ ...item, user: `${item?.user?.firstName} ${item?.user?.lastName}`.trim() })) || [];
   return (
     <Bloc isLoading={isLoading} error={error} data={data} forceActionDisplay>
-      <BlocTitle as="h3" look="h4">
+      <BlocTitle as="h1" look="h4">
         Clés API
       </BlocTitle>
       <BlocActionButton onClick={() => setShowModal((prev) => !prev)}>
