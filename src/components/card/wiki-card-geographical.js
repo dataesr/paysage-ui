@@ -50,9 +50,8 @@ export default function WikipediaLinks({ wikiInfo, allowedLanguages }) {
     </div>
   );
 }
-
 WikipediaLinks.propTypes = {
-  wikiInfo: PropTypes.shape,
+  wikiInfo: PropTypes.string,
   allowedLanguages: PropTypes.array,
 };
 
