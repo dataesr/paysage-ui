@@ -9,7 +9,6 @@ import {
   FooterLink,
   Link,
   Logo,
-  Text,
 } from '@dataesr/react-dsfr';
 import useAuth from '../hooks/useAuth';
 
@@ -83,10 +82,8 @@ export default function Footer({ switchTheme }) {
           </button>
         </FooterLink>
         <FooterCopy to="/">
-          <Text size="sm">
-            Sauf mention contraire, tous les contenus de ce site sont sous
-            <Link target="_blank" href="https://github.com/etalab/licence-ouverte/blob/master/LO.md"> licence étalab2.0</Link>
-          </Text>
+          Sauf mention contraire, tous les contenus de ce site sont sous
+          <Link target="_blank" href="https://github.com/etalab/licence-ouverte/blob/master/LO.md"> licence étalab2.0</Link>
         </FooterCopy>
       </FooterBottom>
     </FooterWrapper>
