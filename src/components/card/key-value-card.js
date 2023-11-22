@@ -36,7 +36,7 @@ export default function KeyValueCard({
             </p>
           )}
           <div className="fr-card__start">
-            <p className="fr-card__detail fr-text--sm fr-mb-0">
+            <div className="fr-card__detail fr-text--sm fr-mb-0">
               {icon && <Icon name={icon} size="1x" />}
               {linkTo && <a href={linkTo} target="_blank" rel="noopener noreferrer">{cardKey}</a>}
               {linkIn && (
@@ -57,7 +57,7 @@ export default function KeyValueCard({
                 </p>
               )}
               {inactive && <Badge isSmall text="inactif" />}
-            </p>
+            </div>
           </div>
           {editMode && onEdit && (
             <Button
