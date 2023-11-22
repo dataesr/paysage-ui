@@ -109,7 +109,7 @@ export default function StructureRHPage() {
   if (error) return <>Erreur...</>;
   return (
     <>
-      <Title as="h3">
+      <Title as="h2">
         <Icon name="ri-community-fill" className="fr-pl-1w" />
         {`Ressources humaines BIATSS pour l'année ${year}`}
       </Title>

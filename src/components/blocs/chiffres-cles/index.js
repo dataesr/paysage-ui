@@ -26,7 +26,7 @@ export default function ChiffresCles({ exercice, netAccountingResult, population
   if (all.length === 0) return null;
   return (
     <Container fluid className="fr-mb-5w">
-      <BlocTitle as="h3" look="h6">Chiffres clés</BlocTitle>
+      <BlocTitle as="h2" look="h6">Chiffres clés</BlocTitle>
       <BlocContent>
         <Row gutters>
           {all.map((element) => (

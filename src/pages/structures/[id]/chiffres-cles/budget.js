@@ -314,13 +314,13 @@ Il constitue une marge de sécurité financière destinée à financer une parti
   return (
     <>
       {!data?.data?.length && (
-        <Title as="h3">
+        <Title as="h2">
           Pas de données financières connues pour cette structure
         </Title>
       )}
       {!!data?.data?.length && (
         <>
-          <Title as="h3">
+          <Title as="h2">
             <Icon name="ri-scales-3-fill" className="fr-pl-1w" />
             {`Données financières - Situation en ${financialAccountYear}${financialAccount?.source === 'Budget' ? ' (Budget)' : ''}`}
           </Title>

@@ -281,7 +281,7 @@ function StructureByIdPage() {
             </ButtonGroup>
           </Row>
           <Row>
-            <Title as="h2">
+            <Title as="h1">
               {getName(data?.currentName)}
               <Title className="fr-pr-1v" as="h6">{getOtherNames(data?.currentName)}</Title>
               <BadgeGroup className="fr-pt-1w">

@@ -36,7 +36,7 @@ export default function RelationGeo({ blocName }) {
 
   return (
     <Bloc isLoading={isLoading} error={error} data={data} isRelation>
-      <BlocTitle as="h3" look="h6">{blocName}</BlocTitle>
+      <BlocTitle as="h2" look="h6">{blocName}</BlocTitle>
       <BlocContent>
         {renderCards()}
       </BlocContent>

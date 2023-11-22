@@ -135,7 +135,7 @@ export default function LocalisationsComponent() {
 
   return (
     <Bloc isLoading={isLoading} error={error} data={data}>
-      <BlocTitle as="h3" look="h6">Localisations</BlocTitle>
+      <BlocTitle as="h2" look="h6">Localisations</BlocTitle>
       <BlocActionButton onClick={() => handleModalToggle()}>
         Ajouter une adresse
       </BlocActionButton>

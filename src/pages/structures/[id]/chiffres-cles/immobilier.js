@@ -225,7 +225,7 @@ export default function StructureImmobilierPage() {
   return (
     <>
       {!allData?.length && (
-        <Title as="h3">
+        <Title as="h2">
           Pas de données immobilières connues pour cette structure
         </Title>
       )}

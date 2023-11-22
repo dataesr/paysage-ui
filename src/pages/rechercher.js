@@ -132,7 +132,7 @@ export default function SearchPage() {
         </BreadcrumbItem>
       </Breadcrumb>
       <Row>
-        <Title as="h2" look="h5">
+        <Title as="h1" look="h5">
           Résultats pour la recherche
           {query?.length > 0 && (
             ` "${query}"`

@@ -162,7 +162,7 @@ export default function IdentifiersComponent() {
 
   return (
     <Bloc isLoading={isLoading} error={error} data={data}>
-      <BlocTitle as="h3" look="h4">
+      <BlocTitle as="h2" look="h4">
         Identifiants
       </BlocTitle>
       <BlocActionButton onClick={() => onOpenModalHandler()}>
