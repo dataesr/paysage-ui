@@ -28,6 +28,7 @@ export default function GroupsCard(groups) {
           <KeyValueCard
             cardValue={getCardValue(group)}
             className="card-geographical-categories"
+            cardKey=""
           />
         </Col>
       ))}
