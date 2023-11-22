@@ -11,9 +11,8 @@ export default function CurrentLegals() {
   const { data } = useFetch(`/relations?filters[resourceId]=${id}&filters[relationTag]=${tag}&limit=500`);
 
   if (!data?.data) return null;
-  const currentLegals = data?.data
-    .sort((a, b) => a.startDate < b.startDate);
-  const currentLegal = currentLegals?.[0] || {};
+  const getCurrentLegal = data?.data.filter((el) => el.active !== false);
+  const currentLegal = getCurrentLegal?.[0] || {};
   if (!currentLegal.relatedObject) {
     return (
       <Col n="12 lg-4">
