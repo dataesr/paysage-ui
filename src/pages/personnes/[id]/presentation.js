@@ -9,6 +9,7 @@ import Wiki from '../../../components/blocs/wiki';
 import { PageSpinner } from '../../../components/spinner';
 import Error from '../../../components/errors';
 import KeyValueCard from '../../../components/card/key-value-card';
+import { capitalize } from '../../../utils/strings';
 
 export default function PersonPresentationPage() {
   const { url } = useUrl();
@@ -20,7 +21,10 @@ export default function PersonPresentationPage() {
     <>
       <Row>
         <Col n="12">
-          <Title as="h3" look="h4">En un coup d'oeil</Title>
+          <Title as="h3" look="h4">
+            En un coup d'oeil
+            <Icon className="ri-eye-2-line fr-ml-1w" />
+          </Title>
         </Col>
       </Row>
       <Row gutters spacing="mb-5w">
@@ -30,7 +34,7 @@ export default function PersonPresentationPage() {
               icon="ri-align-left"
               titleAsText
               cardKey="Activité"
-              cardValue={data.activity}
+              cardValue={capitalize(data?.activity)}
               className="card-persons"
             />
           )}
