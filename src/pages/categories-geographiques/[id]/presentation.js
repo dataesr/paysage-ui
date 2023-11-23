@@ -1,4 +1,4 @@
-import { Badge, Col, Container, Link, Row, Title } from '@dataesr/react-dsfr';
+import { Badge, Col, Container, Icon, Link, Row, Title } from '@dataesr/react-dsfr';
 import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import useFetch from '../../../hooks/useFetch';
@@ -12,9 +12,7 @@ import { capitalize } from '../../../utils/strings';
 import { GEOGRAPHICAL_CATEGORIES_LABELS_MAPPER } from '../../../utils/constants';
 import GroupsCard from '../../../components/card/groups-card';
 import IdentifierCard from '../../../components/card/geo-identifiers-card';
-
 import WikipediaLinks from '../../../components/card/wiki-card-geographical';
-import GoToCard from '../../../components/card/go-to-card';
 
 function ExternalStructures({ exceptionGps }) {
   return (
@@ -116,6 +114,10 @@ export default function GeographicalCategoryPresentationPage() {
 
   return (
     <Container fluid>
+      <Title as="h3" look="h4">
+        En un coup d'oeil
+        <Icon className="ri-eye-2-line fr-ml-1w" />
+      </Title>
       <Row spacing="mb-3w">
         <Col>
           <GroupsCard groups={data?.groups} />
@@ -153,16 +155,11 @@ export default function GeographicalCategoryPresentationPage() {
           Structures associées
           <Badge text={dataStructures?.totalCount} colorFamily="yellow-tournesol" />
         </Title>
-        <Row spacing="mb-3w">
+        <Row spacing="mt-3w">
           <Col n="12">
-            <StructuresList data={dataStructures?.data} />
+            <StructuresList data={dataStructures?.data} id={id} wikidata={wikidata} />
           </Col>
         </Row>
-        {dataStructures?.totalCount > 0 && (
-          <Col n="12 md-6">
-            <GoToCard to={`/categories-geographiques/${id}/elements-lies`} title="Aller vers tous les éléments liés" />
-          </Col>
-        )}
       </Row>
       <Row spacing="mt-5w" gutters>
         <Col>
@@ -175,8 +172,19 @@ export default function GeographicalCategoryPresentationPage() {
 }
 
 WikipediaLinks.propTypes = {
-  wikiInfo: PropTypes.isRequired,
-  allowedLanguages: PropTypes.isRequired,
+  wikiInfo: PropTypes.shape({
+    description: PropTypes.string.isRequired,
+    itemName: PropTypes.object.isRequired,
+  }),
+  allowedLanguages: PropTypes.array,
+};
+
+WikipediaLinks.defaultProps = {
+  wikiInfo: {
+    description: '',
+    itemName: {},
+  },
+  allowedLanguages: [],
 };
 
 ExternalStructures.propTypes = {
