@@ -181,7 +181,7 @@ export default function GeographicalCategoryRelatedElements() {
             <StructuresList data={filteredCardsData} />
           </Col>
         </Row>
-        <Row>
+        <Row spacing="mt-3w">
           <Col>
             <Title as="h2" look="h4">
               Autres structures associées en dehors du territoire

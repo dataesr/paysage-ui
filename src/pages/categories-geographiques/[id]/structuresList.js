@@ -1,10 +1,11 @@
 import { Badge, Col, Icon, Row, Tile } from '@dataesr/react-dsfr';
 import PropTypes from 'prop-types';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useLocation } from 'react-router-dom';
 import { useState } from 'react';
 import { getName } from '../../../utils/structures';
 import ExpendableListCards from '../../../components/card/expendable-list-cards';
 import styles from '../../../components/card/styles.module.scss';
+import GoToExpendableListCards from '../../../components/card/geo-expendable-list-cards';
 
 const getDescription = (item) => {
   const filteredCategories = item.categories
@@ -18,11 +19,15 @@ const getDescription = (item) => {
   return [];
 };
 
-export function StructuresList({ data }) {
+export function StructuresList({ data, id }) {
+  const location = useLocation();
+  const isPresentationPage = location.pathname === `/categories-geographiques/${id}/presentation`;
+
   const [filter] = useState('');
   if (!data && !data?.data) {
     return null;
   }
+
   const list = data
     .filter((item) => item.currentName.usualName.toLowerCase().indexOf(filter.toLowerCase()) > -1)
     .map((item) => (
@@ -42,10 +47,14 @@ export function StructuresList({ data }) {
         </div>
       </div>
     ));
+
   return (
     <Row>
       <Col>
-        <ExpendableListCards list={list} max={6} nCol="12 md-6" />
+        {isPresentationPage ? (
+          <GoToExpendableListCards id={id} list={list} max={6} nCol="12 md-6" />
+        ) : (<ExpendableListCards id={id} list={list} max={6} nCol="12 md-6" />
+        )}
       </Col>
     </Row>
   );
@@ -82,10 +91,12 @@ export function ExceptionStructuresList({ exceptionGps }) {
 
 StructuresList.defaultProps = {
   data: [],
+  id: '',
 };
 
 StructuresList.propTypes = {
-  data: PropTypes.arrayOf(PropTypes.shape()),
+  data: PropTypes.array,
+  id: PropTypes.string,
 };
 
 ExceptionStructuresList.propTypes = {

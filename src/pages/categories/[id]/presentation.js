@@ -1,4 +1,4 @@
-import { Row, Title, Col } from '@dataesr/react-dsfr';
+import { Row, Title, Col, Icon } from '@dataesr/react-dsfr';
 
 import Identifiers from '../../../components/blocs/identifiers';
 import SocialMedias from '../../../components/blocs/social-medias';
@@ -22,6 +22,14 @@ export default function CategoryPresentationPage() {
 
   return (
     <>
+      <Row>
+        <Col n="12">
+          <Title as="h3" look="h4">
+            En un coup d'oeil
+            <Icon className="ri-eye-2-line fr-ml-1w" />
+          </Title>
+        </Col>
+      </Row>
       <RelationCurrent />
       <RelationsByTag
         tag={CATEGORIE_PARENT}
@@ -50,7 +58,9 @@ export default function CategoryPresentationPage() {
         />
       </Col>
       <Title as="h3" look="h4">Présence sur le web</Title>
-      <Row spacing="mb-5w"><Wiki /></Row>
+      <Row spacing="mb-5w">
+        <Wiki />
+      </Row>
       <Row gutters>
         <Col n="12 md-6">
           <Weblinks />
