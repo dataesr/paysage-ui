@@ -7,7 +7,7 @@ on:
       
 env:
   DEPLOYMENT_URL: https://paysage.staging.dataesr.ovh/
-  MM_NOTIFICATION_CHANNEL: 'paysage-bot'
+  MM_NOTIFICATION_CHANNEL: 'bots'
 
 jobs:
   tests:
