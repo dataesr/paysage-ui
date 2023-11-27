@@ -118,16 +118,20 @@ export default function GeographicalCategoryPresentationPage() {
         En un coup d'oeil
         <Icon className="ri-eye-2-line fr-ml-1w" />
       </Title>
-      <Row spacing="mb-3w">
-        <Col>
-          <GroupsCard groups={data?.groups} />
-        </Col>
-      </Row>
-      <Row spacing="mb-3w mt-3w">
-        <Col n="12 ">
-          {wikiInfo && <WikipediaLinks wikiInfo={wikiInfo} allowedLanguages={allowedLanguages} />}
-        </Col>
-      </Row>
+      {data?.groups && (
+        <Row>
+          <Col>
+            <GroupsCard groups={data?.groups} />
+          </Col>
+        </Row>
+      ) }
+      {wikiInfo && (
+        <Row spacing="mb-3w mt-3w">
+          <Col n="12 ">
+            {wikiInfo && <WikipediaLinks wikiInfo={wikiInfo} allowedLanguages={allowedLanguages} />}
+          </Col>
+        </Row>
+      )}
       {data.parent && (
         <Row spacing="mb-3w">
           <Col n="4">
