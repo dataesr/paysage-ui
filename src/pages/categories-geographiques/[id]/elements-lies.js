@@ -108,6 +108,11 @@ export default function GeographicalCategoryRelatedElements() {
   }
   let structuresContent = null;
 
+  function getCategoryCount(category) {
+    const structuresWithCategory = dataStructures?.data?.filter((item) => item.category?.usualNameFr === category) || [];
+    return structuresWithCategory.length;
+  }
+
   if (structuresLoading) {
     structuresContent = <PageSpinner />;
   } else if (dataStructures?.data?.length > 0) {
@@ -140,16 +145,20 @@ export default function GeographicalCategoryRelatedElements() {
         <Row>
           <Col>
             <TagGroup>
-              {sortedCategories.slice(0, categoriesToShow).map((category) => (
-                <Tag
-                  className="no-span"
-                  key={category}
-                  onClick={() => handleCategoryFilterChange(category)}
-                  selected={category === categoryFilter}
-                >
-                  {category}
-                </Tag>
-              ))}
+              {sortedCategories.slice(0, categoriesToShow).map((category) => {
+                const categoryCount = getCategoryCount(category);
+
+                return (
+                  <Tag
+                    className="no-span"
+                    key={category}
+                    onClick={() => handleCategoryFilterChange(category)}
+                    selected={category === categoryFilter}
+                  >
+                    {`${category} (${categoryCount})`}
+                  </Tag>
+                );
+              })}
               <Tag
                 colorFamily="brown-caramel"
                 onClick={() => handleCategoryFilterChange('ShowMore')}
