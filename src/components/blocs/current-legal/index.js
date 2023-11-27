@@ -11,8 +11,17 @@ export default function CurrentLegals() {
   const { data } = useFetch(`/relations?filters[resourceId]=${id}&filters[relationTag]=${tag}&limit=500`);
 
   if (!data?.data) return null;
-  const getCurrentLegal = data?.data.filter((el) => el.active !== false);
-  const currentLegal = getCurrentLegal?.[0] || {};
+  const currentLegals = data?.data.filter((el) => el.active === true || (el.active !== false && !el.endDate));
+
+  if (currentLegals.length === 0) {
+    const inactiveLegals = data?.data.filter((el) => el.active === false);
+    inactiveLegals.sort((a, b) => new Date(b.endDate) - new Date(a.endDate));
+
+    currentLegals.push(inactiveLegals[0]);
+  }
+
+  const currentLegal = currentLegals?.[0] || {};
+
   if (!currentLegal.relatedObject) {
     return (
       <Col n="12 lg-4">
