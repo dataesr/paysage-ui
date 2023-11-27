@@ -46,6 +46,7 @@ export default function ModificationJournal() {
         </Row>
         <Row className="flex--space-around fr-pt-3w">
           <Pagination
+            surrendingPages={2}
             currentPage={page}
             pageCount={data ? Math.ceil(data.totalCount / pageSize) : 0}
             onClick={handlePaginationClick}
