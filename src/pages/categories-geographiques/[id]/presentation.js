@@ -103,13 +103,15 @@ export default function GeographicalCategoryPresentationPage() {
 
   let markers = [];
   if (!structuresLoading && dataStructures?.data?.length > 0) {
-    markers = dataStructures.data.map((item) => ({
-      idStructure: item.id,
-      label: item.currentName.usualName,
-      latLng: item.currentLocalisation?.geometry?.coordinates?.toReversed(),
-      address: `{${item.currentLocalisation?.address || ''},
+    markers = dataStructures.data
+      .filter((item) => item.currentLocalisation && item.currentLocalisation.active === true)
+      .map((item) => ({
+        idStructure: item.id,
+        label: item.currentName.usualName,
+        latLng: item.currentLocalisation?.geometry?.coordinates?.toReversed(),
+        address: `{${item.currentLocalisation?.address || ''},
                 ${item.currentLocalisation?.postalCode || ''} ${item.currentLocalisation?.locality || ''}, ${item.currentLocalisation?.country}}`,
-    }));
+      }));
   }
 
   return (
