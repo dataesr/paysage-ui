@@ -116,7 +116,7 @@ export default function GeographicalCategoryPresentationPage() {
 
   return (
     <Container fluid>
-      <Title as="h3" look="h4">
+      <Title as="h2" look="h4">
         En un coup d'oeil
         <Icon className="ri-eye-2-line fr-ml-1w" />
       </Title>

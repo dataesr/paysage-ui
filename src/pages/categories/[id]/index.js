@@ -145,7 +145,7 @@ function CategoryByIdPage() {
 
           </Row>
           <Row className="flex--space-between flex--wrap-reverse">
-            <Title as="h2">
+            <Title as="h1">
               {data.usualNameFr}
               <BadgeGroup className="fr-pt-1w">
                 <Badge text="catégorie" type="info" />

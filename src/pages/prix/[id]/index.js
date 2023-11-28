@@ -146,7 +146,7 @@ function PrizeByIdPage() {
             </ButtonGroup>
           </Row>
           <Row>
-            <Title as="h2">
+            <Title as="h1">
               {data.nameFr}
               <BadgeGroup className="fr-pt-1w">
                 <Badge type="info" text="prix" />

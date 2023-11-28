@@ -24,7 +24,7 @@ export default function CategoryPresentationPage() {
     <>
       <Row>
         <Col n="12">
-          <Title as="h3" look="h4">
+          <Title as="h2" look="h4">
             En un coup d'oeil
             <Icon className="ri-eye-2-line fr-ml-1w" />
           </Title>
@@ -57,7 +57,7 @@ export default function CategoryPresentationPage() {
           icon="ri-align-left"
         />
       </Col>
-      <Title as="h3" look="h4">Présence sur le web</Title>
+      <Title as="h2" look="h4">Présence sur le web</Title>
       <Row spacing="mb-5w">
         <Wiki />
       </Row>

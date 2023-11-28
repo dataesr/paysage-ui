@@ -146,7 +146,7 @@ function TermByIdPage() {
             </ButtonGroup>
           </Row>
           <Row>
-            <Title as="h2">
+            <Title as="h1">
               {data.usualNameFr}
               <BadgeGroup className="fr-pt-1w">
                 <Badge text="terme" type="info" />

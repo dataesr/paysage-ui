@@ -283,7 +283,7 @@ function StructureByIdPage() {
           <Row>
             <Title as="h1">
               {getName(data?.currentName)}
-              <Title className="fr-pr-1v" as="h6">{getOtherNames(data?.currentName)}</Title>
+              <Title className="fr-pr-1v" as="h2">{getOtherNames(data?.currentName)}</Title>
               <BadgeGroup className="fr-pt-1w">
                 <Badge type="info" text="structure" />
                 {badgeColor()}

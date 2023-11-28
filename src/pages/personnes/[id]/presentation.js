@@ -21,7 +21,7 @@ export default function PersonPresentationPage() {
     <>
       <Row>
         <Col n="12">
-          <Title as="h3" look="h4">
+          <Title as="h2" look="h4">
             En un coup d'oeil
             <Icon className="ri-eye-2-line fr-ml-1w" />
           </Title>
@@ -59,7 +59,7 @@ export default function PersonPresentationPage() {
         </Col>
       </Row>
       <PersonCurrentMandates />
-      <Title as="h3" look="h4">Présence sur le web</Title>
+      <Title as="h2" look="h4">Présence sur le web</Title>
       <Row gutters>
         <Col n="12 md-6">
           <Weblinks />
