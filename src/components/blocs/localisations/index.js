@@ -150,33 +150,37 @@ export default function LocalisationsComponent() {
                 >
                   <Row gutters>
                     <Col n="7">
-                      {currentLocalisation?.coordinates && (
-                        <Map
-                          lat={currentLocalisation?.coordinates?.lat}
-                          lng={currentLocalisation?.coordinates?.lng}
-                          markers={[
-                            {
-                              address: `${currentLocalisation?.address || ''}, ${currentLocalisation?.postalCode || ''} ${currentLocalisation?.locality || ''}, ${currentLocalisation?.country}`,
-                              latLng: [
-                                currentLocalisation?.coordinates?.lat,
-                                currentLocalisation?.coordinates?.lng,
-                              ],
-                            },
-                          ]}
-                        />
-                      )}
+                      <div aria-hidden>
+                        {currentLocalisation?.coordinates && (
+                          <Map
+                            lat={currentLocalisation?.coordinates?.lat}
+                            lng={currentLocalisation?.coordinates?.lng}
+                            markers={[
+                              {
+                                address: `${currentLocalisation?.address || ''}, ${currentLocalisation?.postalCode || ''} ${currentLocalisation?.locality || ''}, ${currentLocalisation?.country}`,
+                                latLng: [
+                                  currentLocalisation?.coordinates?.lat,
+                                  currentLocalisation?.coordinates?.lng,
+                                ],
+                              },
+                            ]}
+                          />
+                        )}
+                      </div>
                     </Col>
                     <Col>
                       {currentLocalisation?.country
                         ? renderAddress(currentLocalisation) : null}
                     </Col>
-                    {data && (
+                  </Row>
+                  {data && (
+                    <Row spacing="mt-3w">
                       <>
-                        <BlocTitle as="h3" look="h6">Catégories géographiques de l'adresse actuelle</BlocTitle>
+                        <BlocTitle as="h3" look="h5">Catégories géographiques de l'adresse actuelle</BlocTitle>
                         <GeographicalTags data={currentLocalisation?.geoCategories} />
                       </>
-                    )}
-                  </Row>
+                    </Row>
+                  )}
                 </Tab>
               )}
               {data.totalCount > 1 && (

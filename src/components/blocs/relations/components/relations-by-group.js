@@ -85,7 +85,9 @@ export default function RelationsByGroup({ group, reloader }) {
       return (
         <Row gutters>
           <Col n="12">
-            <Map height="320px" markers={markers} zoom={8} />
+            <div aria-hidden>
+              <Map height="320px" markers={markers} zoom={8} />
+            </div>
           </Col>
           <Col n="12">
             <ExpendableListCards list={list} nCol="12 md-6" />

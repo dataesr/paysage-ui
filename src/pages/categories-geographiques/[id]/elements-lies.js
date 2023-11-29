@@ -171,10 +171,12 @@ export default function GeographicalCategoryRelatedElements() {
         </Row>
         <Row gutters className="fr-mb-3w">
           <Col>
-            <Map
-              markers={filteredMarkers}
-              height="400px"
-            />
+            <div aria-hidden>
+              <Map
+                markers={filteredMarkers}
+                height="400px"
+              />
+            </div>
           </Col>
         </Row>
         <Row alignItems="middle" spacing="mb-1v">
@@ -197,18 +199,20 @@ export default function GeographicalCategoryRelatedElements() {
               <Badge text={exceptionGps.length} colorFamily="yellow-tournesol" />
             </Title>
             <Col n="12">
-              <Map
-                markers={
-                  exceptionGps
-                    .filter((item) => (item?.currentLocalisation?.geometry?.coordinates || []).length === 2)
-                    .map((item) => ({
-                      label: item.resource.currentName.displayName,
-                      latLng: [item.currentLocalisation.geometry.coordinates[1], item.currentLocalisation.geometry.coordinates[0]],
-                      address: `${item.currentLocalisation?.address || ''},
+              <div aria-hidden>
+                <Map
+                  markers={
+                    exceptionGps
+                      .filter((item) => (item?.currentLocalisation?.geometry?.coordinates || []).length === 2)
+                      .map((item) => ({
+                        label: item.resource.currentName.displayName,
+                        latLng: [item.currentLocalisation.geometry.coordinates[1], item.currentLocalisation.geometry.coordinates[0]],
+                        address: `${item.currentLocalisation?.address || ''},
                           ${item.currentLocalisation?.postalCode || ''} ${item.currentLocalisation?.locality || ''}, ${item.currentLocalisation?.country}`,
-                    }))
-                }
-              />
+                      }))
+                  }
+                />
+              </div>
             </Col>
             <ExceptionStructuresList exceptionGps={exceptionGps} />
           </Col>

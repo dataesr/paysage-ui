@@ -306,11 +306,13 @@ export default function StructureImmobilierPage() {
               Géographie
             </BlocTitle>
             <BlocContent>
-              <Map
-                lat={currentLocalisation?.coordinates?.lat}
-                lng={currentLocalisation?.coordinates?.lng}
-                markers={markers}
-              />
+              <div aria-hidden>
+                <Map
+                  lat={currentLocalisation?.coordinates?.lat}
+                  lng={currentLocalisation?.coordinates?.lng}
+                  markers={markers}
+                />
+              </div>
             </BlocContent>
           </Bloc>
           {renderBuildings()}

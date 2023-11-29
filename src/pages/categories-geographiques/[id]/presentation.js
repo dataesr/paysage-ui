@@ -150,11 +150,13 @@ export default function GeographicalCategoryPresentationPage() {
         </Row>
       )}
       <Col n="12">
-        <Map
-          height="800px"
-          markers={markers}
-          polygonCoordinates={polygonCoordinates}
-        />
+        <div aria-hidden>
+          <Map
+            height="800px"
+            markers={markers}
+            polygonCoordinates={polygonCoordinates}
+          />
+        </div>
       </Col>
       <Row spacing="mt-5w">
         <Title as="h2" look="h4">
