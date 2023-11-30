@@ -17,7 +17,7 @@ export default function RessourcesPage() {
   usePageTitle('Ressources');
   return (
     <Container spacing="mt-5w">
-      <Title as="h2">Les ressources externes</Title>
+      <Title as="h1">Les ressources externes</Title>
       <Row>
         <Col n="12 sm-6 md-4" spacing="p-3w">
           <Card
@@ -32,7 +32,7 @@ export default function RessourcesPage() {
               />
             </CardHeader>
             <CardTitle>CurieXplore</CardTitle>
-            <CardDescription as="div">
+            <CardDescription as="p">
               La plateforme d'exploration des systèmes d'enseignement supérieur,
               de recherche et d'innovation à l'international.
               Réalisé en collaboration avec le ministère de l'Europe et des affaires étrangères.
@@ -52,7 +52,7 @@ export default function RessourcesPage() {
               />
             </CardHeader>
             <CardTitle>scanR</CardTitle>
-            <CardDescription as="div">
+            <CardDescription as="p">
               Explorez le monde de la Recherche et de l'Innovation française avec scanR
             </CardDescription>
           </Card>
@@ -70,7 +70,7 @@ export default function RessourcesPage() {
               />
             </CardHeader>
             <CardTitle>L'état de l'enseignement supérieur</CardTitle>
-            <CardDescription as="div">État de l'enseignement supérieur, de la recherche et de l'innovation</CardDescription>
+            <CardDescription as="p">État de l'enseignement supérieur, de la recherche et de l'innovation</CardDescription>
           </Card>
         </Col>
         <Col n="12 sm-6 md-4" spacing="p-3w">
@@ -86,7 +86,7 @@ export default function RessourcesPage() {
               />
             </CardHeader>
             <CardTitle>#dataesr</CardTitle>
-            <CardDescription as="div">
+            <CardDescription as="p">
               #dataESR vous aide à trouver les ressources en données sur
               l'enseignement supérieur, la recherche et l'innovation
             </CardDescription>
@@ -105,7 +105,7 @@ export default function RessourcesPage() {
               />
             </CardHeader>
             <CardTitle>OpenData</CardTitle>
-            <CardDescription as="div">
+            <CardDescription as="p">
               Découvrez les jeux de données ouvertes relatives à l'enseignement
               supérieur et à la recherche.
             </CardDescription>
@@ -128,7 +128,7 @@ export default function RessourcesPage() {
               />
             </CardHeader>
             <CardTitle />
-            <CardDescription as="div">
+            <CardDescription as="p">
               Mesurer l'évolution de la science ouverte en France à partir de données fiables, ouvertes et maîtrisées.
             </CardDescription>
           </Card>

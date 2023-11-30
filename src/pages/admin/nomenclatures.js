@@ -68,7 +68,7 @@ export default function NomenclaturesPage({ route, title }) {
       </Row>
       <Row className="flex--space-between flex--baseline">
         <Row alignItems="top">
-          <Title className="fr-pr-1v" as="h2" look="h3">{title}</Title>
+          <Title className="fr-pr-1v" as="h1" look="h3">{title}</Title>
           <Badge type="info" text={data?.totalCount} />
         </Row>
         <Button color="success" size="sm" icon="ri-add-line" onClick={() => handleModalToggle()}>Ajouter</Button>

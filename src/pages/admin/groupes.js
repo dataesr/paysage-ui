@@ -81,7 +81,7 @@ export default function GroupsPage() {
         <BreadcrumbItem>Groupes d'utilisateurs</BreadcrumbItem>
       </Breadcrumb>
       <Bloc isLoading={isLoading} error={error} data={data}>
-        <BlocTitle as="h3" look="h4">Groupes d'utilisateurs</BlocTitle>
+        <BlocTitle as="h1" look="h4">Groupes d'utilisateurs</BlocTitle>
         <BlocActionButton onClick={() => handleModalToggle()}>Créer un groupe</BlocActionButton>
         <BlocContent>{renderGroups()}</BlocContent>
         <BlocModal>

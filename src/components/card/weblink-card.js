@@ -25,10 +25,10 @@ export default function WeblinkCard({
             )}
             <Col>
               {title ? (
-                <h4 className="fr-card__title text-center">
+                <h3 className="fr-card__title text-center">
                   {title}
                   <Link href={downloadUrl} target="_blank" />
-                </h4>
+                </h3>
               ) : null}
               <div className="fr-card__desc">{descriptionElement}</div>
               {editMode && canEdit && (

@@ -24,7 +24,7 @@ export default function Annuaire() {
       </Row>
       <Row>
         <Col>
-          <Title as="h2">Annuaire</Title>
+          <Title as="h1">Annuaire</Title>
         </Col>
       </Row>
       <Filters />

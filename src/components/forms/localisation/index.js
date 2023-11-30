@@ -280,12 +280,14 @@ export default function LocalisationForm({ id, data, onDelete, onSave }) {
             />
           </Col>
           <Col n="12">
-            <Map
-              lat={form.coordinates?.lat || 48.8534100}
-              lng={form.coordinates?.lng || 2.3488000}
-              markers={markers}
-              onMarkerDragEnd={onMarkerDragEnd}
-            />
+            <div aria-hidden>
+              <Map
+                lat={form.coordinates?.lat || 48.8534100}
+                lng={form.coordinates?.lng || 2.3488000}
+                markers={markers}
+                onMarkerDragEnd={onMarkerDragEnd}
+              />
+            </div>
           </Col>
           <Col n="12"><Title as="h2" look="h3" spacing="mb-0">Dates</Title></Col>
           <Col n="12">

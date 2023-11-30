@@ -225,7 +225,7 @@ export default function StructureImmobilierPage() {
   return (
     <>
       {!allData?.length && (
-        <Title as="h3">
+        <Title as="h2">
           Pas de données immobilières connues pour cette structure
         </Title>
       )}
@@ -306,11 +306,13 @@ export default function StructureImmobilierPage() {
               Géographie
             </BlocTitle>
             <BlocContent>
-              <Map
-                lat={currentLocalisation?.coordinates?.lat}
-                lng={currentLocalisation?.coordinates?.lng}
-                markers={markers}
-              />
+              <div aria-hidden>
+                <Map
+                  lat={currentLocalisation?.coordinates?.lat}
+                  lng={currentLocalisation?.coordinates?.lng}
+                  markers={markers}
+                />
+              </div>
             </BlocContent>
           </Bloc>
           {renderBuildings()}

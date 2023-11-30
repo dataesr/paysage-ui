@@ -104,13 +104,13 @@ export default function LocalisationsComponent() {
             <p className="fr-card__detail fr-text--sm fr-mb-0">
               <Icon name="ri-map-pin-fill" size="1x" />
               {localisation.current ? 'Dernière adresse connue' : 'Adresse historique'}
+              {editMode && <Button color="text" size="md" onClick={() => handleModalToggle(localisation)} tertiary borderless rounded icon="ri-edit-line" className="edit-button" />}
             </p>
             <div className="fr-card__end fr-mt-0 fr-pt-0">
               <p className="fr-card__detail">
                 {formatDescriptionDates(localisation.startDate || null, localisation.endDate || null)}
               </p>
             </div>
-            {editMode && <Button color="text" size="md" onClick={() => handleModalToggle(localisation)} tertiary borderless rounded icon="ri-edit-line" className="edit-button" />}
           </div>
         </div>
       </div>
@@ -135,7 +135,7 @@ export default function LocalisationsComponent() {
 
   return (
     <Bloc isLoading={isLoading} error={error} data={data}>
-      <BlocTitle as="h3" look="h6">Localisations</BlocTitle>
+      <BlocTitle as="h2" look="h6">Localisations</BlocTitle>
       <BlocActionButton onClick={() => handleModalToggle()}>
         Ajouter une adresse
       </BlocActionButton>
@@ -150,7 +150,7 @@ export default function LocalisationsComponent() {
                 >
                   <Row gutters>
                     <Col n="8">
-                      {currentLocalisation?.coordinates && (
+                      {currentLocalisation.coordinates && (
                         <Map
                           lat={currentLocalisation?.coordinates?.lat}
                           lng={currentLocalisation?.coordinates?.lng}
@@ -166,19 +166,19 @@ export default function LocalisationsComponent() {
                         />
                       )}
                     </Col>
-                    <Col n="4">
+                    <Col>
                       {currentLocalisation?.country
                         ? renderAddress(currentLocalisation) : null}
                     </Col>
-                    {data && (
-                      <Row className="fr-mt-3w">
-                        <Col>
-                          <BlocTitle as="h3" look="h6">Catégories géographiques de l'adresse actuelle</BlocTitle>
-                          <GeographicalTags data={currentLocalisation?.geoCategories} />
-                        </Col>
-                      </Row>
-                    )}
                   </Row>
+                  {data && (
+                    <Row spacing="mt-3w">
+                      <>
+                        <BlocTitle as="h3" look="h5">Catégories géographiques de l'adresse actuelle</BlocTitle>
+                        <GeographicalTags data={currentLocalisation?.geoCategories} />
+                      </>
+                    </Row>
+                  )}
                 </Tab>
               )}
               {data.totalCount > 1 && (

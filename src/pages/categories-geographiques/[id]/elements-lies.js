@@ -4,7 +4,7 @@ import { useSearchParams } from 'react-router-dom';
 import useFetch from '../../../hooks/useFetch';
 import useUrl from '../../../hooks/useUrl';
 
-import Map from '../../../components/map';
+import Map from '../../../components/map/geographical-categories-map';
 import { PageSpinner } from '../../../components/spinner';
 import { ExceptionStructuresList, StructuresList } from './structuresList';
 import { exportGeographicalCategoriesStructuresToCsv } from '../../../components/blocs/relations/utils/exports';
@@ -20,7 +20,7 @@ export default function GeographicalCategoryRelatedElements() {
   const [filter, setFilter] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('');
   const [searchParams, setSearchParams] = useSearchParams();
-  const [categoriesToShow, setCategoriesToShow] = useState(7);
+  const [categoriesToShow, setCategoriesToShow] = useState(5);
 
   useEffect(() => {
     const query = searchParams.get('query');
@@ -42,10 +42,11 @@ export default function GeographicalCategoryRelatedElements() {
     .filter((item) => item.currentName.usualName.toLowerCase().includes(filter.toLowerCase()))
     .filter((item) => !categoryFilter || item.category?.usualNameFr === categoryFilter)
     .map((item) => ({
+      idStructure: item.id,
       label: item.currentName.usualName,
-      latLng: [item.currentLocalisation.geometry.coordinates[1], item.currentLocalisation.geometry.coordinates[0]],
+      latLng: item.currentLocalisation?.geometry?.coordinates?.toReversed(),
       address: `{${item.currentLocalisation?.address || ''},
-          ${item.currentLocalLocalisation?.postalCode || ''} ${item.currentLocalisation?.locality || ''}, ${item.currentLocalisation?.country}}`,
+                ${item.currentLocalisation?.postalCode || ''} ${item.currentLocalisation?.locality || ''}, ${item.currentLocalisation?.country}}`,
     }));
 
   const categoriesWithUniversity = dataStructures?.data
@@ -107,6 +108,11 @@ export default function GeographicalCategoryRelatedElements() {
   }
   let structuresContent = null;
 
+  function getCategoryCount(category) {
+    const structuresWithCategory = dataStructures?.data?.filter((item) => item.category?.usualNameFr === category) || [];
+    return structuresWithCategory.length;
+  }
+
   if (structuresLoading) {
     structuresContent = <PageSpinner />;
   } else if (dataStructures?.data?.length > 0) {
@@ -139,16 +145,20 @@ export default function GeographicalCategoryRelatedElements() {
         <Row>
           <Col>
             <TagGroup>
-              {sortedCategories.slice(0, categoriesToShow).map((category) => (
-                <Tag
-                  className="no-span"
-                  key={category}
-                  onClick={() => handleCategoryFilterChange(category)}
-                  selected={category === categoryFilter}
-                >
-                  {category}
-                </Tag>
-              ))}
+              {sortedCategories.slice(0, categoriesToShow).map((category) => {
+                const categoryCount = getCategoryCount(category);
+
+                return (
+                  <Tag
+                    className="no-span"
+                    key={category}
+                    onClick={() => handleCategoryFilterChange(category)}
+                    selected={category === categoryFilter}
+                  >
+                    {`${category} (${categoryCount})`}
+                  </Tag>
+                );
+              })}
               <Tag
                 colorFamily="brown-caramel"
                 onClick={() => handleCategoryFilterChange('ShowMore')}
@@ -161,10 +171,12 @@ export default function GeographicalCategoryRelatedElements() {
         </Row>
         <Row gutters className="fr-mb-3w">
           <Col>
-            <Map
-              markers={filteredMarkers}
-              height="400px"
-            />
+            <div aria-hidden>
+              <Map
+                markers={filteredMarkers}
+                height="400px"
+              />
+            </div>
           </Col>
         </Row>
         <Row alignItems="middle" spacing="mb-1v">
@@ -180,25 +192,27 @@ export default function GeographicalCategoryRelatedElements() {
             <StructuresList data={filteredCardsData} />
           </Col>
         </Row>
-        <Row>
+        <Row spacing="mt-3w">
           <Col>
             <Title as="h2" look="h4">
               Autres structures associées en dehors du territoire
               <Badge text={exceptionGps.length} colorFamily="yellow-tournesol" />
             </Title>
             <Col n="12">
-              <Map
-                markers={
-                  exceptionGps
-                    .filter((item) => (item?.currentLocalisation?.geometry?.coordinates || []).length === 2)
-                    .map((item) => ({
-                      label: item.resource.currentName.displayName,
-                      latLng: [item.currentLocalisation.geometry.coordinates[1], item.currentLocalisation.geometry.coordinates[0]],
-                      address: `${item.currentLocalisation?.address || ''},
+              <div aria-hidden>
+                <Map
+                  markers={
+                    exceptionGps
+                      .filter((item) => (item?.currentLocalisation?.geometry?.coordinates || []).length === 2)
+                      .map((item) => ({
+                        label: item.resource.currentName.displayName,
+                        latLng: [item.currentLocalisation.geometry.coordinates[1], item.currentLocalisation.geometry.coordinates[0]],
+                        address: `${item.currentLocalisation?.address || ''},
                           ${item.currentLocalisation?.postalCode || ''} ${item.currentLocalisation?.locality || ''}, ${item.currentLocalisation?.country}`,
-                    }))
-                }
-              />
+                      }))
+                  }
+                />
+              </div>
             </Col>
             <ExceptionStructuresList exceptionGps={exceptionGps} />
           </Col>

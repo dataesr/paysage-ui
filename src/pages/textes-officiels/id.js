@@ -134,7 +134,7 @@ export default function OfficialTextByIdPage() {
 
           </Row>
           <Row>
-            <Title className="fr-mb-1w" as="h2">
+            <Title className="fr-mb-1w" as="h1">
               {data.title}
               <BadgeGroup className="fr-pt-1w">
                 <Badge text={data.nature} type="info" />
@@ -171,7 +171,7 @@ export default function OfficialTextByIdPage() {
             </Col>
           </Row>
           <Bloc data={{ totalCount: data?.relatedObjects?.length }} error={error} isLoading={isLoading}>
-            <BlocTitle as="h3" look="h6">Objets liés au texte officiel</BlocTitle>
+            <BlocTitle as="h2" look="h6">Objets liés au texte officiel</BlocTitle>
             <BlocContent>
               {renderCards()}
             </BlocContent>

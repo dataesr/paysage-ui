@@ -446,12 +446,12 @@ export default function StructureEtudiantsPage() {
   if (error) return <>Erreur...</>;
   return (
     <>
-      <Title as="h3">
+      <Title as="h2">
         <Icon name="ri-user-fill" className="fr-pl-1w" />
         Les étudiants inscrits
       </Title>
       <Bloc isLoading={isLoading} error={error} data={data} noBadge>
-        <BlocTitle as="h4">
+        <BlocTitle as="h3">
           {`Situation en ${year} - Source : SISE`}
         </BlocTitle>
         <BlocContent>
@@ -474,7 +474,7 @@ export default function StructureEtudiantsPage() {
         </BlocContent>
       </Bloc>
       <Bloc isLoading={isLoading} error={error} data={data} noBadge>
-        <BlocTitle as="h4">
+        <BlocTitle as="h3">
           Évolution historique
         </BlocTitle>
         <BlocContent>
@@ -531,7 +531,7 @@ export default function StructureEtudiantsPage() {
         </BlocContent>
       </Bloc>
       <Bloc isLoading={isLoading} error={error} data={data} noBadge>
-        <BlocTitle as="h4">
+        <BlocTitle as="h3">
           Ressource(s) en ligne : #dataESR
         </BlocTitle>
         <BlocContent>

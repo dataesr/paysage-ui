@@ -9,6 +9,7 @@ const pageBorderColors = {
   projets: 'var(--projects-color)',
   documents: 'var(--documents-color)',
   termes: 'var(--terms-color)',
+  'categories-geographiques': 'var(--geographical-categories-color)',
   'textes-officiels': 'var(--textes-officiels-color)',
 };
 

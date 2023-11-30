@@ -43,7 +43,7 @@ export default function TermPresentationPage() {
           icon="ri-align-left"
         />
       </Col>
-      <Title as="h3" look="h4">Présence sur le web</Title>
+      <Title as="h2" look="h4">Présence sur le web</Title>
       <Row spacing="mb-5w"><Wiki /></Row>
       <Row gutters>
         <Col n="12 md-6">

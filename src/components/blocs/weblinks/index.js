@@ -161,7 +161,7 @@ export default function Weblinks({ types, title }) {
       error={error}
       data={{ totalCount: getElementsCount() }}
     >
-      <BlocTitle as="h4" look="h6">
+      <BlocTitle as="h3" look="h6">
         {title}
       </BlocTitle>
       <BlocActionButton onClick={onOpenModalHandler} isSmall>

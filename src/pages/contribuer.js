@@ -70,7 +70,7 @@ export default function ContributePage() {
       </div>
       <Row>
         <Col>
-          <Title as="h2" look="h3">Ajouter un nouvel objet Paysage</Title>
+          <Title as="h1" look="h3">Ajouter un nouvel objet Paysage</Title>
         </Col>
       </Row>
       <Row as="ul" gutters>
@@ -78,7 +78,7 @@ export default function ContributePage() {
           <Col n="12 md-6 lg-4" as="li" key={element.type}>
             <Tile horizontal color={`var(--${element.type}-color)`}>
               <TileBody
-                titleAs="h5"
+                titleAs="h2"
                 title={element.name}
                 asLink={<RouterLink to={element.url} />}
               />

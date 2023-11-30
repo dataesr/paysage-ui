@@ -20,12 +20,12 @@ export default function StructureInsertionProfessionnellePage() {
   if (error) return <>Erreur...</>;
   return (
     <>
-      <Title as="h3">
+      <Title as="h2">
         <Icon name="ri-building-fill" className="fr-pl-1w" />
         Insertion professionnelle
       </Title>
       <Bloc isLoading={false} error={false} data={{ totalCount: 42 }} noBadge>
-        <BlocTitle as="h4">
+        <BlocTitle as="h3">
           Ressource(s) en ligne : #dataESR
         </BlocTitle>
         <BlocContent>

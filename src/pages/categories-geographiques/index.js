@@ -61,7 +61,7 @@ function GeographicalCategoriesByIdPage() {
           </Row>
           <Col n="12 md-12">
             <Row>
-              <Title as="h2">
+              <Title as="h1">
                 {`${data.nameFr} (${GEOGRAPHICAL_CATEGORIES_LABELS_MAPPER[data.level]})`}
                 <BadgeGroup className="fr-pt-1w">
                   <Badge text="Catégorie géographique" colorFamily="blue-ecume" />

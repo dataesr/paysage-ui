@@ -314,18 +314,18 @@ Il constitue une marge de sécurité financière destinée à financer une parti
   return (
     <>
       {!data?.data?.length && (
-        <Title as="h3">
+        <Title as="h2">
           Pas de données financières connues pour cette structure
         </Title>
       )}
       {!!data?.data?.length && (
         <>
-          <Title as="h3">
+          <Title as="h2">
             <Icon name="ri-scales-3-fill" className="fr-pl-1w" />
             {`Données financières - Situation en ${financialAccountYear}${financialAccount?.source === 'Budget' ? ' (Budget)' : ''}`}
           </Title>
           <Bloc isLoading={isLoading} error={error} data={data} noBadge>
-            <BlocTitle as="h4">
+            <BlocTitle as="h3">
               Equilibre financier
             </BlocTitle>
             <BlocContent>
@@ -333,7 +333,7 @@ Il constitue une marge de sécurité financière destinée à financer une parti
             </BlocContent>
           </Bloc>
           <Bloc isLoading={isLoading} error={error} data={data} noBadge>
-            <BlocTitle as="h4">
+            <BlocTitle as="h3">
               Cycle d'exploitation
             </BlocTitle>
             <BlocContent>
@@ -341,7 +341,7 @@ Il constitue une marge de sécurité financière destinée à financer une parti
             </BlocContent>
           </Bloc>
           <Bloc isLoading={isLoading} error={error} data={data} noBadge>
-            <BlocTitle as="h4">
+            <BlocTitle as="h3">
               Financement de l'activité
             </BlocTitle>
             <BlocContent>
@@ -349,7 +349,7 @@ Il constitue une marge de sécurité financière destinée à financer une parti
             </BlocContent>
           </Bloc>
           <Bloc isLoading={isLoading} error={error} data={data} noBadge>
-            <BlocTitle as="h4">
+            <BlocTitle as="h3">
               Autofinancement des investissements
             </BlocTitle>
             <BlocContent>
@@ -357,7 +357,7 @@ Il constitue une marge de sécurité financière destinée à financer une parti
             </BlocContent>
           </Bloc>
           <Bloc isLoading={isLoading} error={error} data={data} noBadge>
-            <BlocTitle as="h4">
+            <BlocTitle as="h3">
               Indicateurs GBCP
             </BlocTitle>
             <BlocContent>
@@ -365,7 +365,7 @@ Il constitue une marge de sécurité financière destinée à financer une parti
             </BlocContent>
           </Bloc>
           <Bloc isLoading={isLoading} error={error} data={data} noBadge>
-            <BlocTitle as="h4">
+            <BlocTitle as="h3">
               Recettes formation
             </BlocTitle>
             <BlocContent>
@@ -373,7 +373,7 @@ Il constitue une marge de sécurité financière destinée à financer une parti
             </BlocContent>
           </Bloc>
           <Bloc isLoading={isLoading} error={error} data={data} noBadge>
-            <BlocTitle as="h4">
+            <BlocTitle as="h3">
               Recettes recherche
             </BlocTitle>
             <BlocContent>
@@ -381,7 +381,7 @@ Il constitue une marge de sécurité financière destinée à financer une parti
             </BlocContent>
           </Bloc>
           <Bloc isLoading={isLoading} error={error} data={data} noBadge>
-            <BlocTitle as="h4">
+            <BlocTitle as="h3">
               Autres recettes
             </BlocTitle>
             <BlocContent>
@@ -389,7 +389,7 @@ Il constitue une marge de sécurité financière destinée à financer une parti
             </BlocContent>
           </Bloc>
           <Bloc isLoading={isLoading} error={error} data={data} noBadge>
-            <BlocTitle as="h4">
+            <BlocTitle as="h3">
               Ressource(s) en ligne : #dataESR
             </BlocTitle>
             <BlocContent>

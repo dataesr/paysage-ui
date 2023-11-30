@@ -12,7 +12,7 @@ export default function StructureOffreDeFormationPage() {
 
   return (
     <>
-      <Title as="h3">
+      <Title as="h2">
         <Icon name="ri-file-list-fill" className="fr-pl-1w" />
         Offre de formation
       </Title>

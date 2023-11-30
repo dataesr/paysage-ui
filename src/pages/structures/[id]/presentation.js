@@ -27,7 +27,7 @@ export default function StructurePresentationPage() {
     <>
       <Row>
         <Col n="12">
-          <Title as="h3" look="h4">En un coup d'oeil</Title>
+          <Title as="h2" look="h4">En un coup d'oeil</Title>
         </Col>
       </Row>
       <Names visible={editMode} />
@@ -77,7 +77,7 @@ export default function StructurePresentationPage() {
         year={year}
       />
       <StructureCurrentGovernance />
-      <Title as="h3" look="h4">Présence sur le web</Title>
+      <Title as="h2" look="h4">Présence sur le web</Title>
       <Row gutters>
         <Col n="12 md-6">
           <Weblinks types={INTERNAL_PAGES_TYPES} title="Site internet" />

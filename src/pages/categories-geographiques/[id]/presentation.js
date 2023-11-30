@@ -1,4 +1,4 @@
-import { Badge, Col, Container, Icon, Link, Row, Tag, Title } from '@dataesr/react-dsfr';
+import { Badge, Col, Container, Icon, Link, Row, Title } from '@dataesr/react-dsfr';
 import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import useFetch from '../../../hooks/useFetch';
@@ -7,81 +7,13 @@ import KeyValueCard from '../../../components/card/key-value-card';
 import { PageSpinner } from '../../../components/spinner';
 import Error from '../../../components/errors';
 import Map from '../../../components/map/geographical-categories-map';
-import { ExceptionStructuresList } from './structuresList';
-import getLink from '../../../utils/get-links';
-import TagList from '../../../components/tag-list';
+import { ExceptionStructuresList, StructuresList } from './structuresList';
 import { capitalize } from '../../../utils/strings';
 import { GEOGRAPHICAL_CATEGORIES_LABELS_MAPPER } from '../../../utils/constants';
+import GroupsCard from '../../../components/card/groups-card';
+import IdentifierCard from '../../../components/card/geo-identifiers-card';
+import WikipediaLinks from '../../../components/card/wiki-card-geographical';
 
-function WikipediaLinks({ wikiInfo, allowedLanguages }) {
-  const sortedLanguages = Object.keys(wikiInfo.itemName).sort((a, b) => {
-    if (allowedLanguages.includes(a) && !allowedLanguages.includes(b)) {
-      return -1;
-    } if (!allowedLanguages.includes(a) && allowedLanguages.includes(b)) {
-      return 1;
-    }
-    return allowedLanguages.indexOf(a) - allowedLanguages.indexOf(b);
-  });
-
-  return (
-    <div className="fr-card fr-card--xs fr-card--horizontal fr-card--grey fr-card--no-border card-geographical-categories">
-      <div className="fr-card__body">
-        <div className="fr-card__content">
-          <div className="fr-card__start">
-            <p className="fr-card__detail fr-text--sm fr-mb-2">
-              <Icon name="ri-global-line" size="1x" />
-              Dans Wikipédia
-            </p>
-            <p>{capitalize(wikiInfo.description)}</p>
-            <TagList>
-              {sortedLanguages.map((lang) => {
-                const langInfo = wikiInfo.itemName[lang];
-                if (langInfo.value) {
-                  const wikipediaUrl = `https://${lang}.wikipedia.org/wiki/${encodeURIComponent(langInfo.value)}`;
-                  return (
-                    <Tag
-                      iconPosition="right"
-                      icon="ri-external-link-line"
-                      onClick={() => {
-                        window.open(wikipediaUrl, '_blank');
-                      }}
-                      key={lang}
-                    >
-                      {lang.toLocaleUpperCase()}
-                    </Tag>
-                  );
-                }
-                return null;
-              })}
-            </TagList>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function IdentifierCard({ identifierType, identifierValue }) {
-  let cardKeyLabel = capitalize(identifierType);
-  if (identifierType === 'originalId') {
-    cardKeyLabel = 'Code géographique';
-  }
-
-  return (
-    <Row gutters>
-      <Col n="12 md-3">
-        <KeyValueCard
-          cardKey={cardKeyLabel}
-          cardValue={identifierValue}
-          copy
-          className="card-geographical-categories"
-          icon="ri-fingerprint-2-line"
-          linkTo={getLink({ value: identifierValue, type: identifierType })}
-        />
-      </Col>
-    </Row>
-  );
-}
 function ExternalStructures({ exceptionGps }) {
   return (
     <Row className="fr-mt-3w">
@@ -171,22 +103,37 @@ export default function GeographicalCategoryPresentationPage() {
 
   let markers = [];
   if (!structuresLoading && dataStructures?.data?.length > 0) {
-    markers = dataStructures.data.map((item) => ({
-      idStructure: item.id,
-      label: item.currentName.usualName,
-      latLng: item.currentLocalisation?.geometry?.coordinates?.toReversed(),
-      address: `{${item.currentLocalisation?.address || ''},
+    markers = dataStructures.data
+      .filter((item) => item.currentLocalisation && item.currentLocalisation.active === true)
+      .map((item) => ({
+        idStructure: item.id,
+        label: item.currentName.usualName,
+        latLng: item.currentLocalisation?.geometry?.coordinates?.toReversed(),
+        address: `{${item.currentLocalisation?.address || ''},
                 ${item.currentLocalisation?.postalCode || ''} ${item.currentLocalisation?.locality || ''}, ${item.currentLocalisation?.country}}`,
-    }));
+      }));
   }
 
   return (
     <Container fluid>
-      <Row spacing="mb-3w">
-        <Col n="12 ">
-          {wikiInfo && <WikipediaLinks wikiInfo={wikiInfo} allowedLanguages={allowedLanguages} />}
-        </Col>
-      </Row>
+      <Title as="h2" look="h4">
+        En un coup d'oeil
+        <Icon className="ri-eye-2-line fr-ml-1w" />
+      </Title>
+      {data?.groups && (
+        <Row>
+          <Col>
+            <GroupsCard groups={data?.groups} />
+          </Col>
+        </Row>
+      ) }
+      {wikiInfo && (
+        <Row spacing="mb-3w mt-3w">
+          <Col n="12 ">
+            {wikiInfo && <WikipediaLinks wikiInfo={wikiInfo} allowedLanguages={allowedLanguages} />}
+          </Col>
+        </Row>
+      )}
       {data.parent && (
         <Row spacing="mb-3w">
           <Col n="4">
@@ -203,35 +150,49 @@ export default function GeographicalCategoryPresentationPage() {
         </Row>
       )}
       <Col n="12">
-        <Map
-          height="800px"
-          markers={markers}
-          polygonCoordinates={polygonCoordinates}
-        />
+        <div aria-hidden>
+          <Map
+            height="800px"
+            markers={markers}
+            polygonCoordinates={polygonCoordinates}
+          />
+        </div>
       </Col>
-      <Row>
+      <Row spacing="mt-5w">
+        <Title as="h2" look="h4">
+          Structures associées
+          <Badge text={dataStructures?.totalCount} colorFamily="yellow-tournesol" />
+        </Title>
+        <Row spacing="mt-3w">
+          <Col n="12">
+            <StructuresList data={dataStructures?.data} id={id} wikidata={wikidata} />
+          </Col>
+        </Row>
+      </Row>
+      <Row spacing="mt-5w" gutters>
         <Col>
-          <Title as="h2" look="h4">
-            Identifiants
-          </Title>
-          {wikidata && <IdentifierCard identifierType="wikidata" identifierValue={wikidata} />}
-          {originalId && <IdentifierCard identifierType="originalId" identifierValue={originalId} />}
-          {exceptionGps.length > 0 && <ExternalStructures exceptionGps={exceptionGps} />}
+          <IdentifierCard wikidata={wikidata} originalId={originalId} />
         </Col>
       </Row>
-
+      {exceptionGps.length > 0 && <ExternalStructures exceptionGps={exceptionGps} />}
     </Container>
   );
 }
 
 WikipediaLinks.propTypes = {
-  wikiInfo: PropTypes.isRequired,
-  allowedLanguages: PropTypes.isRequired,
+  wikiInfo: PropTypes.shape({
+    description: PropTypes.string.isRequired,
+    itemName: PropTypes.object.isRequired,
+  }),
+  allowedLanguages: PropTypes.array,
 };
 
-IdentifierCard.propTypes = {
-  identifierType: PropTypes.isRequired,
-  identifierValue: PropTypes.isRequired,
+WikipediaLinks.defaultProps = {
+  wikiInfo: {
+    description: '',
+    itemName: {},
+  },
+  allowedLanguages: [],
 };
 
 ExternalStructures.propTypes = {

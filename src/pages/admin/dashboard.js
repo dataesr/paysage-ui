@@ -16,7 +16,7 @@ export default function AdminDashboardPage() {
       </Row>
       <Row>
         <Col>
-          <Title as="h2" look="h3">Tableau de bord</Title>
+          <Title as="h1" look="h3">Tableau de bord</Title>
         </Col>
       </Row>
       <Dashboard />
