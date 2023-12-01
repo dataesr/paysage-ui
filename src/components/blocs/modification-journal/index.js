@@ -17,8 +17,8 @@ export default function ModificationJournal() {
 
   const { id: resourceId } = useParams();
   const url = resourceId
-    ? `/journal?filters[resourceId]=${resourceId}&filters[createdAt][$gte]=${DATE}&sort=-createdAt&limit=100&filters[resourceType][$ne]=admin&filters[resourceType][$ne]=groups`
-    : `/journal?filters[createdAt][$gte]=${DATE}&sort=-createdAt&limit=100&filters[resourceType][$ne]=admin`;
+    ? `/journal?filters[resourceId]=${resourceId}&filters[createdAt][$gte]=${DATE}&sort=-createdAt&limit=200&filters[resourceType][$ne]=admin&filters[resourceType][$ne]=groups`
+    : `/journal?filters[createdAt][$gte]=${DATE}&sort=-createdAt&limit=200&filters[resourceType][$ne]=admin`;
 
   const { data, error, isLoading } = useFetch(url);
 
