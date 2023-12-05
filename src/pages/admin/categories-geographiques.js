@@ -2,30 +2,22 @@ import { Badge, Breadcrumb, BreadcrumbItem, Col, Container, Modal, ModalContent,
 import { useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import Button from '../../components/button';
-import RelationTypesForm from '../../components/forms/relation-types';
-import useDebounce from '../../hooks/useDebounce';
+import GeographicalCategoriesForm from '../../components/forms/geographical-categories';
 import useFetch from '../../hooks/useFetch';
 import useNotice from '../../hooks/useNotice';
 import api from '../../utils/api';
 import { toString } from '../../utils/dates';
 import { deleteError, deleteSuccess, saveError, saveSuccess } from '../../utils/notice-contents';
-import { normalize } from '../../utils/strings';
 import { Spinner } from '../../components/spinner';
 
-function getSearchableRelationType(relationType) {
-  const { name, maleName, feminineName, mandateTypeGroup, otherNames = [], for: relationFor = [] } = relationType;
-  return normalize([name, maleName, feminineName, mandateTypeGroup, ...otherNames, ...relationFor].filter((elem) => elem).join(' '));
-}
-
-export default function RelationTypesPage() {
-  const route = '/relation-types';
+export default function GeographicalCategories() {
+  const route = '/geographical-categories';
   const { data, isLoading, error, reload } = useFetch(`${route}?limit=500&sort=priority`);
   const [isOpen, setIsOpen] = useState();
   const [modalTitle, setModalTitle] = useState('');
   const [modalContent, setModalContent] = useState(null);
   const { notice } = useNotice();
   const [query, setQuery] = useState('');
-  const debouncedQuery = useDebounce(query, 500);
 
   const handleSave = async (body, itemId) => {
     const method = itemId ? 'patch' : 'post';
@@ -52,7 +44,7 @@ export default function RelationTypesPage() {
   const handleModalToggle = (item = {}) => {
     const { id, ...rest } = item;
     setModalContent(
-      <RelationTypesForm
+      <GeographicalCategoriesForm
         id={id}
         data={rest}
         onDelete={handleDelete}
@@ -65,9 +57,7 @@ export default function RelationTypesPage() {
 
   if (error) return <div>Erreur</div>;
   if (isLoading) return <Spinner />;
-  const filteredData = query
-    ? data?.data?.filter((item) => getSearchableRelationType(item).includes(normalize(debouncedQuery)))
-    : data?.data;
+
   return (
     <Container fluid>
       <Row>
@@ -91,50 +81,24 @@ export default function RelationTypesPage() {
         <TextInput placeholder="Filtrer" value={query} onChange={(e) => setQuery(e.target.value)} size="sm" />
       </Row>
       <hr />
-      {filteredData?.map((item) => (
+      {data.data?.map((item) => (
         <Container fluid key={item.id}>
           <Row className="flex--space-between">
             <Col className="flex--grow fr-pl-2w">
               <Row><Text spacing="my-1v" bold size="lg">{item.name}</Text></Row>
               <Row>
                 <Text as="span" bold className="fr-mb-2v">
-                  Priorité :
+                  Level :
                   {' '}
-                  <Badge text={item.priority} />
+                  <Badge text={item.level} />
                 </Text>
               </Row>
               <Row>
                 <Text as="span" bold className="fr-mb-2v">
-                  Autres noms :
-                  {' '}
-                  {item.otherNames.length ? item.otherNames.map((name) => <Tag key={name} as="span">{name}</Tag>) : <Text as="span">Aucun alias pour le moment</Text>}
+                  Nom :
+                  <Tag key={item.nameFr} as="span">{item.nameFr}</Tag>
                 </Text>
               </Row>
-              <Row>
-                <Text as="span" bold className="fr-mb-2v">
-                  Appliquable aux :
-                  {' '}
-                  {item.for.map((object) => (
-                    <Tag key={object} as="span">
-                      {object === 'persons' ? 'Personnes' : null}
-                      {object === 'structures' ? 'Structures' : null}
-                      {object === 'prizes' ? 'Prix' : null}
-                      {object === 'projects' ? 'Projets' : null}
-                      {object === 'terms' ? 'Termes' : null}
-                      {object === 'categories' ? 'Categories' : null}
-                    </Tag>
-                  ))}
-                </Text>
-              </Row>
-              {item?.for?.includes('persons') && (
-                <Row>
-                  <Text as="span" bold className="fr-mb-2v">
-                    Groupe de gouvernance :
-                    {' '}
-                    {item.mandateTypeGroup}
-                  </Text>
-                </Row>
-              )}
               <Row>
                 <Text spacing="mt-2w mb-0" size="xs">
                   Créé le

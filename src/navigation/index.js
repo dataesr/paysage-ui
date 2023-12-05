@@ -61,6 +61,7 @@ import {
   AdminPage,
   AdminRelationTypesPage,
   AdminUsersPage,
+  AdminGeographicalExceptionsPage,
   AdminGeographicalCategoriesPage,
 } from '../pages/admin';
 
@@ -118,7 +119,8 @@ export default function Routes() {
               <Route path="nomenclatures/types-de-document" element={<AdminNomenclaturesPage route="/document-types" title="Types de documents" />} />
               <Route path="nomenclatures/ministres-de-tutelle" element={<AdminNomenclaturesPage route="/supervising-ministers" title="Ministres de tutelle" />} />
               <Route path="nomenclatures/types-de-mail" element={<AdminNomenclaturesPage route="/email-types" title="Types d'email" />} />
-              <Route path="exceptions-geographiques" element={<AdminGeographicalCategoriesPage route="/geographical-exceptions" title="Exception géographiques" />} />
+              <Route path="exceptions-geographiques" element={<AdminGeographicalExceptionsPage route="/geographical-exceptions" title="Exception géographiques" />} />
+              <Route path="categories-geographiques" element={<AdminGeographicalCategoriesPage route="/categories-geographiques" title="Catégories géographiques" />} />
               <Route path="imports/structures" element={<BulkImport type="structures" />} />
               <Route path="imports/personnes" element={<BulkImport type="personnes" />} />
               <Route path="imports/laureats" element={<BulkImport type="laureats" />} />

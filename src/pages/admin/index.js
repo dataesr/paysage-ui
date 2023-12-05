@@ -3,12 +3,14 @@ import { Outlet, Link as RouterLink, useLocation } from 'react-router-dom';
 import usePageTitle from '../../hooks/usePageTitle';
 import AdminApiKeysPage from './api-keys';
 import AdminLegalCategoriesPage from './categories-juridiques';
-import AdminGeographicalCategoriesPage from './exceptions-geographiques';
+import AdminGeographicalExceptionsPage from './exceptions-geographiques';
 import AdminDashboardPage from './dashboard';
 import AdminGroupsPage from './groupes';
 import AdminJobsPage from './jobs';
 import AdminJournalPage from './journal';
 import AdminNomenclaturesPage from './nomenclatures';
+import AdminGeographicalCategoriesPage from './categories-geographiques';
+
 import AdminRelationTypesPage from './relation-types';
 import AdminUsersPage from './users';
 
@@ -52,6 +54,9 @@ function AdminPage() {
               <SideMenuLink className={(page === 'types-de-relation') && 'sidemenu__item--active'} asLink={<RouterLink to="/admin/types-de-relation" replace />}>
                 Types de relation
               </SideMenuLink>
+              <SideMenuLink className={(page === 'categories-geographiques') && 'sidemenu__item--active'} asLink={<RouterLink to="/admin/categories-geographiques" replace />}>
+                Catégories géographiques
+              </SideMenuLink>
             </SideMenuItem>
             <SideMenuLink className={(page === 'exceptions-geographiques') && 'sidemenu__item--active'} asLink={<RouterLink to="/admin/exceptions-geographiques" replace />}>
               Exceptions géographiques
@@ -92,5 +97,5 @@ function AdminPage() {
 export {
   AdminDashboardPage, AdminPage, AdminUsersPage, AdminNomenclaturesPage, AdminJournalPage,
   AdminLegalCategoriesPage, AdminRelationTypesPage, AdminGroupsPage, AdminApiKeysPage, AdminJobsPage,
-  AdminGeographicalCategoriesPage,
+  AdminGeographicalExceptionsPage, AdminGeographicalCategoriesPage,
 };
