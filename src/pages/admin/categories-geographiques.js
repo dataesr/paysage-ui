@@ -9,6 +9,7 @@ import api from '../../utils/api';
 import { toString } from '../../utils/dates';
 import { deleteError, deleteSuccess, saveError, saveSuccess } from '../../utils/notice-contents';
 import { Spinner } from '../../components/spinner';
+import { GEOGRAPHICAL_CATEGORIES_LABELS_MAPPER } from '../../utils/constants';
 
 export default function GeographicalCategories() {
   const route = '/geographical-categories';
@@ -18,6 +19,17 @@ export default function GeographicalCategories() {
   const [modalContent, setModalContent] = useState(null);
   const { notice } = useNotice();
   const [query, setQuery] = useState('');
+  const [filteredData, setFilteredData] = useState(data?.data);
+
+  const handleFilter = () => {
+    const filtered = data.data.filter((item) => item.nameFr.toLowerCase().includes(query.toLowerCase()));
+    setFilteredData(filtered);
+  };
+
+  const handleQueryChange = (e) => {
+    setQuery(e.target.value);
+    handleFilter();
+  };
 
   const handleSave = async (body, itemId) => {
     const method = itemId ? 'patch' : 'post';
@@ -78,19 +90,21 @@ export default function GeographicalCategories() {
       </Row>
       <hr />
       <Row>
-        <TextInput placeholder="Filtrer" value={query} onChange={(e) => setQuery(e.target.value)} size="sm" />
+        <Col>
+          <TextInput placeholder="Filtrer par nom de catégories géographique" value={query} onChange={handleQueryChange} size="sm" />
+        </Col>
       </Row>
       <hr />
-      {data.data?.map((item) => (
+      {filteredData?.map((item) => (
         <Container fluid key={item.id}>
           <Row className="flex--space-between">
             <Col className="flex--grow fr-pl-2w">
               <Row><Text spacing="my-1v" bold size="lg">{item.name}</Text></Row>
               <Row>
                 <Text as="span" bold className="fr-mb-2v">
-                  Level :
+                  Niveau :
                   {' '}
-                  <Badge text={item.level} />
+                  <Badge text={GEOGRAPHICAL_CATEGORIES_LABELS_MAPPER[item.level]} />
                 </Text>
               </Row>
               <Row>

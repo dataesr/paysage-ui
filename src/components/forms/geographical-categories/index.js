@@ -1,21 +1,17 @@
 import PropTypes from 'prop-types';
-import { Col, Container, Row } from '@dataesr/react-dsfr';
+import { Col, Container, Row, TextInput } from '@dataesr/react-dsfr';
 import { useState } from 'react';
-import TagInput from '../../tag-input';
 import useForm from '../../../hooks/useForm';
 import PaysageBlame from '../../paysage-blame';
 import FormFooter from '../form-footer';
 
 function validate(body) {
+  console.log(body);
   const validationErrors = {};
-  if (!body.name) { validationErrors.name = 'Le nom est obligatoire'; }
-  if (!body.for?.length) { validationErrors.for = 'Ce champs est obligatoire'; }
-  const priority = parseInt(body.priority, 10);
-  if (priority > 99 || priority < 1) { validationErrors.for = 'Doit être compris en 1 (priorité forte) et 99 (priorité faible)'; }
   return validationErrors;
 }
 function sanitize(form) {
-  const fields = ['name', 'pluralName', 'maleName', 'feminineName', 'priority', 'otherNames', 'for', 'mandateTypeGroup'];
+  const fields = ['geometry'];
   const body = {};
   Object.keys(form).forEach((key) => { if (fields.includes(key)) { body[key] = form[key]; } });
   body.priority = parseInt(body.priority, 10);
@@ -25,6 +21,7 @@ function sanitize(form) {
 export default function GeographicalCategoriesForm({ id, data, onSave, onDelete }) {
   const { form, updateForm, errors } = useForm({ priority: 99, for: [], ...data }, validate);
   const [showErrors, setShowErrors] = useState(false);
+  const [input, setInput] = useState('');
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -34,7 +31,6 @@ export default function GeographicalCategoriesForm({ id, data, onSave, onDelete 
   };
 
   if (showErrors) { return null; }
-  //   Attention modifier ici
 
   return (
     <form>
@@ -47,11 +43,13 @@ export default function GeographicalCategoriesForm({ id, data, onSave, onDelete 
         />
         <Row>
           <Col n="12" spacing="pb-3w">
-            <TagInput
-              label="Ajouter le nouveau polygone"
-              hint='Valider votre ajout avec la touche "Entrée"'
-              tags={form.otherNames || []}
-              onTagsChange={(tags) => updateForm({ otherNames: tags })}
+            <TextInput
+              label="Polygone (en format multipolygone)"
+              onChange={(e) => updateForm({ geometry: e.target.value })}
+              required
+              rows="12"
+              textarea
+              value={form.geometry}
             />
           </Col>
         </Row>
