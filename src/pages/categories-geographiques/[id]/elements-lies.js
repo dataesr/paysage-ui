@@ -135,10 +135,12 @@ export default function GeographicalCategoryRelatedElements() {
             Télécharger la liste
           </BlocActionButton>
         </Col>
-        <Title as="h2" look="h4">
-          Structures associées
-          <Badge text={filteredMarkers.length} colorFamily="yellow-tournesol" />
-        </Title>
+        {id !== 'nruh5' && (
+          <Title as="h2" look="h4">
+            Structures associées
+            <Badge text={filteredMarkers.length} colorFamily="yellow-tournesol" />
+          </Title>
+        ) }
         <Row alignItems="middle" spacing="mb-1v">
           <Text className="fr-m-0" size="sm" as="span"><i>Filtrer par categories :</i></Text>
         </Row>
@@ -147,7 +149,6 @@ export default function GeographicalCategoryRelatedElements() {
             <TagGroup>
               {sortedCategories.slice(0, categoriesToShow).map((category) => {
                 const categoryCount = getCategoryCount(category);
-
                 return (
                   <Tag
                     className="no-span"
@@ -170,14 +171,16 @@ export default function GeographicalCategoryRelatedElements() {
           </Col>
         </Row>
         <Row gutters className="fr-mb-3w">
-          <Col>
-            <div aria-hidden>
-              <Map
-                markers={filteredMarkers}
-                height="400px"
-              />
-            </div>
-          </Col>
+          {id !== 'nruh5' || id !== '2c66n' ? (
+            <Col n="12">
+              <div aria-hidden>
+                <Map
+                  height="400px"
+                  markers={filteredMarkers}
+                />
+              </div>
+            </Col>
+          ) : ''}
         </Row>
         <Row alignItems="middle" spacing="mb-1v">
           <Col n="12" spacing="mb-5w">

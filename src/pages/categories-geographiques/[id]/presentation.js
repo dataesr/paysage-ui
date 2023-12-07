@@ -134,7 +134,7 @@ export default function GeographicalCategoryPresentationPage() {
           </Col>
         </Row>
       )}
-      {data.parent && (
+      {data?.parent && (
         <Row spacing="mb-3w">
           <Col n="4">
             <Link href={`/categories-geographiques/${data?.parent?.id}/presentation`}>
@@ -149,15 +149,34 @@ export default function GeographicalCategoryPresentationPage() {
           </Col>
         </Row>
       )}
-      <Col n="12">
-        <div aria-hidden>
-          <Map
-            height="800px"
-            markers={markers}
-            polygonCoordinates={polygonCoordinates}
-          />
-        </div>
-      </Col>
+      {data?.children && (
+        <Row spacing="mb-3w" gutters>
+          {data?.children.map((child) => (
+            <Col n="12 md-4">
+              <Link key={child?.id} href={`/categories-geographiques/${child?.id}/presentation`}>
+                <KeyValueCard
+                  titleAsText
+                  className="card-geographical-categories"
+                  cardKey="Catégorie géographique enfant"
+                  cardValue={`${child?.nameFr} (${capitalize(GEOGRAPHICAL_CATEGORIES_LABELS_MAPPER[child?.level])})`}
+                  icon="ri-align-left"
+                />
+              </Link>
+            </Col>
+          ))}
+        </Row>
+      )}
+      {data.nameFr !== 'France' && (
+        <Col n="12">
+          <div aria-hidden>
+            <Map
+              height="400px"
+              markers={markers}
+              polygonCoordinates={polygonCoordinates}
+            />
+          </div>
+        </Col>
+      )}
       <Row spacing="mt-5w">
         <Title as="h2" look="h4">
           Structures associées
