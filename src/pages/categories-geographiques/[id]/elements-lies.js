@@ -135,12 +135,12 @@ export default function GeographicalCategoryRelatedElements() {
             Télécharger la liste
           </BlocActionButton>
         </Col>
-        {id !== 'nruh5' && (
+        {id !== 'nruh5' || id !== '2c66n' ? (
           <Title as="h2" look="h4">
             Structures associées
             <Badge text={filteredMarkers.length} colorFamily="yellow-tournesol" />
           </Title>
-        ) }
+        ) : ''}
         <Row alignItems="middle" spacing="mb-1v">
           <Text className="fr-m-0" size="sm" as="span"><i>Filtrer par categories :</i></Text>
         </Row>
