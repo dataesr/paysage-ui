@@ -54,9 +54,9 @@ function AdminPage() {
               <SideMenuLink className={(page === 'types-de-relation') && 'sidemenu__item--active'} asLink={<RouterLink to="/admin/types-de-relation" replace />}>
                 Types de relation
               </SideMenuLink>
-              <SideMenuLink className={(page === 'categories-geographiques') && 'sidemenu__item--active'} asLink={<RouterLink to="/admin/categories-geographiques" replace />}>
+              {/* <SideMenuLink className={(page === 'categories-geographiques') && 'sidemenu__item--active'} asLink={<RouterLink to="/admin/categories-geographiques" replace />}>
                 Catégories géographiques
-              </SideMenuLink>
+              </SideMenuLink> */}
             </SideMenuItem>
             <SideMenuLink className={(page === 'exceptions-geographiques') && 'sidemenu__item--active'} asLink={<RouterLink to="/admin/exceptions-geographiques" replace />}>
               Exceptions géographiques
