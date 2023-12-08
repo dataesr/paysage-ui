@@ -135,7 +135,7 @@ export default function GeographicalCategoryRelatedElements() {
             Télécharger la liste
           </BlocActionButton>
         </Col>
-        {id !== 'nruh5' || id !== '2c66n' ? (
+        {id !== 'nruh5' && id !== '2c66n' && id !== '4d6le' ? (
           <Title as="h2" look="h4">
             Structures associées
             <Badge text={filteredMarkers.length} colorFamily="yellow-tournesol" />
@@ -171,7 +171,7 @@ export default function GeographicalCategoryRelatedElements() {
           </Col>
         </Row>
         <Row gutters className="fr-mb-3w">
-          {id !== 'nruh5' || id !== '2c66n' ? (
+          {id !== 'nruh5' && id !== '2c66n' && id !== '4d6le' ? (
             <Col n="12">
               <div aria-hidden>
                 <Map
