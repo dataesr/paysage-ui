@@ -47,9 +47,9 @@ export default function Report({ type, rows }) {
           value = warningMessages;
         } else {
           const fieldKey = currentModel[header];
-          const fieldValues = row.body[fieldKey];
+          const fieldValues = row?.body[fieldKey];
 
-          if (typeof fieldValues === 'object' && fieldValues !== null) {
+          if (Array.isArray(fieldValues)) {
             value = fieldValues.filter(Boolean).join('; ');
           } else if (fieldValues !== undefined) {
             value = fieldValues;
@@ -182,20 +182,22 @@ export default function Report({ type, rows }) {
                 </tbody>
               </table>
             </div>
-            {rows.map((el) => el.type === 'persons' || el.type === 'structures') && (
-              <Button
-                onClick={() => {
-                  const xlsxData = convertRowsToXLSXData(rows);
-                  if (xlsxData) {
-                    exportToXLSX(xlsxData);
-                  }
-                }}
-              >
-                Exporter la liste des imports en XLSX
-              </Button>
-            )}
           </Col>
         )}
+        <Row className="fr-mt-3w">
+          {rows.map((el) => el.type === 'persons' || el.type === 'structures') && (
+            <Button
+              onClick={() => {
+                const xlsxData = convertRowsToXLSXData(rows);
+                if (xlsxData) {
+                  exportToXLSX(xlsxData);
+                }
+              }}
+            >
+              Exporter la liste des imports en XLSX
+            </Button>
+          )}
+        </Row>
       </Row>
     </Container>
   );
