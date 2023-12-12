@@ -25,6 +25,7 @@ import { saveError, saveSuccess } from '../../../utils/notice-contents';
 import Error from '../../../components/errors';
 import usePageTitle from '../../../hooks/usePageTitle';
 import useAuth from '../../../hooks/useAuth';
+import CopyButton from '../../../components/copy/copy-button';
 
 function CategoryByIdPage() {
   const { url, id } = useUrl();
@@ -147,6 +148,10 @@ function CategoryByIdPage() {
           <Row className="flex--space-between flex--wrap-reverse">
             <Title as="h1">
               {data.usualNameFr}
+              <CopyButton
+                copyText={data.usualNameFr}
+                size="sm"
+              />
               <BadgeGroup className="fr-pt-1w">
                 <Badge text="catégorie" type="info" />
                 <CopyBadgeButton

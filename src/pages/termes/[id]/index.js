@@ -25,6 +25,7 @@ import TermForm from '../../../components/forms/category-term';
 import Error from '../../../components/errors';
 import usePageTitle from '../../../hooks/usePageTitle';
 import useAuth from '../../../hooks/useAuth';
+import CopyButton from '../../../components/copy/copy-button';
 
 function TermByIdPage() {
   const { url, id } = useUrl();
@@ -148,6 +149,10 @@ function TermByIdPage() {
           <Row>
             <Title as="h1">
               {data.usualNameFr}
+              <CopyButton
+                copyText={data.usualNameFr}
+                size="sm"
+              />
               <BadgeGroup className="fr-pt-1w">
                 <Badge text="terme" type="info" />
                 <CopyBadgeButton

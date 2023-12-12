@@ -27,7 +27,7 @@ import useUrl from '../../../hooks/useUrl';
 import api from '../../../utils/api';
 import { getComparableNow } from '../../../utils/dates';
 import { saveError, saveSuccess } from '../../../utils/notice-contents';
-import { getName, getOtherNames } from '../../../utils/structures';
+import { getName, getNameAndCopy, getOtherNames } from '../../../utils/structures';
 import StructureCategoriesPage from './categories';
 import StructureBudgetPage from './chiffres-cles/budget';
 import StructureEtudiantsPage from './chiffres-cles/etudiants';
@@ -282,7 +282,7 @@ function StructureByIdPage() {
           </Row>
           <Row>
             <Title as="h1">
-              {getName(data?.currentName)}
+              {getNameAndCopy(data?.currentName)}
               <Title className="fr-pr-1v" as="h2">{getOtherNames(data?.currentName)}</Title>
               <BadgeGroup className="fr-pt-1w">
                 <Badge type="info" text="structure" />

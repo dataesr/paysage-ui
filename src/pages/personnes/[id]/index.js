@@ -30,6 +30,7 @@ import PersonMandats from './mandats';
 import PersonPresentationPage from './presentation';
 import PersonPrizes from './prix-et-recompenses';
 import PersonProjets from './projets';
+import CopyButton from '../../../components/copy/copy-button';
 
 function PersonByIdPage() {
   const { viewer } = useAuth();
@@ -217,6 +218,10 @@ function PersonByIdPage() {
           <Row className="flex--space-between flex--wrap-reverse">
             <Title as="h1">
               {personName}
+              <CopyButton
+                copyText={personName}
+                size="sm"
+              />
               <BadgeGroup className="fr-pt-1w">
                 <Badge text="personne" type="info" />
                 <CopyBadgeButton

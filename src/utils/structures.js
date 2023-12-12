@@ -1,3 +1,5 @@
+import CopyButton from '../components/copy/copy-button';
+
 export function getName(item) {
   return (
     <>
@@ -9,6 +11,29 @@ export function getName(item) {
       {item?.nameFr}
       {item?.currentName?.usualName}
       {item?.resource?.currentName?.usualName}
+    </>
+  );
+}
+
+export function getNameAndCopy(item) {
+  const fullText = `
+    ${item?.shortName ? `${item.shortName} - ` : ''}
+    ${!item?.shortName && item?.acronymFr ? `${item.acronymFr} - ` : ''}
+    ${!item?.shortName && item?.acronym ? `${item.acronym} - ` : ''}
+    ${item?.usualName || ''}
+    ${item?.name || ''}
+    ${item?.nameFr || ''}
+    ${item?.currentName?.usualName || ''}
+    ${item?.resource?.currentName?.usualName || ''}
+  `.trim().replace(/\s+/g, ' ');
+
+  return (
+    <>
+      {fullText}
+      <CopyButton
+        copyText={fullText}
+        size="sm"
+      />
     </>
   );
 }
