@@ -1,4 +1,4 @@
-import { Badge, Col, Container, Icon, Link, Row, Title } from '@dataesr/react-dsfr';
+import { Badge, Button, Col, Container, Icon, Link, Row, Title } from '@dataesr/react-dsfr';
 import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import useFetch from '../../../hooks/useFetch';
@@ -39,12 +39,18 @@ export default function GeographicalCategoryPresentationPage() {
   const { data, isLoading, error } = useFetch(url);
   const originalId = data?.originalId;
   const wikidata = data?.wikidata;
+  const limit = data?.nameFr === 'France' ? 2000 : 10000;
   const {
     data: dataStructures,
     isLoading: structuresLoading,
-  } = useFetch(`${url}/structures`);
+  } = useFetch(`${url}/structures?limit=${limit}`);
 
   const [wikiInfo, setWikiInfo] = useState(null);
+  const [visibleCards, setVisibleCards] = useState(5);
+
+  const showMoreCards = () => {
+    setVisibleCards((prevVisibleCards) => prevVisibleCards + 5);
+  };
 
   useEffect(() => {
     const fetchWikipediaInfo = async () => {
@@ -151,9 +157,9 @@ export default function GeographicalCategoryPresentationPage() {
       )}
       {data?.children && (
         <Row spacing="mb-3w" gutters>
-          {data?.children.map((child) => (
-            <Col n="12 md-4">
-              <Link key={child?.id} href={`/categories-geographiques/${child?.id}/presentation`}>
+          {data?.children.slice(0, visibleCards).map((child) => (
+            <Col key={child?.id} n="12 md-4">
+              <Link href={`/categories-geographiques/${child?.id}/presentation`}>
                 <KeyValueCard
                   titleAsText
                   className="card-geographical-categories"
@@ -164,9 +170,15 @@ export default function GeographicalCategoryPresentationPage() {
               </Link>
             </Col>
           ))}
+          <Col>
+            {data.children.length > visibleCards && (
+              <Button onClick={showMoreCards}>Afficher plus</Button>
+            )}
+          </Col>
         </Row>
       )}
       {data.nameFr !== 'France' && (
+
         <Col n="12">
           <div aria-hidden>
             <Map
@@ -177,6 +189,7 @@ export default function GeographicalCategoryPresentationPage() {
           </div>
         </Col>
       )}
+
       <Row spacing="mt-5w">
         <Title as="h2" look="h4">
           Structures associées
@@ -184,7 +197,7 @@ export default function GeographicalCategoryPresentationPage() {
         </Title>
         <Row spacing="mt-3w">
           <Col n="12">
-            <StructuresList data={dataStructures?.data} id={id} wikidata={wikidata} />
+            <StructuresList isLoading={isLoading} data={dataStructures?.data} id={id} wikidata={wikidata} />
           </Col>
         </Row>
       </Row>

@@ -29,7 +29,7 @@ export function StructuresList({ data, id }) {
   }
 
   const list = data
-    .filter((item) => item.currentName.usualName.toLowerCase().indexOf(filter.toLowerCase()) > -1)
+    .filter((item) => item?.currentName?.usualName.toLowerCase().indexOf(filter.toLowerCase()) > -1)
     .map((item) => (
       <div className="fr-card fr-card--xs fr-card--grey fr-card--no-border">
         <div className={`fr-card__body  ${styles['structures-border']} `}>
