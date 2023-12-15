@@ -191,15 +191,8 @@ export default async function checker(docs, index) {
     const rnsrDuplicate = await duplicateIdChecker('rnsr', doc.rnsr);
     const rorDuplicate = await duplicateIdChecker('ror', doc.ror);
     const uaiDuplicate = await duplicateIdChecker('uai', doc.uai);
-    const bibidDuplicate = await duplicateIdChecker('bibid', doc.bibid);
     const cruchbaseDuplicate = await duplicateIdChecker('cruchbase', doc.cruchbase);
     const dealroomDuplicate = await duplicateIdChecker('dealroom', doc.dealroom);
-    const googleScholarDuplicate = await duplicateIdChecker('googleScholar', doc.googleScholar);
-    const rinngoldDuplicate = await duplicateIdChecker('rinngold', doc.rinngold);
-    const idhalDuplicate = await duplicateIdChecker('idhal', doc.idhal);
-    const gridDuplicate = await duplicateIdChecker('grid', doc.grid);
-    const fundrefDuplicate = await duplicateIdChecker('fundref', doc.fundref);
-    const finessDuplicate = await duplicateIdChecker('finess', doc.finess);
     const wikidataDuplicate = await duplicateIdChecker('wikidata', doc.wikidata);
     const edFormat = await idFormatChecker('ed', doc.ed);
     const identifiersDuplicateInFile = await checkDuplicateIdentifiers(docs, index);
@@ -213,9 +206,9 @@ export default async function checker(docs, index) {
     const websiteChecked = await websiteChecker(doc);
     const duplicateChecker = await rowsChecker(docs, index);
     const warning = [
-      ...bibidDuplicate, ...cruchbaseDuplicate, ...dealroomDuplicate,
-      ...duplicateChecker, ...edDuplicate, ...finessDuplicate, ...fundrefDuplicate, ...googleScholarDuplicate, ...gridDuplicate,
-      ...idhalDuplicate, ...idrefDuplicate, ...identifiersDuplicateInFile, ...nameDuplicateWarnings, ...rinngoldDuplicate, ...rorDuplicate,
+      ...cruchbaseDuplicate, ...dealroomDuplicate,
+      ...duplicateChecker, ...edDuplicate,
+      ...idrefDuplicate, ...identifiersDuplicateInFile, ...nameDuplicateWarnings, ...rorDuplicate,
       ...rnsrDuplicate, ...siretDuplicate, ...uaiDuplicate, ...websiteChecked, ...wikidataDuplicate,
     ];
     const error = [...requiredErrors, ...parentErrors,
