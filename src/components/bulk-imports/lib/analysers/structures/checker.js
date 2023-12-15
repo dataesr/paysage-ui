@@ -132,7 +132,7 @@ function requiredChecker({ usualName, country, iso3, structureStatus, categories
   if (!legalCategory) errors.push({ message: 'Vous devez renseigner la catégorie juridique' });
   if (!iso3) errors.push({ message: 'Le code iso3 est obligatoire' });
   if (!country) errors.push({ message: 'Le pays est obligatoire' });
-  if (index > 150) errors.push({ message: 'Votre fichier est trop long. Ne depassez pas les 200 lignes' });
+  if (index > 199) errors.push({ message: 'Votre fichier est trop long. Ne depassez pas les 200 lignes' });
 
   return errors;
 }
