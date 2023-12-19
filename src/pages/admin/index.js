@@ -80,6 +80,12 @@ function AdminPage() {
               <SideMenuLink className={(page === 'terms') && 'sidemenu__item--active'} asLink={<RouterLink to="/admin/imports/terms" replace />}>
                 Termes
               </SideMenuLink>
+              <SideMenuLink className={(page === 'structures-identifiers') && 'sidemenu__item--active'} asLink={<RouterLink to="/admin/imports/structures-identifiers" replace />}>
+                Identifiants de structure
+              </SideMenuLink>
+              <SideMenuLink className={(page === 'persons-identifiers') && 'sidemenu__item--active'} asLink={<RouterLink to="/admin/imports/persons-identifiers" replace />}>
+                Identifiants de personne
+              </SideMenuLink>
             </SideMenuItem>
             <SideMenuLink className={(page === 'taches') && 'sidemenu__item--active'} asLink={<RouterLink to="/admin/taches" replace />}>
               Tâches du système

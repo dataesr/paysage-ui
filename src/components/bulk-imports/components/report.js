@@ -8,9 +8,11 @@ import { prizesHeadersMapping } from '../lib/analysers/prizes/headers-mapping';
 import { laureatHeadersMapping } from '../lib/analysers/laureats/headers-mapping';
 import { gouvernanceHeadersMapping } from '../lib/analysers/gouvernance/headers-mapping';
 import { termsHeadersMapping } from '../lib/analysers/terms/headers-mapping';
+import { structuresIdentifiersHeadersMapping } from '../lib/analysers/structures-identifiers/headers-mapping';
 
 export default function Report({ type, rows }) {
   const [displayList, setDisplayList] = useState(true);
+
   if (!rows.length) return null;
 
   const typeOfImport = rows.map((el) => el.type)[0];
@@ -22,7 +24,7 @@ export default function Report({ type, rows }) {
     laureats: laureatHeadersMapping,
     gouvernance: gouvernanceHeadersMapping,
     terms: termsHeadersMapping,
-
+    'structures-identifiers': structuresIdentifiersHeadersMapping,
   };
 
   const convertRowsToXLSXData = (dataRows) => {
@@ -145,7 +147,7 @@ export default function Report({ type, rows }) {
                                 {item?.message}
                               </li>
                             ))}
-                            {(row?.imports?.status === 'imported' && row?.type !== 'laureats') && (
+                            {(row?.imports?.status === 'imported' && row?.type !== 'laureats' && row?.type !== 'structures (identifiants)' && row?.type !== 'personnes (identifiants)') && (
                               <li>
                                 L'objet a été importé avec succès
                                 {row.imports?.href && ' '}
@@ -172,6 +174,36 @@ export default function Report({ type, rows }) {
                                   {row.priceName}
                                 </Link>
                                 a bien été effectuée
+                              </li>
+                            )}
+                            {row.type === 'structures (identifiants)' && (
+                              <li>
+                                L'identifiant
+                                {' '}
+                                {row.body.type}
+                                {' '}
+                                {row.body.value}
+                                {' '}
+                                a été ajouté.
+                                {' '}
+                                <Link target="_blank" href={`/structures/${row?.body?.structureId}`}>
+                                  Voir la structure
+                                </Link>
+                              </li>
+                            )}
+                            {row.type === 'personnes (identifiants)' && (
+                              <li>
+                                L'identifiant
+                                {' '}
+                                {row.body.type}
+                                {' '}
+                                {row.body.value}
+                                {' '}
+                                a été ajouté.
+                                {' '}
+                                <Link target="_blank" href={`/personnes/${row?.body?.personId}`}>
+                                  Voir la personne
+                                </Link>
                               </li>
                             )}
                           </ul>

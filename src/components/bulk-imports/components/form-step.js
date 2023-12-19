@@ -10,6 +10,8 @@ const MODELS = {
   laureats: '/models/BulkImportLaureats.xlsx',
   gouvernance: '/models/BulkImportGouvernance.xlsx',
   termes: '/models/BulkImportTerms.xlsx',
+  'structures (identifiants)': '/models/BulkImportStructuresIdentifiers.xlsx',
+  'personnes (identifiants)': '/models/BulkImportPersonsIdentifiers.xlsx',
 };
 
 export default function FormStep({ type, onInputValidation, fileError }) {
@@ -62,7 +64,7 @@ export default function FormStep({ type, onInputValidation, fileError }) {
 }
 
 FormStep.propTypes = {
-  type: PropTypes.oneOf(['structures', 'personnes', 'gouvernance', 'prix', 'laureats', 'termes']).isRequired,
+  type: PropTypes.oneOf(['structures', 'personnes', 'gouvernance', 'prix', 'laureats', 'termes', 'structures (identifiants)', 'personnes (identifiants)']).isRequired,
   onInputValidation: PropTypes.func.isRequired,
   fileError: PropTypes.bool,
 };

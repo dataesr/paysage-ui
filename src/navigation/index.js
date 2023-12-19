@@ -127,6 +127,8 @@ export default function Routes() {
               <Route path="imports/gouvernance" element={<BulkImport type="gouvernance" />} />
               <Route path="imports/terms" element={<BulkImport type="termes" />} />
               <Route path="imports/prix" element={<BulkImport type="prix" />} />
+              <Route path="imports/structures-identifiers" element={<BulkImport type="structures (identifiants)" />} />
+              <Route path="imports/persons-identifiers" element={<BulkImport type="personnes (identifiants)" />} />
             </Route>
           </Route>
           <Route element={<ProtectedRoute roles={['admin', 'user']} />}>

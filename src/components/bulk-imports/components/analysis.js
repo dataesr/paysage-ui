@@ -9,6 +9,8 @@ import { prizesHeadersMapping } from '../lib/analysers/prizes/headers-mapping';
 import { laureatHeadersMapping } from '../lib/analysers/laureats/headers-mapping';
 import { gouvernanceHeadersMapping } from '../lib/analysers/gouvernance/headers-mapping';
 import { termsHeadersMapping } from '../lib/analysers/terms/headers-mapping';
+import { structuresIdentifiersHeadersMapping } from '../lib/analysers/structures-identifiers/headers-mapping';
+import { personsIdentifiersHeadersMapping } from '../lib/analysers/persons-identifiers/headers-mapping';
 
 export default function Analysis({ type, rows, handleForceImport }) {
   const [displayList, setDisplayList] = useState(false);
@@ -23,7 +25,8 @@ export default function Analysis({ type, rows, handleForceImport }) {
     laureats: laureatHeadersMapping,
     gouvernance: gouvernanceHeadersMapping,
     terms: termsHeadersMapping,
-
+    'structures (identifiants)': structuresIdentifiersHeadersMapping,
+    'personnes (identifiants)': personsIdentifiersHeadersMapping,
   };
 
   const convertRowsToXLSXData = (dataRows) => {

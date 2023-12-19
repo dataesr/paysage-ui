@@ -13,7 +13,7 @@ export function regexpValidateIdentifiers(type) {
     'piaweb-organization': [/^\d{1,10}$/, 'Un PIA ne contient que des chiffres'],
     'piaweb-project': [/^\d{1,10}$/, 'Un PIA ne contient que des chiffres'],
     uai: [/^[0-9]{7}[A-Z]{1}$/, "Un UAI doit commencer par 7 chiffres suivis d'une lettre majuscule"],
-    wikidata: [/^Q[0-9]+$/, 'Un wikidata doit commencer par "Q"'],
+    wikidata: [/^Q[0-9]+$/, "L'identifiant wikidata n'est pas valide"],
     orcid: [/^\d{4}-\d{4}-\d{4}-\d{3}[0-9X]$/, 'Un orcid doit contenir 4 fois 4 chiffres et se termine par un chiffre ou un "X"'],
   };
   return validator[type] || [null, null];

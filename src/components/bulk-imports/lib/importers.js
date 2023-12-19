@@ -20,11 +20,18 @@ async function bulk(analysis, url) {
       .catch(() => ({ ...a, imports: { status: 'error', error: [{ message: 'Une erreur inattendue est survenue' }] } }));
   })));
 }
-
 export default async function bulkImport(analysis, type) {
   switch (type) {
   case 'structures':
     return bulk(analysis, '/structures');
+  case 'structures (identifiants)': {
+    const results = await Promise.all(analysis.map(async (a) => bulk([a], `/structures/${a.body.structureId}/identifiers`)));
+    return results.flat();
+  }
+  case 'personnes (identifiants)': {
+    const results = await Promise.all(analysis.map(async (a) => bulk([a], `/persons/${a.body.personId}/identifiers`)));
+    return results.flat();
+  }
   case 'personnes':
     return bulk(analysis, '/persons');
   case 'gouvernance':
