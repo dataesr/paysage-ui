@@ -1,5 +1,6 @@
 import { Col, Icon, Row, Title } from '@dataesr/react-dsfr';
 
+import { useEffect, useState } from 'react';
 import {
   Bloc,
   BlocContent,
@@ -9,6 +10,18 @@ import useUrl from '../../../../hooks/useUrl';
 
 export default function StructureOffreDeFormationPage() {
   const { id } = useUrl('keynumbers');
+
+  const [formationCount, setFormationCount] = useState({ totalCount: 0 });
+
+  useEffect(() => {
+    // eslint-disable-next-line max-len
+    fetch(`https://data.enseignementsup-recherche.gouv.fr/api/explore/v2.1/catalog/datasets/fr-esr-principaux-diplomes-et-formations-prepares-etablissements-publics/records?limit=20&refine=etablissement_id_paysage:"${id}"`)
+      .then((response) => response.json())
+      .then((data) => {
+        const totalCount = data && data.total_count ? data.total_count : 0;
+        setFormationCount({ totalCount });
+      });
+  });
 
   return (
     <>
@@ -32,6 +45,22 @@ table/?disjunctive.tf&disjunctive.nm&disjunctive.fl&disjunctive.amg&refine.etabl
                 canEdit={false}
               />
             </Col>
+            {formationCount.totalCount > 0 && (
+              <Col n="12 md-6">
+                <WeblinkCard
+                  title={(
+                    <>
+                      <Icon className="ri-table-line" />
+                      Liste des principaux diplômes et formations préparés en open data
+                      {/* ICI SI > 0 bLABLABLA.. */}
+                    </>
+                  )}
+                  // eslint-disable-next-line max-len
+                  downloadUrl={`https://data.enseignementsup-recherche.gouv.fr/explore/dataset/fr-esr-principaux-diplomes-et-formations-prepares-etablissements-publics/table/?refine.etablissement_id_paysage=${id}`}
+                  canEdit={false}
+                />
+              </Col>
+            )}
             <Col n="12 md-6">
               <WeblinkCard
                 title={(

@@ -87,40 +87,44 @@ export default function StructureInsertionProfessionnellePage() {
               </Row>
             </>
           )}
-          <Title as="h2" look="h5" className="fr-mb-2w">
-            Enquête insertion professionnelle
-          </Title>
-          <Row spacing="mb-5v">
-            <Col n="12 md-6">
-              <WeblinkCard
-                title={(
-                  <>
-                    <Icon className="ri-table-line" />
-                    Insertion professionnelle des diplômés de Licence professionnelle LMD
-                  </>
-                )}
-                downloadUrl={`https://data.enseignementsup-recherche.gouv.fr/pages/insertion_professionnelle_etablissements/\
-?disjunctive.discipline2&refine.diplome=LICENCE_PRO&refine.id_paysage=${id}&sort=code_de_la_discipline`}
-                canEdit={false}
-              />
-            </Col>
-            {licenceInser.totalCount > 0
+          {licenceInser.totalCount > 0
           && (
-            <Col n="12 md-6">
-              <WeblinkCard
-                title={(
-                  <>
-                    <Icon className="ri-grid-line" />
-                    Données sur l'insertion professionnelle des diplômés de Licence professionnelle en open data
-                  </>
-                )}
-                downloadUrl={`https://data.enseignementsup-recherche.gouv.fr/explore/dataset/fr-esr-insertion_professionnelle-lp/\
-                  table/?disjunctive.numero_de_l_etablissement&disjunctive.academie&refine.id_paysage=${id}&sort=-annee`}
-                canEdit={false}
-              />
-            </Col>
+            <>
+              <Title as="h2" look="h5" className="fr-mb-2w">
+                Enquête insertion professionnelle
+              </Title>
+              <Row spacing="mb-5v">
+                <Col n="12 md-6">
+                  <WeblinkCard
+                    title={(
+                      <>
+                        <Icon className="ri-table-line" />
+                        Insertion professionnelle des diplômés de Licence professionnelle LMD
+                      </>
+                    )}
+                    // eslint-disable-next-line max-len
+                    downloadUrl={`https://data.enseignementsup-recherche.gouv.fr/pages/insertion_professionnelle_etablissements/?disjunctive.discipline2&refine.diplome=LICENCE_PRO&refine.id_paysage=${id}&sort=code_de_la_discipline`}
+                    canEdit={false}
+                  />
+                </Col>
+                <Col n="12 md-6">
+                  <WeblinkCard
+                    title={(
+                      <>
+                        <Icon className="ri-grid-line" />
+                        Données sur l'insertion professionnelle des diplômés de Licence professionnelle en open data
+                      </>
+                    )}
+                    // eslint-disable-next-line max-len
+                    downloadUrl={`https://data.enseignementsup-recherche.gouv.fr/explore/dataset/fr-esr-insertion_professionnelle-lp/table/?disjunctive.numero_de_l_etablissement&disjunctive.academie&refine.id_paysage=${id}&sort=-annee`}
+                    canEdit={false}
+                  />
+                </Col>
+              </Row>
+            </>
           )}
-            {masterInser.totalCount > 0 && (
+          {masterInser.totalCount > 0 && (
+            <Row spacing="mb-1v">
               <Col n="12 md-6">
                 <WeblinkCard
                   title={(
@@ -129,26 +133,26 @@ export default function StructureInsertionProfessionnellePage() {
                       Insertion professionnelle des diplômés de Master LMD
                     </>
                   )}
-                  downloadUrl={`https://data.enseignementsup-recherche.gouv.fr/pages/insertion_professionnelle_etablissements/\
-                  ?disjunctive.discipline2&refine.diplome=MASTER_LMD&refine.annee=2019&refine.id_paysage=${id}&sort=code_de_la_discipline`}
+                  // eslint-disable-next-line max-len
+                  downloadUrl={`https://data.enseignementsup-recherche.gouv.fr/pages/insertion_professionnelle_etablissements/?disjunctive.discipline2&refine.diplome=MASTER_LMD&refine.annee=2019&refine.id_paysage=${id}&sort=code_de_la_discipline`}
                   canEdit={false}
                 />
               </Col>
-            )}
-            <Col n="12 md-6">
-              <WeblinkCard
-                title={(
-                  <>
-                    <Icon className="ri-grid-line" />
-                    Données sur l'insertion professionnelle des diplômés de Master LMD en open data
-                  </>
-                )}
-                downloadUrl={`https://data.enseignementsup-recherche.gouv.fr/explore/dataset/fr-esr-insertion_professionnelle-master/\
-                  table/?disjunctive.numero_de_l_etablissement&disjunctive.academie&refine.id_paysage=${id}&sort=-annee`}
-                canEdit={false}
-              />
-            </Col>
-          </Row>
+              <Col n="12 md-6">
+                <WeblinkCard
+                  title={(
+                    <>
+                      <Icon className="ri-grid-line" />
+                      Données sur l'insertion professionnelle des diplômés de Master LMD en open data
+                    </>
+                  )}
+                  // eslint-disable-next-line max-len
+                  downloadUrl={`https://data.enseignementsup-recherche.gouv.fr/explore/dataset/fr-esr-insertion_professionnelle-master/table/?disjunctive.numero_de_l_etablissement&disjunctive.academie&refine.id_paysage=${id}&sort=-annee`}
+                  canEdit={false}
+                />
+              </Col>
+            </Row>
+          )}
           {ipDoc.totalCount > 0 && (
             <>
               <Title as="h2" look="h5" className="fr-mb-2w">
@@ -164,8 +168,8 @@ export default function StructureInsertionProfessionnellePage() {
                           Données sur l'insertion professionnelle des diplômés de doctorat en open data
                         </>
                       )}
-                      downloadUrl={`https://data.enseignementsup-recherche.gouv.fr/explore/dataset\
-/fr-esr-insertion-professionnelle-des-diplomes-doctorat-par-etablissement/table/?sort=-annee&refine.paysage=${id}`}
+                      // eslint-disable-next-line max-len
+                      downloadUrl={`https://data.enseignementsup-recherche.gouv.fr/explore/dataset/fr-esr-insertion-professionnelle-des-diplomes-doctorat-par-etablissement/table/?sort=-annee&refine.paysage=${id}`}
                       canEdit={false}
                     />
                   </Col>
