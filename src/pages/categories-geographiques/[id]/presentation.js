@@ -178,7 +178,6 @@ export default function GeographicalCategoryPresentationPage() {
         </Row>
       )}
       {data.nameFr !== 'France' && (
-
         <Col n="12">
           <div aria-hidden>
             <Map
