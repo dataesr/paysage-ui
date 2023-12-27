@@ -103,7 +103,7 @@ export default function StructureInsertionProfessionnellePage() {
                       </>
                     )}
                     // eslint-disable-next-line max-len
-                    downloadUrl={`https://data.enseignementsup-recherche.gouv.fr/pages/insertion_professionnelle_etablissements/?disjunctive.discipline2&refine.diplome=LICENCE_PRO&refine.id_paysage=${id}&sort=code_de_la_discipline`}
+                    downloadUrl={`https://data.enseignementsup-recherche.gouv.fr/pages/insertion_historique_etab_lp/?refine.id_paysage=${id}`}
                     canEdit={false}
                   />
                 </Col>
@@ -134,7 +134,7 @@ export default function StructureInsertionProfessionnellePage() {
                     </>
                   )}
                   // eslint-disable-next-line max-len
-                  downloadUrl={`https://data.enseignementsup-recherche.gouv.fr/pages/insertion_professionnelle_etablissements/?disjunctive.discipline2&refine.diplome=MASTER_LMD&refine.annee=2019&refine.id_paysage=${id}&sort=code_de_la_discipline`}
+                  downloadUrl={`https://data.enseignementsup-recherche.gouv.fr/pages/insertion_historique_etab_master/?refine.id_paysage=${id}`}
                   canEdit={false}
                 />
               </Col>
