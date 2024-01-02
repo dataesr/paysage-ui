@@ -1,6 +1,9 @@
 import { Button, Icon, Modal, ModalContent } from '@dataesr/react-dsfr';
 import { useState } from 'react';
 import PropTypes from 'prop-types';
+import { TYPES_MAPPING } from '../analysers/structures-identifiers/types-mappings';
+import CopyButton from '../../../copy/copy-button';
+import { PERSONS_TYPES_MAPPING } from '../analysers/persons-identifiers/persons-types-mapping';
 
 export default function HelperForStructures({ type }) {
   const [isModalOpen, setIsModalOpen] = useState();
@@ -117,6 +120,94 @@ export default function HelperForStructures({ type }) {
                       {' '}
                     </li>
                   </>
+                )}
+              {type === 'structures (identifiants)'
+                && (
+                  <>
+                    <li style={{ marginBottom: '10px' }}>
+                      <span style={{ color: 'purple', marginRight: '10px', fontSize: '20px' }}>✓</span>
+                      L'id de la structure est obligatoire, vérifiez qu'il existe
+                    </li>
+                    <li style={{ marginBottom: '10px' }}>
+                      <span style={{ marginRight: '10px', fontSize: '20px' }}>✓</span>
+                      Vérifiez que les identifiants soient valides
+                    </li>
+                    <li style={{ marginBottom: '20px' }}>
+                      <span style={{ marginRight: '10px', fontSize: '20px' }}>✓</span>
+                      Dans votre tableau, vous devrez renseigner dans la colonne "Type d'identifiant" la valeur exacte du type
+                      (en gras ci-dessous). Par exemple, pour ajouter un identifiant "ESBGU - id bibliothèque", renseignez simplement "bibid".
+                      <div style={{ display: 'flex', justifyContent: 'center' }}>
+                        <ul style={{ listStyleType: 'none', paddingLeft: '20px', marginTop: '10px' }}>
+                          {Object.entries(TYPES_MAPPING).map(([key, value]) => (
+                            <li key={key} style={{ marginBottom: '5px' }}>
+                              <span style={{ fontWeight: 'bold' }}>
+                                {value}
+                                :
+                              </span>
+                              {' '}
+                              {key}
+                              <CopyButton
+                                copyText={key}
+                                size="sm"
+                              />
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    </li>
+
+                    <li style={{ marginBottom: '10px' }}>
+                      <span style={{ marginRight: '10px', fontSize: '20px' }}>✓</span>
+                      Après validation des imports, vous pourrez exporter les objets importés en fichier XLSX.
+                      Si un warning a été forcé, la dernière colonne du fichier comportera la/les raisons du/des warning(s)
+                      {' '}
+                    </li>
+                  </>
+
+                )}
+              {type === 'personnes (identifiants)'
+                && (
+                  <>
+                    <li style={{ marginBottom: '10px' }}>
+                      <span style={{ color: 'purple', marginRight: '10px', fontSize: '20px' }}>✓</span>
+                      L'id de la structure est obligatoire, vérifiez qu'il existe
+                    </li>
+                    <li style={{ marginBottom: '10px' }}>
+                      <span style={{ marginRight: '10px', fontSize: '20px' }}>✓</span>
+                      Vérifiez que les identifiants soient valides
+                    </li>
+                    <li style={{ marginBottom: '20px' }}>
+                      <span style={{ marginRight: '10px', fontSize: '20px' }}>✓</span>
+                      Dans votre tableau, vous devrez renseigner dans la colonne "Type d'identifiant" la valeur exacte du type
+                      (en gras ci-dessous). Par exemple, pour ajouter un identifiant "ESBGU - id bibliothèque", renseignez simplement "bibid".
+                      <div style={{ display: 'flex', justifyContent: 'center' }}>
+                        <ul style={{ listStyleType: 'none', paddingLeft: '20px', marginTop: '10px' }}>
+                          {Object.entries(PERSONS_TYPES_MAPPING).map(([key, value]) => (
+                            <li key={key} style={{ marginBottom: '5px' }}>
+                              <span style={{ fontWeight: 'bold' }}>
+                                {value}
+                                :
+                              </span>
+                              {' '}
+                              {key}
+                              <CopyButton
+                                copyText={key}
+                                size="sm"
+                              />
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    </li>
+
+                    <li style={{ marginBottom: '10px' }}>
+                      <span style={{ marginRight: '10px', fontSize: '20px' }}>✓</span>
+                      Après validation des imports, vous pourrez exporter les objets importés en fichier XLSX.
+                      Si un warning a été forcé, la dernière colonne du fichier comportera la/les raisons du/des warning(s)
+                      {' '}
+                    </li>
+                  </>
+
                 )}
               {type === 'gouvernance'
                 && (

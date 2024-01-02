@@ -1,6 +1,6 @@
 import { Badge, Col, Row, Tag, TagGroup, Text, TextInput, Title } from '@dataesr/react-dsfr';
 import { useEffect, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useOutletContext } from 'react-router-dom';
 import useFetch from '../../../hooks/useFetch';
 import useUrl from '../../../hooks/useUrl';
 
@@ -13,10 +13,14 @@ import { BlocActionButton } from '../../../components/bloc';
 
 export default function GeographicalCategoryRelatedElements() {
   const { url, id } = useUrl();
+  const name = useOutletContext();
+
+  const limit = name === 'France' ? 2000 : 10000;
   const {
     data: dataStructures,
     isLoading: structuresLoading,
-  } = useFetch(`${url}/structures`);
+  } = useFetch(`${url}/structures?limit=${limit}`);
+
   const [filter, setFilter] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('');
   const [searchParams, setSearchParams] = useSearchParams();
@@ -117,8 +121,8 @@ export default function GeographicalCategoryRelatedElements() {
     structuresContent = <PageSpinner />;
   } else if (dataStructures?.data?.length > 0) {
     const filteredCardsData = dataStructures.data.filter((item) => {
-      const nameMatchesFilter = item.currentName.usualName.toLowerCase().includes(filter.toLowerCase());
-      const categoryMatchesFilter = !categoryFilter || item.category?.usualNameFr === categoryFilter;
+      const nameMatchesFilter = item?.currentName?.usualName.toLowerCase().includes(filter.toLowerCase());
+      const categoryMatchesFilter = !categoryFilter || item?.category?.usualNameFr === categoryFilter;
       return nameMatchesFilter && categoryMatchesFilter;
     });
     structuresContent = (
@@ -147,7 +151,6 @@ export default function GeographicalCategoryRelatedElements() {
             <TagGroup>
               {sortedCategories.slice(0, categoriesToShow).map((category) => {
                 const categoryCount = getCategoryCount(category);
-
                 return (
                   <Tag
                     className="no-span"
@@ -170,11 +173,11 @@ export default function GeographicalCategoryRelatedElements() {
           </Col>
         </Row>
         <Row gutters className="fr-mb-3w">
-          <Col>
+          <Col n="12">
             <div aria-hidden>
               <Map
-                markers={filteredMarkers}
                 height="400px"
+                markers={filteredMarkers}
               />
             </div>
           </Col>

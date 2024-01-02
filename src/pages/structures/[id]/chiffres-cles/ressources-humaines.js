@@ -107,6 +107,15 @@ export default function StructureRHPage() {
 
   if (isLoading) return <Spinner size={48} />;
   if (error) return <>Erreur...</>;
+
+  if (data.totalCount === 0) {
+    return (
+      <Title as="h2">
+        Pas de données
+      </Title>
+    );
+  }
+
   return (
     <>
       <Title as="h2">

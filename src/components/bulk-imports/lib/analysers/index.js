@@ -4,6 +4,8 @@ import parsePriceTSV from './prizes';
 import parseLaureatsTSV from './laureats';
 import parseGouvernanceTSV from './gouvernance';
 import parseTermsTSV from './terms';
+import parseStructuresIdentifiersTSV from './structures-identifiers';
+import parsePersonsIdentifiersTSV from './persons-identifiers';
 
 export default async function analyse(str, type) {
   let analyses;
@@ -34,6 +36,18 @@ export default async function analyse(str, type) {
     throw new Error('File Error');
   case 'gouvernance':
     analyses = await parseGouvernanceTSV(str);
+    if (analyses.length > 0) {
+      return analyses;
+    }
+    throw new Error('File Error');
+  case 'structures (identifiants)':
+    analyses = await parseStructuresIdentifiersTSV(str);
+    if (analyses.length > 0) {
+      return analyses;
+    }
+    throw new Error('File Error');
+  case 'personnes (identifiants)':
+    analyses = await parsePersonsIdentifiersTSV(str);
     if (analyses.length > 0) {
       return analyses;
     }

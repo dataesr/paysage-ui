@@ -9,7 +9,7 @@ const statusMapping = {
 };
 
 const structureParsingFunctions = {
-  otherNames: (str) => { str?.split(';'); },
+  otherNames: (str) => str?.split(';').filter((names) => names.trim()),
   structureStatus: (str) => (['O', 'F', 'P'].includes(str) ? statusMapping[str] : null),
   categories: (str) => str?.split(';').filter((category) => category.trim()),
   coordinates: (str) => {

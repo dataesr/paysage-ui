@@ -73,7 +73,7 @@ function GeographicalCategoriesByIdPage() {
                 </BadgeGroup>
               </Title>
             </Row>
-            <Outlet />
+            <Outlet context={data.nameFr} />
           </Col>
         </Col>
       </Row>

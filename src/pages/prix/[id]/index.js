@@ -25,6 +25,7 @@ import { saveError, saveSuccess } from '../../../utils/notice-contents';
 import Error from '../../../components/errors';
 import usePageTitle from '../../../hooks/usePageTitle';
 import useAuth from '../../../hooks/useAuth';
+import CopyButton from '../../../components/copy/copy-button';
 
 function PrizeByIdPage() {
   const { url, id } = useUrl();
@@ -148,6 +149,10 @@ function PrizeByIdPage() {
           <Row>
             <Title as="h1">
               {data.nameFr}
+              <CopyButton
+                copyText={data.nameFr}
+                size="sm"
+              />
               <BadgeGroup className="fr-pt-1w">
                 <Badge type="info" text="prix" />
                 <CopyBadgeButton

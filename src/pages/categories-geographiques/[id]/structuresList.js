@@ -6,6 +6,7 @@ import { getName } from '../../../utils/structures';
 import ExpendableListCards from '../../../components/card/expendable-list-cards';
 import styles from '../../../components/card/styles.module.scss';
 import GoToExpendableListCards from '../../../components/card/geo-expendable-list-cards';
+import { PageSpinner } from '../../../components/spinner';
 
 const getDescription = (item) => {
   const filteredCategories = item.categories
@@ -28,8 +29,12 @@ export function StructuresList({ data, id }) {
     return null;
   }
 
+  if (!data || !data.length) {
+    return <PageSpinner />;
+  }
+
   const list = data
-    .filter((item) => item.currentName.usualName.toLowerCase().indexOf(filter.toLowerCase()) > -1)
+    .filter((item) => item?.currentName?.usualName.toLowerCase().indexOf(filter.toLowerCase()) > -1)
     .map((item) => (
       <div className="fr-card fr-card--xs fr-card--grey fr-card--no-border">
         <div className={`fr-card__body  ${styles['structures-border']} `}>

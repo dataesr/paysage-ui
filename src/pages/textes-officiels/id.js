@@ -25,6 +25,7 @@ import usePageTitle from '../../hooks/usePageTitle';
 import useUrl from '../../hooks/useUrl';
 import api from '../../utils/api';
 import { saveError, saveSuccess } from '../../utils/notice-contents';
+import CopyButton from '../../components/copy/copy-button';
 
 export default function OfficialTextByIdPage() {
   const { url, id } = useUrl();
@@ -136,6 +137,10 @@ export default function OfficialTextByIdPage() {
           <Row>
             <Title className="fr-mb-1w" as="h1">
               {data.title}
+              <CopyButton
+                copyText={data.title}
+                size="sm"
+              />
               <BadgeGroup className="fr-pt-1w">
                 <Badge text={data.nature} type="info" />
                 <Badge text={data.type} colorFamily="purple-glycine" />

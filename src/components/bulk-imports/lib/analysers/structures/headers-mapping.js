@@ -16,6 +16,8 @@ export const structuresHeadersMapping = {
   'Identifiant ROR [12cd5fg89]': 'ror',
   'Code UAI [1234567X]': 'uai',
   'Numéro siret [12345678901234]': 'siret',
+  'Identifiant Crunchbase': 'crunchbase',
+  'Identifiant Dealroom': 'dealroom',
   'Numéro RNSR [123456789X]': 'rnsr',
   "Numéro de l'ED [123]": 'ed',
   'Site internet en français': 'websiteFr',

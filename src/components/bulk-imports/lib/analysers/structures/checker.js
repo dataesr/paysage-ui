@@ -124,14 +124,16 @@ async function legalCategoriesChecker({ legalCategory }) {
   return legalCategoriesWarning;
 }
 
-function requiredChecker({ usualName, country, iso3, structureStatus, categories, legalCategory }) {
+function requiredChecker({ usualName, country, iso3, structureStatus, categories, legalCategory }, index) {
   const errors = [];
   if (!usualName) errors.push({ message: 'Le nom usuel est obligatoire' });
   if (!structureStatus) errors.push({ message: "Le status ['O', 'F', 'P'] est obligatoire" });
-  if (categories.length === 0) errors.push({ message: 'Vous devez renseigner au moins une catégorie' });
+  if (categories?.length === 0) errors.push({ message: 'Vous devez renseigner au moins une catégorie' });
   if (!legalCategory) errors.push({ message: 'Vous devez renseigner la catégorie juridique' });
   if (!iso3) errors.push({ message: 'Le code iso3 est obligatoire' });
   if (!country) errors.push({ message: 'Le pays est obligatoire' });
+  if (index > 199) errors.push({ message: 'Votre fichier est trop long. Ne depassez pas les 200 lignes' });
+
   return errors;
 }
 
@@ -182,13 +184,15 @@ export default async function checker(docs, index) {
     const categoriesErrors = await categoriesChecker(doc);
     const parentErrors = await parentChecker(doc);
     const nameDuplicateWarnings = await nameChecker(doc);
-    const requiredErrors = requiredChecker(doc);
+    const requiredErrors = requiredChecker(doc, index);
     const edDuplicate = await duplicateIdChecker('ed', doc.ed);
     const idrefDuplicate = await duplicateIdChecker('idref', doc.idref);
     const siretDuplicate = await duplicateIdChecker('siret', doc.siret);
     const rnsrDuplicate = await duplicateIdChecker('rnsr', doc.rnsr);
     const rorDuplicate = await duplicateIdChecker('ror', doc.ror);
     const uaiDuplicate = await duplicateIdChecker('uai', doc.uai);
+    const cruchbaseDuplicate = await duplicateIdChecker('cruchbase', doc.cruchbase);
+    const dealroomDuplicate = await duplicateIdChecker('dealroom', doc.dealroom);
     const wikidataDuplicate = await duplicateIdChecker('wikidata', doc.wikidata);
     const edFormat = await idFormatChecker('ed', doc.ed);
     const identifiersDuplicateInFile = await checkDuplicateIdentifiers(docs, index);
@@ -201,8 +205,12 @@ export default async function checker(docs, index) {
     const legalCategoryCheck = await legalCategoriesChecker(doc);
     const websiteChecked = await websiteChecker(doc);
     const duplicateChecker = await rowsChecker(docs, index);
-    const warning = [...idrefDuplicate, ...duplicateChecker,
-      ...siretDuplicate, ...edDuplicate, ...rnsrDuplicate, ...uaiDuplicate, ...rorDuplicate, ...wikidataDuplicate, ...nameDuplicateWarnings, ...websiteChecked, ...identifiersDuplicateInFile];
+    const warning = [
+      ...cruchbaseDuplicate, ...dealroomDuplicate,
+      ...duplicateChecker, ...edDuplicate,
+      ...idrefDuplicate, ...identifiersDuplicateInFile, ...nameDuplicateWarnings, ...rorDuplicate,
+      ...rnsrDuplicate, ...siretDuplicate, ...uaiDuplicate, ...websiteChecked, ...wikidataDuplicate,
+    ];
     const error = [...requiredErrors, ...parentErrors,
       ...legalCategoryCheck, ...categoriesErrors, ...edFormat, ...idrefFormat, ...siretFormat, ...rnsrFormat, ...rorFormat, ...uaiFormat, ...wikidataFormat];
     let status = 'success';
