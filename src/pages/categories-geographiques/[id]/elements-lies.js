@@ -144,7 +144,7 @@ export default function GeographicalCategoryRelatedElements() {
           <Badge text={filteredMarkers.length} colorFamily="yellow-tournesol" />
         </Title>
         <Row alignItems="middle" spacing="mb-1v">
-          <Text className="fr-m-0" size="sm" as="span"><i>Filtrer par categories :</i></Text>
+          <Text className="fr-m-0" size="sm" as="span"><i>Filtrer par catégorie :</i></Text>
         </Row>
         <Row>
           <Col>
