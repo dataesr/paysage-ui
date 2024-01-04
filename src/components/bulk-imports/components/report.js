@@ -16,7 +16,6 @@ export default function Report({ type, rows }) {
   if (!rows.length) return null;
 
   const typeOfImport = rows.map((el) => el.type)[0];
-
   const MODELS = {
     structures: structuresHeadersMapping,
     persons: personsHeadersMapping,
@@ -24,7 +23,7 @@ export default function Report({ type, rows }) {
     laureats: laureatHeadersMapping,
     gouvernance: gouvernanceHeadersMapping,
     terms: termsHeadersMapping,
-    'structures-identifiers': structuresIdentifiersHeadersMapping,
+    'structures (identifiants)': structuresIdentifiersHeadersMapping,
   };
 
   const convertRowsToXLSXData = (dataRows) => {
@@ -62,7 +61,6 @@ export default function Report({ type, rows }) {
 
       xlsxData.push(rowData);
     });
-
     return xlsxData;
   };
 
