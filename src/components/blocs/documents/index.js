@@ -1,4 +1,4 @@
-import { Modal, ModalContent, ModalTitle, Row } from '@dataesr/react-dsfr';
+import { Col, Modal, ModalContent, ModalTitle, Row, Tag, TagGroup, Text } from '@dataesr/react-dsfr';
 import { useState } from 'react';
 import useFetch from '../../../hooks/useFetch';
 import useNotice from '../../../hooks/useNotice';
@@ -18,6 +18,8 @@ export default function DocumentsOutlet() {
   const [isOpen, setIsOpen] = useState(false);
   const [modalTitle, setModalTitle] = useState(null);
   const [modalContent, setModalContent] = useState(null);
+  const [filterType, setFilterType] = useState(null);
+  const [showMore, setShowMore] = useState(false);
 
   const saveDocument = (body, id = null) => {
     const method = id ? 'patch' : 'post';
@@ -32,7 +34,6 @@ export default function DocumentsOutlet() {
     .catch(() => notice(deleteError));
 
   const onOpenModalHandler = (element) => {
-    // Transform relatedObjects to use as managment value inside the form
     const relatedObjects = element?.relatedObjects?.length
       ? element?.relatedObjects.filter((rel) => rel.id !== resourceId)
       : [];
@@ -48,16 +49,66 @@ export default function DocumentsOutlet() {
     setIsOpen(true);
   };
 
+  const handleFilter = (type) => {
+    setFilterType((prevFilterType) => (prevFilterType === type ? null : type));
+  };
+
+  const handleShowMore = () => {
+    setShowMore(!showMore);
+    setFilterType(null);
+  };
+
   const renderContent = () => {
-    if (!data || !data.data.length) return null;
+    if (!data || !data?.data?.length) return null;
+
+    const uniqueTypes = [...new Set(data.data.map((document) => document.documentType.usualName))];
+    const typesToDisplay = showMore ? uniqueTypes : uniqueTypes.slice(0, 5);
+
     return (
-      <Row gutters>
-        {data.data.map((document) => (
-          <DocumentCard document={document} onEdit={onOpenModalHandler} />
-        ))}
-      </Row>
+      <>
+        <Row gutters>
+          <Col>
+            <Row alignItems="middle" spacing="mb-1v">
+              <Text className="fr-m-0" size="sm" as="span"><i>Filtrer par type de document :</i></Text>
+            </Row>
+            <TagGroup>
+              {typesToDisplay.map((type) => (
+                <Tag
+                  className="no-span"
+                  onClick={() => handleFilter(type)}
+                  selected={filterType === type}
+                >
+                  {type}
+                  {' '}
+                  (
+                  {data.data.filter((doc) => doc.documentType.usualName === type).length}
+                  )
+                </Tag>
+              ))}
+              <Tag
+                onClick={handleShowMore}
+                colorFamily="brown-caramel"
+              >
+                {showMore ? 'Voir moins de types' : 'Voir plus de types'}
+              </Tag>
+            </TagGroup>
+          </Col>
+        </Row>
+        <Row gutters>
+          {filterType
+            ? data.data
+              .filter((document) => document.documentType.usualName === filterType)
+              .map((document) => (
+                <DocumentCard key={document?.id} document={document} onEdit={onOpenModalHandler} />
+              ))
+            : data.data.map((document) => (
+              <DocumentCard key={document?.id} document={document} onEdit={onOpenModalHandler} />
+            ))}
+        </Row>
+      </>
     );
   };
+
   return (
     <>
       {(apiObject === 'structures') && <WeblinksResources resourceId={resourceId} />}
