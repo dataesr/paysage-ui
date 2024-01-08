@@ -70,12 +70,21 @@ export default function DocumentsOutlet() {
       ),
     ];
 
+    const documentsByYear = {};
+
     const typesWithLength = data.data.reduce((acc, document) => {
       const type = document.documentType.usualName;
+      const year = new Date(document.startDate).getFullYear();
+
       if (!acc[type]) {
-        acc[type] = 0;
+        acc[type] = {};
       }
-      acc[type] += 1;
+      if (!documentsByYear[year]) {
+        documentsByYear[year] = 0;
+      }
+
+      acc[type][year] = (acc[type][year] || 0) + 1;
+      documentsByYear[year] += 1;
       return acc;
     }, {});
 
@@ -113,9 +122,7 @@ export default function DocumentsOutlet() {
                   {year}
                   {' '}
                   (
-                  {filteredDocuments.filter(
-                    (doc) => new Date(doc.startDate).getFullYear() === year,
-                  ).length}
+                  {documentsByYear[year]}
                   )
                 </Tag>
               ))}
@@ -126,21 +133,30 @@ export default function DocumentsOutlet() {
               </Text>
             </Row>
             <TagGroup>
-              {typesToDisplay.map((type) => (
-                <Tag
-                  className="no-span"
-                  onClick={() => handleFilter(type)}
-                  selected={filterType === type}
-                >
-                  {type}
-                  {' '}
-                  (
-                  {filteredDocuments.filter(
-                    (doc) => doc.documentType.usualName === type,
-                  ).length}
-                  )
-                </Tag>
-              ))}
+              {typesToDisplay.map((type) => {
+                const filteredDocs = filteredDocuments.filter(
+                  (doc) => doc.documentType.usualName === type,
+                );
+                const hasDocuments = filteredDocs.length > 0;
+
+                if (hasDocuments) {
+                  return (
+                    <Tag
+                      key={type}
+                      className="no-span"
+                      onClick={() => handleFilter(type)}
+                      selected={filterType === type}
+                    >
+                      {type}
+                      {' '}
+                      (
+                      {filteredDocs.length}
+                      )
+                    </Tag>
+                  );
+                }
+                return null;
+              })}
               <Tag
                 onClick={handleShowMore}
                 colorFamily="brown-caramel"
