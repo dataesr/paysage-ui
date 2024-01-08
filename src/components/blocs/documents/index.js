@@ -19,6 +19,7 @@ export default function DocumentsOutlet() {
   const [modalTitle, setModalTitle] = useState(null);
   const [modalContent, setModalContent] = useState(null);
   const [filterType, setFilterType] = useState(null);
+  const [filterYear, setFilterYear] = useState(null);
   const [showMore, setShowMore] = useState(false);
 
   const saveDocument = (body, id = null) => {
@@ -52,24 +53,77 @@ export default function DocumentsOutlet() {
   const handleFilter = (type) => {
     setFilterType((prevFilterType) => (prevFilterType === type ? null : type));
   };
+  const handleFilterYear = (year) => {
+    setFilterYear((prevFilterYear) => (prevFilterYear === year ? null : year));
+  };
 
   const handleShowMore = () => {
     setShowMore(!showMore);
     setFilterType(null);
   };
-
   const renderContent = () => {
     if (!data || !data?.data?.length) return null;
 
-    const uniqueTypes = [...new Set(data.data.map((document) => document.documentType.usualName))];
-    const typesToDisplay = showMore ? uniqueTypes : uniqueTypes.slice(0, 5);
+    const years = [
+      ...new Set(
+        data.data.map((document) => new Date(document.startDate).getFullYear()),
+      ),
+    ];
+
+    const typesWithLength = data.data.reduce((acc, document) => {
+      const type = document.documentType.usualName;
+      if (!acc[type]) {
+        acc[type] = 0;
+      }
+      acc[type] += 1;
+      return acc;
+    }, {});
+
+    const sortedTypes = Object.keys(typesWithLength).sort(
+      (a, b) => typesWithLength[b] - typesWithLength[a],
+    );
+
+    const typesToDisplay = showMore ? sortedTypes : sortedTypes.slice(0, 5);
+
+    let filteredDocuments = data.data;
+
+    if (filterYear) {
+      filteredDocuments = filteredDocuments.filter(
+        (doc) => new Date(doc.startDate).getFullYear() === filterYear,
+      );
+    }
 
     return (
       <>
         <Row gutters>
           <Col>
             <Row alignItems="middle" spacing="mb-1v">
-              <Text className="fr-m-0" size="sm" as="span"><i>Filtrer par type de document :</i></Text>
+              <Text className="fr-m-0" size="sm" as="span">
+                <i>Filtrer par année :</i>
+              </Text>
+            </Row>
+            <TagGroup>
+              {years.map((year) => (
+                <Tag
+                  key={`year-${year}`}
+                  className="no-span"
+                  onClick={() => handleFilterYear(year)}
+                  selected={filterYear === year}
+                >
+                  {year}
+                  {' '}
+                  (
+                  {filteredDocuments.filter(
+                    (doc) => new Date(doc.startDate).getFullYear() === year,
+                  ).length}
+                  )
+                </Tag>
+              ))}
+            </TagGroup>
+            <Row alignItems="middle" spacing="mb-1v">
+              <Text className="fr-m-0" size="sm" as="span">
+                <i>Filtrer par type de document :</i>
+              </Text>
             </Row>
             <TagGroup>
               {typesToDisplay.map((type) => (
@@ -81,7 +135,9 @@ export default function DocumentsOutlet() {
                   {type}
                   {' '}
                   (
-                  {data.data.filter((doc) => doc.documentType.usualName === type).length}
+                  {filteredDocuments.filter(
+                    (doc) => doc.documentType.usualName === type,
+                  ).length}
                   )
                 </Tag>
               ))}
@@ -96,13 +152,23 @@ export default function DocumentsOutlet() {
         </Row>
         <Row gutters>
           {filterType
-            ? data.data
-              .filter((document) => document.documentType.usualName === filterType)
+            ? filteredDocuments
+              .filter(
+                (document) => document.documentType.usualName === filterType,
+              )
               .map((document) => (
-                <DocumentCard key={document?.id} document={document} onEdit={onOpenModalHandler} />
+                <DocumentCard
+                  key={document?.id}
+                  document={document}
+                  onEdit={onOpenModalHandler}
+                />
               ))
-            : data.data.map((document) => (
-              <DocumentCard key={document?.id} document={document} onEdit={onOpenModalHandler} />
+            : filteredDocuments.map((document) => (
+              <DocumentCard
+                key={document?.id}
+                document={document}
+                onEdit={onOpenModalHandler}
+              />
             ))}
         </Row>
       </>
