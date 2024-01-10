@@ -54,29 +54,26 @@ export default function ModificationJournal() {
     <Bloc isLoading={isLoading} error={error} data={data}>
       <BlocTitle as="h1" look="h3">Journal des modifications</BlocTitle>
       <BlocContent>
-        <>
+        <TagGroup>
           {sortedUniqueUserNames.map((userName) => {
             const modificationsCount = data?.data?.filter(
               (el) => `${el.user.firstName} ${el.user.lastName}` === userName,
             ).length;
-
             return (
-              <TagGroup key={userName}>
-                <Tag
-                  onClick={() => handleUserFilter(userName)}
-                  selected={selectedUser === userName}
-                  className="no-span"
-                >
-                  {userName}
-                  {' '}
-                  (
-                  {modificationsCount}
-                  )
-                </Tag>
-              </TagGroup>
+              <Tag
+                onClick={() => handleUserFilter(userName)}
+                selected={selectedUser === userName}
+                className="no-span"
+              >
+                {userName}
+                {' '}
+                (
+                {modificationsCount}
+                )
+              </Tag>
             );
           })}
-        </>
+        </TagGroup>
         <Row gutters>
           <Col n="12">
             <Accordion keepOpen>
