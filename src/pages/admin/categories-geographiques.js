@@ -91,7 +91,7 @@ export default function GeographicalCategories() {
       <hr />
       <Row>
         <Col>
-          <TextInput placeholder="Filtrer par nom de catégories géographique" value={query} onChange={handleQueryChange} size="sm" />
+          <TextInput placeholder="Filtrer par nom de catégorie géographique" value={query} onChange={handleQueryChange} size="sm" />
         </Col>
       </Row>
       <hr />

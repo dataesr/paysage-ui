@@ -194,11 +194,11 @@ export default function GeographicalCategoryPresentationPage() {
           Structures associées
           <Badge text={dataStructures?.totalCount} colorFamily="yellow-tournesol" />
         </Title>
-        <Row spacing="mt-3w">
-          <Col n="12">
-            <StructuresList isLoading={isLoading} data={dataStructures?.data} id={id} wikidata={wikidata} />
-          </Col>
-        </Row>
+      </Row>
+      <Row spacing="mt-1w" gutters>
+        <Col>
+          <StructuresList isLoading={isLoading} data={dataStructures?.data} id={id} wikidata={wikidata} />
+        </Col>
       </Row>
       <Row spacing="mt-5w" gutters>
         <Col>

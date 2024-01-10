@@ -1,4 +1,4 @@
-import { Modal, ModalContent, ModalTitle, Row } from '@dataesr/react-dsfr';
+import { Col, Modal, ModalContent, ModalTitle, Row, Tag, TagGroup, Text } from '@dataesr/react-dsfr';
 import { useState } from 'react';
 import useFetch from '../../../hooks/useFetch';
 import useNotice from '../../../hooks/useNotice';
@@ -18,6 +18,9 @@ export default function DocumentsOutlet() {
   const [isOpen, setIsOpen] = useState(false);
   const [modalTitle, setModalTitle] = useState(null);
   const [modalContent, setModalContent] = useState(null);
+  const [filterType, setFilterType] = useState(null);
+  const [filterYear, setFilterYear] = useState(null);
+  const [showMore, setShowMore] = useState(false);
 
   const saveDocument = (body, id = null) => {
     const method = id ? 'patch' : 'post';
@@ -32,7 +35,6 @@ export default function DocumentsOutlet() {
     .catch(() => notice(deleteError));
 
   const onOpenModalHandler = (element) => {
-    // Transform relatedObjects to use as managment value inside the form
     const relatedObjects = element?.relatedObjects?.length
       ? element?.relatedObjects.filter((rel) => rel.id !== resourceId)
       : [];
@@ -48,16 +50,147 @@ export default function DocumentsOutlet() {
     setIsOpen(true);
   };
 
+  const handleFilter = (type) => {
+    setFilterType((prevFilterType) => (prevFilterType === type ? null : type));
+  };
+  const handleFilterYear = (year) => {
+    setFilterYear((prevFilterYear) => (prevFilterYear === year ? null : year));
+  };
+
+  const handleShowMore = () => {
+    setShowMore(!showMore);
+    setFilterType(null);
+  };
   const renderContent = () => {
-    if (!data || !data.data.length) return null;
+    if (!data || !data?.data?.length) return null;
+
+    const years = [
+      ...new Set(
+        data.data.map((document) => new Date(document.startDate).getFullYear()),
+      ),
+    ];
+
+    const documentsByYear = {};
+
+    const typesWithLength = data.data.reduce((acc, document) => {
+      const type = document.documentType.usualName;
+      const year = new Date(document.startDate).getFullYear();
+
+      if (!acc[type]) {
+        acc[type] = {};
+      }
+      if (!documentsByYear[year]) {
+        documentsByYear[year] = 0;
+      }
+
+      acc[type][year] = (acc[type][year] || 0) + 1;
+      documentsByYear[year] += 1;
+      return acc;
+    }, {});
+
+    const sortedTypes = Object.keys(typesWithLength).sort(
+      (a, b) => typesWithLength[b] - typesWithLength[a],
+    );
+
+    const typesToDisplay = showMore ? sortedTypes : sortedTypes.slice(0, 5);
+
+    let filteredDocuments = data.data;
+
+    if (filterYear) {
+      filteredDocuments = filteredDocuments.filter(
+        (doc) => new Date(doc.startDate).getFullYear() === filterYear,
+      );
+    }
+
     return (
-      <Row gutters>
-        {data.data.map((document) => (
-          <DocumentCard document={document} onEdit={onOpenModalHandler} />
-        ))}
-      </Row>
+      <>
+        <Row gutters>
+          <Col>
+            <Row alignItems="middle" spacing="mb-1v">
+              <Text className="fr-m-0" size="sm" as="span">
+                <i>Filtrer par année :</i>
+              </Text>
+            </Row>
+            <TagGroup>
+              {years.map((year) => (
+                <Tag
+                  key={`year-${year}`}
+                  className="no-span"
+                  onClick={() => handleFilterYear(year)}
+                  selected={filterYear === year}
+                >
+                  {year}
+                  {' '}
+                  (
+                  {documentsByYear[year]}
+                  )
+                </Tag>
+              ))}
+            </TagGroup>
+            <Row alignItems="middle" spacing="mb-1v">
+              <Text className="fr-m-0" size="sm" as="span">
+                <i>Filtrer par type de document :</i>
+              </Text>
+            </Row>
+            <TagGroup>
+              {typesToDisplay.map((type) => {
+                const filteredDocs = filteredDocuments.filter(
+                  (doc) => doc.documentType.usualName === type,
+                );
+                const hasDocuments = filteredDocs.length > 0;
+
+                if (hasDocuments) {
+                  return (
+                    <Tag
+                      key={type}
+                      className="no-span"
+                      onClick={() => handleFilter(type)}
+                      selected={filterType === type}
+                    >
+                      {type}
+                      {' '}
+                      (
+                      {filteredDocs.length}
+                      )
+                    </Tag>
+                  );
+                }
+                return null;
+              })}
+              <Tag
+                onClick={handleShowMore}
+                colorFamily="brown-caramel"
+              >
+                {showMore ? 'Voir moins de types' : 'Voir plus de types'}
+              </Tag>
+            </TagGroup>
+          </Col>
+        </Row>
+        <Row gutters>
+          {filterType
+            ? filteredDocuments
+              .filter(
+                (document) => document.documentType.usualName === filterType,
+              )
+              .map((document) => (
+                <DocumentCard
+                  key={document?.id}
+                  document={document}
+                  onEdit={onOpenModalHandler}
+                />
+              ))
+            : filteredDocuments.map((document) => (
+              <DocumentCard
+                key={document?.id}
+                document={document}
+                onEdit={onOpenModalHandler}
+              />
+            ))}
+        </Row>
+      </>
     );
   };
+
   return (
     <>
       {(apiObject === 'structures') && <WeblinksResources resourceId={resourceId} />}
