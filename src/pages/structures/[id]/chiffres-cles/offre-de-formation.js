@@ -22,6 +22,13 @@ export default function StructureOffreDeFormationPage() {
         setFormationCount({ totalCount });
       });
   });
+  if (formationCount.totalCount === 0) {
+    return (
+      <Title as="h2">
+        Pas de données sur les offres de formations
+      </Title>
+    );
+  }
 
   return (
     <>
@@ -32,63 +39,64 @@ export default function StructureOffreDeFormationPage() {
       <Bloc data={{ totalCount: 42 }} noBadge>
         <BlocContent>
           <Row gutters>
-            <Col n="12 md-6">
-              <WeblinkCard
-                title={(
-                  <>
-                    <Icon className="ri-table-line" />
-                    Les formations dans Parcoursup (open data)
-                  </>
-                )}
-                downloadUrl={`https://data.enseignementsup-recherche.gouv.fr/explore/dataset/fr-esr-cartographie_formations_parcoursup/\
-table/?disjunctive.tf&disjunctive.nm&disjunctive.fl&disjunctive.amg&refine.etablissement_id_paysage=${id}&disjunctive.nmc&sort=-annee`}
-                canEdit={false}
-              />
-            </Col>
             {formationCount.totalCount > 0 && (
-              <Col n="12 md-6">
-                <WeblinkCard
-                  title={(
-                    <>
-                      <Icon className="ri-table-line" />
-                      Liste des principaux diplômes et formations préparés en open data
-                      {/* ICI SI > 0 bLABLABLA.. */}
-                    </>
-                  )}
-                  // eslint-disable-next-line max-len
-                  downloadUrl={`https://data.enseignementsup-recherche.gouv.fr/explore/dataset/fr-esr-principaux-diplomes-et-formations-prepares-etablissements-publics/table/?refine.etablissement_id_paysage=${id}`}
-                  canEdit={false}
-                />
-              </Col>
-            )}
-            <Col n="12 md-6">
-              <WeblinkCard
-                title={(
-                  <>
-                    <Icon className="ri-table-line" />
-                    Les mentions dans Trouver Mon Master (TMM) (open data)
-                  </>
-                )}
-                downloadUrl={`https://data.enseignementsup-recherche.gouv.fr/explore/dataset\
+              <>
+                <Col n="12 md-6">
+                  <WeblinkCard
+                    title={(
+                      <>
+                        <Icon className="ri-table-line" />
+                        Les formations dans Parcoursup (open data)
+                      </>
+                    )}
+                    downloadUrl={`https://data.enseignementsup-recherche.gouv.fr/explore/dataset/fr-esr-cartographie_formations_parcoursup/\
+table/?disjunctive.tf&disjunctive.nm&disjunctive.fl&disjunctive.amg&refine.etablissement_id_paysage=${id}&disjunctive.nmc&sort=-annee`}
+                    canEdit={false}
+                  />
+                </Col>
+                <Col n="12 md-6">
+                  <WeblinkCard
+                    title={(
+                      <>
+                        <Icon className="ri-table-line" />
+                        Liste des principaux diplômes et formations préparés en open data
+                      </>
+                    )}
+                    // eslint-disable-next-line max-len
+                    downloadUrl={`https://data.enseignementsup-recherche.gouv.fr/explore/dataset/fr-esr-principaux-diplomes-et-formations-prepares-etablissements-publics/table/?refine.etablissement_id_paysage=${id}`}
+                    canEdit={false}
+                  />
+                </Col>
+                <Col n="12 md-6">
+                  <WeblinkCard
+                    title={(
+                      <>
+                        <Icon className="ri-table-line" />
+                        Les mentions dans Trouver Mon Master (TMM) (open data)
+                      </>
+                    )}
+                    downloadUrl={`https://data.enseignementsup-recherche.gouv.fr/explore/dataset\
 /fr-esr-tmm-donnees-du-portail-dinformation-trouver-mon-master-mentions-de-master/table\
 /?disjunctive.for_modalite&disjunctive.for_lic_cons&refine.etablissement_id_paysage=${id}`}
-                canEdit={false}
-              />
-            </Col>
-            <Col n="12 md-6">
-              <WeblinkCard
-                title={(
-                  <>
-                    <Icon className="ri-table-line" />
-                    Les parcours dans Trouver Mon Master (TMM) (open data)
-                  </>
-                )}
-                downloadUrl={`https://data.enseignementsup-recherche.gouv.fr/explore/dataset\
+                    canEdit={false}
+                  />
+                </Col>
+                <Col n="12 md-6">
+                  <WeblinkCard
+                    title={(
+                      <>
+                        <Icon className="ri-table-line" />
+                        Les parcours dans Trouver Mon Master (TMM) (open data)
+                      </>
+                    )}
+                    downloadUrl={`https://data.enseignementsup-recherche.gouv.fr/explore/dataset\
 /fr-esr-tmm-donnees-du-portail-dinformation-trouver-mon-master-parcours-de-format\
 /table/?refine.etablissement_id_paysage=${id}`}
-                canEdit={false}
-              />
-            </Col>
+                    canEdit={false}
+                  />
+                </Col>
+              </>
+            )}
           </Row>
         </BlocContent>
       </Bloc>

@@ -43,7 +43,6 @@ export default function ModificationJournal() {
     const countA = data.data.filter(
       (event) => `${event.user.firstName} ${event.user.lastName}` === a,
     ).length;
-
     const countB = data.data.filter(
       (event) => `${event.user.firstName} ${event.user.lastName}` === b,
     ).length;
