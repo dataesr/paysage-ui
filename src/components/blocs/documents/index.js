@@ -20,7 +20,7 @@ export default function DocumentsOutlet() {
   const [modalContent, setModalContent] = useState(null);
   const [filterType, setFilterType] = useState(null);
   const [filterYear, setFilterYear] = useState(null);
-  const [showMore, setShowMore] = useState(false);
+  const [displayAll, setDisplayAll] = useState(false);
 
   const saveDocument = (body, id = null) => {
     const method = id ? 'patch' : 'post';
@@ -55,12 +55,15 @@ export default function DocumentsOutlet() {
   };
   const handleFilterYear = (year) => {
     setFilterYear((prevFilterYear) => (prevFilterYear === year ? null : year));
+    setFilterType(null);
+    setDisplayAll(false);
   };
 
   const handleShowMore = () => {
-    setShowMore(!showMore);
+    setDisplayAll(!displayAll);
     setFilterType(null);
   };
+
   const renderContent = () => {
     if (!data || !data?.data?.length) return null;
 
@@ -92,8 +95,6 @@ export default function DocumentsOutlet() {
       (a, b) => typesWithLength[b] - typesWithLength[a],
     );
 
-    const typesToDisplay = showMore ? sortedTypes : sortedTypes.slice(0, 5);
-
     let filteredDocuments = data.data;
 
     if (filterYear) {
@@ -101,6 +102,9 @@ export default function DocumentsOutlet() {
         (doc) => new Date(doc.startDate).getFullYear() === filterYear,
       );
     }
+
+    const typesToDisplay = displayAll ? sortedTypes : sortedTypes.slice(0, 6);
+    const hasMoreTypes = sortedTypes.length > 6 && !displayAll;
 
     return (
       <>
@@ -157,12 +161,14 @@ export default function DocumentsOutlet() {
                 }
                 return null;
               })}
-              <Tag
-                onClick={handleShowMore}
-                colorFamily="brown-caramel"
-              >
-                {showMore ? 'Voir moins de types' : 'Voir plus de types'}
-              </Tag>
+              {(hasMoreTypes && typesToDisplay.length >= 6) && ( // Modification de cette condition
+                <Tag
+                  onClick={handleShowMore}
+                  colorFamily="brown-caramel"
+                >
+                  {displayAll ? 'Voir moins de types' : 'Voir plus de types'}
+                </Tag>
+              )}
             </TagGroup>
           </Col>
         </Row>

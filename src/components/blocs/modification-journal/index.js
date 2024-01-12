@@ -34,9 +34,14 @@ export default function ModificationJournal() {
 
   const handleUserFilter = (userName) => {
     setSearchParams({ page: 1 });
-    setSelectedUser((prevSelectedUser) => (prevSelectedUser === userName ? '' : userName));
 
-    setFilterName(userName);
+    if (selectedUser === userName) {
+      setSelectedUser('');
+      setFilterName('');
+    } else {
+      setSelectedUser(userName);
+      setFilterName(userName);
+    }
   };
 
   const sortedUniqueUserNames = [...uniqueUserNames].sort((a, b) => {
