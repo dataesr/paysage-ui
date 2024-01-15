@@ -50,12 +50,20 @@ export default function StructureInsertionProfessionnellePage() {
       });
   }, [id]);
 
+  if (inserSup.totalCount === 0 && ipDoc.totalCount === 0 && licenceInser.totalCount === 0 && masterInser.totalCount === 0) {
+    return (
+      <Title as="h2">
+        Pas de données sur l'insertion professionnelle
+      </Title>
+    );
+  }
+
   if (isLoading) return <Spinner size={48} />;
   if (error) return <>Erreur...</>;
 
   return (
     <>
-      <Title as="h2">
+      <Title>
         <Icon name="ri-building-fill" className="fr-pl-1w" />
         Insertion professionnelle
       </Title>
