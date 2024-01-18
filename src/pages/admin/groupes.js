@@ -9,6 +9,7 @@ import { Bloc, BlocActionButton, BlocContent, BlocModal, BlocTitle } from '../..
 import useNotice from '../../hooks/useNotice';
 import { saveError, saveSuccess, deleteSuccess, deleteError } from '../../utils/notice-contents';
 import useEditMode from '../../hooks/useEditMode';
+import { PageSpinner } from '../../components/spinner';
 
 export default function GroupsPage() {
   const url = '/groups';
@@ -72,7 +73,7 @@ export default function GroupsPage() {
     ));
   };
   if (error) return <div>Erreur</div>;
-  if (isLoading) return <div>Chargement</div>;
+  if (isLoading) return <PageSpinner />;
   return (
     <>
       <Breadcrumb>

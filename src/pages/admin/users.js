@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import {
   Badge,
   ButtonGroup,
+  Button,
   Breadcrumb,
   BreadcrumbItem,
   Col,
@@ -17,17 +18,18 @@ import {
   TagGroup,
   Tag,
   TextInput,
+  Link,
 } from '@dataesr/react-dsfr';
 import { Link as RouterLink } from 'react-router-dom';
 import Avatar from '../../components/avatar';
 import useFetch from '../../hooks/useFetch';
 import useToast from '../../hooks/useToast';
 import api from '../../utils/api';
-import Button from '../../components/button';
 
 import PaysageBlame from '../../components/paysage-blame';
 import { normalize } from '../../utils/strings';
 import useDebounce from '../../hooks/useDebounce';
+import { PageSpinner } from '../../components/spinner';
 
 const getSearchableUser = (user) => {
   const { firstName, lastName, email, role, groups } = user;
@@ -120,6 +122,11 @@ function User({
               )}
             </Text>
           )}
+          <Tag>
+            <Link target="_blank" href={`/admin/journal?id=${id}`}>
+              Voir les dernières modifications de cet utilisateur
+            </Link>
+          </Tag>
           <Text spacing="mt-2w mb-0" bold>
             Groupes :
           </Text>
@@ -128,6 +135,7 @@ function User({
               <i>Aucun groupe n'a été défini pour cet utilisateur.</i>
             </Text>
           )}
+
           {(groups?.length > 0) && (
             <TagGroup>
               {groups.map((group) => (<Tag key={group.id}>{group.acronym || group.name}</Tag>))}
@@ -398,7 +406,7 @@ export default function AdminUsersPage() {
       </Row>
       <Row>
         {(error) && <div>Erreur</div>}
-        {(isLoading) && <div>Chargement</div>}
+        {(isLoading) && <PageSpinner />}
         {(filteredUsers?.length > 0) && filteredUsers.map((item) => (
           <User
             key={item.id}

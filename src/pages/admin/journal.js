@@ -1,6 +1,6 @@
 import { Breadcrumb, BreadcrumbItem, Col, Container, Row } from '@dataesr/react-dsfr';
 import { Link as RouterLink } from 'react-router-dom';
-import ModificationJournal from '../../components/blocs/modification-journal';
+import GlobalModificationJournal from '../../components/blocs/modification-journal/globalIndex';
 
 export default function AdminJournalPage() {
   return (
@@ -14,7 +14,7 @@ export default function AdminJournalPage() {
           </Breadcrumb>
         </Col>
       </Row>
-      <ModificationJournal />
+      <GlobalModificationJournal />
     </Container>
   );
 }
