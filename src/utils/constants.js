@@ -125,7 +125,7 @@ export const STRUCTURES_CLOSURE_REASONS = [
 
 // TODO: Restore projects
 // export const SEARCH_TYPES = 'categories%2Cofficial%2Dtexts%2Cpersons%2Cprizes%2Cprojects%2Cstructures%2Cterms';
-export const SEARCH_TYPES = 'categories%2Cofficial%2Dtexts%2Cpersons%2Cprizes%2Cstructures%2Cterms%2Cgeographical-categories';
+export const SEARCH_TYPES = 'categories%2Cofficial%2Dtexts%2Cpersons%2Cprizes%2Cstructures%2Cterms%2Cgeographical%2Dcategories';
 
 export const GEOGRAPHICAL_CATEGORIES_LABELS_MAPPER = {
   academy: 'Académie',
