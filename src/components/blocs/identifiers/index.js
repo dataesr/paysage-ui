@@ -113,7 +113,7 @@ export default function IdentifiersComponent() {
             </Col>
           );
         }
-        if (el.type !== 'siret') {
+        if (el.type !== 'siret' && el.type !== 'cnrs-unit') {
           list.push(
             <KeyValueCard
               cardKey={options?.find((type) => (el.type === type.value))?.label}
