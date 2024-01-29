@@ -66,7 +66,7 @@ export default function getLink(el) {
     linkTo = `http://www.sudoc.abes.fr//DB=2.2/SET=1/TTL=3/CMD?ACT=SRCHA&IKT=8888&SRT=RLV&TRM=${el.value}`;
     break;
   case 'rna':
-    linkTo = `https://entreprise.data.gouv.fr/etablissement/${el.value}`;
+    linkTo = `https://www.data-asso.fr/annuaire/association/${el.value}?docFields=documentsDac,documentsRna`;
     break;
   case 'rnsr':
     linkTo = `https://appliweb.dgri.education.fr/rnsr/PresenteStruct.jsp?numNatStruct=${el.value}&PUBLIC=OK`;
