@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
-import { Breadcrumb, BreadcrumbItem, Col, Modal, ModalTitle, ModalContent, Row, Tag, Text } from '@dataesr/react-dsfr';
+import { Breadcrumb, BreadcrumbItem, Col, Modal, ModalTitle, ModalContent, Row, Tag, Text, TextInput } from '@dataesr/react-dsfr';
 import Button from '../../components/button';
 import useFetch from '../../hooks/useFetch';
 import GroupForm from '../../components/forms/groups';
@@ -19,6 +19,7 @@ export default function GroupsPage() {
   const [modalContent, setModalContent] = useState(null);
   const { notice } = useNotice();
   const { setEditMode } = useEditMode();
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => setEditMode(true), [setEditMode]);
 
@@ -51,27 +52,56 @@ export default function GroupsPage() {
     );
     setIsOpen(true);
   };
+  const filteredData = data?.data.filter((item) => item?.name?.toLowerCase().includes(searchQuery.toLowerCase()));
 
   const renderGroups = () => {
     if (!data || !data.data?.length) return null;
-    return data.data.map((group) => (
-      <Col n="12" key={group.id}>
-        <Row className="flex--space-between">
-          <div className="flex--grow fr-pl-2w">
-            <Text spacing="my-1v" bold size="lg">{`${group.name} ${group.acronym ? `(${group.acronym})` : ''}`.trim()}</Text>
-            <Text as="span" bold>
-              Autres noms :
+
+    return (
+      <>
+        <Row alignItems="middle" spacing="mb-3v">
+          <Col n="12">
+            <Text className="fr-m-0" size="sm" as="span">
+              <i>Filtrer par groupe :</i>
             </Text>
-            {group.otherNames.length ? group.otherNames.map((name) => <Tag key="name" as="span">{name}</Tag>) : <Text as="span">Aucun alias pour le moment</Text>}
-          </div>
-          <div>
-            <Button size="sm" color="success" icon="ri-edit-line" onClick={() => handleModalToggle(group)}>Editer</Button>
-          </div>
+            <TextInput
+              type="text"
+              placeholder="Filtrer"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </Col>
         </Row>
-        <hr />
-      </Col>
-    ));
+
+        {filteredData.map((group) => (
+          <Col n="12" key={group.id}>
+            <Row className="flex--space-between">
+              <div className="flex--grow fr-pl-2w">
+                <Text spacing="my-1v" bold size="lg">
+                  {`${group.name} ${group.acronym ? `(${group.acronym})` : ''}`.trim()}
+                </Text>
+                <Text as="span" bold>
+                  Autres noms :
+                </Text>
+                {group.otherNames.length ? (
+                  group.otherNames.map((name) => <Tag key={name} as="span">{name}</Tag>)
+                ) : (
+                  <Text as="span">Aucun alias pour le moment</Text>
+                )}
+              </div>
+              <div>
+                <Button size="sm" color="success" icon="ri-edit-line" onClick={() => handleModalToggle(group)}>
+                  Editer
+                </Button>
+              </div>
+            </Row>
+            <hr />
+          </Col>
+        ))}
+      </>
+    );
   };
+
   if (error) return <div>Erreur</div>;
   if (isLoading) return <PageSpinner />;
   return (

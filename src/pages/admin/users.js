@@ -400,7 +400,9 @@ export default function AdminUsersPage() {
             {(data?.totalCount) && <Badge className="fr-ml-1w" type="info" text={data?.totalCount} />}
           </Title>
         </Col>
-        <Col n="12 md-4">
+      </Row>
+      <Row spacing="mb-3w" alignItems="top">
+        <Col>
           <TextInput placeholder="Filtrer les utilisateurs" className="fr-ml-auto" value={query} onChange={(e) => setQuery(e.target.value)} size="sm" />
         </Col>
       </Row>
