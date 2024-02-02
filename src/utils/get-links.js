@@ -50,6 +50,9 @@ export default function getLink(el) {
   case 'oc':
     linkTo = `https://opencorporates.com/companies/${el.value}`;
     break;
+  case 'openAlexStructId':
+    linkTo = ` https://openalex.org/${el.value}`;
+    break;
   case 'orcid':
     linkTo = `https://orcid.org/${el.value}`;
     break;

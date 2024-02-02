@@ -74,6 +74,7 @@ export const ENUMS_LABELS_MAPPER = {
   ISO3: 'Code ISO 3',
   nnt: 'Numéro National de Thèse',
   oc: 'OpenCorporate id',
+  openAlexStructId: 'OpenAlex institution Id',
   orcid: 'ORCID id',
   orgref: 'ORGREF id',
   pia: 'ANR - id projet PIA',
