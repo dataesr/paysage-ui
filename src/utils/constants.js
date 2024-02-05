@@ -74,6 +74,7 @@ export const ENUMS_LABELS_MAPPER = {
   ISO3: 'Code ISO 3',
   nnt: 'Numéro National de Thèse',
   oc: 'OpenCorporate id',
+  openAlexStructId: 'OpenAlex institution Id',
   orcid: 'ORCID id',
   orgref: 'ORGREF id',
   pia: 'ANR - id projet PIA',
@@ -125,7 +126,7 @@ export const STRUCTURES_CLOSURE_REASONS = [
 
 // TODO: Restore projects
 // export const SEARCH_TYPES = 'categories%2Cofficial%2Dtexts%2Cpersons%2Cprizes%2Cprojects%2Cstructures%2Cterms';
-export const SEARCH_TYPES = 'categories%2Cofficial%2Dtexts%2Cpersons%2Cprizes%2Cstructures%2Cterms%2Cgeographical-categories';
+export const SEARCH_TYPES = 'categories%2Cofficial%2Dtexts%2Cpersons%2Cprizes%2Cstructures%2Cterms%2Cgeographical%2Dcategories';
 
 export const GEOGRAPHICAL_CATEGORIES_LABELS_MAPPER = {
   academy: 'Académie',

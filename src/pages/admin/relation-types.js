@@ -11,6 +11,7 @@ import { toString } from '../../utils/dates';
 import { deleteError, deleteSuccess, saveError, saveSuccess } from '../../utils/notice-contents';
 import { normalize } from '../../utils/strings';
 import CopyButton from '../../components/copy/copy-button';
+import { PageSpinner } from '../../components/spinner';
 
 function getSearchableRelationType(relationType) {
   const { name, maleName, feminineName, mandateTypeGroup, otherNames = [], for: relationFor = [] } = relationType;
@@ -64,7 +65,7 @@ export default function RelationTypesPage() {
   };
 
   if (error) return <div>Erreur</div>;
-  if (isLoading) return <div>Chargement</div>;
+  if (isLoading) return <PageSpinner />;
   const filteredData = query
     ? data?.data?.filter((item) => getSearchableRelationType(item).includes(normalize(debouncedQuery)))
     : data?.data;
@@ -86,14 +87,17 @@ export default function RelationTypesPage() {
         </Row>
         <Button color="success" className="fr-ml-1w" size="sm" icon="ri-add-line" onClick={() => handleModalToggle()}>Nouveau</Button>
       </Row>
-      <hr />
-      <Row>
-        <TextInput placeholder="Filtrer" value={query} onChange={(e) => setQuery(e.target.value)} size="sm" />
+      <Row alignItems="middle" spacing="mb-3v">
+        <Col>
+          <Text className="fr-m-0" size="sm" as="span">
+            <i>Filtrer par types de relations :</i>
+          </Text>
+          <TextInput placeholder="Filtrer" value={query} onChange={(e) => setQuery(e.target.value)} size="sm" />
+        </Col>
       </Row>
-      <hr />
       {filteredData?.map((item) => (
-        <Container fluid key={item.id}>
-          <Row className="flex--space-between">
+        <>
+          <Row key={item.id} className="flex--space-between">
             <Col className="flex--grow fr-pl-2w">
               <Row><Text spacing="my-1v" bold size="lg">{item.name}</Text></Row>
               <Row>
@@ -172,7 +176,7 @@ export default function RelationTypesPage() {
             </Col>
           </Row>
           <hr />
-        </Container>
+        </>
       ))}
       <Modal size="lg" isOpen={isOpen} hide={() => setIsOpen(false)}>
         <ModalTitle>

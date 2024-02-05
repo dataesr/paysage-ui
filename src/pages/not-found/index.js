@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Text } from '@dataesr/react-dsfr';
+import { Button, Col, Row, Text } from '@dataesr/react-dsfr';
 import { useNavigate } from 'react-router-dom';
 import styles from './styles.module.scss';
 
@@ -31,19 +31,30 @@ export default function NotFound() {
         <div className={styles.error__content}>
           <div className={styles.error__message}>
             <Text className={styles.message__title}>Page Introuvable!</Text>
-            <Text className={styles.message__title}>Désolé, la page que vous cherchez n'existe pas. </Text>
+            <Text className={styles.message__title}>Désolé, la page que vous cherchez n'existe pas, ou bien vous n'êtes pas connecté avec vos identifiants. </Text>
             <Text className={styles.message__title}> Vous pouvez relancer une recherche ou vous rendre sur la page d'accueil</Text>
           </div>
-          <Button
-            onClick={() => navigate('/')}
-          >
-            En cliquant ici
-          </Button>
+          <Row gutters alignItems="middle" justifyContent="center" spacing="mb-md-3w">
+            <Col>
+              <Button
+                onClick={() => navigate('/')}
+              >
+                Cliquez ici pour la page d'accueil
+              </Button>
+            </Col>
+          </Row>
+          <Row>
+            <Col>
+              <Button
+                onClick={() => navigate('/se-connecter')}
+              >
+                Cliquez ici pour vous connecter
+              </Button>
+            </Col>
+          </Row>
           <Text className={styles['error__nav e-nav']} />
         </div>
-
       </div>
-
     </div>
   ) : (
     <div className={styles.page_404}>
@@ -56,15 +67,28 @@ export default function NotFound() {
               </div>
               <Text>
                 <Text className={styles.message__title}>
-                  Désolé, la page que vous cherchez n'existe pas.
+                  Désolé, la page que vous cherchez n'existe pas, ou bien vous n'êtes pas connecté avec vos identifiants.
                   <Text className={styles.message__title}> Vous pouvez relancer une recherche ou vous rendre sur la page d'accueil</Text>
                 </Text>
               </Text>
-              <Button
-                onClick={() => navigate('/')}
-              >
-                En cliquant ici
-              </Button>
+              <Row gutters alignItems="middle" justifyContent="center" spacing="mb-md-3w">
+                <Col>
+                  <Button
+                    onClick={() => navigate('/')}
+                  >
+                    Cliquez ici pour la page d'accueil
+                  </Button>
+                </Col>
+              </Row>
+              <Row>
+                <Col>
+                  <Button
+                    onClick={() => navigate('/se-connecter')}
+                  >
+                    Cliquez ici pour vous connecter
+                  </Button>
+                </Col>
+              </Row>
             </div>
           </div>
         </div>

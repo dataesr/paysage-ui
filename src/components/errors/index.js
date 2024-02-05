@@ -2,6 +2,7 @@ import { ButtonGroup, Col, Container, Row, Text, Title } from '@dataesr/react-ds
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { ReactComponent as TechErrorSVG } from '../../assets/technical-error.svg';
+import useAuth from '../../hooks/useAuth';
 
 function Error500() {
   return (
@@ -20,7 +21,7 @@ function Error404() {
     <>
       <Title as="h1" look="h1">Page non trouvée</Title>
       <Text size="sm" className="fr-mb-3w">Erreur 404</Text>
-      <Text size="lead" className="fr-mb-3w">La page que vous cherchez est introuvable. Excusez-nous pour la gêne occasionnée.</Text>
+      <Text size="lead" className="fr-mb-3w">La page que vous cherchez est introuvable. Ou vous n'êtes peut être pas connecté avec vos identifiants. Excusez-nous pour la gêne occasionnée.</Text>
       <Text size="sm" className="fr-mb-5w">
         Si vous avez tapé l'adresse web dans le navigateur, vérifiez qu'elle est correcte. La page n'est peut-être plus disponible.
         <br />
@@ -33,6 +34,7 @@ function Error404() {
 }
 
 export default function Error({ status }) {
+  const { viewer } = useAuth();
   return (
     <Container>
       <Row gutters alignItems="middle" justifyContent="center" spacing="my-7w mt-md-12w mb-md-10w">
@@ -49,6 +51,13 @@ export default function Error({ status }) {
                 Contactez-nous
               </Link>
             </li>
+            {!viewer && (
+              <li>
+                <Link className="fr-btn fr-btn--secondary" to="/se-connecter">
+                  Connectez-vous
+                </Link>
+              </li>
+            ) }
           </ButtonGroup>
         </Col>
         <Col spacing="px-6w px-md-0 py-0" offset="md-1" n="12 md-3">

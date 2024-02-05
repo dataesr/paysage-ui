@@ -1,4 +1,4 @@
-import { Modal, ModalContent, ModalTitle } from '@dataesr/react-dsfr';
+import { Col, Modal, ModalContent, ModalTitle, Text } from '@dataesr/react-dsfr';
 import { useState } from 'react';
 
 import IdentifierForm from '../../forms/identifier';
@@ -24,6 +24,7 @@ import {
   saveSuccess,
 } from '../../../utils/notice-contents';
 import getLink from '../../../utils/get-links';
+import CopyButton from '../../copy/copy-button';
 
 export default function IdentifiersComponent() {
   const { notice } = useNotice();
@@ -84,19 +85,49 @@ export default function IdentifiersComponent() {
     if (data) {
       orderedList?.forEach((el) => {
         const inactive = (el.active === false);
-        list.push(
-          <KeyValueCard
-            cardKey={options?.find((type) => (el.type === type.value))?.label}
-            cardValue={el.value}
-            className={`card-${apiObject}`}
-            copy
-            icon="ri-fingerprint-2-line"
-            key={el.id}
-            onEdit={() => onOpenModalHandler(el)}
-            linkTo={getLink(el)}
-            inactive={inactive}
-          />,
-        );
+        let siretCard = el.value;
+
+        if (el.type === 'siret') {
+          const sireneValue = getTvaIntraFromSiren(el.value);
+
+          siretCard = (
+            <Col>
+              <Text>
+                Siret :
+                {' '}
+                {el.value}
+                {' '}
+                <CopyButton copyText={el.value} size="sm" />
+                <br />
+                Siren :
+                {' '}
+                {el.value.substring(0, 9)}
+                {' '}
+                <CopyButton copyText={el.value.substring(0, 9)} size="sm" />
+                <br />
+                Numéro de TVA :
+                {' '}
+                {sireneValue}
+                <CopyButton copyText={sireneValue} size="sm" />
+              </Text>
+            </Col>
+          );
+        }
+        if (el.type !== 'siret' && el.type !== 'cnrs-unit') {
+          list.push(
+            <KeyValueCard
+              cardKey={options?.find((type) => (el.type === type.value))?.label}
+              cardValue={el.value}
+              className={`card-${apiObject}`}
+              copy
+              icon="ri-fingerprint-2-line"
+              key={el.id}
+              onEdit={() => onOpenModalHandler(el)}
+              linkTo={getLink(el)}
+              inactive={inactive}
+            />,
+          );
+        }
         if (el.type === 'cnrs-unit') {
           list.push(
             <KeyValueCard
@@ -112,45 +143,15 @@ export default function IdentifiersComponent() {
             />,
           );
         }
-        if (el.type === 'wikidata') {
-          list.push(
-            <KeyValueCard
-              cardKey="Wikidata Fichier JSON"
-              cardValue={el.value}
-              className={`card-${apiObject}`}
-              copy
-              icon="ri-fingerprint-2-line"
-              key={el.id}
-              onEdit={() => onOpenModalHandler(el)}
-              linkTo={getLink({ ...el, type: 'wikidata_json' })}
-              inactive={inactive}
-            />,
-          );
-        }
         if (el.type === 'siret') {
-          const siren = el.value.substring(0, 9);
           list.push(
             <KeyValueCard
-              cardKey="Siren"
-              cardValue={siren}
+              cardKey="SIRENE - Siret"
+              cardValue={siretCard}
               className={`card-${apiObject}`}
-              copy
-              icon="ri-fingerprint-2-line"
               key={el.id}
               onEdit={() => onOpenModalHandler(el)}
-              linkTo={getLink({ ...el, type: 'siren' })}
-              inactive={inactive}
-            />,
-          );
-          list.push(
-            <KeyValueCard
-              cardKey="Numéro de TVA intracommunautaire"
-              cardValue={getTvaIntraFromSiren(siren)}
-              className={`card-${apiObject}`}
-              copy
-              icon="ri-fingerprint-2-line"
-              key={el.id}
-              onEdit={() => onOpenModalHandler(el)}
+              linkTo={getLink({ ...el, type: 'siret' })}
               inactive={inactive}
             />,
           );
