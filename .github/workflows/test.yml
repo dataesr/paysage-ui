@@ -13,7 +13,7 @@ jobs:
   tests:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Install dependencies
         run: npm ci --silent
       - name: Run tests
@@ -24,7 +24,7 @@ jobs:
     if: always()
     runs-on: ubuntu-latest
     steps:
-      - uses: dataesr/mm-notifier-action@v1
+      - uses: dataesr/mm-notifier-action@v1.0.2
         with:
           github_token: ${{ secrets.GITHUB_TOKEN}}
           mattermost_webhook_url: ${{ secrets.MATTERMOST_WEBHOOK_URL }}
