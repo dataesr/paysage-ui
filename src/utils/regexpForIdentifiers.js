@@ -11,7 +11,7 @@ export function regexpValidateIdentifiers(type) {
     ror: [/^[a-z0-9]{9}$/, 'Un ROR doit contenir 9 caractères'],
     rncp: [/^RNCP\d{1,10}$/, "Format invalide. Veuillez utiliser 'RNCP' suivi d'au moins 1 et au plus 10 chiffres."],
     siret: [/^\s*(?:\d\s*){14}$/, 'Un Siret doit contenir 14 chiffres'],
-    researchgate: [/researchgate/, 'Renseigner l\'url de votre profil "researchgate".'],
+    researchgate: [/^[\w\d-]+$/, 'Uniquement votre identifiant "researchgate".'],
     'piaweb-organization': [/^\d{1,10}$/, 'Un PIA ne contient que des chiffres'],
     'piaweb-project': [/^\d{1,10}$/, 'Un PIA ne contient que des chiffres'],
     uai: [/^[0-9]{7}[A-Z]{1}$/, "Un UAI doit commencer par 7 chiffres suivis d'une lettre majuscule"],
