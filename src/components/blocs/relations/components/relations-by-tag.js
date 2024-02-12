@@ -19,7 +19,7 @@ export default function RelationsByTag({ blocName, tag, resourceType, relatedObj
   const queryObject = inverse ? 'relatedObjectId' : 'resourceId';
   const { notice } = useNotice();
   const { id: resourceId } = useUrl();
-  const url = `/relations?filters[relationTag]=${tag}&filters[${queryObject}]=${resourceId}&limit=2000&sort=${sort}`;
+  const url = `/relations?filters[relationTag]=${tag}&filters[${queryObject}]=${resourceId}&limit=800&sort=${sort}`;
   const { data, isLoading, error, reload } = useFetch(url);
 
   const [showModal, setShowModal] = useState(false);
