@@ -21,6 +21,8 @@ export const TYPES_MAPPING = {
   isni: 'ISNI',
   oc: 'OpenCorporate id',
   openAlexStructId: 'OpenAlex institution Id',
+  openAlexPersonId: 'OpenAlex personne Id',
+  openAlexTermId: 'OpenAlex terme Id',
   orgref: 'ORGREF id',
   pia: 'ANR - id projet PIA',
   'piaweb-organization': 'Id structure PiaWeb',

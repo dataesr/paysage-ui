@@ -63,7 +63,7 @@ export default function Map({ height, markers, onMarkerDragEnd, width }) {
               </strong>
             )}
             <i>
-              {marker?.address?.startsWith('{,') ? null : marker?.address?.replace(/{|}/g, '')}
+              {marker.address ? marker.address.replace(/{|}/g, '').replace(/\bundefined\b/g, '').trim() : null}
             </i>
 
           </Tooltip>
