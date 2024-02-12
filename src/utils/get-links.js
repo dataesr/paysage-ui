@@ -51,7 +51,9 @@ export default function getLink(el) {
     linkTo = `https://opencorporates.com/companies/${el.value}`;
     break;
   case 'openAlexStructId':
-    linkTo = ` https://openalex.org/${el.value}`;
+  case 'openAlexPersonId':
+  case 'openAlexTermId':
+    linkTo = `https://openalex.org/${el.value}`;
     break;
   case 'orcid':
     linkTo = `https://orcid.org/${el.value}`;
@@ -81,10 +83,14 @@ export default function getLink(el) {
     linkTo = `https://www.scopus.com/authid/detail.uri?authorId=${el.value}`;
     break;
   case 'siren':
-    linkTo = `https://annuaire-entreprises.data.gouv.fr/entreprise/${el.value.split(' ').join('')}`;
+    linkTo = `https://annuaire-entreprises.data.gouv.fr/entreprise/${el.value
+      .split(' ')
+      .join('')}`;
     break;
   case 'siret':
-    linkTo = `https://annuaire-entreprises.data.gouv.fr/etablissement/${el.value.split(' ').join('')}`;
+    linkTo = `https://annuaire-entreprises.data.gouv.fr/etablissement/${el.value
+      .split(' ')
+      .join('')}`;
     break;
   case 'univ-droit':
     linkTo = `https://univ-droit.fr/universitaires/${el.value}`;

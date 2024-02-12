@@ -1,7 +1,7 @@
 export const ENUMS_LABELS_MAPPER = {
   website: 'Site internet',
   websiteRss: 'Flux RSS',
-  websiteOrganizationChart: 'Page sur l\'organisation/organigramme',
+  websiteOrganizationChart: "Page sur l'organisation/organigramme",
   websiteGovernance: 'Page gouvernance',
   websiteGeneralServices: 'Page services généraux',
   websiteCommunication: 'Service communication',
@@ -9,7 +9,7 @@ export const ENUMS_LABELS_MAPPER = {
   websiteDataWarehouse: 'Entrepôt de données institutionnel',
   // Page avec le lien vers l'organigramme
   websiteSocialReport: 'Page bilan social',
-  websiteActivityReport: 'Page rapport d\'activité',
+  websiteActivityReport: "Page rapport d'activité",
   websitePress: 'Espace presse',
   websitenews: 'Actualités',
   websiteDirectory: 'Annuaire en ligne',
@@ -75,6 +75,8 @@ export const ENUMS_LABELS_MAPPER = {
   nnt: 'Numéro National de Thèse',
   oc: 'OpenCorporate id',
   openAlexStructId: 'OpenAlex institution Id',
+  openAlexPersonId: '  OpenAlex personne Id',
+  openAlexTermId: '  OpenAlex terme Id',
   orcid: 'ORCID id',
   orgref: 'ORGREF id',
   pia: 'ANR - id projet PIA',
