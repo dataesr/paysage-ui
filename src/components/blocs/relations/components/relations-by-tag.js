@@ -19,7 +19,8 @@ export default function RelationsByTag({ blocName, tag, resourceType, relatedObj
   const queryObject = inverse ? 'relatedObjectId' : 'resourceId';
   const { notice } = useNotice();
   const { id: resourceId } = useUrl();
-  const url = `/relations?filters[relationTag]=${tag}&filters[${queryObject}]=${resourceId}&limit=800&sort=${sort}`;
+  const limit = 800;
+  const url = `/relations?filters[relationTag]=${tag}&filters[${queryObject}]=${resourceId}&limit=${limit}&sort=${sort}`;
   const { data, isLoading, error, reload } = useFetch(url);
 
   const [showModal, setShowModal] = useState(false);
@@ -99,6 +100,26 @@ export default function RelationsByTag({ blocName, tag, resourceType, relatedObj
     );
   };
 
+  const handleExportClick = async () => {
+    const hasMoreData = data.totalCount - limit;
+
+    let exportList = [...data.data];
+
+    if (hasMoreData > 0) {
+      const restUrl = `/relations?filters[relationTag]=${tag}&filters[${queryObject}]=${resourceId}&limit=${hasMoreData}&sort=${sort}&skip=${limit}`;
+      const fetchRest = await api.get(restUrl);
+      exportList = [...data.data, ...fetchRest.data.data];
+    }
+
+    return exportToCsv({
+      data: exportList,
+      fileName: `${resourceId}-${tag}`,
+      listName: blocName,
+      tag,
+      inverse,
+    });
+  };
+
   return (
     <Bloc isLoading={isLoading} error={error} data={data} isRelation>
       <BlocTitle as="h2" look="h6">{blocName || tag}</BlocTitle>
@@ -108,13 +129,7 @@ export default function RelationsByTag({ blocName, tag, resourceType, relatedObj
         <BlocActionButton
           icon="ri-download-line"
           edit={false}
-          onClick={() => exportToCsv({
-            data: data?.data,
-            fileName: `${resourceId}-${tag}`,
-            listName: blocName,
-            tag,
-            inverse,
-          })}
+          onClick={handleExportClick}
         >
           Télécharger la liste
         </BlocActionButton>
