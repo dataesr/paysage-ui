@@ -16,6 +16,7 @@ import {
   Tool,
   ToolItem,
   ToolItemGroup,
+  Notice,
 } from '@dataesr/react-dsfr';
 import useAuth from '../hooks/useAuth';
 import useDebounce from '../hooks/useDebounce';
@@ -146,8 +147,10 @@ export default function Header() {
           )}
         </Tool>
       </HeaderBody>
+      <Notice title="L'application rencontre actuellement des problèmes techniques. Nous travaillons activement pour résoudre le souci au plus vite. Merci pour votre patience" className="bugNotice" />
       {viewer?.id && (
         <HeaderNav path={pathname}>
+
           <NavItem
             title="Accueil"
             asLink={<RouterLink to="/">Accueil</RouterLink>}
