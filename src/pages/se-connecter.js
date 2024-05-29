@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
-import { Container, Row, Col, TextInput, Text, Link, Title, ButtonGroup, Alert } from '@dataesr/react-dsfr';
+import { Container, Row, Col, TextInput, Text, Link, Title, ButtonGroup, Alert, Notice } from '@dataesr/react-dsfr';
 
 import Button from '../components/button';
 import useAuth from '../hooks/useAuth';
@@ -38,6 +38,11 @@ export default function SignIn() {
     <Container spacing="my-6w">
       <Container fluid>
         <Row justifyContent="center">
+          <Notice
+            title="L'application rencontre actuellement des problèmes techniques.
+          Nous travaillons activement pour résoudre le souci au plus vite. Merci pour votre patience"
+            className="bugNotice"
+          />
           <Col n="xs-12 sm-10 md-8 lg-6">
             <Container fluid className="fr-background-alt" spacing="px-4w px-md-12w pb-4w pt-6w">
               { (step === 1) && (
@@ -45,6 +50,7 @@ export default function SignIn() {
                   <Col n="12">
                     <Title as="h1" look="h5">Se connecter à Paysage</Title>
                   </Col>
+
                   <Col>
                     {(error) && <Alert description={error} type="error" />}
                     <form onSubmit={handleSignIn}>

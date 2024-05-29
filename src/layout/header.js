@@ -16,7 +16,6 @@ import {
   Tool,
   ToolItem,
   ToolItemGroup,
-  Notice,
 } from '@dataesr/react-dsfr';
 import useAuth from '../hooks/useAuth';
 import useDebounce from '../hooks/useDebounce';
@@ -83,7 +82,6 @@ export default function Header() {
 
   return (
     <HeaderWrapper>
-      <Notice title="L'application rencontre actuellement des problèmes techniques. Nous travaillons activement pour résoudre le souci au plus vite. Merci pour votre patience" className="bugNotice" />
       <HeaderBody>
         <Logo splitCharacter={9}>
           Ministère de l'enseignement supérieur et de la recherche
