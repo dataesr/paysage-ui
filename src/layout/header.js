@@ -148,6 +148,7 @@ export default function Header() {
       </HeaderBody>
       {viewer?.id && (
         <HeaderNav path={pathname}>
+
           <NavItem
             title="Accueil"
             asLink={<RouterLink to="/">Accueil</RouterLink>}

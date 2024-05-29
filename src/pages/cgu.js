@@ -420,7 +420,7 @@ export default function CGU({ isModal }) {
                 </tr>
                 <tr>
                   <td>Données d'identité</td>
-                  <td>Liens vers les textes officiels (Legifrance et BOESR) et comptes sociaux professionnels (Twitter, Linkedin, ResearchGate, Academia)</td>
+                  <td>Liens vers les textes officiels (Legifrance et BOESR) et comptes sociaux professionnels (Twitter/X, Linkedin, ResearchGate, Academia)</td>
                   <td>
                     Désambiguisation des homonymes, aide à la recherche d'information pour les utilisateurs (liens de redirection fournis vers pages wikipedia, ORCID, catalogue Sudoc, theses.fr, ...
                   </td>
