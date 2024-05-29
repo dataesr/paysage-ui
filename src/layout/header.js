@@ -83,6 +83,7 @@ export default function Header() {
 
   return (
     <HeaderWrapper>
+      <Notice title="L'application rencontre actuellement des problèmes techniques. Nous travaillons activement pour résoudre le souci au plus vite. Merci pour votre patience" className="bugNotice" />
       <HeaderBody>
         <Logo splitCharacter={9}>
           Ministère de l'enseignement supérieur et de la recherche
@@ -147,7 +148,6 @@ export default function Header() {
           )}
         </Tool>
       </HeaderBody>
-      <Notice title="L'application rencontre actuellement des problèmes techniques. Nous travaillons activement pour résoudre le souci au plus vite. Merci pour votre patience" className="bugNotice" />
       {viewer?.id && (
         <HeaderNav path={pathname}>
 
