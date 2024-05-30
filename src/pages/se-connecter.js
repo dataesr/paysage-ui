@@ -1,21 +1,22 @@
+import { Alert, ButtonGroup, Col, Container, Link, Row, Text, TextInput, Title } from '@dataesr/react-dsfr';
 import { useState } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
-import { Container, Row, Col, TextInput, Text, Link, Title, ButtonGroup, Alert, Notice } from '@dataesr/react-dsfr';
 
 import Button from '../components/button';
 import useAuth from '../hooks/useAuth';
-import { MAIL_REGEXP, PASSWORD_REGEXP, OTP_REGEXP } from '../utils/auth';
 import usePageTitle from '../hooks/usePageTitle';
+import { MAIL_REGEXP, OTP_REGEXP, PASSWORD_REGEXP } from '../utils/auth';
 
 export default function SignIn() {
   usePageTitle('Se connecter');
   const navigate = useNavigate();
   const { signin } = useAuth();
-  const [step, setStep] = useState(1);
-  const [otp, setOtp] = useState('');
+
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [otp, setOtp] = useState('');
+  const [password, setPassword] = useState('');
+  const [step, setStep] = useState(1);
 
   const validateEmail = () => MAIL_REGEXP.test(email);
   const validateOtp = () => OTP_REGEXP.test(otp);

@@ -74,7 +74,7 @@ export default function getLink(el) {
     linkTo = `https://www.data-asso.fr/annuaire/association/${el.value}?docFields=documentsDac,documentsRna`;
     break;
   case 'rnsr':
-    linkTo = `https://appliweb.dgri.education.fr/rnsr/PresenteStruct.jsp?numNatStruct=${el.value}&PUBLIC=OK`;
+    linkTo = `https://rnsr.adc.education.fr/structure/${el.value}`;
     break;
   case 'ror':
     linkTo = `https://ror.org/${el.value}`;
