@@ -31,7 +31,7 @@ jobs:
         run: |
           IMAGE_ID=ghcr.io/${{ github.repository }}
           IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
-          docker build -t ${{ github.repository }}:staging --build-arg MODE=staging .
+          docker build -t $IMAGE_ID:staging --build-arg MODE=staging .
 
       - name: 📦 Push Docker image
         run: |
