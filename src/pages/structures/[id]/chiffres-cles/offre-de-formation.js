@@ -10,8 +10,8 @@ export default function StructureOffreDeFormationPage() {
 
   useEffect(() => {
     if (id) {
-      fetch(`https://data.enseignementsup-recherche.gouv.fr/api/explore/v2.1
-        /catalog/datasets/fr-esr-principaux-diplomes-et-formations-prepares-etablissements-publics/records?limit=20&refine=etablissement_id_paysage:"${id}"`)
+      // eslint-disable-next-line max-len
+      fetch(`https://data.enseignementsup-recherche.gouv.fr/api/explore/v2.1/catalog/datasets/fr-esr-principaux-diplomes-et-formations-prepares-etablissements-publics/records?limit=20&refine=etablissement_id_paysage:${id}`)
         .then((response) => response.json())
         .then((data) => {
           const totalCount = data && data.total_count ? data.total_count : 0;
@@ -19,7 +19,6 @@ export default function StructureOffreDeFormationPage() {
         });
     }
   }, [id]);
-
   if (formationCount.totalCount === 0) {
     return (
       <Title as="h2">
