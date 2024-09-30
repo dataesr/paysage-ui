@@ -15,7 +15,7 @@ function validate(body) {
   return validationErrors;
 }
 function sanitize(form) {
-  const fields = ['name', 'pluralName', 'maleName', 'feminineName', 'priority', 'otherNames', 'for', 'mandateTypeGroup'];
+  const fields = ['name', 'pluralName', 'maleName', 'feminineName', 'priority', 'otherNames', 'for', 'mandateTypeGroup', 'annelisId'];
   const body = {};
   Object.keys(form).forEach((key) => { if (fields.includes(key)) { body[key] = form[key]; } });
   body.priority = parseInt(body.priority, 10);
@@ -122,6 +122,9 @@ export default function RelationTypesForm({ id, data, onSave, onDelete }) {
               onChange={(e) => updateForm({ mandateTypeGroup: e.target.value })}
               options={GROUP_OPTIONS}
             />
+          </Col>
+          <Col n="12" spacing="pb-3w">
+            <TextInput label="Identifiant annelis" value={form.annelisId} onChange={(e) => updateForm({ annelisId: e.target.value })} />
           </Col>
         </Row>
         <FormFooter

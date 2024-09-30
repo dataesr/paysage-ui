@@ -152,6 +152,19 @@ export default function RelationTypesPage() {
                   </Text>
                 </Row>
               )}
+              {item?.annelisId && (
+                <Row>
+                  <Text as="span" bold className="fr-mb-2v">
+                    Annelis ID :
+                    {' '}
+                    <Badge type="info" text={item.annelisId} />
+                    <CopyButton
+                      copyText={item.annelisId}
+                      size="sm"
+                    />
+                  </Text>
+                </Row>
+              )}
               <Row>
                 <Text spacing="mt-2w mb-0" size="xs">
                   Créé le
