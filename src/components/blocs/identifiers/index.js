@@ -1,8 +1,26 @@
-import { Col, Modal, ModalContent, ModalTitle, Text } from '@dataesr/react-dsfr';
+import {
+  Col,
+  Modal,
+  ModalContent,
+  ModalTitle,
+  Text,
+} from '@dataesr/react-dsfr';
 import { useState } from 'react';
 
-import IdentifierForm from '../../forms/identifier';
-import ExpendableListCards from '../../card/expendable-list-cards';
+import useEnums from '../../../hooks/useEnums';
+import useFetch from '../../../hooks/useFetch';
+import useNotice from '../../../hooks/useNotice';
+import useUrl from '../../../hooks/useUrl';
+import api from '../../../utils/api';
+import getLink from '../../../utils/get-links';
+import { getTvaIntraFromSiren } from '../../../utils/get-tva-intra';
+import {
+  deleteError,
+  deleteSuccess,
+  saveDuplicate,
+  saveError,
+  saveSuccess,
+} from '../../../utils/notice-contents';
 import {
   Bloc,
   BlocActionButton,
@@ -10,21 +28,10 @@ import {
   BlocModal,
   BlocTitle,
 } from '../../bloc';
+import ExpendableListCards from '../../card/expendable-list-cards';
 import KeyValueCard from '../../card/key-value-card';
-import useEnums from '../../../hooks/useEnums';
-import useFetch from '../../../hooks/useFetch';
-import useNotice from '../../../hooks/useNotice';
-import useUrl from '../../../hooks/useUrl';
-import api from '../../../utils/api';
-import { getTvaIntraFromSiren } from '../../../utils/get-tva-intra';
-import {
-  deleteError,
-  deleteSuccess,
-  saveError,
-  saveSuccess,
-} from '../../../utils/notice-contents';
-import getLink from '../../../utils/get-links';
 import CopyButton from '../../copy/copy-button';
+import IdentifierForm from '../../forms/identifier';
 
 export default function IdentifiersComponent() {
   const { notice } = useNotice();
@@ -40,8 +47,8 @@ export default function IdentifiersComponent() {
     const method = itemId ? 'patch' : 'post';
     const saveUrl = itemId ? `${url}/${itemId}` : url;
     await api[method](saveUrl, body)
-      .then(() => {
-        notice(saveSuccess);
+      .then((response) => {
+        notice(response.status === 204 ? saveDuplicate : saveSuccess);
         reload();
       })
       .catch(() => notice(saveError));
@@ -78,13 +85,13 @@ export default function IdentifiersComponent() {
   const renderCards = () => {
     if (!data) return null;
     const list = [];
-    const inactives = data.data.filter((el) => (el.active === false));
-    const actives = data.data.filter((el) => (el.active !== false));
+    const inactives = data.data.filter((el) => el.active === false);
+    const actives = data.data.filter((el) => el.active !== false);
     const orderedList = [...actives, ...inactives];
 
     if (data) {
       orderedList?.forEach((el) => {
-        const inactive = (el.active === false);
+        const inactive = el.active === false;
         let siretCard = el.value;
 
         if (el.type === 'siret') {
@@ -116,7 +123,7 @@ export default function IdentifiersComponent() {
         if (el.type !== 'siret' && el.type !== 'cnrs-unit') {
           list.push(
             <KeyValueCard
-              cardKey={options?.find((type) => (el.type === type.value))?.label}
+              cardKey={options?.find((type) => el.type === type.value)?.label}
               cardValue={el.value}
               className={`card-${apiObject}`}
               copy

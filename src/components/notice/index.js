@@ -1,11 +1,12 @@
 import PropTypes from 'prop-types';
+
 import usePausableTimer from '../../hooks/usePausableTimer';
 
 import './notice.scss';
 
 export default function Notice({
-  content,
   autoDismissAfter,
+  content,
   remove,
   type,
 }) {
@@ -43,14 +44,14 @@ export default function Notice({
 }
 
 Notice.propTypes = {
-  content: PropTypes.string,
   autoDismissAfter: PropTypes.number,
+  content: PropTypes.string,
   remove: PropTypes.func.isRequired,
   type: PropTypes.oneOf(['info', 'success', 'error', 'warning']),
 };
 
 Notice.defaultProps = {
-  content: '',
   autoDismissAfter: 6000,
+  content: '',
   type: 'info',
 };
