@@ -1,12 +1,13 @@
+import PropTypes from 'prop-types';
 import {
   createContext,
-  useContext,
-  useState,
   useCallback,
+  useContext,
   useMemo,
+  useState,
 } from 'react';
 import { createPortal } from 'react-dom';
-import PropTypes from 'prop-types';
+
 import Notice from '../components/notice';
 
 const NoticeContext = createContext();
