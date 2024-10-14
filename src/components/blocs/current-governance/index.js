@@ -11,12 +11,19 @@ const MANDATE_PRIORITY_THRESHOLD = 10;
 
 export default function StructureCurrentGovernance() {
   const { id } = useUrl();
-  const { data, isLoading, error } = useFetch(`/relations?filters[resourceId]=${id}&filters[relationTag]=${tag}&limit=500&sort=relationType.priority`);
+  const { data, isLoading, error } = useFetch(
+    `/relations?filters[resourceId]=${id}&filters[relationTag]=${tag}&limit=500&sort=relationType.priority`,
+  );
 
   if (!data?.data?.length > 0) return null;
   const currentMandates = data?.data
-    .filter((mandate) => (!mandate.endDate || (mandate.endDate >= getComparableNow())))
-    .filter((mandate) => (mandate?.relationType?.priority < MANDATE_PRIORITY_THRESHOLD));
+    .filter(
+      (mandate) => mandate.active !== false
+        && (!mandate.endDate || mandate.endDate >= getComparableNow()),
+    )
+    .filter(
+      (mandate) => mandate?.relationType?.priority < MANDATE_PRIORITY_THRESHOLD,
+    );
 
   return (
     <Bloc
@@ -25,7 +32,9 @@ export default function StructureCurrentGovernance() {
       data={{ totalCount: currentMandates?.length || 0 }}
       hideOnEmptyView
     >
-      <BlocTitle as="h3" look="h5">Gouvernance actuelle</BlocTitle>
+      <BlocTitle as="h3" look="h5">
+        Gouvernance actuelle
+      </BlocTitle>
       <BlocContent>
         <Row gutters>
           {currentMandates.map((mandate) => (
@@ -33,7 +42,7 @@ export default function StructureCurrentGovernance() {
               <RelationCard relation={mandate} />
             </Col>
           ))}
-          {(currentMandates.length < data.data.length) && (
+          {currentMandates.length < data.data.length && (
             <Col n="12 md-6">
               <GoToCard
                 to={`/structures/${id}/gouvernance-et-referents`}
