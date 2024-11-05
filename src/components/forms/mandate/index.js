@@ -61,9 +61,7 @@ export default function MandateForm({ id, resourceType, relatedObjectTypes, data
   const relationTypeUrl = (relatedObjectTypes.length > 1)
     ? `/relation-types?limit=500&filters[for][$in]=${relatedObjectTypes.join('&filters[for][$in]=')}`
     : `/relation-types?limit=500&filters[for]=${relatedObjectTypes[0]}`;
-
   const { data: relationTypes } = useFetch(relationTypeUrl);
-
   const [showErrors, setShowErrors] = useState(false);
 
   const [relatedObjectQuery, setRelatedObjectQuery] = useState('');
@@ -173,14 +171,18 @@ export default function MandateForm({ id, resourceType, relatedObjectTypes, data
     return onSave(body, id);
   };
 
-  const relationTypesOptions = (relationTypes?.data)
+  const relationTypesOptions = (Array.isArray(relationTypes?.data))
     ? [
       { label: 'Appartient à la liste', value: null },
       ...relationTypes.data
-        .map((element) => ({ label: element.name, value: element.id }))
-        .sort((a, b) => a.label > b.label),
+        .map((element) => ({
+          label: `${element?.name ?? 'Nom inconnu'}${element?.acronym ? ` (${element.acronym})` : ''}`,
+          value: element?.id ?? null,
+        }))
+        .sort((a, b) => a.label.localeCompare(b.label)),
     ]
     : [{ label: 'Appartient à la liste', value: null }];
+
   return (
     <form>
       <Container fluid>
