@@ -1,21 +1,23 @@
-import { useState } from 'react';
-import PropTypes from 'prop-types';
 import {
-  Container,
   Col,
+  Container,
   Row,
   Select,
   TextInput,
 } from '@dataesr/react-dsfr';
-import FormFooter from '../form-footer';
-import useForm from '../../../hooks/useForm';
+import PropTypes from 'prop-types';
+import { useState } from 'react';
+
 import useEnums from '../../../hooks/useEnums';
-import PaysageBlame from '../../paysage-blame';
+import useForm from '../../../hooks/useForm';
 import { capitalize } from '../../../utils/strings';
+import PaysageBlame from '../../paysage-blame';
+import FormFooter from '../form-footer';
 
 const regexpValidateSocialMedia = (type) => {
   const validator = {
     academia: [/academia/, 'avec "academia" dans l\'url.'],
+    Bluesky: [/^(https:\/\/)?(www.)?bsky.app\/profile\/[A-Za-z0-9/:%_+.,#?!@&=-]+$/, 'https://bsky.app/profile/<compte>'],
     Dailymotion: [/^(https:\/\/)?(www.)?dailymotion.com\/[A-Za-z0-9/:%_+.,#?!@&=-]+$/, 'https://www.dailymotion.com/<compte>'],
     Facebook: [/^(https:\/\/)?(www.)?facebook.com\/[A-Za-z0-9/:%_+.,#?!@&=-]+$/, 'https://www.facebook.com/<compte>'],
     Github: [/^(https:\/\/)?(www.)?github.com\/[A-Za-z0-9/:%_+.,#?!@&=-]+$/, 'https://github.com/<compte>?tab=repositories'],
