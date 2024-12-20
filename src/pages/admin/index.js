@@ -10,6 +10,7 @@ import AdminJobsPage from './jobs';
 import AdminJournalPage from './journal';
 import AdminNomenclaturesPage from './nomenclatures';
 import AdminGeographicalCategoriesPage from './categories-geographiques';
+import AdminSirenePage from './sirene';
 
 import AdminRelationTypesPage from './relation-types';
 import AdminUsersPage from './users';
@@ -90,6 +91,9 @@ function AdminPage() {
             <SideMenuLink className={(page === 'taches') && 'sidemenu__item--active'} asLink={<RouterLink to="/admin/taches" replace />}>
               Tâches du système
             </SideMenuLink>
+            <SideMenuLink className={(page === 'sirene') && 'sidemenu__item--active'} asLink={<RouterLink to="/admin/sirene" replace />}>
+              Mises à jour Sirene
+            </SideMenuLink>
           </SideMenu>
         </Col>
         <Col n="12 md-9">
@@ -103,5 +107,5 @@ function AdminPage() {
 export {
   AdminDashboardPage, AdminPage, AdminUsersPage, AdminNomenclaturesPage, AdminJournalPage,
   AdminLegalCategoriesPage, AdminRelationTypesPage, AdminGroupsPage, AdminApiKeysPage, AdminJobsPage,
-  AdminGeographicalExceptionsPage, AdminGeographicalCategoriesPage,
+  AdminGeographicalExceptionsPage, AdminGeographicalCategoriesPage, AdminSirenePage,
 };
