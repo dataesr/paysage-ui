@@ -63,6 +63,7 @@ import {
   AdminUsersPage,
   AdminGeographicalExceptionsPage,
   AdminGeographicalCategoriesPage,
+  AdminSirenePage,
 } from '../pages/admin';
 
 import { AccountPage, PreferencesPage, ProfilePage, SecurityPage } from '../pages/mon-compte';
@@ -115,6 +116,7 @@ export default function Routes() {
               <Route path="categories-juridiques" element={<AdminLegalCategoriesPage />} />
               <Route path="types-de-relation" element={<AdminRelationTypesPage />} />
               <Route path="taches" element={<AdminJobsPage />} />
+              <Route path="sirene" element={<AdminSirenePage />} />
               <Route path="nomenclatures" element={<Navigate to="nomenclatures/types-de-document" replace />} />
               <Route path="nomenclatures/types-de-document" element={<AdminNomenclaturesPage route="/document-types" title="Types de documents" />} />
               <Route path="nomenclatures/ministres-de-tutelle" element={<AdminNomenclaturesPage route="/supervising-ministers" title="Ministres de tutelle" />} />

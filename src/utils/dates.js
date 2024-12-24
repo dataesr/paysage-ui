@@ -116,7 +116,7 @@ export function formatDescriptionDatesForMandateAndPrizes({ startDate = null, en
 }
 
 export function formatDescriptionDates(startDate = null, endDate = null) {
-  if (!startDate && !endDate) { return null; }
+  if (!startDate && !endDate) return null;
   if (!startDate && endDate) {
     if (endDate.split('-').length === 1) {
       return ` jusqu'à ${toString(endDate)}`;
@@ -127,6 +127,12 @@ export function formatDescriptionDates(startDate = null, endDate = null) {
     return ` jusqu'au ${toString(endDate)}`;
   }
   if (startDate && !endDate) {
+    if (new Date(startDate) > new Date()) {
+      if (startDate.split('-').length !== 3) {
+        return ` à partir de ${toString(startDate)}`;
+      }
+      return ` à partir du ${toString(startDate)}`;
+    }
     if (startDate.split('-').length !== 3) {
       return ` depuis ${toString(startDate)}`;
     }
