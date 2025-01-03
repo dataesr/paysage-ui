@@ -57,11 +57,8 @@ export function getPrizeName(item) {
 export function getOtherNames(item) {
   const isNameEnDifferent = item?.nameEn && item.nameEn !== item.usualName;
   const isOfficialDifferent = (item?.usualName || item?.name) && item?.officialName && (item.officialName !== item.nameEn && item.officialName !== item.usualName);
-
-  return (
-    <>
-      {isNameEnDifferent ? `${item.nameEn}` : ''}
-      {isOfficialDifferent ? ` ${item.officialName}` : ''}
-    </>
-  );
+  return [
+    isNameEnDifferent ? item.nameEn : '',
+    isOfficialDifferent ? item.officialName : '',
+  ].filter(Boolean);
 }

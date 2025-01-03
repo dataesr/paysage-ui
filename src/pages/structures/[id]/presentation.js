@@ -27,7 +27,7 @@ export default function StructurePresentationPage() {
     <>
       <Row>
         <Col n="12">
-          <Title as="h2" look="h4">En un coup d'oeil</Title>
+          <Title as="h2" look="h5">En un coup d'oeil</Title>
         </Col>
       </Row>
       <Names visible={editMode} />

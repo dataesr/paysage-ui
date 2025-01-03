@@ -30,6 +30,7 @@ import {
   StructurePrixEtRecompensesPage,
   StructureProjetsPage,
   StructureRHPage,
+  StructureUpdatesPage,
 } from '../pages/structures/[id]';
 
 import { PersonByIdPage, PersonCategories, PersonExportPage, PersonMandats, PersonPresentationPage, PersonPrizes, PersonProjets, PersonsRelatedElements } from '../pages/personnes/[id]';
@@ -182,6 +183,7 @@ export default function Routes() {
               <Route path="prix-et-recompenses" element={<StructurePrixEtRecompensesPage />} />
               <Route path="elements-lies" element={<StructureElementsLiesPage />} />
               <Route path="journal" element={<JournalOutlet />} />
+              <Route path="updates" element={<StructureUpdatesPage />} />
             </Route>
 
             <Route path="/categories/:id/exporter" element={<CategoriesExportPage />} />

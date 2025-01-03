@@ -41,6 +41,7 @@ import StructureGouvernancePage from './gouvernance';
 import StructurePresentationPage from './presentation';
 import StructurePrixEtRecompensesPage from './prix-et-recompenses';
 import StructureProjetsPage from './projets';
+import StructureUpdatesPage from './updates';
 
 function StructureByIdPage() {
   const { viewer } = useAuth();
@@ -199,6 +200,12 @@ function StructureByIdPage() {
                 Journal de modifications
               </SideMenuLink>
             )}
+            {(viewer.role === 'admin') && (
+              <SideMenuLink asLink={<RouterLink to="updates" replace />}>
+                <Icon name="ri-edit-line" size="1x" />
+                Mises à jour source
+              </SideMenuLink>
+            )}
           </SideMenu>
         </Col>
         <Col n="12 md-9">
@@ -281,15 +288,21 @@ function StructureByIdPage() {
             </ButtonGroup>
           </Row>
           <Row>
-            <Title as="h1">
-              {getNameAndCopy(data?.currentName)}
-              <Title className="fr-pr-1v" as="h2">{getOtherNames(data?.currentName)}</Title>
+            <div style={{ flex: '1 1 100%' }}>
+              <Title as="h1" look="h3" className="fr-mb-0">
+                {getNameAndCopy(data?.currentName)}
+                {!!(getOtherNames(data?.currentName)?.length > 0) && (
+                  <div className="fr-h5 fr-mb-0">
+                    {getOtherNames(data?.currentName).join(' - ')}
+                  </div>
+                )}
+              </Title>
               <BadgeGroup className="fr-pt-1w">
                 <Badge type="info" text="structure" />
                 {badgeColor()}
                 <CopyBadgeButton colorFamily="yellow-tournesol" text={data.id} lowercase />
               </BadgeGroup>
-            </Title>
+            </div>
             <Modal size="sm" isOpen={isExportOpen} hide={() => setIsExportOpen(false)}>
               <ModalTitle>
                 Que souhaitez-vous exporter ?
@@ -425,4 +438,5 @@ export {
   StructurePrixEtRecompensesPage,
   StructureProjetsPage,
   StructureRHPage,
+  StructureUpdatesPage,
 };
