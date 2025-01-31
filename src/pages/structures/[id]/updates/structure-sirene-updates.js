@@ -1,7 +1,10 @@
 import PropTypes from 'prop-types';
+import { useState } from 'react';
+import { ModalContent, ModalTitle } from '@dataesr/react-dsfr';
 import Button from '../../../../components/button';
 import LocalisationForm from '../../../../components/forms/localisation';
 import IdentifierForm from '../../../../components/forms/identifier';
+import Modal from '../../../../components/modal';
 
 function transformAddress(input, startDate = null) {
   const address = [
@@ -88,6 +91,7 @@ const DATE_DISPLAY_OPTIONS = {
 };
 
 export default function StructureSireneUpdates({ structure }) {
+  const [showModal, setShowModal] = useState(false);
   return (
     <div key={structure.id}>
       <p className="fr-card__detail fr-mb-0">
@@ -116,20 +120,28 @@ export default function StructureSireneUpdates({ structure }) {
                 {getPaysageValue(update, structure.paysageData)}
               </p>
             </div>
-            {/* <div>
+            <div>
               <Button
                 size="sm"
                 type="button"
                 tertiary
                 borderless
+                onClick={() => setShowModal(true)}
               >
-                Marquer comme vérifié
+                Actionner
               </Button>
-            </div> */}
+            </div>
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', width: '60%' }}>
-            {getForm(update)}
-          </div>
+          <Modal isOpen={showModal} size="lg" hide={() => setShowModal(false)}>
+            <ModalTitle>
+              Ajouter l'adresse
+              <br />
+              <span className="fr-text--sm fr-text-mention--grey fr-text--regular">Utiliser la recherche pour remplir tous les champs</span>
+              <br />
+              <span className="fr-text--sm fr-text-mention--grey fr-text--regular">Cette action mettra une date de fin à l'adresse actuelle</span>
+            </ModalTitle>
+            <ModalContent>{getForm(update)}</ModalContent>
+          </Modal>
         </div>
       ))}
       <hr style={{ width: '40%' }} />
