@@ -48,12 +48,12 @@ function sanitize(form) {
   return body;
 }
 
-export default function LocalisationForm({ id, data, onDelete, onSave }) {
+export default function LocalisationForm({ id, data, onDelete, onSave, defaultQuery }) {
   const { viewer } = useAuth();
   const [showErrors, setShowErrors] = useState(false);
   const { form, updateForm, errors } = useForm(data, validate);
   const [isFrance, setIsFrance] = useState(true);
-  const [query, setQuery] = useState('');
+  const [query, setQuery] = useState(() => defaultQuery);
   const debouncedQuery = useDebounce(query, 1500);
   const [scope, setScope] = useState(null);
   const [options, setOptions] = useState([]);
@@ -328,10 +328,12 @@ LocalisationForm.propTypes = {
   data: PropTypes.object,
   onDelete: PropTypes.func,
   onSave: PropTypes.func.isRequired,
+  defaultQuery: PropTypes.string,
 };
 
 LocalisationForm.defaultProps = {
   id: null,
   data: {},
   onDelete: null,
+  defaultQuery: '',
 };
