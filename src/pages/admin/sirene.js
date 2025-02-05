@@ -9,13 +9,11 @@ const DATE_DISPLAY_OPTIONS = {
 };
 
 function SireneUpdateList() {
-  const { data, isLoading, error } = useFetch('/sirene/updates');
+  const { data, isLoading } = useFetch('/sirene/updates');
 
   if (isLoading) return null;
 
   const updates = data?.data?.filter((structure) => structure.updates.length > 0);
-
-  console.log(updates);
 
   return (
     <Container fluid>

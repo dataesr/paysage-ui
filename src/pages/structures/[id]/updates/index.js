@@ -5,7 +5,7 @@ import { Bloc, BlocContent, BlocTitle } from '../../../../components/bloc';
 
 export default function StructureUpdatesPage() {
   const { id: resourceId } = useUrl();
-  const { data: sirenUpdates, isLoading: isLoadingSirene, error: sireneError } = useFetch(`/sirene/updates?filters[paysage]=${resourceId}`);
+  const { data: sirenUpdates, isLoading: isLoadingSirene, error: sireneError, reload } = useFetch(`/sirene/updates?filters[paysage]=${resourceId}`);
 
   if (isLoadingSirene) return null;
   if (sirenUpdates && !sirenUpdates?.data?.[0]) return <p>Aucune mise à jour</p>;
@@ -15,7 +15,7 @@ export default function StructureUpdatesPage() {
         Mises à jour Sirene
       </BlocTitle>
       <BlocContent>
-        <StructureSireneUpdates structure={sirenUpdates?.data?.[0]} />
+        <StructureSireneUpdates reload={reload} structure={sirenUpdates?.data?.[0]} />
       </BlocContent>
     </Bloc>
   );
