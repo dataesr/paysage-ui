@@ -5,6 +5,8 @@ import Button from '../../../../../components/button';
 import Modal from '../../../../../components/modal';
 import IdentifierForm from '../../../../../components/forms/identifier';
 import DismissButton from './DismissButton';
+import api from '../../../../../utils/api';
+import useNotice from '../../../../../hooks/useNotice';
 
 export const getPaysageValue = (paysageData) => paysageData.currentSiret?.value;
 
@@ -20,6 +22,7 @@ export const getForm = (update) => ({
 
 export function NicSiegeUpdate({ update, paysageData, reload }) {
   const [showModal, setShowModal] = useState(false);
+  const { notice } = useNotice();
 
   const paysageValue = getPaysageValue(paysageData);
   const sireneValue = getSireneValue(update);
@@ -72,10 +75,20 @@ export function NicSiegeUpdate({ update, paysageData, reload }) {
         </ModalTitle>
         <ModalContent>
           <IdentifierForm
-            id={update.id}
             data={getForm(update)}
-            onSave={() => {
-              console.log('save');
+            onSave={async (body) => {
+              try {
+                await api.patch(
+                  `/structures/${update.paysage}/identifiers/${paysageData.currentSiret.id}`,
+                  { active: false, endDate: update.changeEffectiveDate },
+                );
+                await api.post(`/structures/${update.paysage}/identifiers`, body);
+                await api.patch(`/sirene/updates/${update._id}`, { status: 'ok' });
+                reload();
+                notice({ content: 'OK', autoDismissAfter: 6000, type: 'success' });
+              } catch {
+                notice({ content: 'KO', autoDismissAfter: 6000, type: 'error' });
+              }
               setShowModal(false);
             }}
             options={[{

@@ -5,6 +5,8 @@ import Button from '../../../../../components/button';
 import Modal from '../../../../../components/modal';
 import LocalisationForm from '../../../../../components/forms/localisation';
 import DismissButton from './DismissButton';
+import api from '../../../../../utils/api';
+import useNotice from '../../../../../hooks/useNotice';
 
 function transformAddress(input, startDate = null) {
   const address = [
@@ -44,9 +46,13 @@ const getSireneValue = (update) => <pre className="fr-text--xs">{formatAddress(t
 
 export function AdresseUpdate({ update, paysageData, reload }) {
   const [showModal, setShowModal] = useState(false);
+  const { notice } = useNotice();
 
   const paysageValue = getPaysageValue(paysageData);
   const sireneValue = getSireneValue(update);
+
+  const sirenAdress = transformAddress(update.value, update.changeEffectiveDate);
+  const sireneQuery = `${sirenAdress.address} ${sirenAdress.city}`;
 
   return (
     <>
@@ -88,8 +94,23 @@ export function AdresseUpdate({ update, paysageData, reload }) {
         </ModalTitle>
         <ModalContent>
           <LocalisationForm
-            data={transformAddress(update.value)}
-            defaultQuery={transformAddress(update.value).address}
+            data={sirenAdress}
+            defaultQuery={sireneQuery}
+            onSave={async (body) => {
+              try {
+                await api.patch(
+                  `/structures/${update.paysage}/localisations/${paysageData.currentLocalisation.id}`,
+                  { active: false, endDate: update.changeEffectiveDate },
+                );
+                await api.post(`/structures/${update.paysage}/localisations`, body);
+                await api.patch(`/sirene/updates/${update._id}`, { status: 'ok' });
+                reload();
+                notice({ content: 'OK', autoDismissAfter: 6000, type: 'success' });
+              } catch {
+                notice({ content: 'KO', autoDismissAfter: 6000, type: 'error' });
+              }
+              setShowModal(false);
+            }}
           />
         </ModalContent>
       </Modal>
