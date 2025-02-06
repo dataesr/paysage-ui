@@ -1,4 +1,5 @@
-import { Breadcrumb, BreadcrumbItem, Col, Container, Link, Row, Title } from '@dataesr/react-dsfr';
+import { useState } from 'react';
+import { Breadcrumb, BreadcrumbItem, Col, Container, Link, Row, Select, Title } from '@dataesr/react-dsfr';
 import { Link as RouterLink } from 'react-router-dom';
 import useFetch from '../../hooks/useFetch';
 
@@ -12,24 +13,34 @@ const FIELD_DISPLAY_NAMES = {
   changementNicSiegeUniteLegale: 'Changement NIC du siège',
   changementAdresseSiegeUniteLegale: "Changement d'adresse",
   changementCategorieJuridiqueUniteLegale: 'Changement de catégorie juridique',
-  changementEtatAdministratifUniteLegale: "Changement d'état administratif",
+  changementEtatAdministratifUniteLegale: "Changement d'état administratif UL",
   changementDenominationUniteLegale: 'Changement de nom',
-  changementEtatAdministratifEtablissement: "Changement d'état administratif",
+  changementEtatAdministratifEtablissement: "Changement d'état administratif établissement",
 };
 
 function SireneUpdateList() {
+  const [fieldFilter, setFieldFilter] = useState('');
   const { data, isLoading } = useFetch('/sirene/updates?filters[status]=pending');
 
   if (isLoading) return null;
 
-  const updates = data?.data?.filter((structure) => structure.updates.length > 0);
+  const updates = data?.data
+    ?.filter((structure) => structure.updates.length > 0)
+    ?.filter((structure) => !fieldFilter || structure.updates.some((update) => update.field === fieldFilter));
 
   return (
     <Container fluid>
       <Title as="h1" look="h4">
         Mises à jour Sirene
-
       </Title>
+      <hr />
+      <Select
+        label="Filtrer par type de modification"
+        options={[{ value: '', label: 'Tous les types' }, ...Object.entries(FIELD_DISPLAY_NAMES).map(([value, label]) => ({ value, label }))]}
+        selected={fieldFilter}
+        onChange={(e) => setFieldFilter(e.target.value)}
+      />
+      <hr />
       {updates?.map((structure) => (
         <div key={structure.id}>
           <div style={{ display: 'flex', alignItems: 'center' }}>
