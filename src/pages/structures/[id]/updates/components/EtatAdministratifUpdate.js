@@ -37,14 +37,17 @@ export function EtatAdministratifUpdate({ update, paysageData, reload }) {
           </i>
           <br />
           <span className="fr-text--bold">{sireneValue}</span>
+          <br />
+          <i>{update.changeEffectiveDate}</i>
         </p>
         <p style={{ flex: '0 1 100%' }}>
           <i className="fr-text--sm">
             Valeur paysage actuelle:
-            {' '}
           </i>
           <br />
           <span className="fr-text--bold">{paysageValue || 'Non renseigné'}</span>
+          <br />
+          <i>{paysageData.closureDate && `Fermeture: ${paysageData.closureDate}`}</i>
         </p>
       </div>
       {(update.status === 'pending') && (

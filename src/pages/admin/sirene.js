@@ -36,7 +36,11 @@ function SireneUpdateList() {
       <hr />
       <Select
         label="Filtrer par type de modification"
-        options={[{ value: '', label: 'Tous les types' }, ...Object.entries(FIELD_DISPLAY_NAMES).map(([value, label]) => ({ value, label }))]}
+        options={[
+          { value: '', label: 'Tous les types' },
+          ...Object.entries(FIELD_DISPLAY_NAMES)
+            .map(([value, label]) => ({ value, label })),
+        ]}
         selected={fieldFilter}
         onChange={(e) => setFieldFilter(e.target.value)}
       />
