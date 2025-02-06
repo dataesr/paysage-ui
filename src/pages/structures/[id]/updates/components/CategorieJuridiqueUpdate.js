@@ -1,10 +1,9 @@
 import PropTypes from 'prop-types';
-import { useState } from 'react';
-import { ModalContent, ModalTitle } from '@dataesr/react-dsfr';
 import Button from '../../../../../components/button';
-import Modal from '../../../../../components/modal';
-import RelationForm from '../../../../../components/forms/relations';
 import DismissButton from './DismissButton';
+import api from '../../../../../utils/api';
+import useNotice from '../../../../../hooks/useNotice';
+import useFetch from '../../../../../hooks/useFetch';
 
 export const getPaysageValue = (paysageData) => paysageData?.legalcategory?.inseeCode;
 
@@ -16,71 +15,71 @@ export const getForm = (update) => ({
   startDate: update.changeEffectiveDate,
 });
 
-export function CategorieJuridiqueUpdate({ update, paysageData, reload }) {
-  const [showModal, setShowModal] = useState(false);
+const okContent = (
+  <>
+    <p>La catégorie juridique a été mise à jour</p>
+    <p>La date de fin de l'ancienne catégorie juridique est la date de début de validité de la nouvelle catégorie juridique</p>
+  </>
+);
 
-  const paysageValue = getPaysageValue(paysageData);
-  const sireneValue = getSireneValue(update);
-  const sirenePrevValue = getSirenePrevValue(update);
+export function CategorieJuridiqueUpdate({ update, paysageData, reload }) {
+  const { notice } = useNotice();
+  const { data } = useFetch(`/legal-categories?filters[inseeCode]=${update.value}`);
+
+  const sireneValue = data?.data?.[0];
+  if (!sireneValue) return null;
 
   return (
     <>
       <div style={{ width: '100%', display: 'flex', gap: '2rem' }}>
-        <p style={{ flex: '0 1 30%' }}>
+        <p style={{ flex: '0 1 100%' }}>
           <i className="fr-text--sm">
             Nouvelle valeur sirene:
           </i>
           <br />
-          <span className="fr-text--bold">{sireneValue}</span>
-        </p>
-        <p style={{ flex: '0 1 30%' }}>
-          <i className="fr-text--sm">
-            Ancienne valeur sirene:
-          </i>
+          <span className="fr-text--bold">{sireneValue.longNameFr}</span>
           <br />
-          <span className="fr-text--bold">{sirenePrevValue}</span>
+          <span className="fr-text--bold">{sireneValue.inseeCode}</span>
         </p>
-        <p style={{ flex: '0 1 30%' }}>
+        <p style={{ flex: '0 1 100%' }}>
           <i className="fr-text--sm">
             Valeur paysage actuelle:
-            {' '}
           </i>
           <br />
-          <span className="fr-text--bold">{paysageValue || 'Non renseigné'}</span>
+          <span className="fr-text--bold">{paysageData?.legalcategory?.longNameFr || 'Non renseigné'}</span>
+          <br />
+          <span className="fr-text--bold">{paysageData?.legalcategory?.inseeCode || 'Non renseigné'}</span>
         </p>
       </div>
-      <div className="fr-my-2w fr-btns-group fr-btns-group--inline-sm fr-btns-group--sm">
-        <Button
-          size="sm"
-          type="button"
-          onClick={() => setShowModal(true)}
-        >
-          Ajouter
-        </Button>
-        <DismissButton id={update._id} reload={reload} />
-      </div>
-
-      <Modal isOpen={showModal} size="lg" hide={() => setShowModal(false)}>
-        <ModalTitle>
-          Modifier la catégorie juridique
-          <br />
-          <span className="fr-text--sm fr-text-mention--grey fr-text--regular">
-            Cette action mettra une date de fin à la catégorie juridique actuelle
-          </span>
-        </ModalTitle>
-        <ModalContent>
-          <RelationForm
-            data={getForm(update)}
-            resourceType="structures"
-            relatedObjectType={['legalcategories']}
-            noRelationType
-            onSave={() => {
-              console.log('save');
-              setShowModal(false);
+      {(update.status === 'pending') && (
+        <div className="fr-my-2w fr-btns-group fr-btns-group--inline-sm fr-btns-group--sm">
+          <Button
+            size="sm"
+            type="button"
+            disabled={update.value === paysageData?.legalcategory?.inseeCode}
+            onClick={async () => {
+              try {
+                await api.patch(
+                  `/relationships/${paysageData.legalcategory.id}`,
+                  { endDate: update.changeEffectiveDate },
+                );
+                await api.post(
+                  '/relationships',
+                  { resourceId: update.paysage, relatedObjectId: sireneValue.id, startDate: update.changeEffectiveDate },
+                );
+                await api.patch(`/sirene/updates/${update._id}`, { status: 'ok' });
+                reload();
+                notice({ content: okContent, autoDismissAfter: 6000, type: 'success' });
+              } catch {
+                notice({ content: "Une erreur s'est produite", autoDismissAfter: 6000, type: 'error' });
+              }
             }}
-          />
-        </ModalContent>
-      </Modal>
+          >
+            Mettre à jour
+          </Button>
+          <DismissButton id={update._id} reload={reload} />
+        </div>
+      )}
     </>
   );
 }

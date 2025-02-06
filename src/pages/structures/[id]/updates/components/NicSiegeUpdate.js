@@ -1,9 +1,5 @@
 import PropTypes from 'prop-types';
-import { ModalContent, ModalTitle } from '@dataesr/react-dsfr';
-import { useState } from 'react';
 import Button from '../../../../../components/button';
-import Modal from '../../../../../components/modal';
-import IdentifierForm from '../../../../../components/forms/identifier';
 import DismissButton from './DismissButton';
 import api from '../../../../../utils/api';
 import useNotice from '../../../../../hooks/useNotice';
@@ -20,8 +16,14 @@ export const getForm = (update) => ({
   startDate: update.changeEffectiveDate,
 });
 
+const okContent = (
+  <>
+    <p>Le SIRET a été mis à jour</p>
+    <p>La date de fin de l'ancien SIRET est la date de début de validité du nouveau SIRET</p>
+  </>
+);
+
 export function NicSiegeUpdate({ update, paysageData, reload }) {
-  const [showModal, setShowModal] = useState(false);
   const { notice } = useNotice();
 
   const paysageValue = getPaysageValue(paysageData);
@@ -37,8 +39,7 @@ export function NicSiegeUpdate({ update, paysageData, reload }) {
           </i>
           <br />
           <span className="fr-text--bold">{sireneValue}</span>
-        </p>
-        <p style={{ flex: '0 1 100%' }}>
+          <br className="fr-mb-2w" />
           <i className="fr-text--sm">
             Ancienne valeur sirene:
           </i>
@@ -54,50 +55,35 @@ export function NicSiegeUpdate({ update, paysageData, reload }) {
           <span className="fr-text--bold">{paysageValue || 'Non renseigné'}</span>
         </p>
       </div>
-      <div className="fr-my-2w fr-btns-group fr-btns-group--inline-sm fr-btns-group--sm">
-        <Button
-          size="sm"
-          type="button"
-          onClick={() => setShowModal(true)}
-        >
-          Ajouter
-        </Button>
-        <DismissButton id={update._id} reload={reload} />
-      </div>
-
-      <Modal isOpen={showModal} size="lg" hide={() => setShowModal(false)}>
-        <ModalTitle>
-          Modifier le SIRET
-          <br />
-          <span className="fr-text--sm fr-text-mention--grey fr-text--regular">
-            Cette action mettra une date de fin au SIRET actuel
-          </span>
-        </ModalTitle>
-        <ModalContent>
-          <IdentifierForm
-            data={getForm(update)}
-            onSave={async (body) => {
+      {(update.status === 'pending') && (
+        <div className="fr-my-2w fr-btns-group fr-btns-group--inline-sm fr-btns-group--sm">
+          <Button
+            size="sm"
+            type="button"
+            disabled={update.siren + update.value === paysageData.currentSiret?.value}
+            onClick={async () => {
               try {
                 await api.patch(
                   `/structures/${update.paysage}/identifiers/${paysageData.currentSiret.id}`,
                   { active: false, endDate: update.changeEffectiveDate },
                 );
-                await api.post(`/structures/${update.paysage}/identifiers`, body);
+                await api.post(
+                  `/structures/${update.paysage}/identifiers`,
+                  { type: 'siret', value: update.value, startDate: update.changeEffectiveDate },
+                );
                 await api.patch(`/sirene/updates/${update._id}`, { status: 'ok' });
                 reload();
-                notice({ content: 'OK', autoDismissAfter: 6000, type: 'success' });
+                notice({ content: okContent, autoDismissAfter: 6000, type: 'success' });
               } catch {
-                notice({ content: 'KO', autoDismissAfter: 6000, type: 'error' });
+                notice({ content: "Une erreur s'est produite", autoDismissAfter: 6000, type: 'error' });
               }
-              setShowModal(false);
             }}
-            options={[{
-              label: 'siret',
-              value: 'siret',
-            }]}
-          />
-        </ModalContent>
-      </Modal>
+          >
+            Mettre à jour
+          </Button>
+          <DismissButton id={update._id} reload={reload} />
+        </div>
+      )}
     </>
   );
 }

@@ -1,9 +1,8 @@
 import PropTypes from 'prop-types';
-import { useState } from 'react';
-import { ModalContent, ModalTitle } from '@dataesr/react-dsfr';
 import Button from '../../../../../components/button';
-import Modal from '../../../../../components/modal';
 import DismissButton from './DismissButton';
+import api from '../../../../../utils/api';
+import useNotice from '../../../../../hooks/useNotice';
 
 export const getPaysageValue = (paysageData) => paysageData.structureStatus;
 
@@ -16,13 +15,15 @@ export const getSireneValue = (update) => {
   return statusMap[update.value] || update.value;
 };
 
-export const getForm = (update) => ({
-  status: update.value === 'A' ? 'active' : 'inactive',
-  startDate: update.changeEffectiveDate,
-});
+const okContent = (
+  <>
+    <p>Le statut administratif a été mis à jour</p>
+    <p>La date de fin à été mise à jour</p>
+  </>
+);
 
 export function EtatAdministratifUpdate({ update, paysageData, reload }) {
-  const [showModal, setShowModal] = useState(false);
+  const { notice } = useNotice();
 
   const paysageValue = getPaysageValue(paysageData);
   const sireneValue = getSireneValue(update);
@@ -30,14 +31,14 @@ export function EtatAdministratifUpdate({ update, paysageData, reload }) {
   return (
     <>
       <div style={{ width: '100%', display: 'flex', gap: '2rem' }}>
-        <p style={{ flex: '0 1 30%' }}>
+        <p style={{ flex: '0 1 100%' }}>
           <i className="fr-text--sm">
             Nouvelle valeur sirene:
           </i>
           <br />
           <span className="fr-text--bold">{sireneValue}</span>
         </p>
-        <p style={{ flex: '0 1 30%' }}>
+        <p style={{ flex: '0 1 100%' }}>
           <i className="fr-text--sm">
             Valeur paysage actuelle:
             {' '}
@@ -46,36 +47,41 @@ export function EtatAdministratifUpdate({ update, paysageData, reload }) {
           <span className="fr-text--bold">{paysageValue || 'Non renseigné'}</span>
         </p>
       </div>
-      <div className="fr-my-2w fr-btns-group fr-btns-group--inline-sm fr-btns-group--sm">
-        <Button
-          size="sm"
-          type="button"
-          onClick={() => setShowModal(true)}
-        >
-          Ajouter
-        </Button>
-        <DismissButton id={update._id} reload={reload} />
-      </div>
-
-      <Modal isOpen={showModal} size="lg" hide={() => setShowModal(false)}>
-        <ModalTitle>
-          Modifier le statut administratif
-          <br />
-          <span className="fr-text--sm fr-text-mention--grey fr-text--regular">
-            Cette action changera le status administratif de la structure
-          </span>
-        </ModalTitle>
-        <ModalContent>
+      {(update.status === 'pending') && (
+        <div className="fr-my-2w fr-btns-group fr-btns-group--inline-sm fr-btns-group--sm">
           <Button
             size="sm"
             type="button"
-            secondary
-            onClick={() => setShowModal(true)}
+            onClick={async () => {
+              try {
+                await api.patch(
+                  `/structures/${update.paysage}`,
+                  { closureDate: update.changeEffectiveDate, structureStatus: 'inactive' },
+                );
+                await api.patch(
+                  `/sirene/updates/${update._id}`,
+                  { status: 'ok' },
+                );
+                reload();
+                notice({
+                  content: okContent,
+                  autoDismissAfter: 6000,
+                  type: 'success',
+                });
+              } catch {
+                notice({
+                  content: 'KO',
+                  autoDismissAfter: 6000,
+                  type: 'error',
+                });
+              }
+            }}
           >
-            OK, je comprends
+            Mettre à jour
           </Button>
-        </ModalContent>
-      </Modal>
+          <DismissButton id={update._id} reload={reload} />
+        </div>
+      )}
     </>
   );
 }

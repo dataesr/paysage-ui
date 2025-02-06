@@ -73,23 +73,25 @@ export function AdresseUpdate({ update, paysageData, reload }) {
           <span className="fr-text--bold">{paysageValue || 'Non renseigné'}</span>
         </p>
       </div>
-      <div className="fr-my-2w fr-btns-group fr-btns-group--inline-sm fr-btns-group--sm">
-        <Button
-          size="sm"
-          type="button"
-          onClick={() => setShowModal(true)}
-        >
-          Ajouter
-        </Button>
-        <DismissButton id={update._id} reload={reload} />
-      </div>
+      {(update.status === 'pending') && (
+        <div className="fr-my-2w fr-btns-group fr-btns-group--inline-sm fr-btns-group--sm">
+          <Button
+            size="sm"
+            type="button"
+            onClick={() => setShowModal(true)}
+          >
+            Ajouter comme nouvelle adresse
+          </Button>
+          <DismissButton id={update._id} reload={reload} />
+        </div>
+      )}
 
       <Modal isOpen={showModal} size="lg" hide={() => setShowModal(false)}>
         <ModalTitle>
-          Modifier le SIRET
+          Ajouter comme nouvelle adresse
           <br />
           <span className="fr-text--sm fr-text-mention--grey fr-text--regular">
-            Cette action mettra une date de fin au SIRET actuel
+            Cette action mettra une date de fin à l'adresse actuelle
           </span>
         </ModalTitle>
         <ModalContent>
