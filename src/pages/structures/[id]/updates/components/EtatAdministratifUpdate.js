@@ -62,6 +62,10 @@ export function EtatAdministratifUpdate({ update, paysageData, reload }) {
                   { closureDate: update.changeEffectiveDate, structureStatus: 'inactive' },
                 );
                 await api.patch(
+                  `/structures/${update.paysage}/identifiers/${paysageData.currentSiret.id}`,
+                  { active: false, endDate: update.changeEffectiveDate },
+                );
+                await api.patch(
                   `/sirene/updates/${update._id}`,
                   { status: 'ok' },
                 );
