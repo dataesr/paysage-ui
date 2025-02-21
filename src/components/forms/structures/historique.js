@@ -40,7 +40,10 @@ export default function StructureHistoryForm({ data, onSave }) {
   const { form, updateForm } = useForm(data);
 
   const creationReasonsOptions = STRUCTURES_CREATION_REASONS.map((el) => ({ label: el, value: el }));
-  const closureReasonsOptions = STRUCTURES_CLOSURE_REASONS.map((el) => ({ label: el, value: el }));
+  const closureReasonsOptions = [
+    { label: 'Sélectionner le type de fermeture', value: '' },
+    ...STRUCTURES_CLOSURE_REASONS.map((el) => ({ label: el, value: el })),
+  ];
 
   useEffect(() => {
     const getAutocompleteResultCreation = async () => {
@@ -167,7 +170,7 @@ export default function StructureHistoryForm({ data, onSave }) {
               label="Raison de fermeture"
               options={closureReasonsOptions}
               selected={form?.closureReason}
-              onChange={(e) => updateForm({ closureReason: e.target.value })}
+              onChange={(e) => updateForm({ closureReason: e.target.value || null })}
             />
           </Col>
         </Row>

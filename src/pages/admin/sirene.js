@@ -1,6 +1,6 @@
-import { Breadcrumb, BreadcrumbItem, Col, Container, Row } from '@dataesr/react-dsfr';
+import { useState } from 'react';
+import { Breadcrumb, BreadcrumbItem, Col, Container, Link, Row, Select, Title } from '@dataesr/react-dsfr';
 import { Link as RouterLink } from 'react-router-dom';
-import { Bloc, BlocContent, BlocTitle } from '../../components/bloc';
 import useFetch from '../../hooks/useFetch';
 
 const DATE_DISPLAY_OPTIONS = {
@@ -9,33 +9,64 @@ const DATE_DISPLAY_OPTIONS = {
   day: 'numeric',
 };
 
+const FIELD_DISPLAY_NAMES = {
+  changementNicSiegeUniteLegale: 'Changement NIC du siège',
+  changementAdresseSiegeUniteLegale: "Changement d'adresse",
+  changementCategorieJuridiqueUniteLegale: 'Changement de catégorie juridique',
+  changementEtatAdministratifUniteLegale: "Changement d'état administratif UL",
+  changementDenominationUniteLegale: 'Changement de nom',
+  changementEtatAdministratifEtablissement: "Changement d'état administratif établissement",
+};
+
 function SireneUpdateList() {
-  const { data, isLoading, error } = useFetch('/sirene/updates');
+  const [fieldFilter, setFieldFilter] = useState('');
+  const { data, isLoading } = useFetch('/sirene/updates?filters[status]=pending');
 
   if (isLoading) return null;
 
-  const updates = data?.data?.filter((structure) => structure.updates.length > 0);
+  const updates = data?.data
+    ?.filter((structure) => structure.updates.length > 0)
+    ?.filter((structure) => !fieldFilter || structure.updates.some((update) => update.field === fieldFilter));
 
   return (
-    <Bloc isLoading={isLoading} error={error} data={data} forceActionDisplay>
-      <BlocTitle as="h1" look="h4">
+    <Container fluid>
+      <Title as="h1" look="h4">
         Mises à jour Sirene
-      </BlocTitle>
-      <BlocContent>
-        {updates?.map((structure) => (
-          <div key={structure.id}>
-            <a rel="noreferrer" target="_blank" href={`${structure?.paysageData?.href}/updates`} className="fr-link fr-text--md fr-text--bold fr-mb-0">{structure?.paysageData?.displayName}</a>
-            <p className="fr-card__detail fr-mb-0">
-              {`Dernière modification repérée dans la base sirene le ${new Date(structure?.lastModificationDate)?.toLocaleDateString('fr', DATE_DISPLAY_OPTIONS)}`}
-            </p>
-            {structure.type === 'siren' && <p className="fr-card__detail fr-mb-2w">{`Suivi au niveau unité légale: ${structure?.siren}`}</p>}
-            {structure.type === 'siret' && <p className="fr-card__detail fr-mb-2w">{`Suivi au niveau établissement ${structure.siret}`}</p>}
-            <p className="fr-text--bold fr-text--sm">{structure.updates.map((update) => update.field).join(', ')}</p>
-            <hr />
+      </Title>
+      <hr />
+      <Select
+        label="Filtrer par type de modification"
+        options={[
+          { value: '', label: 'Tous les types' },
+          ...Object.entries(FIELD_DISPLAY_NAMES)
+            .map(([value, label]) => ({ value, label })),
+        ]}
+        selected={fieldFilter}
+        onChange={(e) => setFieldFilter(e.target.value)}
+      />
+      <hr />
+      {updates?.map((structure) => (
+        <div key={structure.id}>
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            <div style={{ flexGrow: 1 }}>
+              <Link href={`${structure?.paysageData?.href}/updates`} className="fr-link fr-text--md fr-text--bold fr-mb-0">{structure?.paysageData?.displayName}</Link>
+            </div>
+            <div>
+              <p
+                className={`fr-badge fr-badge--sm fr-m-0 fr-badge--${(structure.type === 'establishment') ? 'info' : 'success'}`}
+              >
+                {(structure.type === 'establishment') ? 'établissement' : 'unité légale'}
+              </p>
+            </div>
           </div>
-        ))}
-      </BlocContent>
-    </Bloc>
+          <p className="fr-card__detail fr-mb-0">
+            {`Dernière modification repérée dans la base sirene le ${new Date(structure.updates.map((u) => u.createdAt).sort().reverse()[0])?.toLocaleDateString('fr', DATE_DISPLAY_OPTIONS)}`}
+          </p>
+          <p className="fr-text--bold fr-text--sm">{structure.updates.map((update) => FIELD_DISPLAY_NAMES[update.field] ?? update.field).join(', ')}</p>
+          <hr />
+        </div>
+      ))}
+    </Container>
   );
 }
 

@@ -210,15 +210,13 @@ export default function RelationForm({
     const body = sanitize(form);
     return onSave(body, id);
   };
-
   const relationTypesOptions = relationTypes?.data
     ? [
-      { label: 'Appartient à la liste', value: null },
       ...relationTypes.data
         .map((element) => ({ label: element.name, value: element.id }))
         .sort((a, b) => a.label > b.label),
     ]
-    : [{ label: 'Appartient à la liste', value: null }];
+    : [{ label: 'Appartient à la liste', value: '' }];
   return (
     <form>
       <Container fluid>

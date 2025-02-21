@@ -1,28 +1,26 @@
 import PropTypes from 'prop-types';
-import Button from '../../../../components/button';
+import { NicSiegeUpdate } from './components/NicSiegeUpdate';
+import { AdresseUpdate } from './components/AdresseUpdate';
+import { CategorieJuridiqueUpdate } from './components/CategorieJuridiqueUpdate';
+import { EtatAdministratifUpdate } from './components/EtatAdministratifUpdate';
+import { DenominationUpdate } from './components/DenominationUpdate';
 
-const getPaysageValue = (update, paysageData) => {
-  const { field } = update;
-  if (field === 'changementNicSiegeUniteLegale') return update.siret;
-  if (field === 'changementCategorieJuridiqueUniteLegale') {
-    return paysageData?.legalcategory?.inseeCode;
-  }
-  if (field === 'changementEtatAdministratifUniteLegale') {
-    return paysageData?.structureStatus;
-  }
-  if (field === 'changementDenominationUniteLegale') {
-    return paysageData?.displayName;
-  }
-  if (field === 'changementDenominationUsuelleUniteLegale') {
-    return paysageData?.currentName?.usualName;
-  }
-  return null;
+const UPDATE_COMPONENTS = {
+  changementNicSiegeUniteLegale: NicSiegeUpdate,
+  changementAdresseSiegeUniteLegale: AdresseUpdate,
+  changementCategorieJuridiqueUniteLegale: CategorieJuridiqueUpdate,
+  changementEtatAdministratifUniteLegale: EtatAdministratifUpdate,
+  changementDenominationUniteLegale: DenominationUpdate,
+  changementEtatAdministratifEtablissement: EtatAdministratifUpdate,
 };
 
-const getSireneValue = (update) => {
-  const { field } = update;
-  if (field === 'changementNicSiegeUniteLegale') return update.siren + update.value;
-  return update.value;
+const FIELD_DISPLAY_NAMES = {
+  changementNicSiegeUniteLegale: 'NIC du siège',
+  changementAdresseSiegeUniteLegale: 'Adresse',
+  changementCategorieJuridiqueUniteLegale: 'Catégorie juridique',
+  changementEtatAdministratifUniteLegale: 'Etat administratif',
+  changementDenominationUniteLegale: 'Dénomination',
+  changementEtatAdministratifEtablissement: 'Etat administratif',
 };
 
 const DATE_DISPLAY_OPTIONS = {
@@ -31,50 +29,80 @@ const DATE_DISPLAY_OPTIONS = {
   day: 'numeric',
 };
 
-export default function StructureSireneUpdates({ structure }) {
+export default function StructureSireneUpdates({ structure, reload }) {
+  const { updates } = structure;
+  const lastUpdate = updates.map((u) => u.createdAt).sort().reverse()[0];
+  const treatedUpdates = updates.filter((update) => update.status === 'ok');
+  const newUpdates = updates.filter((update) => update.status === 'pending');
+
   return (
     <div key={structure.id}>
-      <p className="fr-card__detail fr-mb-0">
-        {`Dernière modification repérée dans la base sirene le ${new Date(structure?.lastModificationDate)?.toLocaleDateString('fr', DATE_DISPLAY_OPTIONS)}`}
+      <p style={{ marginTop: '-1.25rem' }} className="fr-card__detail fr-mb-0">
+        Dernière modification repérée dans la base sirene le
+        {' '}
+        {new Date(lastUpdate)?.toLocaleDateString('fr', DATE_DISPLAY_OPTIONS)}
       </p>
-      {structure.type === 'siren' && <p className="fr-card__detail fr-mb-2w">{`Suivi au niveau unité légale: ${structure?.siren}`}</p>}
-      {structure.type === 'siret' && <p className="fr-card__detail fr-mb-2w">{`Suivi au niveau établissement ${structure.siret}`}</p>}
-      {structure.updates.map((update) => (
-        <div>
-          <hr style={{ width: '40%' }} />
-          <div style={{ display: 'flex', alignItems: 'center' }} key={update.id}>
-            <div style={{ flexGrow: 1 }} key={update.id}>
-              <p className="fr-text--sm fr-text--bold fr-mb-1v">{`${update.field}`}</p>
-              <p className="fr-text--sm fr-mb-1v">{`Valeur sirene: ${getSireneValue(update)}`}</p>
-              <p className="fr-text--sm fr-mb-0">{`Valeur paysage: ${getPaysageValue(update, structure.paysageData)}`}</p>
+      {newUpdates.map((update) => {
+        const UpdateComponent = UPDATE_COMPONENTS[update.field];
+
+        return UpdateComponent ? (
+          <div key={update.id}>
+            <hr />
+            <p className={` fr-mb-1w fr-badge fr-badge--icon-left fr-badge--${update.status === 'pending' ? 'new' : 'success'} fr-badge--sm`}>
+              {update.status === 'pending' ? 'nouveau' : 'traité'}
+            </p>
+            <div className="fr-mb-2w">
+              <span className="fr-text--bold">{FIELD_DISPLAY_NAMES?.[update.field] ?? update.field}</span>
+              <br />
+              <i className="fr-card__detail">
+                au
+                {' '}
+                {new Date(update?.changeEffectiveDate)?.toLocaleDateString('fr', DATE_DISPLAY_OPTIONS)}
+              </i>
             </div>
-            <div>
-              <Button
-                size="sm"
-                type="button"
-                tertiary
-                borderless
-              >
-                Marquer comme vérifié
-              </Button>
-            </div>
+            <UpdateComponent
+              update={update}
+              reload={reload}
+              paysageData={structure.paysageData}
+            />
           </div>
-        </div>
-      ))}
-      <hr style={{ width: '40%' }} />
-      {/* {structure.checks.map((update) => (
-        <div key={update.id}>
-          <p>{`Vérification de ${update.field}`}</p>
-          <p>{`Valeur sirene: ${update.value}`}</p>
-          <p>{`Date de la dernière vérification: ${update.lastChecked}`}</p>
-        </div>
-      ))} */}
+        ) : null;
+      })}
+      <hr />
+      <hr />
+      {treatedUpdates.map((update) => {
+        const UpdateComponent = UPDATE_COMPONENTS[update.field];
+
+        return UpdateComponent ? (
+          <div key={update.id}>
+            <hr />
+            <p className={` fr-mb-1w fr-badge fr-badge--icon-left fr-badge--${update.status === 'pending' ? 'new' : 'success'} fr-badge--sm`}>
+              {update.status === 'pending' ? 'nouveau' : 'traité'}
+            </p>
+            <div className="fr-mb-2w">
+              <span className="fr-text--bold">{FIELD_DISPLAY_NAMES?.[update.field] ?? update.field}</span>
+              <br />
+              <i className="fr-card__detail">
+                au
+                {' '}
+                {new Date(update?.changeEffectiveDate)?.toLocaleDateString('fr', DATE_DISPLAY_OPTIONS)}
+              </i>
+            </div>
+            <UpdateComponent
+              update={update}
+              reload={reload}
+              paysageData={structure.paysageData}
+            />
+          </div>
+        ) : null;
+      })}
     </div>
   );
 }
 
 StructureSireneUpdates.propTypes = {
   structure: PropTypes.object,
+  reload: PropTypes.func.isRequired,
 };
 
 StructureSireneUpdates.defaultProps = {
