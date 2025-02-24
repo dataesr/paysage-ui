@@ -60,7 +60,7 @@ export function NicSiegeUpdate({ update, paysageData, reload }) {
           <Button
             size="sm"
             type="button"
-            disabled={update.siren + update.value === paysageData.currentSiret?.value}
+            disabled={sireneValue === paysageValue}
             onClick={async () => {
               try {
                 await api.patch(
@@ -69,7 +69,7 @@ export function NicSiegeUpdate({ update, paysageData, reload }) {
                 );
                 await api.post(
                   `/structures/${update.paysage}/identifiers`,
-                  { type: 'siret', value: update.value, startDate: update.changeEffectiveDate },
+                  { type: 'siret', value: sireneValue, startDate: update.changeEffectiveDate },
                 );
                 await api.patch(`/sirene/updates/${update._id}`, { status: 'ok' });
                 reload();
