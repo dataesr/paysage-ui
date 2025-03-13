@@ -1,8 +1,9 @@
 import { Link as RouterLink } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import { Accordion, AccordionItem, Breadcrumb, BreadcrumbItem, Col, Container, Row } from '@dataesr/react-dsfr';
 import useFetch from '../../hooks/useFetch';
 
-function Utility(collection) {
+function Utility({ collection }) {
   const { data, isLoading } = useFetch(`/utilities/${collection}`);
   return (
     <Container fluid>
@@ -15,7 +16,13 @@ function Utility(collection) {
   );
 }
 
-const COLLECTIONS = { 'dedup-legal-category-sirene': 'Déduplication des catégories juridiques SIRENE' };
+Utility.propTypes = {
+  collection: PropTypes.string.isRequired,
+};
+
+const COLLECTIONS = {
+  'dedup-legal-category-sirene': 'Déduplication des catégories juridiques SIRENE',
+};
 
 export default function UtilitiesPage() {
   return (
