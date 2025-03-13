@@ -1,5 +1,5 @@
 import { Link as RouterLink } from 'react-router-dom';
-import { Breadcrumb, BreadcrumbItem, Col, Container, Row } from '@dataesr/react-dsfr';
+import { Accordion, AccordionItem, Breadcrumb, BreadcrumbItem, Col, Container, Row } from '@dataesr/react-dsfr';
 import useFetch from '../../hooks/useFetch';
 
 function Utility(collection) {
@@ -30,12 +30,13 @@ export default function UtilitiesPage() {
         </Col>
       </Row>
       <h3>Collections utilitaires</h3>
-      {Object.entries(COLLECTIONS).map(([name, title]) => (
-        <div key={name}>
-          <h6>{title}</h6>
-          <Utility collection={COLLECTIONS[name]} />
-        </div>
-      ))}
+      <Accordion>
+        {Object.entries(COLLECTIONS).map(([name, title]) => (
+          <AccordionItem title={title} key={name}>
+            <Utility collection={name} />
+          </AccordionItem>
+        ))}
+      </Accordion>
     </Container>
   );
 }
