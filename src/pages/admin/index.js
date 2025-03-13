@@ -11,6 +11,7 @@ import AdminJournalPage from './journal';
 import AdminNomenclaturesPage from './nomenclatures';
 import AdminGeographicalCategoriesPage from './categories-geographiques';
 import AdminSirenePage from './sirene';
+import AdminUtilitiesPage from './utilities';
 
 import AdminRelationTypesPage from './relation-types';
 import AdminUsersPage from './users';
@@ -88,6 +89,9 @@ function AdminPage() {
                 Identifiants de personne
               </SideMenuLink>
             </SideMenuItem>
+            <SideMenuLink className={(page === 'utilities') && 'sidemenu__item--active'} asLink={<RouterLink to="/admin/utilities" replace />}>
+              Utilitaires
+            </SideMenuLink>
             <SideMenuLink className={(page === 'taches') && 'sidemenu__item--active'} asLink={<RouterLink to="/admin/taches" replace />}>
               Tâches du système
             </SideMenuLink>
@@ -107,5 +111,5 @@ function AdminPage() {
 export {
   AdminDashboardPage, AdminPage, AdminUsersPage, AdminNomenclaturesPage, AdminJournalPage,
   AdminLegalCategoriesPage, AdminRelationTypesPage, AdminGroupsPage, AdminApiKeysPage, AdminJobsPage,
-  AdminGeographicalExceptionsPage, AdminGeographicalCategoriesPage, AdminSirenePage,
+  AdminGeographicalExceptionsPage, AdminGeographicalCategoriesPage, AdminSirenePage, AdminUtilitiesPage,
 };
