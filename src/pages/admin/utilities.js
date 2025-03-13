@@ -9,7 +9,7 @@ function Utility({ collection }) {
     <Container fluid>
       <pre>
         <code>
-          {isLoading ? 'Chargement...' : JSON.stringify(data)}
+          {isLoading ? 'Chargement...' : JSON.stringify(data, null, 2)}
         </code>
       </pre>
     </Container>
