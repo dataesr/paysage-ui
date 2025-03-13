@@ -34,6 +34,9 @@ export default function StructureSireneUpdates({ structure, reload }) {
   const lastUpdate = updates.map((u) => u.createdAt).sort().reverse()[0];
   const treatedUpdates = updates.filter((update) => update.status === 'ok');
   const newUpdates = updates.filter((update) => update.status === 'pending');
+  const url = structure.type === 'establishment'
+    ? `https://annuaire-entreprises.data.gouv.fr/etablissement/${structure.siret}`
+    : `https://annuaire-entreprises.data.gouv.fr/entreprise/${structure.siren}`;
 
   return (
     <div key={structure.id}>
@@ -42,7 +45,10 @@ export default function StructureSireneUpdates({ structure, reload }) {
         {' '}
         {new Date(lastUpdate)?.toLocaleDateString('fr', DATE_DISPLAY_OPTIONS)}
       </p>
-      {newUpdates.map((update) => {
+      <a className="fr-btn fr-btn--sm" target="_blank" rel="noopener noreferrer" href={url}>
+        Voir sur l'annuaire entreprise
+      </a>
+      {newUpdates.sort((a, b) => b.changeEffectiveDate - a.changeEffectiveDate).map((update) => {
         const UpdateComponent = UPDATE_COMPONENTS[update.field];
 
         return UpdateComponent ? (
@@ -70,7 +76,7 @@ export default function StructureSireneUpdates({ structure, reload }) {
       })}
       <hr />
       <hr />
-      {treatedUpdates.map((update) => {
+      {treatedUpdates.sort((a, b) => b.changeEffectiveDate - a.changeEffectiveDate).map((update) => {
         const UpdateComponent = UPDATE_COMPONENTS[update.field];
 
         return UpdateComponent ? (

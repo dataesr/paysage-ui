@@ -65,6 +65,7 @@ import {
   AdminGeographicalExceptionsPage,
   AdminGeographicalCategoriesPage,
   AdminSirenePage,
+  AdminUtilitiesPage,
 } from '../pages/admin';
 
 import { AccountPage, PreferencesPage, ProfilePage, SecurityPage } from '../pages/mon-compte';
@@ -132,6 +133,7 @@ export default function Routes() {
               <Route path="imports/prix" element={<BulkImport type="prix" />} />
               <Route path="imports/structures-identifiers" element={<BulkImport type="structures (identifiants)" />} />
               <Route path="imports/persons-identifiers" element={<BulkImport type="personnes (identifiants)" />} />
+              <Route path="utilities" element={<AdminUtilitiesPage />} />
             </Route>
           </Route>
           <Route element={<ProtectedRoute roles={['admin', 'user']} />}>
