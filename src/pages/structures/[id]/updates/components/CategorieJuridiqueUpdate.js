@@ -61,7 +61,11 @@ export function CategorieJuridiqueUpdate({ update, paysageData, reload }) {
               try {
                 await api.patch(
                   `/relations/${paysageData.legalcategoryRelationshipId}`,
-                  { endDate: update.changeEffectiveDate },
+                  {
+                    endDate: update.changeEffectiveDate,
+                    resourceId: update.paysage,
+                    relatedObjectId: paysageData.legalcategory.id,
+                  },
                 );
                 await api.post(
                   '/relations',
