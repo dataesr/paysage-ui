@@ -1,6 +1,6 @@
 {
   "name": "paysage",
-  "version": "3.1.19",
+  "version": "3.1.20",
   "private": true,
   "dependencies": {
     "@dataesr/react-dsfr": "^3.4.6",
