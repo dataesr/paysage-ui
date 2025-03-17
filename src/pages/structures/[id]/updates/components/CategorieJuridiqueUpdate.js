@@ -60,12 +60,17 @@ export function CategorieJuridiqueUpdate({ update, paysageData, reload }) {
             onClick={async () => {
               try {
                 await api.patch(
-                  `/relationships/${paysageData.legalcategoryRelationshipId}`,
+                  `/relations/${paysageData.legalcategoryRelationshipId}`,
                   { endDate: update.changeEffectiveDate },
                 );
                 await api.post(
-                  '/relationships',
-                  { resourceId: update.paysage, relatedObjectId: sireneValue.id, startDate: update.changeEffectiveDate },
+                  '/relations',
+                  {
+                    relationTag: 'structure-categorie-juridique',
+                    resourceId: update.paysage,
+                    relatedObjectId: sireneValue.id,
+                    startDate: update.changeEffectiveDate,
+                  },
                 );
                 await api.patch(`/sirene/updates/${update._id}`, { status: 'ok' });
                 reload();
