@@ -9,7 +9,7 @@ const useMatchFetcher = ({ data, setError, setLoading, setMatchedData, setSelect
     setLoading(true);
     setSelectedMatches({});
 
-    const processEntry = async (entry, index) => {
+    const processEntry = async (entry) => {
       const query = getDisplayName(entry);
 
       if (!query) {
@@ -123,12 +123,6 @@ const useMatchFetcher = ({ data, setError, setLoading, setMatchedData, setSelect
       });
 
       matches.sort((a, b) => b.score - a.score);
-
-      const matchWithId = matches.find((m) => m.hasMatchingId);
-      setSelectedMatches((prev) => ({
-        ...prev,
-        [index]: matchWithId ? matchWithId.id : matches[0].id,
-      }));
 
       return {
         ...entry,
