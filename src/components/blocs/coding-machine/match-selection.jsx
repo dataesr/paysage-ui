@@ -4,7 +4,7 @@ import { formatMatchInfo } from './formatters';
 
 function MatchSelection({ matches, rowIndex, selectedMatches, onMatchSelection }) {
   const getBackgroundColor = (match) => {
-    if (match.hasMatchingId) return 'var(--green-emeraude-925-125)';
+    if (match.hasMatchingId) return 'var(--green-emeraude-975)';
     if (match.isAlternative) return 'var(--blue-france-950-125)';
     return 'transparent';
   };
@@ -41,19 +41,34 @@ function MatchSelection({ matches, rowIndex, selectedMatches, onMatchSelection }
                     )}
                     {match.hasMatchingId && (
                       <div>
-                        {match.matchingIdentifiers ? (
-                          match.matchingIdentifiers.map((identifier, idx) => (
-                            <div key={idx} className="fr-mb-1w">
-                              <Badge
-                                type="success"
-                                text={`Correspondance : ${identifier.fieldName} = ${identifier.value}`}
-                              />
-                            </div>
-                          ))
+                        {match.matchingIdentifiers && match.matchingIdentifiers.length > 0 ? (
+                          <>
+                            <Text size="sm" bold className="fr-mb-1w">
+                              {match.matchingIdentifiers.length > 1
+                                ? `${match.matchingIdentifiers.length} correspondances d'identifiants trouvées:`
+                                : "Correspondance d'identifiant trouvée:"}
+                            </Text>
+                            {match.matchingIdentifiers.map((identifier, idx) => (
+                              <div key={idx} className="fr-mb-1w">
+                                <Badge
+                                  type="success"
+                                  text={`${identifier.fieldName}: ${identifier.value}`}
+                                />
+                                {identifier.apiValue !== identifier.value && (
+                                  <Text size="sm" className="fr-ml-1w" style={{ display: 'inline-block' }}>
+                                    (correspond à:
+                                    {' '}
+                                    {identifier.apiValue}
+                                    )
+                                  </Text>
+                                )}
+                              </div>
+                            ))}
+                          </>
                         ) : (
                           <Badge
                             type="success"
-                            text={`Correspondance d'identifiant : ${match.matchingIdentifier?.value || ''}`}
+                            text={`Correspondance d'identifiant: ${match.matchingIdentifier?.value || ''}`}
                           />
                         )}
                       </div>
@@ -67,8 +82,15 @@ function MatchSelection({ matches, rowIndex, selectedMatches, onMatchSelection }
                       {' '}
                       | Score:
                       {' '}
-                      {Math.round(match.score)}
-                      {match.hasMatchingId && ` (+100 pour ${match.matchingIdentifiers?.length || 1} correspondance(s) d'identifiant)`}
+                      {Math.round(match.score) > 200 ? (
+                        <span style={{ color: '#FFD700', fontWeight: 'bold' }}>
+                          {Math.round(match.score)}
+                        </span>
+                      ) : (
+                        Math.round(match.score)
+                      )}
+                      {match.hasMatchingId
+    && ` (+100 pour ${match.matchingIdentifiers?.length || 1} correspondance(s) d'identifiant)`}
                     </Text>
                   </Col>
                   <Col n="12">

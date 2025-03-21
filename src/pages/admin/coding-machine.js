@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Container, Row, Col, Button, Alert, Text, Title } from '@dataesr/react-dsfr';
+import { Container, Row, Col, Button, Alert, Text, Title, Radio, RadioGroup } from '@dataesr/react-dsfr';
 import useMatchFetcher from '../../components/blocs/coding-machine/use-match-fetch';
 import useExportResults from '../../components/blocs/coding-machine/use-export-results';
 import MatchResultsTable from '../../components/blocs/coding-machine/match-results-table';
@@ -12,8 +12,9 @@ export default function CodingMachinePage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [selectedMatches, setSelectedMatches] = useState({});
+  const [searchType, setSearchType] = useState('structures');
 
-  const { processTableText, processing, validationErrors } = useTextProcessor({
+  const { processTableText, processing } = useTextProcessor({
     setData,
     setError,
     setMatchedData,
@@ -26,6 +27,7 @@ export default function CodingMachinePage() {
     setLoading,
     setMatchedData,
     setSelectedMatches,
+    searchType,
   });
 
   const { exportResults } = useExportResults({ matchedData, selectedMatches });
@@ -37,67 +39,73 @@ export default function CodingMachinePage() {
     }));
   };
 
+  const handleSearchTypeChange = (e) => {
+    setSearchType(e.target.value);
+    if (matchedData.length > 0) {
+      setMatchedData([]);
+      setSelectedMatches({});
+    }
+  };
+
+  const getTypeLabel = () => {
+    switch (searchType) {
+    case 'structures': return 'structures';
+    case 'persons': return 'personnes';
+    case 'prizes': return 'prix';
+    default: return '';
+    }
+  };
+
   return (
     <Container className="fr-mt-3w">
       <Row>
         <Col>
           <Title as="h2">Machine à coder</Title>
           <Text size="sm">Copiez et collez un tableau depuis Excel ou CSV pour trouver les identifiants Paysage correspondants.</Text>
-          <Text size="sm">
-            Les colonnes du tableau doivent contenir
-            des noms de structures ou de personnes. La première colonne doit avoir pour nom "Name", et les suivantes les noms d'identifiants
-          </Text>
-          <Text className="fr-mb-2w">Exemple de format :</Text>
-          <div className="fr-table">
-            <table>
-              <thead>
-                <tr>
-                  <th scope="col">Name</th>
-                  <th scope="col">SIRET</th>
-                  <th scope="col">SIREN</th>
-                  <th scope="col">UAI</th>
-                  <th scope="col">UAI 2</th>
-                  <th scope="col">...</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>Université de Colombie</td>
-                  <td>123213213400014</td>
-                  <td>421321344</td>
-                  <td>532432X</td>
-                </tr>
-                <tr>
-                  <td>Centre National de la Recherche Scientifique</td>
-                  <td>180089013</td>
-                  <td>180089013</td>
-                  <td>0753639Y</td>
-                </tr>
-              </tbody>
-            </table>
+
+          <div className="fr-mb-3w">
+            <Text size="sm">
+              Les colonnes du tableau doivent contenir des noms de
+              {' '}
+              {getTypeLabel()}
+              .
+              La première colonne doit avoir pour nom "Name", et les suivantes les noms d'identifiants
+            </Text>
+            <Text bold className="fr-mb-1w">Type d'entités à rechercher :</Text>
+
+            <RadioGroup
+              legend=""
+              name="searchType"
+              isInline
+            >
+              <Radio
+                label="Structures (établissements, organisations)"
+                value="structures"
+                checked={searchType === 'structures'}
+                onChange={handleSearchTypeChange}
+              />
+              <Radio
+                label="Personnes"
+                value="persons"
+                checked={searchType === 'persons'}
+                onChange={handleSearchTypeChange}
+              />
+              <Radio
+                label="Prix et distinctions"
+                value="prizes"
+                checked={searchType === 'prizes'}
+                onChange={handleSearchTypeChange}
+              />
+            </RadioGroup>
           </div>
 
           <TextPasteArea onDataPaste={processTableText} />
-
           {error && (
             <Alert
               type="error"
               description={error}
               className="fr-mb-3w"
             />
-          )}
-
-          {validationErrors.length > 0 && (
-            <div className="fr-mb-3w">
-              <Text bold>Détails des problèmes détectés :</Text>
-              <ul className="fr-ml-3w">
-                {validationErrors.map((err, index) => (
-                  <li key={index}>
-                    <Text size="sm" className="fr-error-text">{err}</Text>
-                  </li>
-                ))}
-              </ul>
-            </div>
           )}
 
           {data.length > 0 && (
@@ -111,7 +119,9 @@ export default function CodingMachinePage() {
                 onClick={fetchMatches}
                 disabled={loading || processing}
               >
-                {loading ? 'Recherche en cours...' : 'Vérifier les correspondances'}
+                {loading
+                  ? 'Recherche en cours...'
+                  : `Vérifier les correspondances de ${getTypeLabel()}`}
               </Button>
               {matchedData.length > 0 && (
                 <Button
@@ -132,6 +142,7 @@ export default function CodingMachinePage() {
               setSelectedMatches={setSelectedMatches}
               selectedMatches={selectedMatches}
               onMatchSelection={handleMatchSelection}
+              searchType={searchType}
             />
           )}
         </Col>

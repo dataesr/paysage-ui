@@ -1,7 +1,14 @@
 import api from '../../../utils/api';
 import { getDisplayName } from './formatters';
 
-const useMatchFetcher = ({ data, setError, setLoading, setMatchedData, setSelectedMatches }) => {
+const useMatchFetcher = ({
+  data,
+  setError,
+  setLoading,
+  setMatchedData,
+  setSelectedMatches,
+  searchType = '',
+}) => {
   async function fetchMatches() {
     if (!data || !data.length) return;
 
@@ -16,14 +23,18 @@ const useMatchFetcher = ({ data, setError, setLoading, setMatchedData, setSelect
         return { ...entry, matches: [], sourceQuery: query };
       }
 
-      const isProbablyPerson = entry.first_name || entry.last_name || entry['Full Name'] || entry.FullName;
-      const isProbablyStructure = entry.Name || entry.name;
+      let typesToSearch = searchType;
 
-      let typesToSearch = 'persons,structures';
-      if (isProbablyPerson && !isProbablyStructure) {
-        typesToSearch = 'persons';
-      } else if (isProbablyStructure && !isProbablyPerson) {
-        typesToSearch = 'structures';
+      if (!searchType || searchType === 'auto') {
+        const isProbablyPerson = entry.first_name || entry.last_name || entry['Full Name'] || entry.FullName;
+        const isProbablyStructure = entry.Name || entry.name;
+
+        typesToSearch = 'persons,structures';
+        if (isProbablyPerson && !isProbablyStructure) {
+          typesToSearch = 'persons';
+        } else if (isProbablyStructure && !isProbablyPerson) {
+          typesToSearch = 'structures';
+        }
       }
 
       const params = new URLSearchParams({
@@ -47,7 +58,19 @@ const useMatchFetcher = ({ data, setError, setLoading, setMatchedData, setSelect
         return { ...entry, matches: [], sourceQuery: query };
       }
 
-      let matches = response.data.data.map((match) => {
+      let filteredResults = response.data.data;
+      if (searchType && searchType !== 'auto' && searchType !== 'persons,structures') {
+        filteredResults = response.data.data.filter((match) => {
+          const matchType = match.type || match.objectType;
+          return matchType && (
+            matchType === searchType
+            || matchType === `${searchType }s`
+            || matchType === searchType.replace(/s$/, '')
+          );
+        });
+      }
+
+      let matches = filteredResults.map((match) => {
         const identifiersArray = match.identifiers || [];
 
         return {
@@ -75,9 +98,7 @@ const useMatchFetcher = ({ data, setError, setLoading, setMatchedData, setSelect
           return match;
         }
 
-        const normalizedMatchIds = match.identifiersArray
-          .map((id) => (id ? id.toString().toLowerCase().trim() : ''))
-          .filter((id) => id !== '');
+        const normalizedMatchIds = match.identifiersArray.map((id) => (id ? id.toString().toLowerCase().trim() : '')).filter((id) => id !== '');
 
         if (normalizedMatchIds.length === 0) {
           return match;
@@ -86,34 +107,46 @@ const useMatchFetcher = ({ data, setError, setLoading, setMatchedData, setSelect
         const foundMatchingIds = [];
         const matchingFields = [];
         const matchingValues = [];
+        const matchingApiValues = [];
 
         Object.entries(entry).forEach(([field, value]) => {
-          if (!value || value.toString().trim() === '') {
+          if (!value || ['name', 'matches', 'sourceQuery', 'error'].includes(field)) {
             return;
           }
 
-          const normalizedValue = value.toString().toLowerCase().trim();
+          const normalizedValue = value.toString().toLowerCase().trim()
+            .replace(/[-\s.]/g, '');
 
-          if (normalizedMatchIds.includes(normalizedValue)) {
-            foundMatchingIds.push(true);
-            matchingFields.push(field);
-            matchingValues.push(value);
-          }
+          match.identifiersArray.forEach((apiId) => {
+            if (!apiId) return;
+
+            const normalizedApiId = apiId.toString().toLowerCase().trim()
+              .replace(/[-\s.]/g, '');
+
+            if (normalizedApiId === normalizedValue) {
+              foundMatchingIds.push(true);
+              matchingFields.push(field);
+              matchingValues.push(value);
+              matchingApiValues.push(apiId);
+            }
+          });
         });
 
         if (foundMatchingIds.length > 0) {
           const identifiers = [];
-
+          // should we really normalize the matching ids??
+          // talk with yann about this
           for (let i = 0; i < matchingFields.length; i += 1) {
             identifiers.push({
               fieldName: matchingFields[i],
               value: matchingValues[i],
+              apiValue: matchingApiValues[i],
             });
           }
 
           return {
             ...match,
-            score: match.score + 100,
+            score: match.score + (100 * foundMatchingIds.length),
             hasMatchingId: true,
             matchingIdentifiers: identifiers,
           };
@@ -140,6 +173,7 @@ const useMatchFetcher = ({ data, setError, setLoading, setMatchedData, setSelect
       })));
 
       const results = await Promise.all(processingPromises);
+
       setMatchedData(results);
       setLoading(false);
     };
