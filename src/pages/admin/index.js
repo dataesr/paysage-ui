@@ -98,6 +98,9 @@ function AdminPage() {
             <SideMenuLink className={(page === 'sirene') && 'sidemenu__item--active'} asLink={<RouterLink to="/admin/sirene" replace />}>
               Mises à jour Sirene
             </SideMenuLink>
+            <SideMenuLink className={(page === 'coding-machine') && 'sidemenu__item--active'} asLink={<RouterLink to="/admin/coding-machine" replace />}>
+              Machine à coder
+            </SideMenuLink>
           </SideMenu>
         </Col>
         <Col n="12 md-9">
