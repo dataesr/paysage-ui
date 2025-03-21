@@ -2,13 +2,18 @@ import PropTypes from 'prop-types';
 import { Text } from '@dataesr/react-dsfr';
 import { getDisplayName } from './formatters';
 import MatchSelection from './match-selection';
-import AlternativeSearchComponent from './alternativ-search';
+import AlternativeSearchComponent from './alternative-search';
 
-function RowItem({ row, index, selectedMatches, onMatchSelection, matchedData, setMatchedData }) {
+function RowItem({ row, index, selectedMatches, onMatchSelection, matchedData, setMatchedData, setSelectedMatches }) {
   return (
     <tr>
       <td style={{ verticalAlign: 'top' }}>
         <Text size="sm" bold>{getDisplayName(row)}</Text>
+        {row._hasError && (
+          <span className="fr-badge fr-badge--error fr-badge--sm">
+            Erreur de format
+          </span>
+        )}
         {Object.entries(row)
           .filter(([key, value]) => {
             // We could decide to keep only fields that are identifiers (like siret)
@@ -43,7 +48,7 @@ function RowItem({ row, index, selectedMatches, onMatchSelection, matchedData, s
               onMatchSelection={onMatchSelection}
               matchedData={matchedData}
               setMatchedData={setMatchedData}
-
+              setSelectedMatches={setSelectedMatches}
             />
           </>
         ) : (
@@ -56,7 +61,7 @@ function RowItem({ row, index, selectedMatches, onMatchSelection, matchedData, s
               onMatchSelection={onMatchSelection}
               matchedData={matchedData}
               setMatchedData={setMatchedData}
-
+              setSelectedMatches={setSelectedMatches}
             />
           </>
         )}
@@ -68,12 +73,14 @@ function RowItem({ row, index, selectedMatches, onMatchSelection, matchedData, s
 RowItem.propTypes = {
   row: PropTypes.shape({
     matches: PropTypes.array,
+    _hasError: PropTypes.bool,
   }).isRequired,
   index: PropTypes.number.isRequired,
   selectedMatches: PropTypes.object.isRequired,
   onMatchSelection: PropTypes.func.isRequired,
   matchedData: PropTypes.array.isRequired,
   setMatchedData: PropTypes.func.isRequired,
+  setSelectedMatches: PropTypes.func.isRequired,
 };
 
 export default RowItem;

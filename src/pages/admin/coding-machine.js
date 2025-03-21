@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import { Container, Row, Col, Button, Alert, Text, Title } from '@dataesr/react-dsfr';
-import useFileProcessor from '../../components/blocs/coding-machine/use-file-processor';
 import useMatchFetcher from '../../components/blocs/coding-machine/use-match-fetch';
 import useExportResults from '../../components/blocs/coding-machine/use-export-results';
-import FileUploader from '../../components/blocs/coding-machine/file-uploader';
 import MatchResultsTable from '../../components/blocs/coding-machine/match-results-table';
+import useTextProcessor from '../../components/blocs/coding-machine/use-text-processor';
+import TextPasteArea from '../../components/blocs/coding-machine/text-Paste-Area';
 
 export default function CodingMachinePage() {
   const [data, setData] = useState([]);
@@ -13,7 +13,7 @@ export default function CodingMachinePage() {
   const [error, setError] = useState(null);
   const [selectedMatches, setSelectedMatches] = useState({});
 
-  const { handleFileUpload } = useFileProcessor({
+  const { processTableText, processing, validationErrors } = useTextProcessor({
     setData,
     setError,
     setMatchedData,
@@ -42,13 +42,13 @@ export default function CodingMachinePage() {
       <Row>
         <Col>
           <Title as="h2">Machine à coder</Title>
-          <Text size="sm">Importez un fichier CSV ou Excel et trouvez les identifiants Paysage correspondants.</Text>
+          <Text size="sm">Copiez et collez un tableau depuis Excel ou CSV pour trouver les identifiants Paysage correspondants.</Text>
           <Text size="sm">
-            Les colonnes du fichier doivent contenir
+            Les colonnes du tableau doivent contenir
             des noms de structures ou de personnes. La première colonne doit avoir pour nom "Name", et les suivantes les noms d'identifiants
           </Text>
           <Text className="fr-mb-2w">Exemple de format :</Text>
-          <div className="fr-table ">
+          <div className="fr-table">
             <table>
               <thead>
                 <tr>
@@ -77,15 +77,27 @@ export default function CodingMachinePage() {
             </table>
           </div>
 
-          <FileUploader
-            onFileUpload={handleFileUpload}
-          />
+          <TextPasteArea onDataPaste={processTableText} />
+
           {error && (
             <Alert
               type="error"
               description={error}
               className="fr-mb-3w"
             />
+          )}
+
+          {validationErrors.length > 0 && (
+            <div className="fr-mb-3w">
+              <Text bold>Détails des problèmes détectés :</Text>
+              <ul className="fr-ml-3w">
+                {validationErrors.map((err, index) => (
+                  <li key={index}>
+                    <Text size="sm" className="fr-error-text">{err}</Text>
+                  </li>
+                ))}
+              </ul>
+            </div>
           )}
 
           {data.length > 0 && (
@@ -97,7 +109,7 @@ export default function CodingMachinePage() {
               </Text>
               <Button
                 onClick={fetchMatches}
-                disabled={loading}
+                disabled={loading || processing}
               >
                 {loading ? 'Recherche en cours...' : 'Vérifier les correspondances'}
               </Button>
@@ -121,7 +133,6 @@ export default function CodingMachinePage() {
               selectedMatches={selectedMatches}
               onMatchSelection={handleMatchSelection}
             />
-
           )}
         </Col>
       </Row>
