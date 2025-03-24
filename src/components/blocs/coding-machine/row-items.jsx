@@ -16,7 +16,6 @@ function RowItem({ row, index, selectedMatches, onMatchSelection, matchedData, s
         )}
         {Object.entries(row)
           .filter(([key, value]) => {
-            // We could decide to keep only fields that are identifiers (like siret)
             const ignoreFields = ['sourceQuery', 'matches', 'error', 'Name', 'name', 'Full Name', 'first_name', 'last_name', 'FullName'];
             if (ignoreFields.includes(key)) return false;
             if (!value || value.toString().trim() === '') return false;

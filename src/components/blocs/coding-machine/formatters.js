@@ -38,7 +38,6 @@ export function formatMatchInfo(match) {
     return (
       <div>
         {infos.length > 0 && <Text size="sm">{infos.join(' | ')}</Text>}
-
         {statusElem && <Text size="sm">{statusElem}</Text>}
       </div>
     );

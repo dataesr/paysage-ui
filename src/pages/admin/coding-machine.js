@@ -13,13 +13,7 @@ export default function CodingMachinePage() {
   const [error, setError] = useState(null);
   const [selectedMatches, setSelectedMatches] = useState({});
   const [searchType, setSearchType] = useState('structures');
-
-  const { processTableText, processing } = useTextProcessor({
-    setData,
-    setError,
-    setMatchedData,
-    setSelectedMatches,
-  });
+  const [pastedText, setPastedText] = useState('');
 
   const { fetchMatches } = useMatchFetcher({
     data,
@@ -28,6 +22,22 @@ export default function CodingMachinePage() {
     setMatchedData,
     setSelectedMatches,
     searchType,
+  });
+
+  const handleDataProcessed = (processedData) => {
+    setData(processedData);
+    if (processedData && processedData.length > 0) {
+      setTimeout(() => {
+        fetchMatches();
+      }, 50);
+    }
+  };
+
+  const { processTableText, processing } = useTextProcessor({
+    setData: handleDataProcessed,
+    setError,
+    setMatchedData,
+    setSelectedMatches,
   });
 
   const { exportResults } = useExportResults({ matchedData, selectedMatches });
@@ -47,6 +57,15 @@ export default function CodingMachinePage() {
     }
   };
 
+  const handleReset = () => {
+    setData([]);
+    setMatchedData([]);
+    setLoading(false);
+    setError(null);
+    setSelectedMatches({});
+    setPastedText('');
+  };
+
   const getTypeLabel = () => {
     switch (searchType) {
     case 'structures': return 'structures';
@@ -55,6 +74,18 @@ export default function CodingMachinePage() {
     default: return '';
     }
   };
+
+  const handleProcessAndSearch = () => {
+    processTableText(pastedText);
+  };
+
+  const getButtonText = () => {
+    if (processing) return 'Traitement en cours...';
+    if (loading) return 'Recherche en cours...';
+    return 'Traiter les données et rechercher';
+  };
+
+  const showResetButton = pastedText.trim() || data.length > 0 || matchedData.length > 0;
 
   return (
     <Container className="fr-mt-3w">
@@ -72,7 +103,6 @@ export default function CodingMachinePage() {
               La première colonne doit avoir pour nom "Name", et les suivantes les noms d'identifiants
             </Text>
             <Text bold className="fr-mb-1w">Type d'entités à rechercher :</Text>
-
             <RadioGroup
               legend=""
               name="searchType"
@@ -98,55 +128,54 @@ export default function CodingMachinePage() {
               />
             </RadioGroup>
           </div>
-
-          <TextPasteArea onDataPaste={processTableText} />
+          <TextPasteArea onChange={setPastedText} value={pastedText} />
           {error && (
             <Alert
               type="error"
               description={error}
-              className="fr-mb-3w"
+              className="fr-mb-2w"
             />
           )}
+          <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+            <Button
+              onClick={handleProcessAndSearch}
+              disabled={!pastedText.trim() || processing || loading}
+            >
+              {getButtonText()}
+            </Button>
 
-          {data.length > 0 && (
-            <div className="fr-mb-3w">
-              <Text size="sm">
-                {data.length}
-                {' '}
-                entrées chargées.
-              </Text>
+            {showResetButton && (
               <Button
-                onClick={fetchMatches}
-                disabled={loading || processing}
+                onClick={handleReset}
+                secondary
+                color="text"
               >
-                {loading
-                  ? 'Recherche en cours...'
-                  : `Vérifier les correspondances de ${getTypeLabel()}`}
+                Tout réinitialiser
               </Button>
-              {matchedData.length > 0 && (
-                <Button
-                  onClick={exportResults}
-                  secondary
-                  className="fr-ml-2w"
-                >
-                  Exporter les correspondances sélectionnées
-                </Button>
-              )}
-            </div>
-          )}
-
+            )}
+          </div>
           {matchedData.length > 0 && (
-            <MatchResultsTable
-              matchedData={matchedData}
-              setMatchedData={setMatchedData}
-              setSelectedMatches={setSelectedMatches}
-              selectedMatches={selectedMatches}
-              onMatchSelection={handleMatchSelection}
-              searchType={searchType}
-            />
+            <div className="fr-mt-3w">
+              <MatchResultsTable
+                matchedData={matchedData}
+                setMatchedData={setMatchedData}
+                setSelectedMatches={setSelectedMatches}
+                selectedMatches={selectedMatches}
+                onMatchSelection={handleMatchSelection}
+                searchType={searchType}
+              />
+            </div>
           )}
         </Col>
       </Row>
+      {matchedData.length > 0 && (
+        <Button
+          onClick={exportResults}
+          secondary
+        >
+          Exporter les correspondances sélectionnées
+        </Button>
+      )}
     </Container>
   );
 }

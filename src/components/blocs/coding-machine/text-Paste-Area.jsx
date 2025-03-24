@@ -1,22 +1,17 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Button, TextInput } from '@dataesr/react-dsfr';
+import { TextInput } from '@dataesr/react-dsfr';
 
-function TextPasteArea({ onDataPaste }) {
+function TextPasteArea({ onChange }) {
   const [pastedText, setPastedText] = useState('');
 
   const handleTextChange = (e) => {
     setPastedText(e.target.value);
-  };
-
-  const handleProcessClick = () => {
-    if (pastedText.trim()) {
-      onDataPaste(pastedText);
-    }
+    onChange(e.target.value);
   };
 
   return (
-    <div className="fr-mb-3w">
+    <div className="fr-mb-2w">
       <TextInput
         textarea
         label="Collez votre tableau ici"
@@ -25,19 +20,12 @@ function TextPasteArea({ onDataPaste }) {
         value={pastedText}
         rows={10}
       />
-      <Button
-        onClick={handleProcessClick}
-        disabled={!pastedText.trim()}
-        className="fr-mt-2w"
-      >
-        Traiter les données
-      </Button>
     </div>
   );
 }
 
 TextPasteArea.propTypes = {
-  onDataPaste: PropTypes.func.isRequired,
+  onChange: PropTypes.func.isRequired,
 };
 
 export default TextPasteArea;

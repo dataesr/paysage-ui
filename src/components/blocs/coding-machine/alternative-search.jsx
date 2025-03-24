@@ -24,7 +24,7 @@ export default function AlternativeSearchComponent({
   };
 
   return (
-    <div className="fr-mt-3w">
+    <div className="fr-mt-2w">
       <div className="fr-fieldset">
         <legend className="fr-fieldset__legend fr-text--sm">
           Rechercher d'autres correspondances

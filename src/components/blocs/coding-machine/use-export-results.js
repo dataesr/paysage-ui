@@ -1,9 +1,8 @@
-import { useCallback } from 'react';
 import * as XLSX from 'xlsx';
 import { getDisplayName } from './formatters';
 
 const useExportResults = ({ matchedData, selectedMatches }) => {
-  const exportResults = useCallback(() => {
+  const exportResults = () => {
     if (!matchedData.length) return;
 
     const workbook = XLSX.utils.book_new();
@@ -14,7 +13,7 @@ const useExportResults = ({ matchedData, selectedMatches }) => {
 
       return {
         Source: row.sourceQuery || '',
-        MatchId: selectedMatch.id || 'Non sélectionné',
+        PaysageId: selectedMatch.id || 'Non sélectionné',
         MatchName: selectedMatch.name || '',
         ObjectType: selectedMatch.objectType || '',
         Category: selectedMatch.category || '',
@@ -25,9 +24,6 @@ const useExportResults = ({ matchedData, selectedMatches }) => {
         CreationDate: selectedMatch.creationDate || '',
         ClosureDate: selectedMatch.closureDate || '',
         Identifiers: selectedMatch.identifiers || '',
-        IsAlternativeResult: selectedMatch.isAlternative ? 'Oui' : 'Non',
-        HasMatchingId: selectedMatch.hasMatchingId ? 'Oui' : 'Non',
-        MatchingIdentifier: selectedMatch.matchingIdentifier?.value || '',
       };
     });
 
@@ -39,14 +35,13 @@ const useExportResults = ({ matchedData, selectedMatches }) => {
         allPropositionsData.push({
           Source: sourceName,
           IsSelected: 'N/A',
-          MatchId: 'Aucune correspondance',
+          PaysageId: 'Aucune correspondance',
           MatchName: '',
           ObjectType: '',
           Score: '',
           Category: '',
           City: '',
           Activity: '',
-          IsAlternativeResult: 'N/A',
         });
       } else {
         row.matches.forEach((match) => {
@@ -55,7 +50,7 @@ const useExportResults = ({ matchedData, selectedMatches }) => {
           allPropositionsData.push({
             Source: sourceName,
             IsSelected: isSelected ? 'Oui' : 'Non',
-            MatchId: match.id,
+            PaysageId: match.id,
             MatchName: match.name,
             ObjectType: match.objectType,
             Score: Math.round(match.score),
@@ -67,9 +62,6 @@ const useExportResults = ({ matchedData, selectedMatches }) => {
             ClosureDate: match.closureDate || '',
             Status: match.structureStatus || '',
             Identifiers: match.identifiers || '',
-            IsAlternativeResult: match.isAlternative ? 'Oui' : 'Non',
-            HasMatchingId: match.hasMatchingId ? 'Oui' : 'Non',
-            MatchingIdentifier: match.matchingIdentifier?.value || '',
           });
         });
       }
@@ -82,7 +74,7 @@ const useExportResults = ({ matchedData, selectedMatches }) => {
     XLSX.utils.book_append_sheet(workbook, allPropositionsWorksheet, 'Toutes propositions');
 
     XLSX.writeFile(workbook, 'resultats_machine_a_coder.xlsx');
-  }, [matchedData, selectedMatches]);
+  };
 
   return { exportResults };
 };

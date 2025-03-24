@@ -19,95 +19,75 @@ function MatchSelection({ matches, rowIndex, selectedMatches, onMatchSelection }
           <div
             key={match.id}
             style={{
-              padding: '10px',
-              marginBottom: '10px',
               backgroundColor: getBackgroundColor(match),
             }}
           >
             <Radio
               label={(
-                <Row gutters>
-                  <Col n="12">
-                    <strong>
-                      {match.name}
-                    </strong>
-                    {match.isAlternative && (
-                      <div>
-                        <Badge
-                          type="info"
-                          text="RÉSULTAT DE RECHERCHE PERSONNALISÉE"
-                        />
-                      </div>
-                    )}
+                <Row>
+                  <div>
                     {match.hasMatchingId && (
-                      <div>
+                      <Col>
+                        <strong>
+                          {match.name}
+                        </strong>
+                        {match.isAlternative && (
+                          <div>
+                            <Badge
+                              type="info"
+                              text="RÉSULTAT DE RECHERCHE PERSONNALISÉE"
+                            />
+                          </div>
+                        )}
                         {match.matchingIdentifiers && match.matchingIdentifiers.length > 0 ? (
-                          <>
-                            <Text size="sm" bold className="fr-mb-1w">
+                          <Row>
+                            <Text size="sm" bold>
                               {match.matchingIdentifiers.length > 1
                                 ? `${match.matchingIdentifiers.length} correspondances d'identifiants trouvées:`
                                 : "Correspondance d'identifiant trouvée:"}
                             </Text>
                             {match.matchingIdentifiers.map((identifier, idx) => (
-                              <div key={idx} className="fr-mb-1w">
+                              <div key={idx}>
                                 <Badge
                                   type="success"
                                   text={`${identifier.fieldName}: ${identifier.value}`}
                                 />
                                 {identifier.apiValue !== identifier.value && (
-                                  <Text size="sm" className="fr-ml-1w" style={{ display: 'inline-block' }}>
+                                  <Text size="sm">
                                     (correspond à:
-                                    {' '}
                                     {identifier.apiValue}
                                     )
                                   </Text>
                                 )}
                               </div>
                             ))}
-                          </>
+                          </Row>
                         ) : (
                           <Badge
                             type="success"
                             text={`Correspondance d'identifiant: ${match.matchingIdentifier?.value || ''}`}
                           />
                         )}
-                      </div>
+                      </Col>
                     )}
-                  </Col>
-                  <Col n="12">
-                    <Text size="sm">
-                      ID Paysage:
-                      {' '}
-                      {match.id}
-                      {' '}
-                      | Score:
-                      {' '}
-                      {Math.round(match.score) > 200 ? (
-                        <span style={{ color: '#FFD700', fontWeight: 'bold' }}>
-                          {Math.round(match.score)}
-                        </span>
-                      ) : (
-                        Math.round(match.score)
-                      )}
-                      {match.hasMatchingId
-    && ` (+100 pour ${match.matchingIdentifiers?.length || 1} correspondance(s) d'identifiant)`}
-                    </Text>
-                  </Col>
-                  <Col n="12">
+                  </div>
+                  <Text size="sm">
+                    ID Paysage:
+                    {' '}
+                    {match.id}
+                    {' '}
+                    | Score:
+                    {' '}
+                    {Math.round(match.score) > 200 ? (
+                      <span style={{ color: '#FFD700', fontWeight: 'bold' }}>
+                        {Math.round(match.score)}
+                      </span>
+                    ) : (
+                        `${Math.round(match.score)} | `
+                    )}
+                    {match.hasMatchingId}
                     {formatMatchInfo(match)}
-                    {match.identifiers && (
-                      <div>
-                        <Text size="sm">
-                          <strong>Identifiants de l'objet dans paysage:</strong>
-                          {' '}
-                          {match.identifiers}
-                          {!match.hasMatchingId && (
-                            <span style={{ color: '#666', fontStyle: 'italic' }}> (aucun n'a matché)</span>
-                          )}
-                        </Text>
-                      </div>
-                    )}
-                  </Col>
+                  </Text>
                 </Row>
               )}
               value={match.id}
