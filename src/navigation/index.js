@@ -90,6 +90,7 @@ import ScrollToTopOnPathnameChange from './scroll-top-on-pathname-change';
 import CGU from '../pages/cgu';
 import MentionsLegales from '../pages/mentions-legales';
 import Annuaire from '../pages/annuaire';
+import CodingMachinePage from '../pages/admin/coding-machine';
 
 export default function Routes() {
   return (
@@ -119,6 +120,7 @@ export default function Routes() {
               <Route path="types-de-relation" element={<AdminRelationTypesPage />} />
               <Route path="taches" element={<AdminJobsPage />} />
               <Route path="sirene" element={<AdminSirenePage />} />
+              <Route path="coding-machine" element={<CodingMachinePage />} />
               <Route path="nomenclatures" element={<Navigate to="nomenclatures/types-de-document" replace />} />
               <Route path="nomenclatures/types-de-document" element={<AdminNomenclaturesPage route="/document-types" title="Types de documents" />} />
               <Route path="nomenclatures/ministres-de-tutelle" element={<AdminNomenclaturesPage route="/supervising-ministers" title="Ministres de tutelle" />} />
