@@ -13,8 +13,6 @@ export function formatMatchInfo(match) {
 
   if (match.objectType === 'structures') {
     const infos = [];
-    if (match.category) infos.push(`Catégorie: ${match.category}`);
-    if (match.city) infos.push(`Ville: ${match.city}`);
     if (match.acronym) infos.push(`Sigle: ${match.acronym}`);
     if (match.creationDate) infos.push(`Date de création: ${match.creationDate}`);
 

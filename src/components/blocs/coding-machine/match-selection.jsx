@@ -33,6 +33,7 @@ function MatchSelection({
                   <div>
                     {match.isAlternative && (
                       <div>
+                        <strong>{match.name}</strong>
                         <Badge
                           type="info"
                           text={match.name}
@@ -45,6 +46,7 @@ function MatchSelection({
                           && match.matchingIdentifiers.length > 0 ? (
                             <Row>
                               <Text size="sm" bold>
+
                                 {match.matchingIdentifiers.length > 1
                                   ? `${match.matchingIdentifiers.length} correspondances d'identifiants trouvées:`
                                   : "Correspondance d'identifiant trouvée:"}
@@ -78,25 +80,27 @@ function MatchSelection({
                           )}
                       </Col>
                     )}
-                  </div>
-                  <Text size="sm">
-                    ID Paysage:
-                    {' '}
-                    {match.id}
-                    {' '}
-                    | Score:
-                    {' '}
-                    {' '}
-                    {Math.round(match.score) > 200 ? (
-                      <span style={{ color: '#FFD700', fontWeight: 'bold' }}>
-                        {Math.round(match.score)}
-                      </span>
-                    ) : (
+                    <strong>{match.name}</strong>
+
+                    <Text size="sm">
+                      ID Paysage:
+                      {' '}
+                      {match.id}
+                      {' '}
+                      | Score:
+                      {' '}
+                      {' '}
+                      {Math.round(match.score) > 200 ? (
+                        <span style={{ color: '#FFD700', fontWeight: 'bold' }}>
+                          {Math.round(match.score)}
+                        </span>
+                      ) : (
                       `${Math.round(match.score)} | `
-                    )}
-                    {match.hasMatchingId}
-                    {formatMatchInfo(match)}
-                  </Text>
+                      )}
+                      {match.hasMatchingId}
+                      {formatMatchInfo(match)}
+                    </Text>
+                  </div>
                 </Row>
               )}
               value={match.id}
