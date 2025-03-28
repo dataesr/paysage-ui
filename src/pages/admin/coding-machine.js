@@ -92,7 +92,7 @@ export default function CodingMachinePage() {
       <Row>
         <Col>
           <Title as="h2">Machine à coder</Title>
-          <Text size="sm">Copiez et collez un tableau depuis Excel ou CSV pour trouver les identifiants Paysage correspondants.</Text>
+          <Text size="sm">Copiez et collez un tableau depuis Excel ou CSV pour trouver les objets Paysage correspondants.</Text>
           <Text size="sm">
             Les colonnes du tableau doivent contenir des noms de
             {' '}
@@ -106,7 +106,7 @@ export default function CodingMachinePage() {
 
             <ul>
               <li>Soit une première colonne "Name" suivie d'identifiants (format standard)</li>
-              <li>Soit directement des identifiants (SIRET, UAI, RNSR, etc.) sans colonne "Name"</li>
+              <li>Soit uniquement une colonne contenant identifiants (SIRET, UAI, RNSR, etc.) sans colonne "Name"</li>
             </ul>
           </Text>
 

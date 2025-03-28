@@ -9,7 +9,7 @@ function MatchSelection({
   onMatchSelection,
 }) {
   const getBackgroundColor = (match) => {
-    if (match.hasMatchingId) return 'var(--green-emeraude-975)';
+    if (match.hasMatchingId) return 'var(--green-emeraude-925)';
     if (match.isAlternative) return 'var(--blue-france-950-125)';
     return 'transparent';
   };
@@ -33,7 +33,6 @@ function MatchSelection({
                   <div>
                     {match.isAlternative && (
                       <div>
-                        <strong>{match.name}</strong>
                         <Badge
                           type="info"
                           text={match.name}
