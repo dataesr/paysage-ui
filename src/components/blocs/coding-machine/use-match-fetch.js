@@ -17,6 +17,56 @@ const useMatchFetcher = ({
     setSelectedMatches({});
 
     const processEntry = async (entry) => {
+      if (entry.isIdOnlyEntry && entry.primaryId) {
+        const idValue = entry.primaryId;
+        const idType = entry.primaryIdType || '';
+
+        try {
+          const params = new URLSearchParams({
+            query: idValue,
+            limit: 10,
+            types: searchType || 'structures,persons,prizes',
+          });
+
+          const response = await api.get(`/autocomplete?${params.toString()}`);
+          let matches = response?.data?.data || [];
+
+          matches = matches.map((match) => ({
+            id: match.id,
+            name: match.name || match.displayName || '',
+            objectType: match.type || '',
+            score: match.score || 0,
+            activity: match.activity || '',
+            category: match.category || '',
+            city: match.city && match.city.length > 0 ? match.city.join(', ') : '',
+            acronym: match.acronymFr || match.acronymLocal || match.acronymEn || '',
+            structureStatus: match.structureStatus || '',
+            creationDate: match.creationDate || '',
+            closureDate: match.closureDate || '',
+            identifiers: match.identifiers ? match.identifiers.join(', ') : '',
+            identifiersArray: match.identifiers || [],
+            matchingIdentifier: { fieldName: idType, value: idValue },
+            hasMatchingId: true,
+            isIdSearch: true,
+          }));
+
+          matches.sort((a, b) => b.score - a.score);
+
+          return {
+            ...entry,
+            matches,
+            sourceQuery: idValue,
+          };
+        } catch (err) {
+          return {
+            ...entry,
+            matches: [],
+            error: `Erreur de recherche: ${err.message}`,
+            sourceQuery: idValue,
+          };
+        }
+      }
+
       const query = getDisplayName(entry);
 
       if (!query) {
@@ -64,7 +114,7 @@ const useMatchFetcher = ({
           const matchType = match.type || match.objectType;
           return matchType && (
             matchType === searchType
-            || matchType === `${searchType }s`
+            || matchType === `${searchType}s`
             || matchType === searchType.replace(/s$/, '')
           );
         });
@@ -110,7 +160,8 @@ const useMatchFetcher = ({
         const matchingApiValues = [];
 
         Object.entries(entry).forEach(([field, value]) => {
-          if (!value || ['name', 'matches', 'sourceQuery', 'error'].includes(field)) {
+          // Could add more fields to ignore here, for exemple creationDate, closureDate, etc. (because of thoses who use bulk import field)
+          if (!value || ['name', 'matches', 'sourceQuery', 'error', 'isIdOnlyEntry', 'primaryId', 'primaryIdType'].includes(field)) {
             return;
           }
 
@@ -134,8 +185,6 @@ const useMatchFetcher = ({
 
         if (foundMatchingIds.length > 0) {
           const identifiers = [];
-          // should we really normalize the matching ids??
-          // talk with yann about this
           for (let i = 0; i < matchingFields.length; i += 1) {
             identifiers.push({
               fieldName: matchingFields[i],
@@ -169,7 +218,7 @@ const useMatchFetcher = ({
         ...entry,
         matches: [],
         error: `Erreur: ${err.message || err}`,
-        sourceQuery: getDisplayName(entry),
+        sourceQuery: getDisplayName(entry) || entry.primaryId || `Entrée ${index + 1}`,
       })));
 
       const results = await Promise.all(processingPromises);

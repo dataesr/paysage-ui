@@ -1,4 +1,4 @@
-import { Badge, Col, Radio, Row, Text } from '@dataesr/react-dsfr';
+import { Badge, Checkbox, Col, Row, Text } from '@dataesr/react-dsfr';
 import PropTypes from 'prop-types';
 import { formatMatchInfo } from './formatters';
 
@@ -9,16 +9,13 @@ function MatchSelection({
   onMatchSelection,
 }) {
   const getBackgroundColor = (match) => {
-    if (match.hasMatchingId) return 'var(--green-emeraude-975)';
+    if (match.hasMatchingId) return 'var(--green-emeraude-925)';
     if (match.isAlternative) return 'var(--blue-france-950-125)';
     return 'transparent';
   };
 
   return (
     <fieldset className="fr-fieldset">
-      <Text bold className="fr-mb-1w">
-        Sélectionnez la correspondance
-      </Text>
       <div>
         {matches.map((match) => (
           <div
@@ -27,13 +24,12 @@ function MatchSelection({
               backgroundColor: getBackgroundColor(match),
             }}
           >
-            <Radio
+            <Checkbox
               label={(
                 <Row>
                   <div>
                     {match.isAlternative && (
                       <div>
-                        <strong>{match.name}</strong>
                         <Badge
                           type="info"
                           text={match.name}
@@ -105,7 +101,13 @@ function MatchSelection({
               )}
               value={match.id}
               checked={selectedMatches[rowIndex] === match.id}
-              onChange={() => onMatchSelection(rowIndex, match.id)}
+              onChange={() => {
+                if (selectedMatches[rowIndex] === match.id) {
+                  onMatchSelection(rowIndex, null);
+                } else {
+                  onMatchSelection(rowIndex, match.id);
+                }
+              }}
               name={`match-${rowIndex}`}
             />
           </div>

@@ -8,15 +8,26 @@ function RowItem({ row, index, selectedMatches, onMatchSelection, matchedData, s
   return (
     <tr>
       <td style={{ verticalAlign: 'top' }}>
-        <Text size="sm" bold>{getDisplayName(row)}</Text>
+        <Text size="sm" bold>
+          <span className="fr-badge fr-badge--sm fr-badge--blue-cumulus">
+            {row.isIdOnlyEntry && row.primaryId
+              ? `${row.primaryIdType || 'ID'}: ${row.primaryId}`
+              : getDisplayName(row)}
+          </span>
+        </Text>
         {row._hasError && (
           <span className="fr-badge fr-badge--error fr-badge--sm">
             Erreur de format
           </span>
         )}
-        {Object.entries(row)
+
+        {!row.isIdOnlyEntry && Object.entries(row)
           .filter(([key, value]) => {
-            const ignoreFields = ['sourceQuery', 'matches', 'error', 'Name', 'name', 'Full Name', 'first_name', 'last_name', 'FullName'];
+            const ignoreFields = [
+              'sourceQuery', 'matches', 'error', 'Name', 'name',
+              'Full Name', 'first_name', 'last_name', 'FullName',
+              'isIdOnlyEntry', 'primaryId', 'primaryIdType',
+            ];
             if (ignoreFields.includes(key)) return false;
             if (!value || value.toString().trim() === '') return false;
 
@@ -26,7 +37,8 @@ function RowItem({ row, index, selectedMatches, onMatchSelection, matchedData, s
           .map(([key, value]) => (
             <div key={key}>
               <span className="fr-badge fr-badge--sm fr-badge--blue-cumulus">
-                ID renseigné:
+                {key}
+                :
                 {' '}
                 {value}
               </span>
@@ -73,6 +85,9 @@ RowItem.propTypes = {
   row: PropTypes.shape({
     matches: PropTypes.array,
     _hasError: PropTypes.bool,
+    isIdOnlyEntry: PropTypes.bool,
+    primaryId: PropTypes.string,
+    primaryIdType: PropTypes.string,
   }).isRequired,
   index: PropTypes.number.isRequired,
   selectedMatches: PropTypes.object.isRequired,

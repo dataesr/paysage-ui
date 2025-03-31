@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Container, Row, Col, Button, Alert, Text, Title, Radio, RadioGroup } from '@dataesr/react-dsfr';
 import useMatchFetcher from '../../components/blocs/coding-machine/use-match-fetch';
 import useExportResults from '../../components/blocs/coding-machine/use-export-results';
@@ -15,6 +15,8 @@ export default function CodingMachinePage() {
   const [searchType, setSearchType] = useState('structures');
   const [pastedText, setPastedText] = useState('');
 
+  const [processRequested, setProcessRequested] = useState(false);
+
   const { fetchMatches } = useMatchFetcher({
     data,
     setError,
@@ -24,17 +26,15 @@ export default function CodingMachinePage() {
     searchType,
   });
 
-  const handleDataProcessed = (processedData) => {
-    setData(processedData);
-    if (processedData && processedData.length > 0) {
-      setTimeout(() => {
-        fetchMatches();
-      }, 50);
+  useEffect(() => {
+    if (data.length > 0 && processRequested) {
+      setProcessRequested(false);
+      fetchMatches();
     }
-  };
+  }, [data, fetchMatches, processRequested]);
 
   const { processTableText, processing } = useTextProcessor({
-    setData: handleDataProcessed,
+    setData,
     setError,
     setMatchedData,
     setSelectedMatches,
@@ -43,10 +43,17 @@ export default function CodingMachinePage() {
   const { exportResults } = useExportResults({ matchedData, selectedMatches });
 
   const handleMatchSelection = (rowIndex, matchId) => {
-    setSelectedMatches((prev) => ({
-      ...prev,
-      [rowIndex]: matchId,
-    }));
+    setSelectedMatches((prev) => {
+      const updated = { ...prev };
+
+      if (matchId === null) {
+        delete updated[rowIndex];
+      } else {
+        updated[rowIndex] = matchId;
+      }
+
+      return updated;
+    });
   };
 
   const handleSearchTypeChange = (e) => {
@@ -77,6 +84,7 @@ export default function CodingMachinePage() {
 
   const handleProcessAndSearch = () => {
     processTableText(pastedText);
+    setProcessRequested(true);
   };
 
   const getButtonText = () => {
@@ -92,16 +100,55 @@ export default function CodingMachinePage() {
       <Row>
         <Col>
           <Title as="h2">Machine à coder</Title>
-          <Text size="sm">Copiez et collez un tableau depuis Excel ou CSV pour trouver les identifiants Paysage correspondants.</Text>
-
+          <Text size="sm">Copiez et collez un tableau depuis Excel ou CSV pour trouver les objets Paysage correspondants.</Text>
+          <Text size="sm">
+            Les colonnes du tableau doivent contenir des noms de
+            {' '}
+            {getTypeLabel()}
+            .
+            La première colonne doit avoir pour nom "Name", et les suivantes les noms d'identifiants
+          </Text>
+          <Text size="sm">
+            Les colonnes du tableau peuvent contenir:
+            {' '}
+            <ul>
+              <li>Soit une première colonne "Name" suivie d'identifiants (format standard)</li>
+              <li>Soit uniquement une colonne contenant identifiants (SIRET, UAI, RNSR, etc.) sans colonne "Name"</li>
+            </ul>
+          </Text>
+          Exemple :
+          <Row gutters className="fr-mb-3w">
+            <Col n="6">
+              <thead>
+                <tr>
+                  <th style={{ border: '1px solid black' }}>Name</th>
+                  <th style={{ border: '1px solid black' }}>SIRET</th>
+                  <th style={{ border: '1px solid black' }}>UAI</th>
+                </tr>
+                <tr>
+                  <td style={{ border: '1px solid black' }}>Université de Longjumeau</td>
+                  <td style={{ border: '1px solid black' }}>1234567890</td>
+                  <td style={{ border: '1px solid black' }}>0123456A</td>
+                </tr>
+              </thead>
+            </Col>
+            <Col>
+              <strong>
+                Ou
+              </strong>
+            </Col>
+            <Col n="5">
+              <thead>
+                <tr>
+                  <th style={{ border: '1px solid black' }}>Siret</th>
+                </tr>
+                <tr>
+                  <td style={{ border: '1px solid black' }}>12345678901</td>
+                </tr>
+              </thead>
+            </Col>
+          </Row>
           <div className="fr-mb-3w">
-            <Text size="sm">
-              Les colonnes du tableau doivent contenir des noms de
-              {' '}
-              {getTypeLabel()}
-              .
-              La première colonne doit avoir pour nom "Name", et les suivantes les noms d'identifiants
-            </Text>
             <Text bold className="fr-mb-1w">Type d'entités à rechercher :</Text>
             <RadioGroup
               legend=""
@@ -128,7 +175,7 @@ export default function CodingMachinePage() {
               />
             </RadioGroup>
           </div>
-          <TextPasteArea onChange={setPastedText} value={pastedText} />
+          <TextPasteArea onChange={setPastedText} />
           {error && (
             <Alert
               type="error"
