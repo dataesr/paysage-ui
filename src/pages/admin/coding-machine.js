@@ -43,10 +43,17 @@ export default function CodingMachinePage() {
   const { exportResults } = useExportResults({ matchedData, selectedMatches });
 
   const handleMatchSelection = (rowIndex, matchId) => {
-    setSelectedMatches((prev) => ({
-      ...prev,
-      [rowIndex]: matchId,
-    }));
+    setSelectedMatches((prev) => {
+      const updated = { ...prev };
+
+      if (matchId === null) {
+        delete updated[rowIndex];
+      } else {
+        updated[rowIndex] = matchId;
+      }
+
+      return updated;
+    });
   };
 
   const handleSearchTypeChange = (e) => {

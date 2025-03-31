@@ -1,4 +1,4 @@
-import { Badge, Col, Radio, Row, Text } from '@dataesr/react-dsfr';
+import { Badge, Checkbox, Col, Row, Text } from '@dataesr/react-dsfr';
 import PropTypes from 'prop-types';
 import { formatMatchInfo } from './formatters';
 
@@ -24,7 +24,7 @@ function MatchSelection({
               backgroundColor: getBackgroundColor(match),
             }}
           >
-            <Radio
+            <Checkbox
               label={(
                 <Row>
                   <div>
@@ -101,7 +101,13 @@ function MatchSelection({
               )}
               value={match.id}
               checked={selectedMatches[rowIndex] === match.id}
-              onChange={() => onMatchSelection(rowIndex, match.id)}
+              onChange={() => {
+                if (selectedMatches[rowIndex] === match.id) {
+                  onMatchSelection(rowIndex, null);
+                } else {
+                  onMatchSelection(rowIndex, match.id);
+                }
+              }}
               name={`match-${rowIndex}`}
             />
           </div>
