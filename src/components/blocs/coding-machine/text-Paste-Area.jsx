@@ -3,10 +3,10 @@ import PropTypes from 'prop-types';
 import { TextInput } from '@dataesr/react-dsfr';
 
 function TextPasteArea({ onChange }) {
-  const [pastedText, setPastedText] = useState('');
+  const [text, setText] = useState('');
 
   const handleTextChange = (e) => {
-    setPastedText(e.target.value);
+    setText(e.target.value);
     onChange(e.target.value);
   };
 
@@ -17,7 +17,7 @@ function TextPasteArea({ onChange }) {
         label="Collez votre tableau ici"
         hint="Copiez les données depuis Excel ou un autre tableur et collez-les ici"
         onChange={handleTextChange}
-        value={pastedText}
+        value={text}
         rows={10}
       />
     </div>

@@ -16,9 +16,6 @@ function MatchSelection({
 
   return (
     <fieldset className="fr-fieldset">
-      <Text bold className="fr-mb-1w">
-        Sélectionnez la correspondance
-      </Text>
       <div>
         {matches.map((match) => (
           <div

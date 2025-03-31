@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Container, Row, Col, Button, Alert, Text, Title, Radio, RadioGroup } from '@dataesr/react-dsfr';
 import useMatchFetcher from '../../components/blocs/coding-machine/use-match-fetch';
 import useExportResults from '../../components/blocs/coding-machine/use-export-results';
@@ -15,6 +15,8 @@ export default function CodingMachinePage() {
   const [searchType, setSearchType] = useState('structures');
   const [pastedText, setPastedText] = useState('');
 
+  const [processRequested, setProcessRequested] = useState(false);
+
   const { fetchMatches } = useMatchFetcher({
     data,
     setError,
@@ -24,17 +26,15 @@ export default function CodingMachinePage() {
     searchType,
   });
 
-  const handleDataProcessed = (processedData) => {
-    setData(processedData);
-    if (processedData && processedData.length > 0) {
-      setTimeout(() => {
-        fetchMatches();
-      }, 50);
+  useEffect(() => {
+    if (data.length > 0 && processRequested) {
+      setProcessRequested(false);
+      fetchMatches();
     }
-  };
+  }, [data, fetchMatches, processRequested]);
 
   const { processTableText, processing } = useTextProcessor({
-    setData: handleDataProcessed,
+    setData,
     setError,
     setMatchedData,
     setSelectedMatches,
@@ -77,6 +77,7 @@ export default function CodingMachinePage() {
 
   const handleProcessAndSearch = () => {
     processTableText(pastedText);
+    setProcessRequested(true);
   };
 
   const getButtonText = () => {
@@ -103,13 +104,11 @@ export default function CodingMachinePage() {
           <Text size="sm">
             Les colonnes du tableau peuvent contenir:
             {' '}
-
             <ul>
               <li>Soit une première colonne "Name" suivie d'identifiants (format standard)</li>
               <li>Soit uniquement une colonne contenant identifiants (SIRET, UAI, RNSR, etc.) sans colonne "Name"</li>
             </ul>
           </Text>
-
           Exemple :
           <Row gutters className="fr-mb-3w">
             <Col n="6">
@@ -138,7 +137,6 @@ export default function CodingMachinePage() {
             </Col>
           </Row>
           <div className="fr-mb-3w">
-
             <Text bold className="fr-mb-1w">Type d'entités à rechercher :</Text>
             <RadioGroup
               legend=""
@@ -165,7 +163,7 @@ export default function CodingMachinePage() {
               />
             </RadioGroup>
           </div>
-          <TextPasteArea onChange={setPastedText} value={pastedText} />
+          <TextPasteArea onChange={setPastedText} />
           {error && (
             <Alert
               type="error"
