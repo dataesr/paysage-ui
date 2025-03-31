@@ -22,6 +22,7 @@ function MatchSelection({
             key={match.id}
             style={{
               backgroundColor: getBackgroundColor(match),
+              padding: ' 0.5rem',
             }}
           >
             <Checkbox
