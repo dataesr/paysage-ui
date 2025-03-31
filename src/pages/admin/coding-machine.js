@@ -125,7 +125,12 @@ export default function CodingMachinePage() {
                 </tr>
               </thead>
             </Col>
-            <Col n="6">
+            <Col>
+              <strong>
+                Ou
+              </strong>
+            </Col>
+            <Col n="5">
               <thead>
                 <tr>
                   <th style={{ border: '1px solid black' }}>Siret</th>
