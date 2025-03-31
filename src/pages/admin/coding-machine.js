@@ -115,24 +115,24 @@ export default function CodingMachinePage() {
             <Col n="6">
               <thead>
                 <tr>
-                  <th>Name</th>
-                  <th>SIRET</th>
-                  <th>UAI</th>
+                  <th style={{ border: '1px solid black' }}>Name</th>
+                  <th style={{ border: '1px solid black' }}>SIRET</th>
+                  <th style={{ border: '1px solid black' }}>UAI</th>
                 </tr>
                 <tr>
-                  <td>Structure 1</td>
-                  <td>12345678901234</td>
-                  <td>0123456A</td>
+                  <td style={{ border: '1px solid black' }}>Université de Longjumeau</td>
+                  <td style={{ border: '1px solid black' }}>1234567890</td>
+                  <td style={{ border: '1px solid black' }}>0123456A</td>
                 </tr>
               </thead>
             </Col>
             <Col n="6">
               <thead>
                 <tr>
-                  <th>Siret</th>
+                  <th style={{ border: '1px solid black' }}>Siret</th>
                 </tr>
                 <tr>
-                  <td>12345678901234</td>
+                  <td style={{ border: '1px solid black' }}>12345678901</td>
                 </tr>
               </thead>
             </Col>
