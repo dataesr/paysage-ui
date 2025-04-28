@@ -36,7 +36,6 @@ function sanitize(form) {
   Object.keys(form).forEach((key) => { if (fields.includes(key)) { body[key] = form[key]; } });
   return body;
 }
-
 export default function OfficialTextForm({ id, data, onSave, onDelete }) {
   const [showErrors, setShowErrors] = useState(false);
   const [query, setQuery] = useState('');
@@ -49,9 +48,11 @@ export default function OfficialTextForm({ id, data, onSave, onDelete }) {
     const relatesTo = form.relatedObjects?.length ? form.relatedObjects.map((element) => element.id) : [];
     if (form.currentObjectId) relatesTo.push(form.currentObjectId);
     const { relatedObjects, currentObjectId, ...rest } = form;
-    if (Object.keys(errors).length !== 0) { setShowErrors(true); }
+    if (Object.keys(errors).length !== 0) { return setShowErrors(true); }
+
     try {
       const response = await api.get(`/official-texts?filters[jorftext]=${form.jorftext}`);
+
       if (
         form.jorftext && response.data.totalCount > 0
         && !response.data.data.some((el) => el.relatedObjects.some((obj) => obj.id === currentObjectId))
