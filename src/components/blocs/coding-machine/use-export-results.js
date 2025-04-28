@@ -2,8 +2,39 @@ import * as XLSX from 'xlsx';
 import { getDisplayName } from './formatters';
 
 const useExportResults = ({ matchedData, selectedMatches }) => {
+  const collectIdentifierTypes = (data) => {
+    const types = new Set();
+
+    data.forEach((row) => {
+      if (Array.isArray(row.matches)) {
+        row.matches.forEach((match) => {
+          if (match.identifiantsLists && Array.isArray(match.identifiantsLists)) {
+            match.identifiantsLists.forEach((id) => {
+              if (id && id.type) {
+                types.add(id.type);
+              }
+            });
+          }
+        });
+      }
+    });
+
+    return Array.from(types);
+  };
+
+  const getIdentifierValue = (match, idType) => {
+    if (!match || !match.identifiantsLists || !Array.isArray(match.identifiantsLists)) {
+      return '';
+    }
+
+    const identifier = match.identifiantsLists.find((id) => id && id.type === idType);
+    return identifier ? identifier.value : '';
+  };
+
   const exportResults = () => {
     if (!matchedData.length) return;
+
+    const identifierTypes = collectIdentifierTypes(matchedData);
 
     const workbook = XLSX.utils.book_new();
 
@@ -11,20 +42,27 @@ const useExportResults = ({ matchedData, selectedMatches }) => {
       const selectedId = selectedMatches[index];
       const selectedMatch = row.matches?.find((m) => m.id === selectedId) || {};
 
-      return {
+      const rowData = {
         Source: row.sourceQuery || '',
         PaysageId: selectedMatch.id || 'Non sélectionné',
         MatchName: selectedMatch.name || '',
         ObjectType: selectedMatch.objectType || '',
         Category: selectedMatch.category || '',
         City: selectedMatch.city || '',
+        Country: selectedMatch.country || '',
         Acronym: selectedMatch.acronym || '',
         Status: selectedMatch.structureStatus || '',
         Activity: selectedMatch.activity || '',
         CreationDate: selectedMatch.creationDate || '',
         ClosureDate: selectedMatch.closureDate || '',
-        Identifiers: selectedMatch.identifiers || '',
+        Score: selectedMatch.score ? Math.round(selectedMatch.score) : '',
       };
+
+      identifierTypes.forEach((idType) => {
+        rowData[idType] = getIdentifierValue(selectedMatch, idType);
+      });
+
+      return rowData;
     });
 
     const allPropositionsData = [];
@@ -32,22 +70,33 @@ const useExportResults = ({ matchedData, selectedMatches }) => {
       const sourceName = row.sourceQuery || getDisplayName(row) || 'Sans nom';
 
       if (!Array.isArray(row.matches) || row.matches.length === 0) {
-        allPropositionsData.push({
+        const emptyRow = {
           Source: sourceName,
           IsSelected: 'N/A',
-          PaysageId: 'Aucune correspondance',
+          PaysageId: 'Non sélectionné',
           MatchName: '',
           ObjectType: '',
           Score: '',
           Category: '',
           City: '',
+          Country: '',
+          Acronym: '',
+          Status: '',
           Activity: '',
+          CreationDate: '',
+          ClosureDate: '',
+        };
+
+        identifierTypes.forEach((idType) => {
+          emptyRow[idType] = '';
         });
+
+        allPropositionsData.push(emptyRow);
       } else {
         row.matches.forEach((match) => {
           const isSelected = selectedMatches[matchedData.indexOf(row)] === match.id;
 
-          allPropositionsData.push({
+          const rowData = {
             Source: sourceName,
             IsSelected: isSelected ? 'Oui' : 'Non',
             PaysageId: match.id,
@@ -56,13 +105,19 @@ const useExportResults = ({ matchedData, selectedMatches }) => {
             Score: Math.round(match.score),
             Category: match.category || '',
             City: match.city || '',
+            Country: match.country || '',
             Acronym: match.acronym || '',
+            Status: match.structureStatus || '',
             Activity: match.activity || '',
             CreationDate: match.creationDate || '',
             ClosureDate: match.closureDate || '',
-            Status: match.structureStatus || '',
-            Identifiers: match.identifiers || '',
+          };
+
+          identifierTypes.forEach((idType) => {
+            rowData[idType] = getIdentifierValue(match, idType);
           });
+
+          allPropositionsData.push(rowData);
         });
       }
     });
