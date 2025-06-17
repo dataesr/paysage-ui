@@ -15,7 +15,7 @@ export function formatMatchInfo(match) {
     const infos = [];
     if (match.acronym) infos.push(`Sigle: ${match.acronym}`);
     if (match.creationDate) infos.push(`Date de création: ${match.creationDate}`);
-
+    if (match.closureDate) infos.push(`Date de fermeture: ${match.closureDate}`);
     let statusElem = null;
     if (match.structureStatus) {
       statusElem = match.structureStatus === 'active'

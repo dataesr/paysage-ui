@@ -1,4 +1,4 @@
-import { Badge, Checkbox, Col, Row, Text } from '@dataesr/react-dsfr';
+import { Badge, Checkbox, Col, Link, Row, Text } from '@dataesr/react-dsfr';
 import PropTypes from 'prop-types';
 import { formatMatchInfo } from './formatters';
 
@@ -12,6 +12,19 @@ function MatchSelection({
     if (match.hasMatchingId) return 'var(--green-emeraude-925)';
     if (match.isAlternative) return 'var(--blue-france-950-125)';
     return 'transparent';
+  };
+
+  const getObjectUrl = (objectType, id) => {
+    if (objectType === 'structures') {
+      return `https://paysage.enseignementsup-recherche.gouv.fr/structures/${id}/presentation`;
+    }
+    if (objectType === 'persons') {
+      return `https://paysage.enseignementsup-recherche.gouv.fr/personnes/${id}/presentation`;
+    }
+    if (objectType === 'prizes') {
+      return `https://paysage.enseignementsup-recherche.gouv.fr/prix/${id}/presentation`;
+    }
+    return 'https://www.data.gouv.fr/fr/datasets/identifiants-paysage/';
   };
 
   return (
@@ -78,11 +91,17 @@ function MatchSelection({
                       </Col>
                     )}
                     <strong>{match.name}</strong>
-
                     <Text size="sm">
                       ID Paysage:
                       {' '}
-                      {match.id}
+                      <Link
+                        href={getObjectUrl(match.objectType, match.id)}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+
+                        {match.id}
+                      </Link>
                       {' '}
                       | Score:
                       {' '}

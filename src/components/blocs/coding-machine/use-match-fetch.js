@@ -39,18 +39,20 @@ const useMatchFetcher = ({
             activity: match.activity || '',
             category: match.category || '',
             city: match.city && match.city.length > 0 ? match.city.join(', ') : '',
+            country: match.country && match.country.length > 0 ? match.country.join(', ') : '',
             acronym: match.acronymFr || match.acronymLocal || match.acronymEn || '',
             structureStatus: match.structureStatus || '',
             creationDate: match.creationDate || '',
             closureDate: match.closureDate || '',
             identifiers: match.identifiers ? match.identifiers.join(', ') : '',
+            // voir avec emmanuel si on retire ça
             identifiersArray: match.identifiers || [],
+            identifiantsLists: match.identifiantsLists || [],
+
             matchingIdentifier: { fieldName: idType, value: idValue },
             hasMatchingId: true,
             isIdSearch: true,
-          }));
-
-          matches.sort((a, b) => b.score - a.score);
+          })); matches.sort((a, b) => b.score - a.score);
 
           return {
             ...entry,
@@ -131,12 +133,15 @@ const useMatchFetcher = ({
           activity: match.activity || '',
           category: match.category || '',
           city: match.city && match.city.length > 0 ? match.city.join(', ') : '',
+          country: match.country && match.country.length > 0 ? match.country.join(', ') : '',
           acronym: match.acronymFr || match.acronymLocal || match.acronymEn || '',
           structureStatus: match.structureStatus || '',
           creationDate: match.creationDate || '',
           closureDate: match.closureDate || '',
           identifiers: identifiersArray.length > 0 ? identifiersArray.join(', ') : '',
           identifiersArray,
+          identifiantsLists: match.identifiantsLists || [],
+
           matchingIdentifier: null,
           hasMatchingId: false,
           isAlternative: false,
@@ -160,7 +165,6 @@ const useMatchFetcher = ({
         const matchingApiValues = [];
 
         Object.entries(entry).forEach(([field, value]) => {
-          // Could add more fields to ignore here, for exemple creationDate, closureDate, etc. (because of thoses who use bulk import field)
           if (!value || ['name', 'matches', 'sourceQuery', 'error', 'isIdOnlyEntry', 'primaryId', 'primaryIdType'].includes(field)) {
             return;
           }
@@ -198,6 +202,7 @@ const useMatchFetcher = ({
             score: match.score + (100 * foundMatchingIds.length),
             hasMatchingId: true,
             matchingIdentifiers: identifiers,
+            identifiantsLists: Array.isArray(match.identifiantsLists) ? match.identifiantsLists : [],
           };
         }
 
