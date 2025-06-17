@@ -28,7 +28,8 @@ const regexpValidateSocialMedia = (type) => {
     soundcloud: [/^(https:\/\/)?(www.)?soundcloud.com\/[A-Za-z0-9/:%_+.,#?!@&=-]+$/, 'https://soundcloud.com/<compte>'],
     Tiktok: [/^(https:\/\/)?(www.)?tiktok\.com\/([A-Za-z0-9/:%_+.,#?!@&=-]+)($|\?)/, 'https://www.tiktok.com/@<compte>'],
     Twitch: [/^(https:\/\/)?(www.)?twitch\.tv\/([a-z0-9_]+)($|\?)/, 'https://twitch.tv/<chaine>'],
-    Twitter: [/^(https:\/\/)?(www.)?twitter.com\/[0-9A-Za-z_]{1,15}$/, 'https://twitter.com/<compte>'],
+    Twitter: [/^(https:\/\/)?(www.)?(twitter\.com|x\.com)\/[0-9A-Za-z_]{1,15}$/,
+      'https://twitter.com/<compte> ou https://x.com/<compte>'],
     Vimeo: [/^(https:\/\/)?(www.)?vimeo.com\/[A-Za-z0-9/:%_+.,#?!@&=-]+$/, 'https://vimeo.com/<compte>'],
     Youtube: [/^(https:\/\/)?(www.)?youtube.com\/[A-Za-z0-9/:%_+.,#?!@&=-]+$/, 'https://www.youtube.com/channel/<chaine>'],
   };
