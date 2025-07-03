@@ -28,22 +28,8 @@ function validate(body) {
 
 function sanitize(form) {
   const fields = [
-    'active',
-    'address',
-    'city',
-    'current',
-    'cityId',
-    'coordinates',
-    'country',
-    'distributionStatement',
-    'endDate',
-    'iso3',
-    'locality',
-    'phonenumber',
-    'place',
-    'postalCode',
-    'postOfficeBoxNumber',
-    'startDate',
+    'active', 'address', 'city', 'current', 'cityId', 'coordinates', 'country', 'distributionStatement', 'endDate',
+    'iso3', 'locality', 'phonenumber', 'place', 'postalCode', 'postOfficeBoxNumber', 'startDate',
   ];
   const body = {};
   Object.keys(form).forEach((key) => {
@@ -62,13 +48,7 @@ function sanitize(form) {
   return body;
 }
 
-export default function LocalisationForm({
-  id,
-  data,
-  onDelete,
-  onSave,
-  defaultQuery,
-}) {
+export default function LocalisationForm({ id, data, onDelete, onSave, defaultQuery }) {
   const { viewer } = useAuth();
   const [showErrors, setShowErrors] = useState(false);
   const { form, updateForm, errors } = useForm(data, validate);
@@ -81,20 +61,20 @@ export default function LocalisationForm({
 
   useEffect(() => {
     const getAutocompleteResult = async () => {
-      const url = isFrance
+      const url = (isFrance)
         ? `https://api-adresse.data.gouv.fr/search/?q=${debouncedQuery}`
         : `https://nominatim.openstreetmap.org/search?q=${debouncedQuery}&format=jsonv2&addressdetails=1`;
       const response = await fetch(url);
       const respJson = await response.json();
-      const opt = isFrance
+      const opt = (isFrance)
         ? respJson.features.map((element) => ({
-            name: `${element.properties.label} (${element.properties.context})`,
-            data: element,
-          }))
+          name: `${element.properties.label} (${element.properties.context})`,
+          data: element,
+        }))
         : respJson.map((element) => ({
-            name: element?.display_name,
-            data: element,
-          }));
+          name: element?.display_name,
+          data: element,
+        }));
 
       setOptions(opt);
     };
@@ -127,7 +107,7 @@ export default function LocalisationForm({
 
   const getGPSLabel = () => {
     if (form.coordinates?.lat && form.coordinates?.lng) {
-      return `${form.coordinates.lat}, ${form.coordinates.lng}`;
+      return (`${form.coordinates.lat}, ${form.coordinates.lng}`);
     }
     return '';
   };
@@ -149,9 +129,7 @@ export default function LocalisationForm({
       });
     } else {
       updateForm({
-        iso3: getCountryISO3[
-          element.data?.address?.country_code?.toUpperCase()
-        ],
+        iso3: getCountryISO3[element.data?.address?.country_code?.toUpperCase()],
         address: element.data?.display_name,
         cityId: null,
         postalCode: element.data?.address.postcode,
@@ -174,24 +152,15 @@ export default function LocalisationForm({
     setOptions([]);
   };
 
-  const onMarkerDragEnd = useCallback(
-    (e) => {
-      const marker = e.target;
-      const position = marker.getLatLng();
-      updateForm({ coordinates: { lat: position.lat, lng: position.lng } });
-    },
-    [updateForm],
-  );
+  const onMarkerDragEnd = useCallback((e) => {
+    const marker = e.target;
+    const position = marker.getLatLng();
+    updateForm({ coordinates: { lat: position.lat, lng: position.lng } });
+  }, [updateForm]);
 
-  const markers =
-    form.coordinates?.lat && form.coordinates?.lng
-      ? [
-          {
-            address: form.address,
-            latLng: [form.coordinates?.lat, form.coordinates?.lng],
-          },
-        ]
-      : [];
+  const markers = (form.coordinates?.lat && form.coordinates?.lng)
+    ? [{ address: form.address, latLng: [form.coordinates?.lat, form.coordinates?.lng] }]
+    : [];
 
   return (
     <form>
@@ -205,16 +174,8 @@ export default function LocalisationForm({
         <Row gutters>
           <Col n="12">
             <RadioGroup isInline>
-              <Radio
-                label="France"
-                onChange={() => setIsFrance(true)}
-                checked={isFrance}
-              />
-              <Radio
-                label="Hors France"
-                onChange={() => setIsFrance(false)}
-                checked={!isFrance}
-              />
+              <Radio label="France" onChange={() => setIsFrance(true)} checked={isFrance} />
+              <Radio label="Hors France" onChange={() => setIsFrance(false)} checked={!isFrance} />
             </RadioGroup>
           </Col>
           <Col n="12">
@@ -224,9 +185,7 @@ export default function LocalisationForm({
               isSearching={isSearching}
               label="Adresse recherchée"
               onDeleteScope={handleUnselect}
-              onChange={(e) => {
-                setQuery(e.target.value);
-              }}
+              onChange={(e) => { setQuery(e.target.value); }}
               onSelect={handleSelect}
               options={options}
               placeholder={scope ? '' : 'Rechercher...'}
@@ -235,18 +194,12 @@ export default function LocalisationForm({
               value={query}
             />
           </Col>
-          <Col n="12">
-            <Title as="h2" look="h3" spacing="mb-0">
-              Coordonnées
-            </Title>
-          </Col>
+          <Col n="12"><Title as="h2" look="h3" spacing="mb-0">Coordonnées</Title></Col>
           <Col n="12 md-12">
             <TextInput
               label="Mention de distribution"
               value={form.distributionStatement}
-              onChange={(e) =>
-                updateForm({ distributionStatement: e.target.value })
-              }
+              onChange={(e) => updateForm({ distributionStatement: e.target.value })}
             />
           </Col>
           <Col n="12 md-12">
@@ -267,9 +220,7 @@ export default function LocalisationForm({
             <TextInput
               label="BP"
               value={form.postOfficeBoxNumber}
-              onChange={(e) =>
-                updateForm({ postOfficeBoxNumber: e.target.value })
-              }
+              onChange={(e) => updateForm({ postOfficeBoxNumber: e.target.value })}
             />
           </Col>
           <Col n="4 md-4">
@@ -307,8 +258,8 @@ export default function LocalisationForm({
               value={form.country}
               onChange={(e) => updateForm({ country: e.target.value })}
               required
-              message={showErrors && errors.country ? errors.country : null}
-              messageType={showErrors && errors.country ? 'error' : ''}
+              message={(showErrors && errors.country) ? errors.country : null}
+              messageType={(showErrors && errors.country) ? 'error' : ''}
             />
           </Col>
           <Col n="12 md-6">
@@ -317,8 +268,8 @@ export default function LocalisationForm({
               value={form.iso3}
               onChange={(e) => updateForm({ iso3: e.target.value })}
               required
-              message={showErrors && errors.iso3 ? errors.iso3 : null}
-              messageType={showErrors && errors.iso3 ? 'error' : ''}
+              message={(showErrors && errors.iso3) ? errors.iso3 : null}
+              messageType={(showErrors && errors.iso3) ? 'error' : ''}
             />
           </Col>
           <Col n="12 md-6" className="fr-pr-1w">
@@ -329,11 +280,7 @@ export default function LocalisationForm({
             />
           </Col>
 
-          <Col n="12">
-            <Title as="h2" look="h3" spacing="mb-0">
-              Coordonnées GPS
-            </Title>
-          </Col>
+          <Col n="12"><Title as="h2" look="h3" spacing="mb-0">Coordonnées GPS</Title></Col>
           <Col n="12">
             <TextInput
               label="Coordonnées (exemple : 48.84450, 2.276411)"
@@ -345,18 +292,14 @@ export default function LocalisationForm({
           <Col n="12">
             <div aria-hidden>
               <Map
-                lat={form.coordinates?.lat || 48.85341}
-                lng={form.coordinates?.lng || 2.3488}
+                lat={form.coordinates?.lat || 48.8534100}
+                lng={form.coordinates?.lng || 2.3488000}
                 markers={markers}
                 onMarkerDragEnd={onMarkerDragEnd}
               />
             </div>
           </Col>
-          <Col n="12">
-            <Title as="h2" look="h3" spacing="mb-0">
-              Dates
-            </Title>
-          </Col>
+          <Col n="12"><Title as="h2" look="h3" spacing="mb-0">Dates</Title></Col>
           <Col n="12">
             <DateInput
               value={form.startDate}
