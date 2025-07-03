@@ -23,6 +23,7 @@ import getCountryISO3 from '../../../utils/country-codes';
 function validate(body) {
   const errors = {};
   if (!body?.country) errors.country = 'Le pays est obligatoire';
+  if (!body?.iso3) errors.iso3 = 'Le code ISO3 est obligatoire, FRA pour la France';
   return errors;
 }
 
@@ -260,6 +261,16 @@ export default function LocalisationForm({ id, data, onDelete, onSave, defaultQu
               required
               message={(showErrors && errors.country) ? errors.country : null}
               messageType={(showErrors && errors.country) ? 'error' : ''}
+            />
+          </Col>
+          <Col n="12 md-6">
+            <TextInput
+              label="ISO3 (FRA pour la France)"
+              value={form.iso3}
+              onChange={(e) => updateForm({ iso3: e.target.value })}
+              required
+              message={(showErrors && errors.iso3) ? errors.iso3 : null}
+              messageType={(showErrors && errors.iso3) ? 'error' : ''}
             />
           </Col>
           <Col n="12 md-6" className="fr-pr-1w">

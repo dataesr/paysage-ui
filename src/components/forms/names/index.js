@@ -27,6 +27,9 @@ function sanitize(form) {
   ];
   const body = {};
   Object.keys(form).forEach((key) => { if (fields.includes(key)) { body[key] = form[key]; } });
+  if (body.article === 'sans article') {
+    body.article = null;
+  }
   return body;
 }
 
@@ -40,6 +43,7 @@ export default function NameForm({ id, data, onDelete, onSave }) {
     return onSave(body, id);
   };
   const options = [
+    { label: 'sans article', value: null },
     { label: "à l'", value: "à l'" },
     { label: 'à', value: 'à' },
     { label: 'à la', value: 'à la' },
@@ -47,7 +51,6 @@ export default function NameForm({ id, data, onDelete, onSave }) {
     { label: 'dans les', value: 'dans les' },
     { label: 'aux', value: 'aux' },
     { label: 'au', value: 'au' },
-    { label: 'sans article', value: null },
   ];
 
   return (
