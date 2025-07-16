@@ -63,7 +63,7 @@ export default function LocalisationForm({ id, data, onDelete, onSave, defaultQu
   useEffect(() => {
     const getAutocompleteResult = async () => {
       const url = (isFrance)
-        ? `https://api-adresse.data.gouv.fr/search/?q=${debouncedQuery}`
+        ? `https://data.geopf.fr/geocodage/search/?q=${debouncedQuery}`
         : `https://nominatim.openstreetmap.org/search?q=${debouncedQuery}&format=jsonv2&addressdetails=1`;
       const response = await fetch(url);
       const respJson = await response.json();
