@@ -15,13 +15,13 @@ import { exportToCsv, hasExport } from '../utils/exports';
 import { spreadByStatus } from '../utils/status';
 import { getMarkers } from '../utils/maps';
 
-export default function RelationsByTag({ blocName, tag, resourceType, relatedObjectTypes, inverse, noRelationType, noFilters, Form, sort, max }) {
+export default function RelationsByTag({ limit = 200, blocName, tag, resourceType, relatedObjectTypes, inverse, noRelationType, noFilters, Form, sort, max }) {
   const queryObject = inverse ? 'relatedObjectId' : 'resourceId';
   const { notice } = useNotice();
   const { id: resourceId } = useUrl();
-  const limit = 800;
   const url = `/relations?filters[relationTag]=${tag}&filters[${queryObject}]=${resourceId}&limit=${limit}&sort=${sort}`;
   const { data, isLoading, error, reload } = useFetch(url);
+  const moreData = data?.totalCount > limit;
 
   const [showModal, setShowModal] = useState(false);
   const [modalTitle, setModalTitle] = useState('');
@@ -135,6 +135,14 @@ export default function RelationsByTag({ blocName, tag, resourceType, relatedObj
         </BlocActionButton>
       )}
       <BlocContent>
+        {moreData && (
+          <div className="fr-callout fr-mb-1w">
+            <p className="fr-callout__text fr-text--sm">
+              {`Pour des raisons de performances, la liste complète des ${data?.totalCount} objets est trop longue pour être affichée ici. 
+              Seuls les ${limit} premiers objets sont visibles. Pour accéder à la liste complète, veuillez la télécharger.`}
+            </p>
+          </div>
+        )}
         {renderCards()}
       </BlocContent>
       <BlocModal>
@@ -158,6 +166,7 @@ RelationsByTag.propTypes = {
   resourceType: PropTypes.string,
   sort: PropTypes.string,
   tag: PropTypes.string.isRequired,
+  limit: PropTypes.number,
 };
 
 RelationsByTag.defaultProps = {
@@ -170,4 +179,5 @@ RelationsByTag.defaultProps = {
   relatedObjectTypes: ['persons', 'structures', 'prizes', 'terms', 'projects', 'categories', 'geographical-categories'],
   resourceType: 'structures',
   sort: '-startDate',
+  limit: 200,
 };
