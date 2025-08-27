@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { Col, Modal, ModalContent, ModalTitle, Row } from '@dataesr/react-dsfr';
+import { Col, Icon, Modal, ModalContent, ModalTitle, Row, Text } from '@dataesr/react-dsfr';
 import api from '../../../../utils/api';
 import RelationCard from '../../../card/relation-card';
 import ExpendableListCards from '../../../card/expendable-list-cards';
@@ -22,6 +22,23 @@ export default function RelationsByTag({ limit = 200, blocName, tag, resourceTyp
   const url = `/relations?filters[relationTag]=${tag}&filters[${queryObject}]=${resourceId}&limit=${limit}&sort=${sort}`;
   const { data, isLoading, error, reload } = useFetch(url);
   const moreData = data?.totalCount > limit;
+
+  let dateRange = '';
+  if (data?.data?.length > 0) {
+    const years = data.data
+      .map((item) => (item.startDate ? new Date(item.startDate).getFullYear() : null))
+      .filter((year) => year !== null);
+
+    if (years.length > 0) {
+      const maxYear = Math.max(...years);
+      const minYear = Math.min(...years);
+      if (minYear === maxYear) {
+        dateRange = ` en ${minYear}`;
+      } else {
+        dateRange = ` de ${minYear} à ${maxYear}`;
+      }
+    }
+  }
 
   const [showModal, setShowModal] = useState(false);
   const [modalTitle, setModalTitle] = useState('');
@@ -87,6 +104,14 @@ export default function RelationsByTag({ limit = 200, blocName, tag, resourceTyp
         <Row gutters>
           <Col n="12">
             <Map height="320px" markers={markers} zoom={8} />
+            {tag === 'laureat' && (
+              <Text size="xs" className="fr-pt-1w">
+                <Icon name="ri-information-line" size="2x" color="var(--background-action-high-info)" />
+                <i>
+                  Cette carte affiche les structures associées aux lauréats ci-dessous.
+                </i>
+              </Text>
+            )}
           </Col>
           <Col n="12">
             {max ? <ExpendableListCards list={list.slice(0, max)} nCol="6" />
@@ -138,8 +163,10 @@ export default function RelationsByTag({ limit = 200, blocName, tag, resourceTyp
         {moreData && (
           <div className="fr-callout fr-mb-1w">
             <p className="fr-callout__text fr-text--sm">
-              {`Pour des raisons de performances, la liste complète des ${data?.totalCount} objets est trop longue pour être affichée ici. 
-              Seuls les ${limit} premiers objets sont visibles. Pour accéder à la liste complète, veuillez la télécharger.`}
+              {`La liste complète de ${data?.totalCount} éléments est trop 
+              longue pour être affichée. Seuls les ${limit} résultats les plus 
+              récents sont visibles ici (couvrant la période${dateRange}). 
+              Pour accéder à l'historique complet, veuillez télécharger la liste.`}
             </p>
           </div>
         )}
