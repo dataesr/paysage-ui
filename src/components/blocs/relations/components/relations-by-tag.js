@@ -14,6 +14,7 @@ import { deleteError, saveError, saveSuccess, deleteSuccess } from '../../../../
 import { exportToCsv, hasExport } from '../utils/exports';
 import { spreadByStatus } from '../utils/status';
 import { getMarkers } from '../utils/maps';
+import { Spinner } from '../../../spinner';
 
 export default function RelationsByTag({ limit = 200, blocName, tag, resourceType, relatedObjectTypes, inverse, noRelationType, noFilters, Form, sort, max }) {
   const queryObject = inverse ? 'relatedObjectId' : 'resourceId';
@@ -21,24 +22,9 @@ export default function RelationsByTag({ limit = 200, blocName, tag, resourceTyp
   const { id: resourceId } = useUrl();
   const url = `/relations?filters[relationTag]=${tag}&filters[${queryObject}]=${resourceId}&limit=${limit}&sort=${sort}`;
   const { data, isLoading, error, reload } = useFetch(url);
-  const moreData = data?.totalCount > limit;
-
-  let dateRange = '';
-  if (data?.data?.length > 0) {
-    const years = data.data
-      .map((item) => (item.startDate ? new Date(item.startDate).getFullYear() : null))
-      .filter((year) => year !== null);
-
-    if (years.length > 0) {
-      const maxYear = Math.max(...years);
-      const minYear = Math.min(...years);
-      if (minYear === maxYear) {
-        dateRange = ` en ${minYear}`;
-      } else {
-        dateRange = ` de ${minYear} à ${maxYear}`;
-      }
-    }
-  }
+  const displayThreshold = (tag === 'laureat') ? 30 : 400;
+  const hideListDueToCount = data?.totalCount > displayThreshold;
+  const [isExporting, setIsExporting] = useState(false);
 
   const [showModal, setShowModal] = useState(false);
   const [modalTitle, setModalTitle] = useState('');
@@ -126,51 +112,52 @@ export default function RelationsByTag({ limit = 200, blocName, tag, resourceTyp
   };
 
   const handleExportClick = async () => {
-    const hasMoreData = data.totalCount - limit;
+    setIsExporting(true);
+    try {
+      const hasMoreData = data.totalCount - limit;
+      let exportList = [...data.data];
 
-    let exportList = [...data.data];
+      if (hasMoreData > 0) {
+        const restUrl = `/relations?filters[relationTag]=${tag}&filters[${queryObject}]=${resourceId}&limit=${hasMoreData}&sort=${sort}&skip=${limit}`;
+        const fetchRest = await api.get(restUrl);
+        exportList = [...data.data, ...fetchRest.data.data];
+      }
 
-    if (hasMoreData > 0) {
-      const restUrl = `/relations?filters[relationTag]=${tag}&filters[${queryObject}]=${resourceId}&limit=${hasMoreData}&sort=${sort}&skip=${limit}`;
-      const fetchRest = await api.get(restUrl);
-      exportList = [...data.data, ...fetchRest.data.data];
+      exportToCsv({
+        data: exportList,
+        fileName: `${resourceId}-${tag}`,
+        listName: blocName,
+        tag,
+        inverse,
+      });
+    } catch (e) {
+      // console.error("Erreur lors de l'export :", e);
+    } finally {
+      setIsExporting(false);
     }
-
-    return exportToCsv({
-      data: exportList,
-      fileName: `${resourceId}-${tag}`,
-      listName: blocName,
-      tag,
-      inverse,
-    });
   };
 
   return (
     <Bloc isLoading={isLoading} error={error} data={data} isRelation>
       <BlocTitle as="h2" look="h6">{blocName || tag}</BlocTitle>
       <BlocActionButton onClick={() => onOpenModalHandler()}>Ajouter un élément</BlocActionButton>
-      {(!noFilters) && <BlocFilter statusFilter={statusFilter} setStatusFilter={setStatusFilter} counts={counts} />}
+      {!hideListDueToCount && !noFilters && <BlocFilter statusFilter={statusFilter} setStatusFilter={setStatusFilter} counts={counts} />}
       {hasExport({ tag, inverse }) && (
         <BlocActionButton
-          icon="ri-download-line"
+          icon={isExporting ? '' : 'ri-download-line'}
           edit={false}
           onClick={handleExportClick}
+          disabled={isExporting}
         >
-          Télécharger la liste
+          {isExporting ? <Spinner /> : 'Télécharger la liste'}
         </BlocActionButton>
       )}
       <BlocContent>
-        {moreData && (
-          <div className="fr-callout fr-mb-1w">
-            <p className="fr-callout__text fr-text--sm">
-              {`La liste complète de ${data?.totalCount} éléments est trop 
-              longue pour être affichée. Seuls les ${limit} résultats les plus 
-              récents sont visibles ici (couvrant la période${dateRange}). 
-              Pour accéder à l'historique complet, veuillez télécharger la liste.`}
-            </p>
-          </div>
+        {hideListDueToCount ? (
+          ''
+        ) : (
+          renderCards()
         )}
-        {renderCards()}
       </BlocContent>
       <BlocModal>
         <Modal isOpen={showModal} size="lg" hide={() => setShowModal(false)}>

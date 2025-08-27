@@ -3,6 +3,17 @@ import PropTypes from 'prop-types';
 import { divIcon, latLngBounds } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { MapContainer, Marker, TileLayer, Tooltip, useMap } from 'react-leaflet';
+import { useNavigate } from 'react-router-dom';
+
+const formatAddress = (address) => {
+  if (!address) return null;
+
+  return address
+    .split('\n')
+    .map((line) => line.trim().replace(/^undefined,?/g, '').trim())
+    .filter((line) => line && line !== ',')
+    .join('\n');
+};
 
 const getIcon = (color = '#0078f3') => divIcon({
   html: `
@@ -37,6 +48,8 @@ SetMap.propTypes = {
 };
 
 export default function Map({ height, markers, onMarkerDragEnd, width }) {
+  const navigate = useNavigate();
+
   const eventHandlers = useMemo(() => ({ dragend(e) { return onMarkerDragEnd(e); } }), [onMarkerDragEnd]);
   const theme = (window.localStorage.getItem('prefers-color-scheme') === 'dark')
     ? 'dark'
@@ -54,7 +67,22 @@ export default function Map({ height, markers, onMarkerDragEnd, width }) {
         url={`https://tile.jawg.io/jawg-${theme}/{z}/{x}/{y}.png?access-token=5V4ER9yrsLxoHQrAGQuYNu4yWqXNqKAM6iaX5D1LGpRNTBxvQL3enWXpxMQqTrY8`}
       />
       {markers.map((marker, i) => (
-        <Marker zIndexOffset={marker?.zIndexOffset || 10000} icon={getIcon(marker.color)} draggable={!!onMarkerDragEnd} eventHandlers={eventHandlers} key={i} position={marker.latLng}>
+        <Marker
+          zIndexOffset={marker?.zIndexOffset || 10000}
+          icon={getIcon(marker.color)}
+          draggable={!!onMarkerDragEnd}
+          eventHandlers={{
+            ...eventHandlers,
+            click: () => {
+              if (marker.id) {
+                navigate(`/structures/${marker.id}`);
+              }
+            },
+          }}
+          key={i}
+          position={marker.latLng}
+        >
+          {' '}
           <Tooltip>
             {marker?.label && (
               <strong>
@@ -63,9 +91,8 @@ export default function Map({ height, markers, onMarkerDragEnd, width }) {
               </strong>
             )}
             <i>
-              {marker.address ? marker.address.replace(/{|}/g, '').replace(/\bundefined\b/g, '').trim() : null}
+              {formatAddress(marker.address)}
             </i>
-
           </Tooltip>
         </Marker>
       ))}

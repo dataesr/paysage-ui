@@ -9,6 +9,7 @@ export function getMarkersInfo(structures) {
            ${element.currentLocalisation?.address},
            ${element.currentLocalisation?.postalCode},
            ${element.currentLocalisation?.locality}`,
+      id: element.id,
     });
   });
 }
