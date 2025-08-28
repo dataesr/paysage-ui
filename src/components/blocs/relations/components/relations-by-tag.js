@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { Col, Modal, ModalContent, ModalTitle, Row } from '@dataesr/react-dsfr';
+import { Col, Icon, Modal, ModalContent, ModalTitle, Row, Text } from '@dataesr/react-dsfr';
 import api from '../../../../utils/api';
 import RelationCard from '../../../card/relation-card';
 import ExpendableListCards from '../../../card/expendable-list-cards';
@@ -14,14 +14,17 @@ import { deleteError, saveError, saveSuccess, deleteSuccess } from '../../../../
 import { exportToCsv, hasExport } from '../utils/exports';
 import { spreadByStatus } from '../utils/status';
 import { getMarkers } from '../utils/maps';
+import { Spinner } from '../../../spinner';
 
-export default function RelationsByTag({ blocName, tag, resourceType, relatedObjectTypes, inverse, noRelationType, noFilters, Form, sort, max }) {
+export default function RelationsByTag({ limit = 200, blocName, tag, resourceType, relatedObjectTypes, inverse, noRelationType, noFilters, Form, sort, max }) {
   const queryObject = inverse ? 'relatedObjectId' : 'resourceId';
   const { notice } = useNotice();
   const { id: resourceId } = useUrl();
-  const limit = 800;
   const url = `/relations?filters[relationTag]=${tag}&filters[${queryObject}]=${resourceId}&limit=${limit}&sort=${sort}`;
   const { data, isLoading, error, reload } = useFetch(url);
+  const displayThreshold = (tag === 'laureat') ? 30 : 400;
+  const hideListDueToCount = data?.totalCount > displayThreshold;
+  const [isExporting, setIsExporting] = useState(false);
 
   const [showModal, setShowModal] = useState(false);
   const [modalTitle, setModalTitle] = useState('');
@@ -87,6 +90,14 @@ export default function RelationsByTag({ blocName, tag, resourceType, relatedObj
         <Row gutters>
           <Col n="12">
             <Map height="320px" markers={markers} zoom={8} />
+            {tag === 'laureat' && (
+              <Text size="xs" className="fr-pt-1w">
+                <Icon name="ri-information-line" size="2x" color="var(--background-action-high-info)" />
+                <i>
+                  Cette carte affiche les structures associées aux lauréats ci-dessous.
+                </i>
+              </Text>
+            )}
           </Col>
           <Col n="12">
             {max ? <ExpendableListCards list={list.slice(0, max)} nCol="6" />
@@ -101,41 +112,52 @@ export default function RelationsByTag({ blocName, tag, resourceType, relatedObj
   };
 
   const handleExportClick = async () => {
-    const hasMoreData = data.totalCount - limit;
+    setIsExporting(true);
+    try {
+      const hasMoreData = data.totalCount - limit;
+      let exportList = [...data.data];
 
-    let exportList = [...data.data];
+      if (hasMoreData > 0) {
+        const restUrl = `/relations?filters[relationTag]=${tag}&filters[${queryObject}]=${resourceId}&limit=${hasMoreData}&sort=${sort}&skip=${limit}`;
+        const fetchRest = await api.get(restUrl);
+        exportList = [...data.data, ...fetchRest.data.data];
+      }
 
-    if (hasMoreData > 0) {
-      const restUrl = `/relations?filters[relationTag]=${tag}&filters[${queryObject}]=${resourceId}&limit=${hasMoreData}&sort=${sort}&skip=${limit}`;
-      const fetchRest = await api.get(restUrl);
-      exportList = [...data.data, ...fetchRest.data.data];
+      exportToCsv({
+        data: exportList,
+        fileName: `${resourceId}-${tag}`,
+        listName: blocName,
+        tag,
+        inverse,
+      });
+    } catch (e) {
+      // console.error("Erreur lors de l'export :", e);
+    } finally {
+      setIsExporting(false);
     }
-
-    return exportToCsv({
-      data: exportList,
-      fileName: `${resourceId}-${tag}`,
-      listName: blocName,
-      tag,
-      inverse,
-    });
   };
 
   return (
     <Bloc isLoading={isLoading} error={error} data={data} isRelation>
       <BlocTitle as="h2" look="h6">{blocName || tag}</BlocTitle>
       <BlocActionButton onClick={() => onOpenModalHandler()}>Ajouter un élément</BlocActionButton>
-      {(!noFilters) && <BlocFilter statusFilter={statusFilter} setStatusFilter={setStatusFilter} counts={counts} />}
+      {!hideListDueToCount && !noFilters && <BlocFilter statusFilter={statusFilter} setStatusFilter={setStatusFilter} counts={counts} />}
       {hasExport({ tag, inverse }) && (
         <BlocActionButton
-          icon="ri-download-line"
+          icon={isExporting ? '' : 'ri-download-line'}
           edit={false}
           onClick={handleExportClick}
+          disabled={isExporting}
         >
-          Télécharger la liste
+          {isExporting ? <Spinner /> : 'Télécharger la liste'}
         </BlocActionButton>
       )}
       <BlocContent>
-        {renderCards()}
+        {hideListDueToCount ? (
+          ''
+        ) : (
+          renderCards()
+        )}
       </BlocContent>
       <BlocModal>
         <Modal isOpen={showModal} size="lg" hide={() => setShowModal(false)}>
@@ -158,6 +180,7 @@ RelationsByTag.propTypes = {
   resourceType: PropTypes.string,
   sort: PropTypes.string,
   tag: PropTypes.string.isRequired,
+  limit: PropTypes.number,
 };
 
 RelationsByTag.defaultProps = {
@@ -170,4 +193,5 @@ RelationsByTag.defaultProps = {
   relatedObjectTypes: ['persons', 'structures', 'prizes', 'terms', 'projects', 'categories', 'geographical-categories'],
   resourceType: 'structures',
   sort: '-startDate',
+  limit: 200,
 };

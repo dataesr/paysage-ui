@@ -44,6 +44,8 @@ export default function PrizePresentationPage() {
       />
       <RelationsByTag
         tag={LAUREAT}
+        limit={500}
+        sort="-startDate"
         blocName="Lauréats"
         resourceType="prizes"
         // TODO: Restore projects
