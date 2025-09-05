@@ -24,22 +24,7 @@ export default function DomainsForm({ onSave }) {
   const handleSubmit = () => {
     if (Object.keys(errors).length !== 0) return setShowErrors(true);
     const body = sanitize(form);
-    const _body = {
-      ...body,
-      structures: [
-        { structureId: 'Mz90U', type: 'primary' },
-        { structureId: '69445', type: 'secondary' },
-        { structureId: '77947', type: 'primary' },
-        { structureId: 'xJdyB', type: 'secondary' },
-        { structureId: 'Lr94O', type: 'primary' },
-        { structureId: 'HqAYu', type: 'secondary' },
-        { structureId: 'm7K6T', type: 'primary' },
-        { structureId: 'ti37C', type: 'secondary' },
-        { structureId: 'tIJ02', type: 'primary' },
-        { structureId: 'cqkij', type: 'secondary' },
-      ],
-    };
-    return onSave(_body);
+    return onSave(body);
   };
 
   return (
