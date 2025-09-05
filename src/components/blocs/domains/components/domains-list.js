@@ -13,7 +13,9 @@ function StructuresComponent({ type, structures, id, deleteStructure }) {
   if (!_structures?.length) return null;
   return (
     <>
-      <div className="fr-hr-or fr-my-1w">{type === 'secondary' ? 'Secondaire' : 'Principal'}</div>
+      {type === 'primary' && <div className="fr-hr-or fr-my-1w">Principal</div>}
+      {type === 'secondary' && <div className="fr-hr-or fr-my-1w">Secondaire</div>}
+      {type === 'historical' && <div className="fr-hr-or fr-my-1w">Historique</div>}
       <ul style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: '0.125rem' }}>
         {
           _structures.map((s) => (
@@ -169,6 +171,7 @@ export default function DomainsList({ data, deleteItem, highlight, deleteStructu
               <Col n="8">
                 <StructuresComponent id={item.id} type="primary" deleteStructure={deleteStructure} structures={item.structures} />
                 <StructuresComponent id={item.id} type="secondary" deleteStructure={deleteStructure} structures={item.structures} />
+                <StructuresComponent id={item.id} type="historical" deleteStructure={deleteStructure} structures={item.structures} />
               </Col>
             </Row>
           </Col>

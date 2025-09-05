@@ -105,7 +105,7 @@ export default function AddStructureForm({
           <Col n="12">
             <Select
               label="Type"
-              options={[{ value: 'primary', label: 'Domaine principal' }, { value: 'secondary', label: 'Domaine secondaire' }]}
+              options={[{ value: 'primary', label: 'Domaine principal' }, { value: 'secondary', label: 'Domaine secondaire' }, { value: 'historical', label: 'Domaine historique' }]}
               selected={form.type}
               onChange={(e) => updateForm({ type: e.target.value })}
               required
