@@ -91,6 +91,7 @@ import CGU from '../pages/cgu';
 import MentionsLegales from '../pages/mentions-legales';
 import Annuaire from '../pages/annuaire';
 import CodingMachinePage from '../pages/admin/coding-machine';
+import AdminDomainsPage from '../pages/admin/domains';
 
 export default function Routes() {
   return (
@@ -112,6 +113,7 @@ export default function Routes() {
             <Route path="/admin" element={<AdminPage />}>
               <Route path="" element={<Navigate to="dashboard" replace />} />
               <Route path="dashboard" element={<AdminDashboardPage />} />
+              <Route path="domains" element={<AdminDomainsPage />} />
               <Route path="journal" element={<AdminJournalPage />} />
               <Route path="utilisateurs" element={<AdminUsersPage />} />
               <Route path="groupes" element={<AdminGroupsPage />} />

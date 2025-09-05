@@ -1,0 +1,57 @@
+.tbl-line {
+  border-bottom: 1px solid var(--background-contrast-raised-grey);
+
+  .tbl-line__item {
+
+    &:hover {
+      background-color: var(--background-contrast-raised-grey);
+    }
+  }
+}
+
+.tbl-title__sort {
+  position: relative;
+
+  BUTTON {
+    &:hover {
+      background-color: transparent !important;
+    }
+
+    &:active {
+      background-color: transparent !important;
+    }
+
+    &::before {
+      content: '';
+      display: block;
+      position: absolute;
+      background-color: transparent !important;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+    }
+  }
+}
+
+.tbl-highlight {
+  background-color: var(--background-contrast-success);
+}
+
+.tbl-title__hover {
+  BUTTON {
+    opacity: 0;
+  }
+
+  &:hover {
+    BUTTON {
+      opacity: 1;
+    }
+  }
+
+  &:focus {
+    BUTTON {
+      opacity: 1;
+    }
+  }
+}
