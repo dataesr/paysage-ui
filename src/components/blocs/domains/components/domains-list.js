@@ -3,10 +3,9 @@ import { Col, Container, Modal, ModalContent, ModalTitle, Row, Text } from '@dat
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import Button from '../../../button';
-
-import useSort from '../hooks/useSort';
-import '../styles/data-list.scss';
 import AddStructureForm from './add-structure-form';
+
+import '../styles/data-list.scss';
 
 function StructuresComponent({ type, structures, id, deleteStructure }) {
   const _structures = structures?.filter((s) => s.type === type);
@@ -51,8 +50,6 @@ StructuresComponent.propTypes = {
 };
 
 export default function DomainsList({ data, deleteItem, highlight, deleteStructure, addStructure, restore }) {
-  const [sort, setSort] = useSort({ field: 'createdAt', type: 'date', ascending: false });
-  const sortedData = sort.ascending ? data.sort(sort.sorter) : data.sort(sort.sorter).reverse();
   const [showModal, setShowModal] = useState(false);
   const [modalContent, setModalContent] = useState(null);
 
@@ -71,22 +68,10 @@ export default function DomainsList({ data, deleteItem, highlight, deleteStructu
       <Row alignItems="middle">
         <Col n="12" className="tbl-line fr-py-1v fr-px-1w">
           <Row alignItems="middle">
-            <Col n="3">
-              <Row
-                className={classNames('tbl-title__sort', { 'tbl-title__hover': (sort.field !== 'domainName') })}
-                alignItems="middle"
-              >
-                <Text className="fr-mb-0" bold>Nom de domaine</Text>
-                <Button
-                  tertiary
-                  borderless
-                  rounded
-                  icon={`ri-arrow-${(sort.field === 'domainName' && !sort.ascending) ? 'up' : 'down'}-fill`}
-                  onClick={() => setSort({ field: 'domainName', type: 'string' })}
-                />
-              </Row>
+            <Col n="4">
+              <Text className="fr-mb-0" bold>Nom de domaine</Text>
             </Col>
-            <Col n="9">
+            <Col n="8">
               <Text className="fr-mb-0" bold>Structures</Text>
             </Col>
           </Row>
@@ -95,7 +80,7 @@ export default function DomainsList({ data, deleteItem, highlight, deleteStructu
             <ModalContent>{modalContent}</ModalContent>
           </Modal>
         </Col>
-        {sortedData.map((item) => (
+        {data.map((item) => (
           <Col n="12" key={item.id} className={classNames('tbl-line tbl-line__item fr-py-1w fr-px-1w', { 'tbl-highlight': (highlight === item.id) })}>
             <Row alignItems="top" gutters>
               <Col n="4">
