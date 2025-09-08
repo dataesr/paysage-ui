@@ -1,5 +1,5 @@
 import { Modal, ModalContent, ModalTitle, Pagination, Row } from '@dataesr/react-dsfr';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Bloc, BlocActionButton, BlocContent, BlocModal, BlocTitle } from '../../bloc';
 import useFetch from '../../../hooks/useFetch';
@@ -24,6 +24,7 @@ export default function Domains() {
   const { data, isLoading, error, reload } = useFetch(url);
   const [showModal, setShowModal] = useState(false);
   const [searchTerm, setSearchTerm] = useState(q);
+  const [options, setOptions] = useState([]);
   const { notice } = useNotice();
 
   const handleSearch = (e) => {
@@ -84,8 +85,17 @@ export default function Domains() {
       }
     })
     .catch(() => notice(saveError));
+
+  useEffect(() => {
+    const getAutocompleteResult = async () => {
+      const response = await api.get(`/domains?limit=5&query=${searchTerm}`);
+      setOptions(response.data?.data);
+    };
+    if (searchTerm) { getAutocompleteResult(); } else { setOptions([]); }
+  }, [searchTerm]);
+
   return (
-    <Bloc isLoading={isLoading} error={error} data={data} forceActionDisplay>
+    <Bloc isLoading={isLoading} error={error} data={data} forceActionDisplay forceContentDisplay>
       <BlocTitle as="h1" look="h4">
         Noms de domaine
       </BlocTitle>
@@ -101,23 +111,39 @@ export default function Domains() {
             placeholder="Rechercher un domaine"
             id="search-input"
             type="search"
+            list="domains"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
+          <datalist id="domains">
+            {options.map((option) => (
+              <option key={option.id} value={option.domainName}>
+                {option.domainName}
+              </option>
+            ))}
+          </datalist>
           <button title="Rechercher" type="submit" className="fr-btn">Rechercher</button>
         </form>
-        <DomainsList data={data?.data} restore={restore} deleteItem={onDelete} deleteStructure={deleteStructure} addStructure={addStructure} />
-        <Row className="flex--space-around fr-pt-3w">
-          <Pagination
-            onClick={(newPage) => {
-              searchParams.set('page', newPage);
-              setSearchParams(searchParams);
-            }}
-            surroundingPages={2}
-            currentPage={Number(page)}
-            pageCount={data?.totalCount ? Math.ceil(data.totalCount / ITEMS_PER_PAGE) : 0}
-          />
-        </Row>
+        {
+          !data?.data?.length
+            ? 'Aucun résultat'
+            : (
+              <>
+                <DomainsList data={data?.data} restore={restore} deleteItem={onDelete} deleteStructure={deleteStructure} addStructure={addStructure} />
+                <Row className="flex--space-around fr-pt-3w">
+                  <Pagination
+                    onClick={(newPage) => {
+                      searchParams.set('page', newPage);
+                      setSearchParams(searchParams);
+                    }}
+                    surroundingPages={2}
+                    currentPage={Number(page)}
+                    pageCount={data?.totalCount ? Math.ceil(data.totalCount / ITEMS_PER_PAGE) : 0}
+                  />
+                </Row>
+              </>
+            )
+        }
       </BlocContent>
       <BlocModal>
         <Modal isOpen={showModal} size="lg" hide={() => setShowModal(false)}>
