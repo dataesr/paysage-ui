@@ -5,7 +5,7 @@ import { Container, Row, Highlight, ButtonGroup, Badge } from '@dataesr/react-ds
 import { Spinner } from '../spinner';
 import useEditMode from '../../hooks/useEditMode';
 
-export default function Bloc({ children, data, error, isLoading, hideOnEmptyView, noBadge, forceActionDisplay }) {
+export default function Bloc({ children, data, error, isLoading, hideOnEmptyView, noBadge, forceActionDisplay, forceContentDisplay }) {
   const { editMode } = useEditMode();
   const header = Children.toArray(children).find((child) => child.props.__TYPE === 'BlocTitle');
   const editActions = Children.toArray(children).filter((child) => (child.props.__TYPE === 'BlocActionButton' && child.props.edit));
@@ -34,7 +34,7 @@ export default function Bloc({ children, data, error, isLoading, hideOnEmptyView
 
       {isLoading && <Row className="fr-my-2w flex--space-around"><Spinner /></Row>}
       {error && <Highlight color="var(--page-border)">Une erreur s'est produite lors du chargement des données</Highlight>}
-      {data?.totalCount ? blocContent : null}
+      {(data?.totalCount || forceContentDisplay) ? blocContent : null}
       {modals}
     </Container>
   );
@@ -48,6 +48,7 @@ Bloc.propTypes = {
   isLoading: PropTypes.bool,
   noBadge: PropTypes.bool,
   forceActionDisplay: PropTypes.bool,
+  forceContentDisplay: PropTypes.bool,
 };
 
 Bloc.defaultProps = {
@@ -58,4 +59,5 @@ Bloc.defaultProps = {
   isLoading: null,
   noBadge: false,
   forceActionDisplay: false,
+  forceContentDisplay: false,
 };
