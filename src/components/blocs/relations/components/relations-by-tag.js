@@ -16,7 +16,7 @@ import { spreadByStatus } from '../utils/status';
 import { getMarkers } from '../utils/maps';
 import { Spinner } from '../../../spinner';
 
-export default function RelationsByTag({ limit = 200, blocName, tag, resourceType, relatedObjectTypes, inverse, noRelationType, noFilters, Form, sort, max }) {
+export default function RelationsByTag({ limit = 400, blocName, tag, resourceType, relatedObjectTypes, inverse, noRelationType, noFilters, Form, sort, max }) {
   const queryObject = inverse ? 'relatedObjectId' : 'resourceId';
   const { notice } = useNotice();
   const { id: resourceId } = useUrl();
@@ -25,7 +25,6 @@ export default function RelationsByTag({ limit = 200, blocName, tag, resourceTyp
   const displayThreshold = (tag === 'laureat') ? 30 : 400;
   const hideListDueToCount = data?.totalCount > displayThreshold;
   const [isExporting, setIsExporting] = useState(false);
-
   const [showModal, setShowModal] = useState(false);
   const [modalTitle, setModalTitle] = useState('');
   const [modalContent, setModalContent] = useState(null);
@@ -114,17 +113,12 @@ export default function RelationsByTag({ limit = 200, blocName, tag, resourceTyp
   const handleExportClick = async () => {
     setIsExporting(true);
     try {
-      const hasMoreData = data.totalCount - limit;
-      let exportList = [...data.data];
+      const exportUrl = `/relations?filters[relationTag]=${tag}&filters[${queryObject}]=${resourceId}&limit=${data.totalCount}&sort=${sort}`;
 
-      if (hasMoreData > 0) {
-        const restUrl = `/relations?filters[relationTag]=${tag}&filters[${queryObject}]=${resourceId}&limit=${hasMoreData}&sort=${sort}&skip=${limit}`;
-        const fetchRest = await api.get(restUrl);
-        exportList = [...data.data, ...fetchRest.data.data];
-      }
+      const response = await api.get(exportUrl);
 
       exportToCsv({
-        data: exportList,
+        data: response.data.data,
         fileName: `${resourceId}-${tag}`,
         listName: blocName,
         tag,
