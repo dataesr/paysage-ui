@@ -5,8 +5,7 @@ import { Link as RouterLink, useLocation, useSearchParams } from 'react-router-d
 
 import { Spinner } from '../components/spinner';
 import useSearch from '../hooks/useSearch';
-import { formatDescriptionDates } from '../utils/dates';
-import { capitalize } from '../utils/strings';
+import { formatDescriptionDates, toString } from '../utils/dates';
 import { getName, getPrizeName } from '../utils/structures';
 import { getTypeFromUrl, getUrlFromType } from '../utils/types-url-mapper';
 import { SEARCH_TYPES, GEOGRAPHICAL_CATEGORIES_LABELS_MAPPER } from '../utils/constants';
@@ -24,72 +23,118 @@ const icons = {
 };
 
 const getDescription = (item) => {
-  let description = '';
+  const description = {
+    category: '',
+    location: '',
+    creationDate: '',
+    closureDate: '',
+  };
+
   switch (item?.type) {
     case 'structures':
-      description += item?.category ? item.category : '';
-      if (item?.city) {
-        description += (item?.city && item?.city.length > 0) ? ` à ${item.city[0]}` : '';
-      } else {
-        description += (item?.locality && item?.locality.length > 0) ? ` à ${item.locality[0]}` : '';
+      description.category = item?.category || '';
+      if (item?.city?.[0]) {
+        description.location = `à ${item.city[0]}`;
+      } else if (item?.locality?.[0]) {
+        description.location = `à ${item.locality[0]}`;
       }
-      description += item?.creationDate ? ` ${formatDescriptionDates(item?.creationDate)}` : '';
-      break;
-    case 'persons':
-      if (item.activity) { description += item.activity; }
-      break;
-    case 'categories':
-    case 'terms':
-      break;
-    case 'official-texts':
-      break;
-    case 'projects':
-      description += item?.category ? item.category : '';
-      description += item?.startDate ? ` ${formatDescriptionDates(item?.startDate)}` : '';
-      break;
-    case 'geographical-categories':
-      if (item.level) {
-        if (GEOGRAPHICAL_CATEGORIES_LABELS_MAPPER[item.level] === 'Unité urbaine') {
-          description += `${GEOGRAPHICAL_CATEGORIES_LABELS_MAPPER[item.level]} (${item.originalId})`;
+
+      if (item?.creationDate) {
+        const parts = item.creationDate.split('-');
+        if (parts.length === 3) {
+          description.creationDate = `Créée le ${toString(item.creationDate)}`;
+        } else if (parts.length === 2) {
+          description.creationDate = `Créée en ${parts[1]}/${parts[0]}`;
         } else {
-          description += `${GEOGRAPHICAL_CATEGORIES_LABELS_MAPPER[item.level]}`;
+          description.creationDate = `Créée en ${parts[0]}`;
+        }
+      }
+      if (item?.closureDate) {
+        const parts = item.closureDate.split('-');
+        if (parts.length === 3) {
+          description.closureDate = `Fermée le ${toString(item.closureDate)}`;
+        } else if (parts.length === 2) {
+          description.closureDate = `Fermée en ${parts[1]}/${parts[0]}`;
+        } else {
+          description.closureDate = `Fermée en ${parts[0]}`;
         }
       }
       break;
+    case 'persons':
+      description.category = item.activity || '';
+      break;
+
+    case 'categories':
+    case 'terms':
+    case 'official-texts':
+      break;
+
+    case 'projects':
+      description.category = item?.category || '';
+      description.creationDate = item?.startDate ? `${formatDescriptionDates(item?.startDate)}` : '';
+      break;
+
+    case 'geographical-categories':
+      if (item.level) {
+        description.category = GEOGRAPHICAL_CATEGORIES_LABELS_MAPPER[item.level] || '';
+        if (GEOGRAPHICAL_CATEGORIES_LABELS_MAPPER[item.level] === 'Unité urbaine') {
+          description.category += ` (${item.originalId})`;
+        }
+      }
+      break;
+
     default:
   }
-  return capitalize(description.trim());
+
+  return description;
 };
 
 function SearchResults({ data }) {
   if (data && data.length) {
     return (
       <Row as="ul" gutters>
-        {data.map((item) => (
-          <Col n="12 lg-6" as="li" key={item.id}>
-            <Tile horizontal color={`var(--${item.type}-color)`}>
-              <div className="fr-tile__body">
-                <p className="fr-tile__title">
-                  <RouterLink className="fr-tile__link fr-link--md" to={`/${getUrlFromType(item.type)}/${item.id}`}>
-                    <Icon name={icons[item.type]} size="1x" color={`var(--${item.type}-color)`} />
-                    {item.type === 'prizes' ? getPrizeName(item) : getName(item)}
-                  </RouterLink>
-                </p>
-                {item.structureStatus === 'inactive' && (
-                  <Badge
-                    isSmall
-                    colorFamily="brown-opera"
-                    text="Inactive"
-                    spacing="mb-0"
-                  />
-                )}
-                <p className="fr-tile__desc">
-                  {getDescription(item)}
-                </p>
-              </div>
-            </Tile>
-          </Col>
-        ))}
+        {data.map((item) => {
+          const { category, location, creationDate, closureDate } = getDescription(item);
+          return (
+            <Col n="12 lg-6" as="li" key={item.id}>
+              <Tile horizontal color={`var(--${item.type}-color)`}>
+                <div className="fr-tile__body">
+                  <p className="fr-tile__title">
+                    <RouterLink className="fr-tile__link fr-link--md" to={`/${getUrlFromType(item.type)}/${item.id}`}>
+                      <Icon name={icons[item.type]} size="1x" color={`var(--${item.type}-color)`} />
+                      {item.type === 'prizes' ? getPrizeName(item) : getName(item)}
+                    </RouterLink>
+                  </p>
+                  {item.structureStatus === 'inactive' && (
+                    <Badge
+                      isSmall
+                      colorFamily="brown-opera"
+                      text="Inactive"
+                      spacing="mb-0"
+                    />
+                  )}
+                  <p className="fr-tile__desc">
+                    {category && <span>{category}</span>}
+                    {category && location && ' '}
+                    {location}
+                    {creationDate && (
+                    <span>
+                      <br />
+                      {creationDate}
+                    </span>
+                    )}
+                    {closureDate && (
+                    <span>
+                      <br />
+                      {closureDate}
+                    </span>
+                    )}
+                  </p>
+                </div>
+              </Tile>
+            </Col>
+          );
+        })}
       </Row>
     );
   }
