@@ -48,7 +48,8 @@ export default function StructureOffreDeFormationPage() {
                     )}
                     downloadUrl={`https://data.enseignementsup-recherche.gouv.fr
                       /explore/dataset/fr-esr-cartographie_formations_parcoursup
-                      /table/?disjunctive.tf&disjunctive.nm&disjunctive.fl&disjunctive.amg&refine.etablissement_id_paysage=${id}&disjunctive.nmc&sort=-annee`}
+                      /table/?disjunctive.tf&disjunctive.nm&disjunctive.fl&disjunctive.amg&refine.etablissement_id_paysage=${id}&disjunctive.nmc&sort=-annee`
+                      .replace(/\s/g, '')}
                     canEdit={false}
                   />
                 </Col>
@@ -61,7 +62,8 @@ export default function StructureOffreDeFormationPage() {
                       </>
                     )}
                     downloadUrl={`https://data.enseignementsup-recherche.gouv.fr
-                      /explore/dataset/fr-esr-principaux-diplomes-et-formations-prepares-etablissements-publics/table/?refine.etablissement_id_paysage=${id}`}
+                      /explore/dataset/fr-esr-principaux-diplomes-et-formations-prepares-etablissements-publics/table/?refine.etablissement_id_paysage=${id}`
+                      .replace(/\s/g, '')}
                     canEdit={false}
                   />
                 </Col>
@@ -75,7 +77,8 @@ export default function StructureOffreDeFormationPage() {
                     )}
                     downloadUrl={`https://data.enseignementsup-recherche.gouv.fr
                       /explore/dataset/fr-esr-tmm-donnees-du-portail-dinformation
-                      -trouver-mon-master-mentions-de-master/table/?disjunctive.for_modalite&disjunctive.for_lic_cons&refine.etablissement_id_paysage=${id}`}
+                      -trouver-mon-master-mentions-de-master/table/?disjunctive.for_modalite&disjunctive.for_lic_cons&refine.etablissement_id_paysage=${id}`
+                      .replace(/\s/g, '')}
                     canEdit={false}
                   />
                 </Col>
@@ -88,7 +91,8 @@ export default function StructureOffreDeFormationPage() {
                       </>
                     )}
                     downloadUrl={`https://data.enseignementsup-recherche.gouv.fr
-                      /explore/dataset/fr-esr-tmm-donnees-du-portail-dinformation-trouver-mon-master-parcours-de-format/table/?refine.etablissement_id_paysage=${id}`}
+                      /explore/dataset/fr-esr-tmm-donnees-du-portail-dinformation-trouver-mon-master-parcours-de-format/table/?refine.etablissement_id_paysage=${id}`
+                      .replace(/\s/g, '')}
                     canEdit={false}
                   />
                 </Col>
