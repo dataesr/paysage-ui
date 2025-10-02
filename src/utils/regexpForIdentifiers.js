@@ -1,6 +1,6 @@
 export function regexpValidateIdentifiers(type) {
   const validator = {
-    euTransparency: [/^\d{12}-\d{2}$/, 'Un identifiant EU Transparency doit contenir 12 caractères suivi d"un ' - ' et de 2 charactères'],
+    euTransparency: [/^\d{11,13}-\d{2}$/, 'Un identifiant EU Transparency doit contenir 11 à 12 chiffres, suivi d"un ' - ' et de 2 chiffres'],
     googleScholar: [/^[a-zA-Z0-9]{12,20}$/, "L'identifiant googleScholar n'est pas valide"],
     hatvp: [/^H\d{9}$/, 'Un identifiant HATVP doit contenir 10 caractères'],
     idref: [/^\d{8}[\dX]{1}$/, 'Un idRef doit commencer par 8 chiffres suivis d\'un chiffre ou d\'un "X"'],
