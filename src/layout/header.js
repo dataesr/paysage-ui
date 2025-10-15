@@ -84,7 +84,7 @@ export default function Header() {
     <HeaderWrapper>
       <HeaderBody>
         <Logo splitCharacter={9}>
-          Ministère chargé de l'enseignement supérieur et de la recherche
+          Ministère de l'enseignement supérieur, de la recherche et de l'espace
         </Logo>
         <Service
           title={(
