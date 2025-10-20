@@ -92,6 +92,7 @@ import MentionsLegales from '../pages/mentions-legales';
 import Annuaire from '../pages/annuaire';
 import CodingMachinePage from '../pages/admin/coding-machine';
 import AdminDomainsPage from '../pages/admin/domains';
+import EmailTypesPage from '../pages/admin/email-types';
 
 export default function Routes() {
   return (
@@ -126,7 +127,7 @@ export default function Routes() {
               <Route path="nomenclatures" element={<Navigate to="nomenclatures/types-de-document" replace />} />
               <Route path="nomenclatures/types-de-document" element={<AdminNomenclaturesPage route="/document-types" title="Types de documents" />} />
               <Route path="nomenclatures/ministres-de-tutelle" element={<AdminNomenclaturesPage route="/supervising-ministers" title="Ministres de tutelle" />} />
-              <Route path="nomenclatures/types-de-mail" element={<AdminNomenclaturesPage route="/email-types" title="Types d'email" />} />
+              <Route path="nomenclatures/types-de-mail" element={<EmailTypesPage route="/email-types" />} />
               <Route path="exceptions-geographiques" element={<AdminGeographicalExceptionsPage route="/geographical-exceptions" title="Exception géographiques" />} />
               <Route path="categories-geographiques" element={<AdminGeographicalCategoriesPage route="/categories-geographiques" title="Catégories géographiques" />} />
               <Route path="imports/structures" element={<BulkImport type="structures" />} />
