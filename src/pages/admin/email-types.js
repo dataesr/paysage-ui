@@ -120,6 +120,19 @@ export default function EmailTypesPage({ route }) {
                   </Text>
                 </Row>
               )}
+              {item?.annelisId && (
+                <Row>
+                  <Text as="span" bold className="fr-mb-2v">
+                    Annelis ID :
+                    {' '}
+                    {item.annelisId}
+                    <CopyButton
+                      copyText={item.annelisId}
+                      size="sm"
+                    />
+                  </Text>
+                </Row>
+              )}
               <Text spacing="mt-2w mb-0" size="xs">
                 Créé le
                 {' '}
