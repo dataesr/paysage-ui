@@ -12,7 +12,7 @@ function validate(body) {
   return validationErrors;
 }
 function sanitize(form) {
-  const fields = ['usualName', 'otherNames'];
+  const fields = ['usualName', 'otherNames', 'annelisId'];
   const body = {};
   Object.keys(form).forEach((key) => { if (fields.includes(key)) { body[key] = form[key]; } });
   return body;
