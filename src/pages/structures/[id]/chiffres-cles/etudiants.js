@@ -22,7 +22,7 @@ HCExportingData(Highcharts);
 
 export default function StructureEtudiantsPage() {
   const { id, url } = useUrl('keynumbers');
-  const { data, error, isLoading } = useFetch(`${url}/population?sort=annee`);
+  const { data, error, isLoading } = useFetch(`${url}/population?sort=annee&limit=40`);
 
   // eslint-disable-next-line no-nested-ternary
   const allData = data?.data || [];
