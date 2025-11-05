@@ -143,11 +143,7 @@ export default function StructureEtudiantsPage() {
     const LLSHPopulation = lastData?.gd_discisciplinellsh || 0;
     const LLSHPopulationRate = (LLSHPopulation / totalPopulation) * 100;
     const THEOpopulation = lastData?.gd_discisciplinetheo || 0;
-<<<<<<< HEAD
-    const THEOPopulationRate = (THEOPopulation / totalPopulation) * 100;
-=======
     const THEOPopulationRate = (THEOpopulation / totalPopulation) * 100;
->>>>>>> staging
     const SIPopulation = lastData?.gd_discisciplinesi || 0;
     const SIPopulationRate = (SIPopulation / totalPopulation) * 100;
     const stapsPopulation = lastData?.gd_discisciplinestaps || 0;
@@ -254,12 +250,8 @@ export default function StructureEtudiantsPage() {
     value: lastData?.diplomeing,
   }, {
     text: 'étudiants inscrits dans les diplômes visés en management',
-<<<<<<< HEAD
-    value: (lastData?.diplomedipvisemana_manacp || 0) + (lastData?.diplomedipvisemana_manadipl || 0) + (lastData?.diplomedipvisemana_managradel || 0) + (lastData?.diplomedipvisemana_managradem || 0) + (lastData?.diplomedipvisemana_manassgrade || 0),
-=======
     value: (lastData?.diplomedipvisemana_manacp || 0) + (lastData?.diplomedipvisemana_manadipl || 0) + (lastData?.diplomedipvisemana_managradel || 0)
       + (lastData?.diplomedipvisemana_managradem || 0) + (lastData?.diplomedipvisemana_manassgrade || 0),
->>>>>>> staging
   }, {
     text: 'étudiants inscrits dans les autres diplômes visés',
     value: (lastData?.diplomedipvise_dipvisbac_3 || 0) + (lastData?.diplomedipvise_dipvisbac_5 || 0) + (lastData?.diplomedipvise_dipvisgradel || 0),
@@ -268,19 +260,12 @@ export default function StructureEtudiantsPage() {
     value: lastData?.diplomeiep,
   }, {
     text: 'étudiants inscrits en formations de comptabilité',
-<<<<<<< HEAD
-    value: (lastData?.diplomediplcomptable_dcg || 0) + (lastData?.diplomediplcomptable_decf || 0) + (lastData?.diplomediplcomptable_descf || 0) + (lastData?.diplomediplcomptable_dpecf || 0) + (lastData?.diplomediplcomptable_dscg || 0),
-  }, {
-    text: 'étudiants inscrits dans les diplômes canoniques',
-    value: (lastData?.diplomedipcanonique_baccanonique || 0) + (lastData?.diplomedipcanonique_certtheologie || 0) + (lastData?.diplomedipcanonique_doctcanonique || 0) + (lastData?.diplomedipcanonique_liccanonique || 0) + (lastData?.diplomedipcanonique_master canonique || 0),
-=======
     value: (lastData?.diplomediplcomptable_dcg || 0) + (lastData?.diplomediplcomptable_decf || 0) + (lastData?.diplomediplcomptable_descf || 0)
       + (lastData?.diplomediplcomptable_dpecf || 0) + (lastData?.diplomediplcomptable_dscg || 0),
   }, {
     text: 'étudiants inscrits dans les diplômes canoniques',
     value: (lastData?.diplomedipcanonique_baccanonique || 0) + (lastData?.diplomedipcanonique_certtheologie || 0) + (lastData?.diplomedipcanonique_doctcanonique || 0)
       + (lastData?.diplomedipcanonique_liccanonique || 0) + (lastData?.['diplomedipcanonique_master canonique'] || 0),
->>>>>>> staging
   }, {
     text: 'étudiants inscrits dans les autres diplômes nationaux conférant le grade de Licence',
     value: lastData?.diplomediplnatgradel,
@@ -387,11 +372,7 @@ export default function StructureEtudiantsPage() {
         name: 'Etudiants inscrits préparant un Bachelor universitaire de technologie',
         data: allData.map((item) => item?.diplomebut || 0),
       },
-<<<<<<< HEAD
-	  {
-=======
       {
->>>>>>> staging
         name: 'Etudiants inscrits préparant un Diplôme universitaire de technologie',
         data: allData.map((item) => item?.diplomedut || 0),
       },
