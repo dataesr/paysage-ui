@@ -143,7 +143,7 @@ export default function StructureEtudiantsPage() {
     const LLSHPopulation = lastData?.gd_discisciplinellsh || 0;
     const LLSHPopulationRate = (LLSHPopulation / totalPopulation) * 100;
     const THEOpopulation = lastData?.gd_discisciplinetheo || 0;
-    const THEOPopulationRate = (THEOPopulation / totalPopulation) * 100;
+    const THEOPopulationRate = (THEOpopulation / totalPopulation) * 100;
     const SIPopulation = lastData?.gd_discisciplinesi || 0;
     const SIPopulationRate = (SIPopulation / totalPopulation) * 100;
     const stapsPopulation = lastData?.gd_discisciplinestaps || 0;
@@ -262,7 +262,7 @@ export default function StructureEtudiantsPage() {
     value: (lastData?.diplomediplcomptable_dcg || 0) + (lastData?.diplomediplcomptable_decf || 0) + (lastData?.diplomediplcomptable_descf || 0) + (lastData?.diplomediplcomptable_dpecf || 0) + (lastData?.diplomediplcomptable_dscg || 0),
   }, {
     text: 'étudiants inscrits dans les diplômes canoniques',
-    value: (lastData?.diplomedipcanonique_baccanonique || 0) + (lastData?.diplomedipcanonique_certtheologie || 0) + (lastData?.diplomedipcanonique_doctcanonique || 0) + (lastData?.diplomedipcanonique_liccanonique || 0) + (lastData?.diplomedipcanonique_master canonique || 0),
+    value: (lastData?.diplomedipcanonique_baccanonique || 0) + (lastData?.diplomedipcanonique_certtheologie || 0) + (lastData?.diplomedipcanonique_doctcanonique || 0) + (lastData?.diplomedipcanonique_liccanonique || 0) + (lastData?.['diplomedipcanonique_master canonique'] || 0),
   }, {
     text: 'étudiants inscrits dans les autres diplômes nationaux conférant le grade de Licence',
     value: lastData?.diplomediplnatgradel,
@@ -369,7 +369,7 @@ export default function StructureEtudiantsPage() {
         name: 'Etudiants inscrits préparant un Bachelor universitaire de technologie',
         data: allData.map((item) => item?.diplomebut || 0),
       },
-	  {
+      {
         name: 'Etudiants inscrits préparant un Diplôme universitaire de technologie',
         data: allData.map((item) => item?.diplomedut || 0),
       },
@@ -395,7 +395,7 @@ export default function StructureEtudiantsPage() {
       },
       {
         name: 'Etudiants inscrits dans les diplômes canoniques',
-        data: allData.map((item) => (item?.diplomedipcanonique_baccanonique || 0) + (item?.diplomedipcanonique_certtheologie || 0) + (item?.diplomedipcanonique_doctcanonique || 0) + (item?.diplomedipcanonique_liccanonique || 0) + (item?.diplomedipcanonique_master canonique || 0)),
+        data: allData.map((item) => (item?.diplomedipcanonique_baccanonique || 0) + (item?.diplomedipcanonique_certtheologie || 0) + (item?.diplomedipcanonique_doctcanonique || 0) + (item?.diplomedipcanonique_liccanonique || 0) + (item?.['diplomedipcanonique_master canonique'] || 0)),
       },
       {
         name: 'Etudiants inscrits dans les diplômes visés en management',
