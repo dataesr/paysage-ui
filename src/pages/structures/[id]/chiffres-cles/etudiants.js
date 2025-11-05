@@ -60,6 +60,10 @@ export default function StructureEtudiantsPage() {
     value: lastData?.effectif_total,
     isPercent: false,
   }, {
+    text: 'inscriptions totales hors doubles inscriptions CPGE (inscriptions principales et secondes)',
+    value: lastData?.effectif_total_sans_cpge,
+    isPercent: false,
+  }, {
     text: 'étudiants inscrits (inscriptions principales)',
     value: lastData?.effectif,
     isPercent: false,
@@ -84,6 +88,9 @@ export default function StructureEtudiantsPage() {
   }, {
     text: 'nouveaux bacheliers',
     value: lastData?.nouv_bachelier,
+  }, {
+    text: 'nouveaux bacheliers hors doubles inscriptions CPGE',
+    value: lastData?.nouv_bachelier_sans_cpge,
   }, {
     text: 'nouveaux bacheliers issus d\'un bac général',
     value: lastData?.nbaca,
@@ -135,12 +142,18 @@ export default function StructureEtudiantsPage() {
     const DSAPopulationRate = (DSAPopulation / totalPopulation) * 100;
     const LLSHPopulation = lastData?.gd_discisciplinellsh || 0;
     const LLSHPopulationRate = (LLSHPopulation / totalPopulation) * 100;
+    const THEOpopulation = lastData?.gd_discisciplinetheo || 0;
+    const THEOPopulationRate = (THEOPopulation / totalPopulation) * 100;
     const SIPopulation = lastData?.gd_discisciplinesi || 0;
     const SIPopulationRate = (SIPopulation / totalPopulation) * 100;
     const stapsPopulation = lastData?.gd_discisciplinestaps || 0;
     const stapsPopulationRate = (stapsPopulation / totalPopulation) * 100;
     const santePopulation = lastData?.gd_discisciplinesante || 0;
     const santePopulationRate = (santePopulation / totalPopulation) * 100;
+    const vetoPopulation = lastData?.gd_discisciplineveto || 0;
+    const vetoPopulationRate = (vetoPopulation / totalPopulation) * 100;
+    const interdPopulation = lastData?.gd_discisciplineinterd || 0;
+    const interdPopulationRate = (interdPopulation / totalPopulation) * 100;
     disciplinesData = [{
       name: 'Droit, sciences économiques, AES',
       value: DSAPopulation,
@@ -149,6 +162,10 @@ export default function StructureEtudiantsPage() {
       name: 'Lettres, langues et sciences humaines',
       value: LLSHPopulation,
       y: LLSHPopulationRate,
+    }, {
+      name: 'Théologie',
+      value: THEOpopulation,
+      y: THEOPopulationRate,
     }, {
       name: 'Sciences et sciences de l\'ingénieur',
       value: SIPopulation,
@@ -161,6 +178,14 @@ export default function StructureEtudiantsPage() {
       name: 'Santé',
       value: santePopulation,
       y: santePopulationRate,
+    }, {
+      name: 'Vétérinaire',
+      value: vetoPopulation,
+      y: vetoPopulationRate,
+    }, {
+      name: 'Interdisciplinaire',
+      value: interdPopulation,
+      y: interdPopulationRate,
     }];
   }
   const LMDOptions = {
@@ -192,33 +217,61 @@ export default function StructureEtudiantsPage() {
     value: lastData?.diplomecapa,
   }, {
     text: 'étudiants inscrits en Licence',
-    value: (lastData?.diplomelic_l_aut || 0) + (lastData?.diplomelic_l_las || 0),
+    value: (lastData?.diplomelic_l_lic_l || 0) + (lastData?.diplomelic_l_las || 0) + (lastData?.diplomelic_l_lsps || 0) + (lastData?.diplomelic_l_cpes || 0),
   }, {
     text: 'étudiants inscrits en Licence accès santé',
     value: lastData?.diplomelic_l_las,
     prefix: 'dont',
   }, {
+    text: 'étudiants inscrits en Licence sciences pour la santé',
+    value: lastData?.diplomelic_l_lsps,
+    prefix: 'dont',
+  }, {
+    text: 'étudiants inscrits préparant un bachelor universitaire de technologie',
+    value: lastData?.diplomebut,
+  }, {
     text: 'étudiants inscrits préparant un diplôme universitaire de technologie',
     value: lastData?.diplomedut,
   }, {
     text: 'étudiants inscrits en Licence professionnelle',
-    value: lastData?.diplomelic_pro,
+    value: (lastData?.diplomelic_pro_lic_pro1 || 0) + (lastData?.diplomelic_pro_lic_pro23 || 0),
   }, {
     text: 'étudiants inscrits en Master',
-    value: (lastData?.diplomemast_m_autres || 0) + (lastData?.diplomemast_m_enseignement || 0),
+    value: (lastData?.diplomemas_m_mas_aut || 0) + (lastData?.diplomemas_m_mas_ens || 0),
   }, {
     text: 'étudiants inscrits en Master enseignement',
-    value: lastData?.diplomemast_m_enseignement,
+    value: lastData?.diplomemas_m_mas_ens,
     prefix: 'dont',
+  }, {
+    text: 'étudiants inscrits dans les diplôme de l\'École normale supérieure',
+    value: lastData?.diplomediplnatgradem,
   }, {
     text: 'étudiants inscrits en formations d\'ingénieurs',
     value: lastData?.diplomeing,
   }, {
+    text: 'étudiants inscrits dans les diplômes visés en management',
+    value: (lastData?.diplomedipvisemana_manacp || 0) + (lastData?.diplomedipvisemana_manadipl || 0) + (lastData?.diplomedipvisemana_managradel || 0) + (lastData?.diplomedipvisemana_managradem || 0) + (lastData?.diplomedipvisemana_manassgrade || 0),
+  }, {
+    text: 'étudiants inscrits dans les autres diplômes visés',
+    value: (lastData?.diplomedipvise_dipvisbac_3 || 0) + (lastData?.diplomedipvise_dipvisbac_5 || 0) + (lastData?.diplomedipvise_dipvisgradel || 0),
+  }, {
+    text: 'étudiants inscrits en formations d\'IEP',
+    value: lastData?.diplomeiep,
+  }, {
+    text: 'étudiants inscrits en formations de comptabilité',
+    value: (lastData?.diplomediplcomptable_dcg || 0) + (lastData?.diplomediplcomptable_decf || 0) + (lastData?.diplomediplcomptable_descf || 0) + (lastData?.diplomediplcomptable_dpecf || 0) + (lastData?.diplomediplcomptable_dscg || 0),
+  }, {
+    text: 'étudiants inscrits dans les diplômes canoniques',
+    value: (lastData?.diplomedipcanonique_baccanonique || 0) + (lastData?.diplomedipcanonique_certtheologie || 0) + (lastData?.diplomedipcanonique_doctcanonique || 0) + (lastData?.diplomedipcanonique_liccanonique || 0) + (lastData?.diplomedipcanonique_master canonique || 0),
+  }, {
+    text: 'étudiants inscrits dans les autres diplômes nationaux conférant le grade de Licence',
+    value: lastData?.diplomediplnatgradel,
+  }, {
+    text: 'étudiants inscrits dans les autres diplômes nationaux conférant le grade de Master',
+    value: lastData?.diplomediplnatgradem,
+  }, {
     text: 'étudiants inscrits en PASS et PluriPASS',
     value: lastData?.diplomesante_pass,
-  }, {
-    text: 'étudiants inscrits en Diplôme d\'État d\'infirmier',
-    value: lastData?.diplomesante_infirmier,
   }, {
     text: 'étudiants inscrits en PACES',
     value: lastData?.diplomesante_paces,
@@ -236,7 +289,10 @@ export default function StructureEtudiantsPage() {
     value: lastData?.diplomehdr,
   }, {
     text: 'étudiants inscrits dans les diplômes d\'établissement',
-    value: lastData?.diplomedu,
+    value: lastData?.dn_dedu,
+  }, {
+    text: 'étudiants inscrits dans les formations vétérinaires',
+    value: lastData?.diplomeveto,
   }];
 
   const populationOptions = {
@@ -279,6 +335,10 @@ export default function StructureEtudiantsPage() {
         data: allData.map((item) => item?.gd_discisciplinellsh || 0),
       },
       {
+        name: 'Etudiants inscrits en Théologie',
+        data: allData.map((item) => item?.gd_discisciplinetheo || 0),
+      },
+      {
         name: 'Etudiants inscrits en Sciences et sciences de l\'ingénieur',
         data: allData.map((item) => item?.gd_discisciplinesi || 0),
       },
@@ -290,6 +350,14 @@ export default function StructureEtudiantsPage() {
         name: 'Etudiants inscrits en Santé',
         data: allData.map((item) => item?.gd_discisciplinesante || 0),
       },
+      {
+        name: 'Etudiants inscrits en Vétérinaire',
+        data: allData.map((item) => item?.gd_discisciplineveto || 0),
+      },
+      {
+        name: 'Etudiants inscrits en Interdisciplinaire',
+        data: allData.map((item) => item?.gd_discisciplineinterd || 0),
+      },
     ],
     title: { text: 'Évolution des effectifs par discipline' },
   };
@@ -298,24 +366,48 @@ export default function StructureEtudiantsPage() {
     ...commonOptions,
     series: [
       {
-        name: 'Etudiants inscrits préparant un diplôme universitaire de technologie',
+        name: 'Etudiants inscrits préparant un Bachelor universitaire de technologie',
+        data: allData.map((item) => item?.diplomebut || 0),
+      },
+	  {
+        name: 'Etudiants inscrits préparant un Diplôme universitaire de technologie',
         data: allData.map((item) => item?.diplomedut || 0),
       },
       {
         name: 'Etudiants inscrits en Licence',
-        data: allData.map((item) => item?.diplomelic_l_aut || 0),
+        data: allData.map((item) => (item?.diplomelic_l_lic_l || 0) + (item?.diplomelic_l_las || 0) + (item?.diplomelic_l_lsps || 0) + (item?.diplomelic_l_cpes || 0)),
       },
       {
         name: 'Etudiants inscrits en Master',
-        data: allData.map((item) => (item?.diplomemast_m_autres || 0) + (item?.diplomemast_m_enseignement || 0)),
+        data: allData.map((item) => (item?.diplomemas_m_mas_aut || 0) + (item?.diplomemas_m_mas_ens || 0)),
       },
       {
         name: 'Etudiants inscrits en formations d\'ingénieurs',
         data: allData.map((item) => item?.diplomeing || 0),
       },
       {
+        name: 'Etudiants inscrits en formations d\'IEP',
+        data: allData.map((item) => item?.diplomeiep || 0),
+      },
+      {
+        name: 'Etudiants inscrits formations de comptabilité',
+        data: allData.map((item) => (item?.diplomediplcomptable_dcg || 0) + (item?.diplomediplcomptable_decf || 0) + (item?.diplomediplcomptable_descf || 0) + (item?.diplomediplcomptable_dpecf || 0) + (item?.diplomediplcomptable_dscg || 0)),
+      },
+      {
+        name: 'Etudiants inscrits dans les diplômes canoniques',
+        data: allData.map((item) => (item?.diplomedipcanonique_baccanonique || 0) + (item?.diplomedipcanonique_certtheologie || 0) + (item?.diplomedipcanonique_doctcanonique || 0) + (item?.diplomedipcanonique_liccanonique || 0) + (item?.diplomedipcanonique_master canonique || 0)),
+      },
+      {
+        name: 'Etudiants inscrits dans les diplômes visés en management',
+        data: allData.map((item) => (item?.diplomedipvisemana_manacp || 0) + (item?.diplomedipvisemana_manadipl || 0) + (item?.diplomedipvisemana_managradel || 0) + (item?.diplomedipvisemana_managradem || 0) + (item?.diplomedipvisemana_manassgrade || 0)),
+      },
+      {
+        name: 'Etudiants inscrits dans les autres diplômes visés',
+        data: allData.map((item) => (item?.diplomedipvise_dipvisbac_3 || 0) + (item?.diplomedipvise_dipvisbac_5 || 0) + (item?.diplomedipvise_dipvisgradel || 0)),
+      },
+      {
         name: 'Etudiants inscrits en Doctorat',
-        data: allData.map((item) => item?.diplomehdr || 0),
+        data: allData.map((item) => item?.diplomedoct || 0),
       },
     ],
     title: { text: 'Évolution des effectifs dans les principaux diplômes' },
@@ -333,16 +425,36 @@ export default function StructureEtudiantsPage() {
         data: allData.map((item) => item?.diplomecapa || 0),
       },
       {
+        name: 'Etudiants inscrits en Licence accès santé (dont)',
+        data: allData.map((item) => item?.diplomelic_l_las || 0),
+      },
+      {
+        name: 'Etudiants inscrits en Licence sciences pour la santé (majeure santé) (dont)',
+        data: allData.map((item) => item?.diplomelic_l_lsps || 0),
+      },
+      {
         name: 'Etudiants inscrits en Licence professionnelle',
-        data: allData.map((item) => item?.diplomelic_pro || 0),
+        data: allData.map((item) => (item?.diplomelic_pro_lic_pro1 || 0) + (item?.diplomelic_pro_lic_pro23 || 0)),
       },
       {
         name: 'Etudiants inscrits en Master enseignement (dont)',
-        data: allData.map((item) => item?.diplomemast_m_enseignement || 0),
+        data: allData.map((item) => item?.diplomemas_m_mas_ens || 0),
+      },
+      {
+        name: 'Etudiants inscrits dans les autres diplômes nationaux conférant le grade de Licence',
+        data: allData.map((item) => item?.diplomediplnatgradel || 0),
+      },
+      {
+        name: 'Etudiants inscrits dans les autres diplômes nationaux conférant le grade de Master',
+        data: allData.map((item) => item?.diplomediplnatgradem || 0),
       },
       {
         name: 'Etudiants inscrits en PACES',
         data: allData.map((item) => item?.diplomesante_paces || 0),
+      },
+      {
+        name: 'Etudiants inscrits en PASS et PluriPASS',
+        data: allData.map((item) => item?.diplomesante_pass || 0),
       },
       {
         name: 'Etudiants inscrits dans les formations paramédicales',
@@ -358,7 +470,7 @@ export default function StructureEtudiantsPage() {
       },
       {
         name: 'Etudiants inscrits dans les diplômes d\'établissement',
-        data: allData.map((item) => item?.diplomeautres_form || 0),
+        data: allData.map((item) => item?.dn_dedu || 0),
       },
     ],
     title: { text: 'Évolution des effectifs dans d\'autres types de diplômes' },
