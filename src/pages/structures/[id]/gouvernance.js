@@ -7,7 +7,7 @@ import EmailsComponent from '../../../components/blocs/emails';
 export default function StructureGouvernancePage() {
   return (
     <Row gutters>
-      <Col n="12">
+      <Col n="12" className="fr-mt-2w">
         <EmailsComponent />
       </Col>
       <Col n="12">
