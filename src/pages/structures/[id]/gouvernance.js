@@ -7,7 +7,7 @@ import EmailsComponent from '../../../components/blocs/emails';
 export default function StructureGouvernancePage() {
   return (
     <Row gutters>
-      <Tabs>
+      <Tabs className="fr-mt-3w">
         <Tab
           label="Gouvernance"
           className="fr-card fr-card--xs fr-card--horizontal fr-card--grey fr-card--no-border"
