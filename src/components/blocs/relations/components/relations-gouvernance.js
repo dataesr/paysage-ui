@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { Badge, Modal, ModalContent, ModalTitle, Row, Title } from '@dataesr/react-dsfr';
+import { Badge, Modal, ModalContent, ModalTitle } from '@dataesr/react-dsfr';
 import api from '../../../../utils/api';
 import RelationCard from '../../../card/relation-card';
 import ExpendableListCards from '../../../card/expendable-list-cards';
-import { Bloc, BlocActionButton, BlocContent, BlocFilter, BlocModal, BlocTitle } from '../../../bloc';
+import { Bloc, BlocActionButton, BlocContent, BlocModal, BlocTitle } from '../../../bloc';
 import RelationsForm from '../../../forms/relations';
 import useFetch from '../../../../hooks/useFetch';
 import useUrl from '../../../../hooks/useUrl';
@@ -13,7 +13,7 @@ import { deleteError, saveError, saveSuccess, deleteSuccess } from '../../../../
 import { exportToCsv, hasExport } from '../utils/exports';
 import { spreadByStatus } from '../utils/status';
 
-const GROUP_ORDER = [
+export const GROUP_ORDER = [
   'Équipe de direction',
   'Gouvernance',
   'Cabinet',
@@ -44,7 +44,18 @@ function getByMandateTypeGroups(data) {
   return counts;
 }
 
-export default function RelationsGouvernance({ blocName, tag, resourceType, relatedObjectTypes, inverse, noRelationType, noFilters, Form, sort }) {
+export default function RelationsGouvernance({
+  blocName,
+  tag,
+  resourceType,
+  relatedObjectTypes,
+  inverse,
+  noRelationType,
+  noFilters,
+  Form,
+  sort,
+  mandateTypeGroup,
+}) {
   const queryObject = inverse ? 'relatedObjectId' : 'resourceId';
   const { notice } = useNotice();
   const { id: resourceId } = useUrl();
@@ -53,11 +64,17 @@ export default function RelationsGouvernance({ blocName, tag, resourceType, rela
   const [showModal, setShowModal] = useState(false);
   const [modalTitle, setModalTitle] = useState('');
   const [modalContent, setModalContent] = useState(null);
-  const { data: spreadedByStatusRelations, counts, defaultFilter } = spreadByStatus(data?.data);
+
+  let filteredData = data?.data;
+  if (mandateTypeGroup) {
+    filteredData = filteredData?.filter(
+      (rel) => rel?.relationType?.mandateTypeGroup === mandateTypeGroup,
+    );
+  }
+  const { data: spreadedByStatusRelations, counts, defaultFilter } = spreadByStatus(filteredData);
   const [statusFilter, setStatusFilter] = useState(defaultFilter);
   const mandateTypeGroups = getByMandateTypeGroups(spreadedByStatusRelations[statusFilter]);
   useEffect(() => setStatusFilter(defaultFilter), [defaultFilter]);
-
   const onSaveElementHandler = async (body, id = null) => {
     const method = id ? 'patch' : 'post';
     const saveUrl = id ? `/relations/${id}` : '/relations';
@@ -110,32 +127,35 @@ export default function RelationsGouvernance({ blocName, tag, resourceType, rela
     return byTypeRelations
       .sort((a, b) => GROUP_ORDER.indexOf(a.name) - GROUP_ORDER.indexOf(b.name))
       .map((group) => (
-        <>
-          <Row className="flex--nowrap fr-mt-3w">
-            <div className="flex--grow">
-              <Row className="flex flex--start">
-                <Title as="h6" look="h6">{group.name}</Title>
-                <Badge className="fr-ml-1v" type="info" text={group.count} />
-              </Row>
-            </div>
-          </Row>
-          <ExpendableListCards max={60} list={group.list} nCol="12 md-6" />
-        </>
+        <ExpendableListCards max={60} list={group.list} nCol="12 md-6" />
       ));
   };
+  const totalCount = counts ? counts[statusFilter] || 0 : 0;
+  const blocData = { ...data, totalCount };
 
   return (
-    <Bloc isLoading={isLoading} error={error} data={data} isRelation>
-      <BlocTitle as="h2" look="h6">{blocName || tag}</BlocTitle>
+    <Bloc isLoading={isLoading} error={error} data={blocData} isRelation>
+      <BlocTitle as="h2" look="h6">
+        {blocName || tag}
+      </BlocTitle>
       <BlocActionButton onClick={() => onOpenModalHandler()}>Ajouter un élément</BlocActionButton>
-      {(!noFilters) && <BlocFilter statusFilter={statusFilter} setStatusFilter={setStatusFilter} counts={counts} />}
+      {(!noFilters) && (
+        <BlocTitle as="h2" look="h6">
+          {blocName || tag}
+          {mandateTypeGroup && counts && (
+            <span style={{ marginLeft: '8px' }}>
+              <Badge type="info" text={counts[statusFilter] || 0} />
+            </span>
+          )}
+        </BlocTitle>
+      )}
       {hasExport({ tag, inverse }) && (
         <BlocActionButton
           icon="ri-download-line"
           edit={false}
           onClick={() => exportToCsv({
-            data: data?.data,
-            fileName: `${resourceId}-${tag}`,
+            data: filteredData,
+            fileName: `${resourceId}-${tag}${mandateTypeGroup ? `-${ mandateTypeGroup}` : ''}`,
             listName: blocName,
             tag,
             inverse,
@@ -165,6 +185,7 @@ RelationsGouvernance.propTypes = {
   resourceType: PropTypes.string,
   sort: PropTypes.string,
   tag: PropTypes.string.isRequired,
+  mandateTypeGroup: PropTypes.string,
 };
 
 RelationsGouvernance.defaultProps = {
@@ -176,4 +197,5 @@ RelationsGouvernance.defaultProps = {
   relatedObjectTypes: ['persons', 'structures', 'prizes', 'terms', 'projects', 'categories'],
   resourceType: 'structures',
   sort: '-startDate',
+  mandateTypeGroup: '',
 };
