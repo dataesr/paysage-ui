@@ -47,7 +47,7 @@ export default function WeblinksResources({ resourceId }) {
 
   return (
     <Bloc isLoading={isLoading} error={error} data={data}>
-      <BlocTitle as="h2" look="h6">Resources externes</BlocTitle>
+      <BlocTitle as="h2" look="h6">Ressources externes</BlocTitle>
       <BlocContent>
         <ExpendableListCards max={10000} nCol="12 sm-6 md-4" list={cards} />
       </BlocContent>
