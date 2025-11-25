@@ -6,6 +6,8 @@ import EmailsComponent from '../../../components/blocs/emails';
 import useFetch from '../../../hooks/useFetch';
 import useUrl from '../../../hooks/useUrl';
 import { GROUP_ORDER } from '../../../components/blocs/relations/components/relations-gouvernance';
+import { BlocActionButton } from '../../../components/bloc';
+import { exportToCsv, hasExport } from '../../../components/blocs/relations/utils/exports';
 
 export default function StructureGouvernancePage() {
   const { id: resourceId } = useUrl();
@@ -25,6 +27,23 @@ export default function StructureGouvernancePage() {
 
   return (
     <Row gutters>
+      <div style={{ width: '100%', display: 'flex', justifyContent: 'flex-end' }}>
+        {hasExport({ tag: GOUVERNANCE, inverse: false }) && (
+          <BlocActionButton
+            icon="ri-download-line"
+            edit={false}
+            onClick={() => exportToCsv({
+              data: data?.data,
+              fileName: `${resourceId}-${GOUVERNANCE}`,
+              listName: 'Gouvernance',
+              tag: GOUVERNANCE,
+              inverse: false,
+            })}
+          >
+            Télécharger la liste
+          </BlocActionButton>
+        )}
+      </div>
       <Tabs className="fr-mt-3w">
         {sortedGroups.map((group) => (
           <Tab

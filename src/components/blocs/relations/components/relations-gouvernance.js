@@ -4,13 +4,12 @@ import { Badge, Modal, ModalContent, ModalTitle } from '@dataesr/react-dsfr';
 import api from '../../../../utils/api';
 import RelationCard from '../../../card/relation-card';
 import ExpendableListCards from '../../../card/expendable-list-cards';
-import { Bloc, BlocActionButton, BlocContent, BlocModal, BlocTitle } from '../../../bloc';
+import { Bloc, BlocActionButton, BlocContent, BlocFilter, BlocModal, BlocTitle } from '../../../bloc';
 import RelationsForm from '../../../forms/relations';
 import useFetch from '../../../../hooks/useFetch';
 import useUrl from '../../../../hooks/useUrl';
 import useNotice from '../../../../hooks/useNotice';
 import { deleteError, saveError, saveSuccess, deleteSuccess } from '../../../../utils/notice-contents';
-import { exportToCsv, hasExport } from '../utils/exports';
 import { spreadByStatus } from '../utils/status';
 
 export const GROUP_ORDER = [
@@ -135,6 +134,7 @@ export default function RelationsGouvernance({
 
   return (
     <Bloc isLoading={isLoading} error={error} data={blocData} isRelation>
+      <BlocFilter statusFilter={statusFilter} setStatusFilter={setStatusFilter} counts={counts} />
       <BlocTitle as="h2" look="h6">
         {blocName || tag}
       </BlocTitle>
@@ -148,21 +148,6 @@ export default function RelationsGouvernance({
             </span>
           )}
         </BlocTitle>
-      )}
-      {hasExport({ tag, inverse }) && (
-        <BlocActionButton
-          icon="ri-download-line"
-          edit={false}
-          onClick={() => exportToCsv({
-            data: filteredData,
-            fileName: `${resourceId}-${tag}${mandateTypeGroup ? `-${ mandateTypeGroup}` : ''}`,
-            listName: blocName,
-            tag,
-            inverse,
-          })}
-        >
-          Télécharger la liste
-        </BlocActionButton>
       )}
       <BlocContent>{renderCards()}</BlocContent>
       <BlocModal>
