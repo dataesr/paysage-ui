@@ -1,9 +1,9 @@
 import { Button, Icon, Modal, ModalContent } from '@dataesr/react-dsfr';
 import { useState } from 'react';
 import PropTypes from 'prop-types';
-import { TYPES_MAPPING } from '../analysers/structures-identifiers/types-mappings';
 import CopyButton from '../../../copy/copy-button';
 import { PERSONS_TYPES_MAPPING } from '../analysers/persons-identifiers/persons-types-mapping';
+import { structuresHeadersMapping } from '../analysers/structures/headers-mapping';
 
 export default function HelperForStructures({ type }) {
   const [isModalOpen, setIsModalOpen] = useState();
@@ -138,7 +138,7 @@ export default function HelperForStructures({ type }) {
                       (en gras ci-dessous). Par exemple, pour ajouter un identifiant "ESBGU - id bibliothèque", renseignez simplement "bibid".
                       <div style={{ display: 'flex', justifyContent: 'center' }}>
                         <ul style={{ listStyleType: 'none', paddingLeft: '20px', marginTop: '10px' }}>
-                          {Object.entries(TYPES_MAPPING).map(([key, value]) => (
+                          {Object.entries(structuresHeadersMapping).map(([key, value]) => (
                             <li key={key} style={{ marginBottom: '5px' }}>
                               <span style={{ fontWeight: 'bold' }}>
                                 {value}

@@ -185,16 +185,21 @@ export default async function checker(docs, index) {
     const parentErrors = await parentChecker(doc);
     const nameDuplicateWarnings = await nameChecker(doc);
     const requiredErrors = requiredChecker(doc, index);
-    const edDuplicate = await duplicateIdChecker('ed', doc.ed);
-    const idrefDuplicate = await duplicateIdChecker('idref', doc.idref);
-    const siretDuplicate = await duplicateIdChecker('siret', doc.siret);
-    const rnsrDuplicate = await duplicateIdChecker('rnsr', doc.rnsr);
-    const rorDuplicate = await duplicateIdChecker('ror', doc.ror);
-    const uaiDuplicate = await duplicateIdChecker('uai', doc.uai);
-    const cruchbaseDuplicate = await duplicateIdChecker('cruchbase', doc.cruchbase);
-    const dealroomDuplicate = await duplicateIdChecker('dealroom', doc.dealroom);
-    const wikidataDuplicate = await duplicateIdChecker('wikidata', doc.wikidata);
+
+    const ALL_IDENTIFIERS = [
+      'idref', 'wikidata', 'ror', 'uai', 'siret', 'ed', 'rnsr', 'crunchbase', 'dealroom',
+      'annelis', 'bibid', 'bnf', 'cnrs-unit', 'cti', 'euTransparency', 'eter', 'etid', 'finess',
+      'fundref', 'googleScholar', 'grid', 'hatvp', 'idhal', 'isil', 'isni', 'openAlexStructId',
+      'orgref', 'oc', 'openAlexTermId', 'pia', 'piaweb-organization', 'piaweb-project', 'pic',
+      'rcr', 'ringgold', 'rna', 'rtoad', 'sdid',
+    ];
+
+    const allDuplicateChecks = await Promise.all(
+      ALL_IDENTIFIERS.map((identifier) => duplicateIdChecker(identifier, doc[identifier])),
+    );
+
     const edFormat = await idFormatChecker('ed', doc.ed);
+    const ringgoldFormat = await idFormatChecker('ringgold', doc.ringgold);
     const identifiersDuplicateInFile = await checkDuplicateIdentifiers(docs, index);
     const idrefFormat = await idFormatChecker('idref', doc.idref);
     const siretFormat = await idFormatChecker('siret', doc.siret);
@@ -206,13 +211,26 @@ export default async function checker(docs, index) {
     const websiteChecked = await websiteChecker(doc);
     const duplicateChecker = await rowsChecker(docs, index);
     const warning = [
-      ...cruchbaseDuplicate, ...dealroomDuplicate,
-      ...duplicateChecker, ...edDuplicate,
-      ...idrefDuplicate, ...identifiersDuplicateInFile, ...nameDuplicateWarnings, ...rorDuplicate,
-      ...rnsrDuplicate, ...siretDuplicate, ...uaiDuplicate, ...websiteChecked, ...wikidataDuplicate,
+      ...allDuplicateChecks.flat(),
+      ...duplicateChecker,
+      ...edFormat,
+      ...idrefFormat,
+      ...identifiersDuplicateInFile,
+      ...nameDuplicateWarnings,
+      ...ringgoldFormat,
+      ...rorFormat,
+      ...rnsrFormat,
+      ...siretFormat,
+      ...uaiFormat,
+      ...websiteChecked,
+      ...wikidataFormat,
     ];
-    const error = [...requiredErrors, ...parentErrors,
-      ...legalCategoryCheck, ...categoriesErrors, ...edFormat, ...idrefFormat, ...siretFormat, ...rnsrFormat, ...rorFormat, ...uaiFormat, ...wikidataFormat];
+    const error = [
+      ...requiredErrors,
+      ...parentErrors,
+      ...legalCategoryCheck,
+      ...categoriesErrors,
+    ];
     let status = 'success';
     if (warning.length) { status = 'warning'; }
     if (error.length) { status = 'error'; }

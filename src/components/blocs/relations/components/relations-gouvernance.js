@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { Badge, Modal, ModalContent, ModalTitle } from '@dataesr/react-dsfr';
+import { Badge, Modal, ModalContent, ModalTitle, Row } from '@dataesr/react-dsfr';
 import api from '../../../../utils/api';
 import RelationCard from '../../../card/relation-card';
 import ExpendableListCards from '../../../card/expendable-list-cards';
@@ -115,12 +115,14 @@ export default function RelationsGouvernance({
       .sort((a, b) => new Date(b.startDate) - new Date(a.startDate))
       .sort((a, b) => ((a?.relationType?.priority || 99) - (b?.relationType?.priority || 99)))
       .map((element) => (
-        <RelationCard
-          key={element.id}
-          inverse={inverse}
-          relation={element}
-          onEdit={() => onOpenModalHandler(element)}
-        />
+        <Row gutters className="fr-mt-2w">
+          <RelationCard
+            key={element.id}
+            inverse={inverse}
+            relation={element}
+            onEdit={() => onOpenModalHandler(element)}
+          />
+        </Row>
       )) : []);
     const byTypeRelations = Object.entries(mandateTypeGroups).map(([name, { count, list }]) => ({ name, count, list: renderlist(list) }));
     return byTypeRelations
