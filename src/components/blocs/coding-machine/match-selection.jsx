@@ -13,18 +13,18 @@ function MatchSelection({
     if (match.isAlternative) return 'var(--blue-france-950-125)';
     return 'transparent';
   };
-
-  const getObjectUrl = (objectType, id) => {
-    if (objectType === 'structures') {
+  const getObjectUrl = (objectType, id, type) => {
+    const finalType = objectType || type;
+    if (finalType === 'structures') {
       return `https://paysage.enseignementsup-recherche.gouv.fr/structures/${id}/presentation`;
     }
-    if (objectType === 'persons') {
+    if (finalType === 'persons') {
       return `https://paysage.enseignementsup-recherche.gouv.fr/personnes/${id}/presentation`;
     }
-    if (objectType === 'prizes') {
+    if (finalType === 'prizes') {
       return `https://paysage.enseignementsup-recherche.gouv.fr/prix/${id}/presentation`;
     }
-    return 'https://www.data.gouv.fr/fr/datasets/identifiants-paysage/';
+    return '';
   };
 
   return (
@@ -95,7 +95,7 @@ function MatchSelection({
                       ID Paysage:
                       {' '}
                       <Link
-                        href={getObjectUrl(match.objectType, match.id)}
+                        href={getObjectUrl(match.objectType, match.id, match.type)}
                         target="_blank"
                         rel="noopener noreferrer"
                       >

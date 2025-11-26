@@ -136,7 +136,7 @@ function StructureByIdPage() {
             </SideMenuLink>
             <SideMenuLink asLink={<RouterLink to="gouvernance-et-referents" replace />}>
               <Icon name="ri-team-line" size="1x" />
-              Gouvernance et référents
+              Gouvernance, référents et contacts
             </SideMenuLink>
             <SideMenuLink asLink={<RouterLink to="evenements" replace />}>
               <Icon name="ri-calendar-line" size="1x" />
