@@ -1,4 +1,5 @@
 import {
+  Alert,
   Col,
   Container,
   Row,
@@ -6,12 +7,14 @@ import {
   TextInput,
 } from '@dataesr/react-dsfr';
 import PropTypes from 'prop-types';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import useForm from '../../../hooks/useForm';
 import DateInput from '../../date-input';
 import PaysageBlame from '../../paysage-blame';
 import TagInput from '../../tag-input';
 import FormFooter from '../form-footer';
+import api from '../../../utils/api';
+import { capitalize } from '../../../utils/strings';
 
 function validate(body) {
   const validationErrors = {};
@@ -27,25 +30,77 @@ function sanitize(form) {
   Object.keys(form).forEach((key) => { if (fields.includes(key)) { body[key] = form[key]; } });
   return body;
 }
-
 export default function PersonForm({ id, data, onSave, onDelete }) {
   const { form, updateForm, errors } = useForm(data, validate);
   const [showErrors, setShowErrors] = useState(false);
+  const [duplicate, setDuplicate] = useState(null);
+  const [checking, setChecking] = useState(false);
 
-  const handleSubmit = () => {
-    if (Object.keys(errors).length !== 0) return setShowErrors(true);
+  useEffect(() => {
+    const checkDuplicate = async () => {
+      setDuplicate(null);
+      const firstName = form.firstName?.trim();
+      const lastName = form.lastName?.trim();
+      if (!firstName || !lastName) return;
+      const fullName = `${firstName} ${lastName}`;
+      try {
+        setChecking(true);
+        const { data: res } = await api.get(`/autocomplete?types=persons&query=${encodeURIComponent(fullName)}`);
+        const found = res?.data.find((el) => {
+          const norm = (s) => (s || '').replace('\t', '').trim().toLowerCase();
+          return norm(el.name) === norm(fullName);
+        });
+        if (found) setDuplicate(found.id);
+      } catch (err) {
+        // ignore
+      } finally {
+        setChecking(false);
+      }
+    };
+    checkDuplicate();
+  }, [form.firstName, form.lastName]);
+
+  const handleSubmit = (e) => {
+    if (e) e.preventDefault();
+    if (Object.keys(errors).length !== 0) {
+      setShowErrors(true);
+      return null;
+    }
     const body = sanitize(form);
     return onSave(body);
   };
+
   const genderOptions = [
     { value: '', label: 'Sélectionner' },
     { value: 'Homme', label: 'Homme' },
     { value: 'Femme', label: 'Femme' },
     { value: 'Autre', label: 'Autre' },
   ];
-
   return (
-    <form>
+    <form onSubmit={handleSubmit}>
+      {duplicate && (
+        <Alert
+          type="info"
+          small
+          description={
+            (
+              <span>
+                Le nom
+                {' '}
+                {capitalize(form.firstName?.trim())}
+                {' '}
+                {capitalize(form.lastName?.trim())}
+                {' '}
+                existe déjà dans la base de donnée.
+                {' '}
+                <a target="blank" href={`/personnes/${duplicate}`}>Voir la fiche</a>
+                <br />
+                S'il s'agit d'un homonyme, vous pouvez continuer la création.
+              </span>
+            )
+          }
+        />
+      )}
       <PaysageBlame
         createdBy={data.createdBy}
         updatedBy={data.updatedBy}
@@ -119,6 +174,7 @@ export default function PersonForm({ id, data, onSave, onDelete }) {
           id={id}
           onSaveHandler={handleSubmit}
           onDeleteHandler={onDelete}
+          isLoading={checking}
         />
       </Container>
     </form>
