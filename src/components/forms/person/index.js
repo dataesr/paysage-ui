@@ -39,6 +39,7 @@ export default function PersonForm({ id, data, onSave, onDelete }) {
   useEffect(() => {
     const checkDuplicate = async () => {
       setDuplicate(null);
+      if (id) return;
       const firstName = form.firstName?.trim();
       const lastName = form.lastName?.trim();
       if (!firstName || !lastName) return;
@@ -58,7 +59,7 @@ export default function PersonForm({ id, data, onSave, onDelete }) {
       }
     };
     checkDuplicate();
-  }, [form.firstName, form.lastName]);
+  }, [form.firstName, form.lastName, id]);
 
   const handleSubmit = (e) => {
     if (e) e.preventDefault();
@@ -78,7 +79,7 @@ export default function PersonForm({ id, data, onSave, onDelete }) {
   ];
   return (
     <form onSubmit={handleSubmit}>
-      {duplicate && (
+      {!id && duplicate && (
         <Alert
           type="info"
           small
