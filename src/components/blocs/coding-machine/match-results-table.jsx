@@ -3,7 +3,7 @@ import RowItem from './row-items';
 
 function MatchResultsTable({ matchedData, selectedMatches, onMatchSelection, setMatchedData, setSelectedMatches }) {
   return (
-    <table className="fr-table">
+    <table className="fr-table" style={{ width: '100%' }}>
       <thead>
         <tr>
           <th>Nom source</th>

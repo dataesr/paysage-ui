@@ -134,10 +134,21 @@ function StructureByIdPage() {
               <Icon name="ri-newspaper-line" size="1x" />
               Actualités
             </SideMenuLink>
-            <SideMenuLink asLink={<RouterLink to="gouvernance-et-referents" replace />}>
-              <Icon name="ri-team-line" size="1x" />
-              Gouvernance, référents et contacts
-            </SideMenuLink>
+            <SideMenuItem
+              title={(
+                <>
+                  <Icon name="ri-team-line" size="1x" />
+                  Gouvernance, référents et contacts
+                </>
+              )}
+            >
+              <SideMenuLink asLink={<RouterLink to="gouvernance" replace />}>
+                Gouvernance
+              </SideMenuLink>
+              <SideMenuLink asLink={<RouterLink to="contacts" replace />}>
+                Contacts
+              </SideMenuLink>
+            </SideMenuItem>
             <SideMenuLink asLink={<RouterLink to="evenements" replace />}>
               <Icon name="ri-calendar-line" size="1x" />
               Evènements

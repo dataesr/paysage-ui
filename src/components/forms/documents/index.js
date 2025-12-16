@@ -108,9 +108,15 @@ export default function DocumentsForm({ id, data, onSave, onDelete }) {
     if (files && files.length) saveFiles();
   }, [updateForm, files, notice, form]);
 
-  const documentTypesOptions = (documentTypes?.data) ? [
-    { label: 'Sélectionner un type', value: '' }, ...documentTypes.data.map((element) => ({ label: element.usualName, value: element.id })),
-  ] : [{ label: 'Sélectionner un type', value: '' }];
+  const documentTypesOptions = (documentTypes?.data)
+    ? [
+      { label: 'Sélectionner un type', value: '' },
+      ...documentTypes.data
+        .slice()
+        .sort((a, b) => a.usualName.localeCompare(b.usualName, 'fr', { sensitivity: 'base' }))
+        .map((element) => ({ label: element.usualName, value: element.id })),
+    ]
+    : [{ label: 'Sélectionner un type', value: '' }];
 
   return (
     <form>
