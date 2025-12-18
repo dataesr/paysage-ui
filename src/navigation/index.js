@@ -177,7 +177,7 @@ export default function Routes() {
               <Route path="categories" element={<StructureCategoriesPage />} />
               <Route path="documents" element={<DocumentsOutlet />} />
               <Route path="textes-officiels" element={<OfficialTextsOutlet />} />
-              <Route path="gouvernance" element={<StructureGouvernancePage />} />
+              <Route path="gouvernance-et-referents" element={<StructureGouvernancePage />} />
               <Route path="contacts" element={<StructureContactsPage />} />
               <Route path="chiffres-cles">
                 <Route path="" element={<Navigate to="etudiants" replace />} />
