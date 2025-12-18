@@ -142,7 +142,7 @@ function StructureByIdPage() {
                 </>
               )}
             >
-              <SideMenuLink asLink={<RouterLink to="gouvernance" replace />}>
+              <SideMenuLink asLink={<RouterLink to="gouvernance-et-referents" replace />}>
                 Gouvernance
               </SideMenuLink>
               <SideMenuLink asLink={<RouterLink to="contacts" replace />}>
