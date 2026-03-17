@@ -85,8 +85,8 @@ export default function PyDRefPage() {
               <table>
                 <thead>
                   <tr>
-                    <th style={{ border: '1px solid black', padding: '4px 8px' }}>last_name</th>
                     <th style={{ border: '1px solid black', padding: '4px 8px' }}>first_name</th>
+                    <th style={{ border: '1px solid black', padding: '4px 8px' }}>last_name</th>
                   </tr>
                 </thead>
                 <tbody>
