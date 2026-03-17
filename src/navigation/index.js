@@ -94,6 +94,7 @@ import CodingMachinePage from '../pages/admin/coding-machine';
 import AdminDomainsPage from '../pages/admin/domains';
 import EmailTypesPage from '../pages/admin/email-types';
 import StructureContactsPage from '../pages/structures/[id]/contacts';
+import PyDRefPage from '../pages/admin/pydref';
 
 export default function Routes() {
   return (
@@ -125,6 +126,7 @@ export default function Routes() {
               <Route path="taches" element={<AdminJobsPage />} />
               <Route path="sirene" element={<AdminSirenePage />} />
               <Route path="coding-machine" element={<CodingMachinePage />} />
+              <Route path="idref" element={<PyDRefPage />} />
               <Route path="nomenclatures" element={<Navigate to="nomenclatures/types-de-document" replace />} />
               <Route path="nomenclatures/types-de-document" element={<AdminNomenclaturesPage route="/document-types" title="Types de documents" />} />
               <Route path="nomenclatures/ministres-de-tutelle" element={<AdminNomenclaturesPage route="/supervising-ministers" title="Ministres de tutelle" />} />
