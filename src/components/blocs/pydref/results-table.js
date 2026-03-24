@@ -152,6 +152,7 @@ function PydrefResultsTable({ results, selectedMatches, onSelectMatch }) {
             <tr>
               <th>Nom</th>
               <th>Prénom</th>
+              <th>Genre</th>
               <th>Statut</th>
               {idTypes.map((t) => <th key={t}>{t}</th>)}
               <th scope="col" aria-label="Actions" style={{ width: '96px' }}>Action</th>
@@ -168,6 +169,7 @@ function PydrefResultsTable({ results, selectedMatches, onSelectMatch }) {
                 <tr key={row.index}>
                   <td>{row.lastName}</td>
                   <td>{row.firstName}</td>
+                  <td>{row.gender || ''}</td>
                   <td>
                     <span className={`fr-badge fr-badge--sm fr-badge--${statusInfo.type}`}>
                       {statusInfo.label}
@@ -212,6 +214,7 @@ PydrefResultsTable.propTypes = {
     index: PropTypes.number,
     lastName: PropTypes.string,
     firstName: PropTypes.string,
+    gender: PropTypes.string,
     status: PropTypes.string,
     nb_homonyms: PropTypes.number,
     identifiers: PropTypes.array,
