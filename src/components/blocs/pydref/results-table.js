@@ -55,7 +55,14 @@ function HomonymModal({ row, isOpen, onClose, selectedMatch, onSelect }) {
                 <div className={`fr-card fr-card--shadow${isSelected ? ' fr-background-alt--blue-france' : ''}`}>
                   <div className="fr-card__body">
                     <div className="fr-card__content">
-                      <h4 className="fr-card__title">{match.full_name}</h4>
+                      <h4 className="fr-card__title">
+                        {match.full_name}
+                        {match.gender && (
+                          <span className="fr-badge fr-badge--sm fr-badge--info fr-ml-1w">
+                            {match.gender === 'M' ? 'Homme' : 'Femme'}
+                          </span>
+                        )}
+                      </h4>
                       {match.birth_date && (
                         <p className="fr-card__detail">
                           Né·e le
