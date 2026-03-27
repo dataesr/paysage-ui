@@ -157,7 +157,7 @@ export default function SupervisorsForm({ id, data, onDelete, onSave }) {
             <Checkbox
               label="Date de fin inconnue mais passée"
               onChange={(e) => updateForm({ active: !e.target.checked })}
-              checked={form.active === false}
+              checked={form.active === false && !form.endDate}
             />
           </Col>
           <Col n="12">
