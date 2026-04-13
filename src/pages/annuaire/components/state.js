@@ -2,28 +2,20 @@ import { useSearchParams } from 'react-router-dom';
 import { ButtonGroup, Icon, Row, Tag, TagGroup, Text } from '@dataesr/react-dsfr';
 import Button from '../../../components/button';
 
-function paramsToObject(entries) {
-  const result = {};
-  // eslint-disable-next-line no-restricted-syntax
-  for (const [key, value] of entries) {
-    result[key] = value;
-  }
-  return result;
-}
-
 export default function State() {
   const [searchParams, setSearchParams] = useSearchParams({ limit: 1000 });
 
-  const { limit, ...filters } = paramsToObject(searchParams);
+  const filterKeys = [...new Set([...searchParams.keys()])].filter((k) => k !== 'limit');
 
   function deleteFilter(key, value) {
     if (!value) return;
-    const newFilter = searchParams.get(key)?.split(',').filter((v) => v !== value).join(',');
-    if (newFilter) searchParams.set(key, newFilter); else searchParams.delete(key);
+    const remaining = searchParams.getAll(key).filter((v) => v !== value);
+    searchParams.delete(key);
+    remaining.forEach((v) => searchParams.append(key, v));
     setSearchParams(searchParams);
   }
 
-  if (!(Object.keys(filters)?.length > 0)) return <hr />;
+  if (filterKeys.length === 0) return <hr />;
 
   return (
     <>
@@ -39,9 +31,8 @@ export default function State() {
         </ButtonGroup>
       </Row>
       <TagGroup>
-        {Object.entries(filters || {}).map(([key, value]) => {
-          if (!value) return null;
-          const values = value.split(',');
+        {filterKeys.map((key) => {
+          const values = searchParams.getAll(key);
           return values.map((v) => (
             <Tag
               key={`${key}-${v}`}
