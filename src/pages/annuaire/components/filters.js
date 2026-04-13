@@ -14,15 +14,10 @@ export default function Filters() {
 
   function addFilter(key, value) {
     if (!value) return;
-    if (!searchParams.get(key)) {
-      searchParams.set(key, value);
-      setSearchParams(searchParams);
-    } else {
-      const temp = searchParams.get(key).split(',');
-      temp.push(value);
-      searchParams.set(key, [...new Set(temp)].join(','));
-      setSearchParams(searchParams);
-    }
+    const existing = searchParams.getAll(key);
+    if (existing.includes(value)) return;
+    searchParams.append(key, value);
+    setSearchParams(searchParams);
   }
 
   return (
