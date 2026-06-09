@@ -147,6 +147,7 @@ export default function StructureIdentifiersStep({
                   options={filteredOptions}
                   selected={row.type}
                   onChange={(e) => handleChangeType(row._key, e.target.value)}
+                  hint={row.fromExisting ? 'Identifiant existant — modifiable' : null}
                 />
               </div>
               <div style={{ flex: '1 1 auto' }}>
