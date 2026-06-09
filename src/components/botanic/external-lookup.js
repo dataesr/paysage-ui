@@ -36,7 +36,6 @@ const WD_SOCIAL_MEDIA = [
   { prop: 'P2003', type: 'Instagram', url: (id) => `https://www.instagram.com/${id}/` },
   { prop: 'P2002', type: 'Twitter', url: (id) => `https://twitter.com/${id}` },
   { prop: 'P2037', type: 'Github', url: (id) => `https://github.com/${id}` },
-  { prop: 'P7929', type: 'Bluesky', url: (id) => `https://bsky.app/profile/${id}` },
   { prop: 'P4264', type: 'Linkedin', url: (id) => `https://www.linkedin.com/company/${id}` },
   { prop: 'P6634', type: 'Linkedin', url: (id) => `https://www.linkedin.com/in/${id}` },
 ];
