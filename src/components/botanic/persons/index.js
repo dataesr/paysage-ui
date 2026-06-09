@@ -29,6 +29,12 @@ const datesOverlap = (mStart, mEnd, newStart, newEnd) => {
   return true;
 };
 
+const isIdentifierValid = (type, value) => {
+  if (!type || !value) return true;
+  const [regexp] = regexpValidateIdentifiers(type);
+  return !regexp || regexp.test(sanitizeIdentifierValue(type, value));
+};
+
 const STEPS = ['Personne', 'Identifiants', 'Fonction', 'Structure'];
 
 export default function PersonFlow({ onClose }) {
@@ -158,7 +164,7 @@ export default function PersonFlow({ onClose }) {
       setIdentifiers((prev) => {
         const usedTypes = new Set(prev.filter((r) => r.type).map((r) => r.type));
         const extra = wdResult.identifiers
-          .filter(({ type }) => !usedTypes.has(type))
+          .filter(({ type, value }) => !usedTypes.has(type) && isIdentifierValid(type, value))
           .map(({ type, value }) => ({ _key: uid(), type, value, fromWikidata: true, via: 'Pydref', crossTrigger: 'pydref' }));
         return [...prev, ...extra];
       });
@@ -179,7 +185,7 @@ export default function PersonFlow({ onClose }) {
       const withoutWikidata = prev.filter((r) => !r.fromWikidata);
       const usedTypes = new Set(withoutWikidata.filter((r) => r.type).map((r) => r.type));
       const fromWikidata = match.identifiers
-        .filter(({ type }) => !usedTypes.has(type))
+        .filter(({ type, value }) => !usedTypes.has(type) && isIdentifierValid(type, value))
         .map(({ type, value }) => ({ _key: uid(), type, value, fromWikidata: true }));
       return [...withoutWikidata, ...fromWikidata];
     });
@@ -337,12 +343,18 @@ export default function PersonFlow({ onClose }) {
   };
 
   const handleNextFromIdentifiers = () => {
-    const hasInvalid = identifiers.some((r) => {
+    const hasInvalidManual = identifiers.some((r) => {
       if (!r.type || !r.value) return false;
-      const [regexp] = regexpValidateIdentifiers(r.type);
-      return regexp && !regexp.test(sanitizeIdentifierValue(r.type, r.value));
+      if (r.fromWikidata || r.fromPydref) return false;
+      return !isIdentifierValid(r.type, r.value);
     });
-    if (hasInvalid) return;
+    if (hasInvalidManual) {
+      notice({
+        content: 'Un ou plusieurs identifiants saisis sont invalides. Veuillez les corriger avant de continuer.',
+        type: 'error',
+      });
+      return;
+    }
     setStep(3);
   };
 

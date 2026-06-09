@@ -3,6 +3,7 @@ import { Select, TextInput } from '@dataesr/react-dsfr';
 import PropTypes from 'prop-types';
 import Button from '../../../button';
 import { regexpValidateIdentifiers } from '../../../../utils/regexpForIdentifiers';
+import getLink from '../../../../utils/get-links';
 import { sanitizeIdentifierValue } from '../../utils';
 
 const regexpValidateSocialMedia = (type) => {
@@ -16,6 +17,16 @@ const regexpValidateSocialMedia = (type) => {
     Youtube: [/^(https:\/\/)?(www.)?youtube.com\/[A-Za-z0-9/:%_+.,#?!@&=-]+$/, 'https://www.youtube.com/channel/<chaine>'],
   };
   return validator[type] || [null, null];
+};
+
+const toExternalUrl = (account) => {
+  if (!account) return '';
+  return account.startsWith('https://') ? account : `https://${account}`;
+};
+
+const openExternalLink = (url) => {
+  if (!url) return;
+  window.open(url, '_blank', 'noopener,noreferrer');
 };
 
 export default function IdentifiersStep({
@@ -108,6 +119,8 @@ export default function IdentifiersStep({
         const filteredOptions = identifierOptions.filter(
           (o) => !o.value || o.value === row.type || !usedTypes.has(o.value),
         );
+        const normalizedValue = sanitizeIdentifierValue(row.type, row.value || '');
+        const verificationLink = (row.type && row.value) ? getLink({ type: row.type, value: normalizedValue }) : '';
         let sourceBadge = null;
         if (row.fromPydref) sourceBadge = { label: 'IdRef / Pydref', cls: 'fr-badge--blue-ecume' };
         else if (row.fromWikidata) {
@@ -146,6 +159,19 @@ export default function IdentifiersStep({
                     onClick={() => onRemove(row._key)}
                   />
                 )}
+                {!!verificationLink && (
+                  <Button
+                    size="sm"
+                    tertiary
+                    borderless
+                    icon="ri-external-link-line"
+                    title="Vérifier"
+                    onClick={() => openExternalLink(verificationLink)}
+                    style={{ marginLeft: '12px' }}
+                  >
+                    Vérifier
+                  </Button>
+                )}
               </div>
             </div>
             {sourceBadge && (
@@ -181,36 +207,52 @@ export default function IdentifiersStep({
         </div>
       )}
 
-      {socialMedias.map((row) => (
-        <div key={row._key} style={{ display: 'flex', gap: '12px', alignItems: 'flex-start', marginBottom: '8px' }}>
-          <div style={{ flex: '0 0 220px' }}>
-            <Select
-              label="Réseau"
-              options={socialMediaOptions}
-              selected={row.type}
-              onChange={(e) => handleChangeSocialMediaType(row._key, e.target.value)}
-            />
+      {socialMedias.map((row) => {
+        const socialMediaLink = toExternalUrl(row.account);
+        return (
+          <div key={row._key} style={{ display: 'flex', gap: '12px', alignItems: 'flex-start', marginBottom: '8px' }}>
+            <div style={{ flex: '0 0 220px' }}>
+              <Select
+                label="Réseau"
+                options={socialMediaOptions}
+                selected={row.type}
+                onChange={(e) => handleChangeSocialMediaType(row._key, e.target.value)}
+              />
+            </div>
+            <div style={{ flex: '1 1 auto' }}>
+              <TextInput
+                label="URL / Compte"
+                value={row.account}
+                onChange={(e) => handleChangeSocialMediaAccount(row._key, e.target.value, row.type)}
+                message={smErrors[row._key] || null}
+                messageType={smErrors[row._key] ? 'error' : ''}
+              />
+            </div>
+            <div style={{ paddingTop: '28px' }}>
+              <Button
+                size="sm"
+                secondary
+                icon="ri-delete-bin-line"
+                title="Supprimer"
+                onClick={() => onRemoveSocialMedia(row._key)}
+              />
+              {!!row.account && !smErrors[row._key] && (
+                <Button
+                  size="sm"
+                  tertiary
+                  borderless
+                  icon="ri-external-link-line"
+                  title="Vérifier"
+                  onClick={() => openExternalLink(socialMediaLink)}
+                  style={{ marginLeft: '12px' }}
+                >
+                  Vérifier
+                </Button>
+              )}
+            </div>
           </div>
-          <div style={{ flex: '1 1 auto' }}>
-            <TextInput
-              label="URL / Compte"
-              value={row.account}
-              onChange={(e) => handleChangeSocialMediaAccount(row._key, e.target.value, row.type)}
-              message={smErrors[row._key] || null}
-              messageType={smErrors[row._key] ? 'error' : ''}
-            />
-          </div>
-          <div style={{ paddingTop: '28px' }}>
-            <Button
-              size="sm"
-              secondary
-              icon="ri-delete-bin-line"
-              title="Supprimer"
-              onClick={() => onRemoveSocialMedia(row._key)}
-            />
-          </div>
-        </div>
-      ))}
+        );
+      })}
     </div>
   );
 }
