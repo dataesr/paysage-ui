@@ -11,6 +11,7 @@ import {
   TileBody,
   Title,
 } from '@dataesr/react-dsfr';
+import BotanicModal from '../components/botanic';
 import CategoryAddPage from './categories/ajouter';
 import StructureAddPage from './structures/ajouter';
 import TermAddPage from './termes/ajouter';
@@ -25,6 +26,7 @@ import { SEARCH_TYPES } from '../utils/constants';
 
 export default function ContributePage() {
   const [query, setQuery] = useState('');
+  const [showBotanic, setShowBotanic] = useState(false);
   usePageTitle('Contribuer');
   const debouncedQuery = useDebounce(query, 500);
   const { data: options, isLoading } = useSearch(SEARCH_TYPES, debouncedQuery);
@@ -74,21 +76,43 @@ export default function ContributePage() {
         </Col>
       </Row>
       <Row as="ul" gutters>
-        {data.map((element) => (
-          <Col n="12 md-6 lg-4" as="li" key={element.type}>
-            <Tile horizontal color={`var(--${element.type}-color)`}>
+        <>
+          {data.map((element) => (
+            <Col n="12 md-6 lg-4" as="li" key={element.type}>
+              <Tile horizontal color={`var(--${element.type}-color)`}>
+                <TileBody
+                  titleAs="h2"
+                  title={element.name}
+                  asLink={<RouterLink to={element.url} />}
+                />
+                <div className="fr-tile__img">
+                  <Icon size="3x" name={element.icon} color={`var(--${element.type}-color)`} />
+                </div>
+              </Tile>
+            </Col>
+          ))}
+          <Col
+            n="12 md-6 lg-4"
+            className="card-button"
+          >
+            <Tile
+              horizontal
+              onClick={() => setShowBotanic(true)}
+              color="var(--green-emeraude-main-632)"
+            >
               <TileBody
                 titleAs="h2"
-                title={element.name}
-                asLink={<RouterLink to={element.url} />}
+                title="Assistant de contribution Paysage"
+                asLink={<span />}
               />
               <div className="fr-tile__img">
-                <Icon size="3x" name={element.icon} color={`var(--${element.type}-color)`} />
+                <Icon size="3x" name="ri-leaf-line" color="var(--green-emeraude-main-632)" />
               </div>
             </Tile>
           </Col>
-        ))}
+        </>
       </Row>
+      <BotanicModal isOpen={showBotanic} onClose={() => setShowBotanic(false)} />
     </Container>
   );
 }
