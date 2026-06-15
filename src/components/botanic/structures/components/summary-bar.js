@@ -1,4 +1,5 @@
 /* eslint-disable react/jsx-one-expression-per-line */
+import { Link } from '@dataesr/react-dsfr';
 import PropTypes from 'prop-types';
 
 export default function StructureSummaryBar({ step, selectedStructure, usualName, mandateCount }) {
@@ -15,7 +16,10 @@ export default function StructureSummaryBar({ step, selectedStructure, usualName
         {structureLabel && (
           <div>
             <p className="fr-text--xs fr-hint-text fr-mb-0" style={{ fontWeight: 600 }}>Structure</p>
-            <p className="fr-text--sm fr-mb-0">{structureLabel}</p>
+            <p className="fr-text--sm fr-mb-0">{structureLabel}  {selectedStructure?.id && (
+              <Link target="_blank" href={`/structures/${selectedStructure.id}`} className="fr-badge fr-badge--sm fr-badge--success fr-ml-1w">Fiche existante</Link>
+            )}
+            </p>
           </div>
         )}
         {step >= 4 && mandateCount > 0 && (
@@ -33,7 +37,7 @@ export default function StructureSummaryBar({ step, selectedStructure, usualName
 
 StructureSummaryBar.propTypes = {
   step: PropTypes.number.isRequired,
-  selectedStructure: PropTypes.shape({ name: PropTypes.string }),
+  selectedStructure: PropTypes.shape({ name: PropTypes.string, id: PropTypes.string }),
   usualName: PropTypes.string.isRequired,
   mandateCount: PropTypes.number.isRequired,
 };

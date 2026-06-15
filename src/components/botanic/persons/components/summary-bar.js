@@ -1,3 +1,4 @@
+import { Link } from '@dataesr/react-dsfr';
 import PropTypes from 'prop-types';
 
 export default function SummaryBar({
@@ -22,7 +23,7 @@ export default function SummaryBar({
             <strong>Personne :</strong>
             {` ${personLabel}`}
             {existingPersonId && (
-              <span className="fr-badge fr-badge--sm fr-badge--success fr-ml-1w">Fiche existante</span>
+              <Link target="_blank" href={`/persons/${existingPersonId}`} className="fr-badge fr-badge--sm fr-badge--success fr-ml-1w">Fiche existante</Link>
             )}
           </span>
         )}
