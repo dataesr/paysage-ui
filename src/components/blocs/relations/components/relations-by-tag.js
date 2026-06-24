@@ -32,6 +32,11 @@ export default function RelationsByTag({ limit = 400, blocName, tag, resourceTyp
   const [statusFilter, setStatusFilter] = useState(defaultFilter);
   useEffect(() => setStatusFilter(defaultFilter), [defaultFilter]);
 
+  const oldestYear = data?.data
+    ?.map((r) => r.startDate && new Date(r.startDate).getFullYear())
+    .filter(Boolean)
+    .sort((a, b) => a - b)[0];
+
   const onSaveElementHandler = async (body, id = null) => {
     const method = id ? 'patch' : 'post';
     const saveUrl = id ? `/relations/${id}` : '/relations';
@@ -68,11 +73,11 @@ export default function RelationsByTag({ limit = 400, blocName, tag, resourceTyp
     setShowModal(true);
   };
 
-  const renderCards = () => {
+  const renderCards = ({ limitTo } = {}) => {
     const relations = spreadedByStatusRelations[statusFilter] || [];
     const markers = getMarkers(relations, inverse);
 
-    const list = relations
+    let list = relations
       .sort((a, b) => new Date(b.startDate) - new Date(a.startDate))
       .sort((a, b) => (a?.relationType?.priority || 99) - (b?.relationType?.priority || 99))
       .map((element) => (
@@ -83,6 +88,8 @@ export default function RelationsByTag({ limit = 400, blocName, tag, resourceTyp
           onEdit={() => onOpenModalHandler(element)}
         />
       ));
+
+    if (limitTo) list = list.slice(0, limitTo);
 
     if (markers.length) {
       return (
@@ -147,11 +154,16 @@ export default function RelationsByTag({ limit = 400, blocName, tag, resourceTyp
         </BlocActionButton>
       )}
       <BlocContent>
-        {hideListDueToCount ? (
-          ''
-        ) : (
-          renderCards()
+        {hideListDueToCount && (
+          <Text size="xs" className="fr-pb-1w">
+            <Icon name="ri-information-line" size="2x" color="var(--background-action-high-info)" />
+            <i>
+              {`Affichage des 50 objets les plus récents${oldestYear ? ` (historique disponible depuis ${oldestYear})` : ''}. `}
+              Téléchargez la liste complète via le bouton ci-dessus.
+            </i>
+          </Text>
         )}
+        {hideListDueToCount ? renderCards({ limitTo: 50 }) : renderCards()}
       </BlocContent>
       <BlocModal>
         <Modal isOpen={showModal} size="lg" hide={() => setShowModal(false)}>
