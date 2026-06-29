@@ -20,17 +20,38 @@ export default function RelationsByTag({ limit = 400, blocName, tag, resourceTyp
   const queryObject = inverse ? 'relatedObjectId' : 'resourceId';
   const { notice } = useNotice();
   const { id: resourceId } = useUrl();
+
   const url = `/relations?filters[relationTag]=${tag}&filters[${queryObject}]=${resourceId}&limit=${limit}&sort=${sort}`;
+  const oldestUrl = `/relations?filters[relationTag]=${tag}&filters[${queryObject}]=${resourceId}&filters[startDate][$exists]=true&limit=1&sort=startDate`;
+
   const { data, isLoading, error, reload } = useFetch(url);
+  const { data: oldestData } = useFetch(oldestUrl);
+
   const displayThreshold = (tag === 'laureat') ? 30 : 400;
   const hideListDueToCount = data?.totalCount > displayThreshold;
+  const { data: spreadedByStatusRelations, counts, defaultFilter } = spreadByStatus(data?.data);
+  const oldestYear = oldestData?.data?.[0]?.startDate
+    ? new Date(oldestData.data[0].startDate).getFullYear()
+    : null;
+
   const [isExporting, setIsExporting] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [modalTitle, setModalTitle] = useState('');
   const [modalContent, setModalContent] = useState(null);
-  const { data: spreadedByStatusRelations, counts, defaultFilter } = spreadByStatus(data?.data);
   const [statusFilter, setStatusFilter] = useState(defaultFilter);
   useEffect(() => setStatusFilter(defaultFilter), [defaultFilter]);
+
+  const TAG_LABELS = {
+    laureat: 'lauréat',
+    structure: 'structure',
+    personne: 'personne',
+    'structure-categorie': 'structure',
+    'structure-tutelle': 'structure',
+  };
+  const tagLabel = TAG_LABELS[tag] || tag;
+  console.log(tag, 'tagLabel', tagLabel);
+
+  console.log('oldest record', oldestData?.data?.[0]);
 
   const onSaveElementHandler = async (body, id = null) => {
     const method = id ? 'patch' : 'post';
@@ -68,11 +89,11 @@ export default function RelationsByTag({ limit = 400, blocName, tag, resourceTyp
     setShowModal(true);
   };
 
-  const renderCards = () => {
+  const renderCards = ({ limitTo } = {}) => {
     const relations = spreadedByStatusRelations[statusFilter] || [];
     const markers = getMarkers(relations, inverse);
 
-    const list = relations
+    let list = relations
       .sort((a, b) => new Date(b.startDate) - new Date(a.startDate))
       .sort((a, b) => (a?.relationType?.priority || 99) - (b?.relationType?.priority || 99))
       .map((element) => (
@@ -83,6 +104,8 @@ export default function RelationsByTag({ limit = 400, blocName, tag, resourceTyp
           onEdit={() => onOpenModalHandler(element)}
         />
       ));
+
+    if (limitTo) list = list.slice(0, limitTo);
 
     if (markers.length) {
       return (
@@ -147,11 +170,15 @@ export default function RelationsByTag({ limit = 400, blocName, tag, resourceTyp
         </BlocActionButton>
       )}
       <BlocContent>
-        {hideListDueToCount ? (
-          ''
-        ) : (
-          renderCards()
+        {hideListDueToCount && (
+          <Text size="xs" className="fr-pb-1w">
+            <Icon name="ri-information-line" size="2x" color="var(--background-action-high-info)" />
+            <i>
+              {`Affichage des 50 ${tagLabel}s les plus récents${oldestYear ? ` (historique disponible depuis ${oldestYear}. Téléchargez la liste complète via le bouton ci-dessus.)` : ''}. `}
+            </i>
+          </Text>
         )}
+        {hideListDueToCount ? renderCards({ limitTo: 50 }) : renderCards()}
       </BlocContent>
       <BlocModal>
         <Modal isOpen={showModal} size="lg" hide={() => setShowModal(false)}>

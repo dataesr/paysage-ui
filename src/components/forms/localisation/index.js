@@ -53,7 +53,7 @@ export default function LocalisationForm({ id, data, onDelete, onSave, defaultQu
   const { viewer } = useAuth();
   const [showErrors, setShowErrors] = useState(false);
   const { form, updateForm, errors } = useForm(data, validate);
-  const [isFrance, setIsFrance] = useState(true);
+  const [isFrance, setIsFrance] = useState(!data?.iso3 || data?.iso3 === 'FRA');
   const [query, setQuery] = useState(() => defaultQuery);
   const debouncedQuery = useDebounce(query, 1500);
   const [scope, setScope] = useState(null);

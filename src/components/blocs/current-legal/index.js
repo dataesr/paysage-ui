@@ -11,12 +11,15 @@ export default function CurrentLegals() {
   const { data } = useFetch(`/relations?filters[resourceId]=${id}&filters[relationTag]=${tag}&limit=500`);
 
   if (!data?.data) return null;
-  const currentLegals = data?.data.filter((el) => el.active === true || (el.active !== false && !el.endDate));
+
+  const now = new Date();
+  const currentLegals = data?.data.filter(
+    (el) => el.active === true || (el.active !== false && (!el.endDate || new Date(el.endDate) > now)),
+  );
 
   if (currentLegals.length === 0) {
     const inactiveLegals = data?.data.filter((el) => el.active === false);
     inactiveLegals.sort((a, b) => new Date(b.endDate) - new Date(a.endDate));
-
     currentLegals.push(inactiveLegals[0]);
   }
 

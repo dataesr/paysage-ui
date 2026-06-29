@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { useState } from 'react';
 import styles from './styles.module.scss';
 
-function ExpandCard({ isExpanded, toggle }) {
+function ExpandCard({ isExpanded, toggle, total }) {
   return (
     <div
       className={`fr-card fr-enlarge-link fr-card--xs ${styles['blue-border']}`}
@@ -20,7 +20,7 @@ function ExpandCard({ isExpanded, toggle }) {
             ) : (
               <Icon name="ri-eye-line" size="2x" color="inherit" />
             )}
-            {isExpanded ? 'Réduire la liste' : 'Afficher tout'}
+            {isExpanded ? 'Réduire la liste' : `Voir plus ( ${total} )`}
           </button>
         </div>
       </div>
@@ -31,6 +31,7 @@ function ExpandCard({ isExpanded, toggle }) {
 ExpandCard.propTypes = {
   isExpanded: PropTypes.bool.isRequired,
   toggle: PropTypes.func.isRequired,
+  total: PropTypes.number.isRequired,
 };
 
 export default function ExpendableListCards({
@@ -88,7 +89,7 @@ export default function ExpendableListCards({
         </Col>
       ))}
       <Col n={nCol}>
-        <ExpandCard isExpanded={showAll} toggle={() => setShowAll(!showAll)} />
+        <ExpandCard isExpanded={showAll} toggle={() => setShowAll(!showAll)} total={cards.length} />
       </Col>
     </Row>
   );

@@ -9,6 +9,7 @@ const WIKI_LANG_ORDER = ['frwiki', 'enwiki', 'dewiki', 'itwiki', 'eswiki'];
 const WIKI_URL = 'https://www.wikidata.org/w/api.php?format=json&origin=*&action=wbgetentities&ids=';
 const getWikipediaUrl = (lang, title) => `https://${lang.slice(0, lang.length - 4)}.wikipedia.org/wiki/${title.replace(' ', '_')}`;
 const filterWikipediaSiteLinks = (sitelinks) => [...new Set([...WIKI_LANG_ORDER, ...Object.keys(sitelinks)])]
+  .filter((lang) => /^[a-z]+wiki$/.test(lang))
   .filter((lang) => lang !== 'commonswiki')
   .filter((lang) => Object.keys(sitelinks).includes(lang))
   .map((lang) => ({ lang: lang?.slice(0, lang.length - 4).toUpperCase(), link: getWikipediaUrl(lang, sitelinks[lang]?.title) }));
