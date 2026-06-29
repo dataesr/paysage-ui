@@ -49,9 +49,6 @@ export default function RelationsByTag({ limit = 400, blocName, tag, resourceTyp
     'structure-tutelle': 'structure',
   };
   const tagLabel = TAG_LABELS[tag] || tag;
-  console.log(tag, 'tagLabel', tagLabel);
-
-  console.log('oldest record', oldestData?.data?.[0]);
 
   const onSaveElementHandler = async (body, id = null) => {
     const method = id ? 'patch' : 'post';
