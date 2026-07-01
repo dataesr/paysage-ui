@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Col, Row, Stepper } from '@dataesr/react-dsfr';
 import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
@@ -104,8 +104,6 @@ export default function StructureFlow({ onClose }) {
     setSelectedRorMatch(null);
   };
 
-  const handleLocalisationBodyChange = useCallback((body) => setLocalisationBody(body), []);
-
   const handleAddMandate = (mandate) => setMandates((prev) => [...prev, { _key: uid(), ...mandate }]);
   const handleRemoveMandate = (key) => setMandates((prev) => prev.filter((m) => m._key !== key));
 
@@ -128,9 +126,9 @@ export default function StructureFlow({ onClose }) {
     }
     setIdentifiers((prev) => {
       const withoutWikidata = prev.filter((r) => !r.fromWikidata && r.crossTrigger !== 'wikidata');
-      const usedTypes = new Set(withoutWikidata.filter((r) => r.type).map((r) => r.type));
+      const usedNewTypes = new Set(withoutWikidata.filter((r) => r.type && !r.fromExisting).map((r) => r.type));
       const fromWikidata = match.identifiers
-        .filter(({ type }) => !usedTypes.has(type))
+        .filter(({ type }) => !usedNewTypes.has(type))
         .map(({ type, value }) => ({ _key: uid(), type, value, fromWikidata: true }));
       return [...withoutWikidata, ...fromWikidata];
     });
@@ -147,9 +145,9 @@ export default function StructureFlow({ onClose }) {
       const rorResult = await crossEnrichRorById(rorId).catch(() => null);
       if (rorResult) {
         setIdentifiers((prev) => {
-          const usedTypes = new Set(prev.filter((r) => r.type).map((r) => r.type));
+          const usedNewTypes = new Set(prev.filter((r) => r.type && !r.fromExisting).map((r) => r.type));
           const extra = rorResult.identifiers
-            .filter(({ type }) => !usedTypes.has(type))
+            .filter(({ type }) => !usedNewTypes.has(type))
             .map(({ type, value }) => ({ _key: uid(), type, value, fromRor: true, via: 'Wikidata', crossTrigger: 'wikidata' }));
           return [...prev, ...extra];
         });
@@ -225,11 +223,23 @@ export default function StructureFlow({ onClose }) {
         relationTypeId: m.relationType.id,
         startDate: m.startDate || undefined,
         endDate: m.endDate || undefined,
+        endDatePrevisional: m.endDatePrevisional || undefined,
+        active: m.active,
+        mandateReason: m.reason || undefined,
+        mandateTemporary: m.temporary,
+        mandatePosition: m.position || undefined,
+        mandatePrecision: m.precision || undefined,
+        mandateEmail: m.email || undefined,
+        personalEmail: m.personalEmail || undefined,
+        mandatePhonenumber: m.phonenumber || undefined,
+        startDateOfficialTextId: m.startDateOfficialTextId || undefined,
+        endDateOfficialTextId: m.endDateOfficialTextId || undefined,
       }).catch(() => null)));
       if (results.some((r) => r === null)) { notice(saveError); return; }
     }
 
-    const closures = mandates.flatMap((m) => m.closures || []);
+    const closures = [];
+    mandates.forEach((m) => { (m.closures || []).forEach((c) => closures.push(c)); });
     if (closures.length > 0) {
       await Promise.all(closures.map((c) => api.patch(`/relations/${c.id}`, {
         resourceId: c.resourceId,
@@ -251,9 +261,9 @@ export default function StructureFlow({ onClose }) {
     }
     setIdentifiers((prev) => {
       const withoutRor = prev.filter((r) => !r.fromRor && r.crossTrigger !== 'ror');
-      const usedTypes = new Set(withoutRor.filter((r) => r.type).map((r) => r.type));
+      const usedNewTypes = new Set(withoutRor.filter((r) => r.type && !r.fromExisting).map((r) => r.type));
       const fromRor = match.identifiers
-        .filter(({ type }) => !usedTypes.has(type))
+        .filter(({ type }) => !usedNewTypes.has(type))
         .map(({ type, value }) => ({ _key: uid(), type, value, fromRor: true }));
       return [...withoutRor, ...fromRor];
     });
@@ -263,9 +273,9 @@ export default function StructureFlow({ onClose }) {
       const wdResult = await crossEnrichWikidataStructure(wikidataId).catch(() => null);
       if (wdResult) {
         setIdentifiers((prev) => {
-          const usedTypes = new Set(prev.filter((r) => r.type).map((r) => r.type));
+          const usedNewTypes = new Set(prev.filter((r) => r.type && !r.fromExisting).map((r) => r.type));
           const extra = wdResult.identifiers
-            .filter(({ type }) => !usedTypes.has(type))
+            .filter(({ type }) => !usedNewTypes.has(type))
             .map(({ type, value }) => ({ _key: uid(), type, value, fromWikidata: true, via: 'ROR', crossTrigger: 'ror' }));
           return [...prev, ...extra];
         });
@@ -373,7 +383,7 @@ export default function StructureFlow({ onClose }) {
 
       {step === 3 && (
         <>
-          <LocalisationStep onBodyChange={handleLocalisationBodyChange} />
+          <LocalisationStep onBodyChange={setLocalisationBody} />
           <Row justifyContent="right" spacing="mt-3w" gutters>
             <Col>
               <Button secondary icon="ri-arrow-left-line" iconPosition="left" onClick={() => setStep(2)}>

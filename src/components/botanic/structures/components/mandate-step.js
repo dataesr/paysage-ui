@@ -1,10 +1,18 @@
 import { useEffect, useState } from 'react';
-import { Col, Row } from '@dataesr/react-dsfr';
+import {
+  Accordion,
+  AccordionItem,
+  Checkbox,
+  Col,
+  Radio,
+  RadioGroup,
+  Row,
+  TextInput,
+} from '@dataesr/react-dsfr';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
+import Button from '../../../button';
 import SearchBar from '../../../search-bar';
 import DateInput from '../../../date-input';
-import Button from '../../../button';
 import api from '../../../../utils/api';
 import { GOUVERNANCE } from '../../../../utils/relations-tags';
 import { getComparableNow } from '../../../../utils/dates';
@@ -15,129 +23,130 @@ const datesOverlap = (mStart, mEnd, newStart, newEnd) => {
   return true;
 };
 
-function MandateCard({ m }) {
-  const formatDate = (d) => {
-    if (!d) return null;
-    const parts = d.split('-');
-    if (parts.length === 3) return `${parts[2]}/${parts[1]}/${parts[0]}`;
-    if (parts.length === 2) return `${parts[1]}/${parts[0]}`;
-    return parts[0];
-  };
+function useOTSearch() {
+  const [query, setQuery] = useState('');
+  const [options, setOptions] = useState([]);
+  const [searching, setSearching] = useState(false);
+  const [id, setId] = useState(null);
+  const [name, setName] = useState(null);
 
-  let period = 'dates non renseignées';
-  if (m.startDate && m.endDate) period = `du ${formatDate(m.startDate)} au ${formatDate(m.endDate)}`;
-  else if (m.startDate) period = `depuis le ${formatDate(m.startDate)}`;
-  else if (m.endDate) period = `jusqu'au ${formatDate(m.endDate)}`;
+  useEffect(() => {
+    let cleanup = () => {};
+    if (query) {
+      let cancelled = false;
+      cleanup = () => { cancelled = true; };
+      setSearching(true);
+      api.get(`/autocomplete?query=${encodeURIComponent(query)}&types=official-texts`)
+        .then((res) => { if (!cancelled) { setOptions(res.data?.data || []); setSearching(false); } })
+        .catch(() => { if (!cancelled) { setOptions([]); setSearching(false); } });
+    } else {
+      setOptions([]);
+    }
+    return cleanup;
+  }, [query]);
 
-  const personName = m.relatedObject?.displayName || m.relatedObjectId;
-  const personHref = m.relatedObject?.href;
-  const addedBy = m.createdBy
-    ? [m.createdBy.firstName, m.createdBy.lastName].filter(Boolean).join(' ')
-    : null;
-  const addedOn = m.createdAt
-    ? new Date(m.createdAt).toLocaleDateString('fr-FR', { day: '2-digit', month: 'long', year: 'numeric' })
-    : null;
+  const select = ({ id: i, name: n }) => { setId(i); setName(n); setQuery(''); setOptions([]); };
+  const unselect = () => { setId(null); setName(null); setQuery(''); setOptions([]); };
+  const reset = () => { setId(null); setName(null); setQuery(''); setOptions([]); setSearching(false); };
 
-  return (
-    <div style={{ border: '1px solid var(--grey-925-125)', borderRadius: '4px', padding: '10px 14px', marginBottom: '6px', background: 'white' }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap' }}>
-        {personHref ? (
-          <Link to={personHref} target="_blank" rel="noopener noreferrer" style={{ fontWeight: 600, fontSize: '14px' }}>
-            {personName}
-          </Link>
-        ) : (
-          <strong style={{ fontSize: '14px' }}>{personName}</strong>
-        )}
-        {m.mandateTemporary && <span className="fr-badge fr-badge--sm fr-badge--new">Temporaire</span>}
-      </div>
-      {m.relationType?.name && (
-        <p className="fr-text--sm fr-mb-0" style={{ color: 'var(--grey-425-625)', marginTop: '2px' }}>{m.relationType.name}</p>
-      )}
-      <p className="fr-text--xs fr-hint-text fr-mb-0" style={{ marginTop: '4px' }}>
-        {period}
-        {m.endDatePrevisional ? ` - fin previsionnelle : ${formatDate(m.endDatePrevisional)}` : ''}
-      </p>
-      {(addedBy || addedOn) && (
-        <p className="fr-text--xs fr-hint-text fr-mb-0" style={{ marginTop: '4px' }}>
-          {`Ajouté${addedBy ? ` par ${addedBy}` : ''}${addedOn ? ` le ${addedOn}` : ''}`}
-        </p>
-      )}
-    </div>
-  );
+  return { query, setQuery, options, searching, id, name, select, unselect, reset };
 }
 
-MandateCard.propTypes = {
-  m: PropTypes.shape({
-    relatedObject: PropTypes.shape({ displayName: PropTypes.string, href: PropTypes.string }),
-    relatedObjectId: PropTypes.string,
-    relationType: PropTypes.shape({ name: PropTypes.string }),
-    startDate: PropTypes.string,
-    endDate: PropTypes.string,
-    endDatePrevisional: PropTypes.string,
-    mandateTemporary: PropTypes.bool,
-    createdAt: PropTypes.string,
-    createdBy: PropTypes.shape({ firstName: PropTypes.string, lastName: PropTypes.string }),
-  }).isRequired,
-};
-
-export default function StructureMandateStep({ mandates, onAddMandate, onRemoveMandate, allRelationTypes, structureId }) {
+export default function StructureMandateStep({
+  mandates, onAddMandate, onRemoveMandate, allRelationTypes, structureId,
+}) {
   const [personQuery, setPersonQuery] = useState('');
   const [personOptions, setPersonOptions] = useState([]);
-  const [isSearchingPerson, setIsSearchingPerson] = useState(false);
+  const [personSearching, setPersonSearching] = useState(false);
   const [selectedPerson, setSelectedPerson] = useState(null);
-  const [relationTypeQuery, setRelationTypeQuery] = useState('');
-  const [relationTypeOptions, setRelationTypeOptions] = useState([]);
-  const [selectedRelationType, setSelectedRelationType] = useState(null);
+
+  const [relTypeQuery, setRelTypeQuery] = useState('');
+  const [relTypeOptions, setRelTypeOptions] = useState([]);
+  const [selectedRelType, setSelectedRelType] = useState(null);
+
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
+  const [endDatePrevisional, setEndDatePrevisional] = useState('');
+  const [active, setActive] = useState(null);
+  const [reason, setReason] = useState(null);
+  const [temporary, setTemporary] = useState(false);
+  const [position, setPosition] = useState(null);
+  const [precision, setPrecision] = useState('');
+  const [email, setEmail] = useState('');
+  const [personalEmail, setPersonalEmail] = useState('');
+  const [phonenumber, setPhonenumber] = useState('');
+
+  const startOT = useOTSearch();
+  const endOT = useOTSearch();
+
   const [errors, setErrors] = useState({});
   const [conflictWarning, setConflictWarning] = useState(null);
   const [isChecking, setIsChecking] = useState(false);
   const [conflictsToClose, setConflictsToClose] = useState({});
 
   useEffect(() => {
-    const q = relationTypeQuery.toLowerCase().trim();
-    const filtered = q
+    const q = relTypeQuery.toLowerCase().trim();
+    const list = q
       ? allRelationTypes.filter((rt) => rt.name.toLowerCase().includes(q))
       : allRelationTypes;
-    setRelationTypeOptions(filtered.slice(0, 30).map((rt) => ({ id: rt.id, name: rt.name })));
-  }, [relationTypeQuery, allRelationTypes]);
+    setRelTypeOptions(list.slice(0, 30).map((rt) => ({ id: rt.id, name: rt.name })));
+  }, [relTypeQuery, allRelationTypes]);
 
   const handlePersonQuery = async (q) => {
     setPersonQuery(q);
     if (!q || q.length < 2) { setPersonOptions([]); return; }
-    setIsSearchingPerson(true);
+    setPersonSearching(true);
     try {
       const { data: res } = await api.get(`/autocomplete?types=persons&query=${encodeURIComponent(q)}`);
       setPersonOptions(res?.data || []);
-    } catch {
-      setPersonOptions([]);
-    }
-    setIsSearchingPerson(false);
+    } catch { setPersonOptions([]); }
+    setPersonSearching(false);
+  };
+
+  const resetForm = () => {
+    setSelectedPerson(null); setPersonQuery(''); setPersonOptions([]);
+    setSelectedRelType(null); setRelTypeQuery('');
+    setStartDate(''); setEndDate(''); setEndDatePrevisional(''); setActive(null);
+    setReason(null); setTemporary(false); setPosition(null);
+    setPrecision(''); setEmail(''); setPersonalEmail(''); setPhonenumber('');
+    startOT.reset(); endOT.reset();
+    setConflictWarning(null); setConflictsToClose({});
   };
 
   const doAdd = () => {
     const closures = (conflictWarning?.apiConflicts || [])
       .filter((m) => m.id in conflictsToClose)
-      .map((m) => ({ id: m.id, resourceId: m.resourceId, relatedObjectId: m.relatedObjectId, endDate: conflictsToClose[m.id] || null }));
-    setConflictWarning(null);
-    setConflictsToClose({});
+      .map((m) => ({
+        id: m.id,
+        resourceId: m.resourceId,
+        relatedObjectId: m.relatedObjectId,
+        endDate: conflictsToClose[m.id] || null,
+      }));
     onAddMandate({
-      person: selectedPerson, relationType: selectedRelationType, startDate, endDate, closures,
+      person: selectedPerson,
+      relationType: selectedRelType,
+      startDate,
+      endDate,
+      endDatePrevisional,
+      active,
+      reason,
+      temporary,
+      position,
+      precision,
+      email,
+      personalEmail,
+      phonenumber,
+      startDateOfficialTextId: startOT.id,
+      endDateOfficialTextId: endOT.id,
+      closures,
     });
-    setSelectedPerson(null);
-    setPersonQuery('');
-    setPersonOptions([]);
-    setSelectedRelationType(null);
-    setRelationTypeQuery('');
-    setStartDate('');
-    setEndDate('');
+    resetForm();
   };
 
   const handleAdd = async () => {
     const errs = {};
     if (!selectedPerson) errs.personId = 'Veuillez sélectionner une personne.';
-    if (!selectedRelationType) errs.relationTypeId = 'Veuillez choisir un type de mandat.';
+    if (!selectedRelType) errs.relTypeId = 'Veuillez choisir un type de mandat.';
     if (Object.keys(errs).length > 0) { setErrors(errs); return; }
     setErrors({});
 
@@ -145,7 +154,7 @@ export default function StructureMandateStep({ mandates, onAddMandate, onRemoveM
     const newEnd = endDate || null;
 
     const localConflicts = mandates.filter(
-      (m) => m.relationType.id === selectedRelationType.id
+      (m) => m.relationType.id === selectedRelType.id
         && datesOverlap(m.startDate || null, m.endDate || null, newStart, newEnd),
     );
 
@@ -154,9 +163,10 @@ export default function StructureMandateStep({ mandates, onAddMandate, onRemoveM
       setIsChecking(true);
       try {
         const { data: res } = await api.get(`/relations?filters[relationTag]=${GOUVERNANCE}&filters[resourceId]=${structureId}&limit=500`);
-        const active = (res?.data || []).filter((m) => m.active !== false && (!m.endDate || m.endDate >= getComparableNow()));
-        apiConflicts = active.filter(
-          (m) => (m.relationTypeId === selectedRelationType.id || m.relationType?.id === selectedRelationType.id)
+        const now = getComparableNow();
+        const activeRels = (res?.data || []).filter((m) => m.active !== false && (!m.endDate || m.endDate >= now));
+        apiConflicts = activeRels.filter(
+          (m) => (m.relationTypeId === selectedRelType.id || m.relationType?.id === selectedRelType.id)
             && datesOverlap(m.startDate || null, m.endDate || null, newStart, newEnd),
         );
       } catch { /* ignore */ }
@@ -216,14 +226,7 @@ export default function StructureMandateStep({ mandates, onAddMandate, onRemoveM
         </div>
       )}
 
-      <div
-        style={{
-          border: '1px dashed var(--border-default-grey)',
-          borderRadius: '4px',
-          padding: '16px',
-          background: 'white',
-        }}
-      >
+      <div style={{ border: '1px dashed var(--border-default-grey)', borderRadius: '4px', padding: '16px', background: 'white' }}>
         <p className="fr-text--sm fr-mb-2w" style={{ fontWeight: 600 }}>
           {mandates.length === 0 ? 'Ajouter un mandat' : 'Ajouter un autre mandat'}
         </p>
@@ -240,7 +243,7 @@ export default function StructureMandateStep({ mandates, onAddMandate, onRemoveM
               onDeleteScope={() => { setSelectedPerson(null); setPersonQuery(''); }}
               options={personOptions}
               onSelect={(item) => { setSelectedPerson(item); setPersonQuery(''); setPersonOptions([]); }}
-              isSearching={isSearchingPerson}
+              isSearching={personSearching}
               size="lg"
             />
             {errors.personId && <p className="fr-error-text fr-text--sm fr-mt-1v">{errors.personId}</p>}
@@ -251,62 +254,140 @@ export default function StructureMandateStep({ mandates, onAddMandate, onRemoveM
               label="Type de mandat / fonction"
               hint="ex. Président, Directeur général, Chargé de mission…"
               placeholder="Rechercher un type de mandat..."
-              value={selectedRelationType ? '' : relationTypeQuery}
-              scope={selectedRelationType ? selectedRelationType.name : null}
-              onChange={(e) => { setSelectedRelationType(null); setRelationTypeQuery(e.target.value); }}
-              onDeleteScope={() => { setSelectedRelationType(null); setRelationTypeQuery(''); }}
-              options={relationTypeOptions}
-              onSelect={(item) => { setSelectedRelationType(item); setRelationTypeQuery(''); }}
+              value={selectedRelType ? '' : relTypeQuery}
+              scope={selectedRelType ? selectedRelType.name : null}
+              onChange={(e) => { setSelectedRelType(null); setRelTypeQuery(e.target.value); }}
+              onDeleteScope={() => { setSelectedRelType(null); setRelTypeQuery(''); }}
+              options={relTypeOptions}
+              onSelect={(item) => { setSelectedRelType(item); setRelTypeQuery(''); }}
               isSearching={false}
               size="lg"
             />
-            {errors.relationTypeId && <p className="fr-error-text fr-text--sm fr-mt-1v">{errors.relationTypeId}</p>}
-          </Col>
-
-          <Col n="12 md-6">
-            <DateInput label="Date de début" value={startDate} onDateChange={setStartDate} />
-          </Col>
-          <Col n="12 md-6">
-            <DateInput label="Date de fin" value={endDate} onDateChange={setEndDate} />
+            {errors.relTypeId && <p className="fr-error-text fr-text--sm fr-mt-1v">{errors.relTypeId}</p>}
           </Col>
 
           <Col n="12">
-            {conflictWarning && (
-              <div className="fr-alert fr-alert--warning fr-mb-2w">
+            <Accordion>
+              <AccordionItem title="Informations du mandat (optionnel)">
+                <Row gutters>
+                  <Col n="12">
+                    <TextInput
+                      label="Intitulé exact de la fonction"
+                      hint="Précisez si vous avez des informations plus détaillées."
+                      value={precision}
+                      onChange={(e) => setPrecision(e.target.value)}
+                    />
+                  </Col>
+                  <Col n="12">
+                    <RadioGroup legend="Raison du mandat :" isInline>
+                      <Radio label="Élection" onChange={() => setReason('election')} checked={reason === 'election'} />
+                      <Radio label="Nomination" onChange={() => setReason('nomination')} checked={reason === 'nomination'} />
+                    </RadioGroup>
+                  </Col>
+                  <Col n="12">
+                    <Checkbox
+                      label="Mandat par intérim"
+                      checked={temporary}
+                      onChange={() => setTemporary(!temporary)}
+                    />
+                  </Col>
+                  <Col n="12">
+                    <RadioGroup legend="Position du mandat :" isInline>
+                      <Radio label="1er mandat" onChange={() => setPosition('1')} checked={position === '1'} />
+                      <Radio label="2ème mandat" onChange={() => setPosition('2')} checked={position === '2'} />
+                      <Radio label="3ème mandat et plus" onChange={() => setPosition('3+')} checked={position === '3+'} />
+                      <Radio label="Sans objet" onChange={() => setPosition(null)} checked={!position} />
+                    </RadioGroup>
+                  </Col>
+                  <Col n="12 md-6">
+                    <TextInput label="Email associé au mandat" value={email} onChange={(e) => setEmail(e.target.value)} />
+                  </Col>
+                  <Col n="12 md-6">
+                    <TextInput label="Email nominatif" value={personalEmail} onChange={(e) => setPersonalEmail(e.target.value)} />
+                  </Col>
+                  <Col n="12 md-6">
+                    <TextInput label="Numéro de téléphone" value={phonenumber} onChange={(e) => setPhonenumber(e.target.value)} />
+                  </Col>
+                  <Col n="12 md-6">
+                    <DateInput value={endDatePrevisional} label="Date de fin prévisionnelle" onDateChange={setEndDatePrevisional} />
+                  </Col>
+                  <Col n="12 md-6">
+                    <DateInput value={startDate} label="Date de prise de fonction" onDateChange={setStartDate} />
+                    <SearchBar
+                      buttonLabel="Rechercher"
+                      value={startOT.query}
+                      label="Texte officiel de début"
+                      hint="Rechercher un texte officiel"
+                      scope={startOT.name}
+                      placeholder={startOT.name ? '' : 'Rechercher...'}
+                      onChange={(e) => startOT.setQuery(e.target.value)}
+                      options={startOT.options}
+                      onSelect={startOT.select}
+                      onDeleteScope={startOT.unselect}
+                      isSearching={startOT.searching}
+                    />
+                  </Col>
+                  <Col n="12 md-6">
+                    <DateInput value={endDate} label="Date de fin de fonction" onDateChange={setEndDate} />
+                    <Checkbox
+                      label="Date de fin inconnue mais passée"
+                      onChange={(e) => setActive(!e.target.checked)}
+                      checked={active === false}
+                    />
+                    <SearchBar
+                      buttonLabel="Rechercher"
+                      value={endOT.query}
+                      label="Texte officiel de fin"
+                      hint="Rechercher un texte officiel"
+                      scope={endOT.name}
+                      placeholder={endOT.name ? '' : 'Rechercher...'}
+                      onChange={(e) => endOT.setQuery(e.target.value)}
+                      options={endOT.options}
+                      onSelect={endOT.select}
+                      onDeleteScope={endOT.unselect}
+                      isSearching={endOT.searching}
+                    />
+                  </Col>
+                </Row>
+              </AccordionItem>
+            </Accordion>
+          </Col>
+
+          {conflictWarning && (
+            <Col n="12">
+              <div className="fr-alert fr-alert--warning">
                 <p className="fr-alert__title">
-                  {`Conflit de mandat : "${selectedRelationType?.name}"`}
+                  {`Conflit de mandat : "${selectedRelType?.name}"`}
                 </p>
                 {conflictWarning.apiConflicts.length > 0 && (
                   <>
                     <p className="fr-text--sm fr-mb-1w">
                       {conflictWarning.apiConflicts.length === 1
-                        ? 'Une personne a déjà ce type de mandat dans cette structure sur cette période :'
-                        : `${conflictWarning.apiConflicts.length} personnes ont déjà ce type de mandat dans cette structure sur cette période :`}
+                        ? 'Une personne a déjà ce type de mandat dans cette structure :'
+                        : `${conflictWarning.apiConflicts.length} personnes ont déjà ce type de mandat :`}
                     </p>
-                    <p className="fr-text--xs fr-hint-text fr-mb-1w">
-                      Cochez les mandats à clôturer lors de l&apos;enregistrement de la structure et indiquez la date de clôture.
-                    </p>
-                    <div className="fr-mb-2w">
-                      {conflictWarning.apiConflicts.map((m) => (
-                        <div key={m.id} style={{ marginBottom: '10px' }}>
+                    {conflictWarning.apiConflicts.map((m) => {
+                      const personName = m.relatedObject?.displayName || m.relatedObjectId;
+                      const relName = m.relationType?.name || '';
+                      return (
+                        <div key={m.id} style={{ marginBottom: '8px' }}>
                           <div style={{ display: 'flex', gap: '10px', alignItems: 'flex-start' }}>
                             {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
-                            <label style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '12px', flexShrink: 0, cursor: 'pointer', fontSize: '13px' }}>
+                            <label style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '8px', flexShrink: 0, cursor: 'pointer', fontSize: '13px' }}>
                               <input
                                 type="checkbox"
                                 checked={m.id in conflictsToClose}
-                                onChange={(e) => {
-                                  setConflictsToClose((prev) => {
-                                    const next = { ...prev };
-                                    if (e.target.checked) next[m.id] = ''; else delete next[m.id];
-                                    return next;
-                                  });
-                                }}
+                                onChange={() => setConflictsToClose((prev) => {
+                                  const next = { ...prev };
+                                  if (m.id in next) delete next[m.id]; else next[m.id] = '';
+                                  return next;
+                                })}
                               />
                               Clôturer
                             </label>
-                            <div style={{ flex: 1 }}>
-                              <MandateCard m={m} />
+                            <div style={{ flex: 1, border: '1px solid var(--grey-925-125)', borderRadius: '4px', padding: '8px 12px', background: 'white' }}>
+                              <p className="fr-text--sm fr-mb-0"><strong>{personName}</strong></p>
+                              {relName && <p className="fr-text--xs fr-mb-0" style={{ color: 'var(--grey-425-625)' }}>{relName}</p>}
                             </div>
                           </div>
                           {m.id in conflictsToClose && (
@@ -320,44 +401,28 @@ export default function StructureMandateStep({ mandates, onAddMandate, onRemoveM
                             </div>
                           )}
                         </div>
-                      ))}
-                    </div>
+                      );
+                    })}
                   </>
                 )}
                 {conflictWarning.localConflicts.length > 0 && (
-                  <div className="fr-mb-1w">
-                    {conflictWarning.localConflicts.length === 1 ? (
-                      <p className="fr-text--sm fr-mb-0">
-                        Dans ce formulaire,
-                        {' '}
-                        <strong>{conflictWarning.localConflicts[0].person.name}</strong>
-                        {` a déjà un mandat de type "${selectedRelationType?.name}" sur la même période.`}
-                      </p>
-                    ) : (
-                      <p className="fr-text--sm fr-mb-0">
-                        {`Dans ce formulaire, ${conflictWarning.localConflicts.length} personnes ont déjà un mandat de type "${selectedRelationType?.name}" sur la même période : `}
-                        {conflictWarning.localConflicts.map((lc, i) => (
-                          <span key={lc._key}>
-                            {i > 0 && ', '}
-                            <strong>{lc.person.name}</strong>
-                          </span>
-                        ))}
-                      </p>
-                    )}
-                  </div>
+                  <p className="fr-text--sm fr-mb-0">
+                    {`Dans ce formulaire : ${conflictWarning.localConflicts.map((lc) => lc.person.name).join(', ')} ont déjà un mandat de ce type.`}
+                  </p>
                 )}
-                <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginTop: '12px' }}>
-                  <Button size="sm" secondary onClick={() => setConflictWarning(null)}>
-                    Annuler
-                  </Button>
+                <div style={{ display: 'flex', gap: '8px', marginTop: '12px' }}>
+                  <Button size="sm" secondary onClick={() => setConflictWarning(null)}>Annuler</Button>
                   <Button size="sm" onClick={doAdd}>
                     {Object.keys(conflictsToClose).length > 0
-                      ? `Ajouter (clôturera ${Object.keys(conflictsToClose).length} mandat${Object.keys(conflictsToClose).length > 1 ? 's' : ''} à l'enregistrement)`
+                      ? `Ajouter (clôturera ${Object.keys(conflictsToClose).length} mandat${Object.keys(conflictsToClose).length > 1 ? 's' : ''})`
                       : 'Ajouter ce mandat'}
                   </Button>
                 </div>
               </div>
-            )}
+            </Col>
+          )}
+
+          <Col n="12">
             <Button size="sm" icon="ri-add-line" iconPosition="left" onClick={handleAdd} disabled={isChecking}>
               {isChecking ? 'Vérification...' : 'Ajouter ce mandat'}
             </Button>
@@ -369,13 +434,7 @@ export default function StructureMandateStep({ mandates, onAddMandate, onRemoveM
 }
 
 StructureMandateStep.propTypes = {
-  mandates: PropTypes.arrayOf(PropTypes.shape({
-    _key: PropTypes.string.isRequired,
-    person: PropTypes.shape({ id: PropTypes.string, name: PropTypes.string }).isRequired,
-    relationType: PropTypes.shape({ id: PropTypes.string, name: PropTypes.string }).isRequired,
-    startDate: PropTypes.string,
-    endDate: PropTypes.string,
-  })).isRequired,
+  mandates: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   onAddMandate: PropTypes.func.isRequired,
   onRemoveMandate: PropTypes.func.isRequired,
   allRelationTypes: PropTypes.arrayOf(PropTypes.shape({ id: PropTypes.string, name: PropTypes.string })).isRequired,
