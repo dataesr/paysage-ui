@@ -39,7 +39,7 @@ export default function IdRefPanel({ loading, matches, selectedMatch, onSelect }
                 ))}
                 {(m.identifiers || []).length > 0 && (
                   <div className="fr-mt-1w">
-                    {(m.identifiers || []).flatMap((idObj) => Object.entries(idObj)).map(([k, v]) => (
+                    {(() => { const pairs = []; (m.identifiers || []).forEach((idObj) => Object.entries(idObj).forEach((p) => pairs.push(p))); return pairs; })().map(([k, v]) => (
                       <span key={k} className="fr-badge fr-badge--sm fr-badge--blue-ecume fr-mr-1w fr-mb-1v">
                         {`${k} : ${v}`}
                       </span>

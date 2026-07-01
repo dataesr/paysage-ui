@@ -27,13 +27,13 @@ export default function SummaryBar({
             )}
           </span>
         )}
-        {step >= 3 && selectedRelationType && (
+        {selectedRelationType && (
           <span>
             <strong>Fonction :</strong>
             {` ${selectedRelationType.name}${startDate ? ` · à partir du ${startDate}` : ''}`}
           </span>
         )}
-        {step >= 4 && selectedStructure && (
+        {selectedStructure && (
           <span>
             <strong>Structure :</strong>
             {` ${selectedStructure.name}`}

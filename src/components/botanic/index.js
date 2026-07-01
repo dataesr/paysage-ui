@@ -5,7 +5,6 @@ import Modal from '../modal';
 import ObjectSelector from './components/object-selector';
 import PersonFlow from './persons';
 import StructureFlow from './structures';
-import PrizeFlow from './prizes';
 
 const FLOW_TITLES = {
   person: 'Personne',
@@ -30,7 +29,6 @@ export default function BotanicModal({ isOpen, onClose }) {
         {!objectType && <ObjectSelector onSelect={setObjectType} />}
         {objectType === 'person' && <PersonFlow onClose={handleClose} />}
         {objectType === 'structure' && <StructureFlow onClose={handleClose} />}
-        {objectType === 'prize' && <PrizeFlow onClose={handleClose} />}
       </ModalContent>
     </Modal>
   );
