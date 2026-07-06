@@ -76,6 +76,7 @@ export default function PersonFlow({ onClose }) {
   const [socialMedias, setSocialMedias] = useState([]);
 
   const [pastFunctions, setPastFunctions] = useState([]);
+  const [pastContacts, setPastContacts] = useState({ emails: [], personalEmails: [], phones: [] });
 
   const [fonctionErrors, setFonctionErrors] = useState({});
   const [showFonctionErrors, setShowFonctionErrors] = useState(false);
@@ -93,13 +94,18 @@ export default function PersonFlow({ onClose }) {
   }, [debouncedFullName]);
 
   useEffect(() => {
-    if (typeof existingPersonId !== 'string') { setPastFunctions([]); return; }
+    if (typeof existingPersonId !== 'string') {
+      setPastFunctions([]);
+      setPastContacts({ emails: [], personalEmails: [], phones: [] });
+      return;
+    }
     let cancelled = false;
     api.get(`/relations?filters[relatedObjectId]=${existingPersonId}&filters[relationTag]=${GOUVERNANCE}&limit=500`)
       .then(({ data: res }) => {
         if (cancelled) return;
+        const rels = res?.data || [];
         const byType = new Map();
-        (res?.data || []).forEach((rel) => {
+        rels.forEach((rel) => {
           const id = rel.relationTypeId || rel.relationType?.id;
           const name = rel.relationType?.name;
           if (!id || !name) return;
@@ -121,8 +127,18 @@ export default function PersonFlow({ onClose }) {
           .slice(0, 10)
           .map(({ id, name, isCurrent }) => ({ id, name, isCurrent }));
         setPastFunctions(sorted);
+        setPastContacts({
+          emails: [...new Set(rels.map((r) => r.mandateEmail).filter(Boolean))],
+          personalEmails: [...new Set(rels.map((r) => r.personalEmail).filter(Boolean))],
+          phones: [...new Set(rels.map((r) => r.mandatePhonenumber).filter(Boolean))],
+        });
       })
-      .catch(() => { if (!cancelled) setPastFunctions([]); });
+      .catch(() => {
+        if (!cancelled) {
+          setPastFunctions([]);
+          setPastContacts({ emails: [], personalEmails: [], phones: [] });
+        }
+      });
     // eslint-disable-next-line consistent-return
     return () => { cancelled = true; };
   }, [existingPersonId]);
@@ -390,6 +406,7 @@ export default function PersonFlow({ onClose }) {
     setSelectedPydrefMatch(null); setSelectedWikidataMatch(null);
     setIdentifiers([]); setSocialMedias([]);
     setPastFunctions([]);
+    setPastContacts({ emails: [], personalEmails: [], phones: [] });
     setFonctionErrors({}); setShowFonctionErrors(false);
     resetMandate();
     onClose();
@@ -547,6 +564,7 @@ export default function PersonFlow({ onClose }) {
         <>
           <FonctionStep
             pastFunctions={pastFunctions}
+            pastContacts={pastContacts}
             mandate={mandate}
             on={mandateOn}
             errors={fonctionErrors}

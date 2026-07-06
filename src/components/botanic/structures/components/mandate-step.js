@@ -79,10 +79,27 @@ export default function StructureMandateStep({
   const startOT = useOTSearch();
   const endOT = useOTSearch();
 
+  const [contactSuggestions, setContactSuggestions] = useState({ emails: [], personalEmails: [], phones: [] });
+
   const [errors, setErrors] = useState({});
   const [conflictWarning, setConflictWarning] = useState(null);
   const [isChecking, setIsChecking] = useState(false);
   const [conflictsToClose, setConflictsToClose] = useState({});
+
+  useEffect(() => {
+    if (!selectedPerson?.id) { setContactSuggestions({ emails: [], personalEmails: [], phones: [] }); return; }
+    api.get(`/relations?filters[relatedObjectId]=${selectedPerson.id}&filters[relationTag]=${GOUVERNANCE}&limit=200`)
+      .then(({ data: res }) => {
+        const rels = res?.data || [];
+        setContactSuggestions({
+          emails: [...new Set(rels.map((r) => r.mandateEmail).filter(Boolean))],
+          personalEmails: [...new Set(rels.map((r) => r.personalEmail).filter(Boolean))],
+          phones: [...new Set(rels.map((r) => r.mandatePhonenumber).filter(Boolean))],
+        });
+      })
+      .catch(() => {});
+  // eslint-disable-next-line consistent-return
+  }, [selectedPerson?.id]);
 
   useEffect(() => {
     const q = relTypeQuery.toLowerCase().trim();
@@ -110,6 +127,7 @@ export default function StructureMandateStep({
     setReason(null); setTemporary(false); setPosition(null);
     setPrecision(''); setEmail(''); setPersonalEmail(''); setPhonenumber('');
     startOT.reset(); endOT.reset();
+    setContactSuggestions({ emails: [], personalEmails: [], phones: [] });
     setConflictWarning(null); setConflictsToClose({});
   };
 
@@ -299,6 +317,63 @@ export default function StructureMandateStep({
                       <Radio label="Sans objet" onChange={() => setPosition(null)} checked={!position} />
                     </RadioGroup>
                   </Col>
+                  {((!email && contactSuggestions.emails.length > 0)
+                    || (!personalEmail && contactSuggestions.personalEmails.length > 0)
+                    || (!phonenumber && contactSuggestions.phones.length > 0)) && (
+                    <Col n="12">
+                      <div style={{ background: 'var(--grey-975-75)', borderRadius: '4px', padding: '8px 12px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                        <span className="fr-text--xs fr-hint-text">Contacts précédents — cliquer pour pré-remplir :</span>
+                        {!email && contactSuggestions.emails.length > 0 && (
+                          <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px', flexWrap: 'wrap' }}>
+                            <span className="fr-text--xs" style={{ flexShrink: 0, color: 'var(--grey-425-625)', minWidth: '130px' }}>Email mandat :</span>
+                            {contactSuggestions.emails.map((e) => (
+                              <button
+                                key={`email-${e}`}
+                                type="button"
+                                className="fr-badge fr-badge--sm fr-badge--blue-cumulus"
+                                style={{ cursor: 'pointer' }}
+                                onClick={() => setEmail(e)}
+                              >
+                                {e}
+                              </button>
+                            ))}
+                          </div>
+                        )}
+                        {!personalEmail && contactSuggestions.personalEmails.length > 0 && (
+                          <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px', flexWrap: 'wrap' }}>
+                            <span className="fr-text--xs" style={{ flexShrink: 0, color: 'var(--grey-425-625)', minWidth: '130px' }}>Email nominatif :</span>
+                            {contactSuggestions.personalEmails.map((e) => (
+                              <button
+                                key={`personal-${e}`}
+                                type="button"
+                                className="fr-badge fr-badge--sm fr-badge--blue-ecume"
+                                style={{ cursor: 'pointer' }}
+                                onClick={() => setPersonalEmail(e)}
+                              >
+                                {e}
+                              </button>
+                            ))}
+                          </div>
+                        )}
+                        {!phonenumber && contactSuggestions.phones.length > 0 && (
+                          <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px', flexWrap: 'wrap' }}>
+                            <span className="fr-text--xs" style={{ flexShrink: 0, color: 'var(--grey-425-625)', minWidth: '130px' }}>Téléphone :</span>
+                            {contactSuggestions.phones.map((p) => (
+                              <button
+                                key={`phone-${p}`}
+                                type="button"
+                                className="fr-badge fr-badge--sm fr-badge--green-emeraude"
+                                style={{ cursor: 'pointer' }}
+                                onClick={() => setPhonenumber(p)}
+                              >
+                                {p}
+                              </button>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    </Col>
+                  )}
                   <Col n="12 md-6">
                     <TextInput label="Email associé au mandat" value={email} onChange={(e) => setEmail(e.target.value)} />
                   </Col>

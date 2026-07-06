@@ -14,6 +14,7 @@ import SearchBar from '../../../search-bar';
 
 export default function FonctionStep({
   pastFunctions,
+  pastContacts,
   mandate,
   on,
   errors,
@@ -145,6 +146,63 @@ export default function FonctionStep({
                   <Radio label="Sans objet" onChange={() => on.setPosition(null)} checked={!mandate.position} />
                 </RadioGroup>
               </Col>
+              {((!mandate.email && pastContacts.emails.length > 0)
+                || (!mandate.personalEmail && pastContacts.personalEmails.length > 0)
+                || (!mandate.phonenumber && pastContacts.phones.length > 0)) && (
+                <Col n="12">
+                  <div>
+                    <span className="fr-text--xs fr-hint-text">Contacts précédents — cliquer pour pré-remplir :</span>
+                    {!mandate.email && pastContacts.emails.length > 0 && (
+                      <div className="fr-mb-2w" style={{ display: 'flex', alignItems: 'baseline', gap: '6px', flexWrap: 'wrap' }}>
+                        <span className="fr-text--xs">Email mandat :</span>
+                        {pastContacts.emails.map((e) => (
+                          <button
+                            key={`email-${e}`}
+                            type="button"
+                            className="fr-badge fr-badge--sm fr-badge--blue-cumulus"
+                            style={{ cursor: 'pointer' }}
+                            onClick={() => on.setEmail(e)}
+                          >
+                            {e}
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                    {!mandate.personalEmail && pastContacts.personalEmails.length > 0 && (
+                      <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px', flexWrap: 'wrap' }}>
+                        <span className="fr-text--xs">Email nominatif :</span>
+                        {pastContacts.personalEmails.map((e) => (
+                          <button
+                            key={`personal-${e}`}
+                            type="button"
+                            className="fr-badge fr-badge--sm fr-badge--blue-ecume"
+                            style={{ cursor: 'pointer' }}
+                            onClick={() => on.setPersonalEmail(e)}
+                          >
+                            {e}
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                    {!mandate.phonenumber && pastContacts.phones.length > 0 && (
+                      <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px', flexWrap: 'wrap' }}>
+                        <span className="fr-text--xs" style={{ flexShrink: 0, color: 'var(--grey-425-625)', minWidth: '130px' }}>Téléphone :</span>
+                        {pastContacts.phones.map((p) => (
+                          <button
+                            key={`phone-${p}`}
+                            type="button"
+                            className="fr-badge fr-badge--sm fr-badge--green-emeraude"
+                            style={{ cursor: 'pointer' }}
+                            onClick={() => on.setPhonenumber(p)}
+                          >
+                            {p}
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </Col>
+              )}
               <Col n="12 md-6">
                 <TextInput label="Email associé au mandat" value={mandate.email} onChange={(e) => on.setEmail(e.target.value)} />
               </Col>
@@ -225,6 +283,11 @@ FonctionStep.propTypes = {
     name: PropTypes.string,
     isCurrent: PropTypes.bool,
   })),
+  pastContacts: PropTypes.shape({
+    emails: PropTypes.arrayOf(PropTypes.string),
+    personalEmails: PropTypes.arrayOf(PropTypes.string),
+    phones: PropTypes.arrayOf(PropTypes.string),
+  }),
   mandate: PropTypes.shape({
     relType: PropTypes.shape({
       query: PropTypes.string,
@@ -280,6 +343,7 @@ FonctionStep.propTypes = {
 
 FonctionStep.defaultProps = {
   pastFunctions: [],
+  pastContacts: { emails: [], personalEmails: [], phones: [] },
   errors: {},
   showErrors: false,
 };
