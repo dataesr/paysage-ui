@@ -95,6 +95,7 @@ import AdminDomainsPage from '../pages/admin/domains';
 import EmailTypesPage from '../pages/admin/email-types';
 import StructureContactsPage from '../pages/structures/[id]/contacts';
 import PyDRefPage from '../pages/admin/pydref';
+import AdminIdentifiersUpdates from '../pages/admin/update-identifiers';
 
 export default function Routes() {
   return (
@@ -125,6 +126,7 @@ export default function Routes() {
               <Route path="types-de-relation" element={<AdminRelationTypesPage />} />
               <Route path="taches" element={<AdminJobsPage />} />
               <Route path="sirene" element={<AdminSirenePage />} />
+              <Route path="update-identifiers" element={<AdminIdentifiersUpdates />} />
               <Route path="coding-machine" element={<CodingMachinePage />} />
               <Route path="idref" element={<PyDRefPage />} />
               <Route path="nomenclatures" element={<Navigate to="nomenclatures/types-de-document" replace />} />
