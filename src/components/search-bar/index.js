@@ -109,6 +109,67 @@ const SearchBar = forwardRef((props, ref) => {
     },
   );
 
+  const renderOption = (option, i) => {
+    const city = [].concat(option?.city).filter(Boolean)[0];
+    const locality = [].concat(option?.locality).filter(Boolean)[0];
+    const place = city || locality;
+    const showLocality = city && locality
+      && !locality.toLowerCase().startsWith(city.toLowerCase());
+    const isActive = option?.structureStatus === 'active';
+    const isInactive = option?.structureStatus === 'inactive';
+
+    return (
+      <li
+        key={option.id}
+        className={classNames(`${styles.item}`, { [styles.hovered]: (i === activeSuggestionIndex) })}
+        onMouseEnter={() => setActiveSuggestionIndex(i)}
+      >
+        <button
+          tabIndex={-1}
+          className={styles.btn}
+          style={{ color: `${isInactive ? 'var(--text-mention-grey' : 'inherit'}` }}
+          type="button"
+          onMouseDown={() => { onSelect(option); }}
+        >
+          {option.type && <Icon size="xl" color={`var(--${option.type}-color)`} name={objectTypes[option.type]} />}
+          <Text className={styles.content}>
+            {getName(option)}
+            {option.level && (
+              <i>
+                {` (${GEOGRAPHICAL_CATEGORIES_LABELS_MAPPER[option.level]})`}
+              </i>
+            )}
+            <br />
+            {option.category && isActive && (
+              <i>
+                {` ${option.category}`}
+                {place && ` à ${capitalize(place)}`}
+                {showLocality && ` ${capitalize(locality)}`}
+                {option.creationDate && ` depuis ${String(option.creationDate).slice(0, 4)}`}
+              </i>
+            )}
+            {option.category && isInactive && (
+              <i>
+                {` ${option.category}`}
+                {place && ` à ${capitalize(place)}`}
+                {option.closureDate && ` jusqu'à ${String(option.closureDate).slice(0, 4)}`}
+              </i>
+            )}
+            {option.activity && (
+              <i>
+                {capitalize(option.activity)}
+              </i>
+            )}
+            {option.publicationDate ? <strong>{` publié ${toString(option.publicationDate)}`}</strong> : null}
+          </Text>
+          {isInactive && (
+            <Badge type="warning" isSmall text="Inactive" />
+          )}
+        </button>
+      </li>
+    );
+  };
+
   return (
     <div
       onBlur={() => setShowOptions(false)}
@@ -163,58 +224,7 @@ const SearchBar = forwardRef((props, ref) => {
           )}
           {(!isSearching && options.length && showOptions && value) ? (
             <ul className={styles.list} onMouseLeave={() => setActiveSuggestionIndex(null)}>
-              {options.map((option, i) => (
-                <li
-                  key={option.id}
-                  className={classNames(`${styles.item}`, { [styles.hovered]: (i === activeSuggestionIndex) })}
-                  onMouseEnter={() => setActiveSuggestionIndex(i)}
-                >
-                  <button
-                    tabIndex={-1}
-                    className={styles.btn}
-                    // style={{ backgroundColor: `${(option.structureStatus === 'inactive') ? 'var(--background-contrast-warning)' : 'inherit' }` }}
-                    style={{ color: `${(option.structureStatus === 'inactive') ? 'var(--text-mention-grey' : 'inherit'}` }}
-                    type="button"
-                    onMouseDown={() => { onSelect(option); }}
-                  >
-                    {option.type && <Icon size="xl" color={`var(--${option.type}-color)`} name={objectTypes[option.type]} />}
-                    <Text className={styles.content}>
-                      {getName(option)}
-                      {
-                        option.level && (
-                          <i>
-                            {` (${GEOGRAPHICAL_CATEGORIES_LABELS_MAPPER[option.level]})`}
-                          </i>
-                        )
-                      }
-                      <br />
-                      {option.category && option?.structureStatus === 'active' && (
-                        <i>
-                          {` ${option.category}`}
-                          {option.city && ` à ${capitalize(option.city)}`}
-                          {option.creationDate && ` depuis ${option.creationDate.slice(0, 4)}`}
-                        </i>
-                      )}
-                      {option.category && option?.structureStatus === 'inactive' && (
-                        <i>
-                          {` ${option.category}`}
-                          {option.city && ` à ${capitalize(option.city)}`}
-                          {option.closureDate && ` jusqu'à ${option.closureDate.slice(0, 4)}`}
-                        </i>
-                      )}
-                      {option.activity && (
-                        <i>
-                          {capitalize(option.activity)}
-                        </i>
-                      )}
-                      {option.publicationDate ? <strong>{` publié ${toString(option.publicationDate)}`}</strong> : null}
-                    </Text>
-                    {(option.structureStatus === 'inactive') && (
-                      <Badge type="warning" isSmall text="Inactive" />
-                    )}
-                  </button>
-                </li>
-              ))}
+              {options.map(renderOption)}
             </ul>
           ) : null}
         </div>
