@@ -12,7 +12,19 @@ const OBJECTS = [
     id: 'structure',
     icon: 'ri-building-2-line',
     title: 'Structure',
-    description: 'Ajouter ou mettre à jour une structure ou ses identifiants et mandats de gouvernance.',
+    description: 'Ajouter ou mettre à jour une structure ou ses identifiants.',
+  },
+  {
+    id: 'mandate',
+    icon: 'ri-government-line',
+    title: 'Fonction / Mandat',
+    description: 'Enregistrer des mandats à partir d’un texte juridique (nominations, fins de mandat…).',
+  },
+  {
+    id: 'official-text',
+    icon: 'ri-git-repository-line',
+    title: 'Texte officiel',
+    description: 'Créer ou compléter un texte officiel et y lier les personnes et structures citées.',
   },
   // {
   //   id: 'prize',

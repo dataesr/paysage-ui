@@ -10,6 +10,7 @@ export default function PersonStep({
   errors, showErrors,
   paysageMatches, existingPersonId, onUseExisting, onKeepNew,
   birthDate, onBirthDateChange, activity, onActivityChange,
+  onInvertName, canInvertName,
 }) {
   const hasDuplicate = paysageMatches.length > 0 && existingPersonId === undefined;
   const isExisting = typeof existingPersonId === 'string';
@@ -102,6 +103,20 @@ export default function PersonStep({
               />
             </Col>
           )}
+          {!isExisting && canInvertName && (
+            <Col n="12">
+              <Button
+                tertiary
+                borderless
+                size="sm"
+                icon="ri-arrow-left-right-line"
+                iconPosition="left"
+                onClick={onInvertName}
+              >
+                Inverser prénom / nom
+              </Button>
+            </Col>
+          )}
           <Col n="12 md-6">
             <DateInput
               value={birthDate}
@@ -145,5 +160,7 @@ PersonStep.propTypes = {
   onBirthDateChange: PropTypes.func.isRequired,
   activity: PropTypes.string.isRequired,
   onActivityChange: PropTypes.func.isRequired,
+  onInvertName: PropTypes.func,
+  canInvertName: PropTypes.bool,
 };
-PersonStep.defaultProps = { existingPersonId: undefined };
+PersonStep.defaultProps = { existingPersonId: undefined, onInvertName: () => {}, canInvertName: false };

@@ -23,7 +23,7 @@ import StructureSummaryBar from './components/summary-bar';
 
 const STEPS = ['Structure', 'Identifiants', 'Localisation', 'Mandat de gouvernance'];
 
-export default function StructureFlow({ onClose }) {
+export default function StructureFlow({ onClose, onCreated }) {
   const { notice } = useNotice();
   const enums = useEnums();
   const { data: relationTypesData } = useFetch('/relation-types?limit=500&filters[for]=persons');
@@ -249,8 +249,18 @@ export default function StructureFlow({ onClose }) {
     }
 
     notice(saveSuccess);
-    handleReset(); // eslint-disable-line no-use-before-define
-    navigate(`/structures/${structureId}`);
+    const createdName = selectedStructure?.name || usualName.trim();
+    if (onCreated) {
+      onCreated({ id: structureId, name: createdName });
+      handleReset(); // eslint-disable-line no-use-before-define
+    } else {
+      handleReset(); // eslint-disable-line no-use-before-define
+      navigate(`/structures/${structureId}`);
+    }
+  };
+
+  const handleAdoptStructureName = (name) => {
+    if (name && isCreatingNew) setUsualName(name);
   };
 
   const handleSelectRorMatch = async (match) => {
@@ -335,6 +345,7 @@ export default function StructureFlow({ onClose }) {
             selectedRorMatch={selectedRorMatch}
             onSelectRor={handleSelectRorMatch}
             entityType="structure"
+            onAdoptName={isCreatingNew ? handleAdoptStructureName : null}
           />
           {step1Errors.structure && <p className="fr-error-text fr-mt-1w">{step1Errors.structure}</p>}
           {step1Errors.usualName && <p className="fr-error-text fr-mt-1w">{step1Errors.usualName}</p>}
@@ -428,4 +439,8 @@ export default function StructureFlow({ onClose }) {
 
 StructureFlow.propTypes = {
   onClose: PropTypes.func.isRequired,
+  onCreated: PropTypes.func,
+};
+StructureFlow.defaultProps = {
+  onCreated: null,
 };

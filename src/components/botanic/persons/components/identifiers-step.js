@@ -181,7 +181,6 @@ export default function IdentifiersStep({
 
   return (
     <div>
-      {/* Info banner */}
       {isExisting ? (
         <div className="fr-notice fr-notice--info fr-mb-3w">
           <div className="fr-notice__body">
@@ -199,7 +198,6 @@ export default function IdentifiersStep({
         </p>
       )}
 
-      {/* Section 1 : identifiants Paysage */}
       {existingIds.length > 0 && (
         <div className="fr-mb-3w">
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
@@ -211,7 +209,6 @@ export default function IdentifiersStep({
         </div>
       )}
 
-      {/* Section 2 : nouveaux identifiants */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
         <p className="fr-text--sm fr-mb-0" style={{ fontWeight: 600 }}>
           {newIds.length === 0 ? 'Aucun nouvel identifiant' : `${newIds.length} nouvel${newIds.length > 1 ? 's' : ''} identifiant${newIds.length > 1 ? 's' : ''}`}
@@ -231,14 +228,13 @@ export default function IdentifiersStep({
 
       <hr className="fr-mt-3w fr-mb-3w" />
 
-      {/* Réseaux sociaux */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
         <p className="fr-text--sm fr-mb-0" style={{ fontWeight: 600 }}>
           {socialMedias.length === 0
             ? 'Aucun réseau social'
             : `${socialMedias.length} réseau${socialMedias.length > 1 ? 'x' : ''} social${socialMedias.length > 1 ? 'x' : ''}`}
         </p>
-        <Button size="sm" tertiary borderless icon="ri-share-line" iconPosition="left" onClick={onAddSocialMedia}>
+        <Button size="sm" tertiary borderless icon="ri-add-circle-line" iconPosition="left" onClick={onAddSocialMedia}>
           Ajouter un réseau social
         </Button>
       </div>

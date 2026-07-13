@@ -91,7 +91,21 @@ export default function FonctionStep({
           </div>
         </Col>
       )}
-
+      <Col n="12">
+        <SearchBar
+          buttonLabel="Rechercher"
+          label="Structure"
+          value={structure.selected ? '' : structure.query}
+          placeholder="Rechercher une structure…"
+          scope={structure.selected ? structure.selected.name : null}
+          onChange={(e) => { on.unselectStructure(); on.searchStructure(e.target.value); }}
+          onDeleteScope={on.unselectStructure}
+          options={structure.options}
+          onSelect={on.selectStructure}
+          isSearching={structure.searching}
+          size="lg"
+        />
+      </Col>
       <Col n="12">
         <SearchBar
           buttonLabel="Rechercher"
@@ -115,7 +129,7 @@ export default function FonctionStep({
 
       <Col n="12">
         <Accordion>
-          <AccordionItem title="Informations du mandat (optionnel)">
+          <AccordionItem initExpand title="Informations du mandat">
             <Row gutters>
               <Col n="12">
                 <TextInput
@@ -213,14 +227,14 @@ export default function FonctionStep({
                 <TextInput label="Numéro de téléphone" value={mandate.phonenumber} onChange={(e) => on.setPhonenumber(e.target.value)} />
               </Col>
               <Col n="12 md-6">
+                <DateInput value={mandate.startDate} label="Date de prise de fonction" onDateChange={on.setStartDate} />
+              </Col>
+              <Col n="12 md-6">
                 <DateInput
                   value={mandate.endDatePrevisional}
                   label="Date de fin prévisionnelle"
                   onDateChange={on.setEndDatePrevisional}
                 />
-              </Col>
-              <Col n="12 md-6">
-                <DateInput value={mandate.startDate} label="Date de prise de fonction" onDateChange={on.setStartDate} />
                 <SearchBar
                   buttonLabel="Rechercher"
                   value={mandate.startOT.query}
@@ -255,24 +269,6 @@ export default function FonctionStep({
           </AccordionItem>
         </Accordion>
       </Col>
-
-      <Col n="12">
-        <SearchBar
-          buttonLabel="Rechercher"
-          label="Structure"
-          hint="Recherche en temps réel dans le référentiel Paysage"
-          value={structure.selected ? '' : structure.query}
-          placeholder="Rechercher une structure…"
-          scope={structure.selected ? structure.selected.name : null}
-          onChange={(e) => { on.unselectStructure(); on.searchStructure(e.target.value); }}
-          onDeleteScope={on.unselectStructure}
-          options={structure.options}
-          onSelect={on.selectStructure}
-          isSearching={structure.searching}
-          size="lg"
-        />
-      </Col>
-
     </Row>
   );
 }

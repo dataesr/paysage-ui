@@ -12,7 +12,7 @@ import { saveError, saveSuccess } from '../../../utils/notice-contents';
 import { GOUVERNANCE } from '../../../utils/relations-tags';
 import { getComparableNow } from '../../../utils/dates';
 import { regexpValidateIdentifiers } from '../../../utils/regexpForIdentifiers';
-import { PYDREF_GENDER, uid, sanitizeIdentifierValue } from '../utils';
+import { PYDREF_GENDER, uid, sanitizeIdentifierValue, deduceName, capitalizeName } from '../utils';
 import { usePersonExternalLookup } from '../use-external-lookup';
 import { crossEnrichWikidataPersonByOrcid, crossEnrichWikidataPersonByIsni, crossEnrichWikidataPersonByIdRef } from '../external-lookup';
 import EnrichmentPanel from '../enrichment-panel';
@@ -39,7 +39,7 @@ const extractIdentifierPairs = (identifiers) => {
 
 const STEPS = ['Personne', 'Identifiants', 'Fonction'];
 
-export default function PersonFlow({ onClose }) {
+export default function PersonFlow({ onClose, onCreated }) {
   const { notice } = useNotice();
   const enums = useEnums();
   const { data: relationTypesData } = useFetch('/relation-types?limit=500&filters[for]=persons');
@@ -62,6 +62,8 @@ export default function PersonFlow({ onClose }) {
   const [personErrors, setPersonErrors] = useState({});
   const [showPersonErrors, setShowPersonErrors] = useState(false);
   const [isCreatingNew, setIsCreatingNew] = useState(false);
+  const [createSourceText, setCreateSourceText] = useState('');
+  const [nameSplitMode, setNameSplitMode] = useState('first');
 
   const [personSearchQuery, setPersonSearchQuery] = useState('');
   const [personSearchOptions, setPersonSearchOptions] = useState([]);
@@ -223,6 +225,7 @@ export default function PersonFlow({ onClose }) {
 
   const handleNameChange = (field, value) => {
     if (field === 'firstName') setFirstName(value); else setLastName(value);
+    setCreateSourceText('');
     setExistingPersonId(undefined);
     setSelectedPydrefMatch(null);
     setSelectedWikidataMatch(null);
@@ -314,8 +317,45 @@ export default function PersonFlow({ onClose }) {
     setIdentifiers([]); setSelectedPydrefMatch(null); setSelectedWikidataMatch(null);
   };
 
+  const handleChooseCreate = (text) => {
+    const source = (text || '').trim();
+    const { firstName: f, lastName: l } = deduceName(source, 'first');
+    setCreateSourceText(source);
+    setNameSplitMode('first');
+    setFirstName(capitalizeName(f));
+    setLastName(capitalizeName(l));
+    setExistingPersonId(undefined);
+    setSelectedPydrefMatch(null);
+    setSelectedWikidataMatch(null);
+    setPaysageMatches([]);
+    setIsCreatingNew(true);
+  };
+
+  const handleInvertName = () => {
+    const source = (createSourceText || `${firstName} ${lastName}`).trim();
+    const nextMode = nameSplitMode === 'first' ? 'last' : 'first';
+    const { firstName: f, lastName: l } = deduceName(source, nextMode);
+    setNameSplitMode(nextMode);
+    setFirstName(capitalizeName(f));
+    setLastName(capitalizeName(l));
+    setExistingPersonId(undefined);
+    setSelectedPydrefMatch(null);
+    setSelectedWikidataMatch(null);
+  };
+
+  const handleAdoptIdrefName = (fullName) => {
+    const source = (fullName || '').trim();
+    if (!source) return;
+    const { firstName: f, lastName: l } = deduceName(source, 'first');
+    setCreateSourceText(source);
+    setNameSplitMode('first');
+    setFirstName(capitalizeName(f));
+    setLastName(capitalizeName(l));
+  };
+
   const handleBackFromCreate = () => {
     setIsCreatingNew(false);
+    setCreateSourceText(''); setNameSplitMode('first');
     setFirstName(''); setLastName(''); setGender('');
     setPersonErrors({}); setShowPersonErrors(false);
     setExistingPersonId(undefined); setBirthDate(''); setActivity('');
@@ -323,32 +363,17 @@ export default function PersonFlow({ onClose }) {
     setPaysageMatches([]);
   };
 
-  const handleSubmit = async () => {
-    const { relType, structure } = mandate;
-    if (!relType.selected) {
-      setFonctionErrors({ relTypeId: 'Veuillez choisir un type de mandat.' });
-      setShowFonctionErrors(true);
-      return;
-    }
-    if (!structure.selected) {
-      notice({ content: 'Veuillez choisir une structure.', type: 'error' });
-      return;
-    }
-    setFonctionErrors({});
-    setShowFonctionErrors(false);
-
+  const persistPerson = async () => {
     let personId = existingPersonId || null;
     if (!personId) {
-      try {
-        const { data } = await api.post('/persons', {
-          firstName: firstName.trim(),
-          lastName: lastName.trim(),
-          gender,
-          ...(birthDate ? { birthDate } : {}),
-          ...(activity ? { activity } : {}),
-        });
-        personId = data.id;
-      } catch { notice(saveError); return; }
+      const { data } = await api.post('/persons', {
+        firstName: firstName.trim(),
+        lastName: lastName.trim(),
+        gender,
+        ...(birthDate ? { birthDate } : {}),
+        ...(activity ? { activity } : {}),
+      });
+      personId = data.id;
     }
 
     const newIdentifiers = identifiers.filter((r) => {
@@ -371,6 +396,36 @@ export default function PersonFlow({ onClose }) {
       }));
     }
 
+    return personId;
+  };
+
+  const handleSubmitWithoutMandate = async () => {
+    let personId;
+    try { personId = await persistPerson(); } catch { notice(saveError); return; }
+    notice(saveSuccess);
+    const createdName = `${firstName.trim()} ${lastName.trim()}`.trim();
+    // eslint-disable-next-line brace-style
+    if (onCreated) { onCreated({ id: personId, name: createdName }); handleReset(); } // eslint-disable-line no-use-before-define
+    else { handleReset(); navigate(`/personnes/${personId}`); } // eslint-disable-line no-use-before-define
+  };
+
+  const handleSubmit = async () => {
+    const { relType, structure } = mandate;
+    if (!relType.selected) {
+      setFonctionErrors({ relTypeId: 'Veuillez choisir un type de mandat.' });
+      setShowFonctionErrors(true);
+      return;
+    }
+    if (!structure.selected) {
+      notice({ content: 'Veuillez choisir une structure.', type: 'error' });
+      return;
+    }
+    setFonctionErrors({});
+    setShowFonctionErrors(false);
+
+    let personId;
+    try { personId = await persistPerson(); } catch { notice(saveError); return; }
+
     const toClose = mandate.conflicts.filter((m) => m.id in mandate.conflictsToClose);
     if (toClose.length > 0) {
       await Promise.all(toClose.map((m) => api.patch(`/relations/${m.id}`, {
@@ -391,8 +446,10 @@ export default function PersonFlow({ onClose }) {
     } catch { notice(saveError); return; }
 
     notice(saveSuccess);
-    handleReset(); // eslint-disable-line no-use-before-define
-    navigate(`/personnes/${personId}`);
+    const createdName = `${firstName.trim()} ${lastName.trim()}`.trim();
+    // eslint-disable-next-line brace-style
+    if (onCreated) { onCreated({ id: personId, name: createdName }); handleReset(); } // eslint-disable-line no-use-before-define
+    else { handleReset(); navigate(`/personnes/${personId}`); } // eslint-disable-line no-use-before-define
   };
 
   const handleReset = () => {
@@ -401,6 +458,7 @@ export default function PersonFlow({ onClose }) {
     setExistingPersonId(undefined); setPaysageMatches([]);
     setPersonErrors({}); setShowPersonErrors(false);
     setIsCreatingNew(false);
+    setCreateSourceText(''); setNameSplitMode('first');
     setPersonSearchQuery(''); setPersonSearchOptions([]); setPersonSearching(false);
     setSelectedSearchPerson(null);
     setSelectedPydrefMatch(null); setSelectedWikidataMatch(null);
@@ -447,7 +505,7 @@ export default function PersonFlow({ onClose }) {
                 selectedPerson={selectedSearchPerson}
                 onSelect={handleSelectSearchPerson}
                 onUnselect={handleUnselectSearchPerson}
-                onChooseCreate={() => setIsCreatingNew(true)}
+                onChooseCreate={handleChooseCreate}
               />
               {selectedSearchPerson && (
                 <EnrichmentPanel
@@ -482,6 +540,8 @@ export default function PersonFlow({ onClose }) {
                 onBirthDateChange={setBirthDate}
                 activity={activity}
                 onActivityChange={setActivity}
+                onInvertName={handleInvertName}
+                canInvertName={`${firstName} ${lastName}`.trim().includes(' ') || (createSourceText || '').includes(' ')}
               />
               {!hasDuplicate && (
                 <EnrichmentPanel
@@ -494,6 +554,7 @@ export default function PersonFlow({ onClose }) {
                   selectedWikidataMatch={selectedWikidataMatch}
                   onSelectWikidata={handleSelectWikidataMatch}
                   entityType="person"
+                  onAdoptName={handleAdoptIdrefName}
                 />
               )}
             </>
@@ -586,6 +647,18 @@ export default function PersonFlow({ onClose }) {
                 {typeof existingPersonId === 'string' ? 'Enregistrer le mandat' : 'Créer la fiche et le mandat'}
               </Button>
             </Col>
+            <Col className="text-right">
+              <Button
+                color="error"
+                tertiary
+                className="fr-mr-2w"
+                icon="ri-user-line"
+                iconPosition="left"
+                onClick={handleSubmitWithoutMandate}
+              >
+                {typeof existingPersonId === 'string' ? 'Enregistrer sans mandat' : 'Créer la fiche sans mandat'}
+              </Button>
+            </Col>
           </Row>
         </>
       )}
@@ -595,4 +668,8 @@ export default function PersonFlow({ onClose }) {
 
 PersonFlow.propTypes = {
   onClose: PropTypes.func.isRequired,
+  onCreated: PropTypes.func,
+};
+PersonFlow.defaultProps = {
+  onCreated: null,
 };

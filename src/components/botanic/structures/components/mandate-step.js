@@ -286,7 +286,7 @@ export default function StructureMandateStep({
 
           <Col n="12">
             <Accordion>
-              <AccordionItem title="Informations du mandat (optionnel)">
+              <AccordionItem initExpand title="Informations du mandat">
                 <Row gutters>
                   <Col n="12">
                     <TextInput
@@ -384,10 +384,10 @@ export default function StructureMandateStep({
                     <TextInput label="Numéro de téléphone" value={phonenumber} onChange={(e) => setPhonenumber(e.target.value)} />
                   </Col>
                   <Col n="12 md-6">
-                    <DateInput value={endDatePrevisional} label="Date de fin prévisionnelle" onDateChange={setEndDatePrevisional} />
+                    <DateInput value={startDate} label="Date de prise de fonction" onDateChange={setStartDate} />
                   </Col>
                   <Col n="12 md-6">
-                    <DateInput value={startDate} label="Date de prise de fonction" onDateChange={setStartDate} />
+                    <DateInput value={endDatePrevisional} label="Date de fin prévisionnelle" onDateChange={setEndDatePrevisional} />
                     <SearchBar
                       buttonLabel="Rechercher"
                       value={startOT.query}

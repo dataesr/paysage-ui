@@ -129,7 +129,7 @@ export default function LocalisationStep({ onBodyChange }) {
           />
           <Radio
             label="Hors France"
-            onChange={() => setIsFrance(false)}
+            onChange={() => { setIsFrance(false); updateForm({ country: '', iso3: '' }); }}
             checked={!isFrance}
           />
         </RadioGroup>

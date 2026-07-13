@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import { Link } from '@dataesr/react-dsfr';
 import Button from '../button';
 
-function IdRefMatchCard({ m, isSelected, onSelect }) {
+function IdRefMatchCard({ m, isSelected, onSelect, onAdoptName }) {
   const birthStr = m.birth_date
     ? m.birth_date.slice(0, 10).split('-').reverse().join('/')
     : null;
@@ -12,7 +12,7 @@ function IdRefMatchCard({ m, isSelected, onSelect }) {
       className="fr-p-2w fr-mb-1w"
       style={{
         border: `2px solid ${isSelected ? 'var(--blue-france-sun-113-625)' : 'var(--grey-900-175)'}`,
-        background: isSelected ? 'var(--blue-france-975-75)' : 'white',
+        background: isSelected ? 'var(--blue-france-975-75)' : 'var(--grey-100)',
       }}
     >
       <div className="fr-grid-row fr-grid-row--top">
@@ -53,6 +53,18 @@ function IdRefMatchCard({ m, isSelected, onSelect }) {
           >
             {isSelected ? 'Sélectionné' : 'Utiliser'}
           </Button>
+          {onAdoptName && m.full_name && (
+            <Button
+              className="fr-mt-1w"
+              size="sm"
+              tertiary
+              icon="ri-user-line"
+              iconPosition="left"
+              onClick={() => onAdoptName(m.full_name)}
+            >
+              Adopter le nom
+            </Button>
+          )}
         </div>
       </div>
     </div>
@@ -70,9 +82,13 @@ IdRefMatchCard.propTypes = {
   }).isRequired,
   isSelected: PropTypes.bool.isRequired,
   onSelect: PropTypes.func.isRequired,
+  onAdoptName: PropTypes.func,
 };
+IdRefMatchCard.defaultProps = { onAdoptName: null };
 
-function WikidataMatchCard({ m, isSelected, onSelect, entityType }) {
+function WikidataMatchCard({
+  m, isSelected, onSelect, entityType, onAdoptName,
+}) {
   const fmtDate = (d) => (d ? d.split('-').reverse().join('/') : null);
 
   return (
@@ -146,6 +162,18 @@ function WikidataMatchCard({ m, isSelected, onSelect, entityType }) {
           >
             {isSelected ? 'Sélectionné' : 'Utiliser'}
           </Button>
+          {onAdoptName && m.label && (
+            <Button
+              className="fr-mt-1w"
+              size="sm"
+              tertiary
+              icon="ri-user-line"
+              iconPosition="left"
+              onClick={() => onAdoptName(m.label)}
+            >
+              Adopter le nom
+            </Button>
+          )}
         </div>
       </div>
     </div>
@@ -167,9 +195,11 @@ WikidataMatchCard.propTypes = {
   isSelected: PropTypes.bool.isRequired,
   onSelect: PropTypes.func.isRequired,
   entityType: PropTypes.oneOf(['person', 'structure']).isRequired,
+  onAdoptName: PropTypes.func,
 };
+WikidataMatchCard.defaultProps = { onAdoptName: null };
 
-function RorMatchCard({ m, isSelected, onSelect }) {
+function RorMatchCard({ m, isSelected, onSelect, onAdoptName }) {
   return (
     <div
       className="fr-p-2w fr-mb-1w"
@@ -224,6 +254,18 @@ function RorMatchCard({ m, isSelected, onSelect }) {
           >
             {isSelected ? 'Sélectionné' : 'Utiliser'}
           </Button>
+          {onAdoptName && m.label && (
+            <Button
+              className="fr-mt-1w"
+              size="sm"
+              tertiary
+              icon="ri-building-2-line"
+              iconPosition="left"
+              onClick={() => onAdoptName(m.label)}
+            >
+              Adopter le nom
+            </Button>
+          )}
         </div>
       </div>
     </div>
@@ -241,7 +283,9 @@ RorMatchCard.propTypes = {
   }).isRequired,
   isSelected: PropTypes.bool.isRequired,
   onSelect: PropTypes.func.isRequired,
+  onAdoptName: PropTypes.func,
 };
+RorMatchCard.defaultProps = { onAdoptName: null };
 
 function SourceHeader({ badge, badgeClass, loading, count }) {
   return (
@@ -275,6 +319,7 @@ export default function EnrichmentPanel({
   selectedRorMatch,
   onSelectRor,
   entityType,
+  onAdoptName,
 }) {
   const hasPydref = onSelectPydref != null;
   const pydrefVisible = hasPydref && (pydrefLoading || pydrefMatches.length > 0);
@@ -307,6 +352,7 @@ export default function EnrichmentPanel({
               m={m}
               isSelected={!!(selectedPydrefMatch?.idref && selectedPydrefMatch.idref === m.idref)}
               onSelect={onSelectPydref}
+              onAdoptName={onAdoptName}
             />
           ))}
         </div>
@@ -327,6 +373,7 @@ export default function EnrichmentPanel({
               isSelected={selectedWikidataMatch?.qid === m.qid}
               onSelect={onSelectWikidata}
               entityType={entityType}
+              onAdoptName={onAdoptName}
             />
           ))}
         </div>
@@ -346,6 +393,7 @@ export default function EnrichmentPanel({
               m={m}
               isSelected={selectedRorMatch?.rorId === m.rorId}
               onSelect={onSelectRor}
+              onAdoptName={onAdoptName}
             />
           ))}
         </div>
@@ -368,6 +416,7 @@ EnrichmentPanel.propTypes = {
   selectedRorMatch: PropTypes.shape({ rorId: PropTypes.string }),
   onSelectRor: PropTypes.func,
   entityType: PropTypes.oneOf(['person', 'structure']),
+  onAdoptName: PropTypes.func,
 };
 
 EnrichmentPanel.defaultProps = {
@@ -381,4 +430,5 @@ EnrichmentPanel.defaultProps = {
   selectedRorMatch: null,
   onSelectRor: null,
   entityType: 'person',
+  onAdoptName: null,
 };
