@@ -86,8 +86,34 @@ IdRefMatchCard.propTypes = {
 };
 IdRefMatchCard.defaultProps = { onAdoptName: null };
 
+function DuplicateWarning({ info }) {
+  return (
+    <div style={{
+      display: 'flex',
+      alignItems: 'center',
+      gap: '8px',
+      padding: '6px 10px',
+      marginBottom: '8px',
+      background: 'var(--warning-950-100)',
+      borderLeft: '3px solid var(--warning-425-625)',
+      borderRadius: '0 4px 4px 0',
+    }}
+    >
+      <span className="fr-text--xs fr-mb-0">
+        Cette fiche existe déjà dans Paysage :
+        {' '}
+        <a href={`/structures/${info.id}`} target="_blank" rel="noreferrer">{info.name}</a>
+      </span>
+    </div>
+  );
+}
+
+DuplicateWarning.propTypes = {
+  info: PropTypes.shape({ id: PropTypes.string.isRequired, name: PropTypes.string.isRequired }).isRequired,
+};
+
 function WikidataMatchCard({
-  m, isSelected, onSelect, entityType, onAdoptName,
+  m, isSelected, onSelect, entityType, onAdoptName, duplicateInfo,
 }) {
   const fmtDate = (d) => (d ? d.split('-').reverse().join('/') : null);
 
@@ -99,6 +125,7 @@ function WikidataMatchCard({
         background: isSelected ? 'var(--blue-france-975-75)' : 'var(--grey-975-75)',
       }}
     >
+      {duplicateInfo && <DuplicateWarning info={duplicateInfo} />}
       <div className="fr-grid-row fr-grid-row--top">
         <div className="fr-col">
           <p className="fr-text--sm fr-text--bold fr-mb-1v">
@@ -196,10 +223,11 @@ WikidataMatchCard.propTypes = {
   onSelect: PropTypes.func.isRequired,
   entityType: PropTypes.oneOf(['person', 'structure']).isRequired,
   onAdoptName: PropTypes.func,
+  duplicateInfo: PropTypes.shape({ id: PropTypes.string, name: PropTypes.string }),
 };
-WikidataMatchCard.defaultProps = { onAdoptName: null };
+WikidataMatchCard.defaultProps = { onAdoptName: null, duplicateInfo: null };
 
-function RorMatchCard({ m, isSelected, onSelect, onAdoptName }) {
+function RorMatchCard({ m, isSelected, onSelect, onAdoptName, duplicateInfo }) {
   return (
     <div
       className="fr-p-2w fr-mb-1w"
@@ -208,6 +236,7 @@ function RorMatchCard({ m, isSelected, onSelect, onAdoptName }) {
         background: isSelected ? 'var(--blue-france-975-75)' : 'var(--grey-975-75)',
       }}
     >
+      {duplicateInfo && <DuplicateWarning info={duplicateInfo} />}
       <div className="fr-grid-row fr-grid-row--top">
         <div className="fr-col">
           <p className="fr-text--sm fr-text--bold fr-mb-1v">
@@ -284,8 +313,9 @@ RorMatchCard.propTypes = {
   isSelected: PropTypes.bool.isRequired,
   onSelect: PropTypes.func.isRequired,
   onAdoptName: PropTypes.func,
+  duplicateInfo: PropTypes.shape({ id: PropTypes.string, name: PropTypes.string }),
 };
-RorMatchCard.defaultProps = { onAdoptName: null };
+RorMatchCard.defaultProps = { onAdoptName: null, duplicateInfo: null };
 
 function SourceHeader({ badge, badgeClass, loading, count }) {
   return (
@@ -320,6 +350,7 @@ export default function EnrichmentPanel({
   onSelectRor,
   entityType,
   onAdoptName,
+  externalDuplicates,
 }) {
   const hasPydref = onSelectPydref != null;
   const pydrefVisible = hasPydref && (pydrefLoading || pydrefMatches.length > 0);
@@ -374,6 +405,7 @@ export default function EnrichmentPanel({
               onSelect={onSelectWikidata}
               entityType={entityType}
               onAdoptName={onAdoptName}
+              duplicateInfo={externalDuplicates?.[m.qid] || null}
             />
           ))}
         </div>
@@ -394,6 +426,7 @@ export default function EnrichmentPanel({
               isSelected={selectedRorMatch?.rorId === m.rorId}
               onSelect={onSelectRor}
               onAdoptName={onAdoptName}
+              duplicateInfo={externalDuplicates?.[m.rorId] || null}
             />
           ))}
         </div>
@@ -417,6 +450,7 @@ EnrichmentPanel.propTypes = {
   onSelectRor: PropTypes.func,
   entityType: PropTypes.oneOf(['person', 'structure']),
   onAdoptName: PropTypes.func,
+  externalDuplicates: PropTypes.shape({}),
 };
 
 EnrichmentPanel.defaultProps = {
@@ -431,4 +465,5 @@ EnrichmentPanel.defaultProps = {
   onSelectRor: null,
   entityType: 'person',
   onAdoptName: null,
+  externalDuplicates: null,
 };

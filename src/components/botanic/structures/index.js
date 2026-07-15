@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Col, Row, Stepper } from '@dataesr/react-dsfr';
 import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
@@ -55,6 +55,36 @@ export default function StructureFlow({ onClose, onCreated }) {
   const [localisationBody, setLocalisationBody] = useState(null);
 
   const [mandates, setMandates] = useState([]);
+
+  const [externalDuplicates, setExternalDuplicates] = useState({});
+
+  useEffect(() => {
+    if (!wikidataMatches.length && !rorMatches.length) { setExternalDuplicates({}); return; }
+    let cancelled = false;
+    const checkAll = async () => {
+      const entries = [];
+      await Promise.all([
+        ...wikidataMatches.map(async (m) => {
+          try {
+            const { data: res } = await api.get(`/autocomplete?types=structures&query=${encodeURIComponent(m.qid)}`);
+            const found = (res?.data || []).find((el) => el?.identifiers?.includes(m.qid));
+            if (found) entries.push([m.qid, { id: found.id, name: found.name }]);
+          } catch { /* ignore */ }
+        }),
+        ...rorMatches.map(async (m) => {
+          try {
+            const { data: res } = await api.get(`/autocomplete?types=structures&query=${encodeURIComponent(m.rorId)}`);
+            const found = (res?.data || []).find((el) => el?.identifiers?.includes(m.rorId));
+            if (found) entries.push([m.rorId, { id: found.id, name: found.name }]);
+          } catch { /* ignore */ }
+        }),
+      ]);
+      if (!cancelled) setExternalDuplicates(Object.fromEntries(entries));
+    };
+    checkAll();
+    // eslint-disable-next-line consistent-return
+    return () => { cancelled = true; };
+  }, [wikidataMatches, rorMatches]);
 
   const handleStructureQuery = async (q) => {
     setStructureQuery(q);
@@ -346,6 +376,7 @@ export default function StructureFlow({ onClose, onCreated }) {
             onSelectRor={handleSelectRorMatch}
             entityType="structure"
             onAdoptName={isCreatingNew ? handleAdoptStructureName : null}
+            externalDuplicates={externalDuplicates}
           />
           {step1Errors.structure && <p className="fr-error-text fr-mt-1w">{step1Errors.structure}</p>}
           {step1Errors.usualName && <p className="fr-error-text fr-mt-1w">{step1Errors.usualName}</p>}
