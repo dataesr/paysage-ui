@@ -70,17 +70,14 @@ export default function IdentifiersStep({
     setSmErrors((p) => { const n = { ...p }; delete n[key]; return n; });
   };
 
-  // Split identifiers into two sections
   const existingIds = identifiers.filter((r) => r.fromExisting && r.type !== 'ark');
   const newIds = identifiers.filter((r) => !r.fromExisting && r.type !== 'ark');
 
-  // Map existing paysage identifiers by type for conflict detection
   const existingByType = new Map(
     existingIds.filter((r) => r.type).map((r) => [r.type, { key: r._key, value: r.value }]),
   );
 
   const renderIdRow = (row, fromPaysage) => {
-    // Prevent duplicate types WITHIN the same section only
     const siblingTypes = new Set(
       identifiers
         .filter((r) => r._key !== row._key && Boolean(r.fromExisting) === fromPaysage && r.type)
@@ -98,7 +95,6 @@ export default function IdentifiersStep({
     else if (row.fromPydref) sourceBadge = { label: 'IdRef', cls: 'fr-badge--blue-ecume' };
     else if (row.fromWikidata) sourceBadge = { label: row.via ? `Wikidata · ${row.via}` : 'Wikidata', cls: 'fr-badge--green-emeraude' };
 
-    // Conflict: a new identifier has the same type as a paysage one
     const conflict = !fromPaysage && row.type ? existingByType.get(row.type) : null;
     const isSameValue = conflict
       && sanitizeIdentifierValue(row.type, row.value || '') === sanitizeIdentifierValue(row.type, conflict.value || '');

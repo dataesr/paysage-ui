@@ -45,6 +45,11 @@ export default function PersonFlow({ onClose, onCreated }) {
   const { data: relationTypesData } = useFetch('/relation-types?limit=500&filters[for]=persons');
   const allRelationTypes = useMemo(() => relationTypesData?.data || [], [relationTypesData]);
   const identifierOptions = (enums?.identifiers?.persons || [{ label: 'Sélectionner un type', value: '' }]).filter((o) => o.value !== 'ark');
+  const allowedIdentifierTypes = useMemo(
+    () => new Set(identifierOptions.filter((o) => o.value).map((o) => o.value)),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [enums],
+  );
   const socialMediaOptions = enums?.socialMedias || [{ label: 'Sélectionner un type', value: '' }];
   const navigate = useNavigate();
 
@@ -168,10 +173,9 @@ export default function PersonFlow({ onClose, onCreated }) {
     const allPairs = extractIdentifierPairs(match.identifiers);
     setIdentifiers((prev) => {
       const manual = prev.filter((r) => !r.fromPydref && r.crossTrigger !== 'pydref');
-      // Only block types already used by OTHER new identifiers (allow conflict with paysage existing ones)
       const usedNewTypes = new Set(manual.filter((r) => !r.fromExisting).map((r) => r.type).filter(Boolean));
       const fromPydref = allPairs
-        .filter(([type]) => !usedNewTypes.has(type))
+        .filter(([type]) => !usedNewTypes.has(type) && allowedIdentifierTypes.has(type))
         .map(([type, value]) => ({ _key: uid(), type, value, fromPydref: true }));
       return [...fromPydref, ...manual];
     });
@@ -187,7 +191,7 @@ export default function PersonFlow({ onClose, onCreated }) {
       setIdentifiers((prev) => {
         const usedNewTypes = new Set(prev.filter((r) => r.type && !r.fromExisting).map((r) => r.type));
         const extra = (wdResult.identifiers || [])
-          .filter(({ type, value }) => !usedNewTypes.has(type) && isIdentifierValid(type, value))
+          .filter(({ type, value }) => !usedNewTypes.has(type) && allowedIdentifierTypes.has(type) && isIdentifierValid(type, value))
           .map(({ type, value }) => ({ _key: uid(), type, value, fromWikidata: true, via: 'Pydref', crossTrigger: 'pydref' }));
         return [...prev, ...extra];
       });
@@ -209,7 +213,7 @@ export default function PersonFlow({ onClose, onCreated }) {
       // Only block types already used by OTHER new identifiers (allow conflict with paysage existing ones)
       const usedNewTypes = new Set(without.filter((r) => r.type && !r.fromExisting).map((r) => r.type));
       const fromWikidata = (match.identifiers || [])
-        .filter(({ type, value }) => !usedNewTypes.has(type) && isIdentifierValid(type, value))
+        .filter(({ type, value }) => !usedNewTypes.has(type) && allowedIdentifierTypes.has(type) && isIdentifierValid(type, value))
         .map(({ type, value }) => ({ _key: uid(), type, value, fromWikidata: true }));
       return [...without, ...fromWikidata];
     });
@@ -647,6 +651,19 @@ export default function PersonFlow({ onClose, onCreated }) {
               </p>
             )}
           </div>
+          <Row justifyContent="right" spacing="mb-2w" gutters>
+            <Col className="text-right">
+              <Button
+                color="error"
+                tertiary
+                icon="ri-user-line"
+                iconPosition="left"
+                onClick={handleSubmitWithoutMandate}
+              >
+                {typeof existingPersonId === 'string' ? 'Enregistrer sans mandat' : 'Créer la fiche sans mandat'}
+              </Button>
+            </Col>
+          </Row>
           <FonctionStep
             pastFunctions={pastFunctions}
             pastContacts={pastContacts}
@@ -669,18 +686,6 @@ export default function PersonFlow({ onClose, onCreated }) {
                 disabled={!mandate.structure.selected || !mandate.relType.selected}
               >
                 {typeof existingPersonId === 'string' ? 'Enregistrer le mandat' : 'Créer la fiche et le mandat'}
-              </Button>
-            </Col>
-            <Col className="text-right">
-              <Button
-                color="error"
-                tertiary
-                className="fr-mr-2w"
-                icon="ri-user-line"
-                iconPosition="left"
-                onClick={handleSubmitWithoutMandate}
-              >
-                {typeof existingPersonId === 'string' ? 'Enregistrer sans mandat' : 'Créer la fiche sans mandat'}
               </Button>
             </Col>
           </Row>
