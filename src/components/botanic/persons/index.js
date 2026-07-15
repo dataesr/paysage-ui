@@ -623,6 +623,30 @@ export default function PersonFlow({ onClose, onCreated }) {
 
       {step === 3 && (
         <>
+          <div className="fr-mb-3w fr-p-2w" style={{ background: 'var(--grey-975-75)', borderLeft: '3px solid var(--blue-france-sun-113-625)' }}>
+            <p className="fr-text--sm fr-text--bold fr-mb-1w">Ce qui sera enregistré</p>
+            <p className="fr-text--sm fr-mb-1v">
+              <strong>Personne :</strong>
+              {` ${[firstName, lastName].filter(Boolean).join(' ')}`}
+              {existingPersonId ? (
+                <a href={`/personnes/${existingPersonId}`} target="_blank" rel="noreferrer" className="fr-badge fr-badge--sm fr-badge--success fr-ml-1w">Fiche existante ↗</a>
+              ) : (
+                <span className="fr-badge fr-badge--sm fr-badge--new fr-ml-1w">Nouvelle fiche</span>
+              )}
+            </p>
+            {!existingPersonId && (gender || birthDate || activity) && (
+              <p className="fr-text--xs fr-hint-text fr-mb-1v">
+                {[gender, birthDate ? `né·e le ${birthDate}` : null, activity].filter(Boolean).join(' · ')}
+              </p>
+            )}
+            {identifiers.filter((r) => r.type && r.value && !r.fromExisting).length > 0 && (
+              <p className="fr-text--xs fr-hint-text fr-mb-0">
+                <strong>Identifiants :</strong>
+                {' '}
+                {identifiers.filter((r) => r.type && r.value && !r.fromExisting).map((r) => `${r.type} · ${r.value}`).join(', ')}
+              </p>
+            )}
+          </div>
           <FonctionStep
             pastFunctions={pastFunctions}
             pastContacts={pastContacts}

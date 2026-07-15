@@ -12,7 +12,7 @@ function IdRefMatchCard({ m, isSelected, onSelect, onAdoptName }) {
       className="fr-p-2w fr-mb-1w"
       style={{
         border: `2px solid ${isSelected ? 'var(--blue-france-sun-113-625)' : 'var(--grey-900-175)'}`,
-        background: isSelected ? 'var(--blue-france-975-75)' : 'var(--grey-100)',
+        background: isSelected ? 'var(--blue-france-975-75)' : 'var(--grey-975-75)',
       }}
     >
       <div className="fr-grid-row fr-grid-row--top">
@@ -96,7 +96,7 @@ function WikidataMatchCard({
       className="fr-p-2w fr-mb-1w"
       style={{
         border: `2px solid ${isSelected ? 'var(--blue-france-sun-113-625)' : 'var(--grey-900-175)'}`,
-        background: isSelected ? 'var(--blue-france-975-75)' : 'white',
+        background: isSelected ? 'var(--blue-france-975-75)' : 'var(--grey-975-75)',
       }}
     >
       <div className="fr-grid-row fr-grid-row--top">
@@ -205,7 +205,7 @@ function RorMatchCard({ m, isSelected, onSelect, onAdoptName }) {
       className="fr-p-2w fr-mb-1w"
       style={{
         border: `2px solid ${isSelected ? 'var(--blue-france-sun-113-625)' : 'var(--grey-900-175)'}`,
-        background: isSelected ? 'var(--blue-france-975-75)' : 'white',
+        background: isSelected ? 'var(--blue-france-975-75)' : 'var(--grey-975-75)',
       }}
     >
       <div className="fr-grid-row fr-grid-row--top">

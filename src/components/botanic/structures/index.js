@@ -412,6 +412,47 @@ export default function StructureFlow({ onClose, onCreated }) {
 
       {step === 4 && (
         <>
+          <div className="fr-mb-3w fr-p-2w" style={{ background: 'var(--grey-975-75)', borderLeft: '3px solid var(--blue-france-sun-113-625)' }}>
+            <p className="fr-text--sm fr-text--bold fr-mb-1w">Ce qui sera enregistré</p>
+            <p className="fr-text--sm fr-mb-1v">
+              <strong>Structure :</strong>
+              {' '}
+              {selectedStructure ? (
+                <a href={`/structures/${selectedStructure.id}`} target="_blank" rel="noreferrer">
+                  {selectedStructure.name}
+                  {' '}
+                  ↗
+                </a>
+              ) : usualName}
+              {selectedStructure ? (
+                <span className="fr-badge fr-badge--sm fr-badge--success fr-ml-1w">Existante</span>
+              ) : (
+                <span className="fr-badge fr-badge--sm fr-badge--new fr-ml-1w">Nouvelle</span>
+              )}
+            </p>
+            {identifiers.filter((r) => r.type && r.value && !r.fromExisting).length > 0 && (
+              <p className="fr-text--xs fr-hint-text fr-mb-1v">
+                <strong>Identifiants :</strong>
+                {' '}
+                {identifiers.filter((r) => r.type && r.value && !r.fromExisting).map((r) => `${r.type} · ${r.value}`).join(', ')}
+              </p>
+            )}
+            {mandates.length > 0 && (
+              <div className="fr-mt-1v">
+                <p className="fr-text--xs fr-hint-text fr-mb-1v">
+                  <strong>{`${mandates.length} mandat${mandates.length > 1 ? 's' : ''} ajouté${mandates.length > 1 ? 's' : ''} :`}</strong>
+                </p>
+                {mandates.map((m) => (
+                  <p key={m._key} className="fr-text--xs fr-mb-0">
+                    {`${m.person.name} — ${m.relationType.name}`}
+                    {m.startDate ? ` · à partir du ${m.startDate}` : ''}
+                    {m.endDate ? ` · jusqu'au ${m.endDate}` : ''}
+                    {m.temporary ? ' · par intérim' : ''}
+                  </p>
+                ))}
+              </div>
+            )}
+          </div>
           <StructureMandateStep
             mandates={mandates}
             onAddMandate={handleAddMandate}

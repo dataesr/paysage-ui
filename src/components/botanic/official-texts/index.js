@@ -49,6 +49,16 @@ export default function OfficialTextFlow({ onClose }) {
   const [submitting, setSubmitting] = useState(false);
   const [createOverlay, setCreateOverlay] = useState(null); // { kind, apply }
 
+  const [existingCited, setExistingCited] = useState([]);
+  const [citedCategories, setCitedCategories] = useState([]);
+  const [citedTerms, setCitedTerms] = useState([]);
+  const [categoryQuery, setCategoryQuery] = useState('');
+  const [categoryOptions, setCategoryOptions] = useState([]);
+  const [categorySearching, setCategorySearching] = useState(false);
+  const [termQuery, setTermQuery] = useState('');
+  const [termOptions, setTermOptions] = useState([]);
+  const [termSearching, setTermSearching] = useState(false);
+
   const openCreateOverlay = (kind, apply) => setCreateOverlay({ kind, apply });
   const closeCreateOverlay = () => setCreateOverlay(null);
   const handleOverlayCreated = (entity) => {
@@ -67,23 +77,53 @@ export default function OfficialTextFlow({ onClose }) {
     setTextSearching(false);
   };
 
+  const searchCategory = async (q) => {
+    setCategoryQuery(q);
+    if (!q || q.length < 2) { setCategoryOptions([]); return; }
+    setCategorySearching(true);
+    try {
+      const { data } = await api.get(`/autocomplete?types=categories&query=${encodeURIComponent(q)}`);
+      setCategoryOptions(data?.data || []);
+    } catch { setCategoryOptions([]); }
+    setCategorySearching(false);
+  };
+
+  const searchTerm = async (q) => {
+    setTermQuery(q);
+    if (!q || q.length < 2) { setTermOptions([]); return; }
+    setTermSearching(true);
+    try {
+      const { data } = await api.get(`/autocomplete?types=terms&query=${encodeURIComponent(q)}`);
+      setTermOptions(data?.data || []);
+    } catch { setTermOptions([]); }
+    setTermSearching(false);
+  };
+
   const handleSelectOfficialText = async (item) => {
     setOfficialText(item);
     setTextQuery('');
     setTextOptions([]);
+    setExistingCited([]);
     try {
       const { data } = await api.get(`/official-texts/${item.id}`);
       setOfficialText((prev) => ({ ...prev, pageUrl: data.pageUrl }));
+      if (data.relatedObjects?.length) {
+        setExistingCited(data.relatedObjects.map((o) => ({ id: o.id, name: o.displayName || o.id })));
+      }
     } catch { /* */ }
   };
 
   const addCited = (kind, entity) => {
     if (kind === 'structures') setCitedStructures((prev) => (prev.some((s) => s.id === entity.id) ? prev : [...prev, entity]));
-    else setCitedPersons((prev) => (prev.some((p) => p.id === entity.id) ? prev : [...prev, entity]));
+    else if (kind === 'persons') setCitedPersons((prev) => (prev.some((p) => p.id === entity.id) ? prev : [...prev, entity]));
+    else if (kind === 'categories') setCitedCategories((prev) => (prev.some((c) => c.id === entity.id) ? prev : [...prev, entity]));
+    else setCitedTerms((prev) => (prev.some((t) => t.id === entity.id) ? prev : [...prev, entity]));
   };
   const removeCited = (kind, id) => {
     if (kind === 'structures') setCitedStructures((prev) => prev.filter((s) => s.id !== id));
-    else setCitedPersons((prev) => prev.filter((p) => p.id !== id));
+    else if (kind === 'persons') setCitedPersons((prev) => prev.filter((p) => p.id !== id));
+    else if (kind === 'categories') setCitedCategories((prev) => prev.filter((c) => c.id !== id));
+    else setCitedTerms((prev) => prev.filter((t) => t.id !== id));
   };
 
   const handleNextFromText = () => {
@@ -101,11 +141,11 @@ export default function OfficialTextFlow({ onClose }) {
     setStep(2);
   };
 
-  const citedCount = citedStructures.length + citedPersons.length;
+  const citedCount = citedStructures.length + citedPersons.length + citedCategories.length + citedTerms.length;
 
   const handleGoToRecap = () => {
-    if (citedCount === 0) {
-      notice({ content: 'Ajoutez au moins une personne ou une structure à citer.', type: 'error' });
+    if (textMode === 'create' && citedCount === 0) {
+      notice({ content: 'Ajoutez au moins un objet à citer (personne, structure, catégorie ou terme).', type: 'error' });
       return;
     }
     setStep(3);
@@ -116,7 +156,10 @@ export default function OfficialTextFlow({ onClose }) {
     setTextMode('create');
     setTextQuery(''); setTextOptions([]); setTextSearching(false); setOfficialText(null);
     setDraft(emptyDraft);
-    setCitedStructures([]); setCitedPersons([]);
+    setCitedStructures([]); setCitedPersons([]); setCitedCategories([]); setCitedTerms([]);
+    setExistingCited([]);
+    setCategoryQuery(''); setCategoryOptions([]); setCategorySearching(false);
+    setTermQuery(''); setTermOptions([]); setTermSearching(false);
     setShowErrors(false); setSubmitting(false);
     onClose();
   };
@@ -126,6 +169,8 @@ export default function OfficialTextFlow({ onClose }) {
     const relatesToIds = [...new Set([
       ...citedStructures.map((s) => s.id),
       ...citedPersons.map((p) => p.id),
+      ...citedCategories.map((c) => c.id),
+      ...citedTerms.map((t) => t.id),
     ])];
     let savedId = null;
     const normalizeUrl = (url) => (url && !url.match(/^https?:\/\//) ? `https://${url}` : url);
@@ -329,13 +374,24 @@ export default function OfficialTextFlow({ onClose }) {
 
       {step === 2 && (
         <>
-          <p className="fr-text--lead fr-mb-1w">Personnes et structures citées dans le texte</p>
+          <p className="fr-text--lead fr-mb-1w">Objets cités dans le texte</p>
           <p className="fr-text--xs fr-hint-text fr-mb-2w">
-            Ajoutez les objets à lier au texte, sans notion de mandat. Créez-les s&apos;ils sont absents.
+            Ajoutez les objets à lier au texte. Créez-les s&apos;ils sont absents.
           </p>
 
+          {existingCited.length > 0 && (
+            <div className="fr-mb-3w">
+              <p className="fr-text--sm fr-text--bold fr-mb-1w">Déjà liés</p>
+              <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                {existingCited.map((o) => (
+                  <Tag key={o.id}>{o.name}</Tag>
+                ))}
+              </div>
+            </div>
+          )}
+
           <div className="fr-mb-3w">
-            <p className="fr-text--sm fr-text--bold fr-mb-1w">Structures citées</p>
+            <p className="fr-text--sm fr-text--bold fr-mb-1w">Structures</p>
             {citedStructures.length > 0 && (
               <div className="fr-mb-1w" style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
                 {citedStructures.map((s) => (
@@ -354,7 +410,7 @@ export default function OfficialTextFlow({ onClose }) {
           </div>
 
           <div className="fr-mb-3w">
-            <p className="fr-text--sm fr-text--bold fr-mb-1w">Personnes citées</p>
+            <p className="fr-text--sm fr-text--bold fr-mb-1w">Personnes</p>
             {citedPersons.length > 0 && (
               <div className="fr-mb-1w" style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
                 {citedPersons.map((p) => (
@@ -369,6 +425,48 @@ export default function OfficialTextFlow({ onClose }) {
               onSelect={(p) => addCited('persons', p)}
               onUnselect={() => {}}
               onRequestCreate={() => openCreateOverlay('persons', (entity) => addCited('persons', entity))}
+            />
+          </div>
+
+          <div className="fr-mb-3w">
+            <p className="fr-text--sm fr-text--bold fr-mb-1w">Catégories</p>
+            {citedCategories.length > 0 && (
+              <div className="fr-mb-1w" style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                {citedCategories.map((c) => (
+                  <Tag key={c.id} onClick={() => removeCited('categories', c.id)} icon="ri-close-line">{c.name}</Tag>
+                ))}
+              </div>
+            )}
+            <SearchBar
+              buttonLabel="Rechercher"
+              label="Ajouter une catégorie"
+              placeholder="Rechercher une catégorie…"
+              value={categoryQuery}
+              options={categoryOptions}
+              onChange={(e) => searchCategory(e.target.value)}
+              onSelect={(item) => { addCited('categories', item); setCategoryQuery(''); setCategoryOptions([]); }}
+              isSearching={categorySearching}
+            />
+          </div>
+
+          <div className="fr-mb-3w">
+            <p className="fr-text--sm fr-text--bold fr-mb-1w">Termes</p>
+            {citedTerms.length > 0 && (
+              <div className="fr-mb-1w" style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                {citedTerms.map((t) => (
+                  <Tag key={t.id} onClick={() => removeCited('terms', t.id)} icon="ri-close-line">{t.name}</Tag>
+                ))}
+              </div>
+            )}
+            <SearchBar
+              buttonLabel="Rechercher"
+              label="Ajouter un terme"
+              placeholder="Rechercher un terme…"
+              value={termQuery}
+              options={termOptions}
+              onChange={(e) => searchTerm(e.target.value)}
+              onSelect={(item) => { addCited('terms', item); setTermQuery(''); setTermOptions([]); }}
+              isSearching={termSearching}
             />
           </div>
 
@@ -390,11 +488,58 @@ export default function OfficialTextFlow({ onClose }) {
       {step === 3 && (
         <>
           <p className="fr-text--lead fr-mb-2w">Récapitulatif avant enregistrement</p>
-          <ul className="fr-mb-2w">
-            <li>{textMode === 'create' ? `1 texte officiel à créer : ${draft.title}` : `Texte officiel : ${officialText?.name}`}</li>
-            {citedStructures.length > 0 && <li>{`${citedStructures.length} structure(s) liée(s)`}</li>}
-            {citedPersons.length > 0 && <li>{`${citedPersons.length} personne(s) liée(s)`}</li>}
-          </ul>
+
+          <div className="fr-mb-2w fr-p-2w" style={{ border: '1px solid var(--grey-900-175)', background: 'var(--grey-900-175)' }}>
+            <p className="fr-text--sm fr-text--bold fr-mb-1v">Texte officiel</p>
+            <p className="fr-text--sm fr-mb-0">
+              {textMode === 'create' ? `À créer : ${draft.title}` : `Existant : ${officialText?.name}`}
+            </p>
+          </div>
+
+          {existingCited.length > 0 && (
+            <div className="fr-mb-2w">
+              <p className="fr-text--sm fr-text--bold fr-mb-1v">{`Objets déjà liés (${existingCited.length})`}</p>
+              <ul style={{ margin: 0, paddingLeft: '1.5rem' }}>
+                {existingCited.map((o) => <li key={o.id} className="fr-text--sm">{o.name}</li>)}
+              </ul>
+            </div>
+          )}
+
+          {citedStructures.length > 0 && (
+            <div className="fr-mb-2w">
+              <p className="fr-text--sm fr-text--bold fr-mb-1v">{`Structures à lier (${citedStructures.length})`}</p>
+              <ul style={{ margin: 0, paddingLeft: '1.5rem' }}>
+                {citedStructures.map((s) => <li key={s.id} className="fr-text--sm">{s.name}</li>)}
+              </ul>
+            </div>
+          )}
+
+          {citedPersons.length > 0 && (
+            <div className="fr-mb-2w">
+              <p className="fr-text--sm fr-text--bold fr-mb-1v">{`Personnes à lier (${citedPersons.length})`}</p>
+              <ul style={{ margin: 0, paddingLeft: '1.5rem' }}>
+                {citedPersons.map((p) => <li key={p.id} className="fr-text--sm">{p.name}</li>)}
+              </ul>
+            </div>
+          )}
+
+          {citedCategories.length > 0 && (
+            <div className="fr-mb-2w">
+              <p className="fr-text--sm fr-text--bold fr-mb-1v">{`Catégories à lier (${citedCategories.length})`}</p>
+              <ul style={{ margin: 0, paddingLeft: '1.5rem' }}>
+                {citedCategories.map((c) => <li key={c.id} className="fr-text--sm">{c.name}</li>)}
+              </ul>
+            </div>
+          )}
+
+          {citedTerms.length > 0 && (
+            <div className="fr-mb-2w">
+              <p className="fr-text--sm fr-text--bold fr-mb-1v">{`Termes à lier (${citedTerms.length})`}</p>
+              <ul style={{ margin: 0, paddingLeft: '1.5rem' }}>
+                {citedTerms.map((t) => <li key={t.id} className="fr-text--sm">{t.name}</li>)}
+              </ul>
+            </div>
+          )}
 
           <Row justifyContent="right" spacing="mt-3w" gutters>
             <Col>

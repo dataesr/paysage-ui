@@ -567,7 +567,7 @@ export default function MandateFlow({ onClose }) {
             <>
               <p className="fr-text--sm fr-text--bold fr-mb-1w">Fins de mandat</p>
               {closureSections.map((sec) => (
-                <div key={sec._key} className="fr-p-2w fr-mb-2w" style={{ border: '1px solid var(--grey-900-175)', borderRadius: '4px', background: 'var(--grey-975-75)' }}>
+                <div key={sec._key} className="fr-p-2w fr-mb-2w" style={{ border: '1px solid var(--grey-900-175)', background: 'var(--grey-975-75)' }}>
                   <EntityField
                     type="structures"
                     label="Structure concernée"
@@ -595,7 +595,7 @@ export default function MandateFlow({ onClose }) {
                           />
                           Clôturer
                         </label>
-                        <div style={{ flex: 1, border: '1px solid var(--grey-925-125)', borderRadius: '4px', padding: '8px 12px' }}>
+                        <div style={{ flex: 1, border: '1px solid var(--grey-925-125)', padding: '8px 12px' }}>
                           <p className="fr-text--sm fr-mb-0"><strong>{c.personName}</strong></p>
                           {c.relTypeName && <p className="fr-text--xs fr-mb-0" style={{ color: 'var(--grey-425-625)' }}>{c.relTypeName}</p>}
                         </div>
@@ -643,27 +643,79 @@ export default function MandateFlow({ onClose }) {
       {step === 3 && (
         <>
           <p className="fr-text--lead fr-mb-2w">Récapitulatif avant enregistrement</p>
-          <ul className="fr-mb-2w">
-            {hasText === true && (
-              <li>{textMode === 'create' ? `1 texte juridique à créer : ${draft.title}` : `1 texte juridique lié : ${officialText?.name}`}</li>
-            )}
-            {validRows.length > 0 && <li>{`${validRows.length} mandat${validRows.length > 1 ? 's' : ''} à créer`}</li>}
-            {allClosures.length > 0 && <li>{`${allClosures.length} fermeture${allClosures.length > 1 ? 's' : ''} de mandat`}</li>}
-          </ul>
 
-          {validRows.map((r) => (
-            <div key={r._key} className="fr-p-2w fr-mb-1w" style={{ border: '1px solid var(--grey-900-175)', borderRadius: '4px', background: 'var(--grey-975-75)' }}>
-              <p className="fr-text--sm fr-mb-0">
-                <strong>{r.person.name}</strong>
-                {` — ${r.relType.name} @ ${r.structure.name}`}
+          {hasText === true && (
+            <div className="fr-mb-2w fr-p-2w" style={{ border: '1px solid var(--grey-900-175)', background: 'var(--grey-975-75)' }}>
+              <p className="fr-text--sm fr-text--bold fr-mb-1v">
+                {textMode === 'create' ? 'Texte juridique à créer' : 'Texte juridique associé'}
               </p>
-              <p className="fr-text--xs fr-hint-text fr-mb-0">
-                {r.startDate ? `À partir du ${r.startDate}` : 'Sans date de début'}
-                {r.endDate ? ` · jusqu'au ${r.endDate}` : ''}
-                {r.temporary ? ' · par intérim' : ''}
-              </p>
+              {textMode === 'create' ? (
+                <div>
+                  <p className="fr-text--sm fr-mb-0">{draft.title}</p>
+                  {(draft.nature || draft.type) && (
+                    <p className="fr-text--xs fr-hint-text fr-mb-0">{[draft.nature, draft.type].filter(Boolean).join(' · ')}</p>
+                  )}
+                  {draft.publicationDate && (
+                    <p className="fr-text--xs fr-hint-text fr-mb-0">{`Publication : ${draft.publicationDate}${draft.signatureDate ? ` · Signature : ${draft.signatureDate}` : ''}`}</p>
+                  )}
+                </div>
+              ) : (
+                <div>
+                  <p className="fr-text--sm fr-mb-0">{officialText?.name}</p>
+                  {officialText?.pageUrl && (
+                    <a href={officialText.pageUrl} target="_blank" rel="noreferrer" className="fr-text--xs">Voir le texte officiel ↗</a>
+                  )}
+                </div>
+              )}
             </div>
-          ))}
+          )}
+
+          {validRows.length > 0 && (
+            <>
+              <p className="fr-text--sm fr-text--bold fr-mb-1w">{`${validRows.length} mandat${validRows.length > 1 ? 's' : ''} à créer`}</p>
+              {validRows.map((r) => (
+                <div key={r._key} className="fr-p-2w fr-mb-1w" style={{ border: '1px solid var(--grey-900-175)', borderRadius: '4px', background: 'var(--grey-975-75)' }}>
+                  <p className="fr-text--sm fr-mb-1v">
+                    <a href={`/personnes/${r.person.id}`} target="_blank" rel="noreferrer"><strong>{r.person.name}</strong></a>
+                    {' — '}
+                    <strong>{r.relType.name}</strong>
+                  </p>
+                  <p className="fr-text--sm fr-mb-1v">
+                    {'Structure : '}
+                    <a href={`/structures/${r.structure.id}`} target="_blank" rel="noreferrer">{r.structure.name}</a>
+                  </p>
+                  <p className="fr-text--xs fr-hint-text fr-mb-0">
+                    {r.startDate ? `Début : ${r.startDate}` : 'Sans date de début'}
+                    {r.endDatePrevisional ? ` · Fin prév. : ${r.endDatePrevisional}` : ''}
+                    {r.endDate ? ` · Fin : ${r.endDate}` : ''}
+                    {r.temporary ? ' · par intérim' : ''}
+                    {r.reason === 'election' && ' · élection'}
+                    {r.reason === 'nomination' && ' · nomination'}
+                    {r.email ? ` · ${r.email}` : ''}
+                  </p>
+                </div>
+              ))}
+            </>
+          )}
+
+          {allClosures.length > 0 && (
+            <>
+              <p className="fr-text--sm fr-text--bold fr-mb-1w fr-mt-2w">{`${allClosures.length} fermeture${allClosures.length > 1 ? 's' : ''} de mandat`}</p>
+              {allClosures.map((c) => (
+                <div key={c.id} className="fr-p-2w fr-mb-1w" style={{ border: '1px solid var(--orange-terre-battue-925-125)', borderRadius: '4px', background: 'var(--grey-975-75)' }}>
+                  <p className="fr-text--sm fr-mb-0">
+                    <a href={`/personnes/${c.relatedObjectId}`} target="_blank" rel="noreferrer"><strong>{c.personName}</strong></a>
+                    {c.relTypeName ? ` — ${c.relTypeName}` : ''}
+                  </p>
+                  <p className="fr-text--xs fr-hint-text fr-mb-0">
+                    {`Clôture : ${c.endDate || 'date du jour'}`}
+                    {' · '}
+                    <a href={`/structures/${c.resourceId}`} target="_blank" rel="noreferrer">Voir la structure ↗</a>
+                  </p>
+                </div>
+              ))}
+            </>
+          )}
 
           <Row justifyContent="right" spacing="mt-3w" gutters>
             <Col>
