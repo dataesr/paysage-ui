@@ -3,6 +3,7 @@ import {
   Checkbox, Col, Radio, RadioGroup, Row, Select, Stepper, Tag, TextInput,
 } from '@dataesr/react-dsfr';
 import PropTypes from 'prop-types';
+import { useNavigate } from 'react-router-dom';
 import Button from '../../button';
 import SearchBar from '../../search-bar';
 import DateInput from '../../date-input';
@@ -73,6 +74,7 @@ const fetchPersonContacts = async (personId) => {
 
 export default function MandateFlow({ onClose }) {
   const { notice } = useNotice();
+  const navigate = useNavigate();
   const { data: relationTypesData } = useFetch('/relation-types?limit=500&filters[for]=persons');
   const allRelationTypes = useMemo(() => relationTypesData?.data || [], [relationTypesData]);
 
@@ -217,10 +219,13 @@ export default function MandateFlow({ onClose }) {
     onClose();
   };
 
+  const normalizeUrl = (url) => (url && !url.match(/^https?:\/\//) ? `https://${url}` : url);
+
   const resolveOfficialTextId = async (relatesToIds) => {
     if (hasText !== true) return null;
     if (textMode === 'create') {
-      const { data } = await api.post('/official-texts', { ...draft, relatesTo: relatesToIds });
+      const cleanDraft = Object.fromEntries(Object.entries(draft).filter(([, v]) => v !== ''));
+      const { data } = await api.post('/official-texts', { ...cleanDraft, pageUrl: normalizeUrl(cleanDraft.pageUrl), relatesTo: relatesToIds });
       return data.id;
     }
     if (officialText) {
@@ -280,7 +285,9 @@ export default function MandateFlow({ onClose }) {
     } else {
       notice(saveSuccess);
     }
+    const firstPersonId = validRows.length > 0 ? validRows[0].person.id : null;
     handleReset();
+    if (firstPersonId) navigate(`/personnes/${firstPersonId}/mandats`);
   };
 
   const toggleConcern = (key) => setConcerns((prev) => ({ ...prev, [key]: !prev[key] }));

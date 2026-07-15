@@ -3,6 +3,7 @@ import {
   Col, Radio, RadioGroup, Row, Select, Stepper, Tag, TextInput,
 } from '@dataesr/react-dsfr';
 import PropTypes from 'prop-types';
+import { useNavigate } from 'react-router-dom';
 import Button from '../../button';
 import SearchBar from '../../search-bar';
 import DateInput from '../../date-input';
@@ -32,6 +33,7 @@ const emptyDraft = {
 
 export default function OfficialTextFlow({ onClose }) {
   const { notice } = useNotice();
+  const navigate = useNavigate();
 
   const [step, setStep] = useState(1);
   const [textMode, setTextMode] = useState('create'); // 'search' | 'create'
@@ -125,10 +127,15 @@ export default function OfficialTextFlow({ onClose }) {
       ...citedStructures.map((s) => s.id),
       ...citedPersons.map((p) => p.id),
     ])];
+    let savedId = null;
+    const normalizeUrl = (url) => (url && !url.match(/^https?:\/\//) ? `https://${url}` : url);
+    const cleanDraft = Object.fromEntries(Object.entries(draft).filter(([, v]) => v !== ''));
     try {
       if (textMode === 'create') {
-        await api.post('/official-texts', { ...draft, relatesTo: relatesToIds });
+        const { data } = await api.post('/official-texts', { ...cleanDraft, pageUrl: normalizeUrl(cleanDraft.pageUrl), relatesTo: relatesToIds });
+        savedId = data.id;
       } else {
+        savedId = officialText.id;
         const { data: detail } = await api.get(`/official-texts/${officialText.id}`);
         const existing = (detail.relatedObjects || []).map((o) => o.id);
         const merged = [...new Set([...existing, ...relatesToIds])];
@@ -137,6 +144,7 @@ export default function OfficialTextFlow({ onClose }) {
     } catch { notice(saveError); setSubmitting(false); return; }
     notice(saveSuccess);
     handleReset();
+    if (savedId) navigate(`/textes-officiels/${savedId}`);
   };
 
   if (createOverlay) {
