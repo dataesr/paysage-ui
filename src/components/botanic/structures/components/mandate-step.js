@@ -244,7 +244,7 @@ export default function StructureMandateStep({
         </div>
       )}
 
-      <div style={{ border: '1px dashed var(--border-default-grey)', borderRadius: '4px', padding: '16px', background: 'white' }}>
+      <div style={{ border: '1px dashed var(--border-default-grey)', borderRadius: '4px', padding: '16px', background: 'var(--grey-975-75)' }}>
         <p className="fr-text--sm fr-mb-2w" style={{ fontWeight: 600 }}>
           {mandates.length === 0 ? 'Ajouter un mandat' : 'Ajouter un autre mandat'}
         </p>
@@ -388,10 +388,12 @@ export default function StructureMandateStep({
                   </Col>
                   <Col n="12 md-6">
                     <DateInput value={endDatePrevisional} label="Date de fin prévisionnelle" onDateChange={setEndDatePrevisional} />
+                  </Col>
+                  <Col n="12">
                     <SearchBar
                       buttonLabel="Rechercher"
                       value={startOT.query}
-                      label="Texte officiel de début"
+                      label="Texte officiel de début de fonction"
                       hint="Rechercher un texte officiel"
                       scope={startOT.name}
                       placeholder={startOT.name ? '' : 'Rechercher...'}
@@ -404,15 +406,19 @@ export default function StructureMandateStep({
                   </Col>
                   <Col n="12 md-6">
                     <DateInput value={endDate} label="Date de fin de fonction" onDateChange={setEndDate} />
+                  </Col>
+                  <Col n="12 md-6">
                     <Checkbox
                       label="Date de fin inconnue mais passée"
                       onChange={(e) => setActive(!e.target.checked)}
                       checked={active === false}
                     />
+                  </Col>
+                  <Col n="12">
                     <SearchBar
                       buttonLabel="Rechercher"
                       value={endOT.query}
-                      label="Texte officiel de fin"
+                      label="Texte officiel de fin de fonction"
                       hint="Rechercher un texte officiel"
                       scope={endOT.name}
                       placeholder={endOT.name ? '' : 'Rechercher...'}
@@ -460,7 +466,7 @@ export default function StructureMandateStep({
                               />
                               Clôturer
                             </label>
-                            <div style={{ flex: 1, border: '1px solid var(--grey-925-125)', borderRadius: '4px', padding: '8px 12px', background: 'white' }}>
+                            <div style={{ flex: 1, border: '1px solid var(--grey-925-125)', borderRadius: '4px', padding: '8px 12px', background: 'var(--grey-975-75)' }}>
                               <p className="fr-text--sm fr-mb-0"><strong>{personName}</strong></p>
                               {relName && <p className="fr-text--xs fr-mb-0" style={{ color: 'var(--grey-425-625)' }}>{relName}</p>}
                             </div>

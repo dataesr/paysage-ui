@@ -98,7 +98,7 @@ export default function MandateRow({
   return (
     <div
       className="fr-p-2w fr-mb-2w"
-      style={{ border: '1px solid var(--grey-900-175)', borderRadius: '4px', background: 'white' }}
+      style={{ border: '1px solid var(--grey-900-175)', borderRadius: '4px', background: 'var(--grey-975-75)' }}
     >
       <Row gutters>
         <Col n="12">
@@ -157,24 +157,24 @@ export default function MandateRow({
 
         <Col n="12 md-6">
           <DateInput
-            label="Date de début"
-            hint="Reprend la date du texte par défaut"
+            label="Date de début du mandat"
+            hint="Pré-remplie depuis le texte officiel si disponible"
             value={row.startDate}
             onDateChange={(v) => onField('startDate', v)}
           />
         </Col>
         <Col n="12 md-6">
           <DateInput
-            label="Date de fin prévisionnelle"
-            hint="Reprend la date de fin du texte par défaut"
+            label="Date de fin prévisionnelle du mandat"
+            hint="Pré-remplie depuis le texte officiel si disponible"
             value={row.endDatePrevisional}
             onDateChange={(v) => onField('endDatePrevisional', v)}
           />
         </Col>
         <Col n="12 md-6">
           <DateInput
-            label="Date de fin"
-            hint="Laisser vide si le mandat est en cours"
+            label="Date de fin du mandat"
+            hint="Pré-remplie depuis le texte officiel si disponible. Laisser vide si le mandat est en cours."
             value={row.endDate}
             onDateChange={(v) => onField('endDate', v)}
           />
@@ -195,7 +195,7 @@ export default function MandateRow({
                       <input type="checkbox" checked={c.id in (row.closures || {})} onChange={() => onToggleClosure(c.id)} />
                       Clôturer
                     </label>
-                    <div style={{ flex: 1, border: '1px solid var(--grey-925-125)', borderRadius: '4px', padding: '8px 12px', background: 'white' }}>
+                    <div style={{ flex: 1, border: '1px solid var(--grey-925-125)', borderRadius: '4px', padding: '8px 12px', background: 'var(--grey-975-75)' }}>
                       <p className="fr-text--sm fr-mb-0"><strong>{c.personName}</strong></p>
                       {c.relTypeName && <p className="fr-text--xs fr-mb-0" style={{ color: 'var(--grey-425-625)' }}>{c.relTypeName}</p>}
                     </div>

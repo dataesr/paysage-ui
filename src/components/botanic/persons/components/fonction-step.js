@@ -70,7 +70,7 @@ export default function FonctionStep({
                       <input type="checkbox" checked={m.id in conflictsToClose} onChange={() => on.toggleConflict(m.id)} />
                       Clôturer
                     </label>
-                    <div style={{ flex: 1, border: '1px solid var(--grey-925-125)', borderRadius: '4px', padding: '8px 12px', background: 'white' }}>
+                    <div style={{ flex: 1, border: '1px solid var(--grey-925-125)', borderRadius: '4px', padding: '8px 12px', background: 'var(--grey-975-75)' }}>
                       <p className="fr-text--sm fr-mb-0"><strong>{personName}</strong></p>
                       {relName && <p className="fr-text--xs fr-mb-0" style={{ color: 'var(--grey-425-625)' }}>{relName}</p>}
                     </div>
@@ -235,10 +235,12 @@ export default function FonctionStep({
                   label="Date de fin prévisionnelle"
                   onDateChange={on.setEndDatePrevisional}
                 />
+              </Col>
+              <Col n="12">
                 <SearchBar
                   buttonLabel="Rechercher"
                   value={mandate.startOT.query}
-                  label="Texte officiel de début"
+                  label="Texte officiel de début de fonction"
                   hint="Rechercher un texte officiel"
                   scope={mandate.startOT.name}
                   placeholder={mandate.startOT.name ? '' : 'Rechercher...'}
@@ -251,10 +253,12 @@ export default function FonctionStep({
               </Col>
               <Col n="12 md-6">
                 <DateInput value={mandate.endDate} label="Date de fin de fonction" onDateChange={on.setEndDate} />
+              </Col>
+              <Col n="12">
                 <SearchBar
                   buttonLabel="Rechercher"
                   value={mandate.endOT.query}
-                  label="Texte officiel de fin"
+                  label="Texte officiel de fin de fonction"
                   hint="Rechercher un texte officiel"
                   scope={mandate.endOT.name}
                   placeholder={mandate.endOT.name ? '' : 'Rechercher...'}

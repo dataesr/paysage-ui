@@ -28,7 +28,7 @@ const emptyRow = (defaults = {}) => ({
   relTypeQuery: '',
   structure: null,
   startDate: defaults.startDate || '',
-  endDate: '',
+  endDate: defaults.endDate || '',
   endDatePrevisional: defaults.endDatePrevisional || '',
   precision: '',
   reason: null,
@@ -145,7 +145,7 @@ export default function MandateFlow({ onClose }) {
     updateRow(key, { contactSuggestions: contacts });
   };
 
-  const handleAddRow = () => setRows((prev) => [...prev, emptyRow({ startDate: defaultStartDate, endDatePrevisional: defaultEndPrevisional })]);
+  const handleAddRow = () => setRows((prev) => [...prev, emptyRow({ startDate: defaultStartDate, endDate: defaultEndDate, endDatePrevisional: defaultEndPrevisional })]);
   const handleRemoveRow = (key) => setRows((prev) => prev.filter((r) => r._key !== key));
 
   const updateClosureSection = (key, patch) => setClosureSections((prev) => prev.map((s) => (s._key === key ? { ...s, ...patch } : s)));
@@ -166,10 +166,11 @@ export default function MandateFlow({ onClose }) {
         return;
       }
     }
-    if (defaultStartDate || defaultEndPrevisional) {
+    if (defaultStartDate || defaultEndDate || defaultEndPrevisional) {
       setRows((prev) => prev.map((r) => ({
         ...r,
         startDate: r.startDate || defaultStartDate,
+        endDate: r.endDate || defaultEndDate,
         endDatePrevisional: r.endDatePrevisional || defaultEndPrevisional,
       })));
     }
@@ -566,7 +567,7 @@ export default function MandateFlow({ onClose }) {
             <>
               <p className="fr-text--sm fr-text--bold fr-mb-1w">Fins de mandat</p>
               {closureSections.map((sec) => (
-                <div key={sec._key} className="fr-p-2w fr-mb-2w" style={{ border: '1px solid var(--grey-900-175)', borderRadius: '4px', background: 'white' }}>
+                <div key={sec._key} className="fr-p-2w fr-mb-2w" style={{ border: '1px solid var(--grey-900-175)', borderRadius: '4px', background: 'var(--grey-975-75)' }}>
                   <EntityField
                     type="structures"
                     label="Structure concernée"
@@ -651,7 +652,7 @@ export default function MandateFlow({ onClose }) {
           </ul>
 
           {validRows.map((r) => (
-            <div key={r._key} className="fr-p-2w fr-mb-1w" style={{ border: '1px solid var(--grey-900-175)', borderRadius: '4px', background: 'white' }}>
+            <div key={r._key} className="fr-p-2w fr-mb-1w" style={{ border: '1px solid var(--grey-900-175)', borderRadius: '4px', background: 'var(--grey-975-75)' }}>
               <p className="fr-text--sm fr-mb-0">
                 <strong>{r.person.name}</strong>
                 {` — ${r.relType.name} @ ${r.structure.name}`}

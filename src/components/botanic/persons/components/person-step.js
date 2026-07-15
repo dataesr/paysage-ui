@@ -72,8 +72,8 @@ export default function PersonStep({
             <TextInput
               required
               label="Prénom"
-              value={capitalizeName(firstName)}
-              onChange={(e) => onFirstNameChange(capitalizeName(e.target.value))}
+              value={firstName}
+              onChange={(e) => onFirstNameChange(e.target.value)}
               message={(showErrors && errors.firstName) ? errors.firstName : null}
               messageType={(showErrors && errors.firstName) ? 'error' : ''}
               disabled={isExisting}
@@ -83,8 +83,8 @@ export default function PersonStep({
             <TextInput
               required
               label="Nom"
-              value={capitalizeName(lastName)}
-              onChange={(e) => onLastNameChange(capitalizeName(e.target.value))}
+              value={lastName}
+              onChange={(e) => onLastNameChange(e.target.value)}
               message={(showErrors && errors.lastName) ? errors.lastName : null}
               messageType={(showErrors && errors.lastName) ? 'error' : ''}
               disabled={isExisting}
@@ -129,7 +129,7 @@ export default function PersonStep({
             <TextInput
               label="Activité"
               hint="Optionnel — pré-rempli si trouvé dans IdRef ou Wikidata"
-              value={capitalizeName(activity)}
+              value={activity}
               onChange={(e) => onActivityChange(e.target.value)}
             />
           </Col>
