@@ -155,6 +155,29 @@ export default function MandateRow({
           {missing.structure && <p className="fr-error-text fr-text--sm fr-mt-1v">Sélectionnez ou créez une structure.</p>}
         </Col>
 
+        <Col n="12">
+          <TextInput
+            label="Intitulé exact de la fonction"
+            hint="Précisez si vous avez des informations plus détaillées."
+            value={row.precision}
+            onChange={(e) => onField('precision', e.target.value)}
+          />
+        </Col>
+        <Col n="12 md-6">
+          <RadioGroup legend="Raison du mandat :" isInline>
+            <Radio label="Élection" onChange={() => onField('reason', 'election')} checked={row.reason === 'election'} />
+            <Radio label="Nomination" onChange={() => onField('reason', 'nomination')} checked={row.reason === 'nomination'} />
+            <Radio label="Sans objet" onChange={() => onField('reason', null)} checked={!row.reason} />
+          </RadioGroup>
+        </Col>
+        <Col n="12 md-6" style={{ display: 'flex', alignItems: 'center', paddingTop: '28px' }}>
+          <Checkbox
+            label="Mandat par intérim"
+            checked={row.temporary}
+            onChange={() => onField('temporary', !row.temporary)}
+          />
+        </Col>
+
         <Col n="12 md-6">
           <DateInput
             label="Date de début du mandat"
@@ -218,30 +241,8 @@ export default function MandateRow({
 
         <Col n="12">
           <Accordion>
-            <AccordionItem initExpand title="Informations du mandat">
+            <AccordionItem initExpand={false} title="Contacts">
               <Row gutters>
-                <Col n="12">
-                  <TextInput
-                    label="Intitulé exact de la fonction"
-                    hint="Précisez si vous avez des informations plus détaillées."
-                    value={row.precision}
-                    onChange={(e) => onField('precision', e.target.value)}
-                  />
-                </Col>
-                <Col n="12">
-                  <RadioGroup legend="Raison du mandat :" isInline>
-                    <Radio label="Élection" onChange={() => onField('reason', 'election')} checked={row.reason === 'election'} />
-                    <Radio label="Nomination" onChange={() => onField('reason', 'nomination')} checked={row.reason === 'nomination'} />
-                    <Radio label="Sans objet" onChange={() => onField('reason', null)} checked={!row.reason} />
-                  </RadioGroup>
-                </Col>
-                <Col n="12">
-                  <Checkbox
-                    label="Mandat par intérim"
-                    checked={row.temporary}
-                    onChange={() => onField('temporary', !row.temporary)}
-                  />
-                </Col>
                 {row.contactSuggestions && <ContactSuggestions suggestions={row.contactSuggestions} onFill={onFillContact} />}
                 <Col n="12 md-4">
                   <TextInput

@@ -24,7 +24,7 @@ const STEPS = ['Texte juridique', 'Objets concernés', 'Récapitulatif'];
 const emptyRow = (defaults = {}) => ({
   _key: uid(),
   person: null,
-  relType: null,
+  relType: defaults.relType || null,
   relTypeQuery: '',
   structure: null,
   startDate: defaults.startDate || '',
@@ -98,6 +98,22 @@ export default function MandateFlow({ onClose }) {
   const [submitting, setSubmitting] = useState(false);
   const [createOverlay, setCreateOverlay] = useState(null); // { kind, apply }
 
+  const [defaultRelType, setDefaultRelType] = useState(null);
+  const [defaultRelTypeQuery, setDefaultRelTypeQuery] = useState('');
+
+  const defaultRelTypeOptions = useMemo(() => {
+    const q = (defaultRelTypeQuery || '').toLowerCase().trim();
+    const list = q ? allRelationTypes.filter((rt) => rt.name.toLowerCase().includes(q)) : allRelationTypes;
+    return list.slice(0, 30).map((rt) => ({ id: rt.id, name: rt.name }));
+  }, [defaultRelTypeQuery, allRelationTypes]);
+
+  const handleDefaultRelTypeSelect = (relType) => {
+    setDefaultRelType(relType);
+    setDefaultRelTypeQuery('');
+    setRows((prev) => prev.map((r) => (!r.relType ? { ...r, relType } : r)));
+  };
+  const handleDefaultRelTypeUnselect = () => { setDefaultRelType(null); };
+
   const openCreateOverlay = (kind, apply) => setCreateOverlay({ kind, apply });
   const closeCreateOverlay = () => setCreateOverlay(null);
   const handleOverlayCreated = (entity) => {
@@ -145,7 +161,11 @@ export default function MandateFlow({ onClose }) {
     updateRow(key, { contactSuggestions: contacts });
   };
 
-  const handleAddRow = () => setRows((prev) => [...prev, emptyRow({ startDate: defaultStartDate, endDate: defaultEndDate, endDatePrevisional: defaultEndPrevisional })]);
+  const handleAddRow = () => {
+    const defaults = { startDate: defaultStartDate, endDate: defaultEndDate, endDatePrevisional: defaultEndPrevisional };
+    if (defaultRelType) defaults.relType = defaultRelType;
+    setRows((prev) => [...prev, emptyRow(defaults)]);
+  };
   const handleRemoveRow = (key) => setRows((prev) => prev.filter((r) => r._key !== key));
 
   const updateClosureSection = (key, patch) => setClosureSections((prev) => prev.map((s) => (s._key === key ? { ...s, ...patch } : s)));
@@ -217,6 +237,7 @@ export default function MandateFlow({ onClose }) {
     setRows([emptyRow()]);
     setClosureSections([emptyClosureSection()]);
     setShowErrors(false); setSubmitting(false);
+    setDefaultRelType(null); setDefaultRelTypeQuery('');
     onClose();
   };
 
@@ -487,13 +508,6 @@ export default function MandateFlow({ onClose }) {
               </Col>
               <Col n="12 md-6">
                 <DateInput
-                  label="Date de publication"
-                  value={draft.publicationDate}
-                  onDateChange={(v) => setDraft((p) => ({ ...p, publicationDate: v }))}
-                />
-              </Col>
-              <Col n="12 md-6">
-                <DateInput
                   label="Date de signature"
                   value={draft.signatureDate}
                   onDateChange={(v) => setDraft((p) => ({ ...p, signatureDate: v }))}
@@ -528,6 +542,22 @@ export default function MandateFlow({ onClose }) {
           {concerns.mandates && (
             <>
               <p className="fr-text--sm fr-text--bold fr-mb-1w">Mandats / fonctions</p>
+              <div className="fr-p-2w fr-mb-2w" style={{ background: 'var(--blue-france-975-75)', border: '1px solid var(--blue-france-925-125)', borderRadius: '4px' }}>
+                <p className="fr-text--xs fr-text--bold fr-mb-1w">Fonction commune à tous les mandats (optionnel)</p>
+                <SearchBar
+                  buttonLabel="Rechercher"
+                  label="Type de mandat / fonction — par défaut"
+                  hint="Pré-rempli pour chaque nouveau mandat ajouté. Les mandats existants sans fonction sont aussi mis à jour."
+                  placeholder="Ex : Président, Directeur général…"
+                  value={defaultRelType ? '' : defaultRelTypeQuery}
+                  scope={defaultRelType ? defaultRelType.name : null}
+                  onDeleteScope={handleDefaultRelTypeUnselect}
+                  onChange={(e) => setDefaultRelTypeQuery(e.target.value)}
+                  options={defaultRelTypeOptions}
+                  onSelect={handleDefaultRelTypeSelect}
+                  isSearching={false}
+                />
+              </div>
               {rows.map((row, i) => (
                 <MandateRow
                   key={row._key}

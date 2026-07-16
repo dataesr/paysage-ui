@@ -12,6 +12,7 @@ import { GOUVERNANCE } from '../../../utils/relations-tags';
 import { getComparableNow } from '../../../utils/dates';
 import { uid, sanitizeIdentifierValue } from '../utils';
 import { regexpValidateIdentifiers } from '../../../utils/regexpForIdentifiers';
+import useDebounce from '../../../hooks/useDebounce';
 import { useStructureExternalLookup } from '../use-external-lookup';
 import { crossEnrichWikidataStructure, crossEnrichRorById } from '../external-lookup';
 import EnrichmentPanel from '../enrichment-panel';
@@ -41,6 +42,18 @@ export default function StructureFlow({ onClose, onCreated }) {
   const [isCreatingNew, setIsCreatingNew] = useState(false);
   const [usualName, setUsualName] = useState('');
   const [step1Errors, setStep1Errors] = useState({});
+  const [paysageNameMatches, setPaysageNameMatches] = useState([]);
+
+  const debouncedUsualName = useDebounce(usualName.trim(), 700);
+  useEffect(() => {
+    if (!isCreatingNew || debouncedUsualName.length < 3) { setPaysageNameMatches([]); return; }
+    let cancelled = false;
+    api.get(`/autocomplete?types=structures&query=${encodeURIComponent(debouncedUsualName)}`)
+      .then(({ data: res }) => { if (!cancelled) setPaysageNameMatches(res?.data?.slice(0, 5) || []); })
+      .catch(() => { if (!cancelled) setPaysageNameMatches([]); });
+    // eslint-disable-next-line consistent-return
+    return () => { cancelled = true; };
+  }, [isCreatingNew, debouncedUsualName]);
 
   const [identifiers, setIdentifiers] = useState([]);
   const [socialMedias, setSocialMedias] = useState([]);
@@ -55,6 +68,16 @@ export default function StructureFlow({ onClose, onCreated }) {
   const [localisationBody, setLocalisationBody] = useState(null);
 
   const [mandates, setMandates] = useState([]);
+
+  const existingIdentifierTypes = useMemo(
+    () => new Set(identifiers.filter((r) => r.fromExisting).map((r) => r.type)),
+    [identifiers],
+  );
+  const isEditMode = !!selectedStructure;
+  const panelWikidataMatches = (isEditMode && existingIdentifierTypes.has('wikidata')) ? [] : wikidataMatches;
+  const panelWikidataLoading = (isEditMode && existingIdentifierTypes.has('wikidata')) ? false : wikidataLoading;
+  const panelRorMatches = (isEditMode && existingIdentifierTypes.has('ror')) ? [] : rorMatches;
+  const panelRorLoading = (isEditMode && existingIdentifierTypes.has('ror')) ? false : rorLoading;
 
   const [externalDuplicates, setExternalDuplicates] = useState({});
 
@@ -132,6 +155,7 @@ export default function StructureFlow({ onClose, onCreated }) {
     setSocialMedias((prev) => prev.filter((r) => !r.fromWikidata && !r.fromRor));
     setSelectedWikidataMatch(null);
     setSelectedRorMatch(null);
+    setPaysageNameMatches([]);
   };
 
   const handleAddMandate = (mandate) => setMandates((prev) => [...prev, { _key: uid(), ...mandate }]);
@@ -325,7 +349,7 @@ export default function StructureFlow({ onClose, onCreated }) {
 
   const handleReset = () => {
     setStep(1); setStructureQuery(''); setStructureOptions([]); setIsSearchingStructure(false);
-    setSelectedStructure(null); setIsCreatingNew(false); setUsualName(''); setStep1Errors({});
+    setSelectedStructure(null); setIsCreatingNew(false); setUsualName(''); setStep1Errors({}); setPaysageNameMatches([]);
     setIdentifiers([]); setMandates([]); setSocialMedias([]); setSelectedWikidataMatch(null); setSelectedRorMatch(null); setLocalisationBody(null);
     onClose();
   };
@@ -364,14 +388,16 @@ export default function StructureFlow({ onClose, onCreated }) {
             usualName={usualName}
             onUsualNameChange={setUsualName}
             onToggleCreateNew={handleToggleCreateNew}
+            paysageMatches={paysageNameMatches}
+            onSelectExisting={(item) => { setIsCreatingNew(false); handleSelectStructure(item); }}
           />
           <EnrichmentPanel
-            wikidataLoading={wikidataLoading}
-            wikidataMatches={wikidataMatches}
+            wikidataLoading={panelWikidataLoading}
+            wikidataMatches={panelWikidataMatches}
             selectedWikidataMatch={selectedWikidataMatch}
             onSelectWikidata={handleSelectWikidataMatch}
-            rorLoading={rorLoading}
-            rorMatches={rorMatches}
+            rorLoading={panelRorLoading}
+            rorMatches={panelRorMatches}
             selectedRorMatch={selectedRorMatch}
             onSelectRor={handleSelectRorMatch}
             entityType="structure"

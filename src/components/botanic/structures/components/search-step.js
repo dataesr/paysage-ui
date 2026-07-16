@@ -9,6 +9,7 @@ export default function StructureSearchStep({
   query, setQuery, options, isSearching,
   selectedStructure, onSelect, onUnselect,
   isCreatingNew, usualName, onUsualNameChange, onToggleCreateNew,
+  paysageMatches, onSelectExisting,
 }) {
   const [searchMode, setSearchMode] = useState(false);
 
@@ -96,6 +97,30 @@ export default function StructureSearchStep({
           </Button>
         </div>
       )}
+
+      {isCreatingNew && paysageMatches.length > 0 && (
+        <div className="fr-alert fr-alert--warning fr-mt-2w">
+          <p className="fr-alert__title">
+            {`${paysageMatches.length > 1 ? 'Des structures existent' : 'Une structure existe'} peut-être déjà dans Paysage`}
+          </p>
+          <p className="fr-text--sm fr-mb-2w">
+            {`${paysageMatches.length} fiche${paysageMatches.length > 1 ? 's' : ''} trouvée${paysageMatches.length > 1 ? 's' : ''} avec ce nom. Vérifiez avant de créer une nouvelle fiche.`}
+          </p>
+          {paysageMatches.map((match) => (
+            <div key={match.id} style={{ display: 'flex', gap: '8px', alignItems: 'center', marginBottom: '8px', flexWrap: 'wrap' }}>
+              <span className="fr-text--sm" style={{ fontWeight: 600, flex: 1, minWidth: '150px' }}>
+                {match.acronym ? `${match.name} (${match.acronym})` : match.name}
+              </span>
+              <Button size="sm" icon="ri-links-line" iconPosition="left" onClick={() => onSelectExisting(match)}>
+                Modifier cette fiche
+              </Button>
+              <Button size="sm" secondary icon="ri-external-link-line" iconPosition="left" onClick={() => window.open(`/structures/${match.id}`, '_blank')}>
+                Voir la fiche
+              </Button>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
@@ -116,8 +141,12 @@ StructureSearchStep.propTypes = {
   usualName: PropTypes.string.isRequired,
   onUsualNameChange: PropTypes.func.isRequired,
   onToggleCreateNew: PropTypes.func.isRequired,
+  paysageMatches: PropTypes.arrayOf(PropTypes.shape({ id: PropTypes.string, name: PropTypes.string, acronym: PropTypes.string })),
+  onSelectExisting: PropTypes.func,
 };
 
 StructureSearchStep.defaultProps = {
   selectedStructure: null,
+  paysageMatches: [],
+  onSelectExisting: null,
 };

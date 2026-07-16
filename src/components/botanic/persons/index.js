@@ -82,6 +82,16 @@ export default function PersonFlow({ onClose, onCreated }) {
   const [identifiers, setIdentifiers] = useState([]);
   const [socialMedias, setSocialMedias] = useState([]);
 
+  const existingPersonIdentifierTypes = useMemo(
+    () => new Set(identifiers.filter((r) => r.fromExisting).map((r) => r.type)),
+    [identifiers],
+  );
+  const isPersonEditMode = typeof existingPersonId === 'string';
+  const panelWikidataMatches = (isPersonEditMode && existingPersonIdentifierTypes.has('wikidata')) ? [] : wikidataMatches;
+  const panelWikidataLoading = (isPersonEditMode && existingPersonIdentifierTypes.has('wikidata')) ? false : wikidataLoading;
+  const panelPydrefMatches = (isPersonEditMode && existingPersonIdentifierTypes.has('idref')) ? [] : pydrefMatches;
+  const panelPydrefLoading = (isPersonEditMode && existingPersonIdentifierTypes.has('idref')) ? false : pydrefLoading;
+
   const [pastFunctions, setPastFunctions] = useState([]);
   const [pastContacts, setPastContacts] = useState({ emails: [], personalEmails: [], phones: [] });
 
@@ -513,12 +523,12 @@ export default function PersonFlow({ onClose, onCreated }) {
               />
               {selectedSearchPerson && (
                 <EnrichmentPanel
-                  pydrefLoading={pydrefLoading}
-                  pydrefMatches={pydrefMatches}
+                  pydrefLoading={panelPydrefLoading}
+                  pydrefMatches={panelPydrefMatches}
                   selectedPydrefMatch={selectedPydrefMatch}
                   onSelectPydref={handleSelectPydrefMatch}
-                  wikidataLoading={wikidataLoading}
-                  wikidataMatches={wikidataMatches}
+                  wikidataLoading={panelWikidataLoading}
+                  wikidataMatches={panelWikidataMatches}
                   selectedWikidataMatch={selectedWikidataMatch}
                   onSelectWikidata={handleSelectWikidataMatch}
                   entityType="person"
@@ -549,12 +559,12 @@ export default function PersonFlow({ onClose, onCreated }) {
               />
               {!hasDuplicate && (
                 <EnrichmentPanel
-                  pydrefLoading={pydrefLoading}
-                  pydrefMatches={pydrefMatches}
+                  pydrefLoading={panelPydrefLoading}
+                  pydrefMatches={panelPydrefMatches}
                   selectedPydrefMatch={selectedPydrefMatch}
                   onSelectPydref={handleSelectPydrefMatch}
-                  wikidataLoading={wikidataLoading}
-                  wikidataMatches={wikidataMatches}
+                  wikidataLoading={panelWikidataLoading}
+                  wikidataMatches={panelWikidataMatches}
                   selectedWikidataMatch={selectedWikidataMatch}
                   onSelectWikidata={handleSelectWikidataMatch}
                   entityType="person"
