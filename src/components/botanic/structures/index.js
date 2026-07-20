@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Col, Row, Stepper } from '@dataesr/react-dsfr';
 import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
@@ -12,6 +12,7 @@ import { GOUVERNANCE } from '../../../utils/relations-tags';
 import { getComparableNow } from '../../../utils/dates';
 import { uid, sanitizeIdentifierValue } from '../utils';
 import { regexpValidateIdentifiers } from '../../../utils/regexpForIdentifiers';
+import useDebounce from '../../../hooks/useDebounce';
 import { useStructureExternalLookup } from '../use-external-lookup';
 import { crossEnrichWikidataStructure, crossEnrichRorById } from '../external-lookup';
 import EnrichmentPanel from '../enrichment-panel';
@@ -23,7 +24,7 @@ import StructureSummaryBar from './components/summary-bar';
 
 const STEPS = ['Structure', 'Identifiants', 'Localisation', 'Mandat de gouvernance'];
 
-export default function StructureFlow({ onClose }) {
+export default function StructureFlow({ onClose, onCreated }) {
   const { notice } = useNotice();
   const enums = useEnums();
   const { data: relationTypesData } = useFetch('/relation-types?limit=500&filters[for]=persons');
@@ -41,6 +42,18 @@ export default function StructureFlow({ onClose }) {
   const [isCreatingNew, setIsCreatingNew] = useState(false);
   const [usualName, setUsualName] = useState('');
   const [step1Errors, setStep1Errors] = useState({});
+  const [paysageNameMatches, setPaysageNameMatches] = useState([]);
+
+  const debouncedUsualName = useDebounce(usualName.trim(), 700);
+  useEffect(() => {
+    if (!isCreatingNew || debouncedUsualName.length < 3) { setPaysageNameMatches([]); return; }
+    let cancelled = false;
+    api.get(`/autocomplete?types=structures&query=${encodeURIComponent(debouncedUsualName)}`)
+      .then(({ data: res }) => { if (!cancelled) setPaysageNameMatches(res?.data?.slice(0, 5) || []); })
+      .catch(() => { if (!cancelled) setPaysageNameMatches([]); });
+    // eslint-disable-next-line consistent-return
+    return () => { cancelled = true; };
+  }, [isCreatingNew, debouncedUsualName]);
 
   const [identifiers, setIdentifiers] = useState([]);
   const [socialMedias, setSocialMedias] = useState([]);
@@ -55,6 +68,66 @@ export default function StructureFlow({ onClose }) {
   const [localisationBody, setLocalisationBody] = useState(null);
 
   const [mandates, setMandates] = useState([]);
+
+  const existingIdentifierTypes = useMemo(
+    () => new Set(identifiers.filter((r) => r.fromExisting).map((r) => r.type)),
+    [identifiers],
+  );
+  const isEditMode = !!selectedStructure;
+  const panelWikidataMatches = (isEditMode && existingIdentifierTypes.has('wikidata')) ? [] : wikidataMatches;
+  const panelWikidataLoading = (isEditMode && existingIdentifierTypes.has('wikidata')) ? false : wikidataLoading;
+  const panelRorMatches = (isEditMode && existingIdentifierTypes.has('ror')) ? [] : rorMatches;
+  const panelRorLoading = (isEditMode && existingIdentifierTypes.has('ror')) ? false : rorLoading;
+
+  const locationHint = useMemo(() => {
+    const match = selectedRorMatch || selectedWikidataMatch;
+    if (!match) return null;
+    const coords = match.coordinates || null;
+    if (selectedRorMatch) {
+      return {
+        coordinates: coords,
+        city: match.city || null,
+        country: match.country || null,
+        countryCode: match.countryCode || null,
+        searchQuery: !coords ? ([match.city, match.country].filter(Boolean).join(', ') || null) : null,
+      };
+    }
+    return {
+      coordinates: coords,
+      streetAddress: match.streetAddress || null,
+      searchQuery: !coords ? (match.streetAddress || null) : null,
+    };
+  }, [selectedRorMatch, selectedWikidataMatch]);
+
+  const [externalDuplicates, setExternalDuplicates] = useState({});
+
+  useEffect(() => {
+    if (!wikidataMatches.length && !rorMatches.length) { setExternalDuplicates({}); return; }
+    let cancelled = false;
+    const checkAll = async () => {
+      const entries = [];
+      await Promise.all([
+        ...wikidataMatches.map(async (m) => {
+          try {
+            const { data: res } = await api.get(`/autocomplete?types=structures&query=${encodeURIComponent(m.qid)}`);
+            const found = (res?.data || []).find((el) => el?.identifiers?.includes(m.qid));
+            if (found) entries.push([m.qid, { id: found.id, name: found.name }]);
+          } catch { /* ignore */ }
+        }),
+        ...rorMatches.map(async (m) => {
+          try {
+            const { data: res } = await api.get(`/autocomplete?types=structures&query=${encodeURIComponent(m.rorId)}`);
+            const found = (res?.data || []).find((el) => el?.identifiers?.includes(m.rorId));
+            if (found) entries.push([m.rorId, { id: found.id, name: found.name }]);
+          } catch { /* ignore */ }
+        }),
+      ]);
+      if (!cancelled) setExternalDuplicates(Object.fromEntries(entries));
+    };
+    checkAll();
+    // eslint-disable-next-line consistent-return
+    return () => { cancelled = true; };
+  }, [wikidataMatches, rorMatches]);
 
   const handleStructureQuery = async (q) => {
     setStructureQuery(q);
@@ -102,9 +175,8 @@ export default function StructureFlow({ onClose }) {
     setSocialMedias((prev) => prev.filter((r) => !r.fromWikidata && !r.fromRor));
     setSelectedWikidataMatch(null);
     setSelectedRorMatch(null);
+    setPaysageNameMatches([]);
   };
-
-  const handleLocalisationBodyChange = useCallback((body) => setLocalisationBody(body), []);
 
   const handleAddMandate = (mandate) => setMandates((prev) => [...prev, { _key: uid(), ...mandate }]);
   const handleRemoveMandate = (key) => setMandates((prev) => prev.filter((m) => m._key !== key));
@@ -128,9 +200,9 @@ export default function StructureFlow({ onClose }) {
     }
     setIdentifiers((prev) => {
       const withoutWikidata = prev.filter((r) => !r.fromWikidata && r.crossTrigger !== 'wikidata');
-      const usedTypes = new Set(withoutWikidata.filter((r) => r.type).map((r) => r.type));
+      const usedNewTypes = new Set(withoutWikidata.filter((r) => r.type && !r.fromExisting).map((r) => r.type));
       const fromWikidata = match.identifiers
-        .filter(({ type }) => !usedTypes.has(type))
+        .filter(({ type }) => !usedNewTypes.has(type))
         .map(({ type, value }) => ({ _key: uid(), type, value, fromWikidata: true }));
       return [...withoutWikidata, ...fromWikidata];
     });
@@ -147,9 +219,9 @@ export default function StructureFlow({ onClose }) {
       const rorResult = await crossEnrichRorById(rorId).catch(() => null);
       if (rorResult) {
         setIdentifiers((prev) => {
-          const usedTypes = new Set(prev.filter((r) => r.type).map((r) => r.type));
+          const usedNewTypes = new Set(prev.filter((r) => r.type && !r.fromExisting).map((r) => r.type));
           const extra = rorResult.identifiers
-            .filter(({ type }) => !usedTypes.has(type))
+            .filter(({ type }) => !usedNewTypes.has(type))
             .map(({ type, value }) => ({ _key: uid(), type, value, fromRor: true, via: 'Wikidata', crossTrigger: 'wikidata' }));
           return [...prev, ...extra];
         });
@@ -225,11 +297,23 @@ export default function StructureFlow({ onClose }) {
         relationTypeId: m.relationType.id,
         startDate: m.startDate || undefined,
         endDate: m.endDate || undefined,
+        endDatePrevisional: m.endDatePrevisional || undefined,
+        active: m.active,
+        mandateReason: m.reason || undefined,
+        mandateTemporary: m.temporary,
+        mandatePosition: m.position || undefined,
+        mandatePrecision: m.precision || undefined,
+        mandateEmail: m.email || undefined,
+        personalEmail: m.personalEmail || undefined,
+        mandatePhonenumber: m.phonenumber || undefined,
+        startDateOfficialTextId: m.startDateOfficialTextId || undefined,
+        endDateOfficialTextId: m.endDateOfficialTextId || undefined,
       }).catch(() => null)));
       if (results.some((r) => r === null)) { notice(saveError); return; }
     }
 
-    const closures = mandates.flatMap((m) => m.closures || []);
+    const closures = [];
+    mandates.forEach((m) => { (m.closures || []).forEach((c) => closures.push(c)); });
     if (closures.length > 0) {
       await Promise.all(closures.map((c) => api.patch(`/relations/${c.id}`, {
         resourceId: c.resourceId,
@@ -239,8 +323,18 @@ export default function StructureFlow({ onClose }) {
     }
 
     notice(saveSuccess);
-    handleReset(); // eslint-disable-line no-use-before-define
-    navigate(`/structures/${structureId}`);
+    const createdName = selectedStructure?.name || usualName.trim();
+    if (onCreated) {
+      onCreated({ id: structureId, name: createdName });
+      handleReset(); // eslint-disable-line no-use-before-define
+    } else {
+      handleReset(); // eslint-disable-line no-use-before-define
+      navigate(`/structures/${structureId}`);
+    }
+  };
+
+  const handleAdoptStructureName = (name) => {
+    if (name && isCreatingNew) setUsualName(name);
   };
 
   const handleSelectRorMatch = async (match) => {
@@ -251,9 +345,9 @@ export default function StructureFlow({ onClose }) {
     }
     setIdentifiers((prev) => {
       const withoutRor = prev.filter((r) => !r.fromRor && r.crossTrigger !== 'ror');
-      const usedTypes = new Set(withoutRor.filter((r) => r.type).map((r) => r.type));
+      const usedNewTypes = new Set(withoutRor.filter((r) => r.type && !r.fromExisting).map((r) => r.type));
       const fromRor = match.identifiers
-        .filter(({ type }) => !usedTypes.has(type))
+        .filter(({ type }) => !usedNewTypes.has(type))
         .map(({ type, value }) => ({ _key: uid(), type, value, fromRor: true }));
       return [...withoutRor, ...fromRor];
     });
@@ -263,9 +357,9 @@ export default function StructureFlow({ onClose }) {
       const wdResult = await crossEnrichWikidataStructure(wikidataId).catch(() => null);
       if (wdResult) {
         setIdentifiers((prev) => {
-          const usedTypes = new Set(prev.filter((r) => r.type).map((r) => r.type));
+          const usedNewTypes = new Set(prev.filter((r) => r.type && !r.fromExisting).map((r) => r.type));
           const extra = wdResult.identifiers
-            .filter(({ type }) => !usedTypes.has(type))
+            .filter(({ type }) => !usedNewTypes.has(type))
             .map(({ type, value }) => ({ _key: uid(), type, value, fromWikidata: true, via: 'ROR', crossTrigger: 'ror' }));
           return [...prev, ...extra];
         });
@@ -275,7 +369,7 @@ export default function StructureFlow({ onClose }) {
 
   const handleReset = () => {
     setStep(1); setStructureQuery(''); setStructureOptions([]); setIsSearchingStructure(false);
-    setSelectedStructure(null); setIsCreatingNew(false); setUsualName(''); setStep1Errors({});
+    setSelectedStructure(null); setIsCreatingNew(false); setUsualName(''); setStep1Errors({}); setPaysageNameMatches([]);
     setIdentifiers([]); setMandates([]); setSocialMedias([]); setSelectedWikidataMatch(null); setSelectedRorMatch(null); setLocalisationBody(null);
     onClose();
   };
@@ -314,17 +408,21 @@ export default function StructureFlow({ onClose }) {
             usualName={usualName}
             onUsualNameChange={setUsualName}
             onToggleCreateNew={handleToggleCreateNew}
+            paysageMatches={paysageNameMatches}
+            onSelectExisting={(item) => { setIsCreatingNew(false); handleSelectStructure(item); }}
           />
           <EnrichmentPanel
-            wikidataLoading={wikidataLoading}
-            wikidataMatches={wikidataMatches}
+            wikidataLoading={panelWikidataLoading}
+            wikidataMatches={panelWikidataMatches}
             selectedWikidataMatch={selectedWikidataMatch}
             onSelectWikidata={handleSelectWikidataMatch}
-            rorLoading={rorLoading}
-            rorMatches={rorMatches}
+            rorLoading={panelRorLoading}
+            rorMatches={panelRorMatches}
             selectedRorMatch={selectedRorMatch}
             onSelectRor={handleSelectRorMatch}
             entityType="structure"
+            onAdoptName={isCreatingNew ? handleAdoptStructureName : null}
+            externalDuplicates={externalDuplicates}
           />
           {step1Errors.structure && <p className="fr-error-text fr-mt-1w">{step1Errors.structure}</p>}
           {step1Errors.usualName && <p className="fr-error-text fr-mt-1w">{step1Errors.usualName}</p>}
@@ -373,7 +471,7 @@ export default function StructureFlow({ onClose }) {
 
       {step === 3 && (
         <>
-          <LocalisationStep onBodyChange={handleLocalisationBodyChange} />
+          <LocalisationStep onBodyChange={setLocalisationBody} locationHint={locationHint} />
           <Row justifyContent="right" spacing="mt-3w" gutters>
             <Col>
               <Button secondary icon="ri-arrow-left-line" iconPosition="left" onClick={() => setStep(2)}>
@@ -391,6 +489,47 @@ export default function StructureFlow({ onClose }) {
 
       {step === 4 && (
         <>
+          <div className="fr-mb-3w fr-p-2w" style={{ background: 'var(--grey-975-75)', borderLeft: '3px solid var(--blue-france-sun-113-625)' }}>
+            <p className="fr-text--sm fr-text--bold fr-mb-1w">Ce qui sera enregistré</p>
+            <p className="fr-text--sm fr-mb-1v">
+              <strong>Structure :</strong>
+              {' '}
+              {selectedStructure ? (
+                <a href={`/structures/${selectedStructure.id}`} target="_blank" rel="noreferrer">
+                  {selectedStructure.name}
+                  {' '}
+                  ↗
+                </a>
+              ) : usualName}
+              {selectedStructure ? (
+                <span className="fr-badge fr-badge--sm fr-badge--success fr-ml-1w">Existante</span>
+              ) : (
+                <span className="fr-badge fr-badge--sm fr-badge--new fr-ml-1w">Nouvelle</span>
+              )}
+            </p>
+            {identifiers.filter((r) => r.type && r.value && !r.fromExisting).length > 0 && (
+              <p className="fr-text--xs fr-hint-text fr-mb-1v">
+                <strong>Identifiants :</strong>
+                {' '}
+                {identifiers.filter((r) => r.type && r.value && !r.fromExisting).map((r) => `${r.type} · ${r.value}`).join(', ')}
+              </p>
+            )}
+            {mandates.length > 0 && (
+              <div className="fr-mt-1v">
+                <p className="fr-text--xs fr-hint-text fr-mb-1v">
+                  <strong>{`${mandates.length} mandat${mandates.length > 1 ? 's' : ''} ajouté${mandates.length > 1 ? 's' : ''} :`}</strong>
+                </p>
+                {mandates.map((m) => (
+                  <p key={m._key} className="fr-text--xs fr-mb-0">
+                    {`${m.person.name} — ${m.relationType.name}`}
+                    {m.startDate ? ` · à partir du ${m.startDate}` : ''}
+                    {m.endDate ? ` · jusqu'au ${m.endDate}` : ''}
+                    {m.temporary ? ' · par intérim' : ''}
+                  </p>
+                ))}
+              </div>
+            )}
+          </div>
           <StructureMandateStep
             mandates={mandates}
             onAddMandate={handleAddMandate}
@@ -418,4 +557,8 @@ export default function StructureFlow({ onClose }) {
 
 StructureFlow.propTypes = {
   onClose: PropTypes.func.isRequired,
+  onCreated: PropTypes.func,
+};
+StructureFlow.defaultProps = {
+  onCreated: null,
 };

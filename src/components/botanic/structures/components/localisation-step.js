@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { Col, Row, Radio, RadioGroup, TextInput } from '@dataesr/react-dsfr';
 import PropTypes from 'prop-types';
 import Map from '../../../map';
@@ -26,7 +26,7 @@ function sanitize(form) {
   return body;
 }
 
-export default function LocalisationStep({ onBodyChange }) {
+export default function LocalisationStep({ onBodyChange, locationHint }) {
   const [form, setForm] = useState({ country: 'France', iso3: 'FRA' });
   const [isFrance, setIsFrance] = useState(true);
   const [query, setQuery] = useState('');
@@ -34,8 +34,34 @@ export default function LocalisationStep({ onBodyChange }) {
   const [scope, setScope] = useState(null);
   const [options, setOptions] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
+  const appliedHintRef = useRef(null);
 
   const updateForm = (patch) => setForm((prev) => ({ ...prev, ...patch }));
+
+  useEffect(() => {
+    if (!locationHint || locationHint === appliedHintRef.current) return;
+    appliedHintRef.current = locationHint;
+    if (locationHint.coordinates) {
+      const isFR = !locationHint.countryCode || locationHint.countryCode.toUpperCase() === 'FR';
+      setIsFrance(isFR);
+      let iso3 = locationHint.iso3 || '';
+      if (!iso3 && isFR) iso3 = 'FRA';
+      else if (!iso3 && locationHint.countryCode) iso3 = getCountryISO3[locationHint.countryCode.toUpperCase()] || '';
+      updateForm({
+        ...(locationHint.streetAddress ? { address: locationHint.streetAddress } : {}),
+        ...(locationHint.city ? { city: locationHint.city, locality: locationHint.city } : {}),
+        country: locationHint.country || (isFR ? 'France' : ''),
+        iso3,
+        coordinates: locationHint.coordinates,
+      });
+      const hint = [locationHint.streetAddress, locationHint.city, locationHint.country].filter(Boolean).join(', ');
+      if (hint) setQuery(hint);
+    } else if (locationHint.searchQuery) {
+      const isFR = !locationHint.countryCode || locationHint.countryCode.toUpperCase() === 'FR';
+      setIsFrance(isFR);
+      setQuery(locationHint.searchQuery);
+    }
+  }, [locationHint]);
 
   useEffect(() => {
     onBodyChange(sanitize(form));
@@ -129,7 +155,7 @@ export default function LocalisationStep({ onBodyChange }) {
           />
           <Radio
             label="Hors France"
-            onChange={() => setIsFrance(false)}
+            onChange={() => { setIsFrance(false); updateForm({ country: '', iso3: '' }); }}
             checked={!isFrance}
           />
         </RadioGroup>
@@ -243,4 +269,14 @@ export default function LocalisationStep({ onBodyChange }) {
 
 LocalisationStep.propTypes = {
   onBodyChange: PropTypes.func.isRequired,
+  locationHint: PropTypes.shape({
+    searchQuery: PropTypes.string,
+    streetAddress: PropTypes.string,
+    city: PropTypes.string,
+    country: PropTypes.string,
+    iso3: PropTypes.string,
+    countryCode: PropTypes.string,
+    coordinates: PropTypes.shape({ lat: PropTypes.number, lng: PropTypes.number }),
+  }),
 };
+LocalisationStep.defaultProps = { locationHint: null };

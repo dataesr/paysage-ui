@@ -12,22 +12,16 @@ import { saveError, saveSuccess } from '../../../utils/notice-contents';
 import { GOUVERNANCE } from '../../../utils/relations-tags';
 import { getComparableNow } from '../../../utils/dates';
 import { regexpValidateIdentifiers } from '../../../utils/regexpForIdentifiers';
-import { PYDREF_GENDER, uid, sanitizeIdentifierValue } from '../utils';
+import { PYDREF_GENDER, uid, sanitizeIdentifierValue, deduceName, capitalizeName } from '../utils';
 import { usePersonExternalLookup } from '../use-external-lookup';
 import { crossEnrichWikidataPersonByOrcid, crossEnrichWikidataPersonByIsni, crossEnrichWikidataPersonByIdRef } from '../external-lookup';
 import EnrichmentPanel from '../enrichment-panel';
+import useMandate from './hooks/use-mandate';
 import PersonStep from './components/person-step';
 import PersonSearchStep from './components/search-step';
 import IdentifiersStep from './components/identifiers-step';
 import FonctionStep from './components/fonction-step';
-import StructureRelationStep from './components/structure-step';
 import SummaryBar from './components/summary-bar';
-
-const datesOverlap = (mStart, mEnd, newStart, newEnd) => {
-  if (mEnd && newStart && mEnd < newStart) return false;
-  if (mStart && newEnd && mStart > newEnd) return false;
-  return true;
-};
 
 const isIdentifierValid = (type, value) => {
   if (!type || !value) return true;
@@ -35,27 +29,51 @@ const isIdentifierValid = (type, value) => {
   return !regexp || regexp.test(sanitizeIdentifierValue(type, value));
 };
 
-const STEPS = ['Personne', 'Identifiants', 'Fonction', 'Structure'];
+const extractIdentifierPairs = (identifiers) => {
+  const pairs = [];
+  (identifiers || []).forEach((idObj) => {
+    Object.entries(idObj).forEach((entry) => pairs.push(entry));
+  });
+  return pairs;
+};
 
-export default function PersonFlow({ onClose }) {
+const STEPS = ['Personne', 'Identifiants', 'Fonction'];
+
+export default function PersonFlow({ onClose, onCreated }) {
   const { notice } = useNotice();
   const enums = useEnums();
   const { data: relationTypesData } = useFetch('/relation-types?limit=500&filters[for]=persons');
   const allRelationTypes = useMemo(() => relationTypesData?.data || [], [relationTypesData]);
   const identifierOptions = (enums?.identifiers?.persons || [{ label: 'Sélectionner un type', value: '' }]).filter((o) => o.value !== 'ark');
+  const allowedIdentifierTypes = useMemo(
+    () => new Set(identifierOptions.filter((o) => o.value).map((o) => o.value)),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [enums],
+  );
+  const socialMediaOptions = enums?.socialMedias || [{ label: 'Sélectionner un type', value: '' }];
   const navigate = useNavigate();
+
+  const { mandate, on: mandateOn, apiPayload: mandatePayload, reset: resetMandate } = useMandate(allRelationTypes);
 
   const [step, setStep] = useState(1);
 
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [gender, setGender] = useState('');
-  const [personErrors, setPersonErrors] = useState({});
-  const [showPersonErrors, setShowPersonErrors] = useState(false);
-  const [existingPersonId, setExistingPersonId] = useState(undefined);
-  const [paysageMatches, setPaysageMatches] = useState([]);
   const [birthDate, setBirthDate] = useState('');
   const [activity, setActivity] = useState('');
+  const [existingPersonId, setExistingPersonId] = useState(undefined);
+  const [paysageMatches, setPaysageMatches] = useState([]);
+  const [personErrors, setPersonErrors] = useState({});
+  const [showPersonErrors, setShowPersonErrors] = useState(false);
+  const [isCreatingNew, setIsCreatingNew] = useState(false);
+  const [createSourceText, setCreateSourceText] = useState('');
+  const [nameSplitMode, setNameSplitMode] = useState('first');
+
+  const [personSearchQuery, setPersonSearchQuery] = useState('');
+  const [personSearchOptions, setPersonSearchOptions] = useState([]);
+  const [personSearching, setPersonSearching] = useState(false);
+  const [selectedSearchPerson, setSelectedSearchPerson] = useState(null);
 
   const { pydrefLoading, pydrefMatches, wikidataLoading, wikidataMatches } = usePersonExternalLookup(firstName, lastName);
   const [selectedPydrefMatch, setSelectedPydrefMatch] = useState(null);
@@ -63,76 +81,94 @@ export default function PersonFlow({ onClose }) {
 
   const [identifiers, setIdentifiers] = useState([]);
   const [socialMedias, setSocialMedias] = useState([]);
-  const socialMediaOptions = enums?.socialMedias || [{ label: 'Sélectionner un type', value: '' }];
 
-  const [relationTypeQuery, setRelationTypeQuery] = useState('');
-  const [relationTypeOptions, setRelationTypeOptions] = useState([]);
-  const [selectedRelationType, setSelectedRelationType] = useState(null);
-  const [startDate, setStartDate] = useState('');
-  const [endDate, setEndDate] = useState('');
+  const existingPersonIdentifierTypes = useMemo(
+    () => new Set(identifiers.filter((r) => r.fromExisting).map((r) => r.type)),
+    [identifiers],
+  );
+  const isPersonEditMode = typeof existingPersonId === 'string';
+  const panelWikidataMatches = (isPersonEditMode && existingPersonIdentifierTypes.has('wikidata')) ? [] : wikidataMatches;
+  const panelWikidataLoading = (isPersonEditMode && existingPersonIdentifierTypes.has('wikidata')) ? false : wikidataLoading;
+  const panelPydrefMatches = (isPersonEditMode && existingPersonIdentifierTypes.has('idref')) ? [] : pydrefMatches;
+  const panelPydrefLoading = (isPersonEditMode && existingPersonIdentifierTypes.has('idref')) ? false : pydrefLoading;
+
+  const [pastFunctions, setPastFunctions] = useState([]);
+  const [pastContacts, setPastContacts] = useState({ emails: [], personalEmails: [], phones: [] });
+
   const [fonctionErrors, setFonctionErrors] = useState({});
   const [showFonctionErrors, setShowFonctionErrors] = useState(false);
 
-  const [structureQuery, setStructureQuery] = useState('');
-  const [structureOptions, setStructureOptions] = useState([]);
-  const [isSearchingStructure, setIsSearchingStructure] = useState(false);
-  const [selectedStructure, setSelectedStructure] = useState(null);
-  const [activeRelations, setActiveRelations] = useState([]);
-  const [conflictsToClose, setConflictsToClose] = useState({});
-
-  const [isCreatingNew, setIsCreatingNew] = useState(false);
-  const [personSearchQuery, setPersonSearchQuery] = useState('');
-  const [personSearchOptions, setPersonSearchOptions] = useState([]);
-  const [isSearchingPerson, setIsSearchingPerson] = useState(false);
-  const [selectedSearchPerson, setSelectedSearchPerson] = useState(null);
-
-  const relatedConflicts = useMemo(() => {
-    if (!selectedRelationType || !activeRelations.length) return [];
-    const newStart = startDate || null;
-    const newEnd = endDate || null;
-    return activeRelations.filter(
-      (m) => (m.relationTypeId === selectedRelationType.id || m.relationType?.id === selectedRelationType.id)
-        && datesOverlap(m.startDate, m.endDate, newStart, newEnd),
-    );
-  }, [activeRelations, selectedRelationType, startDate, endDate]);
-
-  useEffect(() => {
-    setConflictsToClose(Object.fromEntries(relatedConflicts.map((m) => [m.id, ''])));
-  }, [relatedConflicts]);
-
-  const fullName = `${firstName} ${lastName}`.trim();
-  const debouncedFullName = useDebounce(fullName, 900);
-
+  const debouncedFullName = useDebounce(`${firstName} ${lastName}`.trim(), 900);
   useEffect(() => {
     if (!firstName.trim() || !lastName.trim()) { setPaysageMatches([]); return; }
-    const checkPaysage = async () => {
-      try {
-        const { data: res } = await api.get(`/autocomplete?types=persons&query=${encodeURIComponent(debouncedFullName)}`);
-        const norm = (s) => (s || '').trim().toLowerCase();
-        const found = (res?.data || []).filter((el) => norm(el.name).includes(norm(debouncedFullName)));
-        setPaysageMatches(found);
-      } catch { setPaysageMatches([]); }
-    };
-    checkPaysage();
+    const norm = (s) => (s || '').trim().toLowerCase();
+    api.get(`/autocomplete?types=persons&query=${encodeURIComponent(debouncedFullName)}`)
+      .then(({ data: res }) => {
+        setPaysageMatches((res?.data || []).filter((el) => norm(el.name).includes(norm(debouncedFullName))));
+      })
+      .catch(() => setPaysageMatches([]));
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedFullName]);
 
   useEffect(() => {
-    const q = relationTypeQuery.toLowerCase().trim();
-    const filtered = q
-      ? allRelationTypes.filter((rt) => rt.name.toLowerCase().includes(q))
-      : allRelationTypes;
-    setRelationTypeOptions(filtered.slice(0, 30).map((rt) => ({ id: rt.id, name: rt.name })));
-  }, [relationTypeQuery, allRelationTypes]);
+    if (typeof existingPersonId !== 'string') {
+      setPastFunctions([]);
+      setPastContacts({ emails: [], personalEmails: [], phones: [] });
+      return;
+    }
+    let cancelled = false;
+    api.get(`/relations?filters[relatedObjectId]=${existingPersonId}&filters[relationTag]=${GOUVERNANCE}&limit=500`)
+      .then(({ data: res }) => {
+        if (cancelled) return;
+        const rels = res?.data || [];
+        const byType = new Map();
+        rels.forEach((rel) => {
+          const id = rel.relationTypeId || rel.relationType?.id;
+          const name = rel.relationType?.name;
+          if (!id || !name) return;
+          const isCurrent = rel.active !== false && (!rel.endDate || rel.endDate >= getComparableNow());
+          const start = rel.startDate || '';
+          const existing = byType.get(id);
+          if (!existing) {
+            byType.set(id, { id, name, isCurrent, latestStart: start });
+          } else {
+            existing.isCurrent = existing.isCurrent || isCurrent;
+            if (start && (!existing.latestStart || start > existing.latestStart)) existing.latestStart = start;
+          }
+        });
+        const sorted = [...byType.values()]
+          .sort((a, b) => {
+            if (a.isCurrent !== b.isCurrent) return a.isCurrent ? -1 : 1;
+            return (b.latestStart || '').localeCompare(a.latestStart || '');
+          })
+          .slice(0, 10)
+          .map(({ id, name, isCurrent }) => ({ id, name, isCurrent }));
+        setPastFunctions(sorted);
+        setPastContacts({
+          emails: [...new Set(rels.map((r) => r.mandateEmail).filter(Boolean))],
+          personalEmails: [...new Set(rels.map((r) => r.personalEmail).filter(Boolean))],
+          phones: [...new Set(rels.map((r) => r.mandatePhonenumber).filter(Boolean))],
+        });
+      })
+      .catch(() => {
+        if (!cancelled) {
+          setPastFunctions([]);
+          setPastContacts({ emails: [], personalEmails: [], phones: [] });
+        }
+      });
+    // eslint-disable-next-line consistent-return
+    return () => { cancelled = true; };
+  }, [existingPersonId]);
 
-  const handleNameChange = (field, value) => {
-    if (field === 'firstName') setFirstName(value);
-    if (field === 'lastName') setLastName(value);
-    setExistingPersonId(undefined);
-    setSelectedPydrefMatch(null);
-    setSelectedWikidataMatch(null);
-    setPaysageMatches([]);
-  };
+  const handleAddIdentifier = () => setIdentifiers((prev) => [...prev, { _key: uid(), type: '', value: '' }]);
+  const handleRemoveIdentifier = (key) => setIdentifiers((prev) => prev.filter((r) => r._key !== key));
+  const handleChangeIdentifierType = (key, type) => setIdentifiers((prev) => prev.map((r) => (r._key === key ? { ...r, type } : r)));
+  const handleChangeIdentifierValue = (key, value) => setIdentifiers((prev) => prev.map((r) => (r._key === key ? { ...r, value } : r)));
+
+  const handleAddSocialMedia = () => setSocialMedias((prev) => [...prev, { _key: uid(), type: '', account: '' }]);
+  const handleRemoveSocialMedia = (key) => setSocialMedias((prev) => prev.filter((r) => r._key !== key));
+  const handleChangeSocialMediaType = (key, type) => setSocialMedias((prev) => prev.map((r) => (r._key === key ? { ...r, type } : r)));
+  const handleChangeSocialMediaAccount = (key, account) => setSocialMedias((prev) => prev.map((r) => (r._key === key ? { ...r, account } : r)));
 
   const handleSelectPydrefMatch = async (match) => {
     setSelectedPydrefMatch(match);
@@ -143,28 +179,29 @@ export default function PersonFlow({ onClose }) {
     if (match.gender) setGender(PYDREF_GENDER[match.gender] || gender);
     if (match.birth_date) setBirthDate(match.birth_date.slice(0, 10));
     if (match.job) setActivity(match.job);
+
+    const allPairs = extractIdentifierPairs(match.identifiers);
     setIdentifiers((prev) => {
       const manual = prev.filter((r) => !r.fromPydref && r.crossTrigger !== 'pydref');
-      const usedTypes = new Set(manual.map((r) => r.type).filter(Boolean));
-      const fromPydref = (match.identifiers || [])
-        .flatMap((idObj) => Object.entries(idObj))
-        .filter(([type]) => !usedTypes.has(type))
+      const usedNewTypes = new Set(manual.filter((r) => !r.fromExisting).map((r) => r.type).filter(Boolean));
+      const fromPydref = allPairs
+        .filter(([type]) => !usedNewTypes.has(type) && allowedIdentifierTypes.has(type))
         .map(([type, value]) => ({ _key: uid(), type, value, fromPydref: true }));
       return [...fromPydref, ...manual];
     });
-    const allIds = (match.identifiers || []).flatMap((idObj) => Object.entries(idObj));
-    const orcid = allIds.find(([type]) => type === 'orcid')?.[1];
-    const isni = allIds.find(([type]) => type === 'isni')?.[1];
-    const idref = allIds.find(([type]) => type === 'idref')?.[1];
+
+    const orcid = allPairs.find(([type]) => type === 'orcid')?.[1];
+    const isni = allPairs.find(([type]) => type === 'isni')?.[1];
+    const idref = allPairs.find(([type]) => type === 'idref')?.[1];
     let wdResult = null;
     if (orcid) wdResult = await crossEnrichWikidataPersonByOrcid(orcid).catch(() => null);
     else if (isni) wdResult = await crossEnrichWikidataPersonByIsni(isni).catch(() => null);
     else if (idref) wdResult = await crossEnrichWikidataPersonByIdRef(idref).catch(() => null);
     if (wdResult) {
       setIdentifiers((prev) => {
-        const usedTypes = new Set(prev.filter((r) => r.type).map((r) => r.type));
-        const extra = wdResult.identifiers
-          .filter(({ type, value }) => !usedTypes.has(type) && isIdentifierValid(type, value))
+        const usedNewTypes = new Set(prev.filter((r) => r.type && !r.fromExisting).map((r) => r.type));
+        const extra = (wdResult.identifiers || [])
+          .filter(({ type, value }) => !usedNewTypes.has(type) && allowedIdentifierTypes.has(type) && isIdentifierValid(type, value))
           .map(({ type, value }) => ({ _key: uid(), type, value, fromWikidata: true, via: 'Pydref', crossTrigger: 'pydref' }));
         return [...prev, ...extra];
       });
@@ -182,59 +219,83 @@ export default function PersonFlow({ onClose }) {
     if (match.birthDate && !birthDate) setBirthDate(match.birthDate);
     if (match.description && !activity) setActivity(match.description);
     setIdentifiers((prev) => {
-      const withoutWikidata = prev.filter((r) => !r.fromWikidata);
-      const usedTypes = new Set(withoutWikidata.filter((r) => r.type).map((r) => r.type));
-      const fromWikidata = match.identifiers
-        .filter(({ type, value }) => !usedTypes.has(type) && isIdentifierValid(type, value))
+      const without = prev.filter((r) => !r.fromWikidata);
+      // Only block types already used by OTHER new identifiers (allow conflict with paysage existing ones)
+      const usedNewTypes = new Set(without.filter((r) => r.type && !r.fromExisting).map((r) => r.type));
+      const fromWikidata = (match.identifiers || [])
+        .filter(({ type, value }) => !usedNewTypes.has(type) && allowedIdentifierTypes.has(type) && isIdentifierValid(type, value))
         .map(({ type, value }) => ({ _key: uid(), type, value, fromWikidata: true }));
-      return [...withoutWikidata, ...fromWikidata];
+      return [...without, ...fromWikidata];
     });
     setSocialMedias((prev) => {
-      const withoutWikidata = prev.filter((r) => !r.fromWikidata);
-      const usedTypes = new Set(withoutWikidata.filter((r) => r.type).map((r) => r.type));
+      const without = prev.filter((r) => !r.fromWikidata);
+      const usedTypes = new Set(without.filter((r) => r.type).map((r) => r.type));
       const fromWikidata = (match.socialMedias || [])
         .filter(({ type }) => !usedTypes.has(type))
         .map(({ type, account }) => ({ _key: uid(), type, account, fromWikidata: true }));
-      return [...withoutWikidata, ...fromWikidata];
+      return [...without, ...fromWikidata];
     });
   };
 
-  const handleAddIdentifier = () => setIdentifiers((prev) => [...prev, { _key: uid(), type: '', value: '', fromPydref: false }]);
-  const handleRemoveIdentifier = (key) => setIdentifiers((prev) => prev.filter((r) => r._key !== key));
-  const handleChangeIdentifierType = (key, type) => setIdentifiers((prev) => prev.map((r) => (r._key === key ? { ...r, type } : r)));
-  const handleChangeIdentifierValue = (key, value) => setIdentifiers((prev) => prev.map((r) => (r._key === key ? { ...r, value } : r)));
+  const handleNameChange = (field, value) => {
+    if (field === 'firstName') setFirstName(value); else setLastName(value);
+    setCreateSourceText('');
+    setExistingPersonId(undefined);
+    setSelectedPydrefMatch(null);
+    setSelectedWikidataMatch(null);
+    setPaysageMatches([]);
+  };
 
-  const handleAddSocialMedia = () => setSocialMedias((prev) => [...prev, { _key: uid(), type: '', account: '' }]);
-  const handleRemoveSocialMedia = (key) => setSocialMedias((prev) => prev.filter((r) => r._key !== key));
-  const handleChangeSocialMediaType = (key, type) => setSocialMedias((prev) => prev.map((r) => (r._key === key ? { ...r, type } : r)));
-  const handleChangeSocialMediaAccount = (key, account) => setSocialMedias((prev) => prev.map((r) => (r._key === key ? { ...r, account } : r)));
+  const hasDuplicate = paysageMatches.length > 0 && existingPersonId === undefined;
 
-  const handleEnterIdentifiersStep = async () => {
-    if (typeof existingPersonId === 'string' && identifiers.filter((r) => r.fromExisting).length === 0) {
-      try {
-        const { data: res } = await api.get(`/persons/${existingPersonId}/identifiers?limit=100`);
-        const existing = (res?.data || []).map((id) => ({
-          _key: uid(), type: id.type, value: id.value, originalValue: id.value, originalType: id.type, fromExisting: true,
-        }));
-        const existingTypes = new Set(existing.map((r) => r.type));
-        setIdentifiers((prev) => [
-          ...existing,
-          ...prev.filter((r) => !r.fromExisting && !existingTypes.has(r.type)),
-        ]);
-      } catch { /* keep current */ }
+  const handleNextFromPerson = () => {
+    if (hasDuplicate) return;
+    if (!existingPersonId) {
+      const errs = {};
+      if (!firstName.trim()) errs.firstName = 'Le prénom est obligatoire.';
+      if (!lastName.trim()) errs.lastName = 'Le nom est obligatoire.';
+      if (!gender) errs.gender = 'Le genre est obligatoire.';
+      if (Object.keys(errs).length > 0) { setPersonErrors(errs); setShowPersonErrors(true); return; }
     }
-    setStep(2);
+    setPersonErrors({});
+    setShowPersonErrors(false);
+    const loadThenNext = async () => {
+      if (typeof existingPersonId === 'string' && identifiers.filter((r) => r.fromExisting).length === 0) {
+        try {
+          const { data: res } = await api.get(`/persons/${existingPersonId}/identifiers?limit=100`);
+          const existing = (res?.data || []).map((id) => ({
+            _key: uid(), type: id.type, value: id.value, originalValue: id.value, originalType: id.type, fromExisting: true,
+          }));
+          const existingTypes = new Set(existing.map((r) => r.type));
+          setIdentifiers((prev) => [...existing, ...prev.filter((r) => !r.fromExisting && !existingTypes.has(r.type))]);
+        } catch { /* keep current */ }
+      }
+      setStep(2);
+    };
+    loadThenNext();
+  };
+
+  const handleNextFromIdentifiers = () => {
+    const hasInvalid = identifiers.some((r) => {
+      if (!r.type || !r.value || r.fromWikidata || r.fromPydref) return false;
+      return !isIdentifierValid(r.type, r.value);
+    });
+    if (hasInvalid) {
+      notice({ content: 'Un ou plusieurs identifiants saisis sont invalides.', type: 'error' });
+      return;
+    }
+    setStep(3);
   };
 
   const handlePersonSearchQuery = async (q) => {
     setPersonSearchQuery(q);
     if (!q || q.length < 2) { setPersonSearchOptions([]); return; }
-    setIsSearchingPerson(true);
+    setPersonSearching(true);
     try {
       const { data: res } = await api.get(`/autocomplete?types=persons&query=${encodeURIComponent(q)}`);
       setPersonSearchOptions(res?.data || []);
     } catch { setPersonSearchOptions([]); }
-    setIsSearchingPerson(false);
+    setPersonSearching(false);
   };
 
   const handleSelectSearchPerson = async (person) => {
@@ -252,10 +313,9 @@ export default function PersonFlow({ onClose }) {
       if (data.gender) setGender(data.gender);
       if (data.birthDate) setBirthDate(data.birthDate);
       if (data.activity) setActivity(data.activity);
-      const existing = (idData?.data || []).map((id) => ({
+      setIdentifiers((idData?.data || []).map((id) => ({
         _key: uid(), type: id.type, value: id.value, originalValue: id.value, originalType: id.type, fromExisting: true,
-      }));
-      setIdentifiers(existing);
+      })));
     } catch {
       const parts = person.name.trim().split(' ');
       setFirstName(parts.slice(0, -1).join(' '));
@@ -266,135 +326,76 @@ export default function PersonFlow({ onClose }) {
   const handleUnselectSearchPerson = () => {
     setSelectedSearchPerson(null);
     setExistingPersonId(undefined);
-    setFirstName('');
-    setLastName('');
-    setGender('');
-    setBirthDate('');
-    setActivity('');
-    setPersonSearchQuery('');
-    setPersonSearchOptions([]);
-    setIdentifiers([]);
+    setFirstName(''); setLastName(''); setGender(''); setBirthDate(''); setActivity('');
+    setPersonSearchQuery(''); setPersonSearchOptions([]);
+    setIdentifiers([]); setSelectedPydrefMatch(null); setSelectedWikidataMatch(null);
+  };
+
+  const handleChooseCreate = (text) => {
+    const source = (text || '').trim();
+    const { firstName: f, lastName: l } = deduceName(source, 'first');
+    setCreateSourceText(source);
+    setNameSplitMode('first');
+    setFirstName(capitalizeName(f));
+    setLastName(capitalizeName(l));
+    setExistingPersonId(undefined);
     setSelectedPydrefMatch(null);
     setSelectedWikidataMatch(null);
+    setPaysageMatches([]);
+    setIsCreatingNew(true);
+  };
+
+  const handleInvertName = () => {
+    const source = (createSourceText || `${firstName} ${lastName}`).trim();
+    const nextMode = nameSplitMode === 'first' ? 'last' : 'first';
+    const { firstName: f, lastName: l } = deduceName(source, nextMode);
+    setNameSplitMode(nextMode);
+    setFirstName(capitalizeName(f));
+    setLastName(capitalizeName(l));
+    setExistingPersonId(undefined);
+    setSelectedPydrefMatch(null);
+    setSelectedWikidataMatch(null);
+  };
+
+  const handleAdoptIdrefName = (fullName) => {
+    const source = (fullName || '').trim();
+    if (!source) return;
+    const { firstName: f, lastName: l } = deduceName(source, 'first');
+    setCreateSourceText(source);
+    setNameSplitMode('first');
+    setFirstName(capitalizeName(f));
+    setLastName(capitalizeName(l));
   };
 
   const handleBackFromCreate = () => {
     setIsCreatingNew(false);
-    setFirstName('');
-    setLastName('');
-    setGender('');
-    setPersonErrors({});
-    setShowPersonErrors(false);
-    setExistingPersonId(undefined);
-    setBirthDate('');
-    setActivity('');
-    setSelectedPydrefMatch(null);
-    setSelectedWikidataMatch(null);
+    setCreateSourceText(''); setNameSplitMode('first');
+    setFirstName(''); setLastName(''); setGender('');
+    setPersonErrors({}); setShowPersonErrors(false);
+    setExistingPersonId(undefined); setBirthDate(''); setActivity('');
+    setSelectedPydrefMatch(null); setSelectedWikidataMatch(null);
     setPaysageMatches([]);
   };
 
-  const handleStructureQuery = async (q) => {
-    setStructureQuery(q);
-    if (!q || q.length < 2) { setStructureOptions([]); return; }
-    setIsSearchingStructure(true);
-    try {
-      const { data: res } = await api.get(`/autocomplete?types=structures&query=${encodeURIComponent(q)}`);
-      setStructureOptions(res?.data || []);
-    } catch {
-      setStructureOptions([]);
-    }
-    setIsSearchingStructure(false);
-  };
-
-  const handleSelectStructure = async (item) => {
-    setSelectedStructure(item);
-    setStructureQuery('');
-    setStructureOptions([]);
-    setActiveRelations([]);
-    try {
-      const { data: res } = await api.get(`/relations?filters[relationTag]=${GOUVERNANCE}&filters[resourceId]=${item.id}&limit=500`);
-      const active = (res?.data || []).filter((m) => m.active !== false && (!m.endDate || m.endDate >= getComparableNow()));
-      setActiveRelations(active);
-    } catch {
-      setActiveRelations([]);
-    }
-  };
-
-  const handleUnselectStructure = () => {
-    setSelectedStructure(null);
-    setStructureOptions([]);
-    setActiveRelations([]);
-  };
-
-  const hasDuplicate = paysageMatches.length > 0 && existingPersonId === undefined;
-
-  const handleNextFromPerson = () => {
-    if (hasDuplicate) return;
-    if (!existingPersonId) {
-      const errs = {};
-      if (!firstName.trim()) errs.firstName = 'Le prénom est obligatoire.';
-      if (!lastName.trim()) errs.lastName = 'Le nom est obligatoire.';
-      if (!gender) errs.gender = 'Le genre est obligatoire.';
-      if (Object.keys(errs).length > 0) { setPersonErrors(errs); setShowPersonErrors(true); return; }
-    }
-    setPersonErrors({});
-    setShowPersonErrors(false);
-    handleEnterIdentifiersStep();
-  };
-
-  const handleNextFromIdentifiers = () => {
-    const hasInvalidManual = identifiers.some((r) => {
-      if (!r.type || !r.value) return false;
-      if (r.fromWikidata || r.fromPydref) return false;
-      return !isIdentifierValid(r.type, r.value);
-    });
-    if (hasInvalidManual) {
-      notice({
-        content: 'Un ou plusieurs identifiants saisis sont invalides. Veuillez les corriger avant de continuer.',
-        type: 'error',
-      });
-      return;
-    }
-    setStep(3);
-  };
-
-  const handleNextFromFonction = () => {
-    if (!selectedRelationType) {
-      setFonctionErrors({ relationTypeId: 'Veuillez choisir un type de mandat.' });
-      setShowFonctionErrors(true);
-      return;
-    }
-    setFonctionErrors({});
-    setShowFonctionErrors(false);
-    setStep(4);
-  };
-
-  const handleSubmit = async () => {
-    if (!selectedStructure) return;
-
+  const persistPerson = async () => {
     let personId = existingPersonId || null;
-
     if (!personId) {
-      try {
-        const { data: personData } = await api.post('/persons', {
-          firstName: firstName.trim(),
-          lastName: lastName.trim(),
-          gender,
-          ...(birthDate ? { birthDate } : {}),
-          ...(activity ? { activity } : {}),
-        });
-        personId = personData.id;
-      } catch { notice(saveError); return; }
+      const { data } = await api.post('/persons', {
+        firstName: firstName.trim(),
+        lastName: lastName.trim(),
+        gender,
+        ...(birthDate ? { birthDate } : {}),
+        ...(activity ? { activity } : {}),
+      });
+      personId = data.id;
     }
 
     const newIdentifiers = identifiers.filter((r) => {
-      if (!r.type || !r.value) return false;
-      if (r.type === 'ark') return false;
+      if (!r.type || !r.value || r.type === 'ark') return false;
       if (r.fromExisting && r.value === r.originalValue && r.type === r.originalType) return false;
       const [regexp] = regexpValidateIdentifiers(r.type);
       return !regexp || regexp.test(sanitizeIdentifierValue(r.type, r.value));
     });
-
     if (newIdentifiers.length > 0) {
       await Promise.all(newIdentifiers.map((r) => api.post(`/persons/${personId}/identifiers`, {
         type: r.type, value: sanitizeIdentifierValue(r.type, r.value), active: true,
@@ -409,49 +410,79 @@ export default function PersonFlow({ onClose }) {
       }));
     }
 
-    const toClose = relatedConflicts.filter((m) => m.id in conflictsToClose);
+    return personId;
+  };
+
+  const handleSubmitWithoutMandate = async () => {
+    let personId;
+    try { personId = await persistPerson(); } catch { notice(saveError); return; }
+    notice(saveSuccess);
+    const createdName = `${firstName.trim()} ${lastName.trim()}`.trim();
+    // eslint-disable-next-line brace-style
+    if (onCreated) { onCreated({ id: personId, name: createdName }); handleReset(); } // eslint-disable-line no-use-before-define
+    else { handleReset(); navigate(`/personnes/${personId}`); } // eslint-disable-line no-use-before-define
+  };
+
+  const handleSubmit = async () => {
+    const { relType, structure } = mandate;
+    if (!relType.selected) {
+      setFonctionErrors({ relTypeId: 'Veuillez choisir un type de mandat.' });
+      setShowFonctionErrors(true);
+      return;
+    }
+    if (!structure.selected) {
+      notice({ content: 'Veuillez choisir une structure.', type: 'error' });
+      return;
+    }
+    setFonctionErrors({});
+    setShowFonctionErrors(false);
+
+    let personId;
+    try { personId = await persistPerson(); } catch { notice(saveError); return; }
+
+    const toClose = mandate.conflicts.filter((m) => m.id in mandate.conflictsToClose);
     if (toClose.length > 0) {
-      await Promise.all(
-        toClose.map((m) => api.patch(`/relations/${m.id}`, {
-          resourceId: m.resourceId,
-          relatedObjectId: m.relatedObjectId,
-          endDate: conflictsToClose[m.id] || getComparableNow(),
-        }).catch(() => null)),
-      );
+      await Promise.all(toClose.map((m) => api.patch(`/relations/${m.id}`, {
+        resourceId: m.resourceId,
+        relatedObjectId: m.relatedObjectId,
+        endDate: mandate.conflictsToClose[m.id] || getComparableNow(),
+      }).catch(() => null)));
     }
 
     try {
       await api.post('/relations', {
         relatedObjectId: personId,
-        resourceId: selectedStructure.id,
+        resourceId: structure.selected.id,
         relationTag: GOUVERNANCE,
-        relationTypeId: selectedRelationType.id,
-        startDate: startDate || undefined,
-        endDate: endDate || undefined,
+        relationTypeId: relType.selected.id,
+        ...mandatePayload,
       });
     } catch { notice(saveError); return; }
 
     notice(saveSuccess);
-    handleReset(); // eslint-disable-line no-use-before-define
-    navigate(`/personnes/${personId}`);
+    const createdName = `${firstName.trim()} ${lastName.trim()}`.trim();
+    // eslint-disable-next-line brace-style
+    if (onCreated) { onCreated({ id: personId, name: createdName }); handleReset(); } // eslint-disable-line no-use-before-define
+    else { handleReset(); navigate(`/personnes/${personId}`); } // eslint-disable-line no-use-before-define
   };
 
   const handleReset = () => {
-    setStep(1); setFirstName(''); setLastName(''); setGender('');
-    setPersonErrors({}); setShowPersonErrors(false); setExistingPersonId(undefined);
+    setStep(1);
+    setFirstName(''); setLastName(''); setGender(''); setBirthDate(''); setActivity('');
+    setExistingPersonId(undefined); setPaysageMatches([]);
+    setPersonErrors({}); setShowPersonErrors(false);
+    setIsCreatingNew(false);
+    setCreateSourceText(''); setNameSplitMode('first');
+    setPersonSearchQuery(''); setPersonSearchOptions([]); setPersonSearching(false);
+    setSelectedSearchPerson(null);
     setSelectedPydrefMatch(null); setSelectedWikidataMatch(null);
-    setPaysageMatches([]); setBirthDate(''); setActivity(''); setIdentifiers([]); setSocialMedias([]);
-    setRelationTypeQuery(''); setRelationTypeOptions([]); setSelectedRelationType(null);
-    setStartDate(''); setEndDate(''); setFonctionErrors({}); setShowFonctionErrors(false);
-    setStructureQuery(''); setStructureOptions([]); setIsSearchingStructure(false);
-    setSelectedStructure(null); setActiveRelations([]); setConflictsToClose({});
-    setIsCreatingNew(false); setPersonSearchQuery(''); setPersonSearchOptions([]);
-    setIsSearchingPerson(false); setSelectedSearchPerson(null);
+    setIdentifiers([]); setSocialMedias([]);
+    setPastFunctions([]);
+    setPastContacts({ emails: [], personalEmails: [], phones: [] });
+    setFonctionErrors({}); setShowFonctionErrors(false);
+    resetMandate();
     onClose();
   };
-
-  const canProceedFromStructure = !!selectedStructure;
-  const idrefDescriptions = selectedPydrefMatch?.description || [];
 
   return (
     <>
@@ -471,9 +502,9 @@ export default function PersonFlow({ onClose }) {
         firstName={firstName}
         lastName={lastName}
         existingPersonId={existingPersonId}
-        selectedRelationType={selectedRelationType}
-        startDate={startDate}
-        selectedStructure={selectedStructure}
+        selectedRelationType={mandate.relType.selected}
+        startDate={mandate.startDate}
+        selectedStructure={mandate.structure.selected}
       />
 
       {step === 1 && (
@@ -484,20 +515,20 @@ export default function PersonFlow({ onClose }) {
                 query={personSearchQuery}
                 setQuery={handlePersonSearchQuery}
                 options={personSearchOptions}
-                isSearching={isSearchingPerson}
+                isSearching={personSearching}
                 selectedPerson={selectedSearchPerson}
                 onSelect={handleSelectSearchPerson}
                 onUnselect={handleUnselectSearchPerson}
-                onChooseCreate={() => setIsCreatingNew(true)}
+                onChooseCreate={handleChooseCreate}
               />
               {selectedSearchPerson && (
                 <EnrichmentPanel
-                  pydrefLoading={pydrefLoading}
-                  pydrefMatches={pydrefMatches}
+                  pydrefLoading={panelPydrefLoading}
+                  pydrefMatches={panelPydrefMatches}
                   selectedPydrefMatch={selectedPydrefMatch}
                   onSelectPydref={handleSelectPydrefMatch}
-                  wikidataLoading={wikidataLoading}
-                  wikidataMatches={wikidataMatches}
+                  wikidataLoading={panelWikidataLoading}
+                  wikidataMatches={panelWikidataMatches}
                   selectedWikidataMatch={selectedWikidataMatch}
                   onSelectWikidata={handleSelectWikidataMatch}
                   entityType="person"
@@ -523,18 +554,21 @@ export default function PersonFlow({ onClose }) {
                 onBirthDateChange={setBirthDate}
                 activity={activity}
                 onActivityChange={setActivity}
+                onInvertName={handleInvertName}
+                canInvertName={`${firstName} ${lastName}`.trim().includes(' ') || (createSourceText || '').includes(' ')}
               />
               {!hasDuplicate && (
                 <EnrichmentPanel
-                  pydrefLoading={pydrefLoading}
-                  pydrefMatches={pydrefMatches}
+                  pydrefLoading={panelPydrefLoading}
+                  pydrefMatches={panelPydrefMatches}
                   selectedPydrefMatch={selectedPydrefMatch}
                   onSelectPydref={handleSelectPydrefMatch}
-                  wikidataLoading={wikidataLoading}
-                  wikidataMatches={wikidataMatches}
+                  wikidataLoading={panelWikidataLoading}
+                  wikidataMatches={panelWikidataMatches}
                   selectedWikidataMatch={selectedWikidataMatch}
                   onSelectWikidata={handleSelectWikidataMatch}
                   entityType="person"
+                  onAdoptName={handleAdoptIdrefName}
                 />
               )}
             </>
@@ -603,20 +637,50 @@ export default function PersonFlow({ onClose }) {
 
       {step === 3 && (
         <>
+          <div className="fr-mb-3w fr-p-2w" style={{ background: 'var(--grey-975-75)', borderLeft: '3px solid var(--blue-france-sun-113-625)' }}>
+            <p className="fr-text--sm fr-text--bold fr-mb-1w">Ce qui sera enregistré</p>
+            <p className="fr-text--sm fr-mb-1v">
+              <strong>Personne :</strong>
+              {` ${[firstName, lastName].filter(Boolean).join(' ')}`}
+              {existingPersonId ? (
+                <a href={`/personnes/${existingPersonId}`} target="_blank" rel="noreferrer" className="fr-badge fr-badge--sm fr-badge--success fr-ml-1w">Fiche existante ↗</a>
+              ) : (
+                <span className="fr-badge fr-badge--sm fr-badge--new fr-ml-1w">Nouvelle fiche</span>
+              )}
+            </p>
+            {!existingPersonId && (gender || birthDate || activity) && (
+              <p className="fr-text--xs fr-hint-text fr-mb-1v">
+                {[gender, birthDate ? `né·e le ${birthDate}` : null, activity].filter(Boolean).join(' · ')}
+              </p>
+            )}
+            {identifiers.filter((r) => r.type && r.value && !r.fromExisting).length > 0 && (
+              <p className="fr-text--xs fr-hint-text fr-mb-0">
+                <strong>Identifiants :</strong>
+                {' '}
+                {identifiers.filter((r) => r.type && r.value && !r.fromExisting).map((r) => `${r.type} · ${r.value}`).join(', ')}
+              </p>
+            )}
+          </div>
+          <Row justifyContent="right" spacing="mb-2w" gutters>
+            <Col className="text-right">
+              <Button
+                color="error"
+                tertiary
+                icon="ri-user-line"
+                iconPosition="left"
+                onClick={handleSubmitWithoutMandate}
+              >
+                {typeof existingPersonId === 'string' ? 'Enregistrer sans mandat' : 'Créer la fiche sans mandat'}
+              </Button>
+            </Col>
+          </Row>
           <FonctionStep
-            relationTypeQuery={relationTypeQuery}
-            setRelationTypeQuery={setRelationTypeQuery}
-            relationTypeOptions={relationTypeOptions}
-            selectedRelationType={selectedRelationType}
-            onSelectRelationType={(item) => { setSelectedRelationType(item); setRelationTypeQuery(''); }}
-            onUnselectRelationType={() => { setSelectedRelationType(null); setRelationTypeQuery(''); }}
-            startDate={startDate}
-            onStartDateChange={setStartDate}
-            endDate={endDate}
-            onEndDateChange={setEndDate}
+            pastFunctions={pastFunctions}
+            pastContacts={pastContacts}
+            mandate={mandate}
+            on={mandateOn}
             errors={fonctionErrors}
             showErrors={showFonctionErrors}
-            idrefDescriptions={idrefDescriptions}
           />
           <Row justifyContent="right" spacing="mt-3w" gutters>
             <Col>
@@ -625,43 +689,12 @@ export default function PersonFlow({ onClose }) {
               </Button>
             </Col>
             <Col className="text-right">
-              <Button icon="ri-arrow-right-line" iconPosition="right" onClick={handleNextFromFonction}>
-                Suivant · Structure
-              </Button>
-            </Col>
-          </Row>
-        </>
-      )}
-
-      {step === 4 && (
-        <>
-          <StructureRelationStep
-            query={structureQuery}
-            setQuery={handleStructureQuery}
-            options={structureOptions}
-            isSearching={isSearchingStructure}
-            selectedStructure={selectedStructure}
-            onSelect={handleSelectStructure}
-            onUnselect={handleUnselectStructure}
-            relatedConflicts={relatedConflicts}
-            conflictsToClose={conflictsToClose}
-            onToggleConflictToClose={(id) => setConflictsToClose((prev) => {
-              const next = { ...prev };
-              if (id in next) delete next[id]; else next[id] = '';
-              return next;
-            })}
-            onSetClosureDate={(id, date) => setConflictsToClose((prev) => ({ ...prev, [id]: date }))}
-            selectedRelationType={selectedRelationType}
-            onGoBack={() => setStep(3)}
-          />
-          <Row justifyContent="right" spacing="mt-3w" gutters>
-            <Col>
-              <Button secondary icon="ri-arrow-left-line" iconPosition="left" onClick={() => setStep(3)}>
-                Retour · Fonction
-              </Button>
-            </Col>
-            <Col className="text-right">
-              <Button icon="ri-save-line" iconPosition="left" onClick={handleSubmit} disabled={!canProceedFromStructure}>
+              <Button
+                icon="ri-save-line"
+                iconPosition="left"
+                onClick={handleSubmit}
+                disabled={!mandate.structure.selected || !mandate.relType.selected}
+              >
                 {typeof existingPersonId === 'string' ? 'Enregistrer le mandat' : 'Créer la fiche et le mandat'}
               </Button>
             </Col>
@@ -674,4 +707,8 @@ export default function PersonFlow({ onClose }) {
 
 PersonFlow.propTypes = {
   onClose: PropTypes.func.isRequired,
+  onCreated: PropTypes.func,
+};
+PersonFlow.defaultProps = {
+  onCreated: null,
 };

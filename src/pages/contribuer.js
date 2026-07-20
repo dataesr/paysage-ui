@@ -91,7 +91,7 @@ export default function ContributePage() {
               </Tile>
             </Col>
           ))}
-          {/* <Col
+          <Col
             n="12 md-6 lg-4"
             className="card-button"
           >
@@ -109,10 +109,10 @@ export default function ContributePage() {
                 <Icon size="3x" name="ri-leaf-line" color="var(--green-emeraude-main-632)" />
               </div>
             </Tile>
-          </Col> */}
+          </Col>
         </>
       </Row>
-      {/* <BotanicModal isOpen={showBotanic} onClose={() => setShowBotanic(false)} /> */}
+      <BotanicModal isOpen={showBotanic} onClose={() => setShowBotanic(false)} />
     </Container>
   );
 }

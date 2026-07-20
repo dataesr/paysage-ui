@@ -1,3 +1,4 @@
+/* eslint-disable no-nested-ternary */
 import { useState } from 'react';
 import { Select, TextInput } from '@dataesr/react-dsfr';
 import PropTypes from 'prop-types';
@@ -17,11 +18,6 @@ const regexpValidateSocialMedia = (type) => {
     Youtube: [/^(https:\/\/)?(www.)?youtube.com\/[A-Za-z0-9/:%_+.,#?!@&=-]+$/, 'https://www.youtube.com/channel/<chaine>'],
   };
   return validator[type] || [null, null];
-};
-
-const toExternalUrl = (account) => {
-  if (!account) return '';
-  return account.startsWith('https://') ? account : `https://${account}`;
 };
 
 const openExternalLink = (url) => {
@@ -47,6 +43,20 @@ export default function StructureIdentifiersStep({
 }) {
   const [validationErrors, setValidationErrors] = useState({});
   const [smErrors, setSmErrors] = useState({});
+
+  const fromExisting = identifiers.filter((r) => r.fromExisting);
+  const newRows = identifiers.filter((r) => !r.fromExisting);
+
+  // Conflict detection: new row has same type as existing row
+  const conflicts = {};
+  newRows.forEach((newRow) => {
+    if (!newRow.type) return;
+    const existing = fromExisting.find((ex) => ex.type === newRow.type);
+    if (!existing) return;
+    conflicts[newRow._key] = existing.value === newRow.value
+      ? { kind: 'same', existing }
+      : { kind: 'different', existing };
+  });
 
   const handleChangeValue = (key, value) => {
     onChangeValue(key, value);
@@ -89,6 +99,105 @@ export default function StructureIdentifiersStep({
     setSmErrors((prev) => { const next = { ...prev }; delete next[key]; return next; });
   };
 
+  const renderIdentifierRow = (row, section) => {
+    const siblingRows = section === 'existing'
+      ? fromExisting.filter((r) => r._key !== row._key)
+      : newRows.filter((r) => r._key !== row._key);
+    const usedTypes = new Set(siblingRows.map((r) => r.type).filter(Boolean));
+    const filteredOptions = identifierOptions.filter(
+      (o) => !o.value || o.value === row.type || !usedTypes.has(o.value),
+    );
+    const normalizedValue = sanitizeIdentifierValue(row.type, row.value || '');
+    const verificationLink = (row.type && row.value) ? getLink({ type: row.type, value: normalizedValue }) : '';
+
+    let sourceBadge = null;
+    if (row.fromExisting) {
+      sourceBadge = { label: 'Paysage', cls: 'fr-badge--blue-ecume' };
+    } else if (row.fromRor) {
+      sourceBadge = { label: row.via ? `ROR (via ${row.via})` : 'ROR', cls: 'fr-badge--purple-glycine' };
+    } else if (row.fromWikidata) {
+      sourceBadge = { label: row.via ? `Wikidata (via ${row.via})` : 'Wikidata', cls: 'fr-badge--green-emeraude' };
+    }
+
+    const conflict = conflicts[row._key];
+
+    return (
+      <div key={row._key} style={{ marginBottom: '12px' }}>
+        <div style={{ display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
+          <div style={{ flex: '0 0 220px' }}>
+            <Select
+              label="Type"
+              options={filteredOptions}
+              selected={row.type}
+              onChange={(e) => handleChangeType(row._key, e.target.value)}
+            />
+          </div>
+          <div style={{ flex: '1 1 auto' }}>
+            <TextInput
+              label="Valeur"
+              value={row.value}
+              onChange={(e) => handleChangeValue(row._key, e.target.value)}
+              message={validationErrors[row._key] || null}
+              messageType={validationErrors[row._key] ? 'error' : ''}
+            />
+          </div>
+          <div style={{ paddingTop: '28px', display: 'flex', gap: '4px' }}>
+            {!row.fromExisting && (
+              <Button size="sm" secondary icon="ri-delete-bin-line" title="Supprimer" onClick={() => onRemove(row._key)} />
+            )}
+            {!!verificationLink && (
+              <Button size="sm" tertiary borderless icon="ri-external-link-line" title="Vérifier" onClick={() => openExternalLink(verificationLink)}>
+                Vérifier
+              </Button>
+            )}
+          </div>
+        </div>
+
+        {sourceBadge && !conflict && (
+          <p className="fr-mb-0 fr-mt-1v" style={{ paddingLeft: '4px' }}>
+            <span className={`fr-badge fr-badge--sm ${sourceBadge.cls}`}>{sourceBadge.label}</span>
+            {!row.fromExisting && (
+              <span className="fr-text--xs fr-ml-1w" style={{ color: 'var(--grey-425-625)' }}>
+                {`Sera ajouté — importé depuis ${sourceBadge.label}, pas encore en base`}
+              </span>
+            )}
+          </p>
+        )}
+
+        {conflict?.kind === 'same' && (
+          <p className="fr-mb-0 fr-mt-1v" style={{ paddingLeft: '4px' }}>
+            <span className="fr-badge fr-badge--sm fr-badge--success">Déjà présent</span>
+            <span className="fr-text--xs fr-ml-1w" style={{ color: 'var(--grey-425-625)' }}>Valeur identique déjà dans Paysage.</span>
+          </p>
+        )}
+
+        {conflict?.kind === 'different' && (
+          <div style={{
+            background: 'var(--background-contrast-orange-terre-battue)',
+            borderLeft: '3px solid var(--border-plain-orange-terre-battue)',
+            padding: '8px 12px',
+            marginTop: '6px',
+            borderRadius: '0 4px 4px 0',
+          }}
+          >
+            <p className="fr-text--xs fr-mb-1w">
+              <strong>Conflit :</strong>
+              {' Paysage a déjà '}
+              <code>{conflict.existing.value}</code>
+              {' pour ce type.'}
+            </p>
+            <div style={{ display: 'flex', gap: '8px' }}>
+              <Button size="sm" onClick={() => { onChangeValue(conflict.existing._key, row.value); onRemove(row._key); }}>
+                Utiliser cette valeur
+              </Button>
+              <Button size="sm" secondary onClick={() => onRemove(row._key)}>Ignorer</Button>
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  };
+
   return (
     <div>
       {isExisting ? (
@@ -98,7 +207,7 @@ export default function StructureIdentifiersStep({
               {existingStructureName ? `Identifiants de ${existingStructureName}` : 'Identifiants de la structure existante'}
             </p>
             <p className="fr-notice__desc fr-text--sm">
-              Les identifiants existants sont affichés ci-dessous. Vous pouvez modifier le type ou la valeur de chacun, ou en ajouter de nouveaux.
+              Vous pouvez modifier les identifiants existants ou en ajouter de nouveaux.
             </p>
           </div>
         </div>
@@ -108,103 +217,36 @@ export default function StructureIdentifiersStep({
         </p>
       )}
 
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-        <p className="fr-text--sm fr-mb-0" style={{ fontWeight: '600' }}>
-          {identifiers.length === 0 ? 'Aucun identifiant' : `${identifiers.length} identifiant${identifiers.length > 1 ? 's' : ''}`}
-        </p>
-        <Button size="sm" tertiary borderless icon="ri-add-circle-line" iconPosition="left" onClick={onAdd}>
-          Ajouter un identifiant
-        </Button>
-      </div>
-
-      {identifiers.length === 0 && (
-        <div className="fr-p-3w" style={{ background: 'var(--grey-975-75)', borderRadius: '4px', textAlign: 'center' }}>
-          <p className="fr-text--sm fr-hint-text fr-mb-0">Aucun identifiant renseigné.</p>
+      {fromExisting.length > 0 && (
+        <div className="fr-mb-3w" style={{ background: 'var(--grey-975-75)', borderRadius: '4px', padding: '12px 16px' }}>
+          <p className="fr-text--sm fr-mb-2w" style={{ fontWeight: '600' }}>Dans Paysage</p>
+          {fromExisting.map((row) => renderIdentifierRow(row, 'existing'))}
         </div>
       )}
 
-      {identifiers.map((row) => {
-        const usedTypes = new Set(identifiers.filter((r) => r._key !== row._key).map((r) => r.type).filter(Boolean));
-        const filteredOptions = identifierOptions.filter(
-          (o) => !o.value || o.value === row.type || !usedTypes.has(o.value),
-        );
-        const normalizedValue = sanitizeIdentifierValue(row.type, row.value || '');
-        const verificationLink = (row.type && row.value) ? getLink({ type: row.type, value: normalizedValue }) : '';
-        let sourceBadge = null;
-        if (row.fromRor) {
-          const label = row.via ? `ROR (via ${row.via})` : 'ROR';
-          sourceBadge = { label, cls: 'fr-badge--purple-glycine' };
-        } else if (row.fromWikidata) {
-          const label = row.via ? `Wikidata (via ${row.via})` : 'Wikidata';
-          sourceBadge = { label, cls: 'fr-badge--green-emeraude' };
-        }
-        return (
-          <div key={row._key} style={{ marginBottom: '12px' }}>
-            <div style={{ display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
-              <div style={{ flex: '0 0 220px' }}>
-                <Select
-                  label="Type"
-                  options={filteredOptions}
-                  selected={row.type}
-                  onChange={(e) => handleChangeType(row._key, e.target.value)}
-                  hint={row.fromExisting ? 'Identifiant existant — modifiable' : null}
-                />
-              </div>
-              <div style={{ flex: '1 1 auto' }}>
-                <TextInput
-                  label="Valeur"
-                  hint={row.fromExisting ? 'Identifiant existant — modifiable' : null}
-                  value={row.value}
-                  onChange={(e) => handleChangeValue(row._key, e.target.value)}
-                  message={validationErrors[row._key] || null}
-                  messageType={validationErrors[row._key] ? 'error' : ''}
-                />
-              </div>
-              <div style={{ paddingTop: '28px' }}>
-                {!row.fromExisting && (
-                  <Button
-                    size="sm"
-                    secondary
-                    icon="ri-delete-bin-line"
-                    title="Supprimer"
-                    onClick={() => onRemove(row._key)}
-                  />
-                )}
-                {!!verificationLink && (
-                  <Button
-                    size="sm"
-                    tertiary
-                    borderless
-                    icon="ri-external-link-line"
-                    title="Vérifier"
-                    onClick={() => openExternalLink(verificationLink)}
-                    style={{ marginLeft: '12px' }}
-                  >
-                    Vérifier
-                  </Button>
-                )}
-              </div>
-            </div>
-            {sourceBadge && (
-              <p className="fr-mb-0 fr-mt-1v" style={{ paddingLeft: '4px' }}>
-                <span className={`fr-badge fr-badge--sm ${sourceBadge.cls}`}>{sourceBadge.label}</span>
-                <span className="fr-text--xs fr-ml-1w" style={{ color: 'var(--grey-425-625)' }}>
-                  {'Sera ajouté — importé depuis '}
-                  {sourceBadge.label}
-                  , pas encore en base
-                </span>
-              </p>
-            )}
-          </div>
-        );
-      })}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+        <p className="fr-text--sm fr-mb-0" style={{ fontWeight: '600' }}>
+          {newRows.length === 0 ? 'Nouveaux identifiants' : `Nouveaux identifiants (${newRows.length})`}
+        </p>
+        <Button size="sm" tertiary borderless icon="ri-add-circle-line" iconPosition="left" onClick={onAdd}>
+          Ajouter
+        </Button>
+      </div>
+
+      {newRows.length === 0 && (
+        <div className="fr-p-3w" style={{ background: 'var(--grey-975-75)', borderRadius: '4px', textAlign: 'center' }}>
+          <p className="fr-text--sm fr-hint-text fr-mb-0">Aucun nouvel identifiant renseigné.</p>
+        </div>
+      )}
+
+      {newRows.map((row) => renderIdentifierRow(row, 'new'))}
 
       <hr className="fr-mt-3w fr-mb-3w" />
 
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
         <p className="fr-text--sm fr-mb-0" style={{ fontWeight: '600' }}>
           {socialMedias.length === 0
-            ? 'Aucun réseau social'
+            ? 'Réseaux sociaux'
             : `${socialMedias.length} réseau${socialMedias.length > 1 ? 'x' : ''} social${socialMedias.length > 1 ? 'x' : ''}`}
         </p>
         <Button size="sm" tertiary borderless icon="ri-share-line" iconPosition="left" onClick={onAddSocialMedia}>
@@ -219,7 +261,9 @@ export default function StructureIdentifiersStep({
       )}
 
       {socialMedias.map((row) => {
-        const socialMediaLink = toExternalUrl(row.account);
+        const socialMediaLink = row.account
+          ? (row.account.startsWith('https://') ? row.account : `https://${row.account}`)
+          : '';
         return (
           <div key={row._key} style={{ display: 'flex', gap: '12px', alignItems: 'flex-start', marginBottom: '8px' }}>
             <div style={{ flex: '0 0 220px' }}>
@@ -239,14 +283,8 @@ export default function StructureIdentifiersStep({
                 messageType={smErrors[row._key] ? 'error' : ''}
               />
             </div>
-            <div style={{ paddingTop: '28px' }}>
-              <Button
-                size="sm"
-                secondary
-                icon="ri-delete-bin-line"
-                title="Supprimer"
-                onClick={() => onRemoveSocialMedia(row._key)}
-              />
+            <div style={{ paddingTop: '28px', display: 'flex', gap: '4px' }}>
+              <Button size="sm" secondary icon="ri-delete-bin-line" title="Supprimer" onClick={() => onRemoveSocialMedia(row._key)} />
               {!!row.account && !smErrors[row._key] && (
                 <Button
                   size="sm"
@@ -255,7 +293,6 @@ export default function StructureIdentifiersStep({
                   icon="ri-external-link-line"
                   title="Vérifier"
                   onClick={() => openExternalLink(socialMediaLink)}
-                  style={{ marginLeft: '12px' }}
                 >
                   Vérifier
                 </Button>
@@ -275,28 +312,18 @@ StructureIdentifiersStep.propTypes = {
     value: PropTypes.string,
     fromExisting: PropTypes.bool,
   })).isRequired,
-  identifierOptions: PropTypes.arrayOf(PropTypes.shape({
-    label: PropTypes.string,
-    value: PropTypes.string,
-  })).isRequired,
+  identifierOptions: PropTypes.arrayOf(PropTypes.shape({ label: PropTypes.string, value: PropTypes.string })).isRequired,
   onAdd: PropTypes.func.isRequired,
   onRemove: PropTypes.func.isRequired,
   onChangeType: PropTypes.func.isRequired,
   onChangeValue: PropTypes.func.isRequired,
   isExisting: PropTypes.bool.isRequired,
   existingStructureName: PropTypes.string,
-  socialMedias: PropTypes.arrayOf(PropTypes.shape({
-    _key: PropTypes.string,
-    type: PropTypes.string,
-    account: PropTypes.string,
-  })).isRequired,
+  socialMedias: PropTypes.arrayOf(PropTypes.shape({ _key: PropTypes.string.isRequired, type: PropTypes.string, account: PropTypes.string })).isRequired,
   socialMediaOptions: PropTypes.arrayOf(PropTypes.shape({ label: PropTypes.string, value: PropTypes.string })).isRequired,
   onAddSocialMedia: PropTypes.func.isRequired,
   onRemoveSocialMedia: PropTypes.func.isRequired,
   onChangeSocialMediaType: PropTypes.func.isRequired,
   onChangeSocialMediaAccount: PropTypes.func.isRequired,
 };
-
-StructureIdentifiersStep.defaultProps = {
-  existingStructureName: null,
-};
+StructureIdentifiersStep.defaultProps = { existingStructureName: null };

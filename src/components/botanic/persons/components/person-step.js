@@ -10,6 +10,7 @@ export default function PersonStep({
   errors, showErrors,
   paysageMatches, existingPersonId, onUseExisting, onKeepNew,
   birthDate, onBirthDateChange, activity, onActivityChange,
+  onInvertName, canInvertName,
 }) {
   const hasDuplicate = paysageMatches.length > 0 && existingPersonId === undefined;
   const isExisting = typeof existingPersonId === 'string';
@@ -71,8 +72,8 @@ export default function PersonStep({
             <TextInput
               required
               label="Prénom"
-              value={capitalizeName(firstName)}
-              onChange={(e) => onFirstNameChange(capitalizeName(e.target.value))}
+              value={firstName}
+              onChange={(e) => onFirstNameChange(e.target.value)}
               message={(showErrors && errors.firstName) ? errors.firstName : null}
               messageType={(showErrors && errors.firstName) ? 'error' : ''}
               disabled={isExisting}
@@ -82,8 +83,8 @@ export default function PersonStep({
             <TextInput
               required
               label="Nom"
-              value={capitalizeName(lastName)}
-              onChange={(e) => onLastNameChange(capitalizeName(e.target.value))}
+              value={lastName}
+              onChange={(e) => onLastNameChange(e.target.value)}
               message={(showErrors && errors.lastName) ? errors.lastName : null}
               messageType={(showErrors && errors.lastName) ? 'error' : ''}
               disabled={isExisting}
@@ -102,6 +103,20 @@ export default function PersonStep({
               />
             </Col>
           )}
+          {!isExisting && canInvertName && (
+            <Col n="12">
+              <Button
+                tertiary
+                borderless
+                size="sm"
+                icon="ri-arrow-left-right-line"
+                iconPosition="left"
+                onClick={onInvertName}
+              >
+                Inverser prénom / nom
+              </Button>
+            </Col>
+          )}
           <Col n="12 md-6">
             <DateInput
               value={birthDate}
@@ -114,7 +129,7 @@ export default function PersonStep({
             <TextInput
               label="Activité"
               hint="Optionnel — pré-rempli si trouvé dans IdRef ou Wikidata"
-              value={capitalizeName(activity)}
+              value={activity}
               onChange={(e) => onActivityChange(e.target.value)}
             />
           </Col>
@@ -145,5 +160,7 @@ PersonStep.propTypes = {
   onBirthDateChange: PropTypes.func.isRequired,
   activity: PropTypes.string.isRequired,
   onActivityChange: PropTypes.func.isRequired,
+  onInvertName: PropTypes.func,
+  canInvertName: PropTypes.bool,
 };
-PersonStep.defaultProps = { existingPersonId: undefined };
+PersonStep.defaultProps = { existingPersonId: undefined, onInvertName: () => {}, canInvertName: false };
