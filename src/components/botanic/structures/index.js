@@ -79,6 +79,26 @@ export default function StructureFlow({ onClose, onCreated }) {
   const panelRorMatches = (isEditMode && existingIdentifierTypes.has('ror')) ? [] : rorMatches;
   const panelRorLoading = (isEditMode && existingIdentifierTypes.has('ror')) ? false : rorLoading;
 
+  const locationHint = useMemo(() => {
+    const match = selectedRorMatch || selectedWikidataMatch;
+    if (!match) return null;
+    const coords = match.coordinates || null;
+    if (selectedRorMatch) {
+      return {
+        coordinates: coords,
+        city: match.city || null,
+        country: match.country || null,
+        countryCode: match.countryCode || null,
+        searchQuery: !coords ? ([match.city, match.country].filter(Boolean).join(', ') || null) : null,
+      };
+    }
+    return {
+      coordinates: coords,
+      streetAddress: match.streetAddress || null,
+      searchQuery: !coords ? (match.streetAddress || null) : null,
+    };
+  }, [selectedRorMatch, selectedWikidataMatch]);
+
   const [externalDuplicates, setExternalDuplicates] = useState({});
 
   useEffect(() => {
@@ -451,7 +471,7 @@ export default function StructureFlow({ onClose, onCreated }) {
 
       {step === 3 && (
         <>
-          <LocalisationStep onBodyChange={setLocalisationBody} />
+          <LocalisationStep onBodyChange={setLocalisationBody} locationHint={locationHint} />
           <Row justifyContent="right" spacing="mt-3w" gutters>
             <Col>
               <Button secondary icon="ri-arrow-left-line" iconPosition="left" onClick={() => setStep(2)}>

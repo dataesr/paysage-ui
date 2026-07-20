@@ -62,6 +62,22 @@ function claimEntityId(claims, prop) {
   return snaks[0]?.mainsnak?.datavalue?.value?.id || null;
 }
 
+function claimMonolingualValue(claims, prop) {
+  const snaks = claims?.[prop];
+  if (!snaks?.length) return null;
+  const preferred = snaks.find((s) => s.mainsnak?.datavalue?.value?.language === 'fr')
+    || snaks[0];
+  return preferred?.mainsnak?.datavalue?.value?.text || null;
+}
+
+function claimCoordinates(claims, prop) {
+  const snaks = claims?.[prop];
+  if (!snaks?.length) return null;
+  const val = snaks[0]?.mainsnak?.datavalue?.value;
+  if (!val?.latitude || !val?.longitude) return null;
+  return { lat: val.latitude, lng: val.longitude };
+}
+
 async function wikidataSearchQids(query) {
   const params = new URLSearchParams({
     action: 'wbsearchentities',
@@ -169,7 +185,9 @@ export async function lookupWikidataStructures(name) {
   return wikidataLookup(name, WD_STRUCTURE_IDS, (claims) => {
     const inceptionDate = claimTimeValue(claims, 'P571');
     const website = claimStringValue(claims, 'P856');
-    return { inceptionDate, website };
+    const streetAddress = claimMonolingualValue(claims, 'P6375');
+    const coordinates = claimCoordinates(claims, 'P625');
+    return { inceptionDate, website, streetAddress, coordinates };
   });
 }
 
@@ -178,6 +196,8 @@ export async function crossEnrichWikidataStructure(qid) {
   return wikidataEntityToResult(qid, entities[qid], WD_STRUCTURE_IDS, (claims) => ({
     inceptionDate: claimTimeValue(claims, 'P571'),
     website: claimStringValue(claims, 'P856'),
+    streetAddress: claimMonolingualValue(claims, 'P6375'),
+    coordinates: claimCoordinates(claims, 'P625'),
   }));
 }
 
@@ -230,6 +250,12 @@ function parseRorOrg(org) {
   const country = org.locations?.[0]?.geonames_details?.country_name
     || org.country?.country_name
     || null;
+  const geoDetails = org.locations?.[0]?.geonames_details;
+  const city = geoDetails?.name || null;
+  const coordinates = (geoDetails?.lat != null && geoDetails?.lng != null)
+    ? { lat: geoDetails.lat, lng: geoDetails.lng }
+    : null;
+  const countryCode = geoDetails?.country_code || org.locations?.[0]?.country_code || null;
   const identifiers = [{ type: 'ror', value: rorId }];
   const extIdsArray = Array.isArray(org.external_ids)
     ? org.external_ids
@@ -242,7 +268,7 @@ function parseRorOrg(org) {
     if (val) identifiers.push({ type: mappedType, value: String(val) });
   });
   return {
-    rorId, label: displayName, description, country, website, identifiers,
+    rorId, label: displayName, description, country, city, coordinates, countryCode, website, identifiers,
   };
 }
 
