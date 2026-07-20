@@ -226,16 +226,6 @@ export default function FonctionStep({
               <Col n="12 md-6">
                 <TextInput label="Numéro de téléphone" value={mandate.phonenumber} onChange={(e) => on.setPhonenumber(e.target.value)} />
               </Col>
-              <Col n="12 md-6">
-                <DateInput value={mandate.startDate} label="Date de prise de fonction" onDateChange={on.setStartDate} />
-              </Col>
-              <Col n="12 md-6">
-                <DateInput
-                  value={mandate.endDatePrevisional}
-                  label="Date de fin prévisionnelle"
-                  onDateChange={on.setEndDatePrevisional}
-                />
-              </Col>
               <Col n="12">
                 <SearchBar
                   buttonLabel="Rechercher"
@@ -252,7 +242,14 @@ export default function FonctionStep({
                 />
               </Col>
               <Col n="12 md-6">
-                <DateInput value={mandate.endDate} label="Date de fin de fonction" onDateChange={on.setEndDate} />
+                <DateInput value={mandate.startDate} label="Date de prise de fonction" onDateChange={on.setStartDate} />
+              </Col>
+              <Col n="12 md-6">
+                <DateInput
+                  value={mandate.endDatePrevisional}
+                  label="Date de fin prévisionnelle"
+                  onDateChange={on.setEndDatePrevisional}
+                />
               </Col>
               <Col n="12">
                 <SearchBar
@@ -268,6 +265,9 @@ export default function FonctionStep({
                   onDeleteScope={mandate.endOT.unselect}
                   isSearching={mandate.endOT.searching}
                 />
+              </Col>
+              <Col n="12 md-6">
+                <DateInput value={mandate.endDate} label="Date de fin de fonction" onDateChange={on.setEndDate} />
               </Col>
             </Row>
           </AccordionItem>

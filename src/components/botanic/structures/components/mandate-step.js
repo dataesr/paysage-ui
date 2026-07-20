@@ -383,12 +383,6 @@ export default function StructureMandateStep({
                   <Col n="12 md-6">
                     <TextInput label="Numéro de téléphone" value={phonenumber} onChange={(e) => setPhonenumber(e.target.value)} />
                   </Col>
-                  <Col n="12 md-6">
-                    <DateInput value={startDate} label="Date de prise de fonction" onDateChange={setStartDate} />
-                  </Col>
-                  <Col n="12 md-6">
-                    <DateInput value={endDatePrevisional} label="Date de fin prévisionnelle" onDateChange={setEndDatePrevisional} />
-                  </Col>
                   <Col n="12">
                     <SearchBar
                       buttonLabel="Rechercher"
@@ -405,14 +399,10 @@ export default function StructureMandateStep({
                     />
                   </Col>
                   <Col n="12 md-6">
-                    <DateInput value={endDate} label="Date de fin de fonction" onDateChange={setEndDate} />
+                    <DateInput value={startDate} label="Date de prise de fonction" onDateChange={setStartDate} />
                   </Col>
                   <Col n="12 md-6">
-                    <Checkbox
-                      label="Date de fin inconnue mais passée"
-                      onChange={(e) => setActive(!e.target.checked)}
-                      checked={active === false}
-                    />
+                    <DateInput value={endDatePrevisional} label="Date de fin prévisionnelle" onDateChange={setEndDatePrevisional} />
                   </Col>
                   <Col n="12">
                     <SearchBar
@@ -427,6 +417,16 @@ export default function StructureMandateStep({
                       onSelect={endOT.select}
                       onDeleteScope={endOT.unselect}
                       isSearching={endOT.searching}
+                    />
+                  </Col>
+                  <Col n="12 md-6">
+                    <DateInput value={endDate} label="Date de fin de fonction" onDateChange={setEndDate} />
+                  </Col>
+                  <Col n="12 md-6">
+                    <Checkbox
+                      label="Date de fin inconnue mais passée"
+                      onChange={(e) => setActive(!e.target.checked)}
+                      checked={active === false}
                     />
                   </Col>
                 </Row>

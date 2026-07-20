@@ -484,24 +484,21 @@ export default function MandateFlow({ onClose }) {
             <Row gutters className="fr-mt-2w">
               <Col n="12 md-6">
                 <DateInput
-                  label="Date de début (par défaut)"
-                  hint="Reprise pour chaque mandat, modifiable individuellement"
+                  label="Date de début du mandat (par défaut)"
                   value={defaultStartDate}
                   onDateChange={setDefaultStartDate}
                 />
               </Col>
               <Col n="12 md-6">
                 <DateInput
-                  label="Date de fin prévisionnelle (par défaut)"
-                  hint="Reprise pour chaque mandat, modifiable individuellement"
+                  label="Date de fin prévisionnelle du mandat (par défaut)"
                   value={defaultEndPrevisional}
                   onDateChange={setDefaultEndPrevisional}
                 />
               </Col>
               <Col n="12 md-6">
                 <DateInput
-                  label="Date de fin (par défaut)"
-                  hint="Optionnel — utilisée pour les clôtures de mandat"
+                  label="Date de fin du mandat (par défaut)"
                   value={defaultEndDate}
                   onDateChange={setDefaultEndDate}
                 />
