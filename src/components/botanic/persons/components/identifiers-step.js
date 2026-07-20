@@ -207,7 +207,7 @@ export default function IdentifiersStep({
 
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
         <p className="fr-text--sm fr-mb-0" style={{ fontWeight: 600 }}>
-          {newIds.length === 0 ? 'Aucun nouvel identifiant' : `${newIds.length} nouvel${newIds.length > 1 ? 's' : ''} identifiant${newIds.length > 1 ? 's' : ''}`}
+          {newIds.length === 0 ? 'Aucun nouvel identifiant' : `${newIds.length} nouve${newIds.length > 1 ? 'aux' : 'l'} identifiant${newIds.length > 1 ? 's' : ''}`}
         </p>
         <Button size="sm" tertiary borderless icon="ri-add-circle-line" iconPosition="left" onClick={onAdd}>
           Ajouter un identifiant
