@@ -33,6 +33,7 @@ const emptyRow = (defaults = {}) => ({
   precision: '',
   reason: null,
   temporary: false,
+  position: null,
   email: '',
   personalEmail: '',
   phonenumber: '',
@@ -81,12 +82,12 @@ export default function MandateFlow({ onClose }) {
   const [step, setStep] = useState(1);
 
   const [hasText, setHasText] = useState(null);
-  const [textMode, setTextMode] = useState('search'); // 'search' | 'create'
+  const [textMode, setTextMode] = useState('search');
   const [textQuery, setTextQuery] = useState('');
   const [textOptions, setTextOptions] = useState([]);
   const [textSearching, setTextSearching] = useState(false);
   const [officialText, setOfficialText] = useState(null);
-  const [draft, setDraft] = useState({ nature: '', type: '', jorftext: '', nor: '', title: '', pageUrl: '', publicationDate: '', signatureDate: '' });
+  const [draft, setDraft] = useState({ nature: '', type: '', jorftext: '', nor: '', boesrId: '', joId: '', title: '', pageUrl: '', publicationDate: '', signatureDate: '' });
   const [defaultStartDate, setDefaultStartDate] = useState('');
   const [defaultEndDate, setDefaultEndDate] = useState('');
   const [defaultEndPrevisional, setDefaultEndPrevisional] = useState('');
@@ -231,7 +232,7 @@ export default function MandateFlow({ onClose }) {
     setStep(1);
     setHasText(null); setTextMode('search');
     setTextQuery(''); setTextOptions([]); setTextSearching(false); setOfficialText(null);
-    setDraft({ nature: '', type: '', jorftext: '', nor: '', title: '', pageUrl: '', publicationDate: '', signatureDate: '' });
+    setDraft({ nature: '', type: '', jorftext: '', nor: '', boesrId: '', joId: '', title: '', pageUrl: '', publicationDate: '', signatureDate: '' });
     setDefaultStartDate(''); setDefaultEndDate(''); setDefaultEndPrevisional('');
     setConcerns({ mandates: true, closures: false });
     setRows([emptyRow()]);
@@ -285,6 +286,7 @@ export default function MandateFlow({ onClose }) {
       endDatePrevisional: r.endDatePrevisional || defaultEndPrevisional || undefined,
       mandateReason: r.reason || undefined,
       mandateTemporary: r.temporary,
+      mandatePosition: r.position || undefined,
       mandatePrecision: r.precision || undefined,
       mandateEmail: r.email || undefined,
       personalEmail: r.personalEmail || undefined,
@@ -440,6 +442,21 @@ export default function MandateFlow({ onClose }) {
                       onChange={(e) => setDraft((p) => ({ ...p, nor: e.target.value }))}
                     />
                   </Col>
+                  <Col n="12 md-6">
+                    <TextInput
+                      label="Numéro du BO"
+                      hint="Numéro du bulletin officiel (BOESR) où a été publié le texte"
+                      value={draft.boesrId}
+                      onChange={(e) => setDraft((p) => ({ ...p, boesrId: e.target.value }))}
+                    />
+                  </Col>
+                  <Col n="12 md-6">
+                    <TextInput
+                      label="Numéro du décret ou de l'arrêté"
+                      value={draft.joId}
+                      onChange={(e) => setDraft((p) => ({ ...p, joId: e.target.value }))}
+                    />
+                  </Col>
                   <Col n="12">
                     <TextInput
                       label="Titre"
@@ -468,13 +485,6 @@ export default function MandateFlow({ onClose }) {
                     />
                     {showErrors && !draft.publicationDate && <p className="fr-error-text fr-text--sm fr-mt-1v">Obligatoire</p>}
                   </Col>
-                  <Col n="12 md-6">
-                    <DateInput
-                      label="Date de signature"
-                      value={draft.signatureDate}
-                      onDateChange={(v) => setDraft((p) => ({ ...p, signatureDate: v }))}
-                    />
-                  </Col>
                 </Row>
               )}
             </>
@@ -501,13 +511,6 @@ export default function MandateFlow({ onClose }) {
                   label="Date de fin du mandat (par défaut)"
                   value={defaultEndDate}
                   onDateChange={setDefaultEndDate}
-                />
-              </Col>
-              <Col n="12 md-6">
-                <DateInput
-                  label="Date de signature"
-                  value={draft.signatureDate}
-                  onDateChange={(v) => setDraft((p) => ({ ...p, signatureDate: v }))}
                 />
               </Col>
             </Row>
