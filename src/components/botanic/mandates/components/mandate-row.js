@@ -92,7 +92,8 @@ export default function MandateRow({
   };
 
   const closureCandidates = (row.closureCandidates || []).filter(
-    (c) => row.relType && c.relTypeId === row.relType.id,
+    (c) => (row.relType && c.relTypeId === row.relType.id)
+      || (row.person && c.relatedObjectId === row.person.id),
   );
 
   return (
@@ -125,7 +126,7 @@ export default function MandateRow({
           {missing.person && <p className="fr-error-text fr-text--sm fr-mt-1v">Sélectionnez ou créez une personne.</p>}
         </Col>
 
-        <Col n="12 md-6">
+        <Col n="12">
           <SearchBar
             buttonLabel="Rechercher"
             label="Type de mandat / fonction"
@@ -142,7 +143,7 @@ export default function MandateRow({
           {missing.relType && <p className="fr-error-text fr-text--sm fr-mt-1v">Choisissez un type de mandat.</p>}
         </Col>
 
-        <Col n="12 md-6">
+        <Col n="12">
           <EntityField
             type="structures"
             label="Structure"
@@ -176,6 +177,14 @@ export default function MandateRow({
             checked={row.temporary}
             onChange={() => onField('temporary', !row.temporary)}
           />
+        </Col>
+        <Col n="12">
+          <RadioGroup legend="Numéro du mandat :" isInline>
+            <Radio label="1er mandat" onChange={() => onField('position', '1')} checked={row.position === '1'} />
+            <Radio label="2ème mandat" onChange={() => onField('position', '2')} checked={row.position === '2'} />
+            <Radio label="3ème mandat et plus" onChange={() => onField('position', '3+')} checked={row.position === '3+'} />
+            <Radio label="Sans objet" onChange={() => onField('position', null)} checked={!row.position} />
+          </RadioGroup>
         </Col>
 
         <Col n="12 md-6">
@@ -287,6 +296,7 @@ MandateRow.propTypes = {
     precision: PropTypes.string,
     reason: PropTypes.string,
     temporary: PropTypes.bool,
+    position: PropTypes.string,
     email: PropTypes.string,
     personalEmail: PropTypes.string,
     phonenumber: PropTypes.string,

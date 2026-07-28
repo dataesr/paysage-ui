@@ -2,7 +2,7 @@ import { Col, Row, Select, TextInput } from '@dataesr/react-dsfr';
 import PropTypes from 'prop-types';
 import Button from '../../../button';
 import DateInput from '../../../date-input';
-import { GENDER_OPTIONS, capitalizeName } from '../../utils';
+import { GENDER_OPTIONS } from '../../utils';
 
 export default function PersonStep({
   firstName, lastName, gender,
