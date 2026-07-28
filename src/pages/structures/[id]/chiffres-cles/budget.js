@@ -320,6 +320,25 @@ Il constitue une marge de sécurité financière destinée à financer une parti
       )}
       {!!data?.data?.length && (
         <>
+          <Row gutters spacing="mb-3w">
+            <Col n="12 md-6">
+              <WeblinkCard
+                title={(
+                  <>
+                    <Icon name="ri-bar-chart-2-line" className="fr-mr-1w" />
+                    Tableau de bord financier
+                  </>
+                )}
+                downloadUrl={`https://tableaux.dataesr.ovh/structures-finance/etablissements?structureId=${id}`}
+                descriptionElement={(
+                  <Text spacing="mb-0">
+                    Accès direct à la visualisation et l'analyse des données financières de cet établissement
+                  </Text>
+                )}
+                canEdit={false}
+              />
+            </Col>
+          </Row>
           <Title as="h2">
             <Icon name="ri-scales-3-fill" className="fr-pl-1w" />
             {`Données financières - Situation en ${financialAccountYear}${financialAccount?.source === 'Budget' ? ' (Budget)' : ''}`}
@@ -399,10 +418,34 @@ Il constitue une marge de sécurité financière destinée à financer une parti
                     title={(
                       <>
                         <Icon className="ri-table-line" />
+                        Catalogue
+                      </>
+                    )}
+                    downloadUrl="https://data.esr.gouv.fr/outils/D06"
+                    descriptionElement={(
+                      <Text spacing="mb-0">
+                        Tous les outils, applications, tableaux de bord et API de la plateforme #dataESR
+                        {' '}
+                      </Text>
+                    )}
+                    canEdit={false}
+                  />
+                </Col>
+                <Col n="12 md-6">
+                  <WeblinkCard
+                    title={(
+                      <>
+                        <Icon className="ri-table-line" />
                         Tableau de bord financier
                       </>
                     )}
-                    downloadUrl="https://dataesr.fr/FR/T445/P844/tableau_de_bord_financier_-_finance"
+                    downloadUrl={`https://tableaux.dataesr.ovh/structures-finance/etablissements?structureId=${id}`}
+                    descriptionElement={(
+                      <Text spacing="mb-0">
+                        Outil de visualisation et d'analyse des données financières des établissements d'enseignement supérieur et de recherche
+                        {' '}
+                      </Text>
+                    )}
                     canEdit={false}
                   />
                 </Col>
