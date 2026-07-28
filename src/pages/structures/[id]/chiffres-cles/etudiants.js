@@ -671,7 +671,7 @@ export default function StructureEtudiantsPage() {
                     Tableau de bord de l'enseignement supérieur : les étudiants par établissement
                   </>
                 )}
-                downloadUrl="https://dataesr.fr/FR/T525/P883/tableau_de_bord_de_l_enseignement_superieur_les_etudiants_par_etablissements_avec_doubles_inscriptions_cpge_-_resultats_pour_sise"
+                downloadUrl="https://data.esr.gouv.fr/outils/D14"
                 canEdit={false}
               />
             </Col>
