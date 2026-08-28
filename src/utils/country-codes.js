@@ -245,6 +245,7 @@ const countries = {
   WF: 'WLF',
   EH: 'ESH',
   YE: 'YEM',
+  XK: 'XKX',
   ZM: 'ZMB',
   ZW: 'ZWE',
   AX: 'ALA',
