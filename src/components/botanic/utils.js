@@ -27,6 +27,30 @@ export const OFFICIAL_TEXT_TYPE_OPTIONS = [
 
 export const uid = () => `${Date.now()}-${Math.random().toString(36).slice(2)}`;
 
+export const MANDATE_RELATED_OBJECT_TYPES = ['persons'];
+
+export function relationTypesUrl(relatedObjectTypes) {
+  return (relatedObjectTypes.length > 1)
+    ? `/relation-types?limit=500&filters[for][$in]=${relatedObjectTypes.join('&filters[for][$in]=')}`
+    : `/relation-types?limit=500&filters[for]=${relatedObjectTypes[0]}`;
+}
+
+export function toRelationTypeOption(relationType) {
+  return {
+    id: relationType?.id ?? null,
+    name: `${relationType?.name ?? 'Nom inconnu'}${relationType?.acronym ? ` (${relationType.acronym})` : ''}`,
+  };
+}
+
+export function relationTypeOptions(allRelationTypes, query, limit = 30) {
+  const q = (query || '').toLowerCase().trim();
+  return allRelationTypes
+    .map(toRelationTypeOption)
+    .filter((rt) => (q ? rt.name.toLowerCase().includes(q) : true))
+    .sort((a, b) => a.name.localeCompare(b.name))
+    .slice(0, limit);
+}
+
 export function capitalizeName(str) {
   return str
     .split(' ')

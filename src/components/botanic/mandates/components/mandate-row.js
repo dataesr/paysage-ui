@@ -14,6 +14,7 @@ import SearchBar from '../../../search-bar';
 import DateInput from '../../../date-input';
 import Button from '../../../button';
 import EntityField from './entity-field';
+import { relationTypeOptions } from '../../utils';
 
 function ContactSuggestions({ suggestions, onFill }) {
   const groups = [
@@ -22,6 +23,7 @@ function ContactSuggestions({ suggestions, onFill }) {
     { key: 'phones', field: 'phonenumber', label: 'Téléphones' },
   ].filter((g) => (suggestions[g.key] || []).length > 0);
   if (groups.length === 0) return null;
+
   return (
     <Col n="12">
       {groups.map((g) => (
@@ -77,13 +79,10 @@ export default function MandateRow({
   showErrors,
   defaultClosureDate,
 }) {
-  const relTypeOptions = useMemo(() => {
-    const q = (row.relTypeQuery || '').toLowerCase().trim();
-    const list = q
-      ? allRelationTypes.filter((rt) => rt.name.toLowerCase().includes(q))
-      : allRelationTypes;
-    return list.slice(0, 30).map((rt) => ({ id: rt.id, name: rt.name }));
-  }, [row.relTypeQuery, allRelationTypes]);
+  const relTypeOptions = useMemo(
+    () => relationTypeOptions(allRelationTypes, row.relTypeQuery),
+    [row.relTypeQuery, allRelationTypes],
+  );
 
   const missing = {
     person: showErrors && !row.person,

@@ -13,7 +13,7 @@ import api from '../../../utils/api';
 import { saveError, saveSuccess } from '../../../utils/notice-contents';
 import { GOUVERNANCE } from '../../../utils/relations-tags';
 import { getComparableNow } from '../../../utils/dates';
-import { uid, OFFICIAL_TEXT_NATURE_OPTIONS, OFFICIAL_TEXT_TYPE_OPTIONS } from '../utils';
+import { uid, OFFICIAL_TEXT_NATURE_OPTIONS, OFFICIAL_TEXT_TYPE_OPTIONS, relationTypesUrl, relationTypeOptions, MANDATE_RELATED_OBJECT_TYPES } from '../utils';
 import MandateRow from './components/mandate-row';
 import EntityField from './components/entity-field';
 import PersonFlow from '../persons';
@@ -76,7 +76,7 @@ const fetchPersonContacts = async (personId) => {
 export default function MandateFlow({ onClose }) {
   const { notice } = useNotice();
   const navigate = useNavigate();
-  const { data: relationTypesData } = useFetch('/relation-types?limit=500&filters[for]=persons');
+  const { data: relationTypesData } = useFetch(relationTypesUrl(MANDATE_RELATED_OBJECT_TYPES));
   const allRelationTypes = useMemo(() => relationTypesData?.data || [], [relationTypesData]);
 
   const [step, setStep] = useState(1);
@@ -102,11 +102,10 @@ export default function MandateFlow({ onClose }) {
   const [defaultRelType, setDefaultRelType] = useState(null);
   const [defaultRelTypeQuery, setDefaultRelTypeQuery] = useState('');
 
-  const defaultRelTypeOptions = useMemo(() => {
-    const q = (defaultRelTypeQuery || '').toLowerCase().trim();
-    const list = q ? allRelationTypes.filter((rt) => rt.name.toLowerCase().includes(q)) : allRelationTypes;
-    return list.slice(0, 30).map((rt) => ({ id: rt.id, name: rt.name }));
-  }, [defaultRelTypeQuery, allRelationTypes]);
+  const defaultRelTypeOptions = useMemo(
+    () => relationTypeOptions(allRelationTypes, defaultRelTypeQuery),
+    [defaultRelTypeQuery, allRelationTypes],
+  );
 
   const handleDefaultRelTypeSelect = (relType) => {
     setDefaultRelType(relType);

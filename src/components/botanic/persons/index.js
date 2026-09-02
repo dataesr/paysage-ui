@@ -12,7 +12,7 @@ import { saveError, saveSuccess } from '../../../utils/notice-contents';
 import { GOUVERNANCE } from '../../../utils/relations-tags';
 import { getComparableNow } from '../../../utils/dates';
 import { regexpValidateIdentifiers } from '../../../utils/regexpForIdentifiers';
-import { PYDREF_GENDER, uid, sanitizeIdentifierValue, deduceName, capitalizeName } from '../utils';
+import { PYDREF_GENDER, uid, sanitizeIdentifierValue, deduceName, capitalizeName, relationTypesUrl, MANDATE_RELATED_OBJECT_TYPES } from '../utils';
 import { usePersonExternalLookup } from '../use-external-lookup';
 import { crossEnrichWikidataPersonByOrcid, crossEnrichWikidataPersonByIsni, crossEnrichWikidataPersonByIdRef } from '../external-lookup';
 import EnrichmentPanel from '../enrichment-panel';
@@ -42,7 +42,7 @@ const STEPS = ['Personne', 'Identifiants', 'Fonction'];
 export default function PersonFlow({ onClose, onCreated }) {
   const { notice } = useNotice();
   const enums = useEnums();
-  const { data: relationTypesData } = useFetch('/relation-types?limit=500&filters[for]=persons');
+  const { data: relationTypesData } = useFetch(relationTypesUrl(MANDATE_RELATED_OBJECT_TYPES));
   const allRelationTypes = useMemo(() => relationTypesData?.data || [], [relationTypesData]);
   const identifierOptions = (enums?.identifiers?.persons || [{ label: 'Sélectionner un type', value: '' }]).filter((o) => o.value !== 'ark');
   const allowedIdentifierTypes = useMemo(

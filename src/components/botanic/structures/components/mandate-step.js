@@ -16,6 +16,7 @@ import DateInput from '../../../date-input';
 import api from '../../../../utils/api';
 import { GOUVERNANCE } from '../../../../utils/relations-tags';
 import { getComparableNow } from '../../../../utils/dates';
+import { relationTypeOptions as buildRelationTypeOptions } from '../../utils';
 
 const datesOverlap = (mStart, mEnd, newStart, newEnd) => {
   if (mEnd && newStart && mEnd < newStart) return false;
@@ -102,11 +103,7 @@ export default function StructureMandateStep({
   }, [selectedPerson?.id]);
 
   useEffect(() => {
-    const q = relTypeQuery.toLowerCase().trim();
-    const list = q
-      ? allRelationTypes.filter((rt) => rt.name.toLowerCase().includes(q))
-      : allRelationTypes;
-    setRelTypeOptions(list.slice(0, 30).map((rt) => ({ id: rt.id, name: rt.name })));
+    setRelTypeOptions(buildRelationTypeOptions(allRelationTypes, relTypeQuery));
   }, [relTypeQuery, allRelationTypes]);
 
   const handlePersonQuery = async (q) => {
