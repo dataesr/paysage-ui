@@ -10,7 +10,7 @@ import api from '../../../utils/api';
 import { saveError, saveSuccess } from '../../../utils/notice-contents';
 import { GOUVERNANCE } from '../../../utils/relations-tags';
 import { getComparableNow } from '../../../utils/dates';
-import { uid, sanitizeIdentifierValue } from '../utils';
+import { uid, sanitizeIdentifierValue, relationTypesUrl, MANDATE_RELATED_OBJECT_TYPES } from '../utils';
 import { regexpValidateIdentifiers } from '../../../utils/regexpForIdentifiers';
 import useDebounce from '../../../hooks/useDebounce';
 import { useStructureExternalLookup } from '../use-external-lookup';
@@ -27,7 +27,7 @@ const STEPS = ['Structure', 'Identifiants', 'Localisation', 'Mandat de gouvernan
 export default function StructureFlow({ onClose, onCreated }) {
   const { notice } = useNotice();
   const enums = useEnums();
-  const { data: relationTypesData } = useFetch('/relation-types?limit=500&filters[for]=persons');
+  const { data: relationTypesData } = useFetch(relationTypesUrl(MANDATE_RELATED_OBJECT_TYPES));
   const allRelationTypes = useMemo(() => relationTypesData?.data || [], [relationTypesData]);
   const identifierOptions = enums?.identifiers?.structures || [{ label: 'Sélectionner un type', value: '' }];
   const socialMediaOptions = enums?.socialMedias || [{ label: 'Sélectionner un type', value: '' }];

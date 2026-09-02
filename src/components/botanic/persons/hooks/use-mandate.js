@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import api from '../../../../utils/api';
 import { GOUVERNANCE } from '../../../../utils/relations-tags';
 import { getComparableNow } from '../../../../utils/dates';
+import { relationTypeOptions } from '../../utils';
 
 const datesOverlap = (mStart, mEnd, newStart, newEnd) => {
   if (mEnd && newStart && mEnd < newStart) return false;
@@ -39,13 +40,10 @@ function useOfficialTextSearch() {
 export default function useMandate(allRelationTypes) {
   const [relTypeQuery, setRelTypeQuery] = useState('');
   const [selectedRelType, setSelectedRelType] = useState(null);
-  const relTypeOptions = useMemo(() => {
-    const q = relTypeQuery.toLowerCase().trim();
-    const list = q
-      ? allRelationTypes.filter((rt) => rt.name.toLowerCase().includes(q))
-      : allRelationTypes;
-    return list.slice(0, 30).map((rt) => ({ id: rt.id, name: rt.name }));
-  }, [relTypeQuery, allRelationTypes]);
+  const relTypeOptions = useMemo(
+    () => relationTypeOptions(allRelationTypes, relTypeQuery),
+    [relTypeQuery, allRelationTypes],
+  );
 
   const [structureQuery, setStructureQuery] = useState('');
   const [structureOptions, setStructureOptions] = useState([]);
