@@ -9,6 +9,7 @@ import SearchBar from '../../search-bar';
 import DateInput from '../../date-input';
 import useFetch from '../../../hooks/useFetch';
 import useNotice from '../../../hooks/useNotice';
+import useSubmitGuard from '../../../hooks/useSubmitGuard';
 import api from '../../../utils/api';
 import { saveError, saveSuccess } from '../../../utils/notice-contents';
 import { GOUVERNANCE } from '../../../utils/relations-tags';
@@ -312,6 +313,7 @@ export default function MandateFlow({ onClose }) {
     handleReset();
     if (firstPersonId) navigate(`/personnes/${firstPersonId}/mandats`);
   };
+  const guardedSubmit = useSubmitGuard(handleSubmit);
 
   const toggleConcern = (key) => setConcerns((prev) => ({ ...prev, [key]: !prev[key] }));
 
@@ -753,7 +755,7 @@ export default function MandateFlow({ onClose }) {
               </Button>
             </Col>
             <Col className="text-right">
-              <Button icon="ri-check-line" iconPosition="right" onClick={handleSubmit} disabled={submitting}>
+              <Button icon="ri-check-line" iconPosition="right" onClick={guardedSubmit} disabled={submitting}>
                 {submitting ? 'Enregistrement…' : 'Valider et enregistrer'}
               </Button>
             </Col>

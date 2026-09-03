@@ -7,6 +7,7 @@ import useFetch from '../../../hooks/useFetch';
 import useDebounce from '../../../hooks/useDebounce';
 import useEnums from '../../../hooks/useEnums';
 import useNotice from '../../../hooks/useNotice';
+import useSubmitGuard from '../../../hooks/useSubmitGuard';
 import api from '../../../utils/api';
 import { saveError, saveSuccess } from '../../../utils/notice-contents';
 import { GOUVERNANCE } from '../../../utils/relations-tags';
@@ -465,6 +466,8 @@ export default function PersonFlow({ onClose, onCreated }) {
     if (onCreated) { onCreated({ id: personId, name: createdName }); handleReset(); } // eslint-disable-line no-use-before-define
     else { handleReset(); navigate(`/personnes/${personId}`); } // eslint-disable-line no-use-before-define
   };
+  const guardedSubmit = useSubmitGuard(handleSubmit);
+  const guardedSubmitWithoutMandate = useSubmitGuard(handleSubmitWithoutMandate);
 
   const handleReset = () => {
     setStep(1);
@@ -668,7 +671,7 @@ export default function PersonFlow({ onClose, onCreated }) {
                 tertiary
                 icon="ri-user-line"
                 iconPosition="left"
-                onClick={handleSubmitWithoutMandate}
+                onClick={guardedSubmitWithoutMandate}
               >
                 {typeof existingPersonId === 'string' ? 'Enregistrer sans mandat' : 'Créer la fiche sans mandat'}
               </Button>
@@ -692,7 +695,7 @@ export default function PersonFlow({ onClose, onCreated }) {
               <Button
                 icon="ri-save-line"
                 iconPosition="left"
-                onClick={handleSubmit}
+                onClick={guardedSubmit}
                 disabled={!mandate.structure.selected || !mandate.relType.selected}
               >
                 {typeof existingPersonId === 'string' ? 'Enregistrer le mandat' : 'Créer la fiche et le mandat'}
