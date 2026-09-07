@@ -6,6 +6,7 @@ import Button from '../../button';
 import useFetch from '../../../hooks/useFetch';
 import useEnums from '../../../hooks/useEnums';
 import useNotice from '../../../hooks/useNotice';
+import useSubmitGuard from '../../../hooks/useSubmitGuard';
 import api from '../../../utils/api';
 import { saveError, saveSuccess } from '../../../utils/notice-contents';
 import { GOUVERNANCE } from '../../../utils/relations-tags';
@@ -332,6 +333,7 @@ export default function StructureFlow({ onClose, onCreated }) {
       navigate(`/structures/${structureId}`);
     }
   };
+  const guardedSubmit = useSubmitGuard(handleSubmit);
 
   const handleAdoptStructureName = (name) => {
     if (name && isCreatingNew) setUsualName(name);
@@ -544,7 +546,7 @@ export default function StructureFlow({ onClose, onCreated }) {
               </Button>
             </Col>
             <Col className="text-right">
-              <Button icon="ri-save-line" iconPosition="left" onClick={handleSubmit}>
+              <Button icon="ri-save-line" iconPosition="left" onClick={guardedSubmit}>
                 {selectedStructure ? 'Mettre à jour la structure' : 'Créer la structure'}
               </Button>
             </Col>
