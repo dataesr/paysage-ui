@@ -17,13 +17,11 @@ export default function MentionsLegales() {
           <Title as="h1">Mentions légales</Title>
           <Title as="h2" look="h6">Editeur</Title>
           <Text>
-            Sous-direction des systèmes d’information et des études statistiques (SIES),
-            Direction générale de l’enseignement supérieur et de l’insertion
-            professionnelle/Direction générale de la recherche et de l’innovation.
+            Délégation au numérique et aux données, Direction générale de l’enseignement supérieur et de l’insertion professionnelle/Direction générale de la recherche et de l’innovation.
           </Text>
-          <Title as="h2" look="h6">Directrice de la publication</Title>
+          <Title as="h2" look="h6">Directeur de la publication</Title>
           <Text>
-            Mme Anne-Sophie BARTHEZ, Directrice générale de l’enseignement supérieur et de l’insertion professionnelle (DGESIP)
+            M Olivier GINEZ Directeur général de l’enseignement supérieur et de l’insertion professionnelle (DGESIP)
           </Text>
           <Title as="h2" look="h6">Prestataire d’hébergement</Title>
           <Text>
