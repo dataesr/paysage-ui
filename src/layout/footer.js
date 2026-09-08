@@ -9,7 +9,6 @@ import {
   FooterLink,
   Link,
   Logo,
-  FooterOperator,
 } from '@dataesr/react-dsfr';
 import useAuth from '../hooks/useAuth';
 
@@ -26,19 +25,6 @@ export default function Footer({ switchTheme }) {
         >
           Ministère de l'enseignement supérieur, de la recherche et de l'espace
         </Logo>
-        <FooterOperator>
-          <svg
-            aria-hidden="true"
-            viewBox="0 0 1167.77 752.85"
-            width="100%"
-          >
-            <use
-              className="fr-text-black-white--grey"
-              href="/logos/sies_logo_signature.svg#sies-logo-text"
-            />
-            <use href="/logos/sies_logo_signature.svg#sies-logo-artwork" />
-          </svg>
-        </FooterOperator>
         <FooterBodyItem>
           <Link target="_blank" href="https://legifrance.gouv.fr">
             legifrance.gouv.fr
