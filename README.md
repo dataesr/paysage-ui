@@ -9,10 +9,12 @@ Once you got it running, use the following command to start the app:
 
 ## Deployment
 
+The version number follows [semver](https://semver.org/).
+
 To deploy in production, simply run this command from your staging branch :
 
 ```sh
-npm run deploy --level=[patch|minor|major]
+npm run deploy:[patch|minor|major]
 ```
 
 :warning: Obviously, only members of the [dataesr organization](https://github.com/dataesr/) have rights to push on the repo.
