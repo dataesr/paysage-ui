@@ -35,7 +35,7 @@ export default function RessourcesPage() {
             <CardDescription as="p">
               La plateforme d'exploration des systèmes d'enseignement supérieur,
               de recherche et d'innovation à l'international.
-              Réalisé en collaboration avec le ministère de l'Europe et des affaires étrangères.
+              Réalisé en collaboration avec le Ministère de l'Europe et des affaires étrangères.
             </CardDescription>
           </Card>
         </Col>
