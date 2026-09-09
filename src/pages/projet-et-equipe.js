@@ -128,7 +128,7 @@ export default function ProjetEtEquipe() {
         <Col n="12">
           <Title as="h2" look="h3">L'équipe</Title>
           <Text>
-            Impulsée et soutenue par les directrices et directeurs généraux de l’enseignement supérieur et de l’insertion professionnelle au ministère de l’enseignement supérieur, de la recherche et de l'espace, Paysage est conçue, développée et administrée par l'équipe du département ingénierie et science des données (DGESIP/DGRI-DENUM).
+            Impulsée et soutenue par les directrices et directeurs généraux de l’enseignement supérieur et de l’insertion professionnelle au ministère de l’enseignement supérieur, de la recherche et de l'espace, Paysage est conçue, développée et administrée par l'équipe du département Ingénierie et science des données (DGESIP/DGRI-DENUM).
             <br />
             Tout au long du projet, Tiphanie Pons a veillé, pour la DGESIP, à l’épanouissement du projet. Elle a partagé sa connaissance du fonctionnement du ministère et son expertise sur le paysage de l’ESRI.
             <br />
