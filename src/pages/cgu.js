@@ -21,12 +21,12 @@ export default function CGU({ isModal }) {
         <Col n={large}>
           {!isModal && <Title as="h1">Conditions générales d’utilisation</Title>}
           <Text>
-            Paysage est une plateforme collaborative de partage de connaissances destinée aux agents du ministère en charge de l’enseignement supérieur et de la recherche,
-            du ministère en charge de l’éducation nationale et des services déconcentrés. Elle permet le suivi à 360° des établissements, organismes,
+            Paysage est une plateforme collaborative de partage de connaissances destinée aux agents du Ministère de l’Enseignement Supérieur, de la Recherche et de l'Espace,
+            du Ministère de l’Education Nationale. Elle permet le suivi à 360° des établissements, organismes,
             regroupements, réseaux et projets qui composent le paysage de l'enseignement supérieur,
             de la recherche et de l'innovation (ESRI). Elle est accessible sur le web sur tout support
             (ordinateur, tablette, téléphone portable). Elle permet à ses utilisateurs de partager leurs connaissances sur ces acteurs et les liens qu'ils ont tissés entre eux.
-            Elle est proposée par le ministère de l’enseignement supérieur, de la recherche et de l’espace
+            Elle est proposée par le Ministère de l’Enseignement Supérieur, de la Recherche et de l’Espace
             (Direction générale de l’enseignement supérieur et de l’insertion professionnelle/Direction générale de la recherche) et opérée par la délégation au numérique et aux données.
             Toute utilisation de la plateforme paysage.enseignementsup-recherche.gouv.fr/ (ci-après, la Plateforme) est subordonnée au respect des présentes conditions générales d’utilisation (CGU).
           </Text>
@@ -62,8 +62,8 @@ export default function CGU({ isModal }) {
             type d’objet constituant Paysage. Une Personne correspond à une personne physique
             occupant une fonction officielle au sein des institutions publiques ou
             privées (disposant ou non de la personnalité juridique) en interaction avec
-            les missions placées sous la responsabilité du ministère en charge de
-            la recherche, de l’innovation et de l’enseignement supérieur ou ayant
+            les missions placées sous la responsabilité du Ministère de l'Enseignement Supérieur,
+            de la Recherche et de l'Espace ou ayant
             acquis une certaine visibilité dans le cadre de leur activité d’enseignement
             supérieur, de recherche et d’innovation, via l’attribution de prix et
             distinctions ;
@@ -139,8 +139,8 @@ export default function CGU({ isModal }) {
           <Title as="h3" look="h6">Inscription sur la plateforme et fonctionnalités liées</Title>
           <Text>
             Les agents de l’administration centrale et des services déconcentrés relevant
-            des ministères en charge de l’enseignement supérieur, de la recherche et de
-            l’innovation peuvent consulter le contenu, l’exporter et/ou contribuer à la
+            du Ministère de l'Enseignement Supérieur, de la Recherche et de
+            l'Espace peuvent consulter le contenu, l’exporter et/ou contribuer à la
             Plateforme.
           </Text>
           <Text>
@@ -291,8 +291,8 @@ export default function CGU({ isModal }) {
           <Title as="h2" lokk={look}>Vie privée et données personnelles</Title>
           <Text>
             Le site « paysage.enseignementsup-recherche.gouv.fr » constitue un traitement
-            de données à caractère personnel mis en œuvre par le ministère en charge de
-            l’enseignement supérieur et de la recherche (1 rue Descartes, 75231 Paris Cedex 5)
+            de données à caractère personnel mis en œuvre par le Ministère de
+            l'Enseignement Supérieur, de la Recherche et de l'Espace (1 rue Descartes, 75231 Paris Cedex 5)
             pour l’exécution d’une mission d’intérêt public au sens du e) de l’article 6
             du règlement général (UE) 2016/679 du Parlement européen et du Conseil du 27
             avril 2016 sur la protection des données (RGPD).
@@ -442,7 +442,7 @@ export default function CGU({ isModal }) {
           </Text>
           <Text>
             Pour toute question concernant le traitement de vos données à caractère personnel, vous pouvez contacter le délégué à la protection des données
-            du ministère de l’Enseignement supérieur, de la Recherche et de l’Espace :
+            du Ministère de l’Enseignement supérieur, de la Recherche et de l’Espace :
           </Text>
           <ul className="ul-styled">
             <Text as="li">à l’adresse électronique suivante : dpd@education.gouv.fr</Text>
@@ -463,7 +463,7 @@ export default function CGU({ isModal }) {
 
           </ul>
           <Text>
-            Si vous estimez, même après avoir introduit une réclamation auprès du ministère de l’Enseignement supérieur, de la Recherche et de l’Espace,
+            Si vous estimez, même après avoir introduit une réclamation auprès du Ministère de l’Enseignement supérieur, de la Recherche et de l’Espace,
             que vos droits en matière de protection des données à caractère personnel ne sont pas respectés, vous avez la possibilité
             d’introduire une réclamation auprès de la CNIL à l’adresse suivante : 3 Place de Fontenoy – TSA 80715 – 75334 Paris Cedex 07.
           </Text>

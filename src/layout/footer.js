@@ -23,7 +23,7 @@ export default function Footer({ switchTheme }) {
           asLink={<Link href="https://www.enseignementsup-recherche.gouv.fr/fr" />}
           splitCharacter={9}
         >
-          Ministère de l'enseignement supérieur, de la recherche et de l'espace
+          Ministère de l'Enseignement Supérieur, de la Recherche et de l'Espace
         </Logo>
         <FooterBodyItem>
           <Link target="_blank" href="https://legifrance.gouv.fr">
