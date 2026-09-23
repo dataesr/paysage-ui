@@ -9,7 +9,10 @@ import getLink from '../../../../../utils/get-links';
 export function IdentifierSuggestionUpdate({ suggestion, reload, paysageData }) {
   const [isLoading, setIsLoading] = useState(false);
   const { notice } = useNotice();
-  const normalizedValue = suggestion.value?.toLowerCase().trim();
+  const cleanValue = suggestion.sourceType === 'idref'
+    ? (suggestion.value || '').replace(/^[a-zA-Z]{2}/, '')
+    : suggestion.value;
+  const normalizedValue = cleanValue?.toLowerCase().trim();
   const verificationLink = getLink({ type: suggestion.type, value: normalizedValue });
   const currentIdentifier = paysageData?.currentIdentifiers
     ?.find((identifier) => identifier.type === suggestion.type);
@@ -23,7 +26,7 @@ export function IdentifierSuggestionUpdate({ suggestion, reload, paysageData }) 
             `/structures/${paysageData?.id}/identifiers/${currentIdentifier.id}`,
             {
               type: suggestion.type,
-              value: suggestion.value,
+              value: cleanValue,
               active: true,
             },
           );
@@ -32,7 +35,7 @@ export function IdentifierSuggestionUpdate({ suggestion, reload, paysageData }) 
             `/structures/${paysageData?.id}/identifiers`,
             {
               type: suggestion.type,
-              value: suggestion.value,
+              value: cleanValue,
               active: true,
             },
           );
@@ -75,7 +78,7 @@ export function IdentifierSuggestionUpdate({ suggestion, reload, paysageData }) 
             ? 'Valeur acceptée :'
             : 'Valeur rejetée :'}
         {' '}
-        <span className="fr-text--bold">{suggestion.value}</span>
+        <span className="fr-text--bold">{cleanValue}</span>
       </p>
 
       {suggestion.status === 'pending' ? (
