@@ -13,6 +13,12 @@ export default function ApiKeysList({ data, deleteItem, highlight }) {
   const [actionnedItem, setActionnedItem] = useState();
   const sortedData = sort.ascending ? data.sort(sort.sorter) : data.sort(sort.sorter).reverse();
 
+  const roles = {
+    admin: 'Administrateur',
+    reader: 'Invité (lecture uniquement)',
+    user: 'Utilisateur (lecture & écriture)',
+  };
+
   return (
     <Container fluid>
       <Row alignItems="middle">
@@ -49,7 +55,7 @@ export default function ApiKeysList({ data, deleteItem, highlight }) {
                 <Text className="fr-mb-0" bold>Nom de la clé</Text>
               </Row>
             </Col>
-            <Col n="3">
+            <Col n="2">
               <Row
                 className={classNames('tbl-title__sort')}
                 justifyContent="right"
@@ -58,7 +64,16 @@ export default function ApiKeysList({ data, deleteItem, highlight }) {
                 <Text className="fr-mb-0" bold>Clé API</Text>
               </Row>
             </Col>
-            <Col n="3">
+            <Col n="2">
+              <Row
+                className={classNames('tbl-title__sort')}
+                justifyContent="right"
+                alignItems="middle"
+              >
+                <Text className="fr-mb-0" bold>Rôle</Text>
+              </Row>
+            </Col>
+            <Col n="2">
               <Row
                 className={classNames('tbl-title__sort', { 'tbl-title__hover': (sort.field !== 'createdAt') })}
                 justifyContent="right"
@@ -88,7 +103,7 @@ export default function ApiKeysList({ data, deleteItem, highlight }) {
                 </Text>
               </Col>
               <Col n="2"><Row justifyContent="right"><Text className="fr-mb-0">{item.name}</Text></Row></Col>
-              <Col n="3">
+              <Col n="2">
                 <Row justifyContent="right">
                   <Text className="fr-mb-0">
                     {`${item.apiKey.split('-')[0]}-*****`}
@@ -96,7 +111,14 @@ export default function ApiKeysList({ data, deleteItem, highlight }) {
                   <CopyButton copyText={item.apiKey} />
                 </Row>
               </Col>
-              <Col n="3">
+              <Col n="2">
+                <Row justifyContent="right">
+                  <Text className="fr-mb-0">
+                    {roles?.[item.role] ?? item.role}
+                  </Text>
+                </Row>
+              </Col>
+              <Col n="2">
                 <Row justifyContent="right">
                   <Text className="fr-mb-0">
                     {new Date(item.createdAt).toLocaleDateString([], { year: 'numeric', month: 'long', day: 'numeric' })}
