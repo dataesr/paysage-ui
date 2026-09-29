@@ -61,7 +61,7 @@ jobs:
     if: always()
     runs-on: ubuntu-latest
     steps:
-      - uses: dataesr/mm-notifier-action@v1.0.2
+      - uses: dataesr/mm-notifier-action@v1.0.3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           mattermost_webhook_url: ${{ secrets.MATTERMOST_WEBHOOK_URL }}
