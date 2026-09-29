@@ -26,7 +26,7 @@ export default function getLink(el) {
     linkTo = `https://search.crossref.org/funding?q=${el.value}`;
     break;
   case 'grid':
-    linkTo = `https://ror.org/search?page=1&query=${el.value}`;
+    linkTo = `https://ror.org/search?page=1&query="${el.value}"`;
     break;
   case 'googleScholar':
     if (el.value.length === 12) {
