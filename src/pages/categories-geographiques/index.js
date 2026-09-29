@@ -79,6 +79,5 @@ function GeographicalCategoriesByIdPage() {
 export {
   GeographicalCategoriesByIdPage,
   GeographicalCategoriesPresentationPage,
-  GeographicalCategoriesRelatedElements
+  GeographicalCategoriesRelatedElements,
 };
-
