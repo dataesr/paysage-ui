@@ -1,4 +1,3 @@
-import { Link as RouterLink, Outlet } from 'react-router-dom';
 import {
   Badge, BadgeGroup,
   Breadcrumb, BreadcrumbItem,
@@ -7,16 +6,17 @@ import {
   SideMenuLink,
   Title,
 } from '@dataesr/react-dsfr';
-import useFetch from '../../hooks/useFetch';
+import { Outlet, Link as RouterLink } from 'react-router-dom';
 import CopyBadgeButton from '../../components/copy/copy-badge-button';
-import useUrl from '../../hooks/useUrl';
 import { PageSpinner } from '../../components/spinner';
+import useFetch from '../../hooks/useFetch';
+import useUrl from '../../hooks/useUrl';
 
-import GeographicalCategoriesPresentationPage from './[id]/presentation';
-import GeographicalCategoriesRelatedElements from './[id]/elements-lies';
 import Error from '../../components/errors';
 import usePageTitle from '../../hooks/usePageTitle';
 import { GEOGRAPHICAL_CATEGORIES_LABELS_MAPPER } from '../../utils/constants';
+import GeographicalCategoriesRelatedElements from './[id]/elements-lies';
+import GeographicalCategoriesPresentationPage from './[id]/presentation';
 
 function GeographicalCategoriesByIdPage() {
   const { url } = useUrl();
@@ -38,11 +38,6 @@ function GeographicalCategoriesByIdPage() {
               <Icon name="ri-links-line" size="1x" />
               Eléments liés
             </SideMenuLink>
-            {/* Waiting for data/ information */}
-            {/* <SideMenuLink asLink={<RouterLink to="elements-lies" replace />}>
-              <Icon name="ri-bar-chart-box-line" size="1x" />
-              Statistiques
-            </SideMenuLink> */}
           </SideMenu>
         </Col>
         <Col n="12 md-9">
@@ -52,7 +47,7 @@ function GeographicalCategoriesByIdPage() {
                 Accueil
               </BreadcrumbItem>
               <BreadcrumbItem
-                asLink={<RouterLink to="/rechercher/termes?query=&page=1" />}
+                asLink={<RouterLink to="/rechercher/geographical-categories?query=&page=1" />}
               >
                 Catégories géographiques
               </BreadcrumbItem>
@@ -84,5 +79,6 @@ function GeographicalCategoriesByIdPage() {
 export {
   GeographicalCategoriesByIdPage,
   GeographicalCategoriesPresentationPage,
-  GeographicalCategoriesRelatedElements,
+  GeographicalCategoriesRelatedElements
 };
+
