@@ -1,20 +1,24 @@
 import PropTypes from 'prop-types';
-import { Text } from '@dataesr/react-dsfr';
+import CopyButton from '../../copy/copy-button';
 import { getDisplayName } from './formatters';
 import MatchSelection from './match-selection';
 import AlternativeSearchComponent from './alternative-search';
 
 function RowItem({ row, index, selectedMatches, onMatchSelection, matchedData, setMatchedData, setSelectedMatches }) {
+  const hasPrimaryId = Boolean(row.isIdOnlyEntry && row.primaryId);
+  const displayName = getDisplayName(row);
+
   return (
     <tr>
       <td style={{ verticalAlign: 'top' }}>
-        <Text size="sm" bold>
+        <div className="flex flex--center">
           <span className="fr-badge fr-badge--sm fr-badge--blue-cumulus">
-            {row.isIdOnlyEntry && row.primaryId
+            {hasPrimaryId
               ? `${row.primaryIdType || 'ID'}: ${row.primaryId}`
-              : getDisplayName(row)}
+              : displayName}
           </span>
-        </Text>
+          <CopyButton copyText={hasPrimaryId ? row.primaryId : displayName} title="Copier le nom" />
+        </div>
         {row._hasError && (
           <span className="fr-badge fr-badge--error fr-badge--sm">
             Erreur de format
@@ -35,13 +39,14 @@ function RowItem({ row, index, selectedMatches, onMatchSelection, matchedData, s
             return strValue.length > 3 && /^[A-Za-z0-9._-]+$/.test(strValue);
           })
           .map(([key, value]) => (
-            <div key={key}>
+            <div key={key} className="flex flex--center">
               <span className="fr-badge fr-badge--sm fr-badge--blue-cumulus">
                 {key}
                 :
                 {' '}
                 {value}
               </span>
+              <CopyButton copyText={value} title={`Copier ${key}`} />
             </div>
           ))}
       </td>
