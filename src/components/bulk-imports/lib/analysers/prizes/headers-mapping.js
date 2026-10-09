@@ -1,8 +1,8 @@
 export const prizesHeadersMapping = {
   'Nom usuel en français': 'nameFr',
-  'Description en français : ': 'descriptionFr',
-  'Nom en anglais :': 'nameEn',
-  'Description en anglais : ': 'descriptionEn',
+  'Description en français': 'descriptionFr',
+  'Nom en anglais': 'nameEn',
+  'Description en anglais': 'descriptionEn',
   'Identifiant Wikidata [Q1234]': 'wikidata',
   'Site internet en français': 'websiteFr',
   'Site internet en anglais': 'websiteEn',
