@@ -1,5 +1,11 @@
 import { useState } from 'react';
 
+const splitOnSpaces = (row) => {
+  const tokens = row.trim().split(/\s+/);
+  const firstId = tokens.findIndex((token) => /\d/.test(token));
+  return firstId < 1 ? tokens : [tokens.slice(0, firstId).join(' '), ...tokens.slice(firstId)];
+};
+
 const useTextProcessor = ({ setData, setError, setMatchedData, setSelectedMatches }) => {
   const [processing, setProcessing] = useState(false);
 
@@ -23,8 +29,9 @@ const useTextProcessor = ({ setData, setError, setMatchedData, setSelectedMatche
         return;
       }
 
-      const delimiter = rows[0].includes('\t') ? '\t' : ',';
-      const headers = rows[0].split(delimiter).map((h) => h.trim() || 'Colonne');
+      const delimiter = ['\t', ','].find((d) => rows[0].includes(d));
+      const splitRow = (row) => (delimiter ? row.split(delimiter) : splitOnSpaces(row));
+      const headers = splitRow(rows[0]).map((h) => h.trim() || 'Colonne');
 
       const firstHeaderIsName = headers[0].toLowerCase() === 'name' || headers[0].toLowerCase() === 'nom';
       const isIdOnlyTable = !firstHeaderIsName;
@@ -35,7 +42,7 @@ const useTextProcessor = ({ setData, setError, setMatchedData, setSelectedMatche
         jsonData = rows.slice(1)
           .filter((row) => row.trim())
           .map((row, rowIndex) => {
-            const values = row.split(delimiter);
+            const values = splitRow(row);
             const data = {
               name: `ID ${rowIndex + 1}`,
               isIdOnlyEntry: true,
@@ -59,7 +66,7 @@ const useTextProcessor = ({ setData, setError, setMatchedData, setSelectedMatche
         jsonData = rows.slice(1)
           .filter((row) => row.trim())
           .map((row) => {
-            const values = row.split(delimiter);
+            const values = splitRow(row);
             const data = { name: values[0] ? values[0].trim() : '' };
 
             for (let i = 1; i < headers.length && i < values.length; i += 1) {

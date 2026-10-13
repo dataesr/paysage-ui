@@ -89,13 +89,13 @@ HR {
   border-color: var(--border-color);
 }
 
-// .leaflet-control-zoom {
-//   position: static;
-//   z-index: 1 !important;
-//   A {
-//     background-image: none !important;
-//   }
-// }
+.leaflet-control-zoom {
+  position: static;
+  z-index: 1 !important;
+  a {
+    background-image: none !important;
+  }
+}
 // .leaflet-pane {
 //   position: static;
 //   z-index: 40 !important;
