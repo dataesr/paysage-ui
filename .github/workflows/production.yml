@@ -18,7 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: 🏁 Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: 🏷️ Get tag
         id: tag
@@ -45,7 +45,7 @@ jobs:
     needs: publish-ghcr
     steps:
       - name: 🏁 Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: ☁️ Deploy to Cluster
         id: kubectl-deploy
@@ -62,7 +62,7 @@ jobs:
     needs: deploy
     steps:
       - name: Check Out Repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
       - name: Get version
@@ -76,12 +76,12 @@ jobs:
           config_file: .github/config/changelog.js
       - name: Create Release
         id: create_release
-        uses: actions/create-release@v1
+        uses: softprops/action-gh-release@v3
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: ${{ steps.version.outputs.tag }}
-          release_name: ${{ steps.version.outputs.tag }}
+          name: ${{ steps.version.outputs.tag }}
           body: "${{ steps.changelog.outputs.changes }}"
 
   notify:
@@ -89,7 +89,7 @@ jobs:
     if: always()
     runs-on: ubuntu-latest
     steps:
-      - uses: dataesr/mm-notifier-action@v1.0.2
+      - uses: dataesr/mm-notifier-action@v1.0.3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           mattermost_webhook_url: ${{ secrets.MATTERMOST_WEBHOOK_URL }}
