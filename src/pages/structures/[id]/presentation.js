@@ -19,7 +19,7 @@ import CurrentLogos from '../../../components/blocs/current-logo';
 import CurrentSupervisors from '../../../components/blocs/current-supervisors';
 
 export default function StructurePresentationPage() {
-  const data = useOutletContext();
+  const { data } = useOutletContext();
   const { editMode } = useEditMode();
   if (!data) return null;
   const { descriptionEn, descriptionFr, exercice, motto, netAccountingResult, population, source, year } = data;

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import api from '../utils/api';
 
 // TODO: Add options and pagination functionnality
@@ -11,8 +11,14 @@ export default function useFetch(url, headers) {
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [reloads, setReloads] = useState(0);
+  const shouldKeepPreviousData = useRef(false);
 
-  const reload = () => setReloads(reloads + 1);
+  // reload({ keepPreviousData: true }) refetches without resetting data and isLoading,
+  // so components rendered from the current data stay mounted
+  const reload = (options) => {
+    shouldKeepPreviousData.current = !!options?.keepPreviousData;
+    setReloads((count) => count + 1);
+  };
 
   useEffect(() => {
     const abortController = new AbortController();
@@ -30,9 +36,12 @@ export default function useFetch(url, headers) {
         }
       });
 
-    setIsLoading(true);
-    setError(null);
-    setData(null);
+    if (!shouldKeepPreviousData.current) {
+      setIsLoading(true);
+      setError(null);
+      setData(null);
+    }
+    shouldKeepPreviousData.current = false;
     fetchData();
     return () => abortController.abort();
   }, [url, headers, reloads]);

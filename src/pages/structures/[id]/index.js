@@ -427,7 +427,7 @@ function StructureByIdPage() {
               </ModalContent>
             </Modal>
           </Row>
-          <Outlet context={data} />
+          <Outlet context={{ data, reload }} />
         </Col>
       </Row>
     </Container>

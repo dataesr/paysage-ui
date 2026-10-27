@@ -1,3 +1,5 @@
+import { useOutletContext } from 'react-router-dom';
+
 import useFetch from '../../../../hooks/useFetch';
 import useUrl from '../../../../hooks/useUrl';
 import StructureSireneUpdates from './structure-sirene-updates';
@@ -6,6 +8,7 @@ import StructureIdentifiersUpdates from './structure-identifiers-updates';
 
 export default function StructureUpdatesPage() {
   const { id: resourceId } = useUrl();
+  const { reload: reloadStructure } = useOutletContext();
   const {
     data: sireneUpdates,
     isLoading: isLoadingSirene,
@@ -26,6 +29,11 @@ export default function StructureUpdatesPage() {
 
   if (!hasSireneUpdates && !hasIdentifierUpdates) return <p>Aucune mise à jour</p>;
 
+  const reloadSireneAndStructure = () => {
+    reloadSirene();
+    reloadStructure({ keepPreviousData: true });
+  };
+
   return (
     <>
       {hasSireneUpdates && (
@@ -34,7 +42,7 @@ export default function StructureUpdatesPage() {
             Mises à jour Sirene
           </BlocTitle>
           <BlocContent>
-            <StructureSireneUpdates reload={reloadSirene} structure={sireneUpdates.data[0]} />
+            <StructureSireneUpdates reload={reloadSireneAndStructure} structure={sireneUpdates.data[0]} />
           </BlocContent>
         </Bloc>
       )}
