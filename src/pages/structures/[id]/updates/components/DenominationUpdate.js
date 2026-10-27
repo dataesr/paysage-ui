@@ -20,7 +20,7 @@ export const getSireneValue = (update) => update.value;
 export const getSirenePrevValue = (update) => update.previousValue;
 
 export const getForm = (update) => ({
-  offcialName: update.value,
+  officialName: update.value,
   usualName: update.value,
   startDate: update.changeEffectiveDate,
 });
@@ -119,7 +119,7 @@ export function DenominationUpdate({ update, paysageData, reload }) {
             onSave={async (body) => {
               try {
                 await api.patch(
-                  `/structures/${update.paysage}/names/${paysageData.currentSiret.id}`,
+                  `/structures/${update.paysage}/names/${paysageData.currentName.id}`,
                   { endDate: update.changeEffectiveDate },
                 );
                 await api.post(`/structures/${update.paysage}/names`, body);
@@ -129,7 +129,7 @@ export function DenominationUpdate({ update, paysageData, reload }) {
               } catch {
                 notice({ content: 'KO', autoDismissAfter: 6000, type: 'error' });
               }
-              setShowUpdateModal(false);
+              setShowCreateModal(false);
             }}
           />
         </ModalContent>
