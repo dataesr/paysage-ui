@@ -97,7 +97,7 @@ export default function IdentifierForm({ id, data, onDelete, onSave, options }) 
             <Checkbox
               label="Date de fin inconnue mais passée"
               onChange={(e) => updateForm({ active: !e.target.checked })}
-              checked={form.active === false}
+              checked={form.active === false && !form.endDate}
             />
           </Col>
         </Row>

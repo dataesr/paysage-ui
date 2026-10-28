@@ -338,7 +338,7 @@ export default function RelationForm({
             <Checkbox
               label="Date de fin inconnue mais passée"
               onChange={(e) => updateForm({ active: !e.target.checked })}
-              checked={form.active === false}
+              checked={form.active === false && !form.endDate}
             />
           </Col>
           <Col n="12" className="fr-pb-2w">

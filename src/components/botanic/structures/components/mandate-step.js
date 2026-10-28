@@ -423,7 +423,7 @@ export default function StructureMandateStep({
                     <Checkbox
                       label="Date de fin inconnue mais passée"
                       onChange={(e) => setActive(!e.target.checked)}
-                      checked={active === false}
+                      checked={active === false && !endDate}
                     />
                   </Col>
                 </Row>

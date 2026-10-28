@@ -366,7 +366,7 @@ export default function MandateForm({ id, resourceType, relatedObjectTypes, data
             <Checkbox
               label="Date de fin inconnue mais passée"
               onChange={(e) => updateForm({ active: !e.target.checked })}
-              checked={form.active === false}
+              checked={form.active === false && !form.endDate}
             />
             <SearchBar
               buttonLabel="Rechercher"
