@@ -3,6 +3,7 @@ import { Col, Row, Title } from '@dataesr/react-dsfr';
 
 import ChiffresCles from '../../../components/blocs/chiffres-cles';
 import StructureCurrentGovernance from '../../../components/blocs/current-governance';
+import EmailDomains from '../../../components/blocs/email-domains';
 import Emails from '../../../components/blocs/emails';
 import HistoriqueEtDates from '../../../components/blocs/historique-et-dates';
 import Identifiers from '../../../components/blocs/identifiers';
@@ -94,6 +95,7 @@ export default function StructurePresentationPage() {
       </Row>
       <Emails />
       <Identifiers />
+      <EmailDomains />
     </>
   );
 }

@@ -1,7 +1,11 @@
+import EmailDomainsComponent from '../../../components/blocs/email-domains';
 import EmailsComponent from '../../../components/blocs/emails';
 
 export default function StructureContactsPage() {
   return (
-    <EmailsComponent />
+    <>
+      <EmailsComponent />
+      <EmailDomainsComponent />
+    </>
   );
 }
