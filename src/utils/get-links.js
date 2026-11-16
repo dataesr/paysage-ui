@@ -1,3 +1,18 @@
+// Following yann's function
+
+const ACCE_KEY = [0xd8, 0x84, 0x5e, 0x1e, 0x91, 0x6e, 0xe1, 0x2c];
+function getAcceLink(value) {
+  const uai = value.trim().toUpperCase();
+  if (!/^\d{7}[A-Z]$/.test(uai)) return '';
+  const param = [...uai].map((char, i) => {
+    // eslint-disable-next-line no-bitwise
+    const byte = char.charCodeAt(0) ^ ACCE_KEY[i];
+    const encoded = String.fromCharCode(byte);
+    return /[\w.~-]/.test(encoded) ? encoded : `%25${byte.toString(16).toUpperCase().padStart(2, '0')}`;
+  }).join('');
+  return `https://acce.depp.education.fr/acce_public/uai.php?uai=${param}`;
+}
+
 export default function getLink(el) {
   let linkTo = '';
   switch (el.type) {
@@ -94,6 +109,9 @@ export default function getLink(el) {
     linkTo = `https://annuaire-entreprises.data.gouv.fr/etablissement/${el.value
       .split(' ')
       .join('')}`;
+    break;
+  case 'uai':
+    linkTo = getAcceLink(el.value);
     break;
   case 'univ-droit':
     linkTo = `https://univ-droit.fr/universitaires/${el.value}`;
