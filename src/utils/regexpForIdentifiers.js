@@ -4,6 +4,7 @@ export function regexpValidateIdentifiers(type) {
     googleScholar: [/^[a-zA-Z0-9]{12,20}$/, "L'identifiant googleScholar n'est pas valide"],
     hatvp: [/^H\d{9}$/, 'Un identifiant HATVP doit contenir 10 caractères'],
     idref: [/^\d{8}[\dX]{1}$/, 'Un idRef doit commencer par 8 chiffres suivis d\'un chiffre ou d\'un "X"'],
+    inf: [/^[0-9]{7}[A-Z]{1}$/, "Un INF doit commencer par 7 chiffres suivis d'une lettre majuscule"],
     orcid: [/^\d{4}-\d{4}-\d{4}-\d{3}[0-9X]$/, 'Un orcid doit contenir 4 fois 4 chiffres et se termine par un chiffre ou un "X"'],
     openAlexStructId: [/^I[A-Za-z0-9]+$/, 'Un identifiant OpenAlex doit commencer par un I et doit être suivis par des chiffres'],
     openAlexPersonId: [/^A[A-Za-z0-9]+$/, 'Un identifiant OpenAlex doit commencer par un A et doit être suivis par des chiffres'],

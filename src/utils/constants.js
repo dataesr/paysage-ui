@@ -68,6 +68,7 @@ export const ENUMS_LABELS_MAPPER = {
   hatvp: 'HATVP',
   idhal: 'HAL id',
   idref: 'idRef',
+  inf: 'INF (Fresq)',
   isil: 'ISIL id',
   isni: 'ISNI',
   ISO2: 'Code ISO 2',

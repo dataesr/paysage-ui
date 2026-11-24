@@ -17,6 +17,7 @@ export const TYPES_MAPPING = {
   hatvp: 'HATVP',
   idhal: 'HAL id',
   idref: 'idRef',
+  inf: 'INF (Fresq)',
   isil: 'ISIL id',
   isni: 'ISNI',
   oc: 'OpenCorporate id',
