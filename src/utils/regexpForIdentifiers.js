@@ -10,6 +10,7 @@ export function regexpValidateIdentifiers(type) {
     openAlexPersonId: [/^A[A-Za-z0-9]+$/, 'Un identifiant OpenAlex doit commencer par un A et doit être suivis par des chiffres'],
     openAlexTermId: [/^C[A-Za-z0-9]+$/, 'Un identifiant OpenAlex doit commencer par un C et doit être suivis par des chiffres'],
     rna: [/^W[0-9]{9}$/, 'Un RNA doit commencer par "W" suivi par 9 chiffres'],
+    rnf: [/^\d{2}[\dAB]-[A-Z]+-\d{5}-\d{2}$/, 'Un RNF doit être de la forme 000-XXX-00000-00'],
     rnsr: [/^\d{9}[A-Z]{1}$/, "Un RNSR doit commencer par 9 chiffres suivis d'une lettre majuscule"],
     ror: [/^[a-z0-9]{9}$/, 'Un ROR doit contenir 9 caractères'],
     rncp: [/^RNCP\d{1,10}$/, "Format invalide. Veuillez utiliser 'RNCP' suivi d'au moins 1 et au plus 10 chiffres."],

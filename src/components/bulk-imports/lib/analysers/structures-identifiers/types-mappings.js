@@ -32,6 +32,7 @@ export const TYPES_MAPPING = {
   rcr: 'RCR id',
   ringgold: 'RINGGOLD id',
   rna: 'RNA id',
+  rnf: 'RNF id',
   rnsr: 'RNSR id',
   ror: 'ROR id',
   rtoad: 'RTOAD id',

@@ -91,6 +91,7 @@ export const ENUMS_LABELS_MAPPER = {
   rcr: 'RCR id',
   ringgold: 'RINGGOLD id',
   rna: 'RNA id',
+  rnf: 'RNF id',
   rnsr: 'RNSR id',
   ror: 'ROR id',
   rncp: 'Numéro fiche RNCP',
